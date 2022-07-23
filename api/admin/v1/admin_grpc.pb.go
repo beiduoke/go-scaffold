@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -22,8 +23,18 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AdminClient interface {
-	// Sends a greeting
-	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
+	// 登陆
+	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*User, error)
+	// 登出
+	Logout(ctx context.Context, in *LogoutReq, opts ...grpc.CallOption) (*LogoutReply, error)
+	// 注册
+	Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterReply, error)
+	// 用户列表
+	ListUser(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserReply, error)
+	GetPublicContent(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Content, error)
+	GetUserBoard(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Content, error)
+	GetModeratorBoard(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Content, error)
+	GetAdminBoard(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Content, error)
 }
 
 type adminClient struct {
@@ -34,9 +45,72 @@ func NewAdminClient(cc grpc.ClientConnInterface) AdminClient {
 	return &adminClient{cc}
 }
 
-func (c *adminClient) SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error) {
-	out := new(HelloReply)
-	err := c.cc.Invoke(ctx, "/admin.v1.Admin/SayHello", in, out, opts...)
+func (c *adminClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
+	err := c.cc.Invoke(ctx, "/admin.v1.Admin/Login", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) Logout(ctx context.Context, in *LogoutReq, opts ...grpc.CallOption) (*LogoutReply, error) {
+	out := new(LogoutReply)
+	err := c.cc.Invoke(ctx, "/admin.v1.Admin/Logout", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterReply, error) {
+	out := new(RegisterReply)
+	err := c.cc.Invoke(ctx, "/admin.v1.Admin/Register", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) ListUser(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserReply, error) {
+	out := new(ListUserReply)
+	err := c.cc.Invoke(ctx, "/admin.v1.Admin/ListUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) GetPublicContent(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Content, error) {
+	out := new(Content)
+	err := c.cc.Invoke(ctx, "/admin.v1.Admin/GetPublicContent", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) GetUserBoard(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Content, error) {
+	out := new(Content)
+	err := c.cc.Invoke(ctx, "/admin.v1.Admin/GetUserBoard", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) GetModeratorBoard(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Content, error) {
+	out := new(Content)
+	err := c.cc.Invoke(ctx, "/admin.v1.Admin/GetModeratorBoard", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) GetAdminBoard(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Content, error) {
+	out := new(Content)
+	err := c.cc.Invoke(ctx, "/admin.v1.Admin/GetAdminBoard", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -47,8 +121,18 @@ func (c *adminClient) SayHello(ctx context.Context, in *HelloRequest, opts ...gr
 // All implementations must embed UnimplementedAdminServer
 // for forward compatibility
 type AdminServer interface {
-	// Sends a greeting
-	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
+	// 登陆
+	Login(context.Context, *LoginReq) (*User, error)
+	// 登出
+	Logout(context.Context, *LogoutReq) (*LogoutReply, error)
+	// 注册
+	Register(context.Context, *RegisterReq) (*RegisterReply, error)
+	// 用户列表
+	ListUser(context.Context, *emptypb.Empty) (*ListUserReply, error)
+	GetPublicContent(context.Context, *emptypb.Empty) (*Content, error)
+	GetUserBoard(context.Context, *emptypb.Empty) (*Content, error)
+	GetModeratorBoard(context.Context, *emptypb.Empty) (*Content, error)
+	GetAdminBoard(context.Context, *emptypb.Empty) (*Content, error)
 	mustEmbedUnimplementedAdminServer()
 }
 
@@ -56,8 +140,29 @@ type AdminServer interface {
 type UnimplementedAdminServer struct {
 }
 
-func (UnimplementedAdminServer) SayHello(context.Context, *HelloRequest) (*HelloReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SayHello not implemented")
+func (UnimplementedAdminServer) Login(context.Context, *LoginReq) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+}
+func (UnimplementedAdminServer) Logout(context.Context, *LogoutReq) (*LogoutReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
+}
+func (UnimplementedAdminServer) Register(context.Context, *RegisterReq) (*RegisterReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
+}
+func (UnimplementedAdminServer) ListUser(context.Context, *emptypb.Empty) (*ListUserReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUser not implemented")
+}
+func (UnimplementedAdminServer) GetPublicContent(context.Context, *emptypb.Empty) (*Content, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPublicContent not implemented")
+}
+func (UnimplementedAdminServer) GetUserBoard(context.Context, *emptypb.Empty) (*Content, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserBoard not implemented")
+}
+func (UnimplementedAdminServer) GetModeratorBoard(context.Context, *emptypb.Empty) (*Content, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetModeratorBoard not implemented")
+}
+func (UnimplementedAdminServer) GetAdminBoard(context.Context, *emptypb.Empty) (*Content, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAdminBoard not implemented")
 }
 func (UnimplementedAdminServer) mustEmbedUnimplementedAdminServer() {}
 
@@ -72,20 +177,146 @@ func RegisterAdminServer(s grpc.ServiceRegistrar, srv AdminServer) {
 	s.RegisterService(&Admin_ServiceDesc, srv)
 }
 
-func _Admin_SayHello_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HelloRequest)
+func _Admin_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).SayHello(ctx, in)
+		return srv.(AdminServer).Login(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/admin.v1.Admin/SayHello",
+		FullMethod: "/admin.v1.Admin/Login",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).SayHello(ctx, req.(*HelloRequest))
+		return srv.(AdminServer).Login(ctx, req.(*LoginReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LogoutReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).Logout(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/admin.v1.Admin/Logout",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).Logout(ctx, req.(*LogoutReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).Register(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/admin.v1.Admin/Register",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).Register(ctx, req.(*RegisterReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_ListUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).ListUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/admin.v1.Admin/ListUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).ListUser(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_GetPublicContent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).GetPublicContent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/admin.v1.Admin/GetPublicContent",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).GetPublicContent(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_GetUserBoard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).GetUserBoard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/admin.v1.Admin/GetUserBoard",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).GetUserBoard(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_GetModeratorBoard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).GetModeratorBoard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/admin.v1.Admin/GetModeratorBoard",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).GetModeratorBoard(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_GetAdminBoard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).GetAdminBoard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/admin.v1.Admin/GetAdminBoard",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).GetAdminBoard(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -98,8 +329,36 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AdminServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SayHello",
-			Handler:    _Admin_SayHello_Handler,
+			MethodName: "Login",
+			Handler:    _Admin_Login_Handler,
+		},
+		{
+			MethodName: "Logout",
+			Handler:    _Admin_Logout_Handler,
+		},
+		{
+			MethodName: "Register",
+			Handler:    _Admin_Register_Handler,
+		},
+		{
+			MethodName: "ListUser",
+			Handler:    _Admin_ListUser_Handler,
+		},
+		{
+			MethodName: "GetPublicContent",
+			Handler:    _Admin_GetPublicContent_Handler,
+		},
+		{
+			MethodName: "GetUserBoard",
+			Handler:    _Admin_GetUserBoard_Handler,
+		},
+		{
+			MethodName: "GetModeratorBoard",
+			Handler:    _Admin_GetModeratorBoard_Handler,
+		},
+		{
+			MethodName: "GetAdminBoard",
+			Handler:    _Admin_GetAdminBoard_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

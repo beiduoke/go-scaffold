@@ -7,32 +7,198 @@ info:
     description: The greeting service definition.
     version: 0.0.1
 paths:
-    /admin/{name}:
+    /api/v1/admin:
         get:
             tags:
                 - Admin
-            description: Sends a greeting
-            operationId: Admin_SayHello
-            parameters:
-                - name: name
-                  in: path
-                  required: true
-                  schema:
-                    type: string
+            operationId: Admin_GetAdminBoard
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/admin.v1.HelloReply'
+                                $ref: '#/components/schemas/admin.v1.Content'
+    /api/v1/all:
+        get:
+            tags:
+                - Admin
+            operationId: Admin_GetPublicContent
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/admin.v1.Content'
+    /api/v1/login:
+        post:
+            tags:
+                - Admin
+            description: 登陆
+            operationId: Admin_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/admin.v1.LoginReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/admin.v1.User'
+    /api/v1/logout:
+        post:
+            tags:
+                - Admin
+            description: 登出
+            operationId: Admin_Logout
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/admin.v1.LogoutReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/admin.v1.LogoutReply'
+    /api/v1/mod:
+        get:
+            tags:
+                - Admin
+            operationId: Admin_GetModeratorBoard
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/admin.v1.Content'
+    /api/v1/register:
+        post:
+            tags:
+                - Admin
+            description: 注册
+            operationId: Admin_Register
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/admin.v1.RegisterReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/admin.v1.RegisterReply'
+    /api/v1/user:
+        get:
+            tags:
+                - Admin
+            operationId: Admin_GetUserBoard
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/admin.v1.Content'
+    /api/v1/users:
+        get:
+            tags:
+                - Admin
+            description: 用户列表
+            operationId: Admin_ListUser
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/admin.v1.ListUserReply'
 components:
     schemas:
-        admin.v1.HelloReply:
+        admin.v1.Content:
+            type: object
+            properties:
+                content:
+                    type: string
+        admin.v1.ListUserReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/admin.v1.User'
+                total:
+                    type: integer
+                    format: int32
+        admin.v1.LoginReq:
+            type: object
+            properties:
+                userName:
+                    type: string
+                password:
+                    type: string
+            description: 请求 - 登录
+        admin.v1.LogoutReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint64
+            description: 回应 - 登出
+        admin.v1.LogoutReq:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint64
+            description: 请求 - 登出
+        admin.v1.RegisterReply:
             type: object
             properties:
                 message:
                     type: string
-            description: The response message containing the greetings
+                success:
+                    type: boolean
+        admin.v1.RegisterReq:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+                email:
+                    type: string
+        admin.v1.User:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint64
+                userName:
+                    type: string
+                password:
+                    type: string
+                nickName:
+                    type: string
+                email:
+                    type: string
+                roles:
+                    type: array
+                    items:
+                        type: string
+                token:
+                    type: string
 tags:
     - name: Admin
