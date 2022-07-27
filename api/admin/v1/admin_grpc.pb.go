@@ -47,7 +47,7 @@ func NewAdminClient(cc grpc.ClientConnInterface) AdminClient {
 
 func (c *adminClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*User, error) {
 	out := new(User)
-	err := c.cc.Invoke(ctx, "/admin.v1.Admin/Login", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/Login", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func (c *adminClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.Call
 
 func (c *adminClient) Logout(ctx context.Context, in *LogoutReq, opts ...grpc.CallOption) (*LogoutReply, error) {
 	out := new(LogoutReply)
-	err := c.cc.Invoke(ctx, "/admin.v1.Admin/Logout", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/Logout", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +65,7 @@ func (c *adminClient) Logout(ctx context.Context, in *LogoutReq, opts ...grpc.Ca
 
 func (c *adminClient) Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterReply, error) {
 	out := new(RegisterReply)
-	err := c.cc.Invoke(ctx, "/admin.v1.Admin/Register", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/Register", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func (c *adminClient) Register(ctx context.Context, in *RegisterReq, opts ...grp
 
 func (c *adminClient) ListUser(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserReply, error) {
 	out := new(ListUserReply)
-	err := c.cc.Invoke(ctx, "/admin.v1.Admin/ListUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -83,7 +83,7 @@ func (c *adminClient) ListUser(ctx context.Context, in *emptypb.Empty, opts ...g
 
 func (c *adminClient) GetPublicContent(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Content, error) {
 	out := new(Content)
-	err := c.cc.Invoke(ctx, "/admin.v1.Admin/GetPublicContent", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetPublicContent", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +92,7 @@ func (c *adminClient) GetPublicContent(ctx context.Context, in *emptypb.Empty, o
 
 func (c *adminClient) GetUserBoard(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Content, error) {
 	out := new(Content)
-	err := c.cc.Invoke(ctx, "/admin.v1.Admin/GetUserBoard", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetUserBoard", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +101,7 @@ func (c *adminClient) GetUserBoard(ctx context.Context, in *emptypb.Empty, opts 
 
 func (c *adminClient) GetModeratorBoard(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Content, error) {
 	out := new(Content)
-	err := c.cc.Invoke(ctx, "/admin.v1.Admin/GetModeratorBoard", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetModeratorBoard", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +110,7 @@ func (c *adminClient) GetModeratorBoard(ctx context.Context, in *emptypb.Empty, 
 
 func (c *adminClient) GetAdminBoard(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Content, error) {
 	out := new(Content)
-	err := c.cc.Invoke(ctx, "/admin.v1.Admin/GetAdminBoard", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetAdminBoard", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -187,7 +187,7 @@ func _Admin_Login_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/admin.v1.Admin/Login",
+		FullMethod: "/api.admin.v1.Admin/Login",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServer).Login(ctx, req.(*LoginReq))
@@ -205,7 +205,7 @@ func _Admin_Logout_Handler(srv interface{}, ctx context.Context, dec func(interf
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/admin.v1.Admin/Logout",
+		FullMethod: "/api.admin.v1.Admin/Logout",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServer).Logout(ctx, req.(*LogoutReq))
@@ -223,7 +223,7 @@ func _Admin_Register_Handler(srv interface{}, ctx context.Context, dec func(inte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/admin.v1.Admin/Register",
+		FullMethod: "/api.admin.v1.Admin/Register",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServer).Register(ctx, req.(*RegisterReq))
@@ -241,7 +241,7 @@ func _Admin_ListUser_Handler(srv interface{}, ctx context.Context, dec func(inte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/admin.v1.Admin/ListUser",
+		FullMethod: "/api.admin.v1.Admin/ListUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServer).ListUser(ctx, req.(*emptypb.Empty))
@@ -259,7 +259,7 @@ func _Admin_GetPublicContent_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/admin.v1.Admin/GetPublicContent",
+		FullMethod: "/api.admin.v1.Admin/GetPublicContent",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServer).GetPublicContent(ctx, req.(*emptypb.Empty))
@@ -277,7 +277,7 @@ func _Admin_GetUserBoard_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/admin.v1.Admin/GetUserBoard",
+		FullMethod: "/api.admin.v1.Admin/GetUserBoard",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServer).GetUserBoard(ctx, req.(*emptypb.Empty))
@@ -295,7 +295,7 @@ func _Admin_GetModeratorBoard_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/admin.v1.Admin/GetModeratorBoard",
+		FullMethod: "/api.admin.v1.Admin/GetModeratorBoard",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServer).GetModeratorBoard(ctx, req.(*emptypb.Empty))
@@ -313,7 +313,7 @@ func _Admin_GetAdminBoard_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/admin.v1.Admin/GetAdminBoard",
+		FullMethod: "/api.admin.v1.Admin/GetAdminBoard",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServer).GetAdminBoard(ctx, req.(*emptypb.Empty))
@@ -325,7 +325,7 @@ func _Admin_GetAdminBoard_Handler(srv interface{}, ctx context.Context, dec func
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Admin_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "admin.v1.Admin",
+	ServiceName: "api.admin.v1.Admin",
 	HandlerType: (*AdminServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

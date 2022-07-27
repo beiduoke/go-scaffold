@@ -1,6 +1,14 @@
 package biz
 
-import "github.com/google/wire"
+import (
+	"context"
+
+	"github.com/google/wire"
+)
 
 // ProviderSet is biz providers.
-var ProviderSet = wire.NewSet(NewAdminUsecase)
+var ProviderSet = wire.NewSet(NewUserUsecase, NewRoleUsecase)
+
+type Transaction interface {
+	InTx(context.Context, func(ctx context.Context) error) error
+}

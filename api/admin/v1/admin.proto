@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package admin.v1;
+package api.admin.v1;
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
@@ -15,21 +15,21 @@ service Admin {
   // 登陆
   rpc Login (LoginReq) returns (User) {
     option (google.api.http) = {
-      post: "/api/v1/login"
+      post: "/admin/v1/login"
       body: "*"
     };
   }
   // 登出
   rpc Logout (LogoutReq) returns (LogoutReply) {
     option (google.api.http) = {
-      post: "/api/v1/logout"
+      post: "/admin/v1/logout"
       body: "*"
     };
   }
   // 注册
   rpc Register (RegisterReq) returns (RegisterReply) {
     option (google.api.http) = {
-      post: "/api/v1/register"
+      post: "/admin/v1/register"
       body: "*"
     };
   }
@@ -37,29 +37,29 @@ service Admin {
   // 用户列表
   rpc ListUser (google.protobuf.Empty) returns (ListUserReply) {
     option (google.api.http) = {
-      get: "/api/v1/users"
+      get: "/admin/v1/users"
     };
   }
 
   rpc GetPublicContent (google.protobuf.Empty) returns (Content) {
     option (google.api.http) = {
-      get: "/api/v1/all"
+      get: "/admin/v1/all"
     };
   }
   rpc GetUserBoard (google.protobuf.Empty) returns (Content) {
     option (google.api.http) = {
-      get: "/api/v1/user"
+      get: "/admin/v1/user"
     };
   }
   rpc GetModeratorBoard (google.protobuf.Empty) returns (Content) {
     option (google.api.http) = {
-      get: "/api/v1/mod"
+      get: "/admin/v1/mod"
     };
   }
 
   rpc GetAdminBoard (google.protobuf.Empty) returns (Content) {
     option (google.api.http) = {
-      get: "/api/v1/admin"
+      get: "/admin/v1/admin"
     };
   }
 }
@@ -70,12 +70,12 @@ message Content {
 
 message User {
   optional uint64 id = 1;
-  optional string user_name = 2;
+  optional string user_name = 2 [json_name = "userName"];
   optional string password = 3;
   optional string nick_name = 4;
   optional string email = 5;
   repeated string roles = 6;
-  optional string token = 7;
+  optional string token = 7 [deprecated = true];
 }
 
 message ListUserReply {
@@ -85,6 +85,7 @@ message ListUserReply {
 
 // 请求 - 登录
 message LoginReq {
+  // 用户名
   string user_name = 1;
   string password = 2;
 }
@@ -97,6 +98,7 @@ message LoginReply {
 message LogoutReq {
   uint64 id = 1;
 }
+
 // 回应 - 登出
 message LogoutReply {
   uint64 id = 1;
@@ -110,4 +112,15 @@ message RegisterReq {
 message RegisterReply {
   string message = 1;
   bool success = 2;
+}
+
+message WebsocketProto  {
+  string event_id = 1;
+  string payload = 2;
+}
+
+message WebsocketMessage {
+  string message = 1;
+  string sender = 2;
+  string timestamp = 3;
 }

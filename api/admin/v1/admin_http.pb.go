@@ -20,14 +20,14 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationAdminGetAdminBoard = "/admin.v1.Admin/GetAdminBoard"
-const OperationAdminGetModeratorBoard = "/admin.v1.Admin/GetModeratorBoard"
-const OperationAdminGetPublicContent = "/admin.v1.Admin/GetPublicContent"
-const OperationAdminGetUserBoard = "/admin.v1.Admin/GetUserBoard"
-const OperationAdminListUser = "/admin.v1.Admin/ListUser"
-const OperationAdminLogin = "/admin.v1.Admin/Login"
-const OperationAdminLogout = "/admin.v1.Admin/Logout"
-const OperationAdminRegister = "/admin.v1.Admin/Register"
+const OperationAdminGetAdminBoard = "/api.admin.v1.Admin/GetAdminBoard"
+const OperationAdminGetModeratorBoard = "/api.admin.v1.Admin/GetModeratorBoard"
+const OperationAdminGetPublicContent = "/api.admin.v1.Admin/GetPublicContent"
+const OperationAdminGetUserBoard = "/api.admin.v1.Admin/GetUserBoard"
+const OperationAdminListUser = "/api.admin.v1.Admin/ListUser"
+const OperationAdminLogin = "/api.admin.v1.Admin/Login"
+const OperationAdminLogout = "/api.admin.v1.Admin/Logout"
+const OperationAdminRegister = "/api.admin.v1.Admin/Register"
 
 type AdminHTTPServer interface {
 	GetAdminBoard(context.Context, *emptypb.Empty) (*Content, error)
@@ -42,14 +42,14 @@ type AdminHTTPServer interface {
 
 func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
 	r := s.Route("/")
-	r.POST("/api/v1/login", _Admin_Login0_HTTP_Handler(srv))
-	r.POST("/api/v1/logout", _Admin_Logout0_HTTP_Handler(srv))
-	r.POST("/api/v1/register", _Admin_Register0_HTTP_Handler(srv))
-	r.GET("/api/v1/users", _Admin_ListUser0_HTTP_Handler(srv))
-	r.GET("/api/v1/all", _Admin_GetPublicContent0_HTTP_Handler(srv))
-	r.GET("/api/v1/user", _Admin_GetUserBoard0_HTTP_Handler(srv))
-	r.GET("/api/v1/mod", _Admin_GetModeratorBoard0_HTTP_Handler(srv))
-	r.GET("/api/v1/admin", _Admin_GetAdminBoard0_HTTP_Handler(srv))
+	r.POST("/admin/v1/login", _Admin_Login0_HTTP_Handler(srv))
+	r.POST("/admin/v1/logout", _Admin_Logout0_HTTP_Handler(srv))
+	r.POST("/admin/v1/register", _Admin_Register0_HTTP_Handler(srv))
+	r.GET("/admin/v1/users", _Admin_ListUser0_HTTP_Handler(srv))
+	r.GET("/admin/v1/all", _Admin_GetPublicContent0_HTTP_Handler(srv))
+	r.GET("/admin/v1/user", _Admin_GetUserBoard0_HTTP_Handler(srv))
+	r.GET("/admin/v1/mod", _Admin_GetModeratorBoard0_HTTP_Handler(srv))
+	r.GET("/admin/v1/admin", _Admin_GetAdminBoard0_HTTP_Handler(srv))
 }
 
 func _Admin_Login0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
@@ -225,7 +225,7 @@ func NewAdminHTTPClient(client *http.Client) AdminHTTPClient {
 
 func (c *AdminHTTPClientImpl) GetAdminBoard(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*Content, error) {
 	var out Content
-	pattern := "/api/v1/admin"
+	pattern := "/admin/v1/admin"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminGetAdminBoard))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -238,7 +238,7 @@ func (c *AdminHTTPClientImpl) GetAdminBoard(ctx context.Context, in *emptypb.Emp
 
 func (c *AdminHTTPClientImpl) GetModeratorBoard(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*Content, error) {
 	var out Content
-	pattern := "/api/v1/mod"
+	pattern := "/admin/v1/mod"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminGetModeratorBoard))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -251,7 +251,7 @@ func (c *AdminHTTPClientImpl) GetModeratorBoard(ctx context.Context, in *emptypb
 
 func (c *AdminHTTPClientImpl) GetPublicContent(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*Content, error) {
 	var out Content
-	pattern := "/api/v1/all"
+	pattern := "/admin/v1/all"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminGetPublicContent))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -264,7 +264,7 @@ func (c *AdminHTTPClientImpl) GetPublicContent(ctx context.Context, in *emptypb.
 
 func (c *AdminHTTPClientImpl) GetUserBoard(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*Content, error) {
 	var out Content
-	pattern := "/api/v1/user"
+	pattern := "/admin/v1/user"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminGetUserBoard))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -277,7 +277,7 @@ func (c *AdminHTTPClientImpl) GetUserBoard(ctx context.Context, in *emptypb.Empt
 
 func (c *AdminHTTPClientImpl) ListUser(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*ListUserReply, error) {
 	var out ListUserReply
-	pattern := "/api/v1/users"
+	pattern := "/admin/v1/users"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminListUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -290,7 +290,7 @@ func (c *AdminHTTPClientImpl) ListUser(ctx context.Context, in *emptypb.Empty, o
 
 func (c *AdminHTTPClientImpl) Login(ctx context.Context, in *LoginReq, opts ...http.CallOption) (*User, error) {
 	var out User
-	pattern := "/api/v1/login"
+	pattern := "/admin/v1/login"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminLogin))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -303,7 +303,7 @@ func (c *AdminHTTPClientImpl) Login(ctx context.Context, in *LoginReq, opts ...h
 
 func (c *AdminHTTPClientImpl) Logout(ctx context.Context, in *LogoutReq, opts ...http.CallOption) (*LogoutReply, error) {
 	var out LogoutReply
-	pattern := "/api/v1/logout"
+	pattern := "/admin/v1/logout"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminLogout))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -316,7 +316,7 @@ func (c *AdminHTTPClientImpl) Logout(ctx context.Context, in *LogoutReq, opts ..
 
 func (c *AdminHTTPClientImpl) Register(ctx context.Context, in *RegisterReq, opts ...http.CallOption) (*RegisterReply, error) {
 	var out RegisterReply
-	pattern := "/api/v1/register"
+	pattern := "/admin/v1/register"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminRegister))
 	opts = append(opts, http.PathTemplate(pattern))

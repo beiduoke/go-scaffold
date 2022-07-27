@@ -3,14 +3,14 @@ package server
 import (
 	v1 "github.com/bedoke/go-scaffold/api/admin/v1"
 	"github.com/bedoke/go-scaffold/internal/conf"
-	"github.com/bedoke/go-scaffold/internal/service"
+	"github.com/bedoke/go-scaffold/internal/service/admin"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 )
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(c *conf.Server, admin *service.AdminService, logger log.Logger) *grpc.Server {
+func NewGRPCServer(c *conf.Server, ac *conf.Auth, s *admin.AdminService, logger log.Logger) *grpc.Server {
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(),
@@ -26,6 +26,6 @@ func NewGRPCServer(c *conf.Server, admin *service.AdminService, logger log.Logge
 		opts = append(opts, grpc.Timeout(c.Grpc.Timeout.AsDuration()))
 	}
 	srv := grpc.NewServer(opts...)
-	v1.RegisterAdminServer(srv, admin)
+	v1.RegisterAdminServer(srv, s)
 	return srv
 }

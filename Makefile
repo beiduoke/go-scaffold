@@ -14,6 +14,12 @@ else
 	API_PROTO_FILES=$(shell find api -name *.proto)
 endif
 
+
+.PHONY: run
+# generate internal proto
+run:
+	cd cmd/server && bee run .
+
 .PHONY: init
 # init env
 init:
@@ -22,6 +28,7 @@ init:
 	go install github.com/go-kratos/kratos/cmd/kratos/v2@latest
 	go install github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2@latest
 	go install github.com/google/gnostic/cmd/protoc-gen-openapi@latest
+	go get -u github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2
 
 .PHONY: config
 # generate internal proto
@@ -37,9 +44,13 @@ api:
 	protoc --proto_path=./api \
 	       --proto_path=./third_party \
  	       --go_out=paths=source_relative:./api \
+         --go-errors_out=paths=source_relative:./api \
  	       --go-http_out=paths=source_relative:./api \
  	       --go-grpc_out=paths=source_relative:./api \
 	       --openapi_out=fq_schema_naming=true,default_response=false:. \
+	       --openapiv2_out ./api \
+	       --openapiv2_opt logtostderr=true \
+	       --openapiv2_opt json_names_for_fields=true \
 	       $(API_PROTO_FILES)
 
 .PHONY: build
