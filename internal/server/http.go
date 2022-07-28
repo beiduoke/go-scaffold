@@ -46,11 +46,7 @@ func NewWhiteListMatcher() selector.MatchFunc {
 	}
 }
 
-func NewAuthMiddleware(ac *conf.Auth, policy persist.Adapter) middleware.Middleware {
-	m, _ := model.NewModelFromFile(ac.Casbin.ModelPath)
-	// a := fileAdapter.NewAdapter(ac.Casbin.PolicyPath)
-	// ga, err := gormadapter.NewAdapter(dc.Database.Driver, "root:123456@tcp(127.0.0.1:3306)/", "go_scaffold")
-	// fmt.Println(dc.Database.Source, dc.Database.Driver, a, ga, err, ac)
+func NewAuthMiddleware(ac *conf.Auth, m model.Model, policy persist.Adapter) middleware.Middleware {
 	return selector.Server(
 		jwt.Server(
 			func(token *jwtV4.Token) (interface{}, error) {
@@ -68,21 +64,25 @@ func NewAuthMiddleware(ac *conf.Auth, policy persist.Adapter) middleware.Middlew
 }
 
 // NewMiddleware 创建中间件
-func NewMiddleware(logger log.Logger, middlers ...middleware.Middleware) http.ServerOption {
+func NewMiddleware(logger log.Logger, auth middleware.Middleware) http.ServerOption {
 	return http.Middleware(
 		recovery.Recovery(),
 		tracing.Server(),
 		logging.Server(logger),
+		auth,
 	)
 }
 
 // NewHTTPServer new a HTTP server.
-func NewHTTPServer(c *conf.Server, s *admin.AdminService, opts ...http.ServerOption) *http.Server {
-	opts = append(opts, http.Filter(handlers.CORS(
-		handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
-		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"}),
-		handlers.AllowedOrigins([]string{"*"}),
-	)))
+func NewHTTPServer(c *conf.Server, s *admin.AdminService, middleware http.ServerOption) *http.Server {
+	var opts = []http.ServerOption{
+		middleware,
+		http.Filter(handlers.CORS(
+			handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
+			handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"}),
+			handlers.AllowedOrigins([]string{"*"}),
+		)),
+	}
 	if c.Http.Network != "" {
 		opts = append(opts, http.Network(c.Http.Network))
 	}
