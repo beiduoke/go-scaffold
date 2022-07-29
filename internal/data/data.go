@@ -15,7 +15,7 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewDB, NewRDB, NewTransaction, NewAuthModel, NewAuthGormAdapter, NewUserRepo, NewRoleRepo)
+var ProviderSet = wire.NewSet(NewData, NewDB, NewRDB, NewTransaction, wire.NewSet(NewAuthModel, NewSysModelMigrate), NewModelMigrate, NewAuthGormAdapter, NewUserRepo, NewRoleRepo)
 
 // NewTransaction .
 func NewTransaction(d *Data) biz.Transaction {
@@ -70,7 +70,7 @@ func NewData(db *gorm.DB, rdb *redis.Client, logger log.Logger) (*Data, func(), 
 }
 
 // NewDB gorm Connecting to a Database
-func NewDB(conf *conf.Data, logger log.Logger) *gorm.DB {
+func NewDB(conf *conf.Data, logger log.Logger, migrates ...interface{}) *gorm.DB {
 	log := log.NewHelper(log.With(logger, "module", "data/gorm"))
 	db, err := gorm.Open(mysql.Open(conf.Database.Source), &gorm.Config{
 		Logger:         gormLogger.Default.LogMode(gormLogger.LogLevel(conf.Database.LogLevel)),

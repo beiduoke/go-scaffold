@@ -20,7 +20,7 @@ func NewAuthFileAdapter(ac *conf.Auth, logger log.Logger) persist.Adapter {
 
 func NewAuthGormAdapter(d *Data, logger log.Logger) persist.Adapter {
 	log := log.NewHelper(log.With(logger, "module", "data/authGormAdapter"))
-	a, err := gormadapter.NewAdapterByDB(d.DB(context.Background()))
+	a, err := gormadapter.NewAdapterByDBUseTableName(d.DB(context.Background()), "sys", "casbin_rules")
 	if err != nil {
 		log.Fatalf("failed casbin adapters connection %v", err)
 	}
