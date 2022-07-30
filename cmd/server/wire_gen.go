@@ -21,8 +21,8 @@ import (
 
 // wireApp init kratos application.
 func wireApp(confServer *conf.Server, auth *conf.Auth, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
-	v := data.NewSysModelMigrate()
-	db := data.NewDB(confData, logger, v...)
+	v := data.NewModelMigrate()
+	db := data.NewDB(confData, logger, v)
 	client := data.NewRDB(confData, logger)
 	dataData, cleanup, err := data.NewData(db, client, logger)
 	if err != nil {

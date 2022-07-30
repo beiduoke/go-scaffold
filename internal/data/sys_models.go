@@ -6,16 +6,6 @@ import (
 	"gorm.io/gorm"
 )
 
-var sysMigrates = []interface{}{
-	&SysUser{},
-	&SysApi{},
-	&SysApiOperationLog{},
-	&SysMenu{},
-	&SysMenuButton{},
-	&SysMenuParameter{},
-	&SysRole{},
-}
-
 func NewSysModelMigrate() []interface{} {
 	return []interface{}{
 		&SysUser{},
@@ -24,11 +14,6 @@ func NewSysModelMigrate() []interface{} {
 		&SysMenu{},
 		&SysMenuButton{},
 		&SysMenuParameter{},
-	}
-}
-
-func NewModelMigrate() []interface{} {
-	return []interface{}{
 		&SysRole{},
 	}
 }
