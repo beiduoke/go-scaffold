@@ -34,7 +34,7 @@ func wireApp(confServer *conf.Server, auth *conf.Auth, confData *conf.Data, logg
 	adminService := admin.NewAdminService(logger, userUsecase)
 	grpcServer := server.NewGRPCServer(confServer, auth, adminService, logger)
 	model := data.NewAuthModel(auth, logger)
-	adapter := data.NewAuthGormAdapter(dataData, logger)
+	adapter := data.NewAuthAdapter(dataData, auth, logger)
 	middleware := server.NewAuthMiddleware(auth, model, adapter)
 	serverOption := server.NewMiddleware(logger, middleware)
 	httpServer := server.NewHTTPServer(confServer, adminService, serverOption)
