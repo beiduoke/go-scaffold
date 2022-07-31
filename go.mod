@@ -75,6 +75,7 @@ require (
 	github.com/imdario/mergo v0.3.12 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/mlsen/casbin-redis-adapter/v2 v2.0.1
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rakyll/statik v0.1.7 // indirect
 	go.opentelemetry.io/otel v1.7.0 // indirect

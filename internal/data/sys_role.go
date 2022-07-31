@@ -4,19 +4,22 @@ import (
 	"context"
 
 	"github.com/bedoke/go-scaffold/internal/biz"
+	"github.com/casbin/casbin/v2/persist"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
 type RoleRepo struct {
-	data *Data
-	log  *log.Helper
+	data   *Data
+	log    *log.Helper
+	policy persist.Adapter
 }
 
 // NewRoleRepo .
-func NewRoleRepo(data *Data, logger log.Logger) biz.RoleRepo {
+func NewRoleRepo(data *Data, policy persist.Adapter, logger log.Logger) biz.RoleRepo {
 	return &RoleRepo{
-		data: data,
-		log:  log.NewHelper(logger),
+		data:   data,
+		log:    log.NewHelper(logger),
+		policy: policy,
 	}
 }
 
