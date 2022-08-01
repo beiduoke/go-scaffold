@@ -31,7 +31,7 @@ import (
 )
 
 // ProviderSet is server providers.
-var ProviderHttpSet = wire.NewSet(NewMiddleware, NewAuthMiddleware)
+var ProviderHttp = wire.NewSet(NewMiddleware, NewAuthMiddleware)
 
 // NewWhiteListMatcher 创建jwt白名单
 func NewWhiteListMatcher() selector.MatchFunc {
