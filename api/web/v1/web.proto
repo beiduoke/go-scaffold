@@ -40,7 +40,7 @@ message User {
   optional string password = 3;
   optional string nick_name = 4;
   optional string email = 5;
-  repeated string roles = 6;
+  repeated string authoritys = 6;
   optional string token = 7 [deprecated = true];
 }
 

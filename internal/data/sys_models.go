@@ -14,51 +14,51 @@ func NewSysModelMigrate() []interface{} {
 		&SysMenu{},
 		&SysMenuButton{},
 		&SysMenuParameter{},
-		&SysRole{},
+		&SysAuthority{},
 	}
 }
 
 // User 用户
 type SysUser struct {
 	gorm.Model
-	Name     string     `gorm:"type:varchar(255);column:name;not null;index:idx_users_name_nick_name_real_name,priority:1;comment:名称;"`
-	NickName string     `gorm:"type:varchar(255);column:nick_name;not null;default:'';index:idx_users_name_nick_name_real_name;comment,priority:3:昵称;"`
-	RealName string     `gorm:"type:varchar(100);column:real_name;not null;default:'';index:idx_users_name_nick_name_real_name;comment,priority:2:实名;"`
-	Birthday *time.Time `gorm:"type:datetime;column:birthday;comment:生日;"`
-	Gender   int32      `gorm:"type:tinyint(1);column:gender;not null;default:1;comment:性别 0 未指定 1 男 2 女;"`
-	Mobile   string     `gorm:"type:varchar(20);column:mobile;not null;default:'';index:idx_users_mobile_email,priority:1;;comment:手机号;"`
-	Email    string     `gorm:"type:varchar(50);column:email;not null;default:'';index:idx_users_mobile_email,priority:2;;comment:邮箱;"`
-	State    int32      `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:用户状态 0 未指定  1 启用 2 停用;"`
-	Roles    []SysRole  `gorm:"many2many:sys_role_users;"`
+	Name        string         `gorm:"type:varchar(255);column:name;not null;index:idx_users_name_nick_name_real_name,priority:1;comment:名称;"`
+	NickName    string         `gorm:"type:varchar(255);column:nick_name;not null;default:'';index:idx_users_name_nick_name_real_name;comment,priority:3:昵称;"`
+	RealName    string         `gorm:"type:varchar(100);column:real_name;not null;default:'';index:idx_users_name_nick_name_real_name;comment,priority:2:实名;"`
+	Birthday    *time.Time     `gorm:"type:datetime;column:birthday;comment:生日;"`
+	Gender      int32          `gorm:"type:tinyint(1);column:gender;not null;default:1;comment:性别 0 未指定 1 男 2 女;"`
+	Mobile      string         `gorm:"type:varchar(20);column:mobile;not null;default:'';index:idx_users_mobile_email,priority:1;;comment:手机号;"`
+	Email       string         `gorm:"type:varchar(50);column:email;not null;default:'';index:idx_users_mobile_email,priority:2;;comment:邮箱;"`
+	State       int32          `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:用户状态 0 未指定  1 启用 2 停用;"`
+	Authorities []SysAuthority `gorm:"many2many:sys_authority_users;"`
 }
 
-// Role 角色
-type SysRole struct {
+// Authority 角色
+type SysAuthority struct {
 	gorm.Model
-	Name          string    `gorm:"type:varchar(255);column:name;not null;comment:角色名称;"`
-	ParentID      uint      `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
-	DefaultRouter string    `gorm:"type:varchar(255);column:default_router;not null;default:'dashboard';comment:默认路由;"`
-	Parent        *SysRole  `gorm:"foreignKey:ParentID"`
-	Roles         []SysRole `gorm:"many2many:sys_role_relations"`
-	Menus         []SysMenu `gorm:"many2many:sys_role_menus;"`
-	Users         []SysUser `gorm:"many2many:sys_role_users;"`
+	Name          string         `gorm:"type:varchar(255);column:name;not null;comment:角色名称;"`
+	ParentID      uint           `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
+	DefaultRouter string         `gorm:"type:varchar(255);column:default_router;not null;default:'dashboard';comment:默认路由;"`
+	Parent        *SysAuthority  `gorm:"foreignKey:ParentID"`
+	Authorities   []SysAuthority `gorm:"many2many:sys_authority_relations"`
+	Menus         []SysMenu      `gorm:"many2many:sys_authority_menus;"`
+	Users         []SysUser      `gorm:"many2many:sys_authority_users;"`
 }
 
-type SysRoleMenu struct {
+type SysAuthorityMenu struct {
 	ID             uint `gorm:"primarykey"`
 	CreatedAt      time.Time
-	RoleID         uint               `gorm:"type:bigint(20);column:role_id;not null;uniqueIndex:idx_role_menu_roles_id_menu_id;comment:角色ID"`
-	MenuID         uint               `gorm:"type:bigint(20);column:menu_id;not null;uniqueIndex:idx_role_menu_roles_id_menu_id;comment:菜单ID"`
+	AuthorityID    uint               `gorm:"type:bigint(20);column:authority_id;not null;uniqueIndex:idx_authority_menu_authoritys_id_menu_id;comment:角色ID"`
+	MenuID         uint               `gorm:"type:bigint(20);column:menu_id;not null;uniqueIndex:idx_authority_menu_authoritys_id_menu_id;comment:菜单ID"`
 	Menu           SysMenu            `gorm:"foreignKey:MenuID"`
 	MenuParameters []SysMenuParameter `gorm:"foreignKey:MenuID"`
 }
 
-type SysRoleMenuButton struct {
+type SysAuthorityMenuButton struct {
 	ID           uint `gorm:"primarykey"`
 	CreatedAt    time.Time
-	RoleID       uint          `gorm:"type:bigint(20);column:role_id;not null;uniqueIndex:idx_role_menu_roles_id_menu_id_menu_button_id;comment:角色ID"`
-	MenuID       uint          `gorm:"type:bigint(20);column:menu_id;not null;uniqueIndex:idx_role_menu_roles_id_menu_id_menu_button_id;comment:菜单ID"`
-	MenuButtonID uint          `gorm:"type:bigint(20);column:menu_button_id;not null;uniqueIndex:idx_role_menu_roles_id_menu_id_menu_button_id;comment:菜单按钮ID"`
+	AuthorityID  uint          `gorm:"type:bigint(20);column:authority_id;not null;uniqueIndex:idx_authority_menu_authoritys_id_menu_id_menu_button_id;comment:角色ID"`
+	MenuID       uint          `gorm:"type:bigint(20);column:menu_id;not null;uniqueIndex:idx_authority_menu_authoritys_id_menu_id_menu_button_id;comment:菜单ID"`
+	MenuButtonID uint          `gorm:"type:bigint(20);column:menu_button_id;not null;uniqueIndex:idx_authority_menu_authoritys_id_menu_id_menu_button_id;comment:菜单按钮ID"`
 	Menu         SysMenu       `gorm:"foreignKey:MenuID"`
 	MenuButton   SysMenuButton `gorm:"foreignKey:MenuID"`
 }
@@ -101,7 +101,7 @@ type SysMenu struct {
 	Component      string             `gorm:"type:varchar(255);column:component;not null;comment:对应前端文件路径"`
 	Sort           int                `gorm:"type:int(10);column:sort;not null;default:10;comment:排序标记"`
 	Meta           SysMeta            `gorm:"embedded;comment:附加属性"`
-	Roles          []SysRole          `gorm:"many2many:sys_role_menus;"`
+	Authorities    []SysAuthority     `gorm:"many2many:sys_authority_menus;"`
 	MenuParameters []SysMenuParameter `gorm:"foreignKey:MenuID;"`
 	MenuButtons    []SysMenuButton    `gorm:"foreignKey:MenuID;"`
 }

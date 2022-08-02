@@ -245,7 +245,7 @@ components:
                     type: string
                 email:
                     type: string
-                roles:
+                authoritys:
                     type: array
                     items:
                         type: string
@@ -298,7 +298,7 @@ components:
                     type: string
                 email:
                     type: string
-                roles:
+                authoritys:
                     type: array
                     items:
                         type: string

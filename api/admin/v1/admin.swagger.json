@@ -295,7 +295,7 @@
         "email": {
           "type": "string"
         },
-        "roles": {
+        "authoritys": {
           "type": "array",
           "items": {
             "type": "string"
