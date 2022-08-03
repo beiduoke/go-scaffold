@@ -40,7 +40,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/apiwebv1LoginReq"
+              "$ref": "#/definitions/v1LoginReq"
             }
           }
         ],
@@ -122,19 +122,6 @@
         }
       }
     },
-    "apiwebv1LoginReq": {
-      "type": "object",
-      "properties": {
-        "userName": {
-          "type": "string",
-          "title": "用户名"
-        },
-        "password": {
-          "type": "string"
-        }
-      },
-      "title": "请求 - 登录"
-    },
     "apiwebv1LogoutReply": {
       "type": "object",
       "properties": {
@@ -214,6 +201,19 @@
           }
         }
       }
+    },
+    "v1LoginReq": {
+      "type": "object",
+      "properties": {
+        "userName": {
+          "type": "string",
+          "title": "用户名"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "title": "请求 - 登录"
     }
   }
 }

@@ -4,62 +4,41 @@ package api.admin.v1;
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
 
-option go_package = "github.com/bedoke/go-scaffold/api/admin/v1;v1";
+option go_package = "github.com/beiduoke/go-scaffold/api/admin/v1;v1";
 option java_multiple_files = true;
 option java_package = "dev.kratos.api.admin.v1";
 option java_outer_classname = "adminProtoV1";
 
 // The greeting service definition.
 service Admin {
-  // 登陆
-  rpc Login (LoginReq) returns (User) {
+  // 登出
+  rpc Logout (google.protobuf.Empty) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/admin/v1/login"
+      post: "/admin/v1/auth/logout"
       body: "*"
     };
   }
-  // 登出
-  rpc Logout (LogoutReq) returns (LogoutReply) {
+  // 用户名密码登陆
+  rpc NamePasswordLogin (NamePasswordLoginReq) returns (LoginReply) {
     option (google.api.http) = {
-      post: "/admin/v1/logout"
+      post: "/admin/v1/auth/passwordLogin"
       body: "*"
     };
   }
   // 注册
   rpc Register (RegisterReq) returns (RegisterReply) {
     option (google.api.http) = {
-      post: "/admin/v1/register"
+      post: "/admin/v1/auth/register"
       body: "*"
     };
   }
-
   // 用户列表
   rpc ListUser (google.protobuf.Empty) returns (ListUserReply) {
     option (google.api.http) = {
       get: "/admin/v1/users"
-    };
-  }
-
-  rpc GetPublicContent (google.protobuf.Empty) returns (Content) {
-    option (google.api.http) = {
-      get: "/admin/v1/all"
-    };
-  }
-  rpc GetUserBoard (google.protobuf.Empty) returns (Content) {
-    option (google.api.http) = {
-      get: "/admin/v1/user"
-    };
-  }
-  rpc GetModeratorBoard (google.protobuf.Empty) returns (Content) {
-    option (google.api.http) = {
-      get: "/admin/v1/mod"
-    };
-  }
-
-  rpc GetAdminBoard (google.protobuf.Empty) returns (Content) {
-    option (google.api.http) = {
-      get: "/admin/v1/admin"
     };
   }
 }
@@ -84,14 +63,17 @@ message ListUserReply {
 }
 
 // 请求 - 登录
-message LoginReq {
+message NamePasswordLoginReq {
   // 用户名
-  string user_name = 1;
-  string password = 2;
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  // 密码
+  string password = 2 [(validate.rules).string = {min_len: 6, max_len: 25}];
 }
+
 // 回应 - 登录
 message LoginReply {
-  User user = 1;
+  string token = 1;
+  google.protobuf.Timestamp expire_time = 2;
 }
 
 // 请求 - 登出

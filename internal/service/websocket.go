@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	v1 "github.com/bedoke/go-scaffold/api/admin/v1"
+	v1 "github.com/beiduoke/go-scaffold/api/admin/v1"
 	"github.com/go-kratos/kratos/v2/log"
 
 	"github.com/tx7do/kratos-transport/transport/websocket"

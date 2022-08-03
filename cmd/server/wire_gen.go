@@ -7,12 +7,13 @@
 package main
 
 import (
-	"github.com/bedoke/go-scaffold/internal/biz"
-	"github.com/bedoke/go-scaffold/internal/conf"
-	"github.com/bedoke/go-scaffold/internal/data"
-	"github.com/bedoke/go-scaffold/internal/server"
-	"github.com/bedoke/go-scaffold/internal/service"
-	"github.com/bedoke/go-scaffold/internal/service/admin"
+	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/internal/conf"
+	"github.com/beiduoke/go-scaffold/internal/data"
+	"github.com/beiduoke/go-scaffold/internal/server"
+	"github.com/beiduoke/go-scaffold/internal/service"
+	"github.com/beiduoke/go-scaffold/internal/service/admin"
+	"github.com/beiduoke/go-scaffold/internal/service/web"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 )
@@ -31,13 +32,14 @@ func wireApp(confServer *conf.Server, auth *conf.Auth, confData *conf.Data, logg
 	userRepo := data.NewUserRepo(dataData, logger)
 	transaction := data.NewTransaction(dataData)
 	userUsecase := biz.NewUserUsecase(userRepo, transaction, logger)
-	adminService := admin.NewAdminService(logger, userUsecase)
-	grpcServer := server.NewGRPCServer(confServer, auth, adminService, logger)
+	adminService := admin.NewAdminService(logger, auth, userUsecase)
+	webService := web.NewWebService(logger, userUsecase)
+	grpcServer := server.NewGRPCServer(confServer, auth, adminService, webService, logger)
 	model := data.NewAuthModel(auth, logger)
 	adapter := data.NewAuthAdapter(dataData, auth, logger)
 	middleware := server.NewAuthMiddleware(auth, model, adapter)
 	serverOption := server.NewMiddleware(logger, middleware)
-	httpServer := server.NewHTTPServer(confServer, adminService, serverOption)
+	httpServer := server.NewHTTPServer(confServer, adminService, webService, serverOption)
 	websocketService := service.NewWebsocketService(logger)
 	websocketServer := server.NewWebsocketServer(confServer, logger, websocketService)
 	app := newApp(logger, grpcServer, httpServer, websocketServer)

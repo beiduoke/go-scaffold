@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/bedoke/go-scaffold/internal/service/admin"
-	"github.com/bedoke/go-scaffold/internal/service/web"
+	"github.com/beiduoke/go-scaffold/internal/service/admin"
+	"github.com/beiduoke/go-scaffold/internal/service/web"
 	"github.com/google/wire"
 )
 

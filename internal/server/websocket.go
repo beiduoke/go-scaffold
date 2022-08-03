@@ -4,8 +4,8 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/tx7do/kratos-transport/transport/websocket"
 
-	"github.com/bedoke/go-scaffold/internal/conf"
-	"github.com/bedoke/go-scaffold/internal/service"
+	"github.com/beiduoke/go-scaffold/internal/conf"
+	"github.com/beiduoke/go-scaffold/internal/service"
 )
 
 // NewWebsocketServer create a websocket server.

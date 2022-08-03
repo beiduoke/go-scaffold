@@ -3,8 +3,8 @@ package data
 import (
 	"context"
 
-	"github.com/bedoke/go-scaffold/internal/biz"
-	"github.com/bedoke/go-scaffold/internal/conf"
+	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/internal/conf"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-redis/redis/v8"
 	"github.com/google/wire"

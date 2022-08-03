@@ -20,72 +20,60 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationAdminGetAdminBoard = "/api.admin.v1.Admin/GetAdminBoard"
-const OperationAdminGetModeratorBoard = "/api.admin.v1.Admin/GetModeratorBoard"
-const OperationAdminGetPublicContent = "/api.admin.v1.Admin/GetPublicContent"
-const OperationAdminGetUserBoard = "/api.admin.v1.Admin/GetUserBoard"
 const OperationAdminListUser = "/api.admin.v1.Admin/ListUser"
-const OperationAdminLogin = "/api.admin.v1.Admin/Login"
 const OperationAdminLogout = "/api.admin.v1.Admin/Logout"
+const OperationAdminNamePasswordLogin = "/api.admin.v1.Admin/NamePasswordLogin"
 const OperationAdminRegister = "/api.admin.v1.Admin/Register"
 
 type AdminHTTPServer interface {
-	GetAdminBoard(context.Context, *emptypb.Empty) (*Content, error)
-	GetModeratorBoard(context.Context, *emptypb.Empty) (*Content, error)
-	GetPublicContent(context.Context, *emptypb.Empty) (*Content, error)
-	GetUserBoard(context.Context, *emptypb.Empty) (*Content, error)
 	ListUser(context.Context, *emptypb.Empty) (*ListUserReply, error)
-	Login(context.Context, *LoginReq) (*User, error)
-	Logout(context.Context, *LogoutReq) (*LogoutReply, error)
+	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	NamePasswordLogin(context.Context, *NamePasswordLoginReq) (*LoginReply, error)
 	Register(context.Context, *RegisterReq) (*RegisterReply, error)
 }
 
 func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
 	r := s.Route("/")
-	r.POST("/admin/v1/login", _Admin_Login0_HTTP_Handler(srv))
-	r.POST("/admin/v1/logout", _Admin_Logout0_HTTP_Handler(srv))
-	r.POST("/admin/v1/register", _Admin_Register0_HTTP_Handler(srv))
+	r.POST("/admin/v1/auth/logout", _Admin_Logout0_HTTP_Handler(srv))
+	r.POST("/admin/v1/auth/passwordLogin", _Admin_NamePasswordLogin0_HTTP_Handler(srv))
+	r.POST("/admin/v1/auth/register", _Admin_Register0_HTTP_Handler(srv))
 	r.GET("/admin/v1/users", _Admin_ListUser0_HTTP_Handler(srv))
-	r.GET("/admin/v1/all", _Admin_GetPublicContent0_HTTP_Handler(srv))
-	r.GET("/admin/v1/user", _Admin_GetUserBoard0_HTTP_Handler(srv))
-	r.GET("/admin/v1/mod", _Admin_GetModeratorBoard0_HTTP_Handler(srv))
-	r.GET("/admin/v1/admin", _Admin_GetAdminBoard0_HTTP_Handler(srv))
-}
-
-func _Admin_Login0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in LoginReq
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAdminLogin)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.Login(ctx, req.(*LoginReq))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*User)
-		return ctx.Result(200, reply)
-	}
 }
 
 func _Admin_Logout0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in LogoutReq
+		var in emptypb.Empty
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAdminLogout)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.Logout(ctx, req.(*LogoutReq))
+			return srv.Logout(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*LogoutReply)
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_NamePasswordLogin0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in NamePasswordLoginReq
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminNamePasswordLogin)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.NamePasswordLogin(ctx, req.(*NamePasswordLoginReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*LoginReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -128,90 +116,10 @@ func _Admin_ListUser0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) e
 	}
 }
 
-func _Admin_GetPublicContent0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in emptypb.Empty
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAdminGetPublicContent)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetPublicContent(ctx, req.(*emptypb.Empty))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*Content)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Admin_GetUserBoard0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in emptypb.Empty
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAdminGetUserBoard)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetUserBoard(ctx, req.(*emptypb.Empty))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*Content)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Admin_GetModeratorBoard0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in emptypb.Empty
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAdminGetModeratorBoard)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetModeratorBoard(ctx, req.(*emptypb.Empty))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*Content)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Admin_GetAdminBoard0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in emptypb.Empty
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAdminGetAdminBoard)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetAdminBoard(ctx, req.(*emptypb.Empty))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*Content)
-		return ctx.Result(200, reply)
-	}
-}
-
 type AdminHTTPClient interface {
-	GetAdminBoard(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *Content, err error)
-	GetModeratorBoard(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *Content, err error)
-	GetPublicContent(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *Content, err error)
-	GetUserBoard(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *Content, err error)
 	ListUser(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *ListUserReply, err error)
-	Login(ctx context.Context, req *LoginReq, opts ...http.CallOption) (rsp *User, err error)
-	Logout(ctx context.Context, req *LogoutReq, opts ...http.CallOption) (rsp *LogoutReply, err error)
+	Logout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	NamePasswordLogin(ctx context.Context, req *NamePasswordLoginReq, opts ...http.CallOption) (rsp *LoginReply, err error)
 	Register(ctx context.Context, req *RegisterReq, opts ...http.CallOption) (rsp *RegisterReply, err error)
 }
 
@@ -221,58 +129,6 @@ type AdminHTTPClientImpl struct {
 
 func NewAdminHTTPClient(client *http.Client) AdminHTTPClient {
 	return &AdminHTTPClientImpl{client}
-}
-
-func (c *AdminHTTPClientImpl) GetAdminBoard(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*Content, error) {
-	var out Content
-	pattern := "/admin/v1/admin"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAdminGetAdminBoard))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *AdminHTTPClientImpl) GetModeratorBoard(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*Content, error) {
-	var out Content
-	pattern := "/admin/v1/mod"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAdminGetModeratorBoard))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *AdminHTTPClientImpl) GetPublicContent(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*Content, error) {
-	var out Content
-	pattern := "/admin/v1/all"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAdminGetPublicContent))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *AdminHTTPClientImpl) GetUserBoard(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*Content, error) {
-	var out Content
-	pattern := "/admin/v1/user"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAdminGetUserBoard))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
 }
 
 func (c *AdminHTTPClientImpl) ListUser(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*ListUserReply, error) {
@@ -288,22 +144,9 @@ func (c *AdminHTTPClientImpl) ListUser(ctx context.Context, in *emptypb.Empty, o
 	return &out, err
 }
 
-func (c *AdminHTTPClientImpl) Login(ctx context.Context, in *LoginReq, opts ...http.CallOption) (*User, error) {
-	var out User
-	pattern := "/admin/v1/login"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAdminLogin))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *AdminHTTPClientImpl) Logout(ctx context.Context, in *LogoutReq, opts ...http.CallOption) (*LogoutReply, error) {
-	var out LogoutReply
-	pattern := "/admin/v1/logout"
+func (c *AdminHTTPClientImpl) Logout(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin/v1/auth/logout"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminLogout))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -314,9 +157,22 @@ func (c *AdminHTTPClientImpl) Logout(ctx context.Context, in *LogoutReq, opts ..
 	return &out, err
 }
 
+func (c *AdminHTTPClientImpl) NamePasswordLogin(ctx context.Context, in *NamePasswordLoginReq, opts ...http.CallOption) (*LoginReply, error) {
+	var out LoginReply
+	pattern := "/admin/v1/auth/passwordLogin"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminNamePasswordLogin))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *AdminHTTPClientImpl) Register(ctx context.Context, in *RegisterReq, opts ...http.CallOption) (*RegisterReply, error) {
 	var out RegisterReply
-	pattern := "/admin/v1/register"
+	pattern := "/admin/v1/auth/register"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminRegister))
 	opts = append(opts, http.PathTemplate(pattern))

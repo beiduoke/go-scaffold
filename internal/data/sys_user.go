@@ -3,7 +3,7 @@ package data
 import (
 	"context"
 
-	"github.com/bedoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
@@ -32,10 +32,19 @@ func (r *UserRepo) FindByID(context.Context, int64) (*biz.User, error) {
 	return nil, nil
 }
 
-func (r *UserRepo) ListByName(context.Context, string) ([]*biz.User, error) {
+func (r *UserRepo) ListAll(context.Context) ([]*biz.User, error) {
 	return nil, nil
 }
 
-func (r *UserRepo) ListAll(context.Context) ([]*biz.User, error) {
+func (r *UserRepo) FindByName(context.Context, string) (*biz.User, error) {
+	return nil, nil
+}
+func (r *UserRepo) FindByMobile(context.Context, string) (*biz.User, error) {
+	return nil, nil
+}
+func (r *UserRepo) FindByEmail(context.Context, string) (*biz.User, error) {
+	return nil, nil
+}
+func (r *UserRepo) ListByName(context.Context, string) ([]*biz.User, error) {
 	return nil, nil
 }

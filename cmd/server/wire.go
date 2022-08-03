@@ -6,11 +6,11 @@
 package main
 
 import (
-	"github.com/bedoke/go-scaffold/internal/biz"
-	"github.com/bedoke/go-scaffold/internal/conf"
-	"github.com/bedoke/go-scaffold/internal/data"
-	"github.com/bedoke/go-scaffold/internal/server"
-	"github.com/bedoke/go-scaffold/internal/service"
+	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/internal/conf"
+	"github.com/beiduoke/go-scaffold/internal/data"
+	"github.com/beiduoke/go-scaffold/internal/server"
+	"github.com/beiduoke/go-scaffold/internal/service"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"

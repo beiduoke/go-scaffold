@@ -22,12 +22,13 @@ func NewSysModelMigrate() []interface{} {
 type SysUser struct {
 	gorm.Model
 	Name        string         `gorm:"type:varchar(255);column:name;not null;index:idx_users_name_nick_name_real_name,priority:1;comment:名称;"`
-	NickName    string         `gorm:"type:varchar(255);column:nick_name;not null;default:'';index:idx_users_name_nick_name_real_name;comment,priority:3:昵称;"`
-	RealName    string         `gorm:"type:varchar(100);column:real_name;not null;default:'';index:idx_users_name_nick_name_real_name;comment,priority:2:实名;"`
+	NickName    string         `gorm:"type:varchar(255);column:nick_name;not null;default:'';index:idx_users_name_nick_name_real_name,priority:3;comment:昵称;"`
+	RealName    string         `gorm:"type:varchar(100);column:real_name;not null;default:'';index:idx_users_name_nick_name_real_name,priority:2;comment:实名;"`
+	Password    string         `gorm:"type:varchar(255);column:password;not null;default:'';comment:密码;"`
 	Birthday    *time.Time     `gorm:"type:datetime;column:birthday;comment:生日;"`
 	Gender      int32          `gorm:"type:tinyint(1);column:gender;not null;default:1;comment:性别 0 未指定 1 男 2 女;"`
-	Mobile      string         `gorm:"type:varchar(20);column:mobile;not null;default:'';index:idx_users_mobile_email,priority:1;;comment:手机号;"`
-	Email       string         `gorm:"type:varchar(50);column:email;not null;default:'';index:idx_users_mobile_email,priority:2;;comment:邮箱;"`
+	Mobile      string         `gorm:"type:varchar(20);column:mobile;not null;default:'';index:idx_users_mobile_email,priority:1;comment:手机号;"`
+	Email       string         `gorm:"type:varchar(50);column:email;not null;default:'';index:idx_users_mobile_email,priority:2;comment:邮箱;"`
 	State       int32          `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:用户状态 0 未指定  1 启用 2 停用;"`
 	Authorities []SysAuthority `gorm:"many2many:sys_authority_users;"`
 }

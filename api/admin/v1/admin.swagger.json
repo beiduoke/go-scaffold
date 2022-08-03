@@ -16,84 +16,7 @@
     "application/json"
   ],
   "paths": {
-    "/admin/v1/admin": {
-      "get": {
-        "operationId": "Admin_GetAdminBoard",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1Content"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
-    "/admin/v1/all": {
-      "get": {
-        "operationId": "Admin_GetPublicContent",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1Content"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
-    "/admin/v1/login": {
-      "post": {
-        "summary": "登陆",
-        "operationId": "Admin_Login",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiadminv1User"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/apiadminv1LoginReq"
-            }
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
-    "/admin/v1/logout": {
+    "/admin/v1/auth/logout": {
       "post": {
         "summary": "登出",
         "operationId": "Admin_Logout",
@@ -101,7 +24,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiadminv1LogoutReply"
+              "properties": {}
             }
           },
           "default": {
@@ -117,7 +40,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/apiadminv1LogoutReq"
+              "properties": {}
             }
           }
         ],
@@ -126,14 +49,15 @@
         ]
       }
     },
-    "/admin/v1/mod": {
-      "get": {
-        "operationId": "Admin_GetModeratorBoard",
+    "/admin/v1/auth/passwordLogin": {
+      "post": {
+        "summary": "用户名密码登陆",
+        "operationId": "Admin_NamePasswordLogin",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Content"
+              "$ref": "#/definitions/apiadminv1LoginReply"
             }
           },
           "default": {
@@ -143,12 +67,22 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1NamePasswordLoginReq"
+            }
+          }
+        ],
         "tags": [
           "Admin"
         ]
       }
     },
-    "/admin/v1/register": {
+    "/admin/v1/auth/register": {
       "post": {
         "summary": "注册",
         "operationId": "Admin_Register",
@@ -176,28 +110,6 @@
             }
           }
         ],
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
-    "/admin/v1/user": {
-      "get": {
-        "operationId": "Admin_GetUserBoard",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1Content"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
         "tags": [
           "Admin"
         ]
@@ -243,38 +155,18 @@
         }
       }
     },
-    "apiadminv1LoginReq": {
+    "apiadminv1LoginReply": {
       "type": "object",
       "properties": {
-        "userName": {
-          "type": "string",
-          "title": "用户名"
-        },
-        "password": {
+        "token": {
           "type": "string"
-        }
-      },
-      "title": "请求 - 登录"
-    },
-    "apiadminv1LogoutReply": {
-      "type": "object",
-      "properties": {
-        "id": {
+        },
+        "expireTime": {
           "type": "string",
-          "format": "uint64"
+          "format": "date-time"
         }
       },
-      "title": "回应 - 登出"
-    },
-    "apiadminv1LogoutReq": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        }
-      },
-      "title": "请求 - 登出"
+      "title": "回应 - 登录"
     },
     "apiadminv1User": {
       "type": "object",
@@ -336,13 +228,19 @@
         }
       }
     },
-    "v1Content": {
+    "v1NamePasswordLoginReq": {
       "type": "object",
       "properties": {
-        "content": {
-          "type": "string"
+        "name": {
+          "type": "string",
+          "title": "用户名"
+        },
+        "password": {
+          "type": "string",
+          "title": "密码"
         }
-      }
+      },
+      "title": "请求 - 登录"
     },
     "v1RegisterReply": {
       "type": "object",

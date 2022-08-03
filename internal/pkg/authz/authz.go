@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/bedoke/go-scaffold/pkg/authz"
+	"github.com/beiduoke/go-scaffold/pkg/authz"
 	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
 	"github.com/go-kratos/kratos/v2/transport"
 	jwtV4 "github.com/golang-jwt/jwt/v4"
@@ -16,13 +16,53 @@ var _ authz.SecurityUser = (*SecurityUser)(nil)
 const (
 	ClaimAuthorityId = "authorityId"
 	Domain           = "domain"
+	ID               = "id"
 )
+
+type options struct {
+	id          string
+	authorityId string
+	domain      string
+}
+
+type Option func(*options)
+
+func WithID(id string) Option {
+	return func(o *options) {
+		o.id = id
+	}
+}
+
+func WithAuthorityId(authorityId string) Option {
+	return func(o *options) {
+		o.authorityId = authorityId
+	}
+}
+
+func WithDomain(domain string) Option {
+	return func(o *options) {
+		o.domain = domain
+	}
+}
 
 type SecurityUser struct {
 	Path        string
 	Method      string
 	AuthorityId string
 	Domain      string
+	ID          string
+}
+
+func NewSecurityUserData(opts ...Option) *SecurityUser {
+	o := &options{}
+	for _, opt := range opts {
+		opt(o)
+	}
+	return &SecurityUser{
+		AuthorityId: o.authorityId,
+		Domain:      o.domain,
+		ID:          o.id,
+	}
 }
 
 func NewSecurityUser() authz.SecurityUser {
@@ -38,6 +78,10 @@ func (su *SecurityUser) ParseFromContext(ctx context.Context) error {
 		str, ok = claims.(jwtV4.MapClaims)[Domain]
 		if ok {
 			su.Domain = str.(string)
+		}
+		str, ok = claims.(jwtV4.MapClaims)[ID]
+		if ok {
+			su.ID = str.(string)
 		}
 	} else {
 		return errors.New("jwt claim missing")
@@ -73,6 +117,8 @@ func (su *SecurityUser) CreateAccessJwtToken(secretKey []byte) string {
 	claims := jwtV4.NewWithClaims(jwtV4.SigningMethodHS256,
 		jwtV4.MapClaims{
 			ClaimAuthorityId: su.AuthorityId,
+			Domain:           su.Domain,
+			ID:               su.ID,
 		})
 
 	signedToken, err := claims.SignedString(secretKey)
@@ -129,6 +175,14 @@ func (su *SecurityUser) ParseAccessJwtToken(claims jwtV4.Claims) error {
 	strAuthorityId, ok := mc[ClaimAuthorityId]
 	if ok {
 		su.AuthorityId = strAuthorityId.(string)
+	}
+	strDomain, ok := mc[Domain]
+	if ok {
+		su.Domain = strDomain.(string)
+	}
+	strId, ok := mc[ID]
+	if ok {
+		su.ID = strId.(string)
 	}
 
 	return nil

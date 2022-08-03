@@ -6,50 +6,7 @@ info:
     title: ""
     version: 0.0.1
 paths:
-    /admin/v1/admin:
-        get:
-            tags:
-                - Admin
-            operationId: Admin_GetAdminBoard
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.Content'
-    /admin/v1/all:
-        get:
-            tags:
-                - Admin
-            operationId: Admin_GetPublicContent
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.Content'
-    /admin/v1/login:
-        post:
-            tags:
-                - Admin
-            description: 登陆
-            operationId: Admin_Login
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.admin.v1.LoginReq'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.User'
-    /admin/v1/logout:
+    /admin/v1/auth/logout:
         post:
             tags:
                 - Admin
@@ -57,9 +14,23 @@ paths:
             operationId: Admin_Logout
             requestBody:
                 content:
+                    application/json: {}
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /admin/v1/auth/passwordLogin:
+        post:
+            tags:
+                - Admin
+            description: 用户名密码登陆
+            operationId: Admin_NamePasswordLogin
+            requestBody:
+                content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.admin.v1.LogoutReq'
+                            $ref: '#/components/schemas/api.admin.v1.NamePasswordLoginReq'
                 required: true
             responses:
                 "200":
@@ -67,20 +38,8 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.admin.v1.LogoutReply'
-    /admin/v1/mod:
-        get:
-            tags:
-                - Admin
-            operationId: Admin_GetModeratorBoard
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.Content'
-    /admin/v1/register:
+                                $ref: '#/components/schemas/api.admin.v1.LoginReply'
+    /admin/v1/auth/register:
         post:
             tags:
                 - Admin
@@ -99,18 +58,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.RegisterReply'
-    /admin/v1/user:
-        get:
-            tags:
-                - Admin
-            operationId: Admin_GetUserBoard
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.Content'
     /admin/v1/users:
         get:
             tags:
@@ -177,11 +124,6 @@ paths:
                                 $ref: '#/components/schemas/api.web.v1.ListUserReply'
 components:
     schemas:
-        api.admin.v1.Content:
-            type: object
-            properties:
-                content:
-                    type: string
         api.admin.v1.ListUserReply:
             type: object
             properties:
@@ -192,29 +134,25 @@ components:
                 total:
                     type: integer
                     format: int32
-        api.admin.v1.LoginReq:
+        api.admin.v1.LoginReply:
             type: object
             properties:
-                userName:
+                token:
+                    type: string
+                expireTime:
+                    type: string
+                    format: date-time
+            description: 回应 - 登录
+        api.admin.v1.NamePasswordLoginReq:
+            type: object
+            properties:
+                name:
                     type: string
                     description: 用户名
                 password:
                     type: string
+                    description: 密码
             description: 请求 - 登录
-        api.admin.v1.LogoutReply:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: uint64
-            description: 回应 - 登出
-        api.admin.v1.LogoutReq:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: uint64
-            description: 请求 - 登出
         api.admin.v1.RegisterReply:
             type: object
             properties:

@@ -4,7 +4,7 @@ import (
 	"flag"
 	"os"
 
-	"github.com/bedoke/go-scaffold/internal/conf"
+	"github.com/beiduoke/go-scaffold/internal/conf"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"

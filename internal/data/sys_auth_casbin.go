@@ -3,7 +3,7 @@ package data
 import (
 	"context"
 
-	"github.com/bedoke/go-scaffold/internal/conf"
+	"github.com/beiduoke/go-scaffold/internal/conf"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
 	fileAdapter "github.com/casbin/casbin/v2/persist/file-adapter"

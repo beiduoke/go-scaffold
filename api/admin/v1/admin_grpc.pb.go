@@ -23,18 +23,14 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AdminClient interface {
-	// 登陆
-	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*User, error)
 	// 登出
-	Logout(ctx context.Context, in *LogoutReq, opts ...grpc.CallOption) (*LogoutReply, error)
+	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 用户名密码登陆
+	NamePasswordLogin(ctx context.Context, in *NamePasswordLoginReq, opts ...grpc.CallOption) (*LoginReply, error)
 	// 注册
 	Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterReply, error)
 	// 用户列表
 	ListUser(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserReply, error)
-	GetPublicContent(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Content, error)
-	GetUserBoard(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Content, error)
-	GetModeratorBoard(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Content, error)
-	GetAdminBoard(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Content, error)
 }
 
 type adminClient struct {
@@ -45,18 +41,18 @@ func NewAdminClient(cc grpc.ClientConnInterface) AdminClient {
 	return &adminClient{cc}
 }
 
-func (c *adminClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*User, error) {
-	out := new(User)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/Login", in, out, opts...)
+func (c *adminClient) Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/Logout", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) Logout(ctx context.Context, in *LogoutReq, opts ...grpc.CallOption) (*LogoutReply, error) {
-	out := new(LogoutReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/Logout", in, out, opts...)
+func (c *adminClient) NamePasswordLogin(ctx context.Context, in *NamePasswordLoginReq, opts ...grpc.CallOption) (*LoginReply, error) {
+	out := new(LoginReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/NamePasswordLogin", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -81,58 +77,18 @@ func (c *adminClient) ListUser(ctx context.Context, in *emptypb.Empty, opts ...g
 	return out, nil
 }
 
-func (c *adminClient) GetPublicContent(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Content, error) {
-	out := new(Content)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetPublicContent", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *adminClient) GetUserBoard(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Content, error) {
-	out := new(Content)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetUserBoard", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *adminClient) GetModeratorBoard(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Content, error) {
-	out := new(Content)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetModeratorBoard", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *adminClient) GetAdminBoard(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Content, error) {
-	out := new(Content)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetAdminBoard", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // AdminServer is the server API for Admin service.
 // All implementations must embed UnimplementedAdminServer
 // for forward compatibility
 type AdminServer interface {
-	// 登陆
-	Login(context.Context, *LoginReq) (*User, error)
 	// 登出
-	Logout(context.Context, *LogoutReq) (*LogoutReply, error)
+	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	// 用户名密码登陆
+	NamePasswordLogin(context.Context, *NamePasswordLoginReq) (*LoginReply, error)
 	// 注册
 	Register(context.Context, *RegisterReq) (*RegisterReply, error)
 	// 用户列表
 	ListUser(context.Context, *emptypb.Empty) (*ListUserReply, error)
-	GetPublicContent(context.Context, *emptypb.Empty) (*Content, error)
-	GetUserBoard(context.Context, *emptypb.Empty) (*Content, error)
-	GetModeratorBoard(context.Context, *emptypb.Empty) (*Content, error)
-	GetAdminBoard(context.Context, *emptypb.Empty) (*Content, error)
 	mustEmbedUnimplementedAdminServer()
 }
 
@@ -140,29 +96,17 @@ type AdminServer interface {
 type UnimplementedAdminServer struct {
 }
 
-func (UnimplementedAdminServer) Login(context.Context, *LoginReq) (*User, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
-}
-func (UnimplementedAdminServer) Logout(context.Context, *LogoutReq) (*LogoutReply, error) {
+func (UnimplementedAdminServer) Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
+}
+func (UnimplementedAdminServer) NamePasswordLogin(context.Context, *NamePasswordLoginReq) (*LoginReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method NamePasswordLogin not implemented")
 }
 func (UnimplementedAdminServer) Register(context.Context, *RegisterReq) (*RegisterReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
 func (UnimplementedAdminServer) ListUser(context.Context, *emptypb.Empty) (*ListUserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUser not implemented")
-}
-func (UnimplementedAdminServer) GetPublicContent(context.Context, *emptypb.Empty) (*Content, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetPublicContent not implemented")
-}
-func (UnimplementedAdminServer) GetUserBoard(context.Context, *emptypb.Empty) (*Content, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserBoard not implemented")
-}
-func (UnimplementedAdminServer) GetModeratorBoard(context.Context, *emptypb.Empty) (*Content, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetModeratorBoard not implemented")
-}
-func (UnimplementedAdminServer) GetAdminBoard(context.Context, *emptypb.Empty) (*Content, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAdminBoard not implemented")
 }
 func (UnimplementedAdminServer) mustEmbedUnimplementedAdminServer() {}
 
@@ -177,26 +121,8 @@ func RegisterAdminServer(s grpc.ServiceRegistrar, srv AdminServer) {
 	s.RegisterService(&Admin_ServiceDesc, srv)
 }
 
-func _Admin_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoginReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AdminServer).Login(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/Login",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).Login(ctx, req.(*LoginReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Admin_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LogoutReq)
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -208,7 +134,25 @@ func _Admin_Logout_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: "/api.admin.v1.Admin/Logout",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).Logout(ctx, req.(*LogoutReq))
+		return srv.(AdminServer).Logout(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_NamePasswordLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NamePasswordLoginReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).NamePasswordLogin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/NamePasswordLogin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).NamePasswordLogin(ctx, req.(*NamePasswordLoginReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -249,78 +193,6 @@ func _Admin_ListUser_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_GetPublicContent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AdminServer).GetPublicContent(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/GetPublicContent",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).GetPublicContent(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Admin_GetUserBoard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AdminServer).GetUserBoard(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/GetUserBoard",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).GetUserBoard(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Admin_GetModeratorBoard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AdminServer).GetModeratorBoard(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/GetModeratorBoard",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).GetModeratorBoard(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Admin_GetAdminBoard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AdminServer).GetAdminBoard(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/GetAdminBoard",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).GetAdminBoard(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Admin_ServiceDesc is the grpc.ServiceDesc for Admin service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -329,12 +201,12 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AdminServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Login",
-			Handler:    _Admin_Login_Handler,
-		},
-		{
 			MethodName: "Logout",
 			Handler:    _Admin_Logout_Handler,
+		},
+		{
+			MethodName: "NamePasswordLogin",
+			Handler:    _Admin_NamePasswordLogin_Handler,
 		},
 		{
 			MethodName: "Register",
@@ -343,22 +215,6 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListUser",
 			Handler:    _Admin_ListUser_Handler,
-		},
-		{
-			MethodName: "GetPublicContent",
-			Handler:    _Admin_GetPublicContent_Handler,
-		},
-		{
-			MethodName: "GetUserBoard",
-			Handler:    _Admin_GetUserBoard_Handler,
-		},
-		{
-			MethodName: "GetModeratorBoard",
-			Handler:    _Admin_GetModeratorBoard_Handler,
-		},
-		{
-			MethodName: "GetAdminBoard",
-			Handler:    _Admin_GetAdminBoard_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

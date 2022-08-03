@@ -3,32 +3,38 @@ package admin
 import (
 	"context"
 
-	v1 "github.com/bedoke/go-scaffold/api/admin/v1"
-	"github.com/bedoke/go-scaffold/internal/biz"
+	v1 "github.com/beiduoke/go-scaffold/api/admin/v1"
+	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/internal/conf"
+	myAuthz "github.com/beiduoke/go-scaffold/internal/pkg/authz"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/tx7do/kratos-transport/transport/websocket"
 )
+
+var _ v1.AdminServer = (*AdminService)(nil)
 
 // AdminService is a Admin service.
 type AdminService struct {
 	v1.UnimplementedAdminServer
 	log *log.Helper
 	ws  *websocket.Server
-
-	uc *biz.UserUsecase
+	ac  *conf.Auth
+	uc  *biz.UserUsecase
 }
 
 // NewAdminService new a Admin service.
-func NewAdminService(logger log.Logger, uc *biz.UserUsecase) *AdminService {
+func NewAdminService(logger log.Logger, ac *conf.Auth, uc *biz.UserUsecase) *AdminService {
 	l := log.NewHelper(log.With(logger, "module", "service/admin"))
-	return &AdminService{log: l, uc: uc}
+	return &AdminService{log: l, ac: ac, uc: uc}
 }
 
-// SayHello implements admin.AdminServer.
-func (s *AdminService) Login(ctx context.Context, in *v1.LoginReq) (*v1.User, error) {
-	_, err := s.uc.CreateUser(ctx, &biz.User{Name: in.GetUserName()})
+// NamePasswordLogin 用户密码登录
+func (s *AdminService) NamePasswordLogin(ctx context.Context, in *v1.NamePasswordLoginReq) (*v1.LoginReply, error) {
+	res, err := s.uc.NamePasswordLogin(ctx, &biz.User{Name: in.GetName(), Password: in.GetPassword()})
 	if err != nil {
 		return nil, err
 	}
-	return &v1.User{}, nil
+	securityUser := myAuthz.NewSecurityUserData(myAuthz.WithID(string(rune(res.ID))))
+	securityUser.CreateAccessJwtToken([]byte(s.ac.ApiKey))
+	return &v1.LoginReply{}, nil
 }

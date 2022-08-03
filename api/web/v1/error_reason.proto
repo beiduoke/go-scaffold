@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package web.v1;
 
-option go_package = "github.com/bedoke/go-scaffold/api/web/v1;v1";
+option go_package = "github.com/beiduoke/go-scaffold/api/web/v1;v1";
 option java_multiple_files = true;
 option java_package = "web.v1";
 option objc_class_prefix = "APIwebV1";

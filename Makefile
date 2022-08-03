@@ -47,6 +47,7 @@ api:
          --go-errors_out=paths=source_relative:./api \
  	       --go-http_out=paths=source_relative:./api \
  	       --go-grpc_out=paths=source_relative:./api \
+         --validate_out=paths=source_relative,lang=go:./api \
 	       --openapi_out=fq_schema_naming=true,default_response=false:. \
 	       --openapiv2_out ./api \
 	       --openapiv2_opt logtostderr=true \

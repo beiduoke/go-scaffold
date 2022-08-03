@@ -3,7 +3,7 @@ package data
 import (
 	"context"
 
-	"github.com/bedoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/casbin/casbin/v2/persist"
 	"github.com/go-kratos/kratos/v2/log"
 )
