@@ -6,6 +6,25 @@ info:
     title: ""
     version: 0.0.1
 paths:
+    /admin/v1/auth/login:
+        post:
+            tags:
+                - Admin
+            description: 登陆
+            operationId: Admin_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.v1.LoginReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.LoginReply'
     /admin/v1/auth/logout:
         post:
             tags:
@@ -20,25 +39,6 @@ paths:
                 "200":
                     description: OK
                     content: {}
-    /admin/v1/auth/passwordLogin:
-        post:
-            tags:
-                - Admin
-            description: 用户名密码登陆
-            operationId: Admin_NamePasswordLogin
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.admin.v1.NamePasswordLoginReq'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.LoginReply'
     /admin/v1/auth/register:
         post:
             tags:
@@ -139,11 +139,13 @@ components:
             properties:
                 token:
                     type: string
+                    description: 登录token
                 expireTime:
                     type: string
+                    description: 过期时间
                     format: date-time
             description: 回应 - 登录
-        api.admin.v1.NamePasswordLoginReq:
+        api.admin.v1.LoginReq:
             type: object
             properties:
                 name:
@@ -156,18 +158,16 @@ components:
         api.admin.v1.RegisterReply:
             type: object
             properties:
-                message:
-                    type: string
                 success:
                     type: boolean
+                message:
+                    type: string
         api.admin.v1.RegisterReq:
             type: object
             properties:
-                username:
+                name:
                     type: string
                 password:
-                    type: string
-                email:
                     type: string
         api.admin.v1.User:
             type: object
@@ -175,20 +175,37 @@ components:
                 id:
                     type: integer
                     format: uint64
-                userName:
+                name:
                     type: string
                 password:
                     type: string
                 nickName:
                     type: string
+                realName:
+                    type: string
+                birthday:
+                    type: string
+                    format: date-time
+                gender:
+                    type: integer
+                    format: int32
+                mobile:
+                    type: string
                 email:
                     type: string
+                state:
+                    type: integer
+                    format: int32
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
                 authoritys:
                     type: array
                     items:
                         type: string
-                token:
-                    type: string
         api.web.v1.ListUserReply:
             type: object
             properties:

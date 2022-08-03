@@ -16,6 +16,39 @@
     "application/json"
   ],
   "paths": {
+    "/admin/v1/auth/login": {
+      "post": {
+        "summary": "登陆",
+        "operationId": "Admin_Login",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiadminv1LoginReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiadminv1LoginReq"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/admin/v1/auth/logout": {
       "post": {
         "summary": "登出",
@@ -41,39 +74,6 @@
             "required": true,
             "schema": {
               "properties": {}
-            }
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
-    "/admin/v1/auth/passwordLogin": {
-      "post": {
-        "summary": "用户名密码登陆",
-        "operationId": "Admin_NamePasswordLogin",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiadminv1LoginReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1NamePasswordLoginReq"
             }
           }
         ],
@@ -159,14 +159,30 @@
       "type": "object",
       "properties": {
         "token": {
-          "type": "string"
+          "type": "string",
+          "title": "登录token"
         },
         "expireTime": {
           "type": "string",
-          "format": "date-time"
+          "format": "date-time",
+          "title": "过期时间"
         }
       },
       "title": "回应 - 登录"
+    },
+    "apiadminv1LoginReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "用户名"
+        },
+        "password": {
+          "type": "string",
+          "title": "密码"
+        }
+      },
+      "title": "请求 - 登录"
     },
     "apiadminv1User": {
       "type": "object",
@@ -175,7 +191,7 @@
           "type": "string",
           "format": "uint64"
         },
-        "userName": {
+        "name": {
           "type": "string"
         },
         "password": {
@@ -184,17 +200,40 @@
         "nickName": {
           "type": "string"
         },
+        "realName": {
+          "type": "string"
+        },
+        "birthday": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "gender": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "mobile": {
+          "type": "string"
+        },
         "email": {
           "type": "string"
+        },
+        "state": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
         },
         "authoritys": {
           "type": "array",
           "items": {
             "type": "string"
           }
-        },
-        "token": {
-          "type": "string"
         }
       }
     },
@@ -228,41 +267,24 @@
         }
       }
     },
-    "v1NamePasswordLoginReq": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "title": "用户名"
-        },
-        "password": {
-          "type": "string",
-          "title": "密码"
-        }
-      },
-      "title": "请求 - 登录"
-    },
     "v1RegisterReply": {
       "type": "object",
       "properties": {
-        "message": {
-          "type": "string"
-        },
         "success": {
           "type": "boolean"
+        },
+        "message": {
+          "type": "string"
         }
       }
     },
     "v1RegisterReq": {
       "type": "object",
       "properties": {
-        "username": {
+        "name": {
           "type": "string"
         },
         "password": {
-          "type": "string"
-        },
-        "email": {
           "type": "string"
         }
       }

@@ -4,22 +4,26 @@ import (
 	"context"
 	"time"
 
+	"github.com/beiduoke/go-scaffold/internal/conf"
+	myAuthz "github.com/beiduoke/go-scaffold/internal/pkg/authz"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/zzsds/go-tools/pkg/password"
 )
 
 // User is a User model.
 type User struct {
-	ID       uint
-	Name     string
-	NickName string
-	RealName string
-	Password string
-	Birthday *time.Time
-	Gender   int32
-	Mobile   string
-	Email    string
-	State    int32
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	ID        uint
+	Name      string
+	NickName  string
+	RealName  string
+	Password  string
+	Birthday  *time.Time
+	Gender    int32
+	Mobile    string
+	Email     string
+	State     int32
 }
 
 // UserRepo is a Greater repo.
@@ -38,14 +42,22 @@ type UserRepo interface {
 
 // UserUsecase is a User usecase.
 type UserUsecase struct {
+	ac   *conf.Auth
 	repo UserRepo
 	log  *log.Helper
 	tm   Transaction
 }
 
 // NewUserUsecase new a User usecase.
-func NewUserUsecase(repo UserRepo, tm Transaction, logger log.Logger) *UserUsecase {
-	return &UserUsecase{repo: repo, tm: tm, log: log.NewHelper(logger)}
+func NewUserUsecase(ac *conf.Auth, repo UserRepo, tm Transaction, logger log.Logger) *UserUsecase {
+	return &UserUsecase{ac: ac, repo: repo, tm: tm, log: log.NewHelper(logger)}
+}
+
+func (uc *UserUsecase) GenerateToken(g *User) (token string, expiresAt time.Time) {
+	expiresAt = time.Now().Add(time.Hour * 24)
+	securityUser := myAuthz.NewSecurityUserData(myAuthz.WithID(string(rune(g.ID))), myAuthz.WithExpiresAt(expiresAt.Unix()))
+	token = securityUser.CreateAccessJwtToken([]byte(uc.ac.ApiKey))
+	return
 }
 
 // NamePasswordLogin 用户密码登录

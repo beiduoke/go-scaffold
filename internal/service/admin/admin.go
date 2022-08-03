@@ -6,9 +6,9 @@ import (
 	v1 "github.com/beiduoke/go-scaffold/api/admin/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/conf"
-	myAuthz "github.com/beiduoke/go-scaffold/internal/pkg/authz"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/tx7do/kratos-transport/transport/websocket"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 var _ v1.AdminServer = (*AdminService)(nil)
@@ -28,13 +28,15 @@ func NewAdminService(logger log.Logger, ac *conf.Auth, uc *biz.UserUsecase) *Adm
 	return &AdminService{log: l, ac: ac, uc: uc}
 }
 
-// NamePasswordLogin 用户密码登录
-func (s *AdminService) NamePasswordLogin(ctx context.Context, in *v1.NamePasswordLoginReq) (*v1.LoginReply, error) {
+// Login 登录
+func (s *AdminService) Login(ctx context.Context, in *v1.LoginReq) (*v1.LoginReply, error) {
 	res, err := s.uc.NamePasswordLogin(ctx, &biz.User{Name: in.GetName(), Password: in.GetPassword()})
 	if err != nil {
-		return nil, err
+		return nil, v1.ErrorUserNotFound("用户 %s 不存在或密码错误", in.GetName())
 	}
-	securityUser := myAuthz.NewSecurityUserData(myAuthz.WithID(string(rune(res.ID))))
-	securityUser.CreateAccessJwtToken([]byte(s.ac.ApiKey))
-	return &v1.LoginReply{}, nil
+	token, expiresAt := s.uc.GenerateToken(res)
+	return &v1.LoginReply{
+		Token:      token,
+		ExpireTime: timestamppb.New(expiresAt),
+	}, nil
 }

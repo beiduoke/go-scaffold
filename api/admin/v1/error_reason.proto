@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package admin.v1;
+import "errors/errors.proto";
 
 option go_package = "github.com/beiduoke/go-scaffold/api/admin/v1;v1";
 option java_multiple_files = true;
@@ -8,6 +9,8 @@ option java_package = "admin.v1";
 option objc_class_prefix = "APIadminV1";
 
 enum ErrorReason {
-  GEETER_UNSPECIFIED = 0;
-  USER_NOT_FOUND = 1;
+  // 设置缺省错误码
+  option (errors.default_code) = 500;
+  UNSPECIFIED = 0 [(errors.code) = 400];
+  USER_NOT_FOUND = 1 [(errors.code) = 404];
 }

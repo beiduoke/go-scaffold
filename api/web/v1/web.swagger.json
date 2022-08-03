@@ -40,7 +40,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1LoginReq"
+              "$ref": "#/definitions/apiwebv1LoginReq"
             }
           }
         ],
@@ -57,7 +57,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiwebv1LogoutReply"
+              "$ref": "#/definitions/v1LogoutReply"
             }
           },
           "default": {
@@ -73,7 +73,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/apiwebv1LogoutReq"
+              "$ref": "#/definitions/v1LogoutReq"
             }
           }
         ],
@@ -122,25 +122,18 @@
         }
       }
     },
-    "apiwebv1LogoutReply": {
+    "apiwebv1LoginReq": {
       "type": "object",
       "properties": {
-        "id": {
+        "userName": {
           "type": "string",
-          "format": "uint64"
+          "title": "用户名"
+        },
+        "password": {
+          "type": "string"
         }
       },
-      "title": "回应 - 登出"
-    },
-    "apiwebv1LogoutReq": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        }
-      },
-      "title": "请求 - 登出"
+      "title": "请求 - 登录"
     },
     "apiwebv1User": {
       "type": "object",
@@ -202,18 +195,25 @@
         }
       }
     },
-    "v1LoginReq": {
+    "v1LogoutReply": {
       "type": "object",
       "properties": {
-        "userName": {
+        "id": {
           "type": "string",
-          "title": "用户名"
-        },
-        "password": {
-          "type": "string"
+          "format": "uint64"
         }
       },
-      "title": "请求 - 登录"
+      "title": "回应 - 登出"
+    },
+    "v1LogoutReq": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        }
+      },
+      "title": "请求 - 登出"
     }
   }
 }

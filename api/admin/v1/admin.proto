@@ -21,10 +21,10 @@ service Admin {
       body: "*"
     };
   }
-  // 用户名密码登陆
-  rpc NamePasswordLogin (NamePasswordLoginReq) returns (LoginReply) {
+  // 登陆
+  rpc Login (LoginReq) returns (LoginReply) {
     option (google.api.http) = {
-      post: "/admin/v1/auth/passwordLogin"
+      post: "/admin/v1/auth/login"
       body: "*"
     };
   }
@@ -43,18 +43,20 @@ service Admin {
   }
 }
 
-message Content {
-  string content = 1;
-}
-
 message User {
   optional uint64 id = 1;
-  optional string user_name = 2 [json_name = "userName"];
+  optional string name = 2;
   optional string password = 3;
   optional string nick_name = 4;
-  optional string email = 5;
-  repeated string authoritys = 6;
-  optional string token = 7 [deprecated = true];
+  optional string real_name = 5;
+  optional google.protobuf.Timestamp birthday = 6;
+  optional int32 gender = 7;
+  optional string mobile = 8;
+  optional string email = 9;
+  optional int32 state = 10;
+  optional google.protobuf.Timestamp created_at = 11;
+  optional google.protobuf.Timestamp updated_at = 12;
+  repeated string authoritys = 13;
 }
 
 message ListUserReply {
@@ -63,7 +65,7 @@ message ListUserReply {
 }
 
 // 请求 - 登录
-message NamePasswordLoginReq {
+message LoginReq {
   // 用户名
   string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
   // 密码
@@ -72,28 +74,19 @@ message NamePasswordLoginReq {
 
 // 回应 - 登录
 message LoginReply {
+  // 登录token
   string token = 1;
+  // 过期时间
   google.protobuf.Timestamp expire_time = 2;
 }
 
-// 请求 - 登出
-message LogoutReq {
-  uint64 id = 1;
-}
-
-// 回应 - 登出
-message LogoutReply {
-  uint64 id = 1;
-}
-
 message RegisterReq {
-  string username = 1;
-  string password = 2;
-  string email = 3;
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  string password = 2 [(validate.rules).string = {min_len: 6, max_len: 25}];
 }
 message RegisterReply {
-  string message = 1;
   bool success = 2;
+  string message = 1;
 }
 
 message WebsocketProto  {

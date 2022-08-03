@@ -17,31 +17,31 @@ const (
 	ClaimAuthorityId = "authorityId"
 	Domain           = "domain"
 	ID               = "id"
+	ExpiresAt        = "exp"
 )
 
-type options struct {
-	id          string
-	authorityId string
-	domain      string
-}
-
-type Option func(*options)
+type Option func(*SecurityUser)
 
 func WithID(id string) Option {
-	return func(o *options) {
-		o.id = id
+	return func(o *SecurityUser) {
+		o.ID = id
 	}
 }
 
 func WithAuthorityId(authorityId string) Option {
-	return func(o *options) {
-		o.authorityId = authorityId
+	return func(o *SecurityUser) {
+		o.AuthorityId = authorityId
 	}
 }
 
 func WithDomain(domain string) Option {
-	return func(o *options) {
-		o.domain = domain
+	return func(o *SecurityUser) {
+		o.Domain = domain
+	}
+}
+func WithExpiresAt(expiresAt int64) Option {
+	return func(o *SecurityUser) {
+		o.ExpiresAt = expiresAt
 	}
 }
 
@@ -51,18 +51,15 @@ type SecurityUser struct {
 	AuthorityId string
 	Domain      string
 	ID          string
+	ExpiresAt   int64
 }
 
 func NewSecurityUserData(opts ...Option) *SecurityUser {
-	o := &options{}
+	s := &SecurityUser{}
 	for _, opt := range opts {
-		opt(o)
+		opt(s)
 	}
-	return &SecurityUser{
-		AuthorityId: o.authorityId,
-		Domain:      o.domain,
-		ID:          o.id,
-	}
+	return s
 }
 
 func NewSecurityUser() authz.SecurityUser {
@@ -82,6 +79,10 @@ func (su *SecurityUser) ParseFromContext(ctx context.Context) error {
 		str, ok = claims.(jwtV4.MapClaims)[ID]
 		if ok {
 			su.ID = str.(string)
+		}
+		str, ok = claims.(jwtV4.MapClaims)[ExpiresAt]
+		if ok {
+			su.ExpiresAt = str.(int64)
 		}
 	} else {
 		return errors.New("jwt claim missing")
@@ -119,6 +120,7 @@ func (su *SecurityUser) CreateAccessJwtToken(secretKey []byte) string {
 			ClaimAuthorityId: su.AuthorityId,
 			Domain:           su.Domain,
 			ID:               su.ID,
+			ExpiresAt:        float64(su.ExpiresAt),
 		})
 
 	signedToken, err := claims.SignedString(secretKey)
@@ -175,6 +177,11 @@ func (su *SecurityUser) ParseAccessJwtToken(claims jwtV4.Claims) error {
 	strAuthorityId, ok := mc[ClaimAuthorityId]
 	if ok {
 		su.AuthorityId = strAuthorityId.(string)
+	}
+	strExpiresAt, ok := mc[ExpiresAt]
+	if ok {
+		// expiresAtFloat := strconv.FormatFloat(strExpiresAt.(float64), 'f', 0, 64)
+		su.ExpiresAt = strExpiresAt.(int64)
 	}
 	strDomain, ok := mc[Domain]
 	if ok {
