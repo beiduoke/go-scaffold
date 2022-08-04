@@ -11,6 +11,7 @@ import (
 	"net/mail"
 	"net/url"
 	"regexp"
+	"sort"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -31,59 +32,76 @@ var (
 	_ = (*url.URL)(nil)
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
+	_ = sort.Sort
 )
 
 // Validate checks the field values on User with the rules defined in the proto
-// definition for this message. If any rules are violated, an error is returned.
+// definition for this message. If any rules are violated, the first error
+// encountered is returned, or nil if there are no violations.
 func (m *User) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on User with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in UserMultiError, or nil if none found.
+func (m *User) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *User) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
-	switch m.XId.(type) {
+	var errors []error
 
-	case *User_Id:
+	if m.Id != nil {
 		// no validation rules for Id
-
 	}
 
-	switch m.XUserName.(type) {
-
-	case *User_UserName:
+	if m.UserName != nil {
 		// no validation rules for UserName
-
 	}
 
-	switch m.XPassword.(type) {
-
-	case *User_Password:
+	if m.Password != nil {
 		// no validation rules for Password
-
 	}
 
-	switch m.XNickName.(type) {
-
-	case *User_NickName:
+	if m.NickName != nil {
 		// no validation rules for NickName
-
 	}
 
-	switch m.XEmail.(type) {
-
-	case *User_Email:
+	if m.Email != nil {
 		// no validation rules for Email
-
 	}
 
-	switch m.XToken.(type) {
-
-	case *User_Token:
+	if m.Token != nil {
 		// no validation rules for Token
+	}
 
+	if len(errors) > 0 {
+		return UserMultiError(errors)
 	}
 
 	return nil
 }
+
+// UserMultiError is an error wrapping multiple validation errors returned by
+// User.ValidateAll() if the designated constraints aren't met.
+type UserMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UserMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UserMultiError) AllErrors() []error { return m }
 
 // UserValidationError is the validation error returned by User.Validate if the
 // designated constraints aren't met.
@@ -140,18 +158,53 @@ var _ interface {
 } = UserValidationError{}
 
 // Validate checks the field values on LoginReq with the rules defined in the
-// proto definition for this message. If any rules are violated, an error is returned.
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
 func (m *LoginReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on LoginReq with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in LoginReqMultiError, or nil
+// if none found.
+func (m *LoginReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *LoginReq) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
+
+	var errors []error
 
 	// no validation rules for UserName
 
 	// no validation rules for Password
 
+	if len(errors) > 0 {
+		return LoginReqMultiError(errors)
+	}
+
 	return nil
 }
+
+// LoginReqMultiError is an error wrapping multiple validation errors returned
+// by LoginReq.ValidateAll() if the designated constraints aren't met.
+type LoginReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m LoginReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m LoginReqMultiError) AllErrors() []error { return m }
 
 // LoginReqValidationError is the validation error returned by
 // LoginReq.Validate if the designated constraints aren't met.
@@ -208,13 +261,47 @@ var _ interface {
 } = LoginReqValidationError{}
 
 // Validate checks the field values on LoginReply with the rules defined in the
-// proto definition for this message. If any rules are violated, an error is returned.
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
 func (m *LoginReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on LoginReply with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in LoginReplyMultiError, or
+// nil if none found.
+func (m *LoginReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *LoginReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
-	if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetUser()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, LoginReplyValidationError{
+					field:  "User",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, LoginReplyValidationError{
+					field:  "User",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return LoginReplyValidationError{
 				field:  "User",
@@ -224,8 +311,28 @@ func (m *LoginReply) Validate() error {
 		}
 	}
 
+	if len(errors) > 0 {
+		return LoginReplyMultiError(errors)
+	}
+
 	return nil
 }
+
+// LoginReplyMultiError is an error wrapping multiple validation errors
+// returned by LoginReply.ValidateAll() if the designated constraints aren't met.
+type LoginReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m LoginReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m LoginReplyMultiError) AllErrors() []error { return m }
 
 // LoginReplyValidationError is the validation error returned by
 // LoginReply.Validate if the designated constraints aren't met.
@@ -282,16 +389,51 @@ var _ interface {
 } = LoginReplyValidationError{}
 
 // Validate checks the field values on LogoutReq with the rules defined in the
-// proto definition for this message. If any rules are violated, an error is returned.
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
 func (m *LogoutReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on LogoutReq with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in LogoutReqMultiError, or nil
+// if none found.
+func (m *LogoutReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *LogoutReq) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
+	var errors []error
+
 	// no validation rules for Id
+
+	if len(errors) > 0 {
+		return LogoutReqMultiError(errors)
+	}
 
 	return nil
 }
+
+// LogoutReqMultiError is an error wrapping multiple validation errors returned
+// by LogoutReq.ValidateAll() if the designated constraints aren't met.
+type LogoutReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m LogoutReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m LogoutReqMultiError) AllErrors() []error { return m }
 
 // LogoutReqValidationError is the validation error returned by
 // LogoutReq.Validate if the designated constraints aren't met.
@@ -348,17 +490,51 @@ var _ interface {
 } = LogoutReqValidationError{}
 
 // Validate checks the field values on LogoutReply with the rules defined in
-// the proto definition for this message. If any rules are violated, an error
-// is returned.
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
 func (m *LogoutReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on LogoutReply with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in LogoutReplyMultiError, or
+// nil if none found.
+func (m *LogoutReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *LogoutReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
+	var errors []error
+
 	// no validation rules for Id
+
+	if len(errors) > 0 {
+		return LogoutReplyMultiError(errors)
+	}
 
 	return nil
 }
+
+// LogoutReplyMultiError is an error wrapping multiple validation errors
+// returned by LogoutReply.ValidateAll() if the designated constraints aren't met.
+type LogoutReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m LogoutReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m LogoutReplyMultiError) AllErrors() []error { return m }
 
 // LogoutReplyValidationError is the validation error returned by
 // LogoutReply.Validate if the designated constraints aren't met.
@@ -415,17 +591,50 @@ var _ interface {
 } = LogoutReplyValidationError{}
 
 // Validate checks the field values on ListUserReply with the rules defined in
-// the proto definition for this message. If any rules are violated, an error
-// is returned.
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
 func (m *ListUserReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListUserReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in ListUserReplyMultiError, or
+// nil if none found.
+func (m *ListUserReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListUserReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
+	var errors []error
+
 	for idx, item := range m.GetItems() {
 		_, _ = idx, item
 
-		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListUserReplyValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListUserReplyValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return ListUserReplyValidationError{
 					field:  fmt.Sprintf("Items[%v]", idx),
@@ -439,8 +648,29 @@ func (m *ListUserReply) Validate() error {
 
 	// no validation rules for Total
 
+	if len(errors) > 0 {
+		return ListUserReplyMultiError(errors)
+	}
+
 	return nil
 }
+
+// ListUserReplyMultiError is an error wrapping multiple validation errors
+// returned by ListUserReply.ValidateAll() if the designated constraints
+// aren't met.
+type ListUserReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListUserReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListUserReplyMultiError) AllErrors() []error { return m }
 
 // ListUserReplyValidationError is the validation error returned by
 // ListUserReply.Validate if the designated constraints aren't met.

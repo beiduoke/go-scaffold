@@ -7,6 +7,7 @@ import (
 	webv1 "github.com/beiduoke/go-scaffold/api/web/v1"
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	myAuthz "github.com/beiduoke/go-scaffold/internal/pkg/authz"
+	"github.com/beiduoke/go-scaffold/internal/pkg/middleware/localize"
 	"github.com/beiduoke/go-scaffold/internal/service/admin"
 	"github.com/beiduoke/go-scaffold/internal/service/web"
 	casbinM "github.com/beiduoke/go-scaffold/pkg/authz/casbin"
@@ -73,6 +74,7 @@ func NewMiddleware(logger log.Logger, auth middleware.Middleware) http.ServerOpt
 		tracing.Server(),
 		logging.Server(logger),
 		validate.Validator(),
+		localize.I18N(),
 		auth,
 	)
 }

@@ -62,7 +62,7 @@ func (uc *UserUsecase) GenerateToken(g *User) (token string, expiresAt time.Time
 
 // NamePasswordLogin 用户密码登录
 func (uc *UserUsecase) NamePasswordLogin(ctx context.Context, g *User) (*User, error) {
-	uc.log.WithContext(ctx).Infof("PasswordLogin: %v", g)
+	// uc.log.WithContext(ctx).Infof("PasswordLogin: %v", g)
 	u, err := uc.repo.FindByName(ctx, g.Name)
 	if err != nil {
 		return nil, err

@@ -1,0 +1,5 @@
+[ChangeMobile]
+description = "changeMobile"
+hash = "sha1-b358c8f76eeec70e0fce5a1aea41f01d718b8cd5"
+one = "ChangeMobile {{.Mobile}}"
+other = "ChangeMobile {{.Mobile}}"

@@ -1,0 +1,24 @@
+[ChangeMobile]
+description = "changeMobile"
+one = "ChangeMobile {{.Mobile}}"
+other = "ChangeMobile {{.Mobile}}"
+
+[ChangePassword]
+description = "changePassword"
+one = "ChangePassword {{.Name}} {{.Password}}"
+other = "ChangePassword {{.Name}} {{.Password}}"
+
+[Login]
+description = "login"
+one = "Login {{.Name}} {{.Password}}"
+other = "Login {{.Name}} {{.Password}}"
+
+[Logout]
+description = "logout"
+one = "Logout {{.Name}}"
+other = "Logout {{.Name}}"
+
+[Register]
+description = "register"
+one = "Register {{.Name}} {{.Password}}"
+other = "Register {{.Name}} {{.Password}}"

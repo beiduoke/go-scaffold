@@ -1,0 +1,4 @@
+[ChangeMobile]
+description = "修改手机号"
+hash = "sha1-b358c8f76eeec70e0fce5a1aea41f01d718b8cd5"
+other = "修改手机号 {{.Mobile}}"

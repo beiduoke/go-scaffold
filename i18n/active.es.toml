@@ -1,0 +1,29 @@
+[ChangeMobile]
+description = "changeMobile"
+hash = "sha1-b358c8f76eeec70e0fce5a1aea41f01d718b8cd5"
+one = "ChangeMobile {{.Mobile}}"
+other = "ChangeMobile {{.Mobile}}"
+
+[ChangePassword]
+description = "changePassword"
+hash = "sha1-b0f5fbc62ea68f7d4db63a557b64df9a46357696"
+one = "ChangePassword {{.Name}} {{.Password}}"
+other = "ChangePassword {{.Name}} {{.Password}}"
+
+[Login]
+description = "login"
+hash = "sha1-c3bc241979ef10e575e69645d5b90dce680e9470"
+one = "Login {{.Name}} {{.Password}}"
+other = "Login {{.Name}} {{.Password}}"
+
+[Logout]
+description = "logout"
+hash = "sha1-96bdaad770365f2d3b79ba4a85bf5c5cdb92af2b"
+one = "Logout {{.Name}}"
+other = "Logout {{.Name}}"
+
+[Register]
+description = "register"
+hash = "sha1-094cd0f54580cd211b2ff22cfd9b564dc1e707e0"
+one = "Register {{.Name}} {{.Password}}"
+other = "Register {{.Name}} {{.Password}}"
