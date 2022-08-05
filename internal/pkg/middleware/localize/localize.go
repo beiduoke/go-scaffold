@@ -4,17 +4,13 @@ import (
 	"context"
 
 	"github.com/BurntSushi/toml"
-	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
 
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/transport"
+	"github.com/go-kratos/kratos/v2/transport/http"
 )
-
-type validator interface {
-	Validate() error
-}
 
 type localizerKey struct{}
 
@@ -45,21 +41,20 @@ func I18N(opts ...Option) middleware.Middleware {
 	for _, opt := range opts {
 		opt(o)
 	}
-	bundle := i18n.NewBundle(language.English)
+	bundle := i18n.NewBundle(o.defaultLanguage)
 	bundle.RegisterUnmarshalFunc("toml", toml.Unmarshal)
 	bundle.MustLoadMessageFile(o.messagePath)
 
 	return func(handler middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
 			if tr, ok := transport.FromServerContext(ctx); ok {
-				accept := tr.RequestHeader().Get("Accept-language")
-				localizer := i18n.NewLocalizer(bundle, accept)
-				ctx = context.WithValue(ctx, localizerKey{}, localizer)
-			}
-			if v, ok := req.(validator); ok {
-				if err := v.Validate(); err != nil {
-					return nil, errors.BadRequest("VALIDATOR", err.Error()).WithCause(err)
+				lang := o.defaultLanguage.String()
+				if ht, ok := tr.(http.Transporter); ok {
+					lang = ht.Request().FormValue("lang")
 				}
+				accept := tr.RequestHeader().Get("Accept-Language")
+				localizer := i18n.NewLocalizer(bundle, lang, accept)
+				ctx = context.WithValue(ctx, localizerKey{}, localizer)
 			}
 			return handler(ctx, req)
 		}

@@ -2,6 +2,7 @@ package admin
 
 import (
 	"context"
+	"fmt"
 
 	v1 "github.com/beiduoke/go-scaffold/api/admin/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
@@ -14,6 +15,21 @@ import (
 )
 
 var _ v1.AdminServer = (*AdminService)(nil)
+
+var (
+	loginMessage = &i18n.Message{
+		Description: "login",
+		ID:          "Login",
+		One:         "Login {{.Name}} {{.Password}}",
+		Other:       "Login {{.Name}} {{.Password}}",
+	}
+	registerMessage = &i18n.Message{
+		Description: "register",
+		ID:          "Register",
+		One:         "Register {{.Name}} {{.Password}}",
+		Other:       "Register {{.Name}} {{.Password}}",
+	}
+)
 
 // AdminService is a Admin service.
 type AdminService struct {
@@ -32,16 +48,11 @@ func NewAdminService(logger log.Logger, ac *conf.Auth, uc *biz.UserUsecase) *Adm
 
 // Login 登录
 func (s *AdminService) Login(ctx context.Context, in *v1.LoginReq) (*v1.LoginReply, error) {
-	return &v1.LoginReply{}, nil
 	// 使用i18n包进行国际化
 	localizer := localize.FromContext(ctx)
+	fmt.Println(localizer)
 	helloMsg, err := localizer.Localize(&i18n.LocalizeConfig{
-		DefaultMessage: &i18n.Message{
-			Description: "login",
-			ID:          "Login",
-			One:         "Hello {{.Name}} {{.Password}}",
-			Other:       "Hello {{.Name}} {{.Password}}",
-		},
+		DefaultMessage: loginMessage,
 		TemplateData: map[string]interface{}{
 			"Name":     in.Name,
 			"Password": in.Password,
