@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package api.protobuf;
+
+option go_package = "github.com/beiduoke/go-scaffold/api/protobuf";
+option java_multiple_files = true;
+option java_package = "dev.beiduoke.api.protobuf";
+option java_outer_classname = "EnumProto";
+
+enum Sort {
+  SORT_UNSPECIFIED = 0;
+  DESC = 1;
+  ASC = 2;
+}
+
+enum Enabled {
+  ENABLED_UNSPECIFIED = 0;
+  YES = 1;
+  NO = 2;
+}
+
+enum UserState {
+  USER_STATE_UNSPECIFIED = 0;
+  ACTIVE = 1;
+  INACTIVE = 2;
+  BANNED = 3;
+}

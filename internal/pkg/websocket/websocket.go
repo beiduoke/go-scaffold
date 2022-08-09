@@ -1,18 +1,29 @@
-package service
+package websocket
 
 import (
 	"encoding/json"
 	"fmt"
 
-	v1 "github.com/beiduoke/go-scaffold/api/admin/v1"
 	"github.com/go-kratos/kratos/v2/log"
 
 	"github.com/tx7do/kratos-transport/transport/websocket"
 )
 
+type Event struct {
+	EventId string `json:"eventId,omitempty"`
+	Payload string `json:"payload,omitempty"`
+}
+
+type Option func(*WebsocketService)
+
+func WithSocket(w *websocket.Server) Option {
+	return func(ws *WebsocketService) {
+		ws.ws = w
+	}
+}
+
 // WebsocketService is a Admin service.
 type WebsocketService struct {
-	v1.UnimplementedAdminServer
 	log *log.Helper
 	ws  *websocket.Server
 }
@@ -30,10 +41,10 @@ func (s *WebsocketService) SetWebsocketServer(ws *websocket.Server) {
 func (s *WebsocketService) OnWebsocketMessage(connectionId string, message *websocket.Message) error {
 	s.log.Infof("[%s] Payload: %s\n", connectionId, string(message.Body))
 
-	var proto v1.WebsocketProto
+	var proto Event
 
 	if err := json.Unmarshal(message.Body, &proto); err != nil {
-		s.log.Error("Error unmarshalling proto json %v", err)
+		s.log.Error("Error unmarshal json %v", err)
 		return nil
 	}
 
@@ -67,7 +78,7 @@ func (s *WebsocketService) BroadcastToWebsocketClient(eventId string, payload in
 
 	bufPayload, _ := json.Marshal(&payload)
 
-	var proto v1.WebsocketProto
+	var proto Event
 	proto.EventId = eventId
 	proto.Payload = string(bufPayload)
 

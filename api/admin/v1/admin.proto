@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
+import "protobuf/enum.proto";
 
 option go_package = "github.com/beiduoke/go-scaffold/api/admin/v1;v1";
 option java_multiple_files = true;
@@ -53,7 +54,7 @@ message User {
   optional int32 gender = 7;
   optional string mobile = 8;
   optional string email = 9;
-  optional int32 state = 10;
+  optional api.protobuf.UserState state = 10;
   optional google.protobuf.Timestamp created_at = 11;
   optional google.protobuf.Timestamp updated_at = 12;
   repeated string authoritys = 13;
@@ -84,18 +85,8 @@ message RegisterReq {
   string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
   string password = 2 [(validate.rules).string = {min_len: 6, max_len: 25}];
 }
+
 message RegisterReply {
   bool success = 2;
   string message = 1;
-}
-
-message WebsocketProto  {
-  string event_id = 1;
-  string payload = 2;
-}
-
-message WebsocketMessage {
-  string message = 1;
-  string sender = 2;
-  string timestamp = 3;
 }

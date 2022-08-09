@@ -218,8 +218,7 @@
           "type": "string"
         },
         "state": {
-          "type": "integer",
-          "format": "int32"
+          "$ref": "#/definitions/protobufUserState"
         },
         "createdAt": {
           "type": "string",
@@ -248,6 +247,16 @@
           "format": "byte"
         }
       }
+    },
+    "protobufUserState": {
+      "type": "string",
+      "enum": [
+        "USER_STATE_UNSPECIFIED",
+        "ACTIVE",
+        "INACTIVE",
+        "BANNED"
+      ],
+      "default": "USER_STATE_UNSPECIFIED"
     },
     "rpcStatus": {
       "type": "object",

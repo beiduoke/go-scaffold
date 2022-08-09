@@ -5,13 +5,13 @@ import (
 	"github.com/tx7do/kratos-transport/transport/websocket"
 
 	"github.com/beiduoke/go-scaffold/internal/conf"
-	"github.com/beiduoke/go-scaffold/internal/service"
+	ws "github.com/beiduoke/go-scaffold/internal/pkg/websocket"
 )
 
 // NewWebsocketServer create a websocket server.
-func NewWebsocketServer(c *conf.Server, _ log.Logger, svc *service.WebsocketService) *websocket.Server {
+func NewWebsocketServer(c *conf.Server, _ log.Logger, ws *ws.WebsocketService) *websocket.Server {
 	var opts = []websocket.ServerOption{
-		websocket.ConnectHandle(svc.OnWebsocketConnect),
+		websocket.ConnectHandle(ws.OnWebsocketConnect),
 	}
 	if c.Websocket.Network != "" {
 		opts = append(opts, websocket.Network(c.Websocket.Network))
@@ -23,9 +23,9 @@ func NewWebsocketServer(c *conf.Server, _ log.Logger, svc *service.WebsocketServ
 		opts = append(opts, websocket.Timeout(c.Websocket.Timeout.AsDuration()))
 	}
 	if c.Websocket.Path != "" {
-		opts = append(opts, websocket.ReadHandle(c.Websocket.Path, svc.OnWebsocketMessage))
+		opts = append(opts, websocket.ReadHandle(c.Websocket.Path, ws.OnWebsocketMessage))
 	}
 	srv := websocket.NewServer(opts...)
-	svc.SetWebsocketServer(srv)
+	ws.SetWebsocketServer(srv)
 	return srv
 }

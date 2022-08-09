@@ -21,6 +21,58 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type UserStateEnum int32
+
+const (
+	UserStateEnum_UNKNOWN  UserStateEnum = 0
+	UserStateEnum_ACTIVE   UserStateEnum = 1
+	UserStateEnum_INACTIVE UserStateEnum = 2
+	UserStateEnum_BANNED   UserStateEnum = 3
+)
+
+// Enum value maps for UserStateEnum.
+var (
+	UserStateEnum_name = map[int32]string{
+		0: "UNKNOWN",
+		1: "ACTIVE",
+		2: "INACTIVE",
+		3: "BANNED",
+	}
+	UserStateEnum_value = map[string]int32{
+		"UNKNOWN":  0,
+		"ACTIVE":   1,
+		"INACTIVE": 2,
+		"BANNED":   3,
+	}
+)
+
+func (x UserStateEnum) Enum() *UserStateEnum {
+	p := new(UserStateEnum)
+	*p = x
+	return p
+}
+
+func (x UserStateEnum) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (UserStateEnum) Descriptor() protoreflect.EnumDescriptor {
+	return file_conf_conf_proto_enumTypes[0].Descriptor()
+}
+
+func (UserStateEnum) Type() protoreflect.EnumType {
+	return &file_conf_conf_proto_enumTypes[0]
+}
+
+func (x UserStateEnum) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use UserStateEnum.Descriptor instead.
+func (UserStateEnum) EnumDescriptor() ([]byte, []int) {
+	return file_conf_conf_proto_rawDescGZIP(), []int{0}
+}
+
 type Bootstrap struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -265,6 +317,44 @@ func (x *Auth) GetCasbin() *Auth_Casbin {
 	return nil
 }
 
+type Localize struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *Localize) Reset() {
+	*x = Localize{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_conf_conf_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Localize) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Localize) ProtoMessage() {}
+
+func (x *Localize) ProtoReflect() protoreflect.Message {
+	mi := &file_conf_conf_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Localize.ProtoReflect.Descriptor instead.
+func (*Localize) Descriptor() ([]byte, []int) {
+	return file_conf_conf_proto_rawDescGZIP(), []int{4}
+}
+
 type Server_HTTP struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -278,7 +368,7 @@ type Server_HTTP struct {
 func (x *Server_HTTP) Reset() {
 	*x = Server_HTTP{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_conf_conf_proto_msgTypes[4]
+		mi := &file_conf_conf_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -291,7 +381,7 @@ func (x *Server_HTTP) String() string {
 func (*Server_HTTP) ProtoMessage() {}
 
 func (x *Server_HTTP) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[4]
+	mi := &file_conf_conf_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -341,7 +431,7 @@ type Server_GRPC struct {
 func (x *Server_GRPC) Reset() {
 	*x = Server_GRPC{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_conf_conf_proto_msgTypes[5]
+		mi := &file_conf_conf_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -354,7 +444,7 @@ func (x *Server_GRPC) String() string {
 func (*Server_GRPC) ProtoMessage() {}
 
 func (x *Server_GRPC) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[5]
+	mi := &file_conf_conf_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -405,7 +495,7 @@ type Server_Websocket struct {
 func (x *Server_Websocket) Reset() {
 	*x = Server_Websocket{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_conf_conf_proto_msgTypes[6]
+		mi := &file_conf_conf_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -418,7 +508,7 @@ func (x *Server_Websocket) String() string {
 func (*Server_Websocket) ProtoMessage() {}
 
 func (x *Server_Websocket) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[6]
+	mi := &file_conf_conf_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -475,7 +565,7 @@ type Data_Database struct {
 func (x *Data_Database) Reset() {
 	*x = Data_Database{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_conf_conf_proto_msgTypes[7]
+		mi := &file_conf_conf_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -488,7 +578,7 @@ func (x *Data_Database) String() string {
 func (*Data_Database) ProtoMessage() {}
 
 func (x *Data_Database) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[7]
+	mi := &file_conf_conf_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -540,7 +630,7 @@ type Data_Redis struct {
 func (x *Data_Redis) Reset() {
 	*x = Data_Redis{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_conf_conf_proto_msgTypes[8]
+		mi := &file_conf_conf_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -553,7 +643,7 @@ func (x *Data_Redis) String() string {
 func (*Data_Redis) ProtoMessage() {}
 
 func (x *Data_Redis) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[8]
+	mi := &file_conf_conf_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -616,7 +706,7 @@ type Auth_Casbin struct {
 func (x *Auth_Casbin) Reset() {
 	*x = Auth_Casbin{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_conf_conf_proto_msgTypes[9]
+		mi := &file_conf_conf_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -629,7 +719,7 @@ func (x *Auth_Casbin) String() string {
 func (*Auth_Casbin) ProtoMessage() {}
 
 func (x *Auth_Casbin) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[9]
+	mi := &file_conf_conf_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -743,11 +833,16 @@ var file_conf_conf_proto_rawDesc = []byte{
 	0x70, 0x61, 0x74, 0x68, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x6d, 0x6f, 0x64, 0x65,
 	0x6c, 0x50, 0x61, 0x74, 0x68, 0x12, 0x1f, 0x0a, 0x0b, 0x70, 0x6f, 0x6c, 0x69, 0x63, 0x79, 0x5f,
 	0x70, 0x61, 0x74, 0x68, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x70, 0x6f, 0x6c, 0x69,
-	0x63, 0x79, 0x50, 0x61, 0x74, 0x68, 0x42, 0x32, 0x5a, 0x30, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62,
-	0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x62, 0x65, 0x64, 0x6f, 0x6b, 0x65, 0x2f, 0x67, 0x6f, 0x2d, 0x73,
-	0x63, 0x61, 0x66, 0x66, 0x6f, 0x6c, 0x64, 0x2f, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c,
-	0x2f, 0x63, 0x6f, 0x6e, 0x66, 0x3b, 0x63, 0x6f, 0x6e, 0x66, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x33,
+	0x63, 0x79, 0x50, 0x61, 0x74, 0x68, 0x22, 0x0a, 0x0a, 0x08, 0x4c, 0x6f, 0x63, 0x61, 0x6c, 0x69,
+	0x7a, 0x65, 0x2a, 0x42, 0x0a, 0x0d, 0x55, 0x73, 0x65, 0x72, 0x53, 0x74, 0x61, 0x74, 0x65, 0x45,
+	0x6e, 0x75, 0x6d, 0x12, 0x0b, 0x0a, 0x07, 0x55, 0x4e, 0x4b, 0x4e, 0x4f, 0x57, 0x4e, 0x10, 0x00,
+	0x12, 0x0a, 0x0a, 0x06, 0x41, 0x43, 0x54, 0x49, 0x56, 0x45, 0x10, 0x01, 0x12, 0x0c, 0x0a, 0x08,
+	0x49, 0x4e, 0x41, 0x43, 0x54, 0x49, 0x56, 0x45, 0x10, 0x02, 0x12, 0x0a, 0x0a, 0x06, 0x42, 0x41,
+	0x4e, 0x4e, 0x45, 0x44, 0x10, 0x03, 0x42, 0x34, 0x5a, 0x32, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62,
+	0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x62, 0x65, 0x69, 0x64, 0x75, 0x6f, 0x6b, 0x65, 0x2f, 0x67, 0x6f,
+	0x2d, 0x73, 0x63, 0x61, 0x66, 0x66, 0x6f, 0x6c, 0x64, 0x2f, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x6e,
+	0x61, 0x6c, 0x2f, 0x63, 0x6f, 0x6e, 0x66, 0x3b, 0x63, 0x6f, 0x6e, 0x66, 0x62, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -762,35 +857,38 @@ func file_conf_conf_proto_rawDescGZIP() []byte {
 	return file_conf_conf_proto_rawDescData
 }
 
-var file_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_conf_conf_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_conf_conf_proto_goTypes = []interface{}{
-	(*Bootstrap)(nil),           // 0: kratos.api.Bootstrap
-	(*Server)(nil),              // 1: kratos.api.Server
-	(*Data)(nil),                // 2: kratos.api.Data
-	(*Auth)(nil),                // 3: kratos.api.Auth
-	(*Server_HTTP)(nil),         // 4: kratos.api.Server.HTTP
-	(*Server_GRPC)(nil),         // 5: kratos.api.Server.GRPC
-	(*Server_Websocket)(nil),    // 6: kratos.api.Server.Websocket
-	(*Data_Database)(nil),       // 7: kratos.api.Data.Database
-	(*Data_Redis)(nil),          // 8: kratos.api.Data.Redis
-	(*Auth_Casbin)(nil),         // 9: kratos.api.Auth.Casbin
-	(*durationpb.Duration)(nil), // 10: google.protobuf.Duration
+	(UserStateEnum)(0),          // 0: kratos.api.UserStateEnum
+	(*Bootstrap)(nil),           // 1: kratos.api.Bootstrap
+	(*Server)(nil),              // 2: kratos.api.Server
+	(*Data)(nil),                // 3: kratos.api.Data
+	(*Auth)(nil),                // 4: kratos.api.Auth
+	(*Localize)(nil),            // 5: kratos.api.Localize
+	(*Server_HTTP)(nil),         // 6: kratos.api.Server.HTTP
+	(*Server_GRPC)(nil),         // 7: kratos.api.Server.GRPC
+	(*Server_Websocket)(nil),    // 8: kratos.api.Server.Websocket
+	(*Data_Database)(nil),       // 9: kratos.api.Data.Database
+	(*Data_Redis)(nil),          // 10: kratos.api.Data.Redis
+	(*Auth_Casbin)(nil),         // 11: kratos.api.Auth.Casbin
+	(*durationpb.Duration)(nil), // 12: google.protobuf.Duration
 }
 var file_conf_conf_proto_depIdxs = []int32{
-	1,  // 0: kratos.api.Bootstrap.server:type_name -> kratos.api.Server
-	2,  // 1: kratos.api.Bootstrap.data:type_name -> kratos.api.Data
-	3,  // 2: kratos.api.Bootstrap.auth:type_name -> kratos.api.Auth
-	4,  // 3: kratos.api.Server.http:type_name -> kratos.api.Server.HTTP
-	5,  // 4: kratos.api.Server.grpc:type_name -> kratos.api.Server.GRPC
-	6,  // 5: kratos.api.Server.websocket:type_name -> kratos.api.Server.Websocket
-	7,  // 6: kratos.api.Data.database:type_name -> kratos.api.Data.Database
-	8,  // 7: kratos.api.Data.redis:type_name -> kratos.api.Data.Redis
-	9,  // 8: kratos.api.Auth.casbin:type_name -> kratos.api.Auth.Casbin
-	10, // 9: kratos.api.Server.HTTP.timeout:type_name -> google.protobuf.Duration
-	10, // 10: kratos.api.Server.GRPC.timeout:type_name -> google.protobuf.Duration
-	10, // 11: kratos.api.Server.Websocket.timeout:type_name -> google.protobuf.Duration
-	10, // 12: kratos.api.Data.Redis.read_timeout:type_name -> google.protobuf.Duration
-	10, // 13: kratos.api.Data.Redis.write_timeout:type_name -> google.protobuf.Duration
+	2,  // 0: kratos.api.Bootstrap.server:type_name -> kratos.api.Server
+	3,  // 1: kratos.api.Bootstrap.data:type_name -> kratos.api.Data
+	4,  // 2: kratos.api.Bootstrap.auth:type_name -> kratos.api.Auth
+	6,  // 3: kratos.api.Server.http:type_name -> kratos.api.Server.HTTP
+	7,  // 4: kratos.api.Server.grpc:type_name -> kratos.api.Server.GRPC
+	8,  // 5: kratos.api.Server.websocket:type_name -> kratos.api.Server.Websocket
+	9,  // 6: kratos.api.Data.database:type_name -> kratos.api.Data.Database
+	10, // 7: kratos.api.Data.redis:type_name -> kratos.api.Data.Redis
+	11, // 8: kratos.api.Auth.casbin:type_name -> kratos.api.Auth.Casbin
+	12, // 9: kratos.api.Server.HTTP.timeout:type_name -> google.protobuf.Duration
+	12, // 10: kratos.api.Server.GRPC.timeout:type_name -> google.protobuf.Duration
+	12, // 11: kratos.api.Server.Websocket.timeout:type_name -> google.protobuf.Duration
+	12, // 12: kratos.api.Data.Redis.read_timeout:type_name -> google.protobuf.Duration
+	12, // 13: kratos.api.Data.Redis.write_timeout:type_name -> google.protobuf.Duration
 	14, // [14:14] is the sub-list for method output_type
 	14, // [14:14] is the sub-list for method input_type
 	14, // [14:14] is the sub-list for extension type_name
@@ -853,7 +951,7 @@ func file_conf_conf_proto_init() {
 			}
 		}
 		file_conf_conf_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Server_HTTP); i {
+			switch v := v.(*Localize); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -865,7 +963,7 @@ func file_conf_conf_proto_init() {
 			}
 		}
 		file_conf_conf_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Server_GRPC); i {
+			switch v := v.(*Server_HTTP); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -877,7 +975,7 @@ func file_conf_conf_proto_init() {
 			}
 		}
 		file_conf_conf_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Server_Websocket); i {
+			switch v := v.(*Server_GRPC); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -889,7 +987,7 @@ func file_conf_conf_proto_init() {
 			}
 		}
 		file_conf_conf_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Data_Database); i {
+			switch v := v.(*Server_Websocket); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -901,7 +999,7 @@ func file_conf_conf_proto_init() {
 			}
 		}
 		file_conf_conf_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Data_Redis); i {
+			switch v := v.(*Data_Database); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -913,6 +1011,18 @@ func file_conf_conf_proto_init() {
 			}
 		}
 		file_conf_conf_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Data_Redis); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_conf_conf_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Auth_Casbin); i {
 			case 0:
 				return &v.state
@@ -930,13 +1040,14 @@ func file_conf_conf_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_conf_conf_proto_rawDesc,
-			NumEnums:      0,
-			NumMessages:   10,
+			NumEnums:      1,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_conf_conf_proto_goTypes,
 		DependencyIndexes: file_conf_conf_proto_depIdxs,
+		EnumInfos:         file_conf_conf_proto_enumTypes,
 		MessageInfos:      file_conf_conf_proto_msgTypes,
 	}.Build()
 	File_conf_conf_proto = out.File

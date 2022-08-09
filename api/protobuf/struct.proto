@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package api.protobuf;
+
+option go_package = "github.com/beiduoke/go-scaffold/api/protobuf";
+option java_multiple_files = true;
+option java_package = "dev.beiduoke.api.protobuf";
+option java_outer_classname = "StructProto";
+
+
+message WebsocketProto  {
+  string event_id = 1;
+  string payload = 2;
+}
+
+message WebsocketMessage {
+  string message = 1;
+  string sender = 2;
+  string timestamp = 3;
+}

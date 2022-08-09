@@ -60,7 +60,6 @@ message Auth {
   Casbin casbin = 3;
 }
 
-
 message Localize {
   
 }

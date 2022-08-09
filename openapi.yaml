@@ -195,7 +195,7 @@ components:
                     type: string
                 state:
                     type: integer
-                    format: int32
+                    format: enum
                 createdAt:
                     type: string
                     format: date-time

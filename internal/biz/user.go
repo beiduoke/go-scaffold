@@ -2,8 +2,10 @@ package biz
 
 import (
 	"context"
+	"errors"
 	"time"
 
+	pb "github.com/beiduoke/go-scaffold/api/protobuf"
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	myAuthz "github.com/beiduoke/go-scaffold/internal/pkg/authz"
 	"github.com/go-kratos/kratos/v2/log"
@@ -62,12 +64,12 @@ func (uc *UserUsecase) GenerateToken(g *User) (token string, expiresAt time.Time
 
 // NamePasswordLogin 用户密码登录
 func (uc *UserUsecase) NamePasswordLogin(ctx context.Context, g *User) (*User, error) {
-	// uc.log.WithContext(ctx).Infof("PasswordLogin: %v", g)
 	u, err := uc.repo.FindByName(ctx, g.Name)
 	if err != nil {
 		return nil, err
 	}
-	err = password.Verify(g.Password, g.Password)
+
+	err = password.Verify(u.Password, g.Password)
 	if err != nil {
 		return nil, err
 	}
@@ -83,5 +85,19 @@ func (uc *UserUsecase) MobileSmsLogin(ctx context.Context, g *User) (*User, erro
 // NamePasswordRegister 用户密码注册
 func (uc *UserUsecase) NamePasswordRegister(ctx context.Context, g *User) (*User, error) {
 	uc.log.WithContext(ctx).Infof("NamePasswordRegister: %v", g.Name)
+	user, err := uc.repo.FindByName(ctx, g.Name)
+	if err != nil {
+		return nil, err
+	}
+	if user != nil && user.Name != "" {
+		return nil, errors.New("用户已注册")
+	}
+	g.Password, err = password.Encryption(g.Password)
+	if err != nil {
+		return nil, errors.New("密码加密失败")
+	}
+	if g.State <= 0 {
+		g.State = int32(pb.UserState_ACTIVE)
+	}
 	return uc.repo.Save(ctx, g)
 }
