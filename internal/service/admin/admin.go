@@ -77,7 +77,7 @@ func (s *AdminService) Login(ctx context.Context, in *v1.LoginReq) (*v1.LoginRep
 func (s *AdminService) Register(ctx context.Context, in *v1.RegisterReq) (*v1.RegisterReply, error) {
 	_, err := s.uc.NamePasswordRegister(ctx, &biz.User{Name: in.GetName(), Password: in.GetPassword()})
 	if err != nil {
-		return nil, v1.ErrorUserRegisterFail("用户 %s 注册失败", in.GetName())
+		return nil, v1.ErrorUserRegisterFail("用户 %s 注册失败: %v", in.GetName(), err.Error())
 	}
 
 	return &v1.RegisterReply{

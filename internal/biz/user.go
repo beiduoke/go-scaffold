@@ -3,6 +3,7 @@ package biz
 import (
 	"context"
 	"errors"
+	"strconv"
 	"time"
 
 	pb "github.com/beiduoke/go-scaffold/api/protobuf"
@@ -57,7 +58,12 @@ func NewUserUsecase(ac *conf.Auth, repo UserRepo, tm Transaction, logger log.Log
 
 func (uc *UserUsecase) GenerateToken(g *User) (token string, expiresAt time.Time) {
 	expiresAt = time.Now().Add(time.Hour * 24)
-	securityUser := myAuthz.NewSecurityUserData(myAuthz.WithID(string(rune(g.ID))), myAuthz.WithExpiresAt(expiresAt.Unix()))
+	securityUser := myAuthz.NewSecurityUserData(
+		myAuthz.WithID(strconv.Itoa(int(g.ID))),
+		myAuthz.WithExpiresAt(expiresAt.Unix()),
+		myAuthz.WithDomain(""),
+		myAuthz.WithAuthorityId(""),
+	)
 	token = securityUser.CreateAccessJwtToken([]byte(uc.ac.ApiKey))
 	return
 }
@@ -85,17 +91,15 @@ func (uc *UserUsecase) MobileSmsLogin(ctx context.Context, g *User) (*User, erro
 // NamePasswordRegister 用户密码注册
 func (uc *UserUsecase) NamePasswordRegister(ctx context.Context, g *User) (*User, error) {
 	uc.log.WithContext(ctx).Infof("NamePasswordRegister: %v", g.Name)
-	user, err := uc.repo.FindByName(ctx, g.Name)
-	if err != nil {
-		return nil, err
-	}
+	user, _ := uc.repo.FindByName(ctx, g.Name)
 	if user != nil && user.Name != "" {
 		return nil, errors.New("用户已注册")
 	}
-	g.Password, err = password.Encryption(g.Password)
+	password, err := password.Encryption(g.Password)
 	if err != nil {
 		return nil, errors.New("密码加密失败")
 	}
+	g.Password = password
 	if g.State <= 0 {
 		g.State = int32(pb.UserState_ACTIVE)
 	}

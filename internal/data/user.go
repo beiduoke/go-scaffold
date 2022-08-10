@@ -2,7 +2,6 @@ package data
 
 import (
 	"context"
-	"errors"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/go-kratos/kratos/v2/log"
@@ -27,6 +26,11 @@ func (r *UserRepo) toModel(g *biz.User) *SysUser {
 		return nil
 	}
 	return &SysUser{
+		Model: gorm.Model{
+			ID:        g.ID,
+			CreatedAt: g.CreatedAt,
+			UpdatedAt: g.UpdatedAt,
+		},
 		Name:     g.Name,
 		NickName: g.NickName,
 		RealName: g.RealName,
@@ -44,15 +48,18 @@ func (r *UserRepo) toBiz(u *SysUser) *biz.User {
 		return nil
 	}
 	return &biz.User{
-		Name:     u.Name,
-		NickName: u.NickName,
-		RealName: u.RealName,
-		Password: u.Password,
-		Birthday: u.Birthday,
-		Gender:   u.Gender,
-		Mobile:   u.Mobile,
-		Email:    u.Email,
-		State:    u.State,
+		CreatedAt: u.CreatedAt,
+		UpdatedAt: u.UpdatedAt,
+		ID:        u.ID,
+		Name:      u.Name,
+		NickName:  u.NickName,
+		RealName:  u.RealName,
+		Password:  u.Password,
+		Birthday:  u.Birthday,
+		Gender:    u.Gender,
+		Mobile:    u.Mobile,
+		Email:     u.Email,
+		State:     u.State,
 	}
 }
 
@@ -77,10 +84,10 @@ func (r *UserRepo) ListAll(context.Context) ([]*biz.User, error) {
 func (r *UserRepo) FindByName(ctx context.Context, s string) (*biz.User, error) {
 	user := SysUser{}
 	result := r.data.DB(ctx).First(&user, "name = ?", s)
-	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		return nil, nil
+	if result.Error != nil {
+		return nil, result.Error
 	}
-	return r.toBiz(&user), result.Error
+	return r.toBiz(&user), nil
 }
 func (r *UserRepo) FindByMobile(ctx context.Context, s string) (*biz.User, error) {
 	return nil, nil
