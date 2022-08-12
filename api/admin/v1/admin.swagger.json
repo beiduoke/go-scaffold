@@ -24,7 +24,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiadminv1LoginReply"
+              "$ref": "#/definitions/v1LoginReply"
             }
           },
           "default": {
@@ -37,11 +37,19 @@
         "parameters": [
           {
             "name": "body",
+            "description": "请求体",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/apiadminv1LoginReq"
+              "$ref": "#/definitions/v1Auth"
             }
+          },
+          {
+            "name": "domain",
+            "description": "领域.",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -103,11 +111,19 @@
         "parameters": [
           {
             "name": "body",
+            "description": "请求体",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1RegisterReq"
+              "$ref": "#/definitions/v1Auth"
             }
+          },
+          {
+            "name": "domain",
+            "description": "领域.",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -123,7 +139,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiadminv1ListUserReply"
+              "$ref": "#/definitions/v1ListUserReply"
             }
           },
           "default": {
@@ -140,13 +156,66 @@
     }
   },
   "definitions": {
-    "apiadminv1ListUserReply": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "protobufUserState": {
+      "type": "string",
+      "enum": [
+        "USER_STATE_UNSPECIFIED",
+        "ACTIVE",
+        "INACTIVE",
+        "BANNED"
+      ],
+      "default": "USER_STATE_UNSPECIFIED"
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1Auth": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "用户名"
+        },
+        "password": {
+          "type": "string",
+          "title": "密码"
+        }
+      }
+    },
+    "v1ListUserReply": {
       "type": "object",
       "properties": {
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/apiadminv1User"
+            "$ref": "#/definitions/v1User"
           }
         },
         "total": {
@@ -155,7 +224,7 @@
         }
       }
     },
-    "apiadminv1LoginReply": {
+    "v1LoginReply": {
       "type": "object",
       "properties": {
         "token": {
@@ -170,21 +239,19 @@
       },
       "title": "回应 - 登录"
     },
-    "apiadminv1LoginReq": {
+    "v1RegisterReply": {
       "type": "object",
       "properties": {
-        "name": {
-          "type": "string",
-          "title": "用户名"
+        "success": {
+          "type": "boolean"
         },
-        "password": {
-          "type": "string",
-          "title": "密码"
+        "message": {
+          "type": "string"
         }
       },
-      "title": "请求 - 登录"
+      "title": "回应 - 注册"
     },
-    "apiadminv1User": {
+    "v1User": {
       "type": "object",
       "properties": {
         "id": {
@@ -233,68 +300,6 @@
           "items": {
             "type": "string"
           }
-        }
-      }
-    },
-    "protobufAny": {
-      "type": "object",
-      "properties": {
-        "typeUrl": {
-          "type": "string"
-        },
-        "value": {
-          "type": "string",
-          "format": "byte"
-        }
-      }
-    },
-    "protobufUserState": {
-      "type": "string",
-      "enum": [
-        "USER_STATE_UNSPECIFIED",
-        "ACTIVE",
-        "INACTIVE",
-        "BANNED"
-      ],
-      "default": "USER_STATE_UNSPECIFIED"
-    },
-    "rpcStatus": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "message": {
-          "type": "string"
-        },
-        "details": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/protobufAny"
-          }
-        }
-      }
-    },
-    "v1RegisterReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      }
-    },
-    "v1RegisterReq": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
         }
       }
     }

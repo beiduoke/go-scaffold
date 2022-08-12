@@ -6,6 +6,7 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/casbin/casbin/v2/persist"
 	"github.com/go-kratos/kratos/v2/log"
+	"gorm.io/gorm"
 )
 
 type AuthorityRepo struct {
@@ -20,6 +21,32 @@ func NewAuthorityRepo(data *Data, policy persist.Adapter, logger log.Logger) biz
 		data:   data,
 		log:    log.NewHelper(logger),
 		policy: policy,
+	}
+}
+
+func (r *AuthorityRepo) toModel(d *biz.Authority) *SysAuthority {
+	if d == nil {
+		return nil
+	}
+	return &SysAuthority{
+		Model: gorm.Model{
+			ID:        d.ID,
+			CreatedAt: d.CreatedAt,
+			UpdatedAt: d.UpdatedAt,
+		},
+		Name: d.Name,
+	}
+}
+
+func (r *AuthorityRepo) toBiz(d *SysAuthority) *biz.Authority {
+	if d == nil {
+		return nil
+	}
+	return &biz.Authority{
+		CreatedAt: d.CreatedAt,
+		UpdatedAt: d.UpdatedAt,
+		ID:        d.ID,
+		Name:      d.Name,
 	}
 }
 

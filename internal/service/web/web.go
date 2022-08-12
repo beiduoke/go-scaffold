@@ -26,7 +26,7 @@ func NewWebService(logger log.Logger, uc *biz.UserUsecase) *WebService {
 
 // SayHello implements web.WebServer.
 func (s *WebService) Login(ctx context.Context, in *v1.LoginReq) (*v1.User, error) {
-	_, err := s.uc.NamePasswordLogin(ctx, &biz.User{Name: in.GetUserName()})
+	_, err := s.uc.NamePasswordLogin(ctx, "", &biz.User{Name: in.GetUserName()})
 	if err != nil {
 		return nil, err
 	}

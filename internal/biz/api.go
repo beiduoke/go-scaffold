@@ -2,13 +2,21 @@ package biz
 
 import (
 	"context"
+	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
 
 // Api is a Api model.
 type Api struct {
-	Name string
+	ID          uint
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	Name        string
+	Path        string
+	Method      string
+	Group       string
+	Description string
 }
 
 // ApiRepo is a Greater repo.

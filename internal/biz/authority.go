@@ -2,13 +2,17 @@ package biz
 
 import (
 	"context"
+	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
 
 // Authority is a Authority model.
 type Authority struct {
-	Name string
+	ID        uint
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	Name      string
 }
 
 // AuthorityRepo is a Greater repo.

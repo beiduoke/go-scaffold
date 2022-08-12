@@ -5,6 +5,7 @@ import (
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/conf"
+	"github.com/bwmarrin/snowflake"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-redis/redis/v8"
 	"github.com/google/wire"
@@ -15,17 +16,29 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewDB, NewRDB, NewTransaction, NewModelMigrate, NewAuthModel, NewAuthAdapter, NewUserRepo, NewAuthorityRepo)
+var ProviderSet = wire.NewSet(NewData, NewDB, NewRDB, NewTransaction, NewModelMigrate, NewSnowflake, NewAuthModel, NewAuthAdapter, NewDomainRepo, NewAuthorityRepo, NewMenuRepo, NewApiRepo, NewUserRepo)
 
+// NewModelMigrate 数据模型迁移
 func NewModelMigrate() []interface{} {
 	migrates := NewSysModelMigrate()
 	// migrates = append(migrates, NewWebModelMigrate()...)
 	return migrates
 }
 
-// NewTransaction .
+// NewTransaction 事务
 func NewTransaction(d *Data) biz.Transaction {
 	return d
+}
+
+// NewSnowflake 生成雪花算法id
+func NewSnowflake() *snowflake.Node {
+	sf, err := snowflake.NewNode(1)
+	if err != nil {
+		panic("snowflake no init")
+	}
+	id := sf.Generate()
+	println("初始化雪花ID：" + id.String())
+	return sf
 }
 
 // Data .
@@ -33,33 +46,13 @@ type Data struct {
 	db  *gorm.DB
 	rdb *redis.Client
 	log *log.Helper
-}
-
-type contextTxKey struct{}
-
-func (d *Data) InTx(ctx context.Context, fn func(ctx context.Context) error) error {
-	return d.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		ctx = context.WithValue(ctx, contextTxKey{}, tx)
-		return fn(ctx)
-	})
-}
-
-func (d *Data) DB(ctx context.Context) *gorm.DB {
-	tx, ok := ctx.Value(contextTxKey{}).(*gorm.DB)
-	if ok {
-		return tx
-	}
-	return d.db
+	sf  *snowflake.Node
 }
 
 // NewData .
-func NewData(db *gorm.DB, rdb *redis.Client, logger log.Logger) (*Data, func(), error) {
+func NewData(db *gorm.DB, rdb *redis.Client, sf *snowflake.Node, logger log.Logger) (*Data, func(), error) {
 	l := log.NewHelper(log.With(logger, "module", "data/initialize"))
-	d := &Data{
-		db:  db,
-		rdb: rdb,
-		log: l,
-	}
+	d := &Data{db: db, rdb: rdb, log: l, sf: sf}
 	return d, func() {
 		l.Info("closing db")
 		sql, err := db.DB()
@@ -73,6 +66,24 @@ func NewData(db *gorm.DB, rdb *redis.Client, logger log.Logger) (*Data, func(), 
 		l.Info("closing rdb")
 		rdb.Close()
 	}, nil
+}
+
+type contextTxKey struct{}
+
+// InTx 执行事务
+func (d *Data) InTx(ctx context.Context, fn func(ctx context.Context) error) error {
+	return d.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		ctx = context.WithValue(ctx, contextTxKey{}, tx)
+		return fn(ctx)
+	})
+}
+
+func (d *Data) DB(ctx context.Context) *gorm.DB {
+	tx, ok := ctx.Value(contextTxKey{}).(*gorm.DB)
+	if ok {
+		return tx
+	}
+	return d.db
 }
 
 // NewDB gorm Connecting to a Database

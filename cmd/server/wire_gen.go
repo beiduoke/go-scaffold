@@ -26,14 +26,17 @@ func wireApp(confServer *conf.Server, auth *conf.Auth, confData *conf.Data, logg
 	v := data.NewModelMigrate()
 	db := data.NewDB(confData, logger, v)
 	client := data.NewRDB(confData, logger)
-	dataData, cleanup, err := data.NewData(db, client, logger)
+	node := data.NewSnowflake()
+	dataData, cleanup, err := data.NewData(db, client, node, logger)
 	if err != nil {
 		return nil, nil, err
 	}
 	userRepo := data.NewUserRepo(dataData, logger)
 	transaction := data.NewTransaction(dataData)
-	userUsecase := biz.NewUserUsecase(auth, userRepo, transaction, logger)
-	adminService := admin.NewAdminService(logger, auth, websocketService, userUsecase)
+	domainRepo := data.NewDomainRepo(dataData, logger)
+	userUsecase := biz.NewUserUsecase(auth, userRepo, transaction, logger, domainRepo)
+	domainUsecase := biz.NewDomainUsecase(domainRepo, transaction, logger)
+	adminService := admin.NewAdminService(logger, auth, websocketService, userUsecase, domainUsecase)
 	webService := web.NewWebService(logger, userUsecase)
 	grpcServer := server.NewGRPCServer(confServer, auth, adminService, webService, logger)
 	model := data.NewAuthModel(auth, logger)

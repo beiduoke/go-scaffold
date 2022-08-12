@@ -62,7 +62,10 @@ func _Admin_Logout0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) err
 func _Admin_Login0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in LoginReq
-		if err := ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in.Auth); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAdminLogin)
@@ -81,7 +84,10 @@ func _Admin_Login0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) erro
 func _Admin_Register0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in RegisterReq
-		if err := ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in.Auth); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAdminRegister)
@@ -150,7 +156,7 @@ func (c *AdminHTTPClientImpl) Login(ctx context.Context, in *LoginReq, opts ...h
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminLogin))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in.Auth, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -176,7 +182,7 @@ func (c *AdminHTTPClientImpl) Register(ctx context.Context, in *RegisterReq, opt
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminRegister))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in.Auth, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

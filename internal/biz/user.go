@@ -15,18 +15,20 @@ import (
 
 // User is a User model.
 type User struct {
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	ID        uint
-	Name      string
-	NickName  string
-	RealName  string
-	Password  string
-	Birthday  *time.Time
-	Gender    int32
-	Mobile    string
-	Email     string
-	State     int32
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	ID          uint
+	Name        string
+	NickName    string
+	RealName    string
+	Password    string
+	Birthday    *time.Time
+	Gender      int32
+	Mobile      string
+	Email       string
+	State       int32
+	Domains     []Domain
+	Authorities []Authority
 }
 
 // UserRepo is a Greater repo.
@@ -41,19 +43,22 @@ type UserRepo interface {
 	FindByMobile(context.Context, string) (*User, error)
 	FindByEmail(context.Context, string) (*User, error)
 	ListByName(context.Context, string) ([]*User, error)
+	ListByMobile(context.Context, string) ([]*User, error)
+	ListByEmail(context.Context, string) ([]*User, error)
 }
 
 // UserUsecase is a User usecase.
 type UserUsecase struct {
-	ac   *conf.Auth
-	repo UserRepo
-	log  *log.Helper
-	tm   Transaction
+	ac         *conf.Auth
+	repo       UserRepo
+	domainRepo DomainRepo
+	log        *log.Helper
+	tm         Transaction
 }
 
 // NewUserUsecase new a User usecase.
-func NewUserUsecase(ac *conf.Auth, repo UserRepo, tm Transaction, logger log.Logger) *UserUsecase {
-	return &UserUsecase{ac: ac, repo: repo, tm: tm, log: log.NewHelper(logger)}
+func NewUserUsecase(ac *conf.Auth, repo UserRepo, tm Transaction, logger log.Logger, domainRepo DomainRepo) *UserUsecase {
+	return &UserUsecase{ac: ac, repo: repo, tm: tm, log: log.NewHelper(logger), domainRepo: domainRepo}
 }
 
 func (uc *UserUsecase) GenerateToken(g *User) (token string, expiresAt time.Time) {
@@ -61,36 +66,44 @@ func (uc *UserUsecase) GenerateToken(g *User) (token string, expiresAt time.Time
 	securityUser := myAuthz.NewSecurityUserData(
 		myAuthz.WithID(strconv.Itoa(int(g.ID))),
 		myAuthz.WithExpiresAt(expiresAt.Unix()),
-		myAuthz.WithDomain(""),
-		myAuthz.WithAuthorityId(""),
+		myAuthz.WithDomain(strconv.Itoa(int(g.Domains[0].ID))),
+		myAuthz.WithAuthorityId("[1,2,3]"),
 	)
 	token = securityUser.CreateAccessJwtToken([]byte(uc.ac.ApiKey))
 	return
 }
 
 // NamePasswordLogin 用户密码登录
-func (uc *UserUsecase) NamePasswordLogin(ctx context.Context, g *User) (*User, error) {
+func (uc *UserUsecase) NamePasswordLogin(ctx context.Context, domainId string, g *User) (*User, error) {
+	domain, err := uc.domainRepo.FindByDomainID(ctx, domainId)
+	if err != nil {
+		return nil, errors.New("Domain查询失败")
+	}
 	u, err := uc.repo.FindByName(ctx, g.Name)
 	if err != nil {
 		return nil, err
 	}
-
 	err = password.Verify(u.Password, g.Password)
 	if err != nil {
 		return nil, err
 	}
+	u.Domains = []Domain{*domain}
 	return u, nil
 }
 
 // MobileSmsLogin 手机验证码登录
-func (uc *UserUsecase) MobileSmsLogin(ctx context.Context, g *User) (*User, error) {
+func (uc *UserUsecase) MobileSmsLogin(ctx context.Context, domainId string, g *User) (*User, error) {
 	uc.log.WithContext(ctx).Infof("MobileSmsLogin: %v", g)
 	return uc.repo.FindByMobile(ctx, g.Mobile)
 }
 
 // NamePasswordRegister 用户密码注册
-func (uc *UserUsecase) NamePasswordRegister(ctx context.Context, g *User) (*User, error) {
+func (uc *UserUsecase) NamePasswordRegister(ctx context.Context, domainId string, g *User) (*User, error) {
 	uc.log.WithContext(ctx).Infof("NamePasswordRegister: %v", g.Name)
+	domain, err := uc.domainRepo.FindByDomainID(ctx, domainId)
+	if err != nil {
+		return nil, errors.New("Domain查询失败")
+	}
 	user, _ := uc.repo.FindByName(ctx, g.Name)
 	if user != nil && user.Name != "" {
 		return nil, errors.New("用户已注册")
@@ -103,5 +116,7 @@ func (uc *UserUsecase) NamePasswordRegister(ctx context.Context, g *User) (*User
 	if g.State <= 0 {
 		g.State = int32(pb.UserState_ACTIVE)
 	}
+	g.Domains = []Domain{*domain}
+	g.Authorities = []Authority{{Name: "13213", ID: 1}}
 	return uc.repo.Save(ctx, g)
 }

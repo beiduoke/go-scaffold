@@ -26,14 +26,14 @@ service Admin {
   rpc Login (LoginReq) returns (LoginReply) {
     option (google.api.http) = {
       post: "/admin/v1/auth/login"
-      body: "*"
+      body: "auth"
     };
   }
   // 注册
   rpc Register (RegisterReq) returns (RegisterReply) {
     option (google.api.http) = {
       post: "/admin/v1/auth/register"
-      body: "*"
+      body: "auth"
     };
   }
   // 用户列表
@@ -65,12 +65,19 @@ message ListUserReply {
   int32 total = 2;
 }
 
-// 请求 - 登录
-message LoginReq {
+message Auth {
   // 用户名
   string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
   // 密码
   string password = 2 [(validate.rules).string = {min_len: 6, max_len: 25}];
+}
+
+// 请求 - 登录
+message LoginReq {
+  // 领域
+  string domain = 1;
+  // 请求体
+  Auth auth = 2 [(validate.rules).message = {required: true}];
 }
 
 // 回应 - 登录
@@ -81,11 +88,15 @@ message LoginReply {
   google.protobuf.Timestamp expire_time = 2;
 }
 
+// 请求 - 注册
 message RegisterReq {
-  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
-  string password = 2 [(validate.rules).string = {min_len: 6, max_len: 25}];
+  // 领域
+  string domain = 1;
+  // 请求体
+  Auth auth = 2 [(validate.rules).message = {required: true}];
 }
 
+// 回应 - 注册
 message RegisterReply {
   bool success = 2;
   string message = 1;

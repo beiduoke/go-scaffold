@@ -9,92 +9,160 @@ import (
 )
 
 type UserRepo struct {
-	data *Data
-	log  *log.Helper
+	data      *Data
+	log       *log.Helper
+	domain    DomainRepo
+	authority AuthorityRepo
 }
 
 // NewUserRepo .
 func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
 	return &UserRepo{
-		data: data,
-		log:  log.NewHelper(logger),
+		data:      data,
+		log:       log.NewHelper(logger),
+		domain:    DomainRepo{},
+		authority: AuthorityRepo{},
 	}
 }
 
-func (r *UserRepo) toModel(g *biz.User) *SysUser {
-	if g == nil {
+func (r *UserRepo) toModel(d *biz.User) *SysUser {
+	if d == nil {
 		return nil
+	}
+	domains := []SysDomain{}
+	for _, v := range d.Domains {
+		domains = append(domains, *r.domain.toModel(&v))
+	}
+	authorities := []SysAuthority{}
+	for _, v := range d.Authorities {
+		authorities = append(authorities, *r.authority.toModel(&v))
 	}
 	return &SysUser{
 		Model: gorm.Model{
-			ID:        g.ID,
-			CreatedAt: g.CreatedAt,
-			UpdatedAt: g.UpdatedAt,
+			ID:        d.ID,
+			CreatedAt: d.CreatedAt,
+			UpdatedAt: d.UpdatedAt,
 		},
-		Name:     g.Name,
-		NickName: g.NickName,
-		RealName: g.RealName,
-		Password: g.Password,
-		Birthday: g.Birthday,
-		Gender:   g.Gender,
-		Mobile:   g.Mobile,
-		Email:    g.Email,
-		State:    g.State,
+		Name:        d.Name,
+		NickName:    d.NickName,
+		RealName:    d.RealName,
+		Password:    d.Password,
+		Birthday:    d.Birthday,
+		Gender:      d.Gender,
+		Mobile:      d.Mobile,
+		Email:       d.Email,
+		State:       d.State,
+		Domains:     domains,
+		Authorities: authorities,
 	}
 }
 
-func (r *UserRepo) toBiz(u *SysUser) *biz.User {
-	if u == nil {
+func (r *UserRepo) toBiz(d *SysUser) *biz.User {
+	if d == nil {
 		return nil
 	}
+	domains := []biz.Domain{}
+	for _, v := range d.Domains {
+		domains = append(domains, *r.domain.toBiz(&v))
+	}
 	return &biz.User{
-		CreatedAt: u.CreatedAt,
-		UpdatedAt: u.UpdatedAt,
-		ID:        u.ID,
-		Name:      u.Name,
-		NickName:  u.NickName,
-		RealName:  u.RealName,
-		Password:  u.Password,
-		Birthday:  u.Birthday,
-		Gender:    u.Gender,
-		Mobile:    u.Mobile,
-		Email:     u.Email,
-		State:     u.State,
+		CreatedAt: d.CreatedAt,
+		UpdatedAt: d.UpdatedAt,
+		ID:        d.ID,
+		Name:      d.Name,
+		NickName:  d.NickName,
+		RealName:  d.RealName,
+		Password:  d.Password,
+		Birthday:  d.Birthday,
+		Gender:    d.Gender,
+		Mobile:    d.Mobile,
+		Email:     d.Email,
+		State:     d.State,
+		Domains:   domains,
 	}
 }
 
 func (r *UserRepo) Save(ctx context.Context, g *biz.User) (*biz.User, error) {
-	user := r.toModel(g)
-	result := r.data.DB(ctx).Create(user)
-	return r.toBiz(user), result.Error
+	d := r.toModel(g)
+	result := r.data.DB(ctx).Transaction(func(tx *gorm.DB) error {
+		return tx.Debug().Create(d).Error
+	})
+	return r.toBiz(d), result
 }
 
 func (r *UserRepo) Update(ctx context.Context, g *biz.User) (*biz.User, error) {
 	return g, nil
 }
 
-func (r *UserRepo) FindByID(context.Context, int64) (*biz.User, error) {
-	return nil, nil
+func (r *UserRepo) FindByID(ctx context.Context, id int64) (*biz.User, error) {
+	user := SysUser{}
+	result := r.data.DB(ctx).Last(&user, id)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return r.toBiz(&user), nil
 }
 
-func (r *UserRepo) ListAll(context.Context) ([]*biz.User, error) {
+func (r *UserRepo) ListAll(ctx context.Context) ([]*biz.User, error) {
 	return nil, nil
 }
 
 func (r *UserRepo) FindByName(ctx context.Context, s string) (*biz.User, error) {
 	user := SysUser{}
-	result := r.data.DB(ctx).First(&user, "name = ?", s)
+	result := r.data.DB(ctx).Last(&user, "name = ?", s)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 	return r.toBiz(&user), nil
 }
 func (r *UserRepo) FindByMobile(ctx context.Context, s string) (*biz.User, error) {
-	return nil, nil
+	user := SysUser{}
+	result := r.data.DB(ctx).Last(&user, "mobile = ?", s)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return r.toBiz(&user), nil
 }
 func (r *UserRepo) FindByEmail(ctx context.Context, s string) (*biz.User, error) {
-	return nil, nil
+	user := SysUser{}
+	result := r.data.DB(ctx).Last(&user, "email = ?", s)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return r.toBiz(&user), nil
 }
 func (r *UserRepo) ListByName(ctx context.Context, s string) ([]*biz.User, error) {
-	return nil, nil
+	sysUsers, bizUsers := []*SysUser{}, []*biz.User{}
+	result := r.data.DB(ctx).Find(&sysUsers, "name LIKE ?", "%"+s)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	for _, v := range sysUsers {
+		bizUsers = append(bizUsers, r.toBiz(v))
+	}
+	return bizUsers, nil
+}
+
+func (r *UserRepo) ListByMobile(ctx context.Context, s string) ([]*biz.User, error) {
+	sysUsers, bizUsers := []*SysUser{}, []*biz.User{}
+	result := r.data.DB(ctx).Find(&sysUsers, "mobile LIKE ?", "%"+s)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	for _, v := range sysUsers {
+		bizUsers = append(bizUsers, r.toBiz(v))
+	}
+	return bizUsers, nil
+}
+
+func (r *UserRepo) ListByEmail(ctx context.Context, s string) ([]*biz.User, error) {
+	sysUsers, bizUsers := []*SysUser{}, []*biz.User{}
+	result := r.data.DB(ctx).Find(&sysUsers, "email LIKE ?", "%"+s)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	for _, v := range sysUsers {
+		bizUsers = append(bizUsers, r.toBiz(v))
+	}
+	return bizUsers, nil
 }

@@ -35,6 +35,256 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on PagingReq with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *PagingReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on PagingReq with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in PagingReqMultiError, or nil
+// if none found.
+func (m *PagingReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *PagingReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Query
+
+	// no validation rules for OrderBy
+
+	if m.Page != nil {
+		// no validation rules for Page
+	}
+
+	if m.PageSize != nil {
+		// no validation rules for PageSize
+	}
+
+	if m.Nopaging != nil {
+		// no validation rules for Nopaging
+	}
+
+	if len(errors) > 0 {
+		return PagingReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// PagingReqMultiError is an error wrapping multiple validation errors returned
+// by PagingReq.ValidateAll() if the designated constraints aren't met.
+type PagingReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m PagingReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m PagingReqMultiError) AllErrors() []error { return m }
+
+// PagingReqValidationError is the validation error returned by
+// PagingReq.Validate if the designated constraints aren't met.
+type PagingReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e PagingReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e PagingReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e PagingReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e PagingReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e PagingReqValidationError) ErrorName() string { return "PagingReqValidationError" }
+
+// Error satisfies the builtin error interface
+func (e PagingReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sPagingReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = PagingReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = PagingReqValidationError{}
+
+// Validate checks the field values on PagingReply with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *PagingReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on PagingReply with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in PagingReplyMultiError, or
+// nil if none found.
+func (m *PagingReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *PagingReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Total
+
+	for idx, item := range m.GetItems() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, PagingReplyValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, PagingReplyValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return PagingReplyValidationError{
+					field:  fmt.Sprintf("Items[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return PagingReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// PagingReplyMultiError is an error wrapping multiple validation errors
+// returned by PagingReply.ValidateAll() if the designated constraints aren't met.
+type PagingReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m PagingReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m PagingReplyMultiError) AllErrors() []error { return m }
+
+// PagingReplyValidationError is the validation error returned by
+// PagingReply.Validate if the designated constraints aren't met.
+type PagingReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e PagingReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e PagingReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e PagingReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e PagingReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e PagingReplyValidationError) ErrorName() string { return "PagingReplyValidationError" }
+
+// Error satisfies the builtin error interface
+func (e PagingReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sPagingReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = PagingReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = PagingReplyValidationError{}
+
 // Validate checks the field values on WebsocketProto with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.

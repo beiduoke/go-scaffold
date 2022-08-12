@@ -15,6 +15,7 @@ import (
 var _ v1.AdminServer = (*AdminService)(nil)
 
 var (
+	domain       = "domain"
 	loginMessage = &i18n.Message{
 		Description: "login",
 		ID:          "Login",
@@ -51,21 +52,26 @@ type AdminService struct {
 	log *log.Helper
 	ac  *conf.Auth
 	uc  *biz.UserUsecase
+	dc  *biz.DomainUsecase
 }
 
 // NewAdminService new a Admin service.
-func NewAdminService(logger log.Logger, ac *conf.Auth, ws *websocket.WebsocketService, uc *biz.UserUsecase) *AdminService {
+func NewAdminService(logger log.Logger, ac *conf.Auth, ws *websocket.WebsocketService, uc *biz.UserUsecase, dc *biz.DomainUsecase) *AdminService {
 	l := log.NewHelper(log.With(logger, "module", "service/admin"))
-	return &AdminService{log: l, ac: ac, uc: uc, ws: ws}
+	return &AdminService{log: l, ac: ac, ws: ws, uc: uc, dc: dc}
 }
 
 // Login 登录
 func (s *AdminService) Login(ctx context.Context, in *v1.LoginReq) (*v1.LoginReply, error) {
-	res, err := s.uc.NamePasswordLogin(ctx, &biz.User{Name: in.GetName(), Password: in.GetPassword()})
-	if err != nil {
-		return nil, v1.ErrorUserLoginFail("用户 %s 不存在或密码错误", in.GetName())
+	auth := in.GetAuth()
+	if in.GetDomain() == "" {
+		return nil, v1.ErrorUserRegisterFail("Domain不能为空")
 	}
-
+	res, err := s.uc.NamePasswordLogin(ctx, in.GetDomain(), &biz.User{Name: auth.GetName(), Password: auth.GetPassword()})
+	if err != nil {
+		return nil, v1.ErrorUserLoginFail("用户 %s 不存在或密码错误", auth.GetName())
+	}
+	// 生成token
 	token, expiresAt := s.uc.GenerateToken(res)
 	return &v1.LoginReply{
 		Token:      token,
@@ -75,9 +81,13 @@ func (s *AdminService) Login(ctx context.Context, in *v1.LoginReq) (*v1.LoginRep
 
 // Register 注册
 func (s *AdminService) Register(ctx context.Context, in *v1.RegisterReq) (*v1.RegisterReply, error) {
-	_, err := s.uc.NamePasswordRegister(ctx, &biz.User{Name: in.GetName(), Password: in.GetPassword()})
+	auth := in.GetAuth()
+	if in.GetDomain() == "" {
+		return nil, v1.ErrorUserRegisterFail("Domain不能为空")
+	}
+	_, err := s.uc.NamePasswordRegister(ctx, in.GetDomain(), &biz.User{Name: auth.GetName(), Password: auth.GetPassword()})
 	if err != nil {
-		return nil, v1.ErrorUserRegisterFail("用户 %s 注册失败: %v", in.GetName(), err.Error())
+		return nil, v1.ErrorUserRegisterFail("用户 %s 注册失败: %v", auth.GetName(), err.Error())
 	}
 
 	return &v1.RegisterReply{
