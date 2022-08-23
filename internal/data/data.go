@@ -31,13 +31,13 @@ func NewTransaction(d *Data) biz.Transaction {
 }
 
 // NewSnowflake 生成雪花算法id
-func NewSnowflake() *snowflake.Node {
+func NewSnowflake(logger log.Logger) *snowflake.Node {
+	l := log.NewHelper(log.With(logger, "module", "snowflake/initialize"))
 	sf, err := snowflake.NewNode(1)
 	if err != nil {
-		panic("snowflake no init")
+		l.Fatal("snowflake no init")
 	}
-	id := sf.Generate()
-	println("初始化雪花ID：" + id.String())
+	l.Infof("init snowflake ID：%s", sf.Generate())
 	return sf
 }
 

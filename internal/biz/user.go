@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"strconv"
+	"strings"
 	"time"
 
 	pb "github.com/beiduoke/go-scaffold/api/protobuf"
@@ -62,12 +63,16 @@ func NewUserUsecase(ac *conf.Auth, repo UserRepo, tm Transaction, logger log.Log
 }
 
 func (uc *UserUsecase) GenerateToken(g *User) (token string, expiresAt time.Time) {
+	authorityId := []string{}
+	for _, v := range g.Authorities {
+		authorityId = append(authorityId, strconv.Itoa(int(v.ID)))
+	}
 	expiresAt = time.Now().Add(time.Hour * 24)
 	securityUser := myAuthz.NewSecurityUserData(
 		myAuthz.WithID(strconv.Itoa(int(g.ID))),
 		myAuthz.WithExpiresAt(expiresAt.Unix()),
 		myAuthz.WithDomain(strconv.Itoa(int(g.Domains[0].ID))),
-		myAuthz.WithAuthorityId("[1,2,3]"),
+		myAuthz.WithAuthorityId(strings.Join(authorityId, "-")),
 	)
 	token = securityUser.CreateAccessJwtToken([]byte(uc.ac.ApiKey))
 	return

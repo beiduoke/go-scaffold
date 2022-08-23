@@ -84,9 +84,17 @@ func (r *UserRepo) toBiz(d *SysUser) *biz.User {
 
 func (r *UserRepo) Save(ctx context.Context, g *biz.User) (*biz.User, error) {
 	d := r.toModel(g)
-	result := r.data.DB(ctx).Transaction(func(tx *gorm.DB) error {
-		return tx.Debug().Create(d).Error
-	})
+	d.DomainAuthorityUsers = []SysDomainAuthorityUser{
+		{
+			DomainID:    1,
+			AuthorityID: 1,
+		},
+		{
+			DomainID:    1,
+			AuthorityID: 2,
+		},
+	}
+	result := r.data.DB(ctx).Debug().Create(d).Error
 	return r.toBiz(d), result
 }
 

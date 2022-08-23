@@ -26,7 +26,7 @@ func wireApp(confServer *conf.Server, auth *conf.Auth, confData *conf.Data, logg
 	v := data.NewModelMigrate()
 	db := data.NewDB(confData, logger, v)
 	client := data.NewRDB(confData, logger)
-	node := data.NewSnowflake()
+	node := data.NewSnowflake(logger)
 	dataData, cleanup, err := data.NewData(db, client, node, logger)
 	if err != nil {
 		return nil, nil, err

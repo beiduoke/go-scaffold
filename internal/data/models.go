@@ -31,13 +31,15 @@ type DomainModel struct {
 
 type SysDomain struct {
 	gorm.Model
-	DomainID string `gorm:"type:varchar(100);column:domain_id;not null;uniqueIndex;comment:领域ID;"`
-	Name     string `gorm:"type:varchar(255);column:name;not null;comment:名称;"`
-	State    int32  `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
+	DomainID           string `gorm:"type:varchar(100);column:domain_id;not null;uniqueIndex;comment:领域ID;"`
+	Name               string `gorm:"type:varchar(255);column:name;not null;comment:名称;"`
+	State              int32  `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
+	DefaultAuthorityID uint   `gorm:"type:bigint(20);column:default_authority_id;not null;index;comment:默认角色;"`
 	// Users       []SysUser      `gorm:"many2many:sys_domain_users;"`
 	// Authorities []SysAuthority `gorm:"many2many:sys_domain_authorities;"`
-	Users       []SysUser      `gorm:"-"`
-	Authorities []SysAuthority `gorm:"-"`
+	Users                []SysUser                `gorm:"-"`
+	Authorities          []SysAuthority           `gorm:"-"`
+	DomainAuthorityUsers []SysDomainAuthorityUser `gorm:"foreignKey:DomainID"`
 }
 
 // User 用户
@@ -54,8 +56,9 @@ type SysUser struct {
 	State    int32      `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:用户状态 0 未指定  1 启用 2 停用;"`
 	// Authorities []SysAuthority `gorm:"many2many:sys_authority_users;"`
 	// Domains     []SysDomain    `gorm:"many2many:sys_domain_users;"`
-	Authorities []SysAuthority `gorm:"-"`
-	Domains     []SysDomain    `gorm:"-"`
+	Authorities          []SysAuthority           `gorm:"-"`
+	Domains              []SysDomain              `gorm:"-"`
+	DomainAuthorityUsers []SysDomainAuthorityUser `gorm:"foreignKey:UserID"`
 }
 
 // Authority 角色
@@ -71,8 +74,9 @@ type SysAuthority struct {
 	Apis          []SysApi        `gorm:"many2many:sys_authority_apis;"`
 	// Users         []SysUser       `gorm:"many2many:sys_authority_users;"`
 	// Domains       []SysDomain     `gorm:"many2many:sys_domain_authorities;"`
-	Users   []SysUser   `gorm:"-"`
-	Domains []SysDomain `gorm:"-"`
+	Users                []SysUser                `gorm:"-"`
+	Domains              []SysDomain              `gorm:"-"`
+	DomainAuthorityUsers []SysDomainAuthorityUser `gorm:"foreignKey:AuthorityID"`
 }
 
 type SysDomainAuthorityUser struct {
@@ -80,6 +84,9 @@ type SysDomainAuthorityUser struct {
 	AuthorityID uint `gorm:"type:bigint(20);column:authority_id;not null;uniqueIndex:idx_sys_domain_authority_users_domain_id_authority_id_user_id;comment:角色ID"`
 	UserID      uint `gorm:"type:bigint(20);column:user_id;not null;uniqueIndex:idx_sys_domain_authority_users_domain_id_authority_id_user_id;comment:用户ID"`
 	CreatedAt   time.Time
+	Domain      SysDomain    `gorm:"foreignKey:DomainID"`
+	Authority   SysAuthority `gorm:"foreignKey:AuthorityID"`
+	User        SysUser      `gorm:"foreignKey:UserID"`
 }
 
 // Api api接口

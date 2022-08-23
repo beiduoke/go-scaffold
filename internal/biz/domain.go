@@ -9,12 +9,13 @@ import (
 
 // Domain is a Domain model.
 type Domain struct {
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	ID        uint
-	DomainID  string
-	Name      string
-	State     int32
+	CreatedAt          time.Time
+	UpdatedAt          time.Time
+	ID                 uint
+	DomainID           string
+	Name               string
+	State              int32
+	DefaultAuthorityID uint
 }
 
 // DomainRepo is a Greater repo.
