@@ -16,20 +16,21 @@ import (
 
 // User is a User model.
 type User struct {
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	ID          uint
-	Name        string
-	NickName    string
-	RealName    string
-	Password    string
-	Birthday    *time.Time
-	Gender      int32
-	Mobile      string
-	Email       string
-	State       int32
-	Domains     []Domain
-	Authorities []Authority
+	CreatedAt            time.Time
+	UpdatedAt            time.Time
+	ID                   uint
+	Name                 string
+	NickName             string
+	RealName             string
+	Password             string
+	Birthday             *time.Time
+	Gender               int32
+	Mobile               string
+	Email                string
+	State                int32
+	Domains              []Domain
+	Authorities          []Authority
+	DomainAuthorityUsers []DomainAuthorityUser
 }
 
 // UserRepo is a Greater repo.
@@ -121,7 +122,18 @@ func (uc *UserUsecase) NamePasswordRegister(ctx context.Context, domainId string
 	if g.State <= 0 {
 		g.State = int32(pb.UserState_ACTIVE)
 	}
-	g.Domains = []Domain{*domain}
-	g.Authorities = []Authority{{Name: "13213", ID: 1}}
-	return uc.repo.Save(ctx, g)
+
+	err = uc.tm.InTx(ctx, func(ctx context.Context) error {
+		g, err = uc.repo.Save(ctx, g)
+		if err != nil {
+			return err
+		}
+		_, err := uc.domainRepo.AuthorityUserSave(ctx, &DomainAuthorityUser{
+			UserID:      g.ID,
+			AuthorityID: domain.DefaultAuthorityID,
+			DomainID:    domain.ID,
+		})
+		return err
+	})
+	return g, err
 }

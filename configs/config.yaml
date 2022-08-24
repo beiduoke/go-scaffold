@@ -13,6 +13,7 @@ data:
   database:
     driver: mysql
     source: root:123456@tcp(127.0.0.1:3306)/go_scaffold?charset=utf8mb4&parseTime=true
+    log_level: 4
   redis:
     addr: 127.0.0.1:6379
     password: '123456'

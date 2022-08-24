@@ -6,13 +6,15 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/go-kratos/kratos/v2/log"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type UserRepo struct {
-	data      *Data
-	log       *log.Helper
-	domain    DomainRepo
-	authority AuthorityRepo
+	data                *Data
+	log                 *log.Helper
+	domain              DomainRepo
+	authority           AuthorityRepo
+	domainAuthorityUser DomainAuthorityUserRepo
 }
 
 // NewUserRepo .
@@ -37,12 +39,45 @@ func (r *UserRepo) toModel(d *biz.User) *SysUser {
 	for _, v := range d.Authorities {
 		authorities = append(authorities, *r.authority.toModel(&v))
 	}
+	domainAuthorityUsers := []SysDomainAuthorityUser{}
+	for _, v := range d.DomainAuthorityUsers {
+		domainAuthorityUsers = append(domainAuthorityUsers, *r.domainAuthorityUser.toModel(&v))
+	}
 	return &SysUser{
 		Model: gorm.Model{
 			ID:        d.ID,
 			CreatedAt: d.CreatedAt,
 			UpdatedAt: d.UpdatedAt,
 		},
+		Name:     d.Name,
+		NickName: d.NickName,
+		RealName: d.RealName,
+		Password: d.Password,
+		Birthday: d.Birthday,
+		Gender:   d.Gender,
+		Mobile:   d.Mobile,
+		Email:    d.Email,
+		State:    d.State,
+		// DomainAuthorityUsers: domainAuthorityUsers,
+	}
+}
+
+func (r *UserRepo) toBiz(d *SysUser) *biz.User {
+	if d == nil {
+		return nil
+	}
+	domains := []biz.Domain{}
+	for _, v := range d.Domains {
+		domains = append(domains, *r.domain.toBiz(&v))
+	}
+	authorities := []biz.Authority{}
+	for _, v := range d.Authorities {
+		authorities = append(authorities, *r.authority.toBiz(&v))
+	}
+	return &biz.User{
+		CreatedAt:   d.CreatedAt,
+		UpdatedAt:   d.UpdatedAt,
+		ID:          d.ID,
 		Name:        d.Name,
 		NickName:    d.NickName,
 		RealName:    d.RealName,
@@ -57,44 +92,9 @@ func (r *UserRepo) toModel(d *biz.User) *SysUser {
 	}
 }
 
-func (r *UserRepo) toBiz(d *SysUser) *biz.User {
-	if d == nil {
-		return nil
-	}
-	domains := []biz.Domain{}
-	for _, v := range d.Domains {
-		domains = append(domains, *r.domain.toBiz(&v))
-	}
-	return &biz.User{
-		CreatedAt: d.CreatedAt,
-		UpdatedAt: d.UpdatedAt,
-		ID:        d.ID,
-		Name:      d.Name,
-		NickName:  d.NickName,
-		RealName:  d.RealName,
-		Password:  d.Password,
-		Birthday:  d.Birthday,
-		Gender:    d.Gender,
-		Mobile:    d.Mobile,
-		Email:     d.Email,
-		State:     d.State,
-		Domains:   domains,
-	}
-}
-
 func (r *UserRepo) Save(ctx context.Context, g *biz.User) (*biz.User, error) {
 	d := r.toModel(g)
-	d.DomainAuthorityUsers = []SysDomainAuthorityUser{
-		{
-			DomainID:    1,
-			AuthorityID: 1,
-		},
-		{
-			DomainID:    1,
-			AuthorityID: 2,
-		},
-	}
-	result := r.data.DB(ctx).Debug().Create(d).Error
+	result := r.data.DB(ctx).Omit(clause.Associations).Create(d).Error
 	return r.toBiz(d), result
 }
 

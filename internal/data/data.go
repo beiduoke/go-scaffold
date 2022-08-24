@@ -83,6 +83,7 @@ func (d *Data) DB(ctx context.Context) *gorm.DB {
 	if ok {
 		return tx
 	}
+
 	return d.db
 }
 

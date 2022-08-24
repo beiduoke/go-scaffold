@@ -7,6 +7,13 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 )
 
+type DomainAuthorityUser struct {
+	DomainID    uint
+	AuthorityID uint
+	UserID      uint
+	CreatedAt   time.Time
+}
+
 // Domain is a Domain model.
 type Domain struct {
 	CreatedAt          time.Time
@@ -27,6 +34,9 @@ type DomainRepo interface {
 	ListByName(context.Context, string) ([]*Domain, error)
 	ListAll(context.Context) ([]*Domain, error)
 	FindInDomainID(context.Context, ...string) ([]*Domain, error)
+
+	// 领域权限
+	AuthorityUserSave(context.Context, *DomainAuthorityUser) (*DomainAuthorityUser, error)
 }
 
 // DomainUsecase is a Domain usecase.

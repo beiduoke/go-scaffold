@@ -30,8 +30,7 @@ type DomainModel struct {
 }
 
 type SysDomain struct {
-	gorm.Model
-	DomainID           string `gorm:"type:varchar(100);column:domain_id;not null;uniqueIndex;comment:领域ID;"`
+	DomainModel
 	Name               string `gorm:"type:varchar(255);column:name;not null;comment:名称;"`
 	State              int32  `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
 	DefaultAuthorityID uint   `gorm:"type:bigint(20);column:default_authority_id;not null;index;comment:默认角色;"`

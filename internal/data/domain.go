@@ -5,19 +5,20 @@ import (
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/go-kratos/kratos/v2/log"
-	"gorm.io/gorm"
 )
 
 type DomainRepo struct {
-	data *Data
-	log  *log.Helper
+	data                    *Data
+	log                     *log.Helper
+	domainAuthorityUserRepo *DomainAuthorityUserRepo
 }
 
 // NewDomainRepo .
 func NewDomainRepo(data *Data, logger log.Logger) biz.DomainRepo {
 	return &DomainRepo{
-		data: data,
-		log:  log.NewHelper(logger),
+		data:                    data,
+		log:                     log.NewHelper(logger),
+		domainAuthorityUserRepo: NewDomainAuthorityUserRepo(data, logger),
 	}
 }
 
@@ -26,14 +27,15 @@ func (r *DomainRepo) toModel(d *biz.Domain) *SysDomain {
 		return nil
 	}
 	return &SysDomain{
-		Model: gorm.Model{
+		DomainModel: DomainModel{
 			ID:        d.ID,
 			CreatedAt: d.CreatedAt,
 			UpdatedAt: d.UpdatedAt,
+			DomainID:  d.DomainID,
 		},
-		DomainID: d.DomainID,
-		Name:     d.Name,
-		State:    d.State,
+		Name:               d.Name,
+		State:              d.State,
+		DefaultAuthorityID: d.DefaultAuthorityID,
 	}
 }
 
@@ -42,12 +44,13 @@ func (r *DomainRepo) toBiz(d *SysDomain) *biz.Domain {
 		return nil
 	}
 	return &biz.Domain{
-		CreatedAt: d.CreatedAt,
-		UpdatedAt: d.UpdatedAt,
-		ID:        d.ID,
-		DomainID:  d.DomainID,
-		Name:      d.Name,
-		State:     d.State,
+		CreatedAt:          d.CreatedAt,
+		UpdatedAt:          d.UpdatedAt,
+		ID:                 d.ID,
+		DomainID:           d.DomainID,
+		Name:               d.Name,
+		State:              d.State,
+		DefaultAuthorityID: d.DefaultAuthorityID,
 	}
 }
 
@@ -90,4 +93,8 @@ func (r *DomainRepo) FindInDomainID(ctx context.Context, domainIds ...string) ([
 		bizDomains = append(bizDomains, r.toBiz(v))
 	}
 	return bizDomains, result.Error
+}
+
+func (r *DomainRepo) AuthorityUserSave(ctx context.Context, g *biz.DomainAuthorityUser) (*biz.DomainAuthorityUser, error) {
+	return r.domainAuthorityUserRepo.Save(ctx, g)
 }
