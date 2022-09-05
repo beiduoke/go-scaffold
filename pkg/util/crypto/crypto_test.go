@@ -1,16 +1,16 @@
 package crypto
 
 import (
-	"fmt"
-	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestHashPassword(t *testing.T) {
 	text := "password"
 	hash, _ := HashPassword(text)
-	fmt.Println(hash)
+	t.Log(hash)
 }
 
 func TestCheckPasswordHash(t *testing.T) {

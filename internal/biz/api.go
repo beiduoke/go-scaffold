@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
@@ -26,6 +27,7 @@ type ApiRepo interface {
 	FindByID(context.Context, int64) (*Api, error)
 	ListByName(context.Context, string) ([]*Api, error)
 	ListAll(context.Context) ([]*Api, error)
+	ListPage(context.Context, pagination.PaginationHandler) ([]*Api, int64)
 }
 
 // ApiUsecase is a Api usecase.

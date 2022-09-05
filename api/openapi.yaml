@@ -71,6 +71,19 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.RegisterReply'
+    /admin/v1/user/profile:
+        get:
+            tags:
+                - Admin
+            description: 用户概述
+            operationId: Admin_ProfileUser
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.User'
     /admin/v1/users:
         get:
             tags:
@@ -158,8 +171,6 @@ components:
                     type: string
                     format: date-time
                 authoritys:
-                    type: array
-                    items:
-                        type: string
+                    type: string
 tags:
     - name: Admin

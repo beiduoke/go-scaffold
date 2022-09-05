@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
@@ -22,6 +23,7 @@ type AuthorityRepo interface {
 	FindByID(context.Context, int64) (*Authority, error)
 	ListByName(context.Context, string) ([]*Authority, error)
 	ListAll(context.Context) ([]*Authority, error)
+	ListPage(context.Context, pagination.PaginationHandler) ([]*Authority, int64)
 }
 
 // AuthorityUsecase is a Authority usecase.

@@ -36,6 +36,12 @@ service Admin {
       body: "auth"
     };
   }
+  // 用户概述
+  rpc ProfileUser (google.protobuf.Empty) returns (User) {
+    option (google.api.http) = {
+      get: "/admin/v1/user/profile"
+    };
+  }
   // 用户列表
   rpc ListUser (google.protobuf.Empty) returns (ListUserReply) {
     option (google.api.http) = {
@@ -57,7 +63,7 @@ message User {
   optional api.protobuf.UserState state = 10;
   optional google.protobuf.Timestamp created_at = 11;
   optional google.protobuf.Timestamp updated_at = 12;
-  repeated string authoritys = 13;
+  optional string authoritys = 13;
 }
 
 message ListUserReply {

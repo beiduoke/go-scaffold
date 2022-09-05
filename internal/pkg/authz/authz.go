@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/beiduoke/go-scaffold/pkg/authz"
 	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
@@ -48,9 +49,9 @@ func WithExpiresAt(expiresAt int64) Option {
 type SecurityUser struct {
 	Path        string
 	Method      string
-	AuthorityId string
-	Domain      string
 	ID          string
+	Domain      string
+	AuthorityId string
 	ExpiresAt   int64
 }
 
@@ -68,21 +69,9 @@ func NewSecurityUser() authz.SecurityUser {
 
 func (su *SecurityUser) ParseFromContext(ctx context.Context) error {
 	if claims, ok := jwt.FromContext(ctx); ok {
-		str, ok := claims.(jwtV4.MapClaims)[ClaimAuthorityId]
-		if ok {
-			su.AuthorityId = str.(string)
-		}
-		str, ok = claims.(jwtV4.MapClaims)[Domain]
-		if ok {
-			su.Domain = str.(string)
-		}
-		str, ok = claims.(jwtV4.MapClaims)[ID]
-		if ok {
-			su.ID = str.(string)
-		}
-		str, ok = claims.(jwtV4.MapClaims)[ExpiresAt]
-		if ok {
-			su.ExpiresAt = str.(int64)
+		err := su.ParseAccessJwtToken(claims)
+		if !errors.Is(err, nil) {
+			return err
 		}
 	} else {
 		return errors.New("jwt claim missing")
@@ -91,10 +80,15 @@ func (su *SecurityUser) ParseFromContext(ctx context.Context) error {
 	if header, ok := transport.FromServerContext(ctx); ok {
 		su.Path = header.Operation()
 		su.Method = "*"
+		// if header.Kind() == transport.KindHTTP {
+		// 	if ht, ok := header.(http.Transporter); ok {
+		// 		su.Path = ht.Request().URL.Path
+		// 		su.Method = ht.Request().Method
+		// 	}
+		// }
 	} else {
 		return errors.New("jwt claim missing")
 	}
-
 	return nil
 }
 
@@ -120,7 +114,7 @@ func (su *SecurityUser) CreateAccessJwtToken(secretKey []byte) string {
 			ClaimAuthorityId: su.AuthorityId,
 			Domain:           su.Domain,
 			ID:               su.ID,
-			ExpiresAt:        float64(su.ExpiresAt),
+			ExpiresAt:        su.ExpiresAt,
 		})
 
 	signedToken, err := claims.SignedString(secretKey)
@@ -173,24 +167,30 @@ func (su *SecurityUser) ParseAccessJwtToken(claims jwtV4.Claims) error {
 	if !ok {
 		return errors.New("claims is not map claims")
 	}
-
-	strAuthorityId, ok := mc[ClaimAuthorityId]
+	// 用户ID
+	str, ok := mc[ID]
 	if ok {
-		su.AuthorityId = strAuthorityId.(string)
+		su.ID = str.(string)
 	}
-	strExpiresAt, ok := mc[ExpiresAt]
+	// 权限
+	str, ok = mc[ClaimAuthorityId]
 	if ok {
-		// expiresAtFloat := strconv.FormatFloat(strExpiresAt.(float64), 'f', 0, 64)
-		su.ExpiresAt = strExpiresAt.(int64)
+		su.AuthorityId = str.(string)
 	}
-	strDomain, ok := mc[Domain]
+	// 领域
+	str, ok = mc[Domain]
 	if ok {
-		su.Domain = strDomain.(string)
+		su.Domain = str.(string)
 	}
-	strId, ok := mc[ID]
+	// 过期时间
+	str, ok = mc[ExpiresAt]
 	if ok {
-		su.ID = strId.(string)
+		switch exp := str.(type) {
+		case string:
+			su.ExpiresAt, _ = strconv.ParseInt(exp, 10, 64)
+		case float64:
+			su.ExpiresAt, _ = strconv.ParseInt(strconv.FormatFloat(exp, 'f', 0, 64), 10, 64)
+		}
 	}
-
 	return nil
 }

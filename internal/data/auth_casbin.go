@@ -4,12 +4,14 @@ import (
 	"context"
 
 	"github.com/beiduoke/go-scaffold/internal/conf"
+	stdcasbin "github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
-	fileAdapter "github.com/casbin/casbin/v2/persist/file-adapter"
+	fileadapter "github.com/casbin/casbin/v2/persist/file-adapter"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
+	rediswatcher "github.com/casbin/redis-watcher/v2"
 	"github.com/go-kratos/kratos/v2/log"
-	redisadapter "github.com/mlsen/casbin-redis-adapter/v2"
+	"github.com/go-redis/redis/v8"
 )
 
 func NewAuthModel(ac *conf.Auth, logger log.Logger) model.Model {
@@ -21,56 +23,57 @@ func NewAuthModel(ac *conf.Auth, logger log.Logger) model.Model {
 	return m
 }
 
-func NewAuthAdapter(d *Data, ac *conf.Auth, logger log.Logger) persist.Adapter {
+func NewAuthAdapter(d *Data, ac *conf.Auth, logger log.Logger) (adapter persist.Adapter) {
 	log := log.NewHelper(log.With(logger, "module", "data/authAdapter"))
-	gormAdapter, err := gormadapter.NewAdapterByDBUseTableName(d.DB(context.Background()), "sys", "casbin_rules")
+	// gormadapter "github.com/casbin/gorm-adapter/v3"
+	adapter, err := gormadapter.NewAdapterByDBUseTableName(d.DB(context.Background()), "sys", "casbin_rules")
+	log.Info("initialization gorm adapter ")
 	if err != nil {
 		log.Fatalf("failed gorm casbin adapters connection %v", err)
 	}
 	// 优先使用gorm进行存储
-	return gormAdapter
-	// redis 适配器
-	fileAdapter := fileAdapter.NewAdapter(ac.Casbin.PolicyPath)
-	// redis 适配器
-	redisAdapter := redisadapter.NewFromClient(d.rdb)
-	return &AuthAdapterRepo{
-		redisAdapter: redisAdapter,
-		gormAdapter:  gormAdapter,
-		fileAdapter:  fileAdapter,
+	// file 适配器
+	// fileadapter "github.com/casbin/casbin/v2/persist/file-adapter"
+	adapter = fileadapter.NewAdapter(ac.Casbin.PolicyPath)
+	log.Info("initialization file adapter ")
+	return adapter
+}
+
+func NewWatcher(conf *conf.Data, logger log.Logger) persist.Watcher {
+	log := log.NewHelper(log.With(logger, "module", "data/authWatcher"))
+	// rediswatcher "github.com/casbin/redis-watcher/v2"
+	w, err := rediswatcher.NewWatcher(conf.GetRedis().GetAddr(), rediswatcher.WatcherOptions{
+		Options: redis.Options{
+			Network:  conf.GetRedis().GetNetwork(),
+			Password: conf.GetRedis().GetPassword(),
+		},
+		Channel: "/casbin",
+		// Only exists in test, generally be true
+		IgnoreSelf: false,
+	})
+	if err != nil {
+		log.Fatalf("failed casbin redis watch %v", err)
 	}
+
+	_ = w.SetUpdateCallback(func(s string) {
+		log.Infof("casbin redis watcher info %v", s)
+	})
+
+	return w
 }
 
-// 代理模式进行多个适配器相同操作
-type AuthAdapterRepo struct {
-	redisAdapter persist.Adapter
-	gormAdapter  persist.Adapter
-	fileAdapter  persist.Adapter
-}
+func NewAuthEnforcer(model model.Model, adapter persist.Adapter, watcher persist.Watcher, logger log.Logger) stdcasbin.IEnforcer {
+	log := log.NewHelper(log.With(logger, "module", "data/authEnforcer"))
+	// enforcer, err := stdcasbin.NewEnforcer(model, adapter)
+	// enforcer, err := stdcasbin.NewCachedEnforcer(model, adapter)
+	enforcer, err := stdcasbin.NewSyncedEnforcer(model, adapter)
+	if err != nil {
+		log.Fatalf("failed casbin enforcer %v", err)
+	}
+	err = enforcer.SetWatcher(watcher)
+	if err != nil {
+		log.Fatalf("failed casbin watcher %v", err)
+	}
 
-// LoadPolicy loads all policy rules from the storage.
-func (auth *AuthAdapterRepo) LoadPolicy(model model.Model) error {
-	return auth.gormAdapter.LoadPolicy(model)
-}
-
-// SavePolicy saves all policy rules to the storage.
-func (auth *AuthAdapterRepo) SavePolicy(model model.Model) error {
-	return auth.gormAdapter.SavePolicy(model)
-}
-
-// AddPolicy adds a policy rule to the storage.
-// This is part of the Auto-Save feature.
-func (auth *AuthAdapterRepo) AddPolicy(sec string, ptype string, rule []string) error {
-	return auth.gormAdapter.AddPolicy(sec, ptype, rule)
-}
-
-// RemovePolicy removes a policy rule from the storage.
-// This is part of the Auto-Save feature.
-func (auth *AuthAdapterRepo) RemovePolicy(sec string, ptype string, rule []string) error {
-	return auth.gormAdapter.RemovePolicy(sec, ptype, rule)
-}
-
-// RemoveFilteredPolicy removes policy rules that match the filter from the storage.
-// This is part of the Auto-Save feature.
-func (auth *AuthAdapterRepo) RemoveFilteredPolicy(sec string, ptype string, fieldIndex int, fieldValues ...string) error {
-	return auth.gormAdapter.RemoveFilteredPolicy(sec, ptype, fieldIndex, fieldValues...)
+	return enforcer
 }

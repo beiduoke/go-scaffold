@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -113,6 +114,28 @@ func (r *UserRepo) FindByID(ctx context.Context, id int64) (*biz.User, error) {
 
 func (r *UserRepo) ListAll(ctx context.Context) ([]*biz.User, error) {
 	return nil, nil
+}
+
+func (r *UserRepo) ListPage(ctx context.Context, handler pagination.PaginationHandler) (users []*biz.User, total int64) {
+	db := r.data.DB(ctx).Model(&SysUser{})
+	sysUsers := []*SysUser{}
+	// 查询条件
+	for _, v := range handler.GetConditions() {
+		db = db.Where(v.Query, v.Args...)
+	}
+	// 排序
+	for _, v := range handler.GetOrders() {
+		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: v.Column}, Desc: v.Desc})
+	}
+	result := db.Count(&total).Offset(handler.GetPageOffset()).Limit(int(handler.GetPageSize())).Find(&sysUsers)
+	if result.Error != nil {
+		return nil, 0
+	}
+
+	for _, v := range sysUsers {
+		users = append(users, r.toBiz(v))
+	}
+	return users, total
 }
 
 func (r *UserRepo) FindByName(ctx context.Context, s string) (*biz.User, error) {

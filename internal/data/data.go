@@ -16,7 +16,7 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewDB, NewRDB, NewTransaction, NewModelMigrate, NewSnowflake, NewAuthModel, NewAuthAdapter, NewDomainRepo, NewAuthorityRepo, NewMenuRepo, NewApiRepo, NewUserRepo)
+var ProviderSet = wire.NewSet(NewData, NewDB, NewRDB, NewTransaction, NewModelMigrate, NewSnowflake, NewAuthModel, NewAuthAdapter, NewWatcher, NewAuthEnforcer, NewDomainRepo, NewAuthorityRepo, NewMenuRepo, NewApiRepo, NewUserRepo)
 
 // NewModelMigrate 数据模型迁移
 func NewModelMigrate() []interface{} {

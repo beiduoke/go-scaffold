@@ -2,11 +2,13 @@ package casbin
 
 import (
 	"context"
+	"log"
 
 	"github.com/beiduoke/go-scaffold/pkg/authz"
 	stdcasbin "github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
+	fileadapter "github.com/casbin/casbin/v2/persist/file-adapter"
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/middleware"
 )
@@ -53,7 +55,7 @@ type options struct {
 	securityUserCreator authz.SecurityUserCreator
 	model               model.Model
 	policy              persist.Adapter
-	enforcer            *stdcasbin.SyncedEnforcer
+	enforcer            stdcasbin.IEnforcer
 }
 
 // WithDomainSupport  enable domain support
@@ -81,6 +83,12 @@ func WithCasbinPolicy(policy persist.Adapter) Option {
 	}
 }
 
+func WithCasbinEnforcer(enforcer stdcasbin.IEnforcer) Option {
+	return func(o *options) {
+		o.enforcer = enforcer
+	}
+}
+
 // loadRbacModel 加载RBAC模型
 func loadRbacModel() (model.Model, error) {
 	return model.NewModelFromString(defaultRBACModel)
@@ -88,17 +96,26 @@ func loadRbacModel() (model.Model, error) {
 
 func Server(opts ...Option) middleware.Middleware {
 	o := &options{
+		enableDomain:        false,
 		securityUserCreator: nil,
 	}
 	for _, opt := range opts {
 		opt(o)
 	}
 
-	if o.model == nil {
-		o.model, _ = loadRbacModel()
+	if o.enforcer == nil {
+		if o.model == nil {
+			o.model, _ = loadRbacModel()
+		}
+		if o.policy == nil {
+			o.policy = fileadapter.NewAdapter("configs/authz/authz_policy.csv")
+		}
+		enforcer, err := stdcasbin.NewEnforcer(o.model, o.policy)
+		if err != nil {
+			log.Fatalf("failed casbin enforcer %v", err)
+		}
+		o.enforcer = enforcer
 	}
-
-	o.enforcer, _ = stdcasbin.NewSyncedEnforcer(o.model, o.policy)
 
 	return func(handler middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req interface{}) (interface{}, error) {
@@ -138,17 +155,26 @@ func Server(opts ...Option) middleware.Middleware {
 
 func Client(opts ...Option) middleware.Middleware {
 	o := &options{
+		enableDomain:        false,
 		securityUserCreator: nil,
 	}
 	for _, opt := range opts {
 		opt(o)
 	}
 
-	if o.model == nil {
-		o.model, _ = loadRbacModel()
+	if o.enforcer == nil {
+		if o.model == nil {
+			o.model, _ = loadRbacModel()
+		}
+		if o.policy == nil {
+			o.policy = fileadapter.NewAdapter("configs/authz/authz_policy.csv")
+		}
+		enforcer, err := stdcasbin.NewEnforcer(o.model, o.policy)
+		if err != nil {
+			log.Fatalf("failed casbin enforcer %v", err)
+		}
+		o.enforcer = enforcer
 	}
-
-	o.enforcer, _ = stdcasbin.NewSyncedEnforcer(o.model, o.policy)
 
 	return func(handler middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req interface{}) (interface{}, error) {

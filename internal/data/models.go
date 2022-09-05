@@ -44,6 +44,7 @@ type SysDomain struct {
 // User 用户
 type SysUser struct {
 	gorm.Model
+	Avatar   string     `gorm:"type:varchar(255);column:avatar;not null;default:'';comment:头像;"`
 	Name     string     `gorm:"type:varchar(255);column:name;not null;index:idx_users_name_nick_name_real_name,priority:1;comment:名称;"`
 	NickName string     `gorm:"type:varchar(255);column:nick_name;not null;default:'';index:idx_users_name_nick_name_real_name,priority:3;comment:昵称;"`
 	RealName string     `gorm:"type:varchar(100);column:real_name;not null;default:'';index:idx_users_name_nick_name_real_name,priority:2;comment:实名;"`

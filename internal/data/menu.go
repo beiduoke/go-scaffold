@@ -4,8 +4,10 @@ import (
 	"context"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type MenuRepo struct {
@@ -89,4 +91,26 @@ func (r *MenuRepo) ListByName(context.Context, string) ([]*biz.Menu, error) {
 
 func (r *MenuRepo) ListAll(context.Context) ([]*biz.Menu, error) {
 	return nil, nil
+}
+
+func (r *MenuRepo) ListPage(ctx context.Context, handler pagination.PaginationHandler) (menus []*biz.Menu, total int64) {
+	db := r.data.DB(ctx).Model(&SysMenu{})
+	sysMenus := []*SysMenu{}
+	// 查询条件
+	for _, v := range handler.GetConditions() {
+		db = db.Where(v.Query, v.Args...)
+	}
+	// 排序
+	for _, v := range handler.GetOrders() {
+		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: v.Column}, Desc: v.Desc})
+	}
+	result := db.Count(&total).Offset(handler.GetPageOffset()).Limit(int(handler.GetPageSize())).Find(&sysMenus)
+	if result.Error != nil {
+		return nil, 0
+	}
+
+	for _, v := range sysMenus {
+		menus = append(menus, r.toBiz(v))
+	}
+	return menus, total
 }

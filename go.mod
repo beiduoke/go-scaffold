@@ -14,7 +14,7 @@ require (
 )
 
 require (
-	github.com/casbin/casbin/v2 v2.51.0
+	github.com/casbin/casbin/v2 v2.53.1
 	github.com/envoyproxy/protoc-gen-validate v0.1.0
 	github.com/go-kratos/kratos/contrib/config/consul/v2 v2.0.0-20220811033210-f0c2a6ed90d1
 	github.com/go-kratos/kratos/contrib/config/etcd/v2 v2.0.0-20220811033210-f0c2a6ed90d1
@@ -73,9 +73,11 @@ require (
 	github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b // indirect
 	github.com/jackc/pgtype v1.10.0 // indirect
 	github.com/jackc/pgx/v4 v4.15.0 // indirect
+	github.com/jinzhu/gorm v1.9.12 // indirect
 	github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/jsummers/gobmp v0.0.0-20151104160322-e2ba15ffa76e // indirect
+	github.com/lib/pq v1.10.2 // indirect
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
@@ -115,7 +117,9 @@ require (
 	github.com/BurntSushi/toml v1.2.0
 	github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible // indirect
 	github.com/bwmarrin/snowflake v0.3.0
-	github.com/casbin/gorm-adapter/v3 v3.7.4
+	github.com/casbin/gorm-adapter/v2 v2.1.0
+	github.com/casbin/gorm-adapter/v3 v3.10.0
+	github.com/casbin/redis-watcher/v2 v2.1.0
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/felixge/httpsnoop v1.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
@@ -135,7 +139,6 @@ require (
 	github.com/imdario/mergo v0.3.12 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
-	github.com/mlsen/casbin-redis-adapter/v2 v2.0.1
 	github.com/nicksnyder/go-i18n/v2 v2.2.0
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rakyll/statik v0.1.7 // indirect

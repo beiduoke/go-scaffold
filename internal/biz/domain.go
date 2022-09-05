@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
@@ -33,10 +34,12 @@ type DomainRepo interface {
 	FindByDomainID(context.Context, string) (*Domain, error)
 	ListByName(context.Context, string) ([]*Domain, error)
 	ListAll(context.Context) ([]*Domain, error)
+	ListPage(context.Context, pagination.PaginationHandler) ([]*Domain, int64)
 	FindInDomainID(context.Context, ...string) ([]*Domain, error)
 
 	// 领域权限
-	AuthorityUserSave(context.Context, *DomainAuthorityUser) (*DomainAuthorityUser, error)
+	SaveAuthorityUser(context.Context, *DomainAuthorityUser) (*DomainAuthorityUser, error)
+	FindAuthorityUserByUserID(context.Context, uint /** domainID **/, uint /** userID **/) ([]*DomainAuthorityUser, error)
 }
 
 // DomainUsecase is a Domain usecase.

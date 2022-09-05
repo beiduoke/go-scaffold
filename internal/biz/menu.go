@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
@@ -32,6 +33,7 @@ type MenuRepo interface {
 	FindByID(context.Context, int64) (*Menu, error)
 	ListByName(context.Context, string) ([]*Menu, error)
 	ListAll(context.Context) ([]*Menu, error)
+	ListPage(context.Context, pagination.PaginationHandler) ([]*Menu, int64)
 }
 
 // MenuUsecase is a Menu usecase.

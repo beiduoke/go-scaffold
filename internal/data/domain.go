@@ -4,7 +4,9 @@ import (
 	"context"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
+	"gorm.io/gorm/clause"
 )
 
 type DomainRepo struct {
@@ -85,6 +87,28 @@ func (r *DomainRepo) ListAll(ctx context.Context) ([]*biz.Domain, error) {
 	return nil, nil
 }
 
+func (r *DomainRepo) ListPage(ctx context.Context, handler pagination.PaginationHandler) (domains []*biz.Domain, total int64) {
+	db := r.data.DB(ctx).Model(&SysDomain{})
+	sysDomains := []*SysDomain{}
+	// 查询条件
+	for _, v := range handler.GetConditions() {
+		db = db.Where(v.Query, v.Args...)
+	}
+	// 排序
+	for _, v := range handler.GetOrders() {
+		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: v.Column}, Desc: v.Desc})
+	}
+	result := db.Count(&total).Offset(handler.GetPageOffset()).Limit(int(handler.GetPageSize())).Find(&sysDomains)
+	if result.Error != nil {
+		return nil, 0
+	}
+
+	for _, v := range sysDomains {
+		domains = append(domains, r.toBiz(v))
+	}
+	return domains, total
+}
+
 func (r *DomainRepo) FindInDomainID(ctx context.Context, domainIds ...string) ([]*biz.Domain, error) {
 	sysDomains, bizDomains := []*SysDomain{}, []*biz.Domain{}
 	result := r.data.DB(ctx).Debug().Where("domain_id", domainIds).Find(sysDomains)
@@ -95,6 +119,16 @@ func (r *DomainRepo) FindInDomainID(ctx context.Context, domainIds ...string) ([
 	return bizDomains, result.Error
 }
 
-func (r *DomainRepo) AuthorityUserSave(ctx context.Context, g *biz.DomainAuthorityUser) (*biz.DomainAuthorityUser, error) {
+func (r *DomainRepo) SaveAuthorityUser(ctx context.Context, g *biz.DomainAuthorityUser) (*biz.DomainAuthorityUser, error) {
 	return r.domainAuthorityUserRepo.Save(ctx, g)
+}
+
+func (r *DomainRepo) FindAuthorityUserByUserID(ctx context.Context, domainID uint, userID uint) ([]*biz.DomainAuthorityUser, error) {
+	domainAuthorityUser, _ := r.domainAuthorityUserRepo.ListPage(ctx, pagination.NewPagination(
+		pagination.WithCondition("domain_id = ?", domainID),
+		pagination.WithCondition("user_id = ?", userID),
+		pagination.WithOrder("domain_id", true),
+		pagination.WithOrder("user_id", true),
+	))
+	return domainAuthorityUser, nil
 }

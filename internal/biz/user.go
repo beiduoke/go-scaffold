@@ -10,6 +10,7 @@ import (
 	pb "github.com/beiduoke/go-scaffold/api/protobuf"
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	myAuthz "github.com/beiduoke/go-scaffold/internal/pkg/authz"
+	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/zzsds/go-tools/pkg/password"
 )
@@ -47,6 +48,7 @@ type UserRepo interface {
 	ListByName(context.Context, string) ([]*User, error)
 	ListByMobile(context.Context, string) ([]*User, error)
 	ListByEmail(context.Context, string) ([]*User, error)
+	ListPage(context.Context, pagination.PaginationHandler) ([]*User, int64)
 }
 
 // UserUsecase is a User usecase.
@@ -71,9 +73,10 @@ func (uc *UserUsecase) GenerateToken(g *User) (token string, expiresAt time.Time
 	expiresAt = time.Now().Add(time.Hour * 24)
 	securityUser := myAuthz.NewSecurityUserData(
 		myAuthz.WithID(strconv.Itoa(int(g.ID))),
-		myAuthz.WithExpiresAt(expiresAt.Unix()),
 		myAuthz.WithDomain(strconv.Itoa(int(g.Domains[0].ID))),
-		myAuthz.WithAuthorityId(strings.Join(authorityId, "-")),
+		myAuthz.WithAuthorityId(strings.Join(authorityId, ",")),
+		// myAuthz.WithExpiresAt(strconv.Itoa(int(expiresAt.Unix()))),
+		myAuthz.WithExpiresAt(expiresAt.Unix()),
 	)
 	token = securityUser.CreateAccessJwtToken([]byte(uc.ac.ApiKey))
 	return
@@ -92,6 +95,10 @@ func (uc *UserUsecase) NamePasswordLogin(ctx context.Context, domainId string, g
 	err = password.Verify(u.Password, g.Password)
 	if err != nil {
 		return nil, err
+	}
+	domainAuthorities, _ := uc.domainRepo.FindAuthorityUserByUserID(ctx, domain.ID, u.ID)
+	for _, v := range domainAuthorities {
+		u.Authorities = append(u.Authorities, Authority{ID: v.AuthorityID})
 	}
 	u.Domains = []Domain{*domain}
 	return u, nil
@@ -128,10 +135,10 @@ func (uc *UserUsecase) NamePasswordRegister(ctx context.Context, domainId string
 		if err != nil {
 			return err
 		}
-		_, err := uc.domainRepo.AuthorityUserSave(ctx, &DomainAuthorityUser{
-			UserID:      g.ID,
-			AuthorityID: domain.DefaultAuthorityID,
+		_, err := uc.domainRepo.SaveAuthorityUser(ctx, &DomainAuthorityUser{
 			DomainID:    domain.ID,
+			AuthorityID: domain.DefaultAuthorityID,
+			UserID:      g.ID,
 		})
 		return err
 	})

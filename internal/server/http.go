@@ -11,6 +11,7 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/service/admin"
 	"github.com/beiduoke/go-scaffold/internal/service/web"
 	casbinM "github.com/beiduoke/go-scaffold/pkg/authz/casbin"
+	stdcasbin "github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
 
@@ -50,7 +51,7 @@ func NewWhiteListMatcher() selector.MatchFunc {
 	}
 }
 
-func NewAuthMiddleware(ac *conf.Auth, m model.Model, policy persist.Adapter) middleware.Middleware {
+func NewAuthMiddleware(ac *conf.Auth, m model.Model, policy persist.Adapter, enforcer stdcasbin.IEnforcer) middleware.Middleware {
 	return selector.Server(
 		jwt.Server(
 			func(token *jwtV4.Token) (interface{}, error) {
@@ -59,8 +60,11 @@ func NewAuthMiddleware(ac *conf.Auth, m model.Model, policy persist.Adapter) mid
 			jwt.WithSigningMethod(jwtV4.SigningMethodHS256),
 		),
 		casbinM.Server(
-			casbinM.WithCasbinModel(m),
-			casbinM.WithCasbinPolicy(policy),
+			casbinM.WithDomainSupport(),
+			// enforcer 指定则无需传 model 以及 policy
+			// casbinM.WithCasbinModel(m),
+			// casbinM.WithCasbinPolicy(policy),
+			casbinM.WithCasbinEnforcer(enforcer),
 			casbinM.WithSecurityUserCreator(myAuthz.NewSecurityUser),
 		),
 	).
