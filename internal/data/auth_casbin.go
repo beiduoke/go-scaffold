@@ -7,7 +7,6 @@ import (
 	stdcasbin "github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
-	fileadapter "github.com/casbin/casbin/v2/persist/file-adapter"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 	rediswatcher "github.com/casbin/redis-watcher/v2"
 	"github.com/go-kratos/kratos/v2/log"
@@ -34,8 +33,8 @@ func NewAuthAdapter(d *Data, ac *conf.Auth, logger log.Logger) (adapter persist.
 	// 优先使用gorm进行存储
 	// file 适配器
 	// fileadapter "github.com/casbin/casbin/v2/persist/file-adapter"
-	adapter = fileadapter.NewAdapter(ac.Casbin.PolicyPath)
-	log.Info("initialization file adapter ")
+	// adapter = fileadapter.NewAdapter(ac.Casbin.PolicyPath)
+	// log.Info("initialization file adapter ")
 	return adapter
 }
 

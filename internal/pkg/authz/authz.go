@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/beiduoke/go-scaffold/pkg/authz"
 	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
@@ -15,10 +16,10 @@ import (
 var _ authz.SecurityUser = (*SecurityUser)(nil)
 
 const (
-	ClaimAuthorityId = "authorityId"
-	Domain           = "domain"
-	ID               = "id"
-	ExpiresAt        = "exp"
+	ID             = "id"
+	Expires        = "exp"
+	ClaimAuthority = "authority"
+	ClaimDomain    = "domain"
 )
 
 type Option func(*SecurityUser)
@@ -29,9 +30,9 @@ func WithID(id string) Option {
 	}
 }
 
-func WithAuthorityId(authorityId string) Option {
+func WithAuthority(authority string) Option {
 	return func(o *SecurityUser) {
-		o.AuthorityId = authorityId
+		o.Authority = authority
 	}
 }
 
@@ -40,19 +41,19 @@ func WithDomain(domain string) Option {
 		o.Domain = domain
 	}
 }
-func WithExpiresAt(expiresAt int64) Option {
+func WithExpires(expires time.Time) Option {
 	return func(o *SecurityUser) {
-		o.ExpiresAt = expiresAt
+		o.Expires = expires.Unix()
 	}
 }
 
 type SecurityUser struct {
-	Path        string
-	Method      string
-	ID          string
-	Domain      string
-	AuthorityId string
-	ExpiresAt   int64
+	Path      string
+	Method    string
+	ID        string
+	Domain    string
+	Authority string
+	Expires   int64
 }
 
 func NewSecurityUserData(opts ...Option) *SecurityUser {
@@ -93,7 +94,7 @@ func (su *SecurityUser) ParseFromContext(ctx context.Context) error {
 }
 
 func (su *SecurityUser) GetSubject() string {
-	return su.AuthorityId
+	return su.Authority
 }
 
 func (su *SecurityUser) GetObject() string {
@@ -111,10 +112,10 @@ func (su *SecurityUser) GetDomain() string {
 func (su *SecurityUser) CreateAccessJwtToken(secretKey []byte) string {
 	claims := jwtV4.NewWithClaims(jwtV4.SigningMethodHS256,
 		jwtV4.MapClaims{
-			ClaimAuthorityId: su.AuthorityId,
-			Domain:           su.Domain,
-			ID:               su.ID,
-			ExpiresAt:        su.ExpiresAt,
+			ID:             su.ID,
+			Expires:        su.Expires,
+			ClaimAuthority: su.Authority,
+			ClaimDomain:    su.Domain,
 		})
 
 	signedToken, err := claims.SignedString(secretKey)
@@ -173,23 +174,23 @@ func (su *SecurityUser) ParseAccessJwtToken(claims jwtV4.Claims) error {
 		su.ID = str.(string)
 	}
 	// 权限
-	str, ok = mc[ClaimAuthorityId]
+	str, ok = mc[ClaimAuthority]
 	if ok {
-		su.AuthorityId = str.(string)
+		su.Authority = str.(string)
 	}
 	// 领域
-	str, ok = mc[Domain]
+	str, ok = mc[ClaimDomain]
 	if ok {
 		su.Domain = str.(string)
 	}
 	// 过期时间
-	str, ok = mc[ExpiresAt]
+	str, ok = mc[Expires]
 	if ok {
 		switch exp := str.(type) {
 		case string:
-			su.ExpiresAt, _ = strconv.ParseInt(exp, 10, 64)
+			su.Expires, _ = strconv.ParseInt(exp, 10, 64)
 		case float64:
-			su.ExpiresAt, _ = strconv.ParseInt(strconv.FormatFloat(exp, 'f', 0, 64), 10, 64)
+			su.Expires, _ = strconv.ParseInt(strconv.FormatFloat(exp, 'f', 0, 64), 10, 64)
 		}
 	}
 	return nil

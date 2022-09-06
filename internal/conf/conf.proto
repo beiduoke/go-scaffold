@@ -57,7 +57,8 @@ message Auth {
   }
   string service_key = 1;
   string api_key = 2;
-  Casbin casbin = 3;
+  google.protobuf.Duration expires_time = 3;
+  Casbin casbin = 4;
 }
 
 message Localize {

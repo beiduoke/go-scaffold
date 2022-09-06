@@ -5,6 +5,7 @@ import (
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
+	stdcasbin "github.com/casbin/casbin/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"gorm.io/gorm/clause"
 )
@@ -12,15 +13,17 @@ import (
 type DomainRepo struct {
 	data                    *Data
 	log                     *log.Helper
+	enforcer                stdcasbin.IEnforcer
 	domainAuthorityUserRepo *DomainAuthorityUserRepo
 }
 
 // NewDomainRepo .
-func NewDomainRepo(data *Data, logger log.Logger) biz.DomainRepo {
+func NewDomainRepo(data *Data, enforcer stdcasbin.IEnforcer, logger log.Logger) biz.DomainRepo {
 	return &DomainRepo{
 		data:                    data,
 		log:                     log.NewHelper(logger),
-		domainAuthorityUserRepo: NewDomainAuthorityUserRepo(data, logger),
+		enforcer:                enforcer,
+		domainAuthorityUserRepo: NewDomainAuthorityUserRepo(data, enforcer, logger),
 	}
 }
 
@@ -120,6 +123,7 @@ func (r *DomainRepo) FindInDomainID(ctx context.Context, domainIds ...string) ([
 }
 
 func (r *DomainRepo) SaveAuthorityUser(ctx context.Context, g *biz.DomainAuthorityUser) (*biz.DomainAuthorityUser, error) {
+
 	return r.domainAuthorityUserRepo.Save(ctx, g)
 }
 

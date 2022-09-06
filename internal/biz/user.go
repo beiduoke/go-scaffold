@@ -2,17 +2,11 @@ package biz
 
 import (
 	"context"
-	"errors"
-	"strconv"
-	"strings"
 	"time"
 
-	pb "github.com/beiduoke/go-scaffold/api/protobuf"
 	"github.com/beiduoke/go-scaffold/internal/conf"
-	myAuthz "github.com/beiduoke/go-scaffold/internal/pkg/authz"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/zzsds/go-tools/pkg/password"
 )
 
 // User is a User model.
@@ -65,82 +59,8 @@ func NewUserUsecase(ac *conf.Auth, repo UserRepo, tm Transaction, logger log.Log
 	return &UserUsecase{ac: ac, repo: repo, tm: tm, log: log.NewHelper(logger), domainRepo: domainRepo}
 }
 
-func (uc *UserUsecase) GenerateToken(g *User) (token string, expiresAt time.Time) {
-	authorityId := []string{}
-	for _, v := range g.Authorities {
-		authorityId = append(authorityId, strconv.Itoa(int(v.ID)))
-	}
-	expiresAt = time.Now().Add(time.Hour * 24)
-	securityUser := myAuthz.NewSecurityUserData(
-		myAuthz.WithID(strconv.Itoa(int(g.ID))),
-		myAuthz.WithDomain(strconv.Itoa(int(g.Domains[0].ID))),
-		myAuthz.WithAuthorityId(strings.Join(authorityId, ",")),
-		// myAuthz.WithExpiresAt(strconv.Itoa(int(expiresAt.Unix()))),
-		myAuthz.WithExpiresAt(expiresAt.Unix()),
-	)
-	token = securityUser.CreateAccessJwtToken([]byte(uc.ac.ApiKey))
-	return
-}
-
-// NamePasswordLogin 用户密码登录
-func (uc *UserUsecase) NamePasswordLogin(ctx context.Context, domainId string, g *User) (*User, error) {
-	domain, err := uc.domainRepo.FindByDomainID(ctx, domainId)
-	if err != nil {
-		return nil, errors.New("Domain查询失败")
-	}
-	u, err := uc.repo.FindByName(ctx, g.Name)
-	if err != nil {
-		return nil, err
-	}
-	err = password.Verify(u.Password, g.Password)
-	if err != nil {
-		return nil, err
-	}
-	domainAuthorities, _ := uc.domainRepo.FindAuthorityUserByUserID(ctx, domain.ID, u.ID)
-	for _, v := range domainAuthorities {
-		u.Authorities = append(u.Authorities, Authority{ID: v.AuthorityID})
-	}
-	u.Domains = []Domain{*domain}
-	return u, nil
-}
-
-// MobileSmsLogin 手机验证码登录
-func (uc *UserUsecase) MobileSmsLogin(ctx context.Context, domainId string, g *User) (*User, error) {
+// GetUserByMobile 获取用户手机
+func (uc *UserUsecase) GetUserByMobile(ctx context.Context, g *User) (*User, error) {
 	uc.log.WithContext(ctx).Infof("MobileSmsLogin: %v", g)
 	return uc.repo.FindByMobile(ctx, g.Mobile)
-}
-
-// NamePasswordRegister 用户密码注册
-func (uc *UserUsecase) NamePasswordRegister(ctx context.Context, domainId string, g *User) (*User, error) {
-	uc.log.WithContext(ctx).Infof("NamePasswordRegister: %v", g.Name)
-	domain, err := uc.domainRepo.FindByDomainID(ctx, domainId)
-	if err != nil {
-		return nil, errors.New("Domain查询失败")
-	}
-	user, _ := uc.repo.FindByName(ctx, g.Name)
-	if user != nil && user.Name != "" {
-		return nil, errors.New("用户已注册")
-	}
-	password, err := password.Encryption(g.Password)
-	if err != nil {
-		return nil, errors.New("密码加密失败")
-	}
-	g.Password = password
-	if g.State <= 0 {
-		g.State = int32(pb.UserState_ACTIVE)
-	}
-
-	err = uc.tm.InTx(ctx, func(ctx context.Context) error {
-		g, err = uc.repo.Save(ctx, g)
-		if err != nil {
-			return err
-		}
-		_, err := uc.domainRepo.SaveAuthorityUser(ctx, &DomainAuthorityUser{
-			DomainID:    domain.ID,
-			AuthorityID: domain.DefaultAuthorityID,
-			UserID:      g.ID,
-		})
-		return err
-	})
-	return g, err
 }

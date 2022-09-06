@@ -28,15 +28,16 @@ var _ v1.AdminServer = (*AdminService)(nil)
 // AdminService is a Admin service.
 type AdminService struct {
 	v1.UnimplementedAdminServer
-	ws  *websocket.WebsocketService
-	log *log.Helper
-	ac  *conf.Auth
-	uc  *biz.UserUsecase
-	dc  *biz.DomainUsecase
+	acfg *conf.Auth
+	log  *log.Helper
+	ws   *websocket.WebsocketService
+	ac   *biz.AuthUsecase
+	uc   *biz.UserUsecase
+	dc   *biz.DomainUsecase
 }
 
 // NewAdminService new a Admin service.
-func NewAdminService(logger log.Logger, ac *conf.Auth, ws *websocket.WebsocketService, uc *biz.UserUsecase, dc *biz.DomainUsecase) *AdminService {
+func NewAdminService(logger log.Logger, acfg *conf.Auth, ws *websocket.WebsocketService, ac *biz.AuthUsecase, uc *biz.UserUsecase, dc *biz.DomainUsecase) *AdminService {
 	l := log.NewHelper(log.With(logger, "module", "service/admin"))
-	return &AdminService{log: l, ac: ac, ws: ws, uc: uc, dc: dc}
+	return &AdminService{log: l, acfg: acfg, ws: ws, ac: ac, uc: uc, dc: dc}
 }

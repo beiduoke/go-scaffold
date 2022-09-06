@@ -16,17 +16,18 @@ type WebService struct {
 	ws  *websocket.Server
 
 	uc *biz.UserUsecase
+	ac *biz.AuthUsecase
 }
 
 // NewWebService new a Web service.
-func NewWebService(logger log.Logger, uc *biz.UserUsecase) *WebService {
+func NewWebService(logger log.Logger, uc *biz.UserUsecase, ac *biz.AuthUsecase) *WebService {
 	l := log.NewHelper(log.With(logger, "module", "service/web"))
-	return &WebService{log: l, uc: uc}
+	return &WebService{log: l, uc: uc, ac: ac}
 }
 
 // SayHello implements web.WebServer.
 func (s *WebService) Login(ctx context.Context, in *v1.LoginReq) (*v1.User, error) {
-	_, err := s.uc.NamePasswordLogin(ctx, "", &biz.User{Name: in.GetUserName()})
+	_, err := s.ac.LoginNamePassword(ctx, "", &biz.User{Name: in.GetUserName()})
 	if err != nil {
 		return nil, err
 	}

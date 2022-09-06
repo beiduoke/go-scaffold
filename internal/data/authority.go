@@ -5,24 +5,24 @@ import (
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
-	"github.com/casbin/casbin/v2/persist"
+	stdcasbin "github.com/casbin/casbin/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
 type AuthorityRepo struct {
-	data   *Data
-	log    *log.Helper
-	policy persist.Adapter
+	data     *Data
+	log      *log.Helper
+	enforcer stdcasbin.IEnforcer
 }
 
 // NewAuthorityRepo .
-func NewAuthorityRepo(data *Data, policy persist.Adapter, logger log.Logger) biz.AuthorityRepo {
+func NewAuthorityRepo(data *Data, enforcer stdcasbin.IEnforcer, logger log.Logger) biz.AuthorityRepo {
 	return &AuthorityRepo{
-		data:   data,
-		log:    log.NewHelper(logger),
-		policy: policy,
+		data:     data,
+		log:      log.NewHelper(logger),
+		enforcer: enforcer,
 	}
 }
 

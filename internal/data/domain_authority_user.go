@@ -5,6 +5,7 @@ import (
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
+	stdcasbin "github.com/casbin/casbin/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"gorm.io/gorm/clause"
 )
@@ -12,15 +13,17 @@ import (
 type DomainAuthorityUserRepo struct {
 	data      *Data
 	log       *log.Helper
+	enforcer  stdcasbin.IEnforcer
 	domain    DomainRepo
 	authority AuthorityRepo
 }
 
 // NewDomainAuthorityUserRepo .
-func NewDomainAuthorityUserRepo(data *Data, logger log.Logger) *DomainAuthorityUserRepo {
+func NewDomainAuthorityUserRepo(data *Data, enforcer stdcasbin.IEnforcer, logger log.Logger) *DomainAuthorityUserRepo {
 	return &DomainAuthorityUserRepo{
 		data:      data,
 		log:       log.NewHelper(logger),
+		enforcer:  enforcer,
 		domain:    DomainRepo{},
 		authority: AuthorityRepo{},
 	}

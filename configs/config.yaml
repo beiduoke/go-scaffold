@@ -22,6 +22,7 @@ data:
 auth:
   service_key: some_jwt_sign_key
   api_key: go-scaffold-dev
+  expires_time: 864000s
   casbin: 
     model_path: ../../configs/authz/authz_model.conf
     policy_path: ../../configs/authz/authz_policy.csv
