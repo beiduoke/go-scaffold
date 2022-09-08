@@ -89,7 +89,12 @@ func (r *ApiRepo) ListPage(ctx context.Context, handler pagination.PaginationHan
 	for _, v := range handler.GetOrders() {
 		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: v.Column}, Desc: v.Desc})
 	}
-	result := db.Count(&total).Offset(handler.GetPageOffset()).Limit(int(handler.GetPageSize())).Find(&sysApi)
+
+	if !handler.GetNopaging() {
+		db = db.Count(&total).Offset(handler.GetPageOffset())
+	}
+
+	result := db.Limit(int(handler.GetPageSize())).Find(&sysApi)
 	if result.Error != nil {
 		return nil, 0
 	}
@@ -97,5 +102,10 @@ func (r *ApiRepo) ListPage(ctx context.Context, handler pagination.PaginationHan
 	for _, v := range sysApi {
 		apis = append(apis, r.toBiz(v))
 	}
+
+	if !handler.GetNopaging() {
+		total = int64(len(apis))
+	}
+
 	return apis, total
 }

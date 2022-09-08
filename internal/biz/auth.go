@@ -72,7 +72,10 @@ func (ac *AuthUsecase) LoginNamePassword(ctx context.Context, domainId string, g
 	if err != nil {
 		return nil, err
 	}
-	domainAuthorities, _ := ac.domainRepo.FindAuthorityUserByUserID(ctx, domain.ID, u.ID)
+	authorities := ac.domainRepo.FindAuthoritiesForUserInDomain(ctx, u.ID, domain.ID)
+	if len(authorities) == 0 || err != nil {
+		return nil, errors.New("权限未配置")
+	}
 
 	// 生成token
 	authClaims := AuthClaims{
@@ -87,8 +90,8 @@ func (ac *AuthUsecase) LoginNamePassword(ctx context.Context, domainId string, g
 		authClaims.ExpiresAt = &expiresAt
 	}
 	// 组装权限
-	for _, v := range domainAuthorities {
-		authClaims.Authorities = append(authClaims.Authorities, v.AuthorityID)
+	for _, v := range authorities {
+		authClaims.Authorities = append(authClaims.Authorities, v.ID)
 	}
 	if err := ac.GetToken(&authClaims); err != nil {
 		return nil, err
@@ -128,11 +131,7 @@ func (ac *AuthUsecase) RegisterNamePassword(ctx context.Context, domainId string
 		if err != nil {
 			return err
 		}
-		_, err := ac.domainRepo.SaveAuthorityUser(ctx, &DomainAuthorityUser{
-			DomainID:    domain.ID,
-			AuthorityID: domain.DefaultAuthorityID,
-			UserID:      g.ID,
-		})
+		err := ac.domainRepo.SaveAuthorityForUserInDomain(ctx, g.ID, domain.DefaultAuthorityID, domain.ID)
 		return err
 	})
 	return g, err

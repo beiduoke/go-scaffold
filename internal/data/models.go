@@ -17,7 +17,6 @@ func NewSysModelMigrate() []interface{} {
 		&SysMenuParameter{},
 		&SysAuthority{},
 		&SysAuthorityMenuButton{},
-		&SysDomainAuthorityUser{},
 	}
 }
 
@@ -31,34 +30,28 @@ type DomainModel struct {
 
 type SysDomain struct {
 	DomainModel
-	Name               string `gorm:"type:varchar(255);column:name;not null;comment:名称;"`
-	State              int32  `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
-	DefaultAuthorityID uint   `gorm:"type:bigint(20);column:default_authority_id;not null;index;comment:默认角色;"`
-	// Users       []SysUser      `gorm:"many2many:sys_domain_users;"`
-	// Authorities []SysAuthority `gorm:"many2many:sys_domain_authorities;"`
-	Users                []SysUser                `gorm:"-"`
-	Authorities          []SysAuthority           `gorm:"-"`
-	DomainAuthorityUsers []SysDomainAuthorityUser `gorm:"foreignKey:DomainID"`
+	Name               string         `gorm:"type:varchar(255);column:name;not null;comment:名称;"`
+	State              int32          `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
+	DefaultAuthorityID uint           `gorm:"type:bigint(20);column:default_authority_id;not null;index;comment:默认角色;"`
+	Users              []SysUser      `gorm:"-"`
+	Authorities        []SysAuthority `gorm:"-"`
 }
 
 // User 用户
 type SysUser struct {
 	gorm.Model
-	Avatar   string     `gorm:"type:varchar(255);column:avatar;not null;default:'';comment:头像;"`
-	Name     string     `gorm:"type:varchar(255);column:name;not null;index:idx_users_name_nick_name_real_name,priority:1;comment:名称;"`
-	NickName string     `gorm:"type:varchar(255);column:nick_name;not null;default:'';index:idx_users_name_nick_name_real_name,priority:3;comment:昵称;"`
-	RealName string     `gorm:"type:varchar(100);column:real_name;not null;default:'';index:idx_users_name_nick_name_real_name,priority:2;comment:实名;"`
-	Password string     `gorm:"type:varchar(255);column:password;not null;default:'';comment:密码;"`
-	Birthday *time.Time `gorm:"type:datetime;column:birthday;comment:生日;"`
-	Gender   int32      `gorm:"type:tinyint(1);column:gender;not null;default:1;comment:性别 0 未指定 1 男 2 女;"`
-	Mobile   string     `gorm:"type:varchar(20);column:mobile;not null;default:'';index:idx_users_mobile_email,priority:1;comment:手机号;"`
-	Email    string     `gorm:"type:varchar(50);column:email;not null;default:'';index:idx_users_mobile_email,priority:2;comment:邮箱;"`
-	State    int32      `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:用户状态 0 未指定  1 启用 2 停用;"`
-	// Authorities []SysAuthority `gorm:"many2many:sys_authority_users;"`
-	// Domains     []SysDomain    `gorm:"many2many:sys_domain_users;"`
-	Authorities          []SysAuthority           `gorm:"-"`
-	Domains              []SysDomain              `gorm:"-"`
-	DomainAuthorityUsers []SysDomainAuthorityUser `gorm:"foreignKey:UserID"`
+	Avatar      string         `gorm:"type:varchar(255);column:avatar;not null;default:'';comment:头像;"`
+	Name        string         `gorm:"type:varchar(255);column:name;not null;index:idx_users_name_nick_name_real_name,priority:1;comment:名称;"`
+	NickName    string         `gorm:"type:varchar(255);column:nick_name;not null;default:'';index:idx_users_name_nick_name_real_name,priority:3;comment:昵称;"`
+	RealName    string         `gorm:"type:varchar(100);column:real_name;not null;default:'';index:idx_users_name_nick_name_real_name,priority:2;comment:实名;"`
+	Password    string         `gorm:"type:varchar(255);column:password;not null;default:'';comment:密码;"`
+	Birthday    *time.Time     `gorm:"type:datetime;column:birthday;comment:生日;"`
+	Gender      int32          `gorm:"type:tinyint(1);column:gender;not null;default:1;comment:性别 0 未指定 1 男 2 女;"`
+	Mobile      string         `gorm:"type:varchar(20);column:mobile;not null;default:'';index:idx_users_mobile_email,priority:1;comment:手机号;"`
+	Email       string         `gorm:"type:varchar(50);column:email;not null;default:'';index:idx_users_mobile_email,priority:2;comment:邮箱;"`
+	State       int32          `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:用户状态 0 未指定  1 启用 2 停用;"`
+	Authorities []SysAuthority `gorm:"-"`
+	Domains     []SysDomain    `gorm:"-"`
 }
 
 // Authority 角色
@@ -72,13 +65,11 @@ type SysAuthority struct {
 	Menus         []SysMenu       `gorm:"many2many:sys_authority_menus;"`
 	MenuButtons   []SysMenuButton `gorm:"many2many:sys_authority_menu_buttons;"`
 	Apis          []SysApi        `gorm:"many2many:sys_authority_apis;"`
-	// Users         []SysUser       `gorm:"many2many:sys_authority_users;"`
-	// Domains       []SysDomain     `gorm:"many2many:sys_domain_authorities;"`
-	Users                []SysUser                `gorm:"-"`
-	Domains              []SysDomain              `gorm:"-"`
-	DomainAuthorityUsers []SysDomainAuthorityUser `gorm:"foreignKey:AuthorityID"`
+	Users         []SysUser       `gorm:"-"`
+	Domains       []SysDomain     `gorm:"-"`
 }
 
+// SysDomainAuthorityUser 领域用户权限 (弃用)
 type SysDomainAuthorityUser struct {
 	DomainID    uint `gorm:"type:bigint(20);column:domain_id;not null;uniqueIndex:idx_sys_domain_authority_users_domain_id_authority_id_user_id;comment:领域ID"`
 	AuthorityID uint `gorm:"type:bigint(20);column:authority_id;not null;uniqueIndex:idx_sys_domain_authority_users_domain_id_authority_id_user_id;comment:角色ID"`
@@ -98,6 +89,7 @@ type SysApi struct {
 	Group       string         `gorm:"type:varchar(255);column:group;not null;comment:api分组"`
 	Description string         `gorm:"type:varchar(255);column:description;not null;default:'';comment:api描述"`
 	Authorities []SysAuthority `gorm:"many2many:sys_authority_apis;"`
+	Menus       []SysMenu      `gorm:"many2many:sys_menu_apis;"`
 }
 
 // SysMenu 菜单
@@ -111,6 +103,7 @@ type SysMenu struct {
 	Sort           int                `gorm:"type:int(10);column:sort;not null;default:10;comment:排序标记"`
 	Meta           SysMeta            `gorm:"embedded;comment:附加属性"`
 	Authorities    []SysAuthority     `gorm:"many2many:sys_authority_menus;"`
+	Apis           []SysApi           `gorm:"many2many:sys_menu_apis;"`
 	MenuParameters []SysMenuParameter `gorm:"foreignKey:MenuID;"`
 	MenuButtons    []SysMenuButton    `gorm:"foreignKey:MenuID;"`
 }

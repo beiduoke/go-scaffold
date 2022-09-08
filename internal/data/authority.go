@@ -83,7 +83,12 @@ func (r *AuthorityRepo) ListPage(ctx context.Context, handler pagination.Paginat
 	for _, v := range handler.GetOrders() {
 		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: v.Column}, Desc: v.Desc})
 	}
-	result := db.Count(&total).Offset(handler.GetPageOffset()).Limit(int(handler.GetPageSize())).Find(&sysAuthorities)
+
+	if !handler.GetNopaging() {
+		db = db.Count(&total).Offset(handler.GetPageOffset())
+	}
+
+	result := db.Limit(int(handler.GetPageSize())).Find(&sysAuthorities)
 	if result.Error != nil {
 		return nil, 0
 	}
@@ -91,5 +96,10 @@ func (r *AuthorityRepo) ListPage(ctx context.Context, handler pagination.Paginat
 	for _, v := range sysAuthorities {
 		authorities = append(authorities, r.toBiz(v))
 	}
+
+	if !handler.GetNopaging() {
+		total = int64(len(authorities))
+	}
+
 	return authorities, total
 }

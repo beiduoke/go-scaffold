@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	stdcasbin "github.com/casbin/casbin/v2"
 	"github.com/go-kratos/kratos/v2/log"
@@ -11,19 +12,17 @@ import (
 )
 
 type DomainRepo struct {
-	data                    *Data
-	log                     *log.Helper
-	enforcer                stdcasbin.IEnforcer
-	domainAuthorityUserRepo *DomainAuthorityUserRepo
+	data     *Data
+	log      *log.Helper
+	enforcer stdcasbin.IEnforcer
 }
 
 // NewDomainRepo .
 func NewDomainRepo(data *Data, enforcer stdcasbin.IEnforcer, logger log.Logger) biz.DomainRepo {
 	return &DomainRepo{
-		data:                    data,
-		log:                     log.NewHelper(logger),
-		enforcer:                enforcer,
-		domainAuthorityUserRepo: NewDomainAuthorityUserRepo(data, enforcer, logger),
+		data:     data,
+		log:      log.NewHelper(logger),
+		enforcer: enforcer,
 	}
 }
 
@@ -101,7 +100,12 @@ func (r *DomainRepo) ListPage(ctx context.Context, handler pagination.Pagination
 	for _, v := range handler.GetOrders() {
 		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: v.Column}, Desc: v.Desc})
 	}
-	result := db.Count(&total).Offset(handler.GetPageOffset()).Limit(int(handler.GetPageSize())).Find(&sysDomains)
+
+	if !handler.GetNopaging() {
+		db = db.Count(&total).Offset(handler.GetPageOffset())
+	}
+
+	result := db.Limit(int(handler.GetPageSize())).Find(&sysDomains)
 	if result.Error != nil {
 		return nil, 0
 	}
@@ -109,6 +113,11 @@ func (r *DomainRepo) ListPage(ctx context.Context, handler pagination.Pagination
 	for _, v := range sysDomains {
 		domains = append(domains, r.toBiz(v))
 	}
+
+	if !handler.GetNopaging() {
+		total = int64(len(domains))
+	}
+
 	return domains, total
 }
 
@@ -122,17 +131,52 @@ func (r *DomainRepo) FindInDomainID(ctx context.Context, domainIds ...string) ([
 	return bizDomains, result.Error
 }
 
-func (r *DomainRepo) SaveAuthorityUser(ctx context.Context, g *biz.DomainAuthorityUser) (*biz.DomainAuthorityUser, error) {
-
-	return r.domainAuthorityUserRepo.Save(ctx, g)
+func (r *DomainRepo) SaveAuthorityForUserInDomain(ctx context.Context, userID, authorityID, domainID uint) error {
+	success, err := r.enforcer.AddRoleForUserInDomain(convert.UnitToString(userID), convert.UnitToString(authorityID), convert.UnitToString(domainID))
+	if !success {
+		r.log.Warnf("域内为用户添加角色 %v", success)
+	}
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func (r *DomainRepo) FindAuthorityUserByUserID(ctx context.Context, domainID uint, userID uint) ([]*biz.DomainAuthorityUser, error) {
-	domainAuthorityUser, _ := r.domainAuthorityUserRepo.ListPage(ctx, pagination.NewPagination(
-		pagination.WithCondition("domain_id = ?", domainID),
-		pagination.WithCondition("user_id = ?", userID),
-		pagination.WithOrder("domain_id", true),
-		pagination.WithOrder("user_id", true),
-	))
-	return domainAuthorityUser, nil
+func (r *DomainRepo) FindAuthoritiesForUserInDomain(ctx context.Context, userID, domainID uint) (authorities []*biz.Authority) {
+	roles := r.enforcer.GetRolesForUserInDomain(convert.UnitToString(userID), convert.UnitToString(domainID))
+	authorityIDs := []uint{}
+	for _, v := range roles {
+		authorityIDs = append(authorityIDs, convert.StringToUint(v))
+	}
+	sysAuthorities := []*SysAuthority{}
+	_ = r.data.DB(ctx).Find(&sysAuthorities, authorityIDs)
+
+	for _, v := range sysAuthorities {
+		authorities = append(authorities, &biz.Authority{
+			ID:        v.ID,
+			Name:      v.Name,
+			CreatedAt: v.CreatedAt,
+			UpdatedAt: v.UpdatedAt,
+		})
+	}
+
+	return
+}
+
+// FindUsersForRoleInDomain 获取具有域内角色的用户
+func (r *DomainRepo) FindUsersForRoleInDomain(ctx context.Context, authorityID, domainID uint) (users []*biz.User) {
+	roles := r.enforcer.GetUsersForRoleInDomain(convert.UnitToString(authorityID), convert.UnitToString(domainID))
+	userIDs := []uint{}
+	for _, v := range roles {
+		userIDs = append(userIDs, convert.StringToUint(v))
+	}
+	sysUsers := []*SysUser{}
+	_ = r.data.DB(ctx).Find(&sysUsers, userIDs)
+
+	userRepo := UserRepo{}
+	for _, v := range sysUsers {
+		users = append(users, userRepo.toBiz(v))
+	}
+
+	return
 }

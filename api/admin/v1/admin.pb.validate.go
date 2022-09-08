@@ -195,6 +195,10 @@ func (m *User) validate(all bool) error {
 
 	}
 
+	if m.Authoritys != nil {
+		// no validation rules for Authoritys
+	}
+
 	if len(errors) > 0 {
 		return UserMultiError(errors)
 	}

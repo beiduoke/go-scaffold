@@ -104,7 +104,12 @@ func (r *MenuRepo) ListPage(ctx context.Context, handler pagination.PaginationHa
 	for _, v := range handler.GetOrders() {
 		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: v.Column}, Desc: v.Desc})
 	}
-	result := db.Count(&total).Offset(handler.GetPageOffset()).Limit(int(handler.GetPageSize())).Find(&sysMenus)
+
+	if !handler.GetNopaging() {
+		db = db.Count(&total).Offset(handler.GetPageOffset())
+	}
+
+	result := db.Limit(int(handler.GetPageSize())).Find(&sysMenus)
 	if result.Error != nil {
 		return nil, 0
 	}
@@ -112,5 +117,10 @@ func (r *MenuRepo) ListPage(ctx context.Context, handler pagination.PaginationHa
 	for _, v := range sysMenus {
 		menus = append(menus, r.toBiz(v))
 	}
+
+	if !handler.GetNopaging() {
+		total = int64(len(menus))
+	}
+
 	return menus, total
 }

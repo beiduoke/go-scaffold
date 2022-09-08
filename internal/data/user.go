@@ -11,11 +11,10 @@ import (
 )
 
 type UserRepo struct {
-	data                *Data
-	log                 *log.Helper
-	domain              DomainRepo
-	authority           AuthorityRepo
-	domainAuthorityUser DomainAuthorityUserRepo
+	data      *Data
+	log       *log.Helper
+	domain    DomainRepo
+	authority AuthorityRepo
 }
 
 // NewUserRepo .
@@ -40,10 +39,6 @@ func (r *UserRepo) toModel(d *biz.User) *SysUser {
 	for _, v := range d.Authorities {
 		authorities = append(authorities, *r.authority.toModel(&v))
 	}
-	domainAuthorityUsers := []SysDomainAuthorityUser{}
-	for _, v := range d.DomainAuthorityUsers {
-		domainAuthorityUsers = append(domainAuthorityUsers, *r.domainAuthorityUser.toModel(&v))
-	}
 	return &SysUser{
 		Model: gorm.Model{
 			ID:        d.ID,
@@ -59,7 +54,6 @@ func (r *UserRepo) toModel(d *biz.User) *SysUser {
 		Mobile:   d.Mobile,
 		Email:    d.Email,
 		State:    d.State,
-		// DomainAuthorityUsers: domainAuthorityUsers,
 	}
 }
 
@@ -127,7 +121,12 @@ func (r *UserRepo) ListPage(ctx context.Context, handler pagination.PaginationHa
 	for _, v := range handler.GetOrders() {
 		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: v.Column}, Desc: v.Desc})
 	}
-	result := db.Count(&total).Offset(handler.GetPageOffset()).Limit(int(handler.GetPageSize())).Find(&sysUsers)
+
+	if !handler.GetNopaging() {
+		db = db.Count(&total).Offset(handler.GetPageOffset())
+	}
+
+	result := db.Limit(int(handler.GetPageSize())).Find(&sysUsers)
 	if result.Error != nil {
 		return nil, 0
 	}
@@ -135,6 +134,11 @@ func (r *UserRepo) ListPage(ctx context.Context, handler pagination.PaginationHa
 	for _, v := range sysUsers {
 		users = append(users, r.toBiz(v))
 	}
+
+	if !handler.GetNopaging() {
+		total = int64(len(users))
+	}
+
 	return users, total
 }
 
@@ -146,6 +150,7 @@ func (r *UserRepo) FindByName(ctx context.Context, s string) (*biz.User, error) 
 	}
 	return r.toBiz(&user), nil
 }
+
 func (r *UserRepo) FindByMobile(ctx context.Context, s string) (*biz.User, error) {
 	user := SysUser{}
 	result := r.data.DB(ctx).Last(&user, "mobile = ?", s)
@@ -154,6 +159,7 @@ func (r *UserRepo) FindByMobile(ctx context.Context, s string) (*biz.User, error
 	}
 	return r.toBiz(&user), nil
 }
+
 func (r *UserRepo) FindByEmail(ctx context.Context, s string) (*biz.User, error) {
 	user := SysUser{}
 	result := r.data.DB(ctx).Last(&user, "email = ?", s)
@@ -162,6 +168,7 @@ func (r *UserRepo) FindByEmail(ctx context.Context, s string) (*biz.User, error)
 	}
 	return r.toBiz(&user), nil
 }
+
 func (r *UserRepo) ListByName(ctx context.Context, s string) ([]*biz.User, error) {
 	sysUsers, bizUsers := []*SysUser{}, []*biz.User{}
 	result := r.data.DB(ctx).Find(&sysUsers, "name LIKE ?", "%"+s)

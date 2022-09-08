@@ -1,8 +1,9 @@
 package pagination
 
 const (
-	PAGE_NUM  = 1
-	PAGE_SIZE = 10
+	PAGE_NUM      = 1
+	PAGE_SIZE     = 10
+	MAX_PAGE_SIZE = 1000
 )
 
 func GetPageOffset(pageNum, pageSize int32) int {
@@ -25,6 +26,7 @@ type PaginationHandler interface {
 	GetPageOffset() int
 	GetConditions() []Condition
 	GetOrders() []Order
+	GetNopaging() bool
 	SetCondition(condition Condition)
 	SetOrder(order Order)
 	Reset()
@@ -32,11 +34,18 @@ type PaginationHandler interface {
 
 type Pagination struct {
 	pageNum, pageSize int32
+	nopaging          bool
 	conditions        []*Condition
 	orders            []*Order
 }
 
 type Option func(*Pagination)
+
+func WithNopaging() Option {
+	return func(p *Pagination) {
+		p.nopaging = true
+	}
+}
 
 func WithPageNum(num int32) Option {
 	return func(p *Pagination) {
@@ -80,6 +89,7 @@ func WithOrders(order ...Order) Option {
 
 func NewPagination(opts ...Option) PaginationHandler {
 	p := Pagination{
+		nopaging: false,
 		pageNum:  PAGE_NUM,
 		pageSize: PAGE_SIZE,
 	}
@@ -94,6 +104,7 @@ func (p *Pagination) String() string {
 }
 
 func (p *Pagination) Reset() {
+	p.nopaging = false
 	p.pageNum = PAGE_NUM
 	p.pageSize = PAGE_SIZE
 	p.conditions = []*Condition{}
@@ -101,6 +112,9 @@ func (p *Pagination) Reset() {
 }
 
 func (p *Pagination) GetPageOffset() int {
+	if p.nopaging {
+		return 0
+	}
 	return GetPageOffset(p.pageNum, p.pageSize)
 }
 
@@ -109,7 +123,14 @@ func (p *Pagination) GetPageNum() int32 {
 }
 
 func (p *Pagination) GetPageSize() int32 {
+	if p.nopaging {
+		return MAX_PAGE_SIZE
+	}
 	return p.pageSize
+}
+
+func (p *Pagination) GetNopaging() bool {
+	return p.nopaging
 }
 
 func (p *Pagination) GetConditions() []Condition {
