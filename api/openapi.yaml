@@ -3,8 +3,307 @@
 
 openapi: 3.0.3
 info:
-    title: ""
+    title: Admin API
+    description: The greeting service definition.
     version: 0.0.1
-paths: {}
+paths:
+    /admin/v1/auth/login:
+        post:
+            tags:
+                - Admin
+            description: 登陆
+            operationId: Admin_Login
+            parameters:
+                - name: domain
+                  in: query
+                  description: 领域
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.v1.Auth'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.LoginReply'
+    /admin/v1/auth/logout:
+        post:
+            tags:
+                - Admin
+            description: 登出
+            operationId: Admin_Logout
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /admin/v1/auth/register:
+        post:
+            tags:
+                - Admin
+            description: 注册
+            operationId: Admin_Register
+            parameters:
+                - name: domain
+                  in: query
+                  description: 领域
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.v1.Auth'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.RegisterReply'
+    /admin/v1/users:
+        get:
+            tags:
+                - Admin
+            description: 用户列表
+            operationId: Admin_ListUser
+            parameters:
+                - name: page
+                  in: query
+                  description: 当前页
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  description: 每一页的行数
+                  schema:
+                    type: integer
+                    format: int32
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.protobuf.PagingReply'
+    /admin/v1/users/profiles:
+        get:
+            tags:
+                - Admin
+            description: |-
+                User 用户模块
+                 用户概述
+            operationId: Admin_ProfileUser
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.User'
+    /admin/v1/users/{id}:
+        get:
+            tags:
+                - Admin
+            description: 用户列表
+            operationId: Admin_GetUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.User'
+        put:
+            tags:
+                - Admin
+            description: 用户修改
+            operationId: Admin_UpdateUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.v1.UpdateUserReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.UpdateUserReply'
+        delete:
+            tags:
+                - Admin
+            description: 用户删除
+            operationId: Admin_DeleteUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.DeleteUserReply'
 components:
-    schemas: {}
+    schemas:
+        api.admin.v1.Auth:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: 用户名
+                password:
+                    type: string
+                    description: 密码
+        api.admin.v1.DeleteUserReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+            description: 回应 - 删除用户
+        api.admin.v1.LoginReply:
+            type: object
+            properties:
+                token:
+                    type: string
+                    description: 登录token
+                expireTime:
+                    type: string
+                    description: 过期时间
+                    format: date-time
+            description: 回应 - 登录
+        api.admin.v1.RegisterReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+            description: 回应 - 注册
+        api.admin.v1.UpdateUserReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+            description: 回应 - 用户修改
+        api.admin.v1.UpdateUserReq_Data:
+            type: object
+            properties:
+                name:
+                    type: string
+                password:
+                    type: string
+                nickName:
+                    type: string
+                realName:
+                    type: string
+                birthday:
+                    type: string
+                    format: date-time
+                gender:
+                    type: integer
+                    format: int32
+                mobile:
+                    type: string
+                email:
+                    type: string
+                state:
+                    type: integer
+                    format: enum
+        api.admin.v1.User:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint64
+                name:
+                    type: string
+                password:
+                    type: string
+                nickName:
+                    type: string
+                realName:
+                    type: string
+                birthday:
+                    type: string
+                    format: date-time
+                gender:
+                    type: integer
+                    format: int32
+                mobile:
+                    type: string
+                email:
+                    type: string
+                state:
+                    type: integer
+                    format: enum
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                authoritys:
+                    type: string
+        api.protobuf.PagingReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int32
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/google.protobuf.Any'
+            description: 分页通用结果
+        google.protobuf.Any:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+tags:
+    - name: Admin

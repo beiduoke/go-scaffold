@@ -10,7 +10,7 @@ import (
 var _ v1.AdminServer = (*AdminService)(nil)
 
 // Login 登录
-func (s *AdminService) UserProfile(ctx context.Context, in *emptypb.Empty) (*v1.User, error) {
+func (s *AdminService) ProfileUser(ctx context.Context, in *emptypb.Empty) (*v1.User, error) {
 	name := "jayden"
 	return &v1.User{
 		Name: &name,

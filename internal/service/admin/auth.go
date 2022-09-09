@@ -31,7 +31,7 @@ var (
 func (s *AdminService) Login(ctx context.Context, in *v1.LoginReq) (*v1.LoginReply, error) {
 	auth := in.GetAuth()
 	if in.GetDomain() == "" {
-		return nil, v1.ErrorUserRegisterFail("Domain不能为空")
+		return nil, v1.ErrorUserRegisterFail("领域不能为空")
 	}
 	res, err := s.ac.LoginNamePassword(ctx, in.GetDomain(), &biz.User{Name: auth.GetName(), Password: auth.GetPassword()})
 	if err != nil {
@@ -52,7 +52,7 @@ func (s *AdminService) Login(ctx context.Context, in *v1.LoginReq) (*v1.LoginRep
 func (s *AdminService) Register(ctx context.Context, in *v1.RegisterReq) (*v1.RegisterReply, error) {
 	auth := in.GetAuth()
 	if in.GetDomain() == "" {
-		return nil, v1.ErrorUserRegisterFail("Domain不能为空")
+		return nil, v1.ErrorUserRegisterFail("领域不能为空")
 	}
 	_, err := s.ac.RegisterNamePassword(ctx, in.GetDomain(), &biz.User{Name: auth.GetName(), Password: auth.GetPassword()})
 	if err != nil {

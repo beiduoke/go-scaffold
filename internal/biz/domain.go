@@ -39,11 +39,11 @@ type DomainRepo interface {
 
 	// 领域权限
 	// SaveAuthorityUser 添加领域角色权限
-	SaveAuthorityForUserInDomain(context.Context, uint /** userID **/, uint /** authorityID **/, uint /** domainID **/) error
+	SaveAuthorityForUserInDomain(context.Context, uint /* userID */, uint /* authorityID */, uint /* domainID */) error
 	// FindAuthorityForUserInDomain 获取领域用户的角色
-	FindAuthoritiesForUserInDomain(context.Context, uint /** userID **/, uint /** domainID **/) []*Authority
+	FindAuthoritiesForUserInDomain(context.Context, uint /* userID */, uint /* domainID */) []*Authority
 	// FindAuthoritiesForUserInDomain 获取具有域内角色的用户
-	FindUsersForRoleInDomain(context.Context, uint /** authorityID **/, uint /** domainID **/) []*User
+	FindUsersForRoleInDomain(context.Context, uint /* authorityID */, uint /* domainID */) []*User
 }
 
 // DomainUsecase is a Domain usecase.

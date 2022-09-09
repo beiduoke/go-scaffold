@@ -8,6 +8,7 @@ package v1
 
 import (
 	context "context"
+	protobuf "github.com/beiduoke/go-scaffold/api/protobuf"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -29,10 +30,17 @@ type AdminClient interface {
 	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginReply, error)
 	// 注册
 	Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterReply, error)
+	// User 用户模块
 	// 用户概述
 	ProfileUser(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*User, error)
 	// 用户列表
-	ListUser(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserReply, error)
+	ListUser(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
+	// 用户列表
+	GetUser(ctx context.Context, in *GetUserReq, opts ...grpc.CallOption) (*User, error)
+	// 用户删除
+	DeleteUser(ctx context.Context, in *DeleteUserReq, opts ...grpc.CallOption) (*DeleteUserReply, error)
+	// 用户修改
+	UpdateUser(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*UpdateUserReply, error)
 }
 
 type adminClient struct {
@@ -79,9 +87,36 @@ func (c *adminClient) ProfileUser(ctx context.Context, in *emptypb.Empty, opts .
 	return out, nil
 }
 
-func (c *adminClient) ListUser(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserReply, error) {
-	out := new(ListUserReply)
+func (c *adminClient) ListUser(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
+	out := new(protobuf.PagingReply)
 	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) GetUser(ctx context.Context, in *GetUserReq, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) DeleteUser(ctx context.Context, in *DeleteUserReq, opts ...grpc.CallOption) (*DeleteUserReply, error) {
+	out := new(DeleteUserReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/DeleteUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) UpdateUser(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*UpdateUserReply, error) {
+	out := new(UpdateUserReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/UpdateUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -98,10 +133,17 @@ type AdminServer interface {
 	Login(context.Context, *LoginReq) (*LoginReply, error)
 	// 注册
 	Register(context.Context, *RegisterReq) (*RegisterReply, error)
+	// User 用户模块
 	// 用户概述
 	ProfileUser(context.Context, *emptypb.Empty) (*User, error)
 	// 用户列表
-	ListUser(context.Context, *emptypb.Empty) (*ListUserReply, error)
+	ListUser(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	// 用户列表
+	GetUser(context.Context, *GetUserReq) (*User, error)
+	// 用户删除
+	DeleteUser(context.Context, *DeleteUserReq) (*DeleteUserReply, error)
+	// 用户修改
+	UpdateUser(context.Context, *UpdateUserReq) (*UpdateUserReply, error)
 	mustEmbedUnimplementedAdminServer()
 }
 
@@ -121,8 +163,17 @@ func (UnimplementedAdminServer) Register(context.Context, *RegisterReq) (*Regist
 func (UnimplementedAdminServer) ProfileUser(context.Context, *emptypb.Empty) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ProfileUser not implemented")
 }
-func (UnimplementedAdminServer) ListUser(context.Context, *emptypb.Empty) (*ListUserReply, error) {
+func (UnimplementedAdminServer) ListUser(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUser not implemented")
+}
+func (UnimplementedAdminServer) GetUser(context.Context, *GetUserReq) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
+}
+func (UnimplementedAdminServer) DeleteUser(context.Context, *DeleteUserReq) (*DeleteUserReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
+}
+func (UnimplementedAdminServer) UpdateUser(context.Context, *UpdateUserReq) (*UpdateUserReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
 func (UnimplementedAdminServer) mustEmbedUnimplementedAdminServer() {}
 
@@ -210,7 +261,7 @@ func _Admin_ProfileUser_Handler(srv interface{}, ctx context.Context, dec func(i
 }
 
 func _Admin_ListUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(protobuf.PagingReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -222,7 +273,61 @@ func _Admin_ListUser_Handler(srv interface{}, ctx context.Context, dec func(inte
 		FullMethod: "/api.admin.v1.Admin/ListUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).ListUser(ctx, req.(*emptypb.Empty))
+		return srv.(AdminServer).ListUser(ctx, req.(*protobuf.PagingReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).GetUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/GetUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).GetUser(ctx, req.(*GetUserReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteUserReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).DeleteUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/DeleteUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).DeleteUser(ctx, req.(*DeleteUserReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).UpdateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/UpdateUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).UpdateUser(ctx, req.(*UpdateUserReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -253,6 +358,18 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListUser",
 			Handler:    _Admin_ListUser_Handler,
+		},
+		{
+			MethodName: "GetUser",
+			Handler:    _Admin_GetUser_Handler,
+		},
+		{
+			MethodName: "DeleteUser",
+			Handler:    _Admin_DeleteUser_Handler,
+		},
+		{
+			MethodName: "UpdateUser",
+			Handler:    _Admin_UpdateUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -8,6 +8,7 @@ package v1
 
 import (
 	context "context"
+	protobuf "github.com/beiduoke/go-scaffold/api/protobuf"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -20,18 +21,24 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationAdminDeleteUser = "/api.admin.v1.Admin/DeleteUser"
+const OperationAdminGetUser = "/api.admin.v1.Admin/GetUser"
 const OperationAdminListUser = "/api.admin.v1.Admin/ListUser"
 const OperationAdminLogin = "/api.admin.v1.Admin/Login"
 const OperationAdminLogout = "/api.admin.v1.Admin/Logout"
 const OperationAdminProfileUser = "/api.admin.v1.Admin/ProfileUser"
 const OperationAdminRegister = "/api.admin.v1.Admin/Register"
+const OperationAdminUpdateUser = "/api.admin.v1.Admin/UpdateUser"
 
 type AdminHTTPServer interface {
-	ListUser(context.Context, *emptypb.Empty) (*ListUserReply, error)
+	DeleteUser(context.Context, *DeleteUserReq) (*DeleteUserReply, error)
+	GetUser(context.Context, *GetUserReq) (*User, error)
+	ListUser(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
 	Login(context.Context, *LoginReq) (*LoginReply, error)
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	ProfileUser(context.Context, *emptypb.Empty) (*User, error)
 	Register(context.Context, *RegisterReq) (*RegisterReply, error)
+	UpdateUser(context.Context, *UpdateUserReq) (*UpdateUserReply, error)
 }
 
 func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
@@ -39,8 +46,11 @@ func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
 	r.POST("/admin/v1/auth/logout", _Admin_Logout0_HTTP_Handler(srv))
 	r.POST("/admin/v1/auth/login", _Admin_Login0_HTTP_Handler(srv))
 	r.POST("/admin/v1/auth/register", _Admin_Register0_HTTP_Handler(srv))
-	r.GET("/admin/v1/user/profile", _Admin_ProfileUser0_HTTP_Handler(srv))
+	r.GET("/admin/v1/users/profiles", _Admin_ProfileUser0_HTTP_Handler(srv))
 	r.GET("/admin/v1/users", _Admin_ListUser0_HTTP_Handler(srv))
+	r.GET("/admin/v1/users/{id}", _Admin_GetUser0_HTTP_Handler(srv))
+	r.DELETE("/admin/v1/users/{id}", _Admin_DeleteUser0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/users/{id}", _Admin_UpdateUser0_HTTP_Handler(srv))
 }
 
 func _Admin_Logout0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
@@ -127,29 +137,101 @@ func _Admin_ProfileUser0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context
 
 func _Admin_ListUser0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in emptypb.Empty
+		var in protobuf.PagingReq
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAdminListUser)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListUser(ctx, req.(*emptypb.Empty))
+			return srv.ListUser(ctx, req.(*protobuf.PagingReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*ListUserReply)
+		reply := out.(*protobuf.PagingReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_GetUser0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetUserReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminGetUser)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetUser(ctx, req.(*GetUserReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*User)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_DeleteUser0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteUserReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminDeleteUser)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteUser(ctx, req.(*DeleteUserReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DeleteUserReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_UpdateUser0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateUserReq
+		if err := ctx.Bind(&in.Data); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminUpdateUser)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateUser(ctx, req.(*UpdateUserReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateUserReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 type AdminHTTPClient interface {
-	ListUser(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *ListUserReply, err error)
+	DeleteUser(ctx context.Context, req *DeleteUserReq, opts ...http.CallOption) (rsp *DeleteUserReply, err error)
+	GetUser(ctx context.Context, req *GetUserReq, opts ...http.CallOption) (rsp *User, err error)
+	ListUser(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
 	Login(ctx context.Context, req *LoginReq, opts ...http.CallOption) (rsp *LoginReply, err error)
 	Logout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	ProfileUser(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *User, err error)
 	Register(ctx context.Context, req *RegisterReq, opts ...http.CallOption) (rsp *RegisterReply, err error)
+	UpdateUser(ctx context.Context, req *UpdateUserReq, opts ...http.CallOption) (rsp *UpdateUserReply, err error)
 }
 
 type AdminHTTPClientImpl struct {
@@ -160,8 +242,34 @@ func NewAdminHTTPClient(client *http.Client) AdminHTTPClient {
 	return &AdminHTTPClientImpl{client}
 }
 
-func (c *AdminHTTPClientImpl) ListUser(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*ListUserReply, error) {
-	var out ListUserReply
+func (c *AdminHTTPClientImpl) DeleteUser(ctx context.Context, in *DeleteUserReq, opts ...http.CallOption) (*DeleteUserReply, error) {
+	var out DeleteUserReply
+	pattern := "/admin/v1/users/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminDeleteUser))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AdminHTTPClientImpl) GetUser(ctx context.Context, in *GetUserReq, opts ...http.CallOption) (*User, error) {
+	var out User
+	pattern := "/admin/v1/users/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminGetUser))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AdminHTTPClientImpl) ListUser(ctx context.Context, in *protobuf.PagingReq, opts ...http.CallOption) (*protobuf.PagingReply, error) {
+	var out protobuf.PagingReply
 	pattern := "/admin/v1/users"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminListUser))
@@ -201,7 +309,7 @@ func (c *AdminHTTPClientImpl) Logout(ctx context.Context, in *emptypb.Empty, opt
 
 func (c *AdminHTTPClientImpl) ProfileUser(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*User, error) {
 	var out User
-	pattern := "/admin/v1/user/profile"
+	pattern := "/admin/v1/users/profiles"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminProfileUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -219,6 +327,19 @@ func (c *AdminHTTPClientImpl) Register(ctx context.Context, in *RegisterReq, opt
 	opts = append(opts, http.Operation(OperationAdminRegister))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.Auth, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AdminHTTPClientImpl) UpdateUser(ctx context.Context, in *UpdateUserReq, opts ...http.CallOption) (*UpdateUserReply, error) {
+	var out UpdateUserReply
+	pattern := "/admin/v1/users/{id}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminUpdateUser))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in.Data, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
