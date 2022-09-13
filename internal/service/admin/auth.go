@@ -6,6 +6,7 @@ import (
 	v1 "github.com/beiduoke/go-scaffold/api/admin/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -60,6 +61,13 @@ func (s *AdminService) Register(ctx context.Context, in *v1.RegisterReq) (*v1.Re
 	}
 
 	return &v1.RegisterReply{
+		Success: true,
+	}, nil
+}
+
+// Logout 退出登录
+func (s *AdminService) Logout(ctx context.Context, in *emptypb.Empty) (*v1.LogoutReply, error) {
+	return &v1.LogoutReply{
 		Success: true,
 	}, nil
 }

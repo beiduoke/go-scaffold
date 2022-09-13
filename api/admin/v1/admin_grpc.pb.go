@@ -25,22 +25,72 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AdminClient interface {
 	// 登出
-	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*LogoutReply, error)
 	// 登陆
 	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginReply, error)
 	// 注册
 	Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterReply, error)
 	// User 用户模块
-	// 用户概述
-	ProfileUser(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*User, error)
-	// 用户列表
+	// 当前登录用户概述
+	GetUserProfile(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*User, error)
+	// 获取用户菜单
+	GetUserMenu(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserMenuReply, error)
+	// 列表用户
 	ListUser(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
-	// 用户列表
+	// 创建用户
+	CreateUser(ctx context.Context, in *CreateUserReq, opts ...grpc.CallOption) (*CreateUserReply, error)
+	// 获取用户
 	GetUser(ctx context.Context, in *GetUserReq, opts ...grpc.CallOption) (*User, error)
-	// 用户删除
-	DeleteUser(ctx context.Context, in *DeleteUserReq, opts ...grpc.CallOption) (*DeleteUserReply, error)
-	// 用户修改
+	// 修改用户
 	UpdateUser(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*UpdateUserReply, error)
+	// 删除用户
+	DeleteUser(ctx context.Context, in *DeleteUserReq, opts ...grpc.CallOption) (*DeleteUserReply, error)
+	// 领域模块
+	// 列表领域
+	ListDomain(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
+	// 创建领域
+	CreateDomain(ctx context.Context, in *CreateDomainReq, opts ...grpc.CallOption) (*CreateDomainReply, error)
+	// 获取领域
+	GetDomain(ctx context.Context, in *GetDomainReq, opts ...grpc.CallOption) (*Domain, error)
+	// 修改领域
+	UpdateDomain(ctx context.Context, in *UpdateDomainReq, opts ...grpc.CallOption) (*UpdateDomainReply, error)
+	// 删除领域
+	DeleteDomain(ctx context.Context, in *DeleteDomainReq, opts ...grpc.CallOption) (*DeleteDomainReply, error)
+	// 授权模块
+	// 列表领域
+	ListAuthority(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
+	// 创建领域
+	CreateAuthority(ctx context.Context, in *CreateAuthorityReq, opts ...grpc.CallOption) (*CreateAuthorityReply, error)
+	// 获取领域
+	GetAuthority(ctx context.Context, in *GetAuthorityReq, opts ...grpc.CallOption) (*Authority, error)
+	// 修改领域
+	UpdateAuthority(ctx context.Context, in *UpdateAuthorityReq, opts ...grpc.CallOption) (*UpdateAuthorityReply, error)
+	// 删除领域
+	DeleteAuthority(ctx context.Context, in *DeleteAuthorityReq, opts ...grpc.CallOption) (*DeleteAuthorityReply, error)
+	// 接口模块
+	// 列表接口
+	ListApi(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
+	// 创建接口
+	CreateApi(ctx context.Context, in *CreateApiReq, opts ...grpc.CallOption) (*CreateApiReply, error)
+	// 获取接口
+	GetApi(ctx context.Context, in *GetApiReq, opts ...grpc.CallOption) (*Api, error)
+	// 修改接口
+	UpdateApi(ctx context.Context, in *UpdateApiReq, opts ...grpc.CallOption) (*UpdateApiReply, error)
+	// 删除接口
+	DeleteApi(ctx context.Context, in *DeleteApiReq, opts ...grpc.CallOption) (*DeleteApiReply, error)
+	// 菜单模块
+	// 列表菜单
+	ListMenu(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
+	// 创建菜单
+	CreateMenu(ctx context.Context, in *CreateMenuReq, opts ...grpc.CallOption) (*CreateMenuReply, error)
+	// 获取树形菜单
+	GetMenuTree(ctx context.Context, in *GetMenuTreeReq, opts ...grpc.CallOption) (*Menu, error)
+	// 获取菜单
+	GetMenu(ctx context.Context, in *GetMenuReq, opts ...grpc.CallOption) (*Menu, error)
+	// 修改菜单
+	UpdateMenu(ctx context.Context, in *UpdateMenuReq, opts ...grpc.CallOption) (*UpdateMenuReply, error)
+	// 删除菜单
+	DeleteMenu(ctx context.Context, in *DeleteMenuReq, opts ...grpc.CallOption) (*DeleteMenuReply, error)
 }
 
 type adminClient struct {
@@ -51,8 +101,8 @@ func NewAdminClient(cc grpc.ClientConnInterface) AdminClient {
 	return &adminClient{cc}
 }
 
-func (c *adminClient) Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *adminClient) Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*LogoutReply, error) {
+	out := new(LogoutReply)
 	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/Logout", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -78,9 +128,18 @@ func (c *adminClient) Register(ctx context.Context, in *RegisterReq, opts ...grp
 	return out, nil
 }
 
-func (c *adminClient) ProfileUser(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*User, error) {
+func (c *adminClient) GetUserProfile(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*User, error) {
 	out := new(User)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ProfileUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetUserProfile", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) GetUserMenu(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserMenuReply, error) {
+	out := new(GetUserMenuReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetUserMenu", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -96,18 +155,18 @@ func (c *adminClient) ListUser(ctx context.Context, in *protobuf.PagingReq, opts
 	return out, nil
 }
 
-func (c *adminClient) GetUser(ctx context.Context, in *GetUserReq, opts ...grpc.CallOption) (*User, error) {
-	out := new(User)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetUser", in, out, opts...)
+func (c *adminClient) CreateUser(ctx context.Context, in *CreateUserReq, opts ...grpc.CallOption) (*CreateUserReply, error) {
+	out := new(CreateUserReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/CreateUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) DeleteUser(ctx context.Context, in *DeleteUserReq, opts ...grpc.CallOption) (*DeleteUserReply, error) {
-	out := new(DeleteUserReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/DeleteUser", in, out, opts...)
+func (c *adminClient) GetUser(ctx context.Context, in *GetUserReq, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -123,27 +182,275 @@ func (c *adminClient) UpdateUser(ctx context.Context, in *UpdateUserReq, opts ..
 	return out, nil
 }
 
+func (c *adminClient) DeleteUser(ctx context.Context, in *DeleteUserReq, opts ...grpc.CallOption) (*DeleteUserReply, error) {
+	out := new(DeleteUserReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/DeleteUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) ListDomain(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
+	out := new(protobuf.PagingReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListDomain", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) CreateDomain(ctx context.Context, in *CreateDomainReq, opts ...grpc.CallOption) (*CreateDomainReply, error) {
+	out := new(CreateDomainReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/CreateDomain", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) GetDomain(ctx context.Context, in *GetDomainReq, opts ...grpc.CallOption) (*Domain, error) {
+	out := new(Domain)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetDomain", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) UpdateDomain(ctx context.Context, in *UpdateDomainReq, opts ...grpc.CallOption) (*UpdateDomainReply, error) {
+	out := new(UpdateDomainReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/UpdateDomain", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) DeleteDomain(ctx context.Context, in *DeleteDomainReq, opts ...grpc.CallOption) (*DeleteDomainReply, error) {
+	out := new(DeleteDomainReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/DeleteDomain", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) ListAuthority(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
+	out := new(protobuf.PagingReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListAuthority", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) CreateAuthority(ctx context.Context, in *CreateAuthorityReq, opts ...grpc.CallOption) (*CreateAuthorityReply, error) {
+	out := new(CreateAuthorityReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/CreateAuthority", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) GetAuthority(ctx context.Context, in *GetAuthorityReq, opts ...grpc.CallOption) (*Authority, error) {
+	out := new(Authority)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetAuthority", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) UpdateAuthority(ctx context.Context, in *UpdateAuthorityReq, opts ...grpc.CallOption) (*UpdateAuthorityReply, error) {
+	out := new(UpdateAuthorityReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/UpdateAuthority", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) DeleteAuthority(ctx context.Context, in *DeleteAuthorityReq, opts ...grpc.CallOption) (*DeleteAuthorityReply, error) {
+	out := new(DeleteAuthorityReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/DeleteAuthority", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) ListApi(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
+	out := new(protobuf.PagingReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListApi", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) CreateApi(ctx context.Context, in *CreateApiReq, opts ...grpc.CallOption) (*CreateApiReply, error) {
+	out := new(CreateApiReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/CreateApi", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) GetApi(ctx context.Context, in *GetApiReq, opts ...grpc.CallOption) (*Api, error) {
+	out := new(Api)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetApi", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) UpdateApi(ctx context.Context, in *UpdateApiReq, opts ...grpc.CallOption) (*UpdateApiReply, error) {
+	out := new(UpdateApiReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/UpdateApi", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) DeleteApi(ctx context.Context, in *DeleteApiReq, opts ...grpc.CallOption) (*DeleteApiReply, error) {
+	out := new(DeleteApiReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/DeleteApi", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) ListMenu(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
+	out := new(protobuf.PagingReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListMenu", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) CreateMenu(ctx context.Context, in *CreateMenuReq, opts ...grpc.CallOption) (*CreateMenuReply, error) {
+	out := new(CreateMenuReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/CreateMenu", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) GetMenuTree(ctx context.Context, in *GetMenuTreeReq, opts ...grpc.CallOption) (*Menu, error) {
+	out := new(Menu)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetMenuTree", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) GetMenu(ctx context.Context, in *GetMenuReq, opts ...grpc.CallOption) (*Menu, error) {
+	out := new(Menu)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetMenu", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) UpdateMenu(ctx context.Context, in *UpdateMenuReq, opts ...grpc.CallOption) (*UpdateMenuReply, error) {
+	out := new(UpdateMenuReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/UpdateMenu", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) DeleteMenu(ctx context.Context, in *DeleteMenuReq, opts ...grpc.CallOption) (*DeleteMenuReply, error) {
+	out := new(DeleteMenuReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/DeleteMenu", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AdminServer is the server API for Admin service.
 // All implementations must embed UnimplementedAdminServer
 // for forward compatibility
 type AdminServer interface {
 	// 登出
-	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	Logout(context.Context, *emptypb.Empty) (*LogoutReply, error)
 	// 登陆
 	Login(context.Context, *LoginReq) (*LoginReply, error)
 	// 注册
 	Register(context.Context, *RegisterReq) (*RegisterReply, error)
 	// User 用户模块
-	// 用户概述
-	ProfileUser(context.Context, *emptypb.Empty) (*User, error)
-	// 用户列表
+	// 当前登录用户概述
+	GetUserProfile(context.Context, *emptypb.Empty) (*User, error)
+	// 获取用户菜单
+	GetUserMenu(context.Context, *emptypb.Empty) (*GetUserMenuReply, error)
+	// 列表用户
 	ListUser(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
-	// 用户列表
+	// 创建用户
+	CreateUser(context.Context, *CreateUserReq) (*CreateUserReply, error)
+	// 获取用户
 	GetUser(context.Context, *GetUserReq) (*User, error)
-	// 用户删除
-	DeleteUser(context.Context, *DeleteUserReq) (*DeleteUserReply, error)
-	// 用户修改
+	// 修改用户
 	UpdateUser(context.Context, *UpdateUserReq) (*UpdateUserReply, error)
+	// 删除用户
+	DeleteUser(context.Context, *DeleteUserReq) (*DeleteUserReply, error)
+	// 领域模块
+	// 列表领域
+	ListDomain(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	// 创建领域
+	CreateDomain(context.Context, *CreateDomainReq) (*CreateDomainReply, error)
+	// 获取领域
+	GetDomain(context.Context, *GetDomainReq) (*Domain, error)
+	// 修改领域
+	UpdateDomain(context.Context, *UpdateDomainReq) (*UpdateDomainReply, error)
+	// 删除领域
+	DeleteDomain(context.Context, *DeleteDomainReq) (*DeleteDomainReply, error)
+	// 授权模块
+	// 列表领域
+	ListAuthority(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	// 创建领域
+	CreateAuthority(context.Context, *CreateAuthorityReq) (*CreateAuthorityReply, error)
+	// 获取领域
+	GetAuthority(context.Context, *GetAuthorityReq) (*Authority, error)
+	// 修改领域
+	UpdateAuthority(context.Context, *UpdateAuthorityReq) (*UpdateAuthorityReply, error)
+	// 删除领域
+	DeleteAuthority(context.Context, *DeleteAuthorityReq) (*DeleteAuthorityReply, error)
+	// 接口模块
+	// 列表接口
+	ListApi(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	// 创建接口
+	CreateApi(context.Context, *CreateApiReq) (*CreateApiReply, error)
+	// 获取接口
+	GetApi(context.Context, *GetApiReq) (*Api, error)
+	// 修改接口
+	UpdateApi(context.Context, *UpdateApiReq) (*UpdateApiReply, error)
+	// 删除接口
+	DeleteApi(context.Context, *DeleteApiReq) (*DeleteApiReply, error)
+	// 菜单模块
+	// 列表菜单
+	ListMenu(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	// 创建菜单
+	CreateMenu(context.Context, *CreateMenuReq) (*CreateMenuReply, error)
+	// 获取树形菜单
+	GetMenuTree(context.Context, *GetMenuTreeReq) (*Menu, error)
+	// 获取菜单
+	GetMenu(context.Context, *GetMenuReq) (*Menu, error)
+	// 修改菜单
+	UpdateMenu(context.Context, *UpdateMenuReq) (*UpdateMenuReply, error)
+	// 删除菜单
+	DeleteMenu(context.Context, *DeleteMenuReq) (*DeleteMenuReply, error)
 	mustEmbedUnimplementedAdminServer()
 }
 
@@ -151,7 +458,7 @@ type AdminServer interface {
 type UnimplementedAdminServer struct {
 }
 
-func (UnimplementedAdminServer) Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+func (UnimplementedAdminServer) Logout(context.Context, *emptypb.Empty) (*LogoutReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
 }
 func (UnimplementedAdminServer) Login(context.Context, *LoginReq) (*LoginReply, error) {
@@ -160,20 +467,89 @@ func (UnimplementedAdminServer) Login(context.Context, *LoginReq) (*LoginReply, 
 func (UnimplementedAdminServer) Register(context.Context, *RegisterReq) (*RegisterReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
-func (UnimplementedAdminServer) ProfileUser(context.Context, *emptypb.Empty) (*User, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ProfileUser not implemented")
+func (UnimplementedAdminServer) GetUserProfile(context.Context, *emptypb.Empty) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserProfile not implemented")
+}
+func (UnimplementedAdminServer) GetUserMenu(context.Context, *emptypb.Empty) (*GetUserMenuReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserMenu not implemented")
 }
 func (UnimplementedAdminServer) ListUser(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUser not implemented")
 }
+func (UnimplementedAdminServer) CreateUser(context.Context, *CreateUserReq) (*CreateUserReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
+}
 func (UnimplementedAdminServer) GetUser(context.Context, *GetUserReq) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
+}
+func (UnimplementedAdminServer) UpdateUser(context.Context, *UpdateUserReq) (*UpdateUserReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
 func (UnimplementedAdminServer) DeleteUser(context.Context, *DeleteUserReq) (*DeleteUserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
 }
-func (UnimplementedAdminServer) UpdateUser(context.Context, *UpdateUserReq) (*UpdateUserReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
+func (UnimplementedAdminServer) ListDomain(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListDomain not implemented")
+}
+func (UnimplementedAdminServer) CreateDomain(context.Context, *CreateDomainReq) (*CreateDomainReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateDomain not implemented")
+}
+func (UnimplementedAdminServer) GetDomain(context.Context, *GetDomainReq) (*Domain, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDomain not implemented")
+}
+func (UnimplementedAdminServer) UpdateDomain(context.Context, *UpdateDomainReq) (*UpdateDomainReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateDomain not implemented")
+}
+func (UnimplementedAdminServer) DeleteDomain(context.Context, *DeleteDomainReq) (*DeleteDomainReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteDomain not implemented")
+}
+func (UnimplementedAdminServer) ListAuthority(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListAuthority not implemented")
+}
+func (UnimplementedAdminServer) CreateAuthority(context.Context, *CreateAuthorityReq) (*CreateAuthorityReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAuthority not implemented")
+}
+func (UnimplementedAdminServer) GetAuthority(context.Context, *GetAuthorityReq) (*Authority, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAuthority not implemented")
+}
+func (UnimplementedAdminServer) UpdateAuthority(context.Context, *UpdateAuthorityReq) (*UpdateAuthorityReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAuthority not implemented")
+}
+func (UnimplementedAdminServer) DeleteAuthority(context.Context, *DeleteAuthorityReq) (*DeleteAuthorityReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteAuthority not implemented")
+}
+func (UnimplementedAdminServer) ListApi(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListApi not implemented")
+}
+func (UnimplementedAdminServer) CreateApi(context.Context, *CreateApiReq) (*CreateApiReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateApi not implemented")
+}
+func (UnimplementedAdminServer) GetApi(context.Context, *GetApiReq) (*Api, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetApi not implemented")
+}
+func (UnimplementedAdminServer) UpdateApi(context.Context, *UpdateApiReq) (*UpdateApiReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateApi not implemented")
+}
+func (UnimplementedAdminServer) DeleteApi(context.Context, *DeleteApiReq) (*DeleteApiReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteApi not implemented")
+}
+func (UnimplementedAdminServer) ListMenu(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListMenu not implemented")
+}
+func (UnimplementedAdminServer) CreateMenu(context.Context, *CreateMenuReq) (*CreateMenuReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateMenu not implemented")
+}
+func (UnimplementedAdminServer) GetMenuTree(context.Context, *GetMenuTreeReq) (*Menu, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMenuTree not implemented")
+}
+func (UnimplementedAdminServer) GetMenu(context.Context, *GetMenuReq) (*Menu, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMenu not implemented")
+}
+func (UnimplementedAdminServer) UpdateMenu(context.Context, *UpdateMenuReq) (*UpdateMenuReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateMenu not implemented")
+}
+func (UnimplementedAdminServer) DeleteMenu(context.Context, *DeleteMenuReq) (*DeleteMenuReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteMenu not implemented")
 }
 func (UnimplementedAdminServer) mustEmbedUnimplementedAdminServer() {}
 
@@ -242,20 +618,38 @@ func _Admin_Register_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_ProfileUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Admin_GetUserProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).ProfileUser(ctx, in)
+		return srv.(AdminServer).GetUserProfile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/ProfileUser",
+		FullMethod: "/api.admin.v1.Admin/GetUserProfile",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).ProfileUser(ctx, req.(*emptypb.Empty))
+		return srv.(AdminServer).GetUserProfile(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_GetUserMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).GetUserMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/GetUserMenu",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).GetUserMenu(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -278,6 +672,24 @@ func _Admin_ListUser_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Admin_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateUserReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).CreateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/CreateUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).CreateUser(ctx, req.(*CreateUserReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Admin_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserReq)
 	if err := dec(in); err != nil {
@@ -292,6 +704,24 @@ func _Admin_GetUser_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServer).GetUser(ctx, req.(*GetUserReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).UpdateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/UpdateUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).UpdateUser(ctx, req.(*UpdateUserReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -314,20 +744,380 @@ func _Admin_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateUserReq)
+func _Admin_ListDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(protobuf.PagingReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).UpdateUser(ctx, in)
+		return srv.(AdminServer).ListDomain(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/UpdateUser",
+		FullMethod: "/api.admin.v1.Admin/ListDomain",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).UpdateUser(ctx, req.(*UpdateUserReq))
+		return srv.(AdminServer).ListDomain(ctx, req.(*protobuf.PagingReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_CreateDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateDomainReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).CreateDomain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/CreateDomain",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).CreateDomain(ctx, req.(*CreateDomainReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_GetDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDomainReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).GetDomain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/GetDomain",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).GetDomain(ctx, req.(*GetDomainReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_UpdateDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateDomainReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).UpdateDomain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/UpdateDomain",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).UpdateDomain(ctx, req.(*UpdateDomainReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_DeleteDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteDomainReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).DeleteDomain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/DeleteDomain",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).DeleteDomain(ctx, req.(*DeleteDomainReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_ListAuthority_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(protobuf.PagingReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).ListAuthority(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/ListAuthority",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).ListAuthority(ctx, req.(*protobuf.PagingReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_CreateAuthority_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAuthorityReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).CreateAuthority(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/CreateAuthority",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).CreateAuthority(ctx, req.(*CreateAuthorityReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_GetAuthority_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAuthorityReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).GetAuthority(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/GetAuthority",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).GetAuthority(ctx, req.(*GetAuthorityReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_UpdateAuthority_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAuthorityReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).UpdateAuthority(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/UpdateAuthority",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).UpdateAuthority(ctx, req.(*UpdateAuthorityReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_DeleteAuthority_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteAuthorityReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).DeleteAuthority(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/DeleteAuthority",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).DeleteAuthority(ctx, req.(*DeleteAuthorityReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_ListApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(protobuf.PagingReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).ListApi(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/ListApi",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).ListApi(ctx, req.(*protobuf.PagingReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_CreateApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateApiReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).CreateApi(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/CreateApi",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).CreateApi(ctx, req.(*CreateApiReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_GetApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetApiReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).GetApi(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/GetApi",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).GetApi(ctx, req.(*GetApiReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_UpdateApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateApiReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).UpdateApi(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/UpdateApi",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).UpdateApi(ctx, req.(*UpdateApiReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_DeleteApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteApiReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).DeleteApi(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/DeleteApi",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).DeleteApi(ctx, req.(*DeleteApiReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_ListMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(protobuf.PagingReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).ListMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/ListMenu",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).ListMenu(ctx, req.(*protobuf.PagingReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_CreateMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateMenuReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).CreateMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/CreateMenu",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).CreateMenu(ctx, req.(*CreateMenuReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_GetMenuTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMenuTreeReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).GetMenuTree(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/GetMenuTree",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).GetMenuTree(ctx, req.(*GetMenuTreeReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_GetMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMenuReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).GetMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/GetMenu",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).GetMenu(ctx, req.(*GetMenuReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_UpdateMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateMenuReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).UpdateMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/UpdateMenu",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).UpdateMenu(ctx, req.(*UpdateMenuReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_DeleteMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteMenuReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).DeleteMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/DeleteMenu",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).DeleteMenu(ctx, req.(*DeleteMenuReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -352,24 +1142,116 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Admin_Register_Handler,
 		},
 		{
-			MethodName: "ProfileUser",
-			Handler:    _Admin_ProfileUser_Handler,
+			MethodName: "GetUserProfile",
+			Handler:    _Admin_GetUserProfile_Handler,
+		},
+		{
+			MethodName: "GetUserMenu",
+			Handler:    _Admin_GetUserMenu_Handler,
 		},
 		{
 			MethodName: "ListUser",
 			Handler:    _Admin_ListUser_Handler,
 		},
 		{
+			MethodName: "CreateUser",
+			Handler:    _Admin_CreateUser_Handler,
+		},
+		{
 			MethodName: "GetUser",
 			Handler:    _Admin_GetUser_Handler,
+		},
+		{
+			MethodName: "UpdateUser",
+			Handler:    _Admin_UpdateUser_Handler,
 		},
 		{
 			MethodName: "DeleteUser",
 			Handler:    _Admin_DeleteUser_Handler,
 		},
 		{
-			MethodName: "UpdateUser",
-			Handler:    _Admin_UpdateUser_Handler,
+			MethodName: "ListDomain",
+			Handler:    _Admin_ListDomain_Handler,
+		},
+		{
+			MethodName: "CreateDomain",
+			Handler:    _Admin_CreateDomain_Handler,
+		},
+		{
+			MethodName: "GetDomain",
+			Handler:    _Admin_GetDomain_Handler,
+		},
+		{
+			MethodName: "UpdateDomain",
+			Handler:    _Admin_UpdateDomain_Handler,
+		},
+		{
+			MethodName: "DeleteDomain",
+			Handler:    _Admin_DeleteDomain_Handler,
+		},
+		{
+			MethodName: "ListAuthority",
+			Handler:    _Admin_ListAuthority_Handler,
+		},
+		{
+			MethodName: "CreateAuthority",
+			Handler:    _Admin_CreateAuthority_Handler,
+		},
+		{
+			MethodName: "GetAuthority",
+			Handler:    _Admin_GetAuthority_Handler,
+		},
+		{
+			MethodName: "UpdateAuthority",
+			Handler:    _Admin_UpdateAuthority_Handler,
+		},
+		{
+			MethodName: "DeleteAuthority",
+			Handler:    _Admin_DeleteAuthority_Handler,
+		},
+		{
+			MethodName: "ListApi",
+			Handler:    _Admin_ListApi_Handler,
+		},
+		{
+			MethodName: "CreateApi",
+			Handler:    _Admin_CreateApi_Handler,
+		},
+		{
+			MethodName: "GetApi",
+			Handler:    _Admin_GetApi_Handler,
+		},
+		{
+			MethodName: "UpdateApi",
+			Handler:    _Admin_UpdateApi_Handler,
+		},
+		{
+			MethodName: "DeleteApi",
+			Handler:    _Admin_DeleteApi_Handler,
+		},
+		{
+			MethodName: "ListMenu",
+			Handler:    _Admin_ListMenu_Handler,
+		},
+		{
+			MethodName: "CreateMenu",
+			Handler:    _Admin_CreateMenu_Handler,
+		},
+		{
+			MethodName: "GetMenuTree",
+			Handler:    _Admin_GetMenuTree_Handler,
+		},
+		{
+			MethodName: "GetMenu",
+			Handler:    _Admin_GetMenu_Handler,
+		},
+		{
+			MethodName: "UpdateMenu",
+			Handler:    _Admin_UpdateMenu_Handler,
+		},
+		{
+			MethodName: "DeleteMenu",
+			Handler:    _Admin_DeleteMenu_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

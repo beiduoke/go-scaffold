@@ -1,0 +1,192 @@
+syntax = "proto3";
+
+package api.admin.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+import "protobuf/enum.proto";
+import "protobuf/struct.proto";
+
+option go_package = "github.com/beiduoke/go-scaffold/api/admin/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.admin.v1";
+option java_outer_classname = "adminProtoV1";
+
+// The authority service definition.
+service AuthorityService {
+  // 列表角色
+  rpc ListRole (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+    option (google.api.http) = {
+      get: "/admin/v1/roles"
+    };
+  }
+  
+  // 创建角色
+  rpc CreateRole (CreateRoleReq) returns (CreateRoleReply) {
+    option (google.api.http) = {
+      post: "/admin/v1/roles"
+      body: "data"
+    };
+  }
+  
+  // 获取角色
+  rpc GetRole (GetRoleReq) returns (Role) {
+    option (google.api.http) = {
+      get: "/admin/v1/roles/{id}"
+    };
+  }
+  
+  // 修改角色
+  rpc UpdateRole (UpdateRoleReq) returns (UpdateRoleReply) {
+    option (google.api.http) = {
+      put: "/admin/v1/roles/{id}"
+      body: "data"
+    };
+  }
+  
+  // 删除角色
+  rpc DeleteRole (DeleteRoleReq) returns (DeleteRoleReply) {
+    option (google.api.http) = {
+      delete: "/admin/v1/roles/{id}"
+    };
+  }
+  // 权限模块
+  // 列表权限
+  rpc ListAuthority (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+    option (google.api.http) = {
+      get: "/admin/v1/authorities"
+    };
+  }
+  
+  // 创建权限
+  rpc CreateAuthority (CreateAuthorityReq) returns (CreateAuthorityReply) {
+    option (google.api.http) = {
+      post: "/admin/v1/authorities"
+      body: "data"
+    };
+  }
+  
+  // 获取权限
+  rpc GetAuthority (GetAuthorityReq) returns (Authority) {
+    option (google.api.http) = {
+      get: "/admin/v1/authorities/{id}"
+    };
+  }
+  
+  // 修改权限
+  rpc UpdateAuthority (UpdateAuthorityReq) returns (UpdateAuthorityReply) {
+    option (google.api.http) = {
+      put: "/admin/v1/authorities/{id}"
+      body: "data"
+    };
+  }
+  
+  // 删除权限
+  rpc DeleteAuthority (DeleteAuthorityReq) returns (DeleteAuthorityReply) {
+    option (google.api.http) = {
+      delete: "/admin/v1/authorities/{id}"
+    };
+  }
+}
+
+
+// 角色模块
+message Role {
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
+  optional uint64 id = 3;
+  optional string name = 4;
+}
+
+// 请求 - 创建角色
+message CreateRoleReq {
+  Role data = 1;
+}
+
+// 回应 - 创建角色
+message CreateRoleReply {
+  bool success = 1;
+  string message = 2;
+}
+
+// 请求 - 修改角色
+message UpdateRoleReq {
+  uint64 id = 1;
+  message Data {
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建角色
+message UpdateRoleReply {
+  bool success = 1;
+  string message = 2;
+}
+
+// 请求 - 获取角色
+message GetRoleReq {
+  uint64 id = 1;
+}
+
+// 请求 - 删除角色
+message DeleteRoleReq {
+  uint64 id = 1;
+}
+
+// 回应 - 删除角色
+message DeleteRoleReply {
+  bool success = 1;
+  string message = 2;
+}
+
+// 权限模块
+message Authority {
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
+  optional uint64 id = 3;
+  optional string name = 4;
+  optional api.protobuf.AuthorityState state = 5;
+}
+
+// 请求 - 创建权限
+message CreateAuthorityReq {
+  Authority data = 1;
+}
+
+// 回应 - 创建权限
+message CreateAuthorityReply {
+  bool success = 1;
+  string message = 2;
+}
+
+// 请求 - 修改权限
+message UpdateAuthorityReq {
+  uint64 id = 1;
+  message Data {
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建权限
+message UpdateAuthorityReply {
+  bool success = 1;
+  string message = 2;
+}
+
+// 请求 - 获取权限
+message GetAuthorityReq {
+  uint64 id = 1;
+}
+
+// 请求 - 删除权限
+message DeleteAuthorityReq {
+  uint64 id = 1;
+}
+
+// 回应 - 删除权限
+message DeleteAuthorityReply {
+  bool success = 1;
+  string message = 2;
+}

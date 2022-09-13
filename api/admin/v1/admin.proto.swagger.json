@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "admin/v1/admin.proto",
+    "title": "admin/v1/admin.proto.old",
     "version": "version not set"
   },
   "tags": [
@@ -925,44 +925,6 @@
         "tags": [
           "Admin"
         ]
-      },
-      "post": {
-        "summary": "创建用户",
-        "operationId": "Admin_CreateUser",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1CreateUserReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1CreateUserReqData"
-            }
-          },
-          {
-            "name": "id",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
       }
     },
     "/admin/v1/users/menus": {
@@ -1013,7 +975,7 @@
     },
     "/admin/v1/users/{id}": {
       "get": {
-        "summary": "获取用户",
+        "summary": "列表用户",
         "operationId": "Admin_GetUser",
         "responses": {
           "200": {
@@ -1306,52 +1268,6 @@
         }
       },
       "title": "回应 - 创建菜单"
-    },
-    "v1CreateUserReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 创建用户"
-    },
-    "v1CreateUserReqData": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        },
-        "nickName": {
-          "type": "string"
-        },
-        "realName": {
-          "type": "string"
-        },
-        "birthday": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "gender": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "mobile": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "state": {
-          "$ref": "#/definitions/protobufUserState"
-        }
-      }
     },
     "v1DeleteApiReply": {
       "type": "object",

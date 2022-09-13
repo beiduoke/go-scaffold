@@ -17,7 +17,7 @@ option java_outer_classname = "adminProtoV1";
 // The greeting service definition.
 service Admin {
   // 登出
-  rpc Logout (google.protobuf.Empty) returns (google.protobuf.Empty) {
+  rpc Logout (google.protobuf.Empty) returns (LogoutReply) {
     option (google.api.http) = {
       post: "/admin/v1/auth/logout"
       body: "*"
@@ -39,43 +39,215 @@ service Admin {
   }
 
   // User 用户模块
-  // 用户概述
-  rpc ProfileUser (google.protobuf.Empty) returns (User) {
+  // 当前登录用户概述
+  rpc GetUserProfile (google.protobuf.Empty) returns (User) {
     option (google.api.http) = {
       get: "/admin/v1/users/profiles"
     };
   }
   
-  // 用户列表
+  // 获取用户菜单
+  rpc GetUserMenu (google.protobuf.Empty) returns (GetUserMenuReply) {
+    option (google.api.http) = {
+      get: "/admin/v1/users/menus"
+    };
+  }
+  
+  // 列表用户
   rpc ListUser (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
     option (google.api.http) = {
       get: "/admin/v1/users"
     };
   }
   
-  // 用户列表
+  // 创建用户
+  rpc CreateUser (CreateUserReq) returns (CreateUserReply) {
+    option (google.api.http) = {
+      post: "/admin/v1/users"
+      body: "data"
+    };
+  }
+  
+  // 获取用户
   rpc GetUser (GetUserReq) returns (User) {
     option (google.api.http) = {
       get: "/admin/v1/users/{id}"
     };
   }
   
-  // 用户删除
-  rpc DeleteUser (DeleteUserReq) returns (DeleteUserReply) {
-    option (google.api.http) = {
-      delete: "/admin/v1/users/{id}"
-    };
-  }
-  
-  // 用户修改
+  // 修改用户
   rpc UpdateUser (UpdateUserReq) returns (UpdateUserReply) {
     option (google.api.http) = {
       put: "/admin/v1/users/{id}"
       body: "data"
     };
   }
-}
+  
+  // 删除用户
+  rpc DeleteUser (DeleteUserReq) returns (DeleteUserReply) {
+    option (google.api.http) = {
+      delete: "/admin/v1/users/{id}"
+    };
+  }
 
+  // 领域模块
+  // 列表领域
+  rpc ListDomain (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+    option (google.api.http) = {
+      get: "/admin/v1/domains"
+    };
+  }
+  
+  // 创建领域
+  rpc CreateDomain (CreateDomainReq) returns (CreateDomainReply) {
+    option (google.api.http) = {
+      post: "/admin/v1/domains"
+      body: "data"
+    };
+  }
+  
+  // 获取领域
+  rpc GetDomain (GetDomainReq) returns (Domain) {
+    option (google.api.http) = {
+      get: "/admin/v1/domains/{id}"
+    };
+  }
+  
+  // 修改领域
+  rpc UpdateDomain (UpdateDomainReq) returns (UpdateDomainReply) {
+    option (google.api.http) = {
+      put: "/admin/v1/domains/{id}"
+      body: "data"
+    };
+  }
+  
+  // 删除领域
+  rpc DeleteDomain (DeleteDomainReq) returns (DeleteDomainReply) {
+    option (google.api.http) = {
+      delete: "/admin/v1/domains/{id}"
+    };
+  }
+
+  // 授权模块
+  // 列表领域
+  rpc ListAuthority (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+    option (google.api.http) = {
+      get: "/admin/v1/authorities"
+    };
+  }
+  
+  // 创建领域
+  rpc CreateAuthority (CreateAuthorityReq) returns (CreateAuthorityReply) {
+    option (google.api.http) = {
+      post: "/admin/v1/authorities"
+      body: "data"
+    };
+  }
+  
+  // 获取领域
+  rpc GetAuthority (GetAuthorityReq) returns (Authority) {
+    option (google.api.http) = {
+      get: "/admin/v1/authorities/{id}"
+    };
+  }
+  
+  // 修改领域
+  rpc UpdateAuthority (UpdateAuthorityReq) returns (UpdateAuthorityReply) {
+    option (google.api.http) = {
+      put: "/admin/v1/authorities/{id}"
+      body: "data"
+    };
+  }
+  
+  // 删除领域
+  rpc DeleteAuthority (DeleteAuthorityReq) returns (DeleteAuthorityReply) {
+    option (google.api.http) = {
+      delete: "/admin/v1/authorities/{id}"
+    };
+  }
+
+  // 接口模块
+  // 列表接口
+  rpc ListApi (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+    option (google.api.http) = {
+      get: "/admin/v1/apis"
+    };
+  }
+  
+  // 创建接口
+  rpc CreateApi (CreateApiReq) returns (CreateApiReply) {
+    option (google.api.http) = {
+      post: "/admin/v1/apis"
+      body: "data"
+    };
+  }
+  
+  // 获取接口
+  rpc GetApi (GetApiReq) returns (Api) {
+    option (google.api.http) = {
+      get: "/admin/v1/apis/{id}"
+    };
+  }
+  
+  // 修改接口
+  rpc UpdateApi (UpdateApiReq) returns (UpdateApiReply) {
+    option (google.api.http) = {
+      put: "/admin/v1/apis/{id}"
+      body: "data"
+    };
+  }
+  
+  // 删除接口
+  rpc DeleteApi (DeleteApiReq) returns (DeleteApiReply) {
+    option (google.api.http) = {
+      delete: "/admin/v1/apis/{id}"
+    };
+  }
+  // 菜单模块
+  // 列表菜单
+  rpc ListMenu (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+    option (google.api.http) = {
+      get: "/admin/v1/menus"
+    };
+  }
+  
+  // 创建菜单
+  rpc CreateMenu (CreateMenuReq) returns (CreateMenuReply) {
+    option (google.api.http) = {
+      post: "/admin/v1/menus"
+      body: "data"
+    };
+  }
+
+  // 获取树形菜单
+  rpc GetMenuTree (GetMenuTreeReq) returns (Menu) {
+    option (google.api.http) = {
+      get: "/admin/v1/menus/tree/{id}"
+    };
+  }
+  
+  // 获取菜单
+  rpc GetMenu (GetMenuReq) returns (Menu) {
+    option (google.api.http) = {
+      get: "/admin/v1/menus/{id}"
+    };
+  }
+  
+  // 修改菜单
+  rpc UpdateMenu (UpdateMenuReq) returns (UpdateMenuReply) {
+    option (google.api.http) = {
+      put: "/admin/v1/menus/{id}"
+      body: "data"
+    };
+  }
+  
+  // 删除菜单
+  rpc DeleteMenu (DeleteMenuReq) returns (DeleteMenuReply) {
+    option (google.api.http) = {
+      delete: "/admin/v1/menus/{id}"
+    };
+  }
+}
 
 message User {
   optional uint64 id = 1;
@@ -92,7 +264,6 @@ message User {
   optional google.protobuf.Timestamp updated_at = 12;
   optional string authoritys = 13;
 }
-
 
 message Auth {
   // 用户名
@@ -131,15 +302,40 @@ message RegisterReply {
   string message = 2;
 }
 
+// 回应 - 退出登录
 message LogoutReply {
   bool success = 1;
   string message = 2;
 }
 
-// 回应 - 用户列表
+
+// 回应 - 列表用户 - 未使用
 message ListUserReply {
   repeated User items = 1;
   int32 total = 2;
+}
+
+// 请求 - 创建用户
+message CreateUserReq {
+  uint64 id = 1;
+  message Data {
+    string name = 2;
+    optional string password = 3;
+    optional string nick_name = 4;
+    optional string real_name = 5;
+    optional google.protobuf.Timestamp birthday = 6;
+    optional int32 gender = 7;
+    string mobile = 8;
+    optional string email = 9;
+    api.protobuf.UserState state = 10;
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建用户
+message CreateUserReply {
+  bool success = 1;
+  string message = 2;
 }
 
 // 请求 - 获取用户
@@ -158,7 +354,7 @@ message DeleteUserReply {
   string message = 2;
 }
 
-// 请求 - 用户修改
+// 请求 - 修改用户
 message UpdateUserReq {
   uint64 id = 1;
   message Data {
@@ -175,8 +371,220 @@ message UpdateUserReq {
   Data data = 2;
 }
 
-// 回应 - 用户修改
+// 回应 - 修改用户
 message UpdateUserReply {
   bool success = 1;
   string message = 2;
+}
+
+// 回应 - 获取用户菜单
+message GetUserMenuReply {
+  string name = 1;
+  string path = 2;
+  string component = 3;
+  repeated GetUserMenuReply childrens = 4;
+}
+
+
+// 领域模块
+message Domain {
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
+  optional uint64 id = 3;
+  optional string name = 4;
+  optional api.protobuf.DomainState state = 5;
+}
+
+// 请求 - 创建领域
+message CreateDomainReq {
+  Domain data = 1;
+}
+
+// 回应 - 创建领域
+message CreateDomainReply {
+  bool success = 1;
+  string message = 2;
+}
+
+// 请求 - 修改领域
+message UpdateDomainReq {
+  uint64 id = 1;
+  message Data {
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建领域
+message UpdateDomainReply {
+  bool success = 1;
+  string message = 2;
+}
+
+// 请求 - 获取领域
+message GetDomainReq {
+  uint64 id = 1;
+}
+
+// 请求 - 删除领域
+message DeleteDomainReq {
+  uint64 id = 1;
+}
+
+// 回应 - 删除领域
+message DeleteDomainReply {
+  bool success = 1;
+  string message = 2;
+}
+
+// 权限模块
+message Authority {
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
+  optional uint64 id = 3;
+  optional string name = 4;
+  optional api.protobuf.AuthorityState state = 5;
+}
+
+// 请求 - 创建权限
+message CreateAuthorityReq {
+  Authority data = 1;
+}
+
+// 回应 - 创建权限
+message CreateAuthorityReply {
+  bool success = 1;
+  string message = 2;
+}
+
+// 请求 - 修改权限
+message UpdateAuthorityReq {
+  uint64 id = 1;
+  message Data {
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建权限
+message UpdateAuthorityReply {
+  bool success = 1;
+  string message = 2;
+}
+
+// 请求 - 获取权限
+message GetAuthorityReq {
+  uint64 id = 1;
+}
+
+// 请求 - 删除权限
+message DeleteAuthorityReq {
+  uint64 id = 1;
+}
+
+// 回应 - 删除权限
+message DeleteAuthorityReply {
+  bool success = 1;
+  string message = 2;
+}
+
+// 接口模块
+message Api {
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
+  optional uint64 id = 3;
+  optional string name = 4;
+}
+
+// 请求 - 创建接口
+message CreateApiReq {
+  Api data = 1;
+}
+
+// 回应 - 创建接口
+message CreateApiReply {
+  bool success = 1;
+  string message = 2;
+}
+
+// 请求 - 修改接口
+message UpdateApiReq {
+  uint64 id = 1;
+  message Data {
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建接口
+message UpdateApiReply {
+  bool success = 1;
+  string message = 2;
+}
+
+// 请求 - 获取接口
+message GetApiReq {
+  uint64 id = 1;
+}
+
+// 请求 - 删除接口
+message DeleteApiReq {
+  uint64 id = 1;
+}
+
+// 回应 - 删除接口
+message DeleteApiReply {
+  bool success = 1;
+  string message = 2;
+}
+
+// 菜单模块
+message Menu {
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
+  optional uint64 id = 3;
+  optional string name = 4;
+}
+
+// 请求 - 创建菜单
+message CreateMenuReq {
+  Menu data = 1;
+}
+
+// 回应 - 创建菜单
+message CreateMenuReply {
+  bool success = 1;
+  string message = 2;
+}
+
+// 请求 - 修改菜单
+message UpdateMenuReq {
+  uint64 id = 1;
+  message Data {
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建菜单
+message UpdateMenuReply {
+  bool success = 1;
+  string message = 2;
+}
+
+// 请求 - 获取菜单
+message GetMenuReq {
+  uint64 id = 1;
+}
+
+// 请求 - 删除菜单
+message DeleteMenuReq {
+  uint64 id = 1;
+}
+
+// 回应 - 删除菜单
+message DeleteMenuReply {
+  bool success = 1;
+  string message = 2;
+}
+
+// 回应 - 获取树形菜单
+message GetMenuTreeReq {
+  uint64 id = 1;
 }

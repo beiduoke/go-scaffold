@@ -7,6 +7,121 @@ info:
     description: The greeting service definition.
     version: 0.0.1
 paths:
+    /admin/v1/apis:
+        get:
+            tags:
+                - Admin
+            description: |-
+                接口模块
+                 列表接口
+            operationId: Admin_ListApi
+            parameters:
+                - name: page
+                  in: query
+                  description: 当前页
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  description: 每一页的行数
+                  schema:
+                    type: integer
+                    format: int32
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.protobuf.PagingReply'
+        post:
+            tags:
+                - Admin
+            description: 创建接口
+            operationId: Admin_CreateApi
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.v1.Api'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.CreateApiReply'
+    /admin/v1/apis/{id}:
+        get:
+            tags:
+                - Admin
+            description: 获取接口
+            operationId: Admin_GetApi
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.Api'
+        put:
+            tags:
+                - Admin
+            description: 修改接口
+            operationId: Admin_UpdateApi
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.v1.UpdateApiReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.UpdateApiReply'
+        delete:
+            tags:
+                - Admin
+            description: 删除接口
+            operationId: Admin_DeleteApi
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.DeleteApiReply'
     /admin/v1/auth/login:
         post:
             tags:
@@ -45,7 +160,10 @@ paths:
             responses:
                 "200":
                     description: OK
-                    content: {}
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.LogoutReply'
     /admin/v1/auth/register:
         post:
             tags:
@@ -71,11 +189,376 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.RegisterReply'
+    /admin/v1/authorities:
+        get:
+            tags:
+                - Admin
+            description: |-
+                授权模块
+                 列表领域
+            operationId: Admin_ListAuthority
+            parameters:
+                - name: page
+                  in: query
+                  description: 当前页
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  description: 每一页的行数
+                  schema:
+                    type: integer
+                    format: int32
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.protobuf.PagingReply'
+        post:
+            tags:
+                - Admin
+            description: 创建领域
+            operationId: Admin_CreateAuthority
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.v1.Authority'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.CreateAuthorityReply'
+    /admin/v1/authorities/{id}:
+        get:
+            tags:
+                - Admin
+            description: 获取领域
+            operationId: Admin_GetAuthority
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.Authority'
+        put:
+            tags:
+                - Admin
+            description: 修改领域
+            operationId: Admin_UpdateAuthority
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.v1.UpdateAuthorityReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.UpdateAuthorityReply'
+        delete:
+            tags:
+                - Admin
+            description: 删除领域
+            operationId: Admin_DeleteAuthority
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.DeleteAuthorityReply'
+    /admin/v1/domains:
+        get:
+            tags:
+                - Admin
+            description: |-
+                领域模块
+                 列表领域
+            operationId: Admin_ListDomain
+            parameters:
+                - name: page
+                  in: query
+                  description: 当前页
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  description: 每一页的行数
+                  schema:
+                    type: integer
+                    format: int32
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.protobuf.PagingReply'
+        post:
+            tags:
+                - Admin
+            description: 创建领域
+            operationId: Admin_CreateDomain
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.v1.Domain'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.CreateDomainReply'
+    /admin/v1/domains/{id}:
+        get:
+            tags:
+                - Admin
+            description: 获取领域
+            operationId: Admin_GetDomain
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.Domain'
+        put:
+            tags:
+                - Admin
+            description: 修改领域
+            operationId: Admin_UpdateDomain
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.v1.UpdateDomainReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.UpdateDomainReply'
+        delete:
+            tags:
+                - Admin
+            description: 删除领域
+            operationId: Admin_DeleteDomain
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.DeleteDomainReply'
+    /admin/v1/menus:
+        get:
+            tags:
+                - Admin
+            description: |-
+                菜单模块
+                 列表菜单
+            operationId: Admin_ListMenu
+            parameters:
+                - name: page
+                  in: query
+                  description: 当前页
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  description: 每一页的行数
+                  schema:
+                    type: integer
+                    format: int32
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.protobuf.PagingReply'
+        post:
+            tags:
+                - Admin
+            description: 创建菜单
+            operationId: Admin_CreateMenu
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.v1.Menu'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.CreateMenuReply'
+    /admin/v1/menus/tree/{id}:
+        get:
+            tags:
+                - Admin
+            description: 获取树形菜单
+            operationId: Admin_GetMenuTree
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.Menu'
+    /admin/v1/menus/{id}:
+        get:
+            tags:
+                - Admin
+            description: 获取菜单
+            operationId: Admin_GetMenu
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.Menu'
+        put:
+            tags:
+                - Admin
+            description: 修改菜单
+            operationId: Admin_UpdateMenu
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.v1.UpdateMenuReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.UpdateMenuReply'
+        delete:
+            tags:
+                - Admin
+            description: 删除菜单
+            operationId: Admin_DeleteMenu
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.DeleteMenuReply'
     /admin/v1/users:
         get:
             tags:
                 - Admin
-            description: 用户列表
+            description: 列表用户
             operationId: Admin_ListUser
             parameters:
                 - name: page
@@ -102,14 +585,51 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.protobuf.PagingReply'
+        post:
+            tags:
+                - Admin
+            description: 创建用户
+            operationId: Admin_CreateUser
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.v1.CreateUserReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.CreateUserReply'
+    /admin/v1/users/menus:
+        get:
+            tags:
+                - Admin
+            description: 获取用户菜单
+            operationId: Admin_GetUserMenu
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.GetUserMenuReply'
     /admin/v1/users/profiles:
         get:
             tags:
                 - Admin
             description: |-
                 User 用户模块
-                 用户概述
-            operationId: Admin_ProfileUser
+                 当前登录用户概述
+            operationId: Admin_GetUserProfile
             responses:
                 "200":
                     description: OK
@@ -121,7 +641,7 @@ paths:
         get:
             tags:
                 - Admin
-            description: 用户列表
+            description: 获取用户
             operationId: Admin_GetUser
             parameters:
                 - name: id
@@ -140,7 +660,7 @@ paths:
         put:
             tags:
                 - Admin
-            description: 用户修改
+            description: 修改用户
             operationId: Admin_UpdateUser
             parameters:
                 - name: id
@@ -165,7 +685,7 @@ paths:
         delete:
             tags:
                 - Admin
-            description: 用户删除
+            description: 删除用户
             operationId: Admin_DeleteUser
             parameters:
                 - name: id
@@ -183,6 +703,21 @@ paths:
                                 $ref: '#/components/schemas/api.admin.v1.DeleteUserReply'
 components:
     schemas:
+        api.admin.v1.Api:
+            type: object
+            properties:
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                id:
+                    type: integer
+                    format: uint64
+                name:
+                    type: string
+            description: 接口模块
         api.admin.v1.Auth:
             type: object
             properties:
@@ -192,6 +727,120 @@ components:
                 password:
                     type: string
                     description: 密码
+        api.admin.v1.Authority:
+            type: object
+            properties:
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                id:
+                    type: integer
+                    format: uint64
+                name:
+                    type: string
+                state:
+                    type: integer
+                    format: enum
+            description: 权限模块
+        api.admin.v1.CreateApiReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+            description: 回应 - 创建接口
+        api.admin.v1.CreateAuthorityReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+            description: 回应 - 创建权限
+        api.admin.v1.CreateDomainReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+            description: 回应 - 创建领域
+        api.admin.v1.CreateMenuReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+            description: 回应 - 创建菜单
+        api.admin.v1.CreateUserReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+            description: 回应 - 创建用户
+        api.admin.v1.CreateUserReq_Data:
+            type: object
+            properties:
+                name:
+                    type: string
+                password:
+                    type: string
+                nickName:
+                    type: string
+                realName:
+                    type: string
+                birthday:
+                    type: string
+                    format: date-time
+                gender:
+                    type: integer
+                    format: int32
+                mobile:
+                    type: string
+                email:
+                    type: string
+                state:
+                    type: integer
+                    format: enum
+        api.admin.v1.DeleteApiReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+            description: 回应 - 删除接口
+        api.admin.v1.DeleteAuthorityReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+            description: 回应 - 删除权限
+        api.admin.v1.DeleteDomainReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+            description: 回应 - 删除领域
+        api.admin.v1.DeleteMenuReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+            description: 回应 - 删除菜单
         api.admin.v1.DeleteUserReply:
             type: object
             properties:
@@ -200,6 +849,38 @@ components:
                 message:
                     type: string
             description: 回应 - 删除用户
+        api.admin.v1.Domain:
+            type: object
+            properties:
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                id:
+                    type: integer
+                    format: uint64
+                name:
+                    type: string
+                state:
+                    type: integer
+                    format: enum
+            description: 领域模块
+        api.admin.v1.GetUserMenuReply:
+            type: object
+            properties:
+                name:
+                    type: string
+                path:
+                    type: string
+                component:
+                    type: string
+                childrens:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.v1.GetUserMenuReply'
+            description: 回应 - 获取用户菜单
         api.admin.v1.LoginReply:
             type: object
             properties:
@@ -211,6 +892,29 @@ components:
                     description: 过期时间
                     format: date-time
             description: 回应 - 登录
+        api.admin.v1.LogoutReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+            description: 回应 - 退出登录
+        api.admin.v1.Menu:
+            type: object
+            properties:
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                id:
+                    type: integer
+                    format: uint64
+                name:
+                    type: string
+            description: 菜单模块
         api.admin.v1.RegisterReply:
             type: object
             properties:
@@ -219,6 +923,50 @@ components:
                 message:
                     type: string
             description: 回应 - 注册
+        api.admin.v1.UpdateApiReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+            description: 回应 - 创建接口
+        api.admin.v1.UpdateApiReq_Data:
+            type: object
+            properties: {}
+        api.admin.v1.UpdateAuthorityReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+            description: 回应 - 创建权限
+        api.admin.v1.UpdateAuthorityReq_Data:
+            type: object
+            properties: {}
+        api.admin.v1.UpdateDomainReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+            description: 回应 - 创建领域
+        api.admin.v1.UpdateDomainReq_Data:
+            type: object
+            properties: {}
+        api.admin.v1.UpdateMenuReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+            description: 回应 - 创建菜单
+        api.admin.v1.UpdateMenuReq_Data:
+            type: object
+            properties: {}
         api.admin.v1.UpdateUserReply:
             type: object
             properties:
@@ -226,7 +974,7 @@ components:
                     type: boolean
                 message:
                     type: string
-            description: 回应 - 用户修改
+            description: 回应 - 修改用户
         api.admin.v1.UpdateUserReq_Data:
             type: object
             properties:

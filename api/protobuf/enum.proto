@@ -9,19 +9,40 @@ option java_outer_classname = "EnumProto";
 
 enum Sort {
   SORT_UNSPECIFIED = 0;
-  DESC = 1;
-  ASC = 2;
+  SORT_DESC = 1;
+  SORT_ASC = 2;
 }
 
 enum Enabled {
   ENABLED_UNSPECIFIED = 0;
-  YES = 1;
-  NO = 2;
+  ENABLED_YES = 1;
+  ENABLED_NO = 2;
 }
 
 enum UserState {
   USER_STATE_UNSPECIFIED = 0;
-  ACTIVE = 1;
-  INACTIVE = 2;
-  BANNED = 3;
+  USER_ACTIVE = 1;
+  USER_INACTIVE = 2;
+  USER_BANNED = 3;
+}
+
+enum DomainState {
+  DOMAIN_STATE_UNSPECIFIED = 0;
+  DOMAIN_ACTIVE = 1;
+  DOMAIN_INACTIVE = 2;
+  DOMAIN_BANNED = 3;
+}
+
+enum AuthorityState {
+  AUTHORITY_STATE_UNSPECIFIED = 0;
+  AUTHORITY_ACTIVE = 1;
+  AUTHORITY_INACTIVE = 2;
+  AUTHORITY_BANNED = 3;
+}
+
+enum MenuState {
+  MENU_STATE_UNSPECIFIED = 0;
+  MENU_ACTIVE = 1;
+  MENU_INACTIVE = 2;
+  MENU_BANNED = 3;
 }

@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package api.admin.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/beiduoke/go-scaffold/api/admin/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.admin.v1";
+option java_outer_classname = "adminProtoV1";
+
+// The greeting service definition.
+service AuthService {
+  // 登出
+  rpc Logout (google.protobuf.Empty) returns (LogoutReply) {
+    option (google.api.http) = {
+      post: "/admin/v1/auth/logout"
+      body: "*"
+    };
+  }
+  // 登陆
+  rpc Login (LoginReq) returns (LoginReply) {
+    option (google.api.http) = {
+      post: "/admin/v1/auth/login"
+      body: "data"
+    };
+  }
+  // 注册
+  rpc Register (RegisterReq) returns (RegisterReply) {
+    option (google.api.http) = {
+      post: "/admin/v1/auth/register"
+      body: "data"
+    };
+  }
+}
+
+// 请求 - 登录
+message LoginReq {
+  // 领域
+  string domain = 1;
+  message Data {
+    // 用户名
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    // 密码
+    string password = 2 [(validate.rules).string = {min_len: 6, max_len: 25}];
+  }
+  // 请求体
+  Data data = 2 [(validate.rules).message = {required: true}];
+}
+
+// 回应 - 登录
+message LoginReply {
+  // 登录token
+  string token = 1;
+  // 过期时间
+  google.protobuf.Timestamp expire_time = 2;
+}
+
+// 请求 - 注册
+message RegisterReq {
+  // 领域
+  string domain = 1;
+
+  message Data {
+    // 用户名
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    // 密码
+    string password = 2 [(validate.rules).string = {min_len: 6, max_len: 25}];
+  }
+  // 请求体
+  Data data = 2 [(validate.rules).message = {required: true}];
+}
+
+// 回应 - 注册
+message RegisterReply {
+  bool success = 1;
+  string message = 2;
+}
+
+// 回应 - 退出登录
+message LogoutReply {
+  bool success = 1;
+  string message = 2;
+}
