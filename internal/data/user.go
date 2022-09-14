@@ -2,6 +2,8 @@ package data
 
 import (
 	"context"
+	"fmt"
+	"time"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
@@ -9,6 +11,8 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
+
+const cacheKeyToken string = "%d-%d"
 
 type UserRepo struct {
 	data      *Data
@@ -203,4 +207,16 @@ func (r *UserRepo) ListByEmail(ctx context.Context, s string) ([]*biz.User, erro
 		bizUsers = append(bizUsers, r.toBiz(v))
 	}
 	return bizUsers, nil
+}
+
+func (r *UserRepo) SetTokenCache(ctx context.Context, claims biz.AuthClaims) error {
+	key := fmt.Sprintf(cacheKeyToken, claims.ID, claims.Domain)
+	result := r.data.rdb.Set(ctx, key, claims.Token, time.Until(*claims.ExpiresAt))
+	return result.Err()
+}
+
+func (r *UserRepo) GetTokenCache(ctx context.Context, claims biz.AuthClaims) error {
+	key := fmt.Sprintf(cacheKeyToken, claims.ID, claims.Domain)
+	result := r.data.rdb.Get(ctx, key)
+	return result.Err()
 }

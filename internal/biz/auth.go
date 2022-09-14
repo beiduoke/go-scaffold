@@ -27,13 +27,13 @@ type AuthUsecase struct {
 	ac         *conf.Auth
 	log        *log.Helper
 	tm         Transaction
-	repo       UserRepo
+	userRepo   UserRepo
 	domainRepo DomainRepo
 }
 
 // NewAuthUsecase new a User usecase.
-func NewAuthUsecase(ac *conf.Auth, repo UserRepo, tm Transaction, logger log.Logger, domainRepo DomainRepo) *AuthUsecase {
-	return &AuthUsecase{ac: ac, repo: repo, tm: tm, log: log.NewHelper(logger), domainRepo: domainRepo}
+func NewAuthUsecase(ac *conf.Auth, userRepo UserRepo, tm Transaction, logger log.Logger, domainRepo DomainRepo) *AuthUsecase {
+	return &AuthUsecase{ac: ac, userRepo: userRepo, tm: tm, log: log.NewHelper(logger), domainRepo: domainRepo}
 }
 
 func (ac *AuthUsecase) GetToken(claims *AuthClaims) error {
@@ -64,7 +64,7 @@ func (ac *AuthUsecase) LoginNamePassword(ctx context.Context, domainId string, g
 	if err != nil {
 		return nil, errors.New("domain查询失败")
 	}
-	u, err := ac.repo.FindByName(ctx, g.Name)
+	u, err := ac.userRepo.FindByName(ctx, g.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func (ac *AuthUsecase) LoginNamePassword(ctx context.Context, domainId string, g
 	}
 
 	// 生成token
-	authClaims := AuthClaims{
+	authClaims := &AuthClaims{
 		ID:          u.ID,
 		Domain:      domain.ID,
 		Authorities: []uint{},
@@ -93,17 +93,21 @@ func (ac *AuthUsecase) LoginNamePassword(ctx context.Context, domainId string, g
 	for _, v := range authorities {
 		authClaims.Authorities = append(authClaims.Authorities, v.ID)
 	}
-	if err := ac.GetToken(&authClaims); err != nil {
+	if err := ac.GetToken(authClaims); err != nil {
 		return nil, err
 	}
 
-	return &authClaims, nil
+	if err := ac.userRepo.SetTokenCache(ctx, *authClaims); err != nil {
+		ac.log.Errorf("token 缓存失败 %v", err)
+	}
+
+	return authClaims, nil
 }
 
 // LoginMobileSms 登录-手机验证码
 func (ac *AuthUsecase) LoginMobileSms(ctx context.Context, domainId string, g *User) (*User, error) {
 	ac.log.WithContext(ctx).Infof("mobileSmsLogin: %v", g)
-	return ac.repo.FindByMobile(ctx, g.Mobile)
+	return ac.userRepo.FindByMobile(ctx, g.Mobile)
 }
 
 // RegisterNamePassword 注册-用户密码
@@ -113,7 +117,7 @@ func (ac *AuthUsecase) RegisterNamePassword(ctx context.Context, domainId string
 	if err != nil {
 		return nil, errors.New("domain查询失败")
 	}
-	user, _ := ac.repo.FindByName(ctx, g.Name)
+	user, _ := ac.userRepo.FindByName(ctx, g.Name)
 	if user != nil && user.Name != "" {
 		return nil, errors.New("用户已注册")
 	}
@@ -127,7 +131,7 @@ func (ac *AuthUsecase) RegisterNamePassword(ctx context.Context, domainId string
 	}
 
 	err = ac.tm.InTx(ctx, func(ctx context.Context) error {
-		g, err = ac.repo.Save(ctx, g)
+		g, err = ac.userRepo.Save(ctx, g)
 		if err != nil {
 			return err
 		}

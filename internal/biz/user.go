@@ -43,6 +43,10 @@ type UserRepo interface {
 	ListByMobile(context.Context, string) ([]*User, error)
 	ListByEmail(context.Context, string) ([]*User, error)
 	ListPage(context.Context, pagination.PaginationHandler) ([]*User, int64)
+
+	// 缓存操作
+	SetTokenCache(context.Context, AuthClaims) error
+	GetTokenCache(context.Context, AuthClaims) error
 }
 
 // UserUsecase is a User usecase.

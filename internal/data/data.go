@@ -62,9 +62,9 @@ func NewSnowflake(logger log.Logger) *snowflake.Node {
 
 // Data .
 type Data struct {
+	log *log.Helper
 	db  *gorm.DB
 	rdb *redis.Client
-	log *log.Helper
 	sf  *snowflake.Node
 }
 
@@ -137,7 +137,7 @@ func NewRDB(conf *conf.Data, logger log.Logger) *redis.Client {
 	})
 	err := rdb.Ping(context.Background()).Err()
 	if err != nil {
-		log.Fatalf("init redis connection failed %v", err)
+		log.Fatalf("failed opening connection to redis %v", err)
 	}
 	return rdb
 }

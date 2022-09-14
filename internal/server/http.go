@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 
 	adminv1 "github.com/beiduoke/go-scaffold/api/admin/v1"
 	webv1 "github.com/beiduoke/go-scaffold/api/web/v1"
@@ -55,9 +56,13 @@ func NewAuthMiddleware(ac *conf.Auth, m model.Model, policy persist.Adapter, enf
 	return selector.Server(
 		jwt.Server(
 			func(token *jwtV4.Token) (interface{}, error) {
+				fmt.Println(token)
 				return []byte(ac.ApiKey), nil
 			},
 			jwt.WithSigningMethod(jwtV4.SigningMethodHS256),
+			jwt.WithClaims(func() jwtV4.Claims {
+				return nil
+			}),
 		),
 		casbinM.Server(
 			casbinM.WithDomainSupport(),
