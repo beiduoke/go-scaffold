@@ -195,7 +195,7 @@ paths:
                 - Admin
             description: |-
                 授权模块
-                 列表领域
+                 列表授权
             operationId: Admin_ListAuthority
             parameters:
                 - name: page
@@ -225,7 +225,7 @@ paths:
         post:
             tags:
                 - Admin
-            description: 创建领域
+            description: 创建授权
             operationId: Admin_CreateAuthority
             requestBody:
                 content:
@@ -244,7 +244,7 @@ paths:
         get:
             tags:
                 - Admin
-            description: 获取领域
+            description: 获取授权
             operationId: Admin_GetAuthority
             parameters:
                 - name: id
@@ -263,7 +263,7 @@ paths:
         put:
             tags:
                 - Admin
-            description: 修改领域
+            description: 修改授权
             operationId: Admin_UpdateAuthority
             parameters:
                 - name: id
@@ -288,7 +288,7 @@ paths:
         delete:
             tags:
                 - Admin
-            description: 删除领域
+            description: 删除授权
             operationId: Admin_DeleteAuthority
             parameters:
                 - name: id
@@ -914,6 +914,36 @@ components:
                     format: uint64
                 name:
                     type: string
+                parentId:
+                    type: integer
+                    format: uint64
+                path:
+                    type: string
+                hidden:
+                    type: integer
+                    format: enum
+                component:
+                    type: string
+                sort:
+                    type: integer
+                    format: int64
+                icon:
+                    type: string
+                title:
+                    type: string
+                keepAlive:
+                    type: integer
+                    format: enum
+                baseMenu:
+                    type: integer
+                    format: enum
+                closeTab:
+                    type: integer
+                    format: enum
+                childrens:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.v1.Menu'
             description: 菜单模块
         api.admin.v1.RegisterReply:
             type: object

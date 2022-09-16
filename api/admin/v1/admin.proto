@@ -129,14 +129,14 @@ service Admin {
   }
 
   // 授权模块
-  // 列表领域
+  // 列表授权
   rpc ListAuthority (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
     option (google.api.http) = {
       get: "/admin/v1/authorities"
     };
   }
   
-  // 创建领域
+  // 创建授权
   rpc CreateAuthority (CreateAuthorityReq) returns (CreateAuthorityReply) {
     option (google.api.http) = {
       post: "/admin/v1/authorities"
@@ -144,14 +144,14 @@ service Admin {
     };
   }
   
-  // 获取领域
+  // 获取授权
   rpc GetAuthority (GetAuthorityReq) returns (Authority) {
     option (google.api.http) = {
       get: "/admin/v1/authorities/{id}"
     };
   }
   
-  // 修改领域
+  // 修改授权
   rpc UpdateAuthority (UpdateAuthorityReq) returns (UpdateAuthorityReply) {
     option (google.api.http) = {
       put: "/admin/v1/authorities/{id}"
@@ -159,7 +159,7 @@ service Admin {
     };
   }
   
-  // 删除领域
+  // 删除授权
   rpc DeleteAuthority (DeleteAuthorityReq) returns (DeleteAuthorityReply) {
     option (google.api.http) = {
       delete: "/admin/v1/authorities/{id}"
@@ -541,6 +541,17 @@ message Menu {
   optional google.protobuf.Timestamp updated_at = 2;
   optional uint64 id = 3;
   optional string name = 4;
+  optional uint64 parent_id = 5;
+  optional string path = 6;
+  optional api.protobuf.MenuHidden hidden = 7;
+  optional string component = 8;
+  optional int64 sort = 9;
+  optional string icon = 10;
+  optional string title = 11;
+  optional api.protobuf.MenuKeepAlive keep_alive = 12;
+  optional api.protobuf.MenuBaseMenu base_menu = 13;
+  optional api.protobuf.MenuCloseTab close_tab = 14;
+  repeated Menu childrens = 15;
 }
 
 // 请求 - 创建菜单

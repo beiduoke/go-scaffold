@@ -312,7 +312,7 @@
     },
     "/admin/v1/authorities": {
       "get": {
-        "summary": "授权模块\n列表领域",
+        "summary": "授权模块\n列表授权",
         "operationId": "Admin_ListAuthority",
         "responses": {
           "200": {
@@ -358,7 +358,7 @@
         ]
       },
       "post": {
-        "summary": "创建领域",
+        "summary": "创建授权",
         "operationId": "Admin_CreateAuthority",
         "responses": {
           "200": {
@@ -391,7 +391,7 @@
     },
     "/admin/v1/authorities/{id}": {
       "get": {
-        "summary": "获取领域",
+        "summary": "获取授权",
         "operationId": "Admin_GetAuthority",
         "responses": {
           "200": {
@@ -421,7 +421,7 @@
         ]
       },
       "delete": {
-        "summary": "删除领域",
+        "summary": "删除授权",
         "operationId": "Admin_DeleteAuthority",
         "responses": {
           "200": {
@@ -451,7 +451,7 @@
         ]
       },
       "put": {
-        "summary": "修改领域",
+        "summary": "修改授权",
         "operationId": "Admin_UpdateAuthority",
         "responses": {
           "200": {
@@ -1132,9 +1132,9 @@
       "type": "string",
       "enum": [
         "AUTHORITY_STATE_UNSPECIFIED",
-        "AUTHORITY_ACTIVE",
-        "AUTHORITY_INACTIVE",
-        "AUTHORITY_BANNED"
+        "AUTHORITY_STATE_ACTIVE",
+        "AUTHORITY_STATE_INACTIVE",
+        "AUTHORITY_STATE_BANNED"
       ],
       "default": "AUTHORITY_STATE_UNSPECIFIED"
     },
@@ -1142,11 +1142,47 @@
       "type": "string",
       "enum": [
         "DOMAIN_STATE_UNSPECIFIED",
-        "DOMAIN_ACTIVE",
-        "DOMAIN_INACTIVE",
-        "DOMAIN_BANNED"
+        "DOMAIN_STATE_ACTIVE",
+        "DOMAIN_STATE_INACTIVE",
+        "DOMAIN_STATE_BANNED"
       ],
       "default": "DOMAIN_STATE_UNSPECIFIED"
+    },
+    "protobufMenuBaseMenu": {
+      "type": "string",
+      "enum": [
+        "MENU_BASE_MENU_UNSPECIFIED",
+        "MENU_BASE_MENU_YES",
+        "MENU_BASE_MENU_NO"
+      ],
+      "default": "MENU_BASE_MENU_UNSPECIFIED"
+    },
+    "protobufMenuCloseTab": {
+      "type": "string",
+      "enum": [
+        "MENU_CLOSE_TAB_UNSPECIFIED",
+        "MENU_CLOSE_TAB_YES",
+        "MENU_CLOSE_TAB_NO"
+      ],
+      "default": "MENU_CLOSE_TAB_UNSPECIFIED"
+    },
+    "protobufMenuHidden": {
+      "type": "string",
+      "enum": [
+        "MENU_HIDDEN_UNSPECIFIED",
+        "MENU_HIDDEN_YES",
+        "MENU_HIDDEN_NO"
+      ],
+      "default": "MENU_HIDDEN_UNSPECIFIED"
+    },
+    "protobufMenuKeepAlive": {
+      "type": "string",
+      "enum": [
+        "MENU_KEEP_ALIVE_UNSPECIFIED",
+        "MENU_KEEP_ALIVE_YES",
+        "MENU_KEEP_ALIVE_NO"
+      ],
+      "default": "MENU_KEEP_ALIVE_UNSPECIFIED"
     },
     "protobufPagingReply": {
       "type": "object",
@@ -1177,9 +1213,9 @@
       "type": "string",
       "enum": [
         "USER_STATE_UNSPECIFIED",
-        "USER_ACTIVE",
-        "USER_INACTIVE",
-        "USER_BANNED"
+        "USER_STATE_ACTIVE",
+        "USER_STATE_INACTIVE",
+        "USER_STATE_BANNED"
       ],
       "default": "USER_STATE_UNSPECIFIED"
     },
@@ -1502,6 +1538,44 @@
         },
         "name": {
           "type": "string"
+        },
+        "parentId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "path": {
+          "type": "string"
+        },
+        "hidden": {
+          "$ref": "#/definitions/protobufMenuHidden"
+        },
+        "component": {
+          "type": "string"
+        },
+        "sort": {
+          "type": "string",
+          "format": "int64"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "keepAlive": {
+          "$ref": "#/definitions/protobufMenuKeepAlive"
+        },
+        "baseMenu": {
+          "$ref": "#/definitions/protobufMenuBaseMenu"
+        },
+        "closeTab": {
+          "$ref": "#/definitions/protobufMenuCloseTab"
+        },
+        "childrens": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Menu"
+          }
         }
       },
       "title": "菜单模块"

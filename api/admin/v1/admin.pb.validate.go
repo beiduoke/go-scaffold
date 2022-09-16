@@ -4955,6 +4955,40 @@ func (m *Menu) validate(all bool) error {
 
 	var errors []error
 
+	for idx, item := range m.GetChildrens() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, MenuValidationError{
+						field:  fmt.Sprintf("Childrens[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, MenuValidationError{
+						field:  fmt.Sprintf("Childrens[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return MenuValidationError{
+					field:  fmt.Sprintf("Childrens[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
 	if m.CreatedAt != nil {
 
 		if all {
@@ -5027,6 +5061,46 @@ func (m *Menu) validate(all bool) error {
 
 	if m.Name != nil {
 		// no validation rules for Name
+	}
+
+	if m.ParentId != nil {
+		// no validation rules for ParentId
+	}
+
+	if m.Path != nil {
+		// no validation rules for Path
+	}
+
+	if m.Hidden != nil {
+		// no validation rules for Hidden
+	}
+
+	if m.Component != nil {
+		// no validation rules for Component
+	}
+
+	if m.Sort != nil {
+		// no validation rules for Sort
+	}
+
+	if m.Icon != nil {
+		// no validation rules for Icon
+	}
+
+	if m.Title != nil {
+		// no validation rules for Title
+	}
+
+	if m.KeepAlive != nil {
+		// no validation rules for KeepAlive
+	}
+
+	if m.BaseMenu != nil {
+		// no validation rules for BaseMenu
+	}
+
+	if m.CloseTab != nil {
+		// no validation rules for CloseTab
 	}
 
 	if len(errors) > 0 {

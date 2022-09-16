@@ -1,15 +1,15 @@
 syntax = "proto3";
 
-package api.admin.v1;
+package api.admin.v1.service;
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
 
-option go_package = "github.com/beiduoke/go-scaffold/api/admin/v1;v1";
+option go_package = "github.com/beiduoke/go-scaffold/api/admin/v1/service;service";
 option java_multiple_files = true;
-option java_package = "dev.kratos.api.admin.v1";
+option java_package = "dev.kratos.api.admin.v1.service";
 option java_outer_classname = "adminProtoV1";
 
 // The greeting service definition.
@@ -25,30 +25,31 @@ service AuthService {
   rpc Login (LoginReq) returns (LoginReply) {
     option (google.api.http) = {
       post: "/admin/v1/auth/login"
-      body: "data"
+      body: "auth"
     };
   }
   // 注册
   rpc Register (RegisterReq) returns (RegisterReply) {
     option (google.api.http) = {
       post: "/admin/v1/auth/register"
-      body: "data"
+      body: "auth"
     };
   }
+}
+
+message Auth {
+  // 用户名
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  // 密码
+  string password = 2 [(validate.rules).string = {min_len: 6, max_len: 25}];
 }
 
 // 请求 - 登录
 message LoginReq {
   // 领域
   string domain = 1;
-  message Data {
-    // 用户名
-    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
-    // 密码
-    string password = 2 [(validate.rules).string = {min_len: 6, max_len: 25}];
-  }
   // 请求体
-  Data data = 2 [(validate.rules).message = {required: true}];
+  Auth auth = 2 [(validate.rules).message = {required: true}];
 }
 
 // 回应 - 登录
@@ -63,15 +64,8 @@ message LoginReply {
 message RegisterReq {
   // 领域
   string domain = 1;
-
-  message Data {
-    // 用户名
-    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
-    // 密码
-    string password = 2 [(validate.rules).string = {min_len: 6, max_len: 25}];
-  }
   // 请求体
-  Data data = 2 [(validate.rules).message = {required: true}];
+  Auth auth = 2 [(validate.rules).message = {required: true}];
 }
 
 // 回应 - 注册

@@ -127,7 +127,7 @@ func (ac *AuthUsecase) RegisterNamePassword(ctx context.Context, domainId string
 	}
 	g.Password = password
 	if g.State <= 0 {
-		g.State = int32(pb.UserState_USER_ACTIVE)
+		g.State = int32(pb.UserState_USER_STATE_ACTIVE)
 	}
 
 	err = ac.tm.InTx(ctx, func(ctx context.Context) error {

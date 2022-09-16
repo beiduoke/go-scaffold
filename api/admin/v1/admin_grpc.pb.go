@@ -57,15 +57,15 @@ type AdminClient interface {
 	// 删除领域
 	DeleteDomain(ctx context.Context, in *DeleteDomainReq, opts ...grpc.CallOption) (*DeleteDomainReply, error)
 	// 授权模块
-	// 列表领域
+	// 列表授权
 	ListAuthority(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
-	// 创建领域
+	// 创建授权
 	CreateAuthority(ctx context.Context, in *CreateAuthorityReq, opts ...grpc.CallOption) (*CreateAuthorityReply, error)
-	// 获取领域
+	// 获取授权
 	GetAuthority(ctx context.Context, in *GetAuthorityReq, opts ...grpc.CallOption) (*Authority, error)
-	// 修改领域
+	// 修改授权
 	UpdateAuthority(ctx context.Context, in *UpdateAuthorityReq, opts ...grpc.CallOption) (*UpdateAuthorityReply, error)
-	// 删除领域
+	// 删除授权
 	DeleteAuthority(ctx context.Context, in *DeleteAuthorityReq, opts ...grpc.CallOption) (*DeleteAuthorityReply, error)
 	// 接口模块
 	// 列表接口
@@ -417,15 +417,15 @@ type AdminServer interface {
 	// 删除领域
 	DeleteDomain(context.Context, *DeleteDomainReq) (*DeleteDomainReply, error)
 	// 授权模块
-	// 列表领域
+	// 列表授权
 	ListAuthority(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
-	// 创建领域
+	// 创建授权
 	CreateAuthority(context.Context, *CreateAuthorityReq) (*CreateAuthorityReply, error)
-	// 获取领域
+	// 获取授权
 	GetAuthority(context.Context, *GetAuthorityReq) (*Authority, error)
-	// 修改领域
+	// 修改授权
 	UpdateAuthority(context.Context, *UpdateAuthorityReq) (*UpdateAuthorityReply, error)
-	// 删除领域
+	// 删除授权
 	DeleteAuthority(context.Context, *DeleteAuthorityReq) (*DeleteAuthorityReply, error)
 	// 接口模块
 	// 列表接口
