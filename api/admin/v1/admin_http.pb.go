@@ -90,7 +90,8 @@ type AdminHTTPServer interface {
 func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
 	r := s.Route("/")
 	r.POST("/admin/v1/auth/logout", _Admin_Logout0_HTTP_Handler(srv))
-	r.POST("/admin/v1/auth/login", _Admin_Login0_HTTP_Handler(srv))
+	r.PATCH("/admin/v1/auth/login/{domain}", _Admin_Login0_HTTP_Handler(srv))
+	r.POST("/admin/v1/auth/login", _Admin_Login1_HTTP_Handler(srv))
 	r.POST("/admin/v1/auth/register", _Admin_Register0_HTTP_Handler(srv))
 	r.GET("/admin/v1/users/profiles", _Admin_GetUserProfile0_HTTP_Handler(srv))
 	r.GET("/admin/v1/users/menus", _Admin_GetUserMenu0_HTTP_Handler(srv))
@@ -142,6 +143,31 @@ func _Admin_Logout0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) err
 }
 
 func _Admin_Login0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in LoginReq
+		if err := ctx.Bind(&in.Auth); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminLogin)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Login(ctx, req.(*LoginReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*LoginReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_Login1_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in LoginReq
 		if err := ctx.Bind(&in.Auth); err != nil {

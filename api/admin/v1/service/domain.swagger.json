@@ -70,7 +70,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceCreateDomainReply"
+              "$ref": "#/definitions/v1serviceCreateDomainReply"
             }
           },
           "default": {
@@ -86,7 +86,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/serviceDomain"
+              "$ref": "#/definitions/v1serviceDomain"
             }
           }
         ],
@@ -103,7 +103,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceDomain"
+              "$ref": "#/definitions/v1serviceDomain"
             }
           },
           "default": {
@@ -133,7 +133,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceDeleteDomainReply"
+              "$ref": "#/definitions/v1serviceDeleteDomainReply"
             }
           },
           "default": {
@@ -163,7 +163,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceUpdateDomainReply"
+              "$ref": "#/definitions/v1serviceUpdateDomainReply"
             }
           },
           "default": {
@@ -186,7 +186,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/UpdateDomainReqData"
+              "$ref": "#/definitions/v1serviceUpdateDomainReqData"
             }
           }
         ],
@@ -197,14 +197,6 @@
     }
   },
   "definitions": {
-    "UpdateDomainReqData": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        }
-      }
-    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -224,9 +216,9 @@
       "type": "string",
       "enum": [
         "DOMAIN_STATE_UNSPECIFIED",
-        "DOMAIN_ACTIVE",
-        "DOMAIN_INACTIVE",
-        "DOMAIN_BANNED"
+        "DOMAIN_STATE_ACTIVE",
+        "DOMAIN_STATE_INACTIVE",
+        "DOMAIN_STATE_BANNED"
       ],
       "default": "DOMAIN_STATE_UNSPECIFIED"
     },
@@ -273,7 +265,7 @@
         }
       }
     },
-    "serviceCreateDomainReply": {
+    "v1serviceCreateDomainReply": {
       "type": "object",
       "properties": {
         "success": {
@@ -285,7 +277,7 @@
       },
       "title": "回应 - 创建领域"
     },
-    "serviceDeleteDomainReply": {
+    "v1serviceDeleteDomainReply": {
       "type": "object",
       "properties": {
         "success": {
@@ -297,7 +289,7 @@
       },
       "title": "回应 - 删除领域"
     },
-    "serviceDomain": {
+    "v1serviceDomain": {
       "type": "object",
       "properties": {
         "createdAt": {
@@ -321,7 +313,7 @@
       },
       "title": "领域模块"
     },
-    "serviceUpdateDomainReply": {
+    "v1serviceUpdateDomainReply": {
       "type": "object",
       "properties": {
         "success": {
@@ -332,6 +324,14 @@
         }
       },
       "title": "回应 - 创建领域"
+    },
+    "v1serviceUpdateDomainReqData": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
     }
   }
 }

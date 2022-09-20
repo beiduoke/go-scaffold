@@ -104,7 +104,7 @@ func NewHTTPServer(c *conf.Server, as *admin.AdminService, bs *web.WebService, m
 	}
 	srv := http.NewServer(opts...)
 
-	openAPIhandler := openapiv2.NewHandler(openapiv2.WithGeneratorOptions(generator.UseJSONNamesForFields(true), generator.EnumsAsInts(true)))
+	openAPIhandler := openapiv2.NewHandler(openapiv2.WithGeneratorOptions(generator.UseJSONNamesForFields(true), generator.EnumsAsInts(false)))
 	srv.HandlePrefix("/q/", openAPIhandler)
 
 	adminv1.RegisterAdminHTTPServer(srv, as)

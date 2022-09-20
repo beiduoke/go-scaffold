@@ -57,7 +57,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1LogoutReply"
+              "$ref": "#/definitions/apiwebv1LogoutReply"
             }
           },
           "default": {
@@ -135,6 +135,16 @@
       },
       "title": "请求 - 登录"
     },
+    "apiwebv1LogoutReply": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        }
+      },
+      "title": "回应 - 登出"
+    },
     "apiwebv1User": {
       "type": "object",
       "properties": {
@@ -197,16 +207,6 @@
           }
         }
       }
-    },
-    "v1LogoutReply": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        }
-      },
-      "title": "回应 - 登出"
     },
     "v1LogoutReq": {
       "type": "object",

@@ -70,7 +70,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceCreateAuthorityReply"
+              "$ref": "#/definitions/v1serviceCreateAuthorityReply"
             }
           },
           "default": {
@@ -86,7 +86,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/serviceAuthority"
+              "$ref": "#/definitions/v1serviceAuthority"
             }
           }
         ],
@@ -103,7 +103,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceAuthority"
+              "$ref": "#/definitions/v1serviceAuthority"
             }
           },
           "default": {
@@ -133,7 +133,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceDeleteAuthorityReply"
+              "$ref": "#/definitions/v1serviceDeleteAuthorityReply"
             }
           },
           "default": {
@@ -163,7 +163,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceUpdateAuthorityReply"
+              "$ref": "#/definitions/v1serviceUpdateAuthorityReply"
             }
           },
           "default": {
@@ -186,7 +186,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/serviceUpdateAuthorityReqData"
+              "$ref": "#/definitions/v1serviceUpdateAuthorityReqData"
             }
           }
         ],
@@ -395,9 +395,9 @@
       "type": "string",
       "enum": [
         "AUTHORITY_STATE_UNSPECIFIED",
-        "AUTHORITY_ACTIVE",
-        "AUTHORITY_INACTIVE",
-        "AUTHORITY_BANNED"
+        "AUTHORITY_STATE_ACTIVE",
+        "AUTHORITY_STATE_INACTIVE",
+        "AUTHORITY_STATE_BANNED"
       ],
       "default": "AUTHORITY_STATE_UNSPECIFIED"
     },
@@ -444,42 +444,6 @@
         }
       }
     },
-    "serviceAuthority": {
-      "type": "object",
-      "properties": {
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "name": {
-          "type": "string"
-        },
-        "state": {
-          "$ref": "#/definitions/protobufAuthorityState"
-        }
-      },
-      "title": "权限模块"
-    },
-    "serviceCreateAuthorityReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 创建权限"
-    },
     "serviceCreateRoleReply": {
       "type": "object",
       "properties": {
@@ -491,18 +455,6 @@
         }
       },
       "title": "回应 - 创建角色"
-    },
-    "serviceDeleteAuthorityReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 删除权限"
     },
     "serviceDeleteRoleReply": {
       "type": "object",
@@ -537,21 +489,6 @@
       },
       "title": "角色模块"
     },
-    "serviceUpdateAuthorityReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 创建权限"
-    },
-    "serviceUpdateAuthorityReqData": {
-      "type": "object"
-    },
     "serviceUpdateRoleReply": {
       "type": "object",
       "properties": {
@@ -565,6 +502,69 @@
       "title": "回应 - 创建角色"
     },
     "serviceUpdateRoleReqData": {
+      "type": "object"
+    },
+    "v1serviceAuthority": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/protobufAuthorityState"
+        }
+      },
+      "title": "权限模块"
+    },
+    "v1serviceCreateAuthorityReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 创建权限"
+    },
+    "v1serviceDeleteAuthorityReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 删除权限"
+    },
+    "v1serviceUpdateAuthorityReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 创建权限"
+    },
+    "v1serviceUpdateAuthorityReqData": {
       "type": "object"
     }
   }

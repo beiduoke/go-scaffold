@@ -30,7 +30,7 @@ type Domain struct {
 type DomainRepo interface {
 	Save(context.Context, *Domain) (*Domain, error)
 	Update(context.Context, *Domain) (*Domain, error)
-	FindByID(context.Context, int64) (*Domain, error)
+	FindByID(context.Context, uint) (*Domain, error)
 	FindByDomainID(context.Context, string) (*Domain, error)
 	ListByName(context.Context, string) ([]*Domain, error)
 	ListAll(context.Context) ([]*Domain, error)

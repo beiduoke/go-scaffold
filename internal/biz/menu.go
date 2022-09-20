@@ -30,7 +30,7 @@ type Menu struct {
 type MenuRepo interface {
 	Save(context.Context, *Menu) (*Menu, error)
 	Update(context.Context, *Menu) (*Menu, error)
-	FindByID(context.Context, int64) (*Menu, error)
+	FindByID(context.Context, uint) (*Menu, error)
 	ListByName(context.Context, string) ([]*Menu, error)
 	ListAll(context.Context) ([]*Menu, error)
 	ListPage(context.Context, pagination.PaginationHandler) ([]*Menu, int64)

@@ -70,7 +70,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceCreateApiReply"
+              "$ref": "#/definitions/v1serviceCreateApiReply"
             }
           },
           "default": {
@@ -103,7 +103,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceApi"
+              "$ref": "#/definitions/v1serviceApi"
             }
           },
           "default": {
@@ -133,7 +133,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceDeleteApiReply"
+              "$ref": "#/definitions/v1serviceDeleteApiReply"
             }
           },
           "default": {
@@ -163,7 +163,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceUpdateApiReply"
+              "$ref": "#/definitions/v1serviceUpdateApiReply"
             }
           },
           "default": {
@@ -186,7 +186,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/serviceUpdateApiReqData"
+              "$ref": "#/definitions/v1serviceUpdateApiReqData"
             }
           }
         ],
@@ -255,7 +255,15 @@
         }
       }
     },
-    "serviceApi": {
+    "serviceCreateApiReqData": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "v1serviceApi": {
       "type": "object",
       "properties": {
         "createdAt": {
@@ -276,7 +284,7 @@
       },
       "title": "接口模块"
     },
-    "serviceCreateApiReply": {
+    "v1serviceCreateApiReply": {
       "type": "object",
       "properties": {
         "success": {
@@ -288,15 +296,7 @@
       },
       "title": "回应 - 创建接口"
     },
-    "serviceCreateApiReqData": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        }
-      }
-    },
-    "serviceDeleteApiReply": {
+    "v1serviceDeleteApiReply": {
       "type": "object",
       "properties": {
         "success": {
@@ -308,7 +308,7 @@
       },
       "title": "回应 - 删除接口"
     },
-    "serviceUpdateApiReply": {
+    "v1serviceUpdateApiReply": {
       "type": "object",
       "properties": {
         "success": {
@@ -320,7 +320,7 @@
       },
       "title": "回应 - 创建接口"
     },
-    "serviceUpdateApiReqData": {
+    "v1serviceUpdateApiReqData": {
       "type": "object"
     }
   }

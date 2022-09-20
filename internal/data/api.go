@@ -66,7 +66,7 @@ func (r *ApiRepo) Update(ctx context.Context, g *biz.Api) (*biz.Api, error) {
 	return g, nil
 }
 
-func (r *ApiRepo) FindByID(ctx context.Context, id int64) (*biz.Api, error) {
+func (r *ApiRepo) FindByID(ctx context.Context, id uint) (*biz.Api, error) {
 	return nil, nil
 }
 

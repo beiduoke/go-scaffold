@@ -101,7 +101,7 @@ func (r *UserRepo) Update(ctx context.Context, g *biz.User) (*biz.User, error) {
 	return g, nil
 }
 
-func (r *UserRepo) FindByID(ctx context.Context, id int64) (*biz.User, error) {
+func (r *UserRepo) FindByID(ctx context.Context, id uint) (*biz.User, error) {
 	user := SysUser{}
 	result := r.data.DB(ctx).Last(&user, id)
 	if result.Error != nil {

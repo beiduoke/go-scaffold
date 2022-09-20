@@ -70,7 +70,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceCreateUserReply"
+              "$ref": "#/definitions/v1serviceCreateUserReply"
             }
           },
           "default": {
@@ -86,7 +86,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/serviceCreateUserReqData"
+              "$ref": "#/definitions/v1serviceCreateUserReqData"
             }
           },
           {
@@ -110,7 +110,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceGetUserMenuReply"
+              "$ref": "#/definitions/v1serviceGetUserMenuReply"
             }
           },
           "default": {
@@ -133,7 +133,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceUser"
+              "$ref": "#/definitions/v1serviceUser"
             }
           },
           "default": {
@@ -156,7 +156,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceUser"
+              "$ref": "#/definitions/v1serviceUser"
             }
           },
           "default": {
@@ -186,7 +186,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceDeleteUserReply"
+              "$ref": "#/definitions/v1serviceDeleteUserReply"
             }
           },
           "default": {
@@ -216,7 +216,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceUpdateUserReply"
+              "$ref": "#/definitions/v1serviceUpdateUserReply"
             }
           },
           "default": {
@@ -239,7 +239,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/serviceUpdateUserReqData"
+              "$ref": "#/definitions/v1serviceUpdateUserReqData"
             }
           }
         ],
@@ -294,9 +294,9 @@
       "type": "string",
       "enum": [
         "USER_STATE_UNSPECIFIED",
-        "USER_ACTIVE",
-        "USER_INACTIVE",
-        "USER_BANNED"
+        "USER_STATE_ACTIVE",
+        "USER_STATE_INACTIVE",
+        "USER_STATE_BANNED"
       ],
       "default": "USER_STATE_UNSPECIFIED"
     },
@@ -318,7 +318,7 @@
         }
       }
     },
-    "serviceCreateUserReply": {
+    "v1serviceCreateUserReply": {
       "type": "object",
       "properties": {
         "success": {
@@ -330,7 +330,7 @@
       },
       "title": "回应 - 创建用户"
     },
-    "serviceCreateUserReqData": {
+    "v1serviceCreateUserReqData": {
       "type": "object",
       "properties": {
         "name": {
@@ -364,7 +364,7 @@
         }
       }
     },
-    "serviceDeleteUserReply": {
+    "v1serviceDeleteUserReply": {
       "type": "object",
       "properties": {
         "success": {
@@ -376,7 +376,7 @@
       },
       "title": "回应 - 删除用户"
     },
-    "serviceGetUserMenuReply": {
+    "v1serviceGetUserMenuReply": {
       "type": "object",
       "properties": {
         "name": {
@@ -391,13 +391,13 @@
         "childrens": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/serviceGetUserMenuReply"
+            "$ref": "#/definitions/v1serviceGetUserMenuReply"
           }
         }
       },
       "title": "回应 - 获取用户菜单"
     },
-    "serviceUpdateUserReply": {
+    "v1serviceUpdateUserReply": {
       "type": "object",
       "properties": {
         "success": {
@@ -409,7 +409,7 @@
       },
       "title": "回应 - 修改用户"
     },
-    "serviceUpdateUserReqData": {
+    "v1serviceUpdateUserReqData": {
       "type": "object",
       "properties": {
         "name": {
@@ -443,7 +443,7 @@
         }
       }
     },
-    "serviceUser": {
+    "v1serviceUser": {
       "type": "object",
       "properties": {
         "id": {

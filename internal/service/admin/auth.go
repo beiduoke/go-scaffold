@@ -34,7 +34,7 @@ func (s *AdminService) Login(ctx context.Context, in *v1.LoginReq) (*v1.LoginRep
 	if in.GetDomain() == "" {
 		return nil, v1.ErrorUserRegisterFail("领域不能为空")
 	}
-	res, err := s.ac.LoginNamePassword(ctx, in.GetDomain(), &biz.User{Name: auth.GetName(), Password: auth.GetPassword()})
+	res, err := s.authCase.LoginNamePassword(ctx, in.GetDomain(), &biz.User{Name: auth.GetName(), Password: auth.GetPassword()})
 	if err != nil {
 		return nil, v1.ErrorUserLoginFail("用户 %s 登录失败：%v", auth.GetName(), err)
 	}
@@ -55,7 +55,7 @@ func (s *AdminService) Register(ctx context.Context, in *v1.RegisterReq) (*v1.Re
 	if in.GetDomain() == "" {
 		return nil, v1.ErrorUserRegisterFail("领域不能为空")
 	}
-	_, err := s.ac.RegisterNamePassword(ctx, in.GetDomain(), &biz.User{Name: auth.GetName(), Password: auth.GetPassword()})
+	_, err := s.authCase.RegisterNamePassword(ctx, in.GetDomain(), &biz.User{Name: auth.GetName(), Password: auth.GetPassword()})
 	if err != nil {
 		return nil, v1.ErrorUserRegisterFail("用户 %s 注册失败: %v", auth.GetName(), err.Error())
 	}

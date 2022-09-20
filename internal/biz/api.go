@@ -24,7 +24,7 @@ type Api struct {
 type ApiRepo interface {
 	Save(context.Context, *Api) (*Api, error)
 	Update(context.Context, *Api) (*Api, error)
-	FindByID(context.Context, int64) (*Api, error)
+	FindByID(context.Context, uint) (*Api, error)
 	ListByName(context.Context, string) ([]*Api, error)
 	ListAll(context.Context) ([]*Api, error)
 	ListPage(context.Context, pagination.PaginationHandler) ([]*Api, int64)

@@ -2,11 +2,14 @@ package biz
 
 import (
 	"context"
+	"errors"
 	"time"
 
+	pb "github.com/beiduoke/go-scaffold/api/protobuf"
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/zzsds/go-tools/pkg/password"
 )
 
 // User is a User model.
@@ -33,7 +36,7 @@ type UserRepo interface {
 	// 基准操作
 	Save(context.Context, *User) (*User, error)
 	Update(context.Context, *User) (*User, error)
-	FindByID(context.Context, int64) (*User, error)
+	FindByID(context.Context, uint) (*User, error)
 	ListAll(context.Context) ([]*User, error)
 	// 自定义操作
 	FindByName(context.Context, string) (*User, error)
@@ -63,8 +66,60 @@ func NewUserUsecase(ac *conf.Auth, repo UserRepo, tm Transaction, logger log.Log
 	return &UserUsecase{ac: ac, repo: repo, tm: tm, log: log.NewHelper(logger), domainRepo: domainRepo}
 }
 
+// CreateUser 创建用户
+func (uc *UserUsecase) CreateUser(ctx context.Context, g *User) (*User, error) {
+	uc.log.WithContext(ctx).Infof("CreateUser: %v", g)
+	var (
+		err    error
+		domain Domain
+	)
+	// 创建用户只能关联一次领域
+	if len(g.Domains) <= 0 {
+		return nil, errors.New("用户未绑定领域")
+	} else {
+		domain = g.Domains[0]
+	}
+	user, _ := uc.repo.FindByName(ctx, g.Name)
+	if user != nil && user.Name != "" {
+		return nil, errors.New("用户已注册")
+	}
+
+	if g.Password != "" {
+		password, err := password.Encryption(g.Password)
+		if err != nil {
+			return nil, errors.New("密码加密失败")
+		}
+		g.Password = password
+		if g.State <= 0 {
+			g.State = int32(pb.UserState_USER_STATE_ACTIVE)
+		}
+	}
+
+	err = uc.tm.InTx(ctx, func(ctx context.Context) error {
+		g, err = uc.repo.Save(ctx, g)
+		if err != nil {
+			return err
+		}
+		err := uc.domainRepo.SaveAuthorityForUserInDomain(ctx, g.ID, domain.DefaultAuthorityID, domain.ID)
+		return err
+	})
+	return g, err
+}
+
+// ListUser 用户列表
+func (uc *UserUsecase) ListUser(ctx context.Context) ([]*User, int64) {
+	uc.log.WithContext(ctx).Infof("ListUser")
+	return uc.repo.ListPage(ctx, pagination.NewPagination())
+}
+
+// GetUserByMobile 获取用户ID
+func (uc *UserUsecase) GetUserByID(ctx context.Context, g *User) (*User, error) {
+	uc.log.WithContext(ctx).Infof("GetUserByID: %v", g)
+	return uc.repo.FindByID(ctx, g.ID)
+}
+
 // GetUserByMobile 获取用户手机
 func (uc *UserUsecase) GetUserByMobile(ctx context.Context, g *User) (*User, error) {
-	uc.log.WithContext(ctx).Infof("MobileSmsLogin: %v", g)
+	uc.log.WithContext(ctx).Infof("GetUserByMobile: %v", g)
 	return uc.repo.FindByMobile(ctx, g.Mobile)
 }

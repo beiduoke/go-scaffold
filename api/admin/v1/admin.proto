@@ -8,11 +8,46 @@ import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
 import "protobuf/enum.proto";
 import "protobuf/struct.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "github.com/beiduoke/go-scaffold/api/admin/v1;v1";
 option java_multiple_files = true;
 option java_package = "dev.kratos.api.admin.v1";
 option java_outer_classname = "adminProtoV1";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  security_definitions: {
+    security: {
+      key: "apiKey";
+      value: {
+        name: "Authorization";
+        description: "jwt 无状态";
+        type: 2;
+        in: 2;
+        flow: 2;
+      }
+    }
+  };
+	info: {
+		title: "Scaffold API";
+		version: "1.0";
+		contact: {
+			name: "基础架构";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway";
+			email: "none@example.com";
+		};
+		license: {
+			name: "BSD 3-Clause License";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt";
+		};
+		extensions: {
+			key: "x-something-something";
+			value: {
+				string_value: "yadda";
+			}
+		};
+  };
+};
 
 // The greeting service definition.
 service Admin {
@@ -22,12 +57,41 @@ service Admin {
       post: "/admin/v1/auth/logout"
       body: "*"
     };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      external_docs: {
+        url: "https://github.com/grpc-ecosystem/grpc-gateway";
+        description: "SayHello Query";
+      }
+      security: {
+          security_requirement: {
+              key: "ApiKeyAuth";
+              value: {}
+          }
+          security_requirement: {
+              key: "OAuth2";
+              value: {
+                  scope: "read";
+                  scope: "write";
+              }
+          }
+      }
+      extensions: {
+          key: "x-irreversible";
+          value: {
+              bool_value: true;
+          }
+      }
+    };
   }
   // 登陆
   rpc Login (LoginReq) returns (LoginReply) {
     option (google.api.http) = {
       post: "/admin/v1/auth/login"
       body: "auth"
+      additional_bindings {
+        patch: "/admin/v1/auth/login/{domain}"
+        body: "auth"
+      }
     };
   }
   // 注册
@@ -45,21 +109,18 @@ service Admin {
       get: "/admin/v1/users/profiles"
     };
   }
-  
   // 获取用户菜单
   rpc GetUserMenu (google.protobuf.Empty) returns (GetUserMenuReply) {
     option (google.api.http) = {
       get: "/admin/v1/users/menus"
     };
   }
-  
   // 列表用户
   rpc ListUser (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
     option (google.api.http) = {
       get: "/admin/v1/users"
     };
   }
-  
   // 创建用户
   rpc CreateUser (CreateUserReq) returns (CreateUserReply) {
     option (google.api.http) = {
@@ -67,14 +128,12 @@ service Admin {
       body: "data"
     };
   }
-  
   // 获取用户
   rpc GetUser (GetUserReq) returns (User) {
     option (google.api.http) = {
       get: "/admin/v1/users/{id}"
     };
   }
-  
   // 修改用户
   rpc UpdateUser (UpdateUserReq) returns (UpdateUserReply) {
     option (google.api.http) = {
@@ -82,7 +141,6 @@ service Admin {
       body: "data"
     };
   }
-  
   // 删除用户
   rpc DeleteUser (DeleteUserReq) returns (DeleteUserReply) {
     option (google.api.http) = {
@@ -97,7 +155,6 @@ service Admin {
       get: "/admin/v1/domains"
     };
   }
-  
   // 创建领域
   rpc CreateDomain (CreateDomainReq) returns (CreateDomainReply) {
     option (google.api.http) = {
@@ -105,14 +162,12 @@ service Admin {
       body: "data"
     };
   }
-  
   // 获取领域
   rpc GetDomain (GetDomainReq) returns (Domain) {
     option (google.api.http) = {
       get: "/admin/v1/domains/{id}"
     };
   }
-  
   // 修改领域
   rpc UpdateDomain (UpdateDomainReq) returns (UpdateDomainReply) {
     option (google.api.http) = {
@@ -120,7 +175,6 @@ service Admin {
       body: "data"
     };
   }
-  
   // 删除领域
   rpc DeleteDomain (DeleteDomainReq) returns (DeleteDomainReply) {
     option (google.api.http) = {
@@ -135,7 +189,6 @@ service Admin {
       get: "/admin/v1/authorities"
     };
   }
-  
   // 创建授权
   rpc CreateAuthority (CreateAuthorityReq) returns (CreateAuthorityReply) {
     option (google.api.http) = {
@@ -143,14 +196,12 @@ service Admin {
       body: "data"
     };
   }
-  
   // 获取授权
   rpc GetAuthority (GetAuthorityReq) returns (Authority) {
     option (google.api.http) = {
       get: "/admin/v1/authorities/{id}"
     };
   }
-  
   // 修改授权
   rpc UpdateAuthority (UpdateAuthorityReq) returns (UpdateAuthorityReply) {
     option (google.api.http) = {
@@ -158,7 +209,6 @@ service Admin {
       body: "data"
     };
   }
-  
   // 删除授权
   rpc DeleteAuthority (DeleteAuthorityReq) returns (DeleteAuthorityReply) {
     option (google.api.http) = {
@@ -173,7 +223,6 @@ service Admin {
       get: "/admin/v1/apis"
     };
   }
-  
   // 创建接口
   rpc CreateApi (CreateApiReq) returns (CreateApiReply) {
     option (google.api.http) = {
@@ -181,14 +230,12 @@ service Admin {
       body: "data"
     };
   }
-  
   // 获取接口
   rpc GetApi (GetApiReq) returns (Api) {
     option (google.api.http) = {
       get: "/admin/v1/apis/{id}"
     };
   }
-  
   // 修改接口
   rpc UpdateApi (UpdateApiReq) returns (UpdateApiReply) {
     option (google.api.http) = {
@@ -196,7 +243,6 @@ service Admin {
       body: "data"
     };
   }
-  
   // 删除接口
   rpc DeleteApi (DeleteApiReq) returns (DeleteApiReply) {
     option (google.api.http) = {
@@ -210,7 +256,6 @@ service Admin {
       get: "/admin/v1/menus"
     };
   }
-  
   // 创建菜单
   rpc CreateMenu (CreateMenuReq) returns (CreateMenuReply) {
     option (google.api.http) = {
@@ -218,21 +263,18 @@ service Admin {
       body: "data"
     };
   }
-
   // 获取树形菜单
   rpc GetMenuTree (GetMenuTreeReq) returns (Menu) {
     option (google.api.http) = {
       get: "/admin/v1/menus/tree/{id}"
     };
   }
-  
   // 获取菜单
   rpc GetMenu (GetMenuReq) returns (Menu) {
     option (google.api.http) = {
       get: "/admin/v1/menus/{id}"
     };
   }
-  
   // 修改菜单
   rpc UpdateMenu (UpdateMenuReq) returns (UpdateMenuReply) {
     option (google.api.http) = {
@@ -240,29 +282,12 @@ service Admin {
       body: "data"
     };
   }
-  
   // 删除菜单
   rpc DeleteMenu (DeleteMenuReq) returns (DeleteMenuReply) {
     option (google.api.http) = {
       delete: "/admin/v1/menus/{id}"
     };
   }
-}
-
-message User {
-  optional uint64 id = 1;
-  optional string name = 2;
-  optional string password = 3;
-  optional string nick_name = 4;
-  optional string real_name = 5;
-  optional google.protobuf.Timestamp birthday = 6;
-  optional int32 gender = 7;
-  optional string mobile = 8;
-  optional string email = 9;
-  optional api.protobuf.UserState state = 10;
-  optional google.protobuf.Timestamp created_at = 11;
-  optional google.protobuf.Timestamp updated_at = 12;
-  optional string authoritys = 13;
 }
 
 message Auth {
@@ -308,6 +333,21 @@ message LogoutReply {
   string message = 2;
 }
 
+// 用户模块
+message User {
+  uint64 id = 1;
+  string name = 2;
+  string nick_name = 4;
+  string real_name = 5;
+  google.protobuf.Timestamp birthday = 6;
+  api.protobuf.UserGender gender = 7;
+  string mobile = 8;
+  string email = 9;
+  api.protobuf.UserState state = 10;
+  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Timestamp updated_at = 12;
+  optional string authoritys = 13;
+}
 
 // 回应 - 列表用户 - 未使用
 message ListUserReply {

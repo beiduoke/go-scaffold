@@ -20,7 +20,7 @@ type Authority struct {
 type AuthorityRepo interface {
 	Save(context.Context, *Authority) (*Authority, error)
 	Update(context.Context, *Authority) (*Authority, error)
-	FindByID(context.Context, int64) (*Authority, error)
+	FindByID(context.Context, uint) (*Authority, error)
 	ListByName(context.Context, string) ([]*Authority, error)
 	ListAll(context.Context) ([]*Authority, error)
 	ListPage(context.Context, pagination.PaginationHandler) ([]*Authority, int64)

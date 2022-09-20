@@ -19,6 +19,12 @@ enum Enabled {
   ENABLED_NO = 2;
 }
 
+enum UserGender {
+  USER_GENDER_UNSPECIFIED = 0;
+  USER_GENDER_MAN = 1;
+  USER_GENDER_WOMAN = 2;
+}
+
 enum UserState {
   USER_STATE_UNSPECIFIED = 0;
   USER_STATE_ACTIVE = 1;

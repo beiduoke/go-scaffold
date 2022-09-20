@@ -60,15 +60,15 @@ func (r *AuthorityRepo) Update(ctx context.Context, g *biz.Authority) (*biz.Auth
 	return g, nil
 }
 
-func (r *AuthorityRepo) FindByID(context.Context, int64) (*biz.Authority, error) {
+func (r *AuthorityRepo) FindByID(ctx context.Context, id uint) (*biz.Authority, error) {
 	return nil, nil
 }
 
-func (r *AuthorityRepo) ListByName(context.Context, string) ([]*biz.Authority, error) {
+func (r *AuthorityRepo) ListByName(ctx context.Context, name string) ([]*biz.Authority, error) {
 	return nil, nil
 }
 
-func (r *AuthorityRepo) ListAll(context.Context) ([]*biz.Authority, error) {
+func (r *AuthorityRepo) ListAll(ctx context.Context) ([]*biz.Authority, error) {
 	return nil, nil
 }
 

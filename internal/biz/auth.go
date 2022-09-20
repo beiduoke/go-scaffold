@@ -14,6 +14,13 @@ import (
 	"github.com/zzsds/go-tools/pkg/password"
 )
 
+// Auth 多登录方式进行接口封装
+type Auth interface {
+	Login() (AuthClaims, error)
+	Register() error
+	Logout() error
+}
+
 type AuthClaims struct {
 	ID          uint
 	Domain      uint

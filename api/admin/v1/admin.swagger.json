@@ -1,8 +1,18 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "admin/v1/admin.proto",
-    "version": "version not set"
+    "title": "Scaffold API",
+    "version": "1.0",
+    "contact": {
+      "name": "基础架构",
+      "url": "https://github.com/grpc-ecosystem/grpc-gateway",
+      "email": "none@example.com"
+    },
+    "license": {
+      "name": "BSD 3-Clause License",
+      "url": "https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt"
+    },
+    "x-something-something": "yadda"
   },
   "tags": [
     {
@@ -70,7 +80,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1CreateApiReply"
+              "$ref": "#/definitions/adminv1CreateApiReply"
             }
           },
           "default": {
@@ -86,7 +96,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1Api"
+              "$ref": "#/definitions/adminv1Api"
             }
           }
         ],
@@ -103,7 +113,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Api"
+              "$ref": "#/definitions/adminv1Api"
             }
           },
           "default": {
@@ -133,7 +143,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1DeleteApiReply"
+              "$ref": "#/definitions/adminv1DeleteApiReply"
             }
           },
           "default": {
@@ -163,7 +173,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1UpdateApiReply"
+              "$ref": "#/definitions/adminv1UpdateApiReply"
             }
           },
           "default": {
@@ -186,7 +196,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1UpdateApiReqData"
+              "$ref": "#/definitions/adminv1UpdateApiReqData"
             }
           }
         ],
@@ -203,7 +213,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1LoginReply"
+              "$ref": "#/definitions/apiadminv1LoginReply"
             }
           },
           "default": {
@@ -220,7 +230,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1Auth"
+              "$ref": "#/definitions/adminv1Auth"
             }
           },
           {
@@ -236,6 +246,47 @@
         ]
       }
     },
+    "/admin/v1/auth/login/{domain}": {
+      "patch": {
+        "summary": "登陆",
+        "operationId": "Admin_Login2",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiadminv1LoginReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "domain",
+            "description": "领域",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": "请求体",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/adminv1Auth"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/admin/v1/auth/logout": {
       "post": {
         "summary": "登出",
@@ -244,7 +295,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1LogoutReply"
+              "$ref": "#/definitions/apiadminv1LogoutReply"
             }
           },
           "default": {
@@ -266,7 +317,21 @@
         ],
         "tags": [
           "Admin"
-        ]
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": [],
+            "OAuth2": [
+              "read",
+              "write"
+            ]
+          }
+        ],
+        "externalDocs": {
+          "description": "SayHello Query",
+          "url": "https://github.com/grpc-ecosystem/grpc-gateway"
+        },
+        "x-irreversible": true
       }
     },
     "/admin/v1/auth/register": {
@@ -277,7 +342,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1RegisterReply"
+              "$ref": "#/definitions/adminv1RegisterReply"
             }
           },
           "default": {
@@ -294,7 +359,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1Auth"
+              "$ref": "#/definitions/adminv1Auth"
             }
           },
           {
@@ -364,7 +429,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1CreateAuthorityReply"
+              "$ref": "#/definitions/adminv1CreateAuthorityReply"
             }
           },
           "default": {
@@ -380,7 +445,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1Authority"
+              "$ref": "#/definitions/adminv1Authority"
             }
           }
         ],
@@ -397,7 +462,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Authority"
+              "$ref": "#/definitions/adminv1Authority"
             }
           },
           "default": {
@@ -427,7 +492,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1DeleteAuthorityReply"
+              "$ref": "#/definitions/adminv1DeleteAuthorityReply"
             }
           },
           "default": {
@@ -457,7 +522,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1UpdateAuthorityReply"
+              "$ref": "#/definitions/adminv1UpdateAuthorityReply"
             }
           },
           "default": {
@@ -480,7 +545,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1UpdateAuthorityReqData"
+              "$ref": "#/definitions/adminv1UpdateAuthorityReqData"
             }
           }
         ],
@@ -543,7 +608,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1CreateDomainReply"
+              "$ref": "#/definitions/adminv1CreateDomainReply"
             }
           },
           "default": {
@@ -559,7 +624,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1Domain"
+              "$ref": "#/definitions/adminv1Domain"
             }
           }
         ],
@@ -576,7 +641,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Domain"
+              "$ref": "#/definitions/adminv1Domain"
             }
           },
           "default": {
@@ -606,7 +671,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1DeleteDomainReply"
+              "$ref": "#/definitions/adminv1DeleteDomainReply"
             }
           },
           "default": {
@@ -636,7 +701,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1UpdateDomainReply"
+              "$ref": "#/definitions/adminv1UpdateDomainReply"
             }
           },
           "default": {
@@ -659,7 +724,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1UpdateDomainReqData"
+              "$ref": "#/definitions/adminv1UpdateDomainReqData"
             }
           }
         ],
@@ -722,7 +787,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1CreateMenuReply"
+              "$ref": "#/definitions/adminv1CreateMenuReply"
             }
           },
           "default": {
@@ -738,7 +803,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1Menu"
+              "$ref": "#/definitions/adminv1Menu"
             }
           }
         ],
@@ -755,7 +820,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Menu"
+              "$ref": "#/definitions/adminv1Menu"
             }
           },
           "default": {
@@ -787,7 +852,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Menu"
+              "$ref": "#/definitions/adminv1Menu"
             }
           },
           "default": {
@@ -817,7 +882,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1DeleteMenuReply"
+              "$ref": "#/definitions/adminv1DeleteMenuReply"
             }
           },
           "default": {
@@ -847,7 +912,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1UpdateMenuReply"
+              "$ref": "#/definitions/adminv1UpdateMenuReply"
             }
           },
           "default": {
@@ -870,7 +935,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1UpdateMenuReqData"
+              "$ref": "#/definitions/adminv1UpdateMenuReqData"
             }
           }
         ],
@@ -933,7 +998,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1CreateUserReply"
+              "$ref": "#/definitions/adminv1CreateUserReply"
             }
           },
           "default": {
@@ -949,7 +1014,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1CreateUserReqData"
+              "$ref": "#/definitions/adminv1CreateUserReqData"
             }
           },
           {
@@ -973,7 +1038,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1GetUserMenuReply"
+              "$ref": "#/definitions/adminv1GetUserMenuReply"
             }
           },
           "default": {
@@ -996,7 +1061,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1User"
+              "$ref": "#/definitions/apiadminv1User"
             }
           },
           "default": {
@@ -1019,7 +1084,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1User"
+              "$ref": "#/definitions/apiadminv1User"
             }
           },
           "default": {
@@ -1049,7 +1114,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1DeleteUserReply"
+              "$ref": "#/definitions/adminv1DeleteUserReply"
             }
           },
           "default": {
@@ -1079,7 +1144,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1UpdateUserReply"
+              "$ref": "#/definitions/adminv1UpdateUserReply"
             }
           },
           "default": {
@@ -1102,7 +1167,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1UpdateUserReqData"
+              "$ref": "#/definitions/adminv1UpdateUserReqData"
             }
           }
         ],
@@ -1113,6 +1178,513 @@
     }
   },
   "definitions": {
+    "adminv1Api": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "接口模块"
+    },
+    "adminv1Auth": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "用户名"
+        },
+        "password": {
+          "type": "string",
+          "title": "密码"
+        }
+      }
+    },
+    "adminv1Authority": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/protobufAuthorityState"
+        }
+      },
+      "title": "权限模块"
+    },
+    "adminv1CreateApiReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 创建接口"
+    },
+    "adminv1CreateAuthorityReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 创建权限"
+    },
+    "adminv1CreateDomainReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 创建领域"
+    },
+    "adminv1CreateMenuReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 创建菜单"
+    },
+    "adminv1CreateUserReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 创建用户"
+    },
+    "adminv1CreateUserReqData": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "nickName": {
+          "type": "string"
+        },
+        "realName": {
+          "type": "string"
+        },
+        "birthday": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "gender": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "mobile": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/protobufUserState"
+        }
+      }
+    },
+    "adminv1DeleteApiReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 删除接口"
+    },
+    "adminv1DeleteAuthorityReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 删除权限"
+    },
+    "adminv1DeleteDomainReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 删除领域"
+    },
+    "adminv1DeleteMenuReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 删除菜单"
+    },
+    "adminv1DeleteUserReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 删除用户"
+    },
+    "adminv1Domain": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/protobufDomainState"
+        }
+      },
+      "title": "领域模块"
+    },
+    "adminv1GetUserMenuReply": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "component": {
+          "type": "string"
+        },
+        "childrens": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/adminv1GetUserMenuReply"
+          }
+        }
+      },
+      "title": "回应 - 获取用户菜单"
+    },
+    "adminv1Menu": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "path": {
+          "type": "string"
+        },
+        "hidden": {
+          "$ref": "#/definitions/protobufMenuHidden"
+        },
+        "component": {
+          "type": "string"
+        },
+        "sort": {
+          "type": "string",
+          "format": "int64"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "keepAlive": {
+          "$ref": "#/definitions/protobufMenuKeepAlive"
+        },
+        "baseMenu": {
+          "$ref": "#/definitions/protobufMenuBaseMenu"
+        },
+        "closeTab": {
+          "$ref": "#/definitions/protobufMenuCloseTab"
+        },
+        "childrens": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/adminv1Menu"
+          }
+        }
+      },
+      "title": "菜单模块"
+    },
+    "adminv1RegisterReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 注册"
+    },
+    "adminv1UpdateApiReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 创建接口"
+    },
+    "adminv1UpdateApiReqData": {
+      "type": "object"
+    },
+    "adminv1UpdateAuthorityReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 创建权限"
+    },
+    "adminv1UpdateAuthorityReqData": {
+      "type": "object"
+    },
+    "adminv1UpdateDomainReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 创建领域"
+    },
+    "adminv1UpdateDomainReqData": {
+      "type": "object"
+    },
+    "adminv1UpdateMenuReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 创建菜单"
+    },
+    "adminv1UpdateMenuReqData": {
+      "type": "object"
+    },
+    "adminv1UpdateUserReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 修改用户"
+    },
+    "adminv1UpdateUserReqData": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "nickName": {
+          "type": "string"
+        },
+        "realName": {
+          "type": "string"
+        },
+        "birthday": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "gender": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "mobile": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/protobufUserState"
+        }
+      }
+    },
+    "apiadminv1LoginReply": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string",
+          "title": "登录token"
+        },
+        "expireTime": {
+          "type": "string",
+          "format": "date-time",
+          "title": "过期时间"
+        }
+      },
+      "title": "回应 - 登录"
+    },
+    "apiadminv1LogoutReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 退出登录"
+    },
+    "apiadminv1User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "nickName": {
+          "type": "string"
+        },
+        "realName": {
+          "type": "string"
+        },
+        "birthday": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "gender": {
+          "$ref": "#/definitions/protobufUserGender"
+        },
+        "mobile": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/protobufUserState"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "authoritys": {
+          "type": "string"
+        }
+      },
+      "title": "用户模块"
+    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -1209,6 +1781,15 @@
       ],
       "default": "SORT_UNSPECIFIED"
     },
+    "protobufUserGender": {
+      "type": "string",
+      "enum": [
+        "USER_GENDER_UNSPECIFIED",
+        "USER_GENDER_MAN",
+        "USER_GENDER_WOMAN"
+      ],
+      "default": "USER_GENDER_UNSPECIFIED"
+    },
     "protobufUserState": {
       "type": "string",
       "enum": [
@@ -1236,516 +1817,15 @@
           }
         }
       }
-    },
-    "v1Api": {
-      "type": "object",
-      "properties": {
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "name": {
-          "type": "string"
-        }
-      },
-      "title": "接口模块"
-    },
-    "v1Auth": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "title": "用户名"
-        },
-        "password": {
-          "type": "string",
-          "title": "密码"
-        }
-      }
-    },
-    "v1Authority": {
-      "type": "object",
-      "properties": {
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "name": {
-          "type": "string"
-        },
-        "state": {
-          "$ref": "#/definitions/protobufAuthorityState"
-        }
-      },
-      "title": "权限模块"
-    },
-    "v1CreateApiReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 创建接口"
-    },
-    "v1CreateAuthorityReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 创建权限"
-    },
-    "v1CreateDomainReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 创建领域"
-    },
-    "v1CreateMenuReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 创建菜单"
-    },
-    "v1CreateUserReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 创建用户"
-    },
-    "v1CreateUserReqData": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        },
-        "nickName": {
-          "type": "string"
-        },
-        "realName": {
-          "type": "string"
-        },
-        "birthday": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "gender": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "mobile": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "state": {
-          "$ref": "#/definitions/protobufUserState"
-        }
-      }
-    },
-    "v1DeleteApiReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 删除接口"
-    },
-    "v1DeleteAuthorityReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 删除权限"
-    },
-    "v1DeleteDomainReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 删除领域"
-    },
-    "v1DeleteMenuReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 删除菜单"
-    },
-    "v1DeleteUserReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 删除用户"
-    },
-    "v1Domain": {
-      "type": "object",
-      "properties": {
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "name": {
-          "type": "string"
-        },
-        "state": {
-          "$ref": "#/definitions/protobufDomainState"
-        }
-      },
-      "title": "领域模块"
-    },
-    "v1GetUserMenuReply": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "path": {
-          "type": "string"
-        },
-        "component": {
-          "type": "string"
-        },
-        "childrens": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1GetUserMenuReply"
-          }
-        }
-      },
-      "title": "回应 - 获取用户菜单"
-    },
-    "v1LoginReply": {
-      "type": "object",
-      "properties": {
-        "token": {
-          "type": "string",
-          "title": "登录token"
-        },
-        "expireTime": {
-          "type": "string",
-          "format": "date-time",
-          "title": "过期时间"
-        }
-      },
-      "title": "回应 - 登录"
-    },
-    "v1LogoutReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 退出登录"
-    },
-    "v1Menu": {
-      "type": "object",
-      "properties": {
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "name": {
-          "type": "string"
-        },
-        "parentId": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "path": {
-          "type": "string"
-        },
-        "hidden": {
-          "$ref": "#/definitions/protobufMenuHidden"
-        },
-        "component": {
-          "type": "string"
-        },
-        "sort": {
-          "type": "string",
-          "format": "int64"
-        },
-        "icon": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        },
-        "keepAlive": {
-          "$ref": "#/definitions/protobufMenuKeepAlive"
-        },
-        "baseMenu": {
-          "$ref": "#/definitions/protobufMenuBaseMenu"
-        },
-        "closeTab": {
-          "$ref": "#/definitions/protobufMenuCloseTab"
-        },
-        "childrens": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1Menu"
-          }
-        }
-      },
-      "title": "菜单模块"
-    },
-    "v1RegisterReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 注册"
-    },
-    "v1UpdateApiReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 创建接口"
-    },
-    "v1UpdateApiReqData": {
-      "type": "object"
-    },
-    "v1UpdateAuthorityReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 创建权限"
-    },
-    "v1UpdateAuthorityReqData": {
-      "type": "object"
-    },
-    "v1UpdateDomainReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 创建领域"
-    },
-    "v1UpdateDomainReqData": {
-      "type": "object"
-    },
-    "v1UpdateMenuReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 创建菜单"
-    },
-    "v1UpdateMenuReqData": {
-      "type": "object"
-    },
-    "v1UpdateUserReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 修改用户"
-    },
-    "v1UpdateUserReqData": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        },
-        "nickName": {
-          "type": "string"
-        },
-        "realName": {
-          "type": "string"
-        },
-        "birthday": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "gender": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "mobile": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "state": {
-          "$ref": "#/definitions/protobufUserState"
-        }
-      }
-    },
-    "v1User": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "name": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        },
-        "nickName": {
-          "type": "string"
-        },
-        "realName": {
-          "type": "string"
-        },
-        "birthday": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "gender": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "mobile": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "state": {
-          "$ref": "#/definitions/protobufUserState"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "authoritys": {
-          "type": "string"
-        }
-      }
+    }
+  },
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "description": "jwt 无状态",
+      "name": "Authorization",
+      "in": "header",
+      "flow": "password"
     }
   }
 }

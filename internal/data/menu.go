@@ -81,15 +81,15 @@ func (r *MenuRepo) Update(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 	return g, nil
 }
 
-func (r *MenuRepo) FindByID(context.Context, int64) (*biz.Menu, error) {
+func (r *MenuRepo) FindByID(ctx context.Context, id uint) (*biz.Menu, error) {
 	return nil, nil
 }
 
-func (r *MenuRepo) ListByName(context.Context, string) ([]*biz.Menu, error) {
+func (r *MenuRepo) ListByName(ctx context.Context, name string) ([]*biz.Menu, error) {
 	return nil, nil
 }
 
-func (r *MenuRepo) ListAll(context.Context) ([]*biz.Menu, error) {
+func (r *MenuRepo) ListAll(ctx context.Context) ([]*biz.Menu, error) {
 	return nil, nil
 }
 

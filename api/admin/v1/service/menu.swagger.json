@@ -70,7 +70,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceCreateMenuReply"
+              "$ref": "#/definitions/v1serviceCreateMenuReply"
             }
           },
           "default": {
@@ -103,7 +103,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceMenu"
+              "$ref": "#/definitions/v1serviceMenu"
             }
           },
           "default": {
@@ -135,7 +135,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceMenu"
+              "$ref": "#/definitions/v1serviceMenu"
             }
           },
           "default": {
@@ -165,7 +165,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceDeleteMenuReply"
+              "$ref": "#/definitions/v1serviceDeleteMenuReply"
             }
           },
           "default": {
@@ -195,7 +195,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serviceUpdateMenuReply"
+              "$ref": "#/definitions/v1serviceUpdateMenuReply"
             }
           },
           "default": {
@@ -218,7 +218,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/serviceUpdateMenuReqData"
+              "$ref": "#/definitions/v1serviceUpdateMenuReqData"
             }
           }
         ],
@@ -323,7 +323,15 @@
         }
       }
     },
-    "serviceCreateMenuReply": {
+    "serviceCreateMenuReqData": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "v1serviceCreateMenuReply": {
       "type": "object",
       "properties": {
         "success": {
@@ -335,15 +343,7 @@
       },
       "title": "回应 - 创建菜单"
     },
-    "serviceCreateMenuReqData": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        }
-      }
-    },
-    "serviceDeleteMenuReply": {
+    "v1serviceDeleteMenuReply": {
       "type": "object",
       "properties": {
         "success": {
@@ -355,7 +355,7 @@
       },
       "title": "回应 - 删除菜单"
     },
-    "serviceMenu": {
+    "v1serviceMenu": {
       "type": "object",
       "properties": {
         "createdAt": {
@@ -408,13 +408,13 @@
         "childrens": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/serviceMenu"
+            "$ref": "#/definitions/v1serviceMenu"
           }
         }
       },
       "title": "菜单模块"
     },
-    "serviceUpdateMenuReply": {
+    "v1serviceUpdateMenuReply": {
       "type": "object",
       "properties": {
         "success": {
@@ -426,7 +426,7 @@
       },
       "title": "回应 - 创建菜单"
     },
-    "serviceUpdateMenuReqData": {
+    "v1serviceUpdateMenuReqData": {
       "type": "object"
     }
   }

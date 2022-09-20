@@ -71,7 +71,7 @@ func (r *DomainRepo) Update(ctx context.Context, g *biz.Domain) (*biz.Domain, er
 	return g, nil
 }
 
-func (r *DomainRepo) FindByID(context.Context, int64) (*biz.Domain, error) {
+func (r *DomainRepo) FindByID(ctx context.Context, id uint) (*biz.Domain, error) {
 	return nil, nil
 }
 
@@ -81,7 +81,7 @@ func (r *DomainRepo) FindByDomainID(ctx context.Context, domainId string) (*biz.
 	return r.toBiz(sysDomain), result.Error
 }
 
-func (r *DomainRepo) ListByName(context.Context, string) ([]*biz.Domain, error) {
+func (r *DomainRepo) ListByName(ctx context.Context, name string) ([]*biz.Domain, error) {
 	return nil, nil
 }
 
