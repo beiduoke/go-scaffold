@@ -38,8 +38,8 @@ func NewAuthorityUsecase(repo AuthorityRepo, tm Transaction, logger log.Logger) 
 	return &AuthorityUsecase{repo: repo, tm: tm, log: log.NewHelper(logger)}
 }
 
-// CreateAuthority creates a Authority, and returns the new Authority.
-func (uc *AuthorityUsecase) CreateAuthority(ctx context.Context, g *Authority) (*Authority, error) {
-	uc.log.WithContext(ctx).Infof("CreateAuthority: %v", g.Name)
+// Create creates a Authority, and returns the new Authority.
+func (uc *AuthorityUsecase) Create(ctx context.Context, g *Authority) (*Authority, error) {
+	uc.log.WithContext(ctx).Infof("Create: %v", g.Name)
 	return uc.repo.Save(ctx, g)
 }

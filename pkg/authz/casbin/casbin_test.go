@@ -94,6 +94,7 @@ func (tr *Transport) ReplyHeader() transport.Header {
 }
 
 type SecurityUser struct {
+	ID          string
 	Path        string
 	Method      string
 	AuthorityId string
@@ -128,6 +129,10 @@ func (su *SecurityUser) ParseFromContext(ctx context.Context) error {
 	return nil
 }
 
+func (su *SecurityUser) GetUser() string {
+	return su.ID
+}
+
 func (su *SecurityUser) GetSubject() string {
 	return su.AuthorityId
 }
@@ -143,6 +148,7 @@ func (su *SecurityUser) GetAction() string {
 func (su *SecurityUser) GetDomain() string {
 	return su.Domain
 }
+
 func createToken(authorityId string) jwtV4.Claims {
 	return jwtV4.MapClaims{
 		ClaimAuthorityId: authorityId,

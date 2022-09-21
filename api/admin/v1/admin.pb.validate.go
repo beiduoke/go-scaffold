@@ -3979,79 +3979,75 @@ func (m *Api) validate(all bool) error {
 
 	var errors []error
 
-	if m.CreatedAt != nil {
-
-		if all {
-			switch v := interface{}(m.GetCreatedAt()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ApiValidationError{
-						field:  "CreatedAt",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ApiValidationError{
-						field:  "CreatedAt",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetCreatedAt()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return ApiValidationError{
+	if all {
+		switch v := interface{}(m.GetCreatedAt()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ApiValidationError{
 					field:  "CreatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
-				}
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ApiValidationError{
+					field:  "CreatedAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
 			}
 		}
-
+	} else if v, ok := interface{}(m.GetCreatedAt()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ApiValidationError{
+				field:  "CreatedAt",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
 	}
 
-	if m.UpdatedAt != nil {
-
-		if all {
-			switch v := interface{}(m.GetUpdatedAt()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ApiValidationError{
-						field:  "UpdatedAt",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ApiValidationError{
-						field:  "UpdatedAt",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetUpdatedAt()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return ApiValidationError{
+	if all {
+		switch v := interface{}(m.GetUpdatedAt()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ApiValidationError{
 					field:  "UpdatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
-				}
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ApiValidationError{
+					field:  "UpdatedAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
 			}
 		}
-
+	} else if v, ok := interface{}(m.GetUpdatedAt()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ApiValidationError{
+				field:  "UpdatedAt",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
 	}
 
-	if m.Id != nil {
-		// no validation rules for Id
-	}
+	// no validation rules for Id
 
-	if m.Name != nil {
-		// no validation rules for Name
-	}
+	// no validation rules for Name
+
+	// no validation rules for Path
+
+	// no validation rules for Method
+
+	// no validation rules for Group
+
+	// no validation rules for Description
 
 	if len(errors) > 0 {
 		return ApiMultiError(errors)
@@ -4152,34 +4148,42 @@ func (m *CreateApiReq) validate(all bool) error {
 
 	var errors []error
 
-	if all {
-		switch v := interface{}(m.GetData()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CreateApiReqValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, CreateApiReqValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
+		err := CreateApiReqValidationError{
+			field:  "Name",
+			reason: "value length must be between 1 and 10 runes, inclusive",
 		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CreateApiReqValidationError{
-				field:  "Data",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
+		if !all {
+			return err
 		}
+		errors = append(errors, err)
 	}
+
+	if l := utf8.RuneCountInString(m.GetPath()); l < 1 || l > 100 {
+		err := CreateApiReqValidationError{
+			field:  "Path",
+			reason: "value length must be between 1 and 100 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetMethod()); l < 1 || l > 10 {
+		err := CreateApiReqValidationError{
+			field:  "Method",
+			reason: "value length must be between 1 and 10 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	// no validation rules for Group
+
+	// no validation rules for Description
 
 	if len(errors) > 0 {
 		return CreateApiReqMultiError(errors)
@@ -6578,6 +6582,43 @@ func (m *UpdateApiReq_Data) validate(all bool) error {
 	}
 
 	var errors []error
+
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
+		err := UpdateApiReq_DataValidationError{
+			field:  "Name",
+			reason: "value length must be between 1 and 10 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetPath()); l < 1 || l > 100 {
+		err := UpdateApiReq_DataValidationError{
+			field:  "Path",
+			reason: "value length must be between 1 and 100 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetMethod()); l < 1 || l > 10 {
+		err := UpdateApiReq_DataValidationError{
+			field:  "Method",
+			reason: "value length must be between 1 and 10 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	// no validation rules for Group
+
+	// no validation rules for Description
 
 	if len(errors) > 0 {
 		return UpdateApiReq_DataMultiError(errors)

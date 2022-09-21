@@ -42,8 +42,14 @@ func NewApiUsecase(repo ApiRepo, tm Transaction, logger log.Logger) *ApiUsecase 
 	return &ApiUsecase{repo: repo, tm: tm, log: log.NewHelper(logger)}
 }
 
-// CreateApi creates a Api, and returns the new Api.
-func (uc *ApiUsecase) CreateApi(ctx context.Context, g *Api) (*Api, error) {
-	uc.log.WithContext(ctx).Infof("CreateApi: %v", g.Name)
+// Create creates a Api, and returns the new Api.
+func (uc *ApiUsecase) Create(ctx context.Context, g *Api) (*Api, error) {
+	uc.log.WithContext(ctx).Infof("Create: %v", g.Name)
 	return uc.repo.Save(ctx, g)
+}
+
+// GetID 获取用户ID
+func (uc *ApiUsecase) GetID(ctx context.Context, g *Api) (*Api, error) {
+	uc.log.WithContext(ctx).Infof("GetID: %v", g)
+	return uc.repo.FindByID(ctx, g.ID)
 }

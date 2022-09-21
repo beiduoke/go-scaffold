@@ -48,8 +48,8 @@ func NewMenuUsecase(repo MenuRepo, tm Transaction, logger log.Logger) *MenuUseca
 	return &MenuUsecase{repo: repo, tm: tm, log: log.NewHelper(logger)}
 }
 
-// CreateMenu creates a Menu, and returns the new Menu.
-func (uc *MenuUsecase) CreateMenu(ctx context.Context, g *Menu) (*Menu, error) {
-	uc.log.WithContext(ctx).Infof("CreateMenu: %v", g.Name)
+// Create creates a Menu, and returns the new Menu.
+func (uc *MenuUsecase) Create(ctx context.Context, g *Menu) (*Menu, error) {
+	uc.log.WithContext(ctx).Infof("Create: %v", g.Name)
 	return uc.repo.Save(ctx, g)
 }

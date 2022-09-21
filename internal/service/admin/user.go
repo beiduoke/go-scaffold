@@ -6,6 +6,8 @@ import (
 	v1 "github.com/beiduoke/go-scaffold/api/admin/v1"
 	"github.com/beiduoke/go-scaffold/api/protobuf"
 	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/internal/pkg/authz"
+	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -15,14 +17,33 @@ var _ v1.AdminServer = (*AdminService)(nil)
 
 // ProfileUser 概括
 func (s *AdminService) GetUserProfile(ctx context.Context, in *emptypb.Empty) (*v1.User, error) {
-	name := "jayden"
+	id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
+	profile, err := s.userCase.GetID(ctx, &biz.User{ID: id})
+	if err != nil {
+		return nil, v1.ErrorUserNotFound("用户查询失败 %v", err)
+	}
+	var birthday *timestamppb.Timestamp
+	if profile.Birthday != nil {
+		birthday = timestamppb.New(*profile.Birthday)
+	}
 	return &v1.User{
-		Name: name,
+		Id:        uint64(profile.ID),
+		Name:      profile.Name,
+		NickName:  profile.NickName,
+		RealName:  profile.RealName,
+		Gender:    protobuf.UserGender(profile.Gender),
+		Birthday:  birthday,
+		Mobile:    profile.Mobile,
+		Email:     profile.Email,
+		State:     protobuf.UserState(profile.State),
+		CreatedAt: timestamppb.New(profile.CreatedAt),
+		UpdatedAt: timestamppb.New(profile.UpdatedAt),
 	}, nil
 }
 
 // ProfileUser 概括
 func (s *AdminService) GetUserMenu(ctx context.Context, in *emptypb.Empty) (*v1.GetUserMenuReply, error) {
+	// id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
 	name := "菜单"
 	return &v1.GetUserMenuReply{
 		Name: name,
@@ -31,7 +52,7 @@ func (s *AdminService) GetUserMenu(ctx context.Context, in *emptypb.Empty) (*v1.
 
 // ListUser 列表用户
 func (s *AdminService) ListUser(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
-	results, _ := s.userCase.ListUser(ctx)
+	results, _ := s.userCase.List(ctx)
 	items := make([]*anypb.Any, 0, len(results))
 	for _, v := range results {
 		user := &v1.User{
@@ -74,7 +95,7 @@ func (s *AdminService) UpdateUser(ctx context.Context, in *v1.UpdateUserReq) (*v
 
 // GetUser 获取用户
 func (s *AdminService) GetUser(ctx context.Context, in *v1.GetUserReq) (*v1.User, error) {
-	user, err := s.userCase.GetUserByID(ctx, &biz.User{ID: uint(in.GetId())})
+	user, err := s.userCase.GetID(ctx, &biz.User{ID: uint(in.GetId())})
 	if err != nil {
 		return nil, v1.ErrorUserNotFound("用户未找到")
 	}

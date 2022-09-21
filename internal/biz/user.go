@@ -106,20 +106,20 @@ func (uc *UserUsecase) CreateUser(ctx context.Context, g *User) (*User, error) {
 	return g, err
 }
 
-// ListUser 用户列表
-func (uc *UserUsecase) ListUser(ctx context.Context) ([]*User, int64) {
-	uc.log.WithContext(ctx).Infof("ListUser")
+// List 用户列表
+func (uc *UserUsecase) List(ctx context.Context) ([]*User, int64) {
+	uc.log.WithContext(ctx).Infof("List")
 	return uc.repo.ListPage(ctx, pagination.NewPagination())
 }
 
-// GetUserByMobile 获取用户ID
-func (uc *UserUsecase) GetUserByID(ctx context.Context, g *User) (*User, error) {
-	uc.log.WithContext(ctx).Infof("GetUserByID: %v", g)
+// GetID 获取用户ID
+func (uc *UserUsecase) GetID(ctx context.Context, g *User) (*User, error) {
+	uc.log.WithContext(ctx).Infof("GetID: %v", g)
 	return uc.repo.FindByID(ctx, g.ID)
 }
 
-// GetUserByMobile 获取用户手机
-func (uc *UserUsecase) GetUserByMobile(ctx context.Context, g *User) (*User, error) {
-	uc.log.WithContext(ctx).Infof("GetUserByMobile: %v", g)
+// GetMobile 获取用户手机
+func (uc *UserUsecase) GetMobile(ctx context.Context, g *User) (*User, error) {
+	uc.log.WithContext(ctx).Infof("GetMobile: %v", g)
 	return uc.repo.FindByMobile(ctx, g.Mobile)
 }

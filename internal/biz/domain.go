@@ -58,13 +58,13 @@ func NewDomainUsecase(repo DomainRepo, tm Transaction, logger log.Logger) *Domai
 	return &DomainUsecase{repo: repo, tm: tm, log: log.NewHelper(logger)}
 }
 
-// CreateDomain creates a Domain, and returns the new Domain.
-func (uc *DomainUsecase) CreateDomain(ctx context.Context, g *Domain) (*Domain, error) {
-	uc.log.WithContext(ctx).Infof("CreateDomain: %v", g.Name)
+// Create creates a Domain, and returns the new Domain.
+func (uc *DomainUsecase) Create(ctx context.Context, g *Domain) (*Domain, error) {
+	uc.log.WithContext(ctx).Infof("Create: %v", g.Name)
 	return uc.repo.Save(ctx, g)
 }
 
-// CreateDomain creates a Domain, and returns the new Domain.
-func (uc *DomainUsecase) FindByDomainID(ctx context.Context, domainId string) (*Domain, error) {
+// GetDomainID 获取指定领域ID
+func (uc *DomainUsecase) GetDomainID(ctx context.Context, domainId string) (*Domain, error) {
 	return uc.repo.FindByDomainID(ctx, domainId)
 }

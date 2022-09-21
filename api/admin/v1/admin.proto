@@ -227,7 +227,7 @@ service Admin {
   rpc CreateApi (CreateApiReq) returns (CreateApiReply) {
     option (google.api.http) = {
       post: "/admin/v1/apis"
-      body: "data"
+      body: "*"
     };
   }
   // 获取接口
@@ -528,15 +528,23 @@ message DeleteAuthorityReply {
 
 // 接口模块
 message Api {
-  optional google.protobuf.Timestamp created_at = 1;
-  optional google.protobuf.Timestamp updated_at = 2;
-  optional uint64 id = 3;
-  optional string name = 4;
+  google.protobuf.Timestamp created_at = 1;
+  google.protobuf.Timestamp updated_at = 2;
+  uint64 id = 3;
+  string name = 4;
+  string path = 5;
+  string method = 6;
+  string group = 7;
+  string description = 8;
 }
 
 // 请求 - 创建接口
 message CreateApiReq {
-  Api data = 1;
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  string path = 2 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  string method = 3 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  string group = 4;
+  string description = 5;
 }
 
 // 回应 - 创建接口
@@ -549,6 +557,11 @@ message CreateApiReply {
 message UpdateApiReq {
   uint64 id = 1;
   message Data {
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    string path = 2 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    string method = 3 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    string group = 4;
+    string description = 5;
   }
   Data data = 2;
 }

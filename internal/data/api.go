@@ -59,7 +59,9 @@ func (r *ApiRepo) toBiz(d *SysApi) *biz.Api {
 }
 
 func (r *ApiRepo) Save(ctx context.Context, g *biz.Api) (*biz.Api, error) {
-	return g, nil
+	d := r.toModel(g)
+	result := r.data.DB(ctx).Omit(clause.Associations).Create(d).Error
+	return r.toBiz(d), result
 }
 
 func (r *ApiRepo) Update(ctx context.Context, g *biz.Api) (*biz.Api, error) {
@@ -67,11 +69,25 @@ func (r *ApiRepo) Update(ctx context.Context, g *biz.Api) (*biz.Api, error) {
 }
 
 func (r *ApiRepo) FindByID(ctx context.Context, id uint) (*biz.Api, error) {
-	return nil, nil
+	api := SysApi{}
+	result := r.data.DB(ctx).Last(&api, id)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return r.toBiz(&api), nil
 }
 
 func (r *ApiRepo) ListByName(ctx context.Context, name string) ([]*biz.Api, error) {
-	return nil, nil
+	sysApis := []*SysApi{}
+	result := r.data.DB(ctx).Find(&sysApis, "name Like ?", name+"%")
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	apis := make([]*biz.Api, 0, len(sysApis))
+	for _, v := range sysApis {
+		apis = append(apis, r.toBiz(v))
+	}
+	return apis, nil
 }
 
 func (r *ApiRepo) ListAll(ctx context.Context) ([]*biz.Api, error) {

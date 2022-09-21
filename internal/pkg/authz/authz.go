@@ -93,6 +93,10 @@ func (su *SecurityUser) ParseFromContext(ctx context.Context) error {
 	return nil
 }
 
+func (su *SecurityUser) GetUser() string {
+	return su.ID
+}
+
 func (su *SecurityUser) GetSubject() string {
 	return su.Authority
 }
@@ -194,4 +198,12 @@ func (su *SecurityUser) ParseAccessJwtToken(claims jwtV4.Claims) error {
 		}
 	}
 	return nil
+}
+
+func ParseFromContext(ctx context.Context) authz.SecurityUser {
+	securityUser := NewSecurityUser()
+	if securityUser.ParseFromContext(ctx) != nil {
+		return &SecurityUser{}
+	}
+	return securityUser
 }
