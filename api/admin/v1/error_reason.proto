@@ -15,4 +15,7 @@ enum ErrorReason {
   USER_NOT_FOUND = 1;
   USER_LOGIN_FAIL = 2;
   USER_REGISTER_FAIL = 3;
+  DOMAIN_NOT_FOUND = 4;
+  MENU_NOT_FOUND = 5;
+  API_NOT_FOUND = 6;
 }

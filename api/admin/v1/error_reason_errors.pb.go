@@ -58,3 +58,39 @@ func IsUserRegisterFail(err error) bool {
 func ErrorUserRegisterFail(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_USER_REGISTER_FAIL.String(), fmt.Sprintf(format, args...))
 }
+
+func IsDomainNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_DOMAIN_NOT_FOUND.String() && e.Code == 400
+}
+
+func ErrorDomainNotFound(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_DOMAIN_NOT_FOUND.String(), fmt.Sprintf(format, args...))
+}
+
+func IsMenuNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_MENU_NOT_FOUND.String() && e.Code == 400
+}
+
+func ErrorMenuNotFound(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_MENU_NOT_FOUND.String(), fmt.Sprintf(format, args...))
+}
+
+func IsApiNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_API_NOT_FOUND.String() && e.Code == 400
+}
+
+func ErrorApiNotFound(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_API_NOT_FOUND.String(), fmt.Sprintf(format, args...))
+}
