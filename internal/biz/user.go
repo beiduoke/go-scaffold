@@ -26,9 +26,9 @@ type User struct {
 	Mobile               string
 	Email                string
 	State                int32
-	Domains              []Domain
-	Authorities          []Authority
-	DomainAuthorityUsers []DomainAuthorityUser
+	Domains              []*Domain
+	Authorities          []*Authority
+	DomainAuthorityUsers []*DomainAuthorityUser
 }
 
 // UserRepo is a Greater repo.
@@ -69,19 +69,14 @@ func NewUserUsecase(ac *conf.Auth, repo UserRepo, tm Transaction, logger log.Log
 // CreateUser 创建用户
 func (uc *UserUsecase) CreateUser(ctx context.Context, g *User) (*User, error) {
 	uc.log.WithContext(ctx).Infof("CreateUser: %v", g)
-	var (
-		err    error
-		domain Domain
-	)
 	// 创建用户只能关联一次领域
-	if len(g.Domains) <= 0 {
-		return nil, errors.New("用户未绑定领域")
-	} else {
-		domain = g.Domains[0]
+	domains := g.Domains
+	if len(domains) <= 0 {
+		return nil, errors.New("未绑定领域")
 	}
 	user, _ := uc.repo.FindByName(ctx, g.Name)
 	if user != nil && user.Name != "" {
-		return nil, errors.New("用户已注册")
+		return nil, errors.New("已注册")
 	}
 
 	if g.Password != "" {
@@ -90,18 +85,23 @@ func (uc *UserUsecase) CreateUser(ctx context.Context, g *User) (*User, error) {
 			return nil, errors.New("密码加密失败")
 		}
 		g.Password = password
-		if g.State <= 0 {
-			g.State = int32(pb.UserState_USER_STATE_ACTIVE)
-		}
 	}
 
-	err = uc.tm.InTx(ctx, func(ctx context.Context) error {
-		g, err = uc.repo.Save(ctx, g)
+	if g.State <= 0 {
+		g.State = int32(pb.UserState_USER_STATE_ACTIVE)
+	}
+
+	err := uc.tm.InTx(ctx, func(ctx context.Context) error {
+		g, err := uc.repo.Save(ctx, g)
 		if err != nil {
 			return err
 		}
-		err := uc.domainRepo.SaveAuthorityForUserInDomain(ctx, g.ID, domain.DefaultAuthorityID, domain.ID)
-		return err
+		for _, domain := range domains {
+			if err := uc.domainRepo.SaveAuthorityForUserInDomain(ctx, g.ID, domain.DefaultAuthorityID, domain.ID); err != nil {
+				uc.log.Errorf("领域权限绑定失败 %v", err)
+			}
+		}
+		return nil
 	})
 	return g, err
 }

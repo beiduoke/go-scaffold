@@ -37,11 +37,11 @@ func (r *UserRepo) toModel(d *biz.User) *SysUser {
 	}
 	domains := []SysDomain{}
 	for _, v := range d.Domains {
-		domains = append(domains, *r.domain.toModel(&v))
+		domains = append(domains, *r.domain.toModel(v))
 	}
 	authorities := []SysAuthority{}
 	for _, v := range d.Authorities {
-		authorities = append(authorities, *r.authority.toModel(&v))
+		authorities = append(authorities, *r.authority.toModel(v))
 	}
 	return &SysUser{
 		Model: gorm.Model{
@@ -49,15 +49,17 @@ func (r *UserRepo) toModel(d *biz.User) *SysUser {
 			CreatedAt: d.CreatedAt,
 			UpdatedAt: d.UpdatedAt,
 		},
-		Name:     d.Name,
-		NickName: d.NickName,
-		RealName: d.RealName,
-		Password: d.Password,
-		Birthday: d.Birthday,
-		Gender:   d.Gender,
-		Mobile:   d.Mobile,
-		Email:    d.Email,
-		State:    d.State,
+		Name:        d.Name,
+		NickName:    d.NickName,
+		RealName:    d.RealName,
+		Password:    d.Password,
+		Birthday:    d.Birthday,
+		Gender:      d.Gender,
+		Mobile:      d.Mobile,
+		Email:       d.Email,
+		State:       d.State,
+		Domains:     domains,
+		Authorities: authorities,
 	}
 }
 
@@ -65,13 +67,13 @@ func (r *UserRepo) toBiz(d *SysUser) *biz.User {
 	if d == nil {
 		return nil
 	}
-	domains := []biz.Domain{}
+	domains := []*biz.Domain{}
 	for _, v := range d.Domains {
-		domains = append(domains, *r.domain.toBiz(&v))
+		domains = append(domains, r.domain.toBiz(&v))
 	}
-	authorities := []biz.Authority{}
+	authorities := []*biz.Authority{}
 	for _, v := range d.Authorities {
-		authorities = append(authorities, *r.authority.toBiz(&v))
+		authorities = append(authorities, r.authority.toBiz(&v))
 	}
 	return &biz.User{
 		CreatedAt:   d.CreatedAt,

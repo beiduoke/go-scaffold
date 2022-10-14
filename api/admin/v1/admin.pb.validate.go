@@ -6051,11 +6051,62 @@ func (m *CreateUserReq_Data) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Name
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
+		err := CreateUserReq_DataValidationError{
+			field:  "Name",
+			reason: "value length must be between 1 and 10 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	// no validation rules for Mobile
 
 	// no validation rules for State
+
+	if len(m.GetDomainIds()) < 1 {
+		err := CreateUserReq_DataValidationError{
+			field:  "DomainIds",
+			reason: "value must contain at least 1 item(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	_CreateUserReq_Data_DomainIds_Unique := make(map[uint64]struct{}, len(m.GetDomainIds()))
+
+	for idx, item := range m.GetDomainIds() {
+		_, _ = idx, item
+
+		if _, exists := _CreateUserReq_Data_DomainIds_Unique[item]; exists {
+			err := CreateUserReq_DataValidationError{
+				field:  fmt.Sprintf("DomainIds[%v]", idx),
+				reason: "repeated value must contain unique items",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		} else {
+			_CreateUserReq_Data_DomainIds_Unique[item] = struct{}{}
+		}
+
+		if item <= 0 {
+			err := CreateUserReq_DataValidationError{
+				field:  fmt.Sprintf("DomainIds[%v]", idx),
+				reason: "value must be greater than 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
 
 	if m.Password != nil {
 		// no validation rules for Password

@@ -1482,8 +1482,7 @@
           "format": "date-time"
         },
         "gender": {
-          "type": "integer",
-          "format": "int32"
+          "$ref": "#/definitions/protobufUserGender"
         },
         "mobile": {
           "type": "string"
@@ -1493,6 +1492,13 @@
         },
         "state": {
           "$ref": "#/definitions/protobufUserState"
+        },
+        "domainIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
         }
       }
     },
@@ -1808,8 +1814,7 @@
           "format": "date-time"
         },
         "gender": {
-          "type": "integer",
-          "format": "int32"
+          "$ref": "#/definitions/protobufUserGender"
         },
         "mobile": {
           "type": "string"

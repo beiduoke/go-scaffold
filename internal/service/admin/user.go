@@ -2,6 +2,8 @@ package admin
 
 import (
 	"context"
+	"fmt"
+	"time"
 
 	v1 "github.com/beiduoke/go-scaffold/api/admin/v1"
 	"github.com/beiduoke/go-scaffold/api/protobuf"
@@ -81,6 +83,33 @@ func (s *AdminService) ListUser(ctx context.Context, in *protobuf.PagingReq) (*p
 
 // CreateUser 创建用户
 func (s *AdminService) CreateUser(ctx context.Context, in *v1.CreateUserReq) (*v1.CreateUserReply, error) {
+	v := in.GetData()
+	domainIds := make([]uint, 0, len(v.GetDomainIds()))
+	for _, domainId := range v.GetDomainIds() {
+		domainIds = append(domainIds, uint(domainId))
+	}
+	fmt.Println(domainIds)
+	domains, _ := s.domainCase.ListByIDs(ctx, domainIds...)
+	var birthday *time.Time
+	if v.GetBirthday() != nil {
+		b := v.GetBirthday().AsTime()
+		birthday = &b
+	}
+	_, err := s.userCase.CreateUser(ctx, &biz.User{
+		Name:     v.GetName(),
+		Password: v.GetPassword(),
+		Gender:   int32(v.GetGender()),
+		NickName: v.GetNickName(),
+		RealName: v.GetRealName(),
+		Birthday: birthday,
+		Mobile:   v.GetMobile(),
+		Email:    v.GetEmail(),
+		State:    int32(v.GetState()),
+		Domains:  domains,
+	})
+	if err != nil {
+		return nil, v1.ErrorUserCreateFail("用户创建失败: %v", err.Error())
+	}
 	return &v1.CreateUserReply{
 		Success: true,
 	}, nil

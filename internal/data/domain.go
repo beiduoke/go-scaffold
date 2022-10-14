@@ -81,6 +81,21 @@ func (r *DomainRepo) FindByDomainID(ctx context.Context, domainId string) (*biz.
 	return r.toBiz(sysDomain), result.Error
 }
 
+func (r *DomainRepo) ListByIDs(ctx context.Context, id ...uint) (domains []*biz.Domain, err error) {
+	db := r.data.DB(ctx).Model(&SysDomain{})
+	sysDomains := []*SysDomain{}
+
+	err = db.Find(&sysDomains).Error
+	if err != nil {
+		return domains, err
+	}
+	for _, v := range sysDomains {
+		domains = append(domains, r.toBiz(v))
+	}
+
+	return
+}
+
 func (r *DomainRepo) ListByName(ctx context.Context, name string) ([]*biz.Domain, error) {
 	return nil, nil
 }

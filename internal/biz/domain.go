@@ -65,6 +65,12 @@ func (uc *DomainUsecase) Create(ctx context.Context, g *Domain) (*Domain, error)
 }
 
 // GetDomainID 获取指定领域ID
-func (uc *DomainUsecase) GetDomainID(ctx context.Context, domainId string) (*Domain, error) {
+func (uc *DomainUsecase) GetByDomainID(ctx context.Context, domainId string) (*Domain, error) {
 	return uc.repo.FindByDomainID(ctx, domainId)
+}
+
+// GetDomainInID 获取指定领域ID集合
+func (uc *DomainUsecase) ListByIDs(ctx context.Context, id ...uint) (domains []*Domain, err error) {
+	domains, _ = uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
+	return
 }

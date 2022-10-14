@@ -359,15 +359,16 @@ message ListUserReply {
 message CreateUserReq {
   uint64 id = 1;
   message Data {
-    string name = 2;
+    string name = 2 [(validate.rules).string = {min_len: 1, max_len: 10}];
     optional string password = 3;
     optional string nick_name = 4;
     optional string real_name = 5;
     optional google.protobuf.Timestamp birthday = 6;
-    optional int32 gender = 7;
+    optional api.protobuf.UserGender gender = 7;
     string mobile = 8;
     optional string email = 9;
     api.protobuf.UserState state = 10;
+    repeated uint64 domain_ids = 11 [(validate.rules).repeated = {min_items: 1, unique: true, items: {uint64: {gt: 0}}}];
   }
   Data data = 2;
 }
@@ -403,7 +404,7 @@ message UpdateUserReq {
     optional string nick_name = 4;
     optional string real_name = 5;
     optional google.protobuf.Timestamp birthday = 6;
-    optional int32 gender = 7;
+    optional api.protobuf.UserGender gender = 7;
     optional string mobile = 8;
     optional string email = 9;
     optional api.protobuf.UserState state = 10;
