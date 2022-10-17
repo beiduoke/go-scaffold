@@ -67,7 +67,7 @@ func NewUserUsecase(ac *conf.Auth, repo UserRepo, tm Transaction, logger log.Log
 }
 
 // CreateUser 创建用户
-func (uc *UserUsecase) CreateUser(ctx context.Context, g *User) (*User, error) {
+func (uc *UserUsecase) Create(ctx context.Context, g *User) (*User, error) {
 	uc.log.WithContext(ctx).Infof("CreateUser: %v", g)
 	// 创建用户只能关联一次领域
 	domains := g.Domains
@@ -104,6 +104,55 @@ func (uc *UserUsecase) CreateUser(ctx context.Context, g *User) (*User, error) {
 		return nil
 	})
 	return g, err
+}
+
+// Update 修改用户
+func (uc *UserUsecase) Update(ctx context.Context, g *User) error {
+	uc.log.WithContext(ctx).Infof("UpdateUser: %v", g)
+
+	user, _ := uc.repo.FindByID(ctx, g.ID)
+	if user == nil {
+		return errors.New("用户未注册")
+	}
+
+	if user.Name != g.Name {
+		name, _ := uc.repo.FindByName(ctx, g.Name)
+		if name != nil {
+			return errors.New("用户名已存在")
+		}
+	}
+
+	if user.Mobile != g.Mobile {
+		mobile, _ := uc.repo.FindByMobile(ctx, g.Mobile)
+		if mobile != nil {
+			return errors.New("手机号已存在")
+		}
+	}
+
+	if user.Email != g.Email {
+		mobile, _ := uc.repo.FindByEmail(ctx, g.Email)
+		if mobile != nil {
+			return errors.New("邮箱已存在")
+		}
+	}
+
+	if g.Password != "" {
+		password, err := password.Encryption(g.Password)
+		if err != nil {
+			return errors.New("密码加密失败")
+		}
+		g.Password = password
+	}
+
+	if g.State <= 0 {
+		g.State = int32(pb.UserState_USER_STATE_ACTIVE)
+	}
+
+	err := uc.tm.InTx(ctx, func(ctx context.Context) error {
+		_, err := uc.repo.Update(ctx, g)
+		return err
+	})
+	return err
 }
 
 // List 用户列表

@@ -2,7 +2,6 @@ package admin
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	v1 "github.com/beiduoke/go-scaffold/api/admin/v1"
@@ -88,14 +87,14 @@ func (s *AdminService) CreateUser(ctx context.Context, in *v1.CreateUserReq) (*v
 	for _, domainId := range v.GetDomainIds() {
 		domainIds = append(domainIds, uint(domainId))
 	}
-	fmt.Println(domainIds)
+
 	domains, _ := s.domainCase.ListByIDs(ctx, domainIds...)
 	var birthday *time.Time
 	if v.GetBirthday() != nil {
 		b := v.GetBirthday().AsTime()
 		birthday = &b
 	}
-	_, err := s.userCase.CreateUser(ctx, &biz.User{
+	_, err := s.userCase.Create(ctx, &biz.User{
 		Name:     v.GetName(),
 		Password: v.GetPassword(),
 		Gender:   int32(v.GetGender()),
@@ -117,6 +116,31 @@ func (s *AdminService) CreateUser(ctx context.Context, in *v1.CreateUserReq) (*v
 
 // UpdateUser 修改用户
 func (s *AdminService) UpdateUser(ctx context.Context, in *v1.UpdateUserReq) (*v1.UpdateUserReply, error) {
+	id := in.GetId()
+	if id <= 0 {
+		return nil, v1.ErrorUserIdNull("修改用户ID不能为空")
+	}
+	v := in.GetData()
+	var birthday *time.Time
+	if v.GetBirthday() != nil {
+		b := v.GetBirthday().AsTime()
+		birthday = &b
+	}
+	err := s.userCase.Update(ctx, &biz.User{
+		ID:       uint(id),
+		Name:     v.GetName(),
+		NickName: v.GetNickName(),
+		RealName: v.GetRealName(),
+		Password: v.GetPassword(),
+		Birthday: birthday,
+		Gender:   int32(v.GetGender()),
+		Mobile:   v.GetMobile(),
+		Email:    v.GetEmail(),
+		State:    int32(v.GetState()),
+	})
+	if err != nil {
+		return nil, v1.ErrorUserUpdateFail("用户修改失败 %v", err)
+	}
 	return &v1.UpdateUserReply{
 		Success: true,
 	}, nil

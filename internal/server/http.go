@@ -77,8 +77,8 @@ func NewMiddleware(logger log.Logger, auth middleware.Middleware) http.ServerOpt
 		recovery.Recovery(),
 		tracing.Server(),
 		logging.Server(logger),
-		validate.Validator(),
 		localize.I18N(),
+		validate.Validator(),
 		auth,
 	)
 }

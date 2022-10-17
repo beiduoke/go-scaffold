@@ -1,22 +1,7 @@
-[ChangeMobile]
-description = "changeMobile"
-hash = "sha1-b358c8f76eeec70e0fce5a1aea41f01d718b8cd5"
-other = "修改手机号 {{.Mobile}}"
-
-[ChangePassword]
-description = "changePassword"
-hash = "sha1-b0f5fbc62ea68f7d4db63a557b64df9a46357696"
-other = "修改密码 {{.Name}} {{.Password}}"
-
 [Login]
 description = "login"
 hash = "sha1-c3bc241979ef10e575e69645d5b90dce680e9470"
 other = "登录 {{.Name}} {{.Password}}"
-
-[Logout]
-description = "logout"
-hash = "sha1-96bdaad770365f2d3b79ba4a85bf5c5cdb92af2b"
-other = "退出登录 {{.Name}}"
 
 [Register]
 description = "register"

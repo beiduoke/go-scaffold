@@ -12,10 +12,13 @@ enum ErrorReason {
   // 设置缺省错误码
   option (errors.default_code) = 400;
   UNSPECIFIED = 0 [(errors.code) = 400];
+  SYSTEM_NOT_FOUND = 1;
   USER_NOT_FOUND = 101;
   USER_LOGIN_FAIL = 102;
   USER_REGISTER_FAIL = 103;
   USER_CREATE_FAIL = 104;
+  USER_ID_NULL = 105;
+  USER_UPDATE_FAIL = 106;
   DOMAIN_NOT_FOUND = 201;
   MENU_NOT_FOUND = 301;
   API_NOT_FOUND = 401;

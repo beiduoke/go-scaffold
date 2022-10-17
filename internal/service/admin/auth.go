@@ -5,6 +5,7 @@ import (
 
 	v1 "github.com/beiduoke/go-scaffold/api/admin/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/internal/pkg/middleware/localize"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -38,6 +39,20 @@ func (s *AdminService) Login(ctx context.Context, in *v1.LoginReq) (*v1.LoginRep
 	if err != nil {
 		return nil, v1.ErrorUserLoginFail("用户 %s 登录失败：%v", auth.GetName(), err)
 	}
+
+	localizer := localize.FromContext(ctx)
+	loginMsg, err := localizer.Localize(&i18n.LocalizeConfig{
+		DefaultMessage: loginMessage,
+		TemplateData: map[string]interface{}{
+			"Name":     auth.GetName(),
+			"Password": "123456",
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return nil, v1.ErrorUserLoginFail(loginMsg)
 
 	var expireTime *timestamppb.Timestamp
 	if res.ExpiresAt != nil {

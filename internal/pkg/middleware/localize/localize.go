@@ -4,13 +4,16 @@ import (
 	"context"
 
 	"github.com/BurntSushi/toml"
-	"github.com/nicksnyder/go-i18n/v2/i18n"
-	"golang.org/x/text/language"
-
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
+	"golang.org/x/text/language"
 )
+
+type validator interface {
+	Validate() error
+}
 
 type localizerKey struct{}
 
@@ -47,8 +50,8 @@ func I18N(opts ...Option) middleware.Middleware {
 
 	return func(handler middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
+			lang := o.defaultLanguage.String()
 			if tr, ok := transport.FromServerContext(ctx); ok {
-				lang := o.defaultLanguage.String()
 				if ht, ok := tr.(http.Transporter); ok {
 					lang = ht.Request().FormValue("lang")
 				}
@@ -56,6 +59,12 @@ func I18N(opts ...Option) middleware.Middleware {
 				localizer := i18n.NewLocalizer(bundle, lang, accept)
 				ctx = context.WithValue(ctx, localizerKey{}, localizer)
 			}
+			// 请求验证（处理请求验证翻译）
+			// if v, ok := req.(validator); ok {
+			// 	if err := v.Validate(); err != nil {
+			// 		return nil, errors.BadRequest("VALIDATOR", err.Error()).WithCause(err)
+			// 	}
+			// }
 			return handler(ctx, req)
 		}
 	}

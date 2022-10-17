@@ -365,9 +365,12 @@ message CreateUserReq {
     optional string real_name = 5;
     optional google.protobuf.Timestamp birthday = 6;
     optional api.protobuf.UserGender gender = 7;
-    string mobile = 8;
-    optional string email = 9;
-    api.protobuf.UserState state = 10;
+    string mobile = 8 [(validate.rules).string = {
+      pattern:   "^1[0-9]{10}$",
+      max_bytes: 15,
+   }];
+    optional string email = 9 [(validate.rules).string.email = true];
+    api.protobuf.UserState state = 10 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
     repeated uint64 domain_ids = 11 [(validate.rules).repeated = {min_items: 1, unique: true, items: {uint64: {gt: 0}}}];
   }
   Data data = 2;
@@ -397,7 +400,7 @@ message DeleteUserReply {
 
 // 请求 - 修改用户
 message UpdateUserReq {
-  uint64 id = 1;
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     optional string name = 2;
     optional string password = 3;

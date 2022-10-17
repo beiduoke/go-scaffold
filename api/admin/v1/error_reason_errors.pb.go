@@ -23,6 +23,18 @@ func ErrorUnspecified(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_UNSPECIFIED.String(), fmt.Sprintf(format, args...))
 }
 
+func IsSystemNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_SYSTEM_NOT_FOUND.String() && e.Code == 400
+}
+
+func ErrorSystemNotFound(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_SYSTEM_NOT_FOUND.String(), fmt.Sprintf(format, args...))
+}
+
 func IsUserNotFound(err error) bool {
 	if err == nil {
 		return false
@@ -69,6 +81,30 @@ func IsUserCreateFail(err error) bool {
 
 func ErrorUserCreateFail(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_USER_CREATE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsUserIdNull(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_USER_ID_NULL.String() && e.Code == 400
+}
+
+func ErrorUserIdNull(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_USER_ID_NULL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsUserUpdateFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_USER_UPDATE_FAIL.String() && e.Code == 400
+}
+
+func ErrorUserUpdateFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_USER_UPDATE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
 func IsDomainNotFound(err error) bool {
