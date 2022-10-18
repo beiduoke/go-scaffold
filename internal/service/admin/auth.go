@@ -41,18 +41,16 @@ func (s *AdminService) Login(ctx context.Context, in *v1.LoginReq) (*v1.LoginRep
 	}
 
 	localizer := localize.FromContext(ctx)
-	loginMsg, err := localizer.Localize(&i18n.LocalizeConfig{
+	_, err = localizer.Localize(&i18n.LocalizeConfig{
 		DefaultMessage: loginMessage,
 		TemplateData: map[string]interface{}{
 			"Name":     auth.GetName(),
-			"Password": "123456",
+			"Password": auth.GetPassword(),
 		},
 	})
 	if err != nil {
 		return nil, err
 	}
-
-	return nil, v1.ErrorUserLoginFail(loginMsg)
 
 	var expireTime *timestamppb.Timestamp
 	if res.ExpiresAt != nil {
@@ -73,6 +71,18 @@ func (s *AdminService) Register(ctx context.Context, in *v1.RegisterReq) (*v1.Re
 	_, err := s.authCase.RegisterNamePassword(ctx, in.GetDomain(), &biz.User{Name: auth.GetName(), Password: auth.GetPassword()})
 	if err != nil {
 		return nil, v1.ErrorUserRegisterFail("用户 %s 注册失败: %v", auth.GetName(), err.Error())
+	}
+
+	localizer := localize.FromContext(ctx)
+	_, err = localizer.Localize(&i18n.LocalizeConfig{
+		DefaultMessage: registerMessage,
+		TemplateData: map[string]interface{}{
+			"Name":     auth.GetName(),
+			"Password": auth.GetPassword(),
+		},
+	})
+	if err != nil {
+		return nil, err
 	}
 
 	return &v1.RegisterReply{

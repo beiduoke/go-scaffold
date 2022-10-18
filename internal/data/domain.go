@@ -77,7 +77,7 @@ func (r *DomainRepo) FindByID(ctx context.Context, id uint) (*biz.Domain, error)
 
 func (r *DomainRepo) FindByDomainID(ctx context.Context, domainId string) (*biz.Domain, error) {
 	sysDomain := &SysDomain{}
-	result := r.data.DB(ctx).Debug().Last(sysDomain, "domain_id", domainId)
+	result := r.data.DB(ctx).Last(sysDomain, "domain_id", domainId)
 	return r.toBiz(sysDomain), result.Error
 }
 
