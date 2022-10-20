@@ -2,13 +2,15 @@ package biz
 
 import (
 	"context"
-	"errors"
 	"time"
+
+	"github.com/pkg/errors"
 
 	pb "github.com/beiduoke/go-scaffold/api/protobuf"
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/imdario/mergo"
 	"github.com/zzsds/go-tools/pkg/password"
 )
 
@@ -18,6 +20,7 @@ type User struct {
 	UpdatedAt            time.Time
 	ID                   uint
 	Name                 string
+	Avatar               string
 	NickName             string
 	RealName             string
 	Password             string
@@ -54,11 +57,11 @@ type UserRepo interface {
 
 // UserUsecase is a User usecase.
 type UserUsecase struct {
+	log        *log.Helper
 	ac         *conf.Auth
+	tm         Transaction
 	repo       UserRepo
 	domainRepo DomainRepo
-	log        *log.Helper
-	tm         Transaction
 }
 
 // NewUserUsecase new a User usecase.
@@ -66,17 +69,17 @@ func NewUserUsecase(ac *conf.Auth, repo UserRepo, tm Transaction, logger log.Log
 	return &UserUsecase{ac: ac, repo: repo, tm: tm, log: log.NewHelper(logger), domainRepo: domainRepo}
 }
 
-// CreateUser 创建用户
+// Create 创建用户
 func (uc *UserUsecase) Create(ctx context.Context, g *User) (*User, error) {
 	uc.log.WithContext(ctx).Infof("CreateUser: %v", g)
 	// 创建用户只能关联一次领域
 	domains := g.Domains
 	if len(domains) <= 0 {
-		return nil, errors.New("未绑定领域")
+		return nil, errors.New("领域未指定")
 	}
 	user, _ := uc.repo.FindByName(ctx, g.Name)
 	if user != nil && user.Name != "" {
-		return nil, errors.New("已注册")
+		return nil, errors.New("用户名已存在")
 	}
 
 	if g.Password != "" {
@@ -115,7 +118,7 @@ func (uc *UserUsecase) Update(ctx context.Context, g *User) error {
 		return errors.New("用户未注册")
 	}
 
-	if user.Name != g.Name {
+	if user.Name != g.Name && g.Name != "" {
 		name, _ := uc.repo.FindByName(ctx, g.Name)
 		if name != nil {
 			return errors.New("用户名已存在")
@@ -139,7 +142,7 @@ func (uc *UserUsecase) Update(ctx context.Context, g *User) error {
 	if g.Password != "" {
 		password, err := password.Encryption(g.Password)
 		if err != nil {
-			return errors.New("密码加密失败")
+			return errors.Errorf("密码加密失败：%v", err)
 		}
 		g.Password = password
 	}
@@ -147,28 +150,28 @@ func (uc *UserUsecase) Update(ctx context.Context, g *User) error {
 	if g.State <= 0 {
 		g.State = int32(pb.UserState_USER_STATE_ACTIVE)
 	}
-
-	err := uc.tm.InTx(ctx, func(ctx context.Context) error {
-		_, err := uc.repo.Update(ctx, g)
-		return err
-	})
+	// 新数据合并到源数据
+	if err := mergo.Merge(user, *g, mergo.WithOverride); err != nil {
+		return errors.Errorf("数据合并失败：%v", err)
+	}
+	_, err := uc.repo.Update(ctx, user)
 	return err
 }
 
 // List 用户列表
 func (uc *UserUsecase) List(ctx context.Context) ([]*User, int64) {
-	uc.log.WithContext(ctx).Infof("List")
+	uc.log.WithContext(ctx).Infof("UserList")
 	return uc.repo.ListPage(ctx, pagination.NewPagination())
 }
 
 // GetID 获取用户ID
 func (uc *UserUsecase) GetID(ctx context.Context, g *User) (*User, error) {
-	uc.log.WithContext(ctx).Infof("GetID: %v", g)
+	uc.log.WithContext(ctx).Infof("GetUserID: %v", g)
 	return uc.repo.FindByID(ctx, g.ID)
 }
 
 // GetMobile 获取用户手机
 func (uc *UserUsecase) GetMobile(ctx context.Context, g *User) (*User, error) {
-	uc.log.WithContext(ctx).Infof("GetMobile: %v", g)
+	uc.log.WithContext(ctx).Infof("GetUserMobile: %v", g)
 	return uc.repo.FindByMobile(ctx, g.Mobile)
 }

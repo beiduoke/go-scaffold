@@ -339,14 +339,15 @@ message User {
   string name = 2;
   string nick_name = 4;
   string real_name = 5;
-  google.protobuf.Timestamp birthday = 6;
+  string birthday = 6;
   api.protobuf.UserGender gender = 7;
   string mobile = 8;
   string email = 9;
   api.protobuf.UserState state = 10;
   google.protobuf.Timestamp created_at = 11;
   google.protobuf.Timestamp updated_at = 12;
-  optional string authoritys = 13;
+  string authoritys = 13;
+  string avatar = 14;
 }
 
 // 回应 - 列表用户 - 未使用
@@ -360,18 +361,16 @@ message CreateUserReq {
   uint64 id = 1;
   message Data {
     string name = 2 [(validate.rules).string = {min_len: 1, max_len: 10}];
-    optional string password = 3;
-    optional string nick_name = 4;
-    optional string real_name = 5;
-    optional google.protobuf.Timestamp birthday = 6;
-    optional api.protobuf.UserGender gender = 7;
-    string mobile = 8 [(validate.rules).string = {
-      pattern:   "^1[0-9]{10}$",
-      max_bytes: 15,
-   }];
+    optional string password = 3 [(validate.rules).string = {min_len: 6, max_len: 28}];
+    optional string nick_name = 4 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    optional string real_name = 5 [(validate.rules).string = {min_len: 2, max_len: 10}];
+    optional string birthday = 6 [(validate.rules).string.pattern = "^[1-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$"];
+    optional api.protobuf.UserGender gender = 7 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    string mobile = 8 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
     optional string email = 9 [(validate.rules).string.email = true];
     api.protobuf.UserState state = 10 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
     repeated uint64 domain_ids = 11 [(validate.rules).repeated = {min_items: 1, unique: true, items: {uint64: {gt: 0}}}];
+    optional string avatar = 12;
   }
   Data data = 2;
 }
@@ -402,15 +401,17 @@ message DeleteUserReply {
 message UpdateUserReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
-    optional string name = 2;
-    optional string password = 3;
-    optional string nick_name = 4;
-    optional string real_name = 5;
-    optional google.protobuf.Timestamp birthday = 6;
-    optional api.protobuf.UserGender gender = 7;
-    optional string mobile = 8;
-    optional string email = 9;
-    optional api.protobuf.UserState state = 10;
+    string name = 2 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    optional string password = 3 [(validate.rules).string = {min_len: 6, max_len: 28}];
+    optional string nick_name = 4 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    optional string real_name = 5 [(validate.rules).string = {min_len: 2, max_len: 10}];
+    // x must be less than the Unix Epoch
+    optional string birthday = 6 [(validate.rules).string.pattern = "^[1-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$"];
+    optional api.protobuf.UserGender gender = 7 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    string mobile = 8 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
+    optional string email = 9 [(validate.rules).string.email = true];
+    api.protobuf.UserState state = 10 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    optional string avatar = 11;
   }
   Data data = 2;
 }

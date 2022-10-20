@@ -50,6 +50,7 @@ func (r *UserRepo) toModel(d *biz.User) *SysUser {
 			UpdatedAt: d.UpdatedAt,
 		},
 		Name:        d.Name,
+		Avatar:      d.Avatar,
 		NickName:    d.NickName,
 		RealName:    d.RealName,
 		Password:    d.Password,
@@ -79,6 +80,7 @@ func (r *UserRepo) toBiz(d *SysUser) *biz.User {
 		CreatedAt:   d.CreatedAt,
 		UpdatedAt:   d.UpdatedAt,
 		ID:          d.ID,
+		Avatar:      d.Avatar,
 		Name:        d.Name,
 		NickName:    d.NickName,
 		RealName:    d.RealName,
@@ -100,7 +102,9 @@ func (r *UserRepo) Save(ctx context.Context, g *biz.User) (*biz.User, error) {
 }
 
 func (r *UserRepo) Update(ctx context.Context, g *biz.User) (*biz.User, error) {
-	return g, nil
+	d := r.toModel(g)
+	result := r.data.DB(ctx).Debug().Model(d).Updates(d)
+	return r.toBiz(d), result.Error
 }
 
 func (r *UserRepo) FindByID(ctx context.Context, id uint) (*biz.User, error) {

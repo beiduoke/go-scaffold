@@ -1478,8 +1478,7 @@
           "type": "string"
         },
         "birthday": {
-          "type": "string",
-          "format": "date-time"
+          "type": "string"
         },
         "gender": {
           "$ref": "#/definitions/protobufUserGender"
@@ -1499,6 +1498,9 @@
             "type": "string",
             "format": "uint64"
           }
+        },
+        "avatar": {
+          "type": "string"
         }
       }
     },
@@ -1811,7 +1813,7 @@
         },
         "birthday": {
           "type": "string",
-          "format": "date-time"
+          "title": "x must be less than the Unix Epoch"
         },
         "gender": {
           "$ref": "#/definitions/protobufUserGender"
@@ -1824,6 +1826,9 @@
         },
         "state": {
           "$ref": "#/definitions/protobufUserState"
+        },
+        "avatar": {
+          "type": "string"
         }
       }
     },
@@ -1844,8 +1849,7 @@
           "type": "string"
         },
         "birthday": {
-          "type": "string",
-          "format": "date-time"
+          "type": "string"
         },
         "gender": {
           "$ref": "#/definitions/protobufUserGender"
@@ -1868,6 +1872,9 @@
           "format": "date-time"
         },
         "authoritys": {
+          "type": "string"
+        },
+        "avatar": {
           "type": "string"
         }
       },

@@ -2,10 +2,11 @@ package authz
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"strconv"
 	"time"
+
+	"github.com/pkg/errors"
 
 	"github.com/beiduoke/go-scaffold/pkg/authz"
 	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"

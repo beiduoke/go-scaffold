@@ -19,26 +19,27 @@ var _ v1.AdminServer = (*AdminService)(nil)
 // ProfileUser 概括
 func (s *AdminService) GetUserProfile(ctx context.Context, in *emptypb.Empty) (*v1.User, error) {
 	id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
-	profile, err := s.userCase.GetID(ctx, &biz.User{ID: id})
+	user, err := s.userCase.GetID(ctx, &biz.User{ID: id})
 	if err != nil {
 		return nil, v1.ErrorUserNotFound("用户查询失败 %v", err)
 	}
-	var birthday *timestamppb.Timestamp
-	if profile.Birthday != nil {
-		birthday = timestamppb.New(*profile.Birthday)
+	var birthday string
+	if user.Birthday != nil {
+		birthday = user.Birthday.Format("2006-01-02")
 	}
 	return &v1.User{
-		Id:        uint64(profile.ID),
-		Name:      profile.Name,
-		NickName:  profile.NickName,
-		RealName:  profile.RealName,
-		Gender:    protobuf.UserGender(profile.Gender),
+		Id:        uint64(user.ID),
+		Name:      user.Name,
+		Avatar:    user.Avatar,
+		NickName:  user.NickName,
+		RealName:  user.RealName,
+		Gender:    protobuf.UserGender(user.Gender),
 		Birthday:  birthday,
-		Mobile:    profile.Mobile,
-		Email:     profile.Email,
-		State:     protobuf.UserState(profile.State),
-		CreatedAt: timestamppb.New(profile.CreatedAt),
-		UpdatedAt: timestamppb.New(profile.UpdatedAt),
+		Mobile:    user.Mobile,
+		Email:     user.Email,
+		State:     protobuf.UserState(user.State),
+		CreatedAt: timestamppb.New(user.CreatedAt),
+		UpdatedAt: timestamppb.New(user.UpdatedAt),
 	}, nil
 }
 
@@ -59,6 +60,7 @@ func (s *AdminService) ListUser(ctx context.Context, in *protobuf.PagingReq) (*p
 		user := &v1.User{
 			Id:        uint64(v.ID),
 			Name:      v.Name,
+			Avatar:    v.Avatar,
 			NickName:  v.NickName,
 			RealName:  v.RealName,
 			Gender:    protobuf.UserGender(v.Gender),
@@ -69,7 +71,7 @@ func (s *AdminService) ListUser(ctx context.Context, in *protobuf.PagingReq) (*p
 			UpdatedAt: timestamppb.New(v.UpdatedAt),
 		}
 		if v.Birthday != nil {
-			user.Birthday = timestamppb.New(*v.Birthday)
+			user.Birthday = v.Birthday.Format("2006-01-02")
 		}
 		item, _ := anypb.New(user)
 		items = append(items, item)
@@ -90,12 +92,16 @@ func (s *AdminService) CreateUser(ctx context.Context, in *v1.CreateUserReq) (*v
 
 	domains, _ := s.domainCase.ListByIDs(ctx, domainIds...)
 	var birthday *time.Time
-	if v.GetBirthday() != nil {
-		b := v.GetBirthday().AsTime()
-		birthday = &b
+	if v.GetBirthday() != "" {
+		day, err := time.Parse("2006-01-02", v.GetBirthday())
+		if err != nil {
+			return nil, v1.ErrorUserCreateFail("生日格式错误")
+		}
+		birthday = &day
 	}
 	_, err := s.userCase.Create(ctx, &biz.User{
 		Name:     v.GetName(),
+		Avatar:   v.GetAvatar(),
 		Password: v.GetPassword(),
 		Gender:   int32(v.GetGender()),
 		NickName: v.GetNickName(),
@@ -122,13 +128,17 @@ func (s *AdminService) UpdateUser(ctx context.Context, in *v1.UpdateUserReq) (*v
 	}
 	v := in.GetData()
 	var birthday *time.Time
-	if v.GetBirthday() != nil {
-		b := v.GetBirthday().AsTime()
-		birthday = &b
+	if v.GetBirthday() != "" {
+		day, err := time.Parse("2006-01-02", v.GetBirthday())
+		if err != nil {
+			return nil, v1.ErrorUserUpdateFail("生日格式错误")
+		}
+		birthday = &day
 	}
 	err := s.userCase.Update(ctx, &biz.User{
 		ID:       uint(id),
 		Name:     v.GetName(),
+		Avatar:   v.GetAvatar(),
 		NickName: v.GetNickName(),
 		RealName: v.GetRealName(),
 		Password: v.GetPassword(),
@@ -152,13 +162,14 @@ func (s *AdminService) GetUser(ctx context.Context, in *v1.GetUserReq) (*v1.User
 	if err != nil {
 		return nil, v1.ErrorUserNotFound("用户未找到")
 	}
-	var birthday *timestamppb.Timestamp
+	var birthday string
 	if user.Birthday != nil {
-		birthday = timestamppb.New(*user.Birthday)
+		birthday = user.Birthday.Format("2006-01-02")
 	}
 	return &v1.User{
 		Id:        uint64(user.ID),
 		Name:      user.Name,
+		Avatar:    user.Avatar,
 		NickName:  user.NickName,
 		RealName:  user.RealName,
 		Birthday:  birthday,

@@ -807,34 +807,7 @@ func (m *User) validate(all bool) error {
 
 	// no validation rules for RealName
 
-	if all {
-		switch v := interface{}(m.GetBirthday()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UserValidationError{
-					field:  "Birthday",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, UserValidationError{
-					field:  "Birthday",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetBirthday()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UserValidationError{
-				field:  "Birthday",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Birthday
 
 	// no validation rules for Gender
 
@@ -902,9 +875,9 @@ func (m *User) validate(all bool) error {
 		}
 	}
 
-	if m.Authoritys != nil {
-		// no validation rules for Authoritys
-	}
+	// no validation rules for Authoritys
+
+	// no validation rules for Avatar
 
 	if len(errors) > 0 {
 		return UserMultiError(errors)
@@ -6071,17 +6044,6 @@ func (m *CreateUserReq_Data) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if len(m.GetMobile()) > 15 {
-		err := CreateUserReq_DataValidationError{
-			field:  "Mobile",
-			reason: "value length must be at most 15 bytes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if !_CreateUserReq_Data_Mobile_Pattern.MatchString(m.GetMobile()) {
 		err := CreateUserReq_DataValidationError{
 			field:  "Mobile",
@@ -6158,52 +6120,89 @@ func (m *CreateUserReq_Data) validate(all bool) error {
 	}
 
 	if m.Password != nil {
-		// no validation rules for Password
+
+		if l := utf8.RuneCountInString(m.GetPassword()); l < 6 || l > 28 {
+			err := CreateUserReq_DataValidationError{
+				field:  "Password",
+				reason: "value length must be between 6 and 28 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.NickName != nil {
-		// no validation rules for NickName
+
+		if l := utf8.RuneCountInString(m.GetNickName()); l < 1 || l > 10 {
+			err := CreateUserReq_DataValidationError{
+				field:  "NickName",
+				reason: "value length must be between 1 and 10 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.RealName != nil {
-		// no validation rules for RealName
+
+		if l := utf8.RuneCountInString(m.GetRealName()); l < 2 || l > 10 {
+			err := CreateUserReq_DataValidationError{
+				field:  "RealName",
+				reason: "value length must be between 2 and 10 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.Birthday != nil {
 
-		if all {
-			switch v := interface{}(m.GetBirthday()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, CreateUserReq_DataValidationError{
-						field:  "Birthday",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, CreateUserReq_DataValidationError{
-						field:  "Birthday",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
+		if !_CreateUserReq_Data_Birthday_Pattern.MatchString(m.GetBirthday()) {
+			err := CreateUserReq_DataValidationError{
+				field:  "Birthday",
+				reason: "value does not match regex pattern \"^[1-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$\"",
 			}
-		} else if v, ok := interface{}(m.GetBirthday()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return CreateUserReq_DataValidationError{
-					field:  "Birthday",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
+			if !all {
+				return err
 			}
+			errors = append(errors, err)
 		}
 
 	}
 
 	if m.Gender != nil {
-		// no validation rules for Gender
+
+		if _, ok := _CreateUserReq_Data_Gender_NotInLookup[m.GetGender()]; ok {
+			err := CreateUserReq_DataValidationError{
+				field:  "Gender",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.UserGender_name[int32(m.GetGender())]; !ok {
+			err := CreateUserReq_DataValidationError{
+				field:  "Gender",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.Email != nil {
@@ -6220,6 +6219,10 @@ func (m *CreateUserReq_Data) validate(all bool) error {
 			errors = append(errors, err)
 		}
 
+	}
+
+	if m.Avatar != nil {
+		// no validation rules for Avatar
 	}
 
 	if len(errors) > 0 {
@@ -6352,6 +6355,12 @@ var _ interface {
 	ErrorName() string
 } = CreateUserReq_DataValidationError{}
 
+var _CreateUserReq_Data_Birthday_Pattern = regexp.MustCompile("^[1-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$")
+
+var _CreateUserReq_Data_Gender_NotInLookup = map[protobuf.UserGender]struct{}{
+	0: {},
+}
+
 var _CreateUserReq_Data_Mobile_Pattern = regexp.MustCompile("^1[0-9]{10}$")
 
 var _CreateUserReq_Data_State_NotInLookup = map[protobuf.UserState]struct{}{
@@ -6380,69 +6389,154 @@ func (m *UpdateUserReq_Data) validate(all bool) error {
 
 	var errors []error
 
-	if m.Name != nil {
-		// no validation rules for Name
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
+		err := UpdateUserReq_DataValidationError{
+			field:  "Name",
+			reason: "value length must be between 1 and 10 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if !_UpdateUserReq_Data_Mobile_Pattern.MatchString(m.GetMobile()) {
+		err := UpdateUserReq_DataValidationError{
+			field:  "Mobile",
+			reason: "value does not match regex pattern \"^1[0-9]{10}$\"",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := _UpdateUserReq_Data_State_NotInLookup[m.GetState()]; ok {
+		err := UpdateUserReq_DataValidationError{
+			field:  "State",
+			reason: "value must not be in list [0]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := protobuf.UserState_name[int32(m.GetState())]; !ok {
+		err := UpdateUserReq_DataValidationError{
+			field:  "State",
+			reason: "value must be one of the defined enum values",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
 	}
 
 	if m.Password != nil {
-		// no validation rules for Password
+
+		if l := utf8.RuneCountInString(m.GetPassword()); l < 6 || l > 28 {
+			err := UpdateUserReq_DataValidationError{
+				field:  "Password",
+				reason: "value length must be between 6 and 28 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.NickName != nil {
-		// no validation rules for NickName
+
+		if l := utf8.RuneCountInString(m.GetNickName()); l < 1 || l > 10 {
+			err := UpdateUserReq_DataValidationError{
+				field:  "NickName",
+				reason: "value length must be between 1 and 10 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.RealName != nil {
-		// no validation rules for RealName
+
+		if l := utf8.RuneCountInString(m.GetRealName()); l < 2 || l > 10 {
+			err := UpdateUserReq_DataValidationError{
+				field:  "RealName",
+				reason: "value length must be between 2 and 10 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.Birthday != nil {
 
-		if all {
-			switch v := interface{}(m.GetBirthday()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, UpdateUserReq_DataValidationError{
-						field:  "Birthday",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, UpdateUserReq_DataValidationError{
-						field:  "Birthday",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
+		if !_UpdateUserReq_Data_Birthday_Pattern.MatchString(m.GetBirthday()) {
+			err := UpdateUserReq_DataValidationError{
+				field:  "Birthday",
+				reason: "value does not match regex pattern \"^[1-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$\"",
 			}
-		} else if v, ok := interface{}(m.GetBirthday()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return UpdateUserReq_DataValidationError{
-					field:  "Birthday",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
+			if !all {
+				return err
 			}
+			errors = append(errors, err)
 		}
 
 	}
 
 	if m.Gender != nil {
-		// no validation rules for Gender
-	}
 
-	if m.Mobile != nil {
-		// no validation rules for Mobile
+		if _, ok := _UpdateUserReq_Data_Gender_NotInLookup[m.GetGender()]; ok {
+			err := UpdateUserReq_DataValidationError{
+				field:  "Gender",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.UserGender_name[int32(m.GetGender())]; !ok {
+			err := UpdateUserReq_DataValidationError{
+				field:  "Gender",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.Email != nil {
-		// no validation rules for Email
+
+		if err := m._validateEmail(m.GetEmail()); err != nil {
+			err = UpdateUserReq_DataValidationError{
+				field:  "Email",
+				reason: "value must be a valid email address",
+				cause:  err,
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
-	if m.State != nil {
-		// no validation rules for State
+	if m.Avatar != nil {
+		// no validation rules for Avatar
 	}
 
 	if len(errors) > 0 {
@@ -6450,6 +6544,56 @@ func (m *UpdateUserReq_Data) validate(all bool) error {
 	}
 
 	return nil
+}
+
+func (m *UpdateUserReq_Data) _validateHostname(host string) error {
+	s := strings.ToLower(strings.TrimSuffix(host, "."))
+
+	if len(host) > 253 {
+		return errors.New("hostname cannot exceed 253 characters")
+	}
+
+	for _, part := range strings.Split(s, ".") {
+		if l := len(part); l == 0 || l > 63 {
+			return errors.New("hostname part must be non-empty and cannot exceed 63 characters")
+		}
+
+		if part[0] == '-' {
+			return errors.New("hostname parts cannot begin with hyphens")
+		}
+
+		if part[len(part)-1] == '-' {
+			return errors.New("hostname parts cannot end with hyphens")
+		}
+
+		for _, r := range part {
+			if (r < 'a' || r > 'z') && (r < '0' || r > '9') && r != '-' {
+				return fmt.Errorf("hostname parts can only contain alphanumeric characters or hyphens, got %q", string(r))
+			}
+		}
+	}
+
+	return nil
+}
+
+func (m *UpdateUserReq_Data) _validateEmail(addr string) error {
+	a, err := mail.ParseAddress(addr)
+	if err != nil {
+		return err
+	}
+	addr = a.Address
+
+	if len(addr) > 254 {
+		return errors.New("email addresses cannot exceed 254 characters")
+	}
+
+	parts := strings.SplitN(addr, "@", 2)
+
+	if len(parts[0]) > 64 {
+		return errors.New("email address local phrase cannot exceed 64 characters")
+	}
+
+	return m._validateHostname(parts[1])
 }
 
 // UpdateUserReq_DataMultiError is an error wrapping multiple validation errors
@@ -6524,6 +6668,18 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = UpdateUserReq_DataValidationError{}
+
+var _UpdateUserReq_Data_Birthday_Pattern = regexp.MustCompile("^[1-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$")
+
+var _UpdateUserReq_Data_Gender_NotInLookup = map[protobuf.UserGender]struct{}{
+	0: {},
+}
+
+var _UpdateUserReq_Data_Mobile_Pattern = regexp.MustCompile("^1[0-9]{10}$")
+
+var _UpdateUserReq_Data_State_NotInLookup = map[protobuf.UserState]struct{}{
+	0: {},
+}
 
 // Validate checks the field values on UpdateDomainReq_Data with the rules
 // defined in the proto definition for this message. If any rules are

@@ -820,7 +820,6 @@ components:
                     type: string
                 birthday:
                     type: string
-                    format: date-time
                 gender:
                     type: integer
                     format: enum
@@ -836,6 +835,8 @@ components:
                     items:
                         type: integer
                         format: uint64
+                avatar:
+                    type: string
         api.admin.v1.DeleteApiReply:
             type: object
             properties:
@@ -1055,7 +1056,7 @@ components:
                     type: string
                 birthday:
                     type: string
-                    format: date-time
+                    description: x must be less than the Unix Epoch
                 gender:
                     type: integer
                     format: enum
@@ -1066,6 +1067,8 @@ components:
                 state:
                     type: integer
                     format: enum
+                avatar:
+                    type: string
         api.admin.v1.User:
             type: object
             properties:
@@ -1080,7 +1083,6 @@ components:
                     type: string
                 birthday:
                     type: string
-                    format: date-time
                 gender:
                     type: integer
                     format: enum
@@ -1098,6 +1100,8 @@ components:
                     type: string
                     format: date-time
                 authoritys:
+                    type: string
+                avatar:
                     type: string
             description: 用户模块
         api.protobuf.PagingReply:

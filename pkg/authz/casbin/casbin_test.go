@@ -2,11 +2,12 @@ package casbin
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net/http"
 	"strings"
 	"testing"
+
+	"github.com/pkg/errors"
 
 	"github.com/beiduoke/go-scaffold/pkg/authz"
 	"github.com/casbin/casbin/v2"

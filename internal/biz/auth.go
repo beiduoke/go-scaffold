@@ -2,12 +2,12 @@ package biz
 
 import (
 	"context"
-	"errors"
 	"strconv"
 	"strings"
 	"time"
 
-	pb "github.com/beiduoke/go-scaffold/api/protobuf"
+	"github.com/pkg/errors"
+
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	myAuthz "github.com/beiduoke/go-scaffold/internal/pkg/authz"
 	"github.com/go-kratos/kratos/v2/log"
@@ -122,28 +122,8 @@ func (ac *AuthUsecase) RegisterNamePassword(ctx context.Context, domainId string
 	ac.log.WithContext(ctx).Infof("NamePasswordRegister: %v", g.Name)
 	domain, err := ac.domainRepo.FindByDomainID(ctx, domainId)
 	if err != nil {
-		return nil, errors.New("domain查询失败")
+		return nil, errors.New("领域查询失败")
 	}
-	user, _ := ac.userRepo.FindByName(ctx, g.Name)
-	if user != nil && user.Name != "" {
-		return nil, errors.New("用户已注册")
-	}
-	password, err := password.Encryption(g.Password)
-	if err != nil {
-		return nil, errors.New("密码加密失败")
-	}
-	g.Password = password
-	if g.State <= 0 {
-		g.State = int32(pb.UserState_USER_STATE_ACTIVE)
-	}
-
-	err = ac.tm.InTx(ctx, func(ctx context.Context) error {
-		g, err = ac.userRepo.Save(ctx, g)
-		if err != nil {
-			return err
-		}
-		err := ac.domainRepo.SaveAuthorityForUserInDomain(ctx, g.ID, domain.DefaultAuthorityID, domain.ID)
-		return err
-	})
-	return g, err
+	g.Domains = []*Domain{domain}
+	return (&UserUsecase{ac.log, ac.ac, ac.tm, ac.userRepo, ac.domainRepo}).Create(ctx, g)
 }
