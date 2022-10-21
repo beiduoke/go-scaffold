@@ -107,6 +107,18 @@ func ErrorUserUpdateFail(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_USER_UPDATE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
+func IsUserDeleteFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_USER_DELETE_FAIL.String() && e.Code == 400
+}
+
+func ErrorUserDeleteFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_USER_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
 func IsDomainNotFound(err error) bool {
 	if err == nil {
 		return false

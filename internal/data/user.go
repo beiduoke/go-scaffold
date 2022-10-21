@@ -120,8 +120,12 @@ func (r *UserRepo) ListAll(ctx context.Context) ([]*biz.User, error) {
 	return nil, nil
 }
 
+func (r *UserRepo) Delete(ctx context.Context, g *biz.User) error {
+	return r.data.DB(ctx).Delete(r.toModel(g)).Error
+}
+
 func (r *UserRepo) ListPage(ctx context.Context, handler pagination.PaginationHandler) (users []*biz.User, total int64) {
-	db := r.data.DB(ctx).Model(&SysUser{})
+	db := r.data.DB(ctx).Model(&SysUser{}).Debug()
 	sysUsers := []*SysUser{}
 	// 查询条件
 	for _, v := range handler.GetConditions() {
@@ -131,7 +135,6 @@ func (r *UserRepo) ListPage(ctx context.Context, handler pagination.PaginationHa
 	for _, v := range handler.GetOrders() {
 		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: v.Column}, Desc: v.Desc})
 	}
-
 	if !handler.GetNopaging() {
 		db = db.Count(&total).Offset(handler.GetPageOffset())
 	}
@@ -145,7 +148,7 @@ func (r *UserRepo) ListPage(ctx context.Context, handler pagination.PaginationHa
 		users = append(users, r.toBiz(v))
 	}
 
-	if !handler.GetNopaging() {
+	if handler.GetNopaging() {
 		total = int64(len(users))
 	}
 

@@ -3,7 +3,6 @@ syntax = "proto3";
 package api.protobuf;
 
 import "google/protobuf/any.proto";
-import "protobuf/enum.proto";
 
 option go_package = "github.com/beiduoke/go-scaffold/api/protobuf";
 option java_multiple_files = true;
@@ -22,7 +21,7 @@ message PagingReq {
   map<string, string> query = 3;
 
   // 排序
-  map<string, Sort> order_by = 4;
+  map<string, bool> order_by = 4;
 
   // 是否不分页
   optional bool nopaging = 5;

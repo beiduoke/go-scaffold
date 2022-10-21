@@ -41,6 +41,7 @@ type UserRepo interface {
 	Update(context.Context, *User) (*User, error)
 	FindByID(context.Context, uint) (*User, error)
 	ListAll(context.Context) ([]*User, error)
+	Delete(context.Context, *User) error
 	// 自定义操作
 	FindByName(context.Context, string) (*User, error)
 	FindByMobile(context.Context, string) (*User, error)
@@ -158,10 +159,31 @@ func (uc *UserUsecase) Update(ctx context.Context, g *User) error {
 	return err
 }
 
-// List 用户列表
-func (uc *UserUsecase) List(ctx context.Context) ([]*User, int64) {
+// List 用户列表全部
+func (uc *UserUsecase) ListAll(ctx context.Context) ([]*User, int64) {
 	uc.log.WithContext(ctx).Infof("UserList")
 	return uc.repo.ListPage(ctx, pagination.NewPagination())
+}
+
+// List 用户列表分页
+func (uc *UserUsecase) ListPage(ctx context.Context, pageNum, pageSize int32, query map[string]string, order map[string]bool) ([]*User, int64) {
+	uc.log.WithContext(ctx).Infof("UserPage")
+	conditions := []pagination.Condition{}
+	for k, v := range query {
+		conditions = append(conditions, pagination.Condition{Query: k, Args: []interface{}{v}})
+	}
+	orders := []pagination.Order{}
+	for k, v := range order {
+		orders = append(orders, pagination.Order{Column: k, Desc: v})
+	}
+
+	page := pagination.NewPagination(
+		pagination.WithPageNum(pageNum),
+		pagination.WithPageSize(pageSize),
+		pagination.WithConditions(conditions...),
+		pagination.WithOrders(orders...),
+	)
+	return uc.repo.ListPage(ctx, page)
 }
 
 // GetID 获取用户ID
@@ -174,4 +196,10 @@ func (uc *UserUsecase) GetID(ctx context.Context, g *User) (*User, error) {
 func (uc *UserUsecase) GetMobile(ctx context.Context, g *User) (*User, error) {
 	uc.log.WithContext(ctx).Infof("GetUserMobile: %v", g)
 	return uc.repo.FindByMobile(ctx, g.Mobile)
+}
+
+// Delete 删除用户
+func (uc *UserUsecase) Delete(ctx context.Context, g *User) error {
+	uc.log.WithContext(ctx).Infof("DeleteUser: %v", g)
+	return uc.repo.Delete(ctx, g)
 }

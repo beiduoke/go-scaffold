@@ -151,10 +151,7 @@ func (r *DomainRepo) SaveAuthorityForUserInDomain(ctx context.Context, userID, a
 	if !success {
 		r.log.Warnf("域内为用户添加角色 %v", success)
 	}
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 func (r *DomainRepo) FindAuthoritiesForUserInDomain(ctx context.Context, userID, domainID uint) (authorities []*biz.Authority) {
@@ -174,7 +171,6 @@ func (r *DomainRepo) FindAuthoritiesForUserInDomain(ctx context.Context, userID,
 			UpdatedAt: v.UpdatedAt,
 		})
 	}
-
 	return
 }
 
@@ -192,6 +188,19 @@ func (r *DomainRepo) FindUsersForRoleInDomain(ctx context.Context, authorityID, 
 	for _, v := range sysUsers {
 		users = append(users, userRepo.toBiz(v))
 	}
-
 	return
+}
+
+// DeleteRoleForUserInDomain 在域内删除用户的角色
+func (r *DomainRepo) DeleteRoleForUserInDomain(ctx context.Context, userID, domainID uint) error {
+	roles := r.enforcer.GetRolesForUserInDomain(convert.UnitToString(userID), convert.UnitToString(domainID))
+	for _, role := range roles {
+		success, err := r.enforcer.DeleteRoleForUserInDomain(convert.UnitToString(userID), role, convert.UnitToString(domainID))
+		if err != nil {
+			r.log.Errorf("域内删除用户的角色失败 %v", success)
+		} else {
+			r.log.Infof("域内删除用户的角色 %v", success)
+		}
+	}
+	return nil
 }

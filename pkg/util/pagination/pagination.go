@@ -35,8 +35,8 @@ type PaginationHandler interface {
 type Pagination struct {
 	pageNum, pageSize int32
 	nopaging          bool
-	conditions        []*Condition
-	orders            []*Order
+	conditions        []Condition
+	orders            []Order
 }
 
 type Option func(*Pagination)
@@ -49,12 +49,18 @@ func WithNopaging() Option {
 
 func WithPageNum(num int32) Option {
 	return func(p *Pagination) {
+		if num == 0 {
+			num = PAGE_NUM
+		}
 		p.pageNum = num
 	}
 }
 
 func WithPageSize(size int32) Option {
 	return func(p *Pagination) {
+		if size == 0 {
+			size = PAGE_SIZE
+		}
 		p.pageSize = size
 	}
 }
@@ -67,9 +73,7 @@ func WithCondition(query string, args ...interface{}) Option {
 
 func WithConditions(condition ...Condition) Option {
 	return func(p *Pagination) {
-		for _, v := range condition {
-			p.conditions = append(p.conditions, &v)
-		}
+		p.conditions = append(p.conditions, condition...)
 	}
 }
 
@@ -81,9 +85,7 @@ func WithOrder(column string, desc bool) Option {
 
 func WithOrders(order ...Order) Option {
 	return func(p *Pagination) {
-		for _, v := range order {
-			p.orders = append(p.orders, &v)
-		}
+		p.orders = append(p.orders, order...)
 	}
 }
 
@@ -107,8 +109,8 @@ func (p *Pagination) Reset() {
 	p.nopaging = false
 	p.pageNum = PAGE_NUM
 	p.pageSize = PAGE_SIZE
-	p.conditions = []*Condition{}
-	p.orders = []*Order{}
+	p.conditions = []Condition{}
+	p.orders = []Order{}
 }
 
 func (p *Pagination) GetPageOffset() int {
@@ -134,43 +136,29 @@ func (p *Pagination) GetNopaging() bool {
 }
 
 func (p *Pagination) GetConditions() []Condition {
-	conditions := make([]Condition, 0, len(p.conditions))
-	for _, v := range p.conditions {
-		conditions = append(conditions, *v)
-	}
-	return conditions
+	return p.conditions
 }
 
 func (p *Pagination) GetOrders() []Order {
-	orders := make([]Order, 0, len(p.orders))
-	for _, v := range p.orders {
-		orders = append(orders, *v)
-	}
-	return orders
+	return p.orders
 }
 
 func (p *Pagination) SetCondition(condition Condition) {
-	isAdd := true
 	for _, v := range p.conditions {
 		if v.Query == condition.Query {
-			isAdd = false
 			v.Args = condition.Args
+			return
 		}
 	}
-	if isAdd {
-		p.conditions = append(p.conditions, &condition)
-	}
+	p.conditions = append(p.conditions, condition)
 }
 
 func (p *Pagination) SetOrder(order Order) {
-	isAdd := true
 	for _, v := range p.orders {
 		if v.Column == order.Column {
-			isAdd = false
 			v.Desc = order.Desc
+			return
 		}
 	}
-	if isAdd {
-		p.orders = append(p.orders, &order)
-	}
+	p.orders = append(p.orders, order)
 }

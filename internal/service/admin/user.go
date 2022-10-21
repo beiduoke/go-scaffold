@@ -2,6 +2,7 @@ package admin
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	v1 "github.com/beiduoke/go-scaffold/api/admin/v1"
@@ -54,7 +55,8 @@ func (s *AdminService) GetUserMenu(ctx context.Context, in *emptypb.Empty) (*v1.
 
 // ListUser 列表用户
 func (s *AdminService) ListUser(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
-	results, _ := s.userCase.List(ctx)
+	fmt.Printf("排序传值：%#v", in.GetOrderBy())
+	results, total := s.userCase.ListPage(ctx, in.GetPage(), in.GetPageSize(), in.GetQuery(), in.GetOrderBy())
 	items := make([]*anypb.Any, 0, len(results))
 	for _, v := range results {
 		user := &v1.User{
@@ -77,7 +79,7 @@ func (s *AdminService) ListUser(ctx context.Context, in *protobuf.PagingReq) (*p
 		items = append(items, item)
 	}
 	return &protobuf.PagingReply{
-		Total: 0,
+		Total: int32(total),
 		Items: items,
 	}, nil
 }
@@ -184,6 +186,10 @@ func (s *AdminService) GetUser(ctx context.Context, in *v1.GetUserReq) (*v1.User
 
 // DeleteUser 删除用户
 func (s *AdminService) DeleteUser(ctx context.Context, in *v1.DeleteUserReq) (*v1.DeleteUserReply, error) {
+	if err := s.userCase.Delete(ctx, &biz.User{ID: uint(in.GetId())}); err != nil {
+		return nil, v1.ErrorUserDeleteFail("用户删除失败：%v", err)
+	}
+
 	return &v1.DeleteUserReply{
 		Success: true,
 	}, nil

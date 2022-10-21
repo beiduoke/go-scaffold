@@ -346,8 +346,9 @@ message User {
   api.protobuf.UserState state = 10;
   google.protobuf.Timestamp created_at = 11;
   google.protobuf.Timestamp updated_at = 12;
-  string authoritys = 13;
+  repeated Authority authoritys = 13;
   string avatar = 14;
+  repeated Domain domains = 15;
 }
 
 // 回应 - 列表用户 - 未使用

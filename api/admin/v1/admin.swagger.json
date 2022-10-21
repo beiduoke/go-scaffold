@@ -1872,10 +1872,19 @@
           "format": "date-time"
         },
         "authoritys": {
-          "type": "string"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Authority"
+          }
         },
         "avatar": {
           "type": "string"
+        },
+        "domains": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Domain"
+          }
         }
       },
       "title": "用户模块"
