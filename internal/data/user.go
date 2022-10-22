@@ -26,7 +26,6 @@ func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
 	return &UserRepo{
 		data:      data,
 		log:       log.NewHelper(logger),
-		domain:    DomainRepo{},
 		authority: AuthorityRepo{},
 	}
 }

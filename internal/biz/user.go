@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"sync"
 	"time"
 
 	"github.com/pkg/errors"
@@ -201,5 +202,19 @@ func (uc *UserUsecase) GetMobile(ctx context.Context, g *User) (*User, error) {
 // Delete 删除用户
 func (uc *UserUsecase) Delete(ctx context.Context, g *User) error {
 	uc.log.WithContext(ctx).Infof("DeleteUser: %v", g)
-	return uc.repo.Delete(ctx, g)
+	return uc.tm.InTx(ctx, func(ctx context.Context) error {
+		var wg sync.WaitGroup
+		if err := uc.repo.Delete(ctx, g); err != nil {
+			return err
+		}
+		wg.Add(len(g.Domains))
+		for _, v := range g.Domains {
+			if err := uc.domainRepo.DeleteRoleForUserInDomain(ctx, g.ID, v.ID); err != nil {
+				uc.log.Errorf("删除删除用户的角色失败：%v", err)
+			}
+			wg.Done()
+		}
+		wg.Wait()
+		return nil
+	})
 }

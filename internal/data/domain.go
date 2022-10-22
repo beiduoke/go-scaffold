@@ -191,7 +191,7 @@ func (r *DomainRepo) FindUsersForRoleInDomain(ctx context.Context, authorityID, 
 	return
 }
 
-// DeleteRoleForUserInDomain 在域内删除用户的角色
+// DeleteRoleForUserInDomain 域内删除用户的角色
 func (r *DomainRepo) DeleteRoleForUserInDomain(ctx context.Context, userID, domainID uint) error {
 	roles := r.enforcer.GetRolesForUserInDomain(convert.UnitToString(userID), convert.UnitToString(domainID))
 	for _, role := range roles {

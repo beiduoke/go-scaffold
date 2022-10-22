@@ -44,6 +44,8 @@ type DomainRepo interface {
 	FindAuthoritiesForUserInDomain(context.Context, uint /* userID */, uint /* domainID */) []*Authority
 	// FindAuthoritiesForUserInDomain 获取具有域内角色的用户
 	FindUsersForRoleInDomain(context.Context, uint /* authorityID */, uint /* domainID */) []*User
+	// DeleteRoleForUserInDomain 域内删除用户的角色域内删除用户的角色
+	DeleteRoleForUserInDomain(context.Context, uint /* userID */, uint /* domainID */) error
 }
 
 // DomainUsecase is a Domain usecase.
