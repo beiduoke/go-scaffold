@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
+	stdcasbin "github.com/casbin/casbin/v2"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
@@ -38,14 +39,15 @@ type DomainRepo interface {
 	FindInDomainID(context.Context, ...string) ([]*Domain, error)
 
 	// 领域权限
+	stdcasbin.IEnforcer
 	// SaveAuthorityUser 添加领域角色权限
-	SaveAuthorityForUserInDomain(context.Context, uint /* userID */, uint /* authorityID */, uint /* domainID */) error
-	// FindAuthorityForUserInDomain 获取领域用户的角色
-	FindAuthoritiesForUserInDomain(context.Context, uint /* userID */, uint /* domainID */) []*Authority
-	// FindAuthoritiesForUserInDomain 获取具有域内角色的用户
-	FindUsersForRoleInDomain(context.Context, uint /* authorityID */, uint /* domainID */) []*User
+	// SaveAuthorityForUserInDomain(context.Context, uint /* userID */, uint /* authorityID */, uint /* domainID */) error
+	// GetAuthorityForUserInDomain 获取领域用户的角色
+	// GetAuthoritiesForUserInDomain(context.Context, uint /* userID */, uint /* domainID */) []*Authority
+	// GetAuthoritiesForUserInDomain 获取具有域内角色的用户
+	// GetUsersForRoleInDomain(context.Context, uint /* authorityID */, uint /* domainID */) []*User
 	// DeleteRoleForUserInDomain 域内删除用户的角色域内删除用户的角色
-	DeleteRoleForUserInDomain(context.Context, uint /* userID */, uint /* domainID */) error
+	// DeleteRoleForUserInDomain(context.Context, uint /* userID */, uint /* domainID */) error
 }
 
 // DomainUsecase is a Domain usecase.
