@@ -1,8 +1,6 @@
 package data
 
 import (
-	"context"
-
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	stdcasbin "github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
@@ -11,6 +9,7 @@ import (
 	rediswatcher "github.com/casbin/redis-watcher/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-redis/redis/v8"
+	"gorm.io/gorm"
 )
 
 func NewAuthModel(ac *conf.Auth, logger log.Logger) model.Model {
@@ -22,10 +21,10 @@ func NewAuthModel(ac *conf.Auth, logger log.Logger) model.Model {
 	return m
 }
 
-func NewAuthAdapter(d *Data, ac *conf.Auth, logger log.Logger) (adapter persist.Adapter) {
+func NewAuthAdapter(db *gorm.DB, ac *conf.Auth, logger log.Logger) (adapter persist.Adapter) {
 	log := log.NewHelper(log.With(logger, "module", "data/authAdapter"))
 	// gormadapter "github.com/casbin/gorm-adapter/v3"
-	adapter, err := gormadapter.NewAdapterByDBUseTableName(d.DB(context.Background()), "sys", "casbin_rules")
+	adapter, err := gormadapter.NewAdapterByDBUseTableName(db, "sys", "casbin_rules")
 	log.Info("initialization gorm adapter ")
 	if err != nil {
 		log.Fatalf("failed gorm casbin adapters connection %v", err)

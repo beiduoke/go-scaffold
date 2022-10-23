@@ -6,23 +6,20 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
-	stdcasbin "github.com/casbin/casbin/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"gorm.io/gorm/clause"
 )
 
 type DomainRepo struct {
-	data     *Data
-	log      *log.Helper
-	enforcer stdcasbin.IEnforcer
+	data *Data
+	log  *log.Helper
 }
 
 // NewDomainRepo .
-func NewDomainRepo(data *Data, enforcer stdcasbin.IEnforcer, logger log.Logger) biz.DomainRepo {
+func NewDomainRepo(data *Data, logger log.Logger) biz.DomainRepo {
 	return &DomainRepo{
-		data:     data,
-		log:      log.NewHelper(logger),
-		enforcer: enforcer,
+		data: data,
+		log:  log.NewHelper(logger),
 	}
 }
 
@@ -147,7 +144,7 @@ func (r *DomainRepo) FindInDomainID(ctx context.Context, domainIds ...string) ([
 }
 
 func (r *DomainRepo) SaveAuthorityForUserInDomain(ctx context.Context, userID, authorityID, domainID uint) error {
-	success, err := r.enforcer.AddRoleForUserInDomain(convert.UnitToString(userID), convert.UnitToString(authorityID), convert.UnitToString(domainID))
+	success, err := r.data.enforcer.AddRoleForUserInDomain(convert.UnitToString(userID), convert.UnitToString(authorityID), convert.UnitToString(domainID))
 	if !success {
 		r.log.Warnf("域内为用户添加角色 %v", success)
 	}
@@ -155,7 +152,7 @@ func (r *DomainRepo) SaveAuthorityForUserInDomain(ctx context.Context, userID, a
 }
 
 func (r *DomainRepo) GetRolesForUserInDomain(ctx context.Context, userID, domainID uint) (authorities []*biz.Authority) {
-	roles := r.enforcer.GetRolesForUserInDomain(convert.UnitToString(userID), convert.UnitToString(domainID))
+	roles := r.data.enforcer.GetRolesForUserInDomain(convert.UnitToString(userID), convert.UnitToString(domainID))
 	authorityIDs := []uint{}
 	for _, v := range roles {
 		authorityIDs = append(authorityIDs, convert.StringToUint(v))
@@ -176,7 +173,7 @@ func (r *DomainRepo) GetRolesForUserInDomain(ctx context.Context, userID, domain
 
 // FindUsersForRoleInDomain 获取具有域内角色的用户
 func (r *DomainRepo) GetUsersForRoleInDomain(ctx context.Context, authorityID, domainID uint) (users []*biz.User) {
-	roles := r.enforcer.GetUsersForRoleInDomain(convert.UnitToString(authorityID), convert.UnitToString(domainID))
+	roles := r.data.enforcer.GetUsersForRoleInDomain(convert.UnitToString(authorityID), convert.UnitToString(domainID))
 	userIDs := []uint{}
 	for _, v := range roles {
 		userIDs = append(userIDs, convert.StringToUint(v))
@@ -193,9 +190,9 @@ func (r *DomainRepo) GetUsersForRoleInDomain(ctx context.Context, authorityID, d
 
 // DeleteRoleForUserInDomain 域内删除用户的角色
 func (r *DomainRepo) DeleteRoleForUserInDomain(ctx context.Context, userID, domainID uint) error {
-	roles := r.enforcer.GetRolesForUserInDomain(convert.UnitToString(userID), convert.UnitToString(domainID))
+	roles := r.data.enforcer.GetRolesForUserInDomain(convert.UnitToString(userID), convert.UnitToString(domainID))
 	for _, role := range roles {
-		success, err := r.enforcer.DeleteRoleForUserInDomain(convert.UnitToString(userID), role, convert.UnitToString(domainID))
+		success, err := r.data.enforcer.DeleteRoleForUserInDomain(convert.UnitToString(userID), role, convert.UnitToString(domainID))
 		if err != nil {
 			r.log.Errorf("域内删除用户的角色失败 %v", success)
 		} else {
@@ -207,14 +204,5 @@ func (r *DomainRepo) DeleteRoleForUserInDomain(ctx context.Context, userID, doma
 
 // DeleteRoleForUserInDomain 域内删除用户的角色
 func (r *DomainRepo) GetDomains(ctx context.Context, userID uint) error {
-	roles := r.enforcer.GetPermissionsForUser(convert.UnitToString(userID), convert.UnitToString(domainID))
-	for _, role := range roles {
-		success, err := r.enforcer.DeleteRoleForUserInDomain(convert.UnitToString(userID), role, convert.UnitToString(domainID))
-		if err != nil {
-			r.log.Errorf("域内删除用户的角色失败 %v", success)
-		} else {
-			r.log.Infof("域内删除用户的角色 %v", success)
-		}
-	}
 	return nil
 }

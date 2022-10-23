@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"fmt"
 	"sync"
 	"time"
 
@@ -9,8 +10,8 @@ import (
 
 	pb "github.com/beiduoke/go-scaffold/api/protobuf"
 	"github.com/beiduoke/go-scaffold/internal/conf"
+	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/imdario/mergo"
 	"github.com/zzsds/go-tools/pkg/password"
 )
@@ -59,16 +60,13 @@ type UserRepo interface {
 
 // UserUsecase is a User usecase.
 type UserUsecase struct {
-	log        *log.Helper
-	ac         *conf.Auth
-	tm         Transaction
-	repo       UserRepo
-	domainRepo DomainRepo
+	*Biz
+	ac *conf.Auth
 }
 
 // NewUserUsecase new a User usecase.
-func NewUserUsecase(ac *conf.Auth, repo UserRepo, tm Transaction, logger log.Logger, domainRepo DomainRepo) *UserUsecase {
-	return &UserUsecase{ac: ac, repo: repo, tm: tm, log: log.NewHelper(logger), domainRepo: domainRepo}
+func NewUserUsecase(biz *Biz, ac *conf.Auth) *UserUsecase {
+	return &UserUsecase{ac: ac, Biz: biz}
 }
 
 // Create 创建用户
@@ -79,7 +77,7 @@ func (uc *UserUsecase) Create(ctx context.Context, g *User) (*User, error) {
 	if len(domains) <= 0 {
 		return nil, errors.New("领域未指定")
 	}
-	user, _ := uc.repo.FindByName(ctx, g.Name)
+	user, _ := uc.userRepo.FindByName(ctx, g.Name)
 	if user != nil && user.Name != "" {
 		return nil, errors.New("用户名已存在")
 	}
@@ -97,12 +95,12 @@ func (uc *UserUsecase) Create(ctx context.Context, g *User) (*User, error) {
 	}
 
 	err := uc.tm.InTx(ctx, func(ctx context.Context) error {
-		g, err := uc.repo.Save(ctx, g)
+		g, err := uc.userRepo.Save(ctx, g)
 		if err != nil {
 			return err
 		}
 		for _, domain := range domains {
-			if err := uc.domainRepo.SaveAuthorityForUserInDomain(ctx, g.ID, domain.DefaultAuthorityID, domain.ID); err != nil {
+			if _, err := uc.enforcer.AddRoleForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(domain.DefaultAuthorityID), convert.UnitToString(domain.ID)); err != nil {
 				uc.log.Errorf("领域权限绑定失败 %v", err)
 			}
 		}
@@ -115,27 +113,27 @@ func (uc *UserUsecase) Create(ctx context.Context, g *User) (*User, error) {
 func (uc *UserUsecase) Update(ctx context.Context, g *User) error {
 	uc.log.WithContext(ctx).Infof("UpdateUser: %v", g)
 
-	user, _ := uc.repo.FindByID(ctx, g.ID)
+	user, _ := uc.userRepo.FindByID(ctx, g.ID)
 	if user == nil {
 		return errors.New("用户未注册")
 	}
 
 	if user.Name != g.Name && g.Name != "" {
-		name, _ := uc.repo.FindByName(ctx, g.Name)
+		name, _ := uc.userRepo.FindByName(ctx, g.Name)
 		if name != nil {
 			return errors.New("用户名已存在")
 		}
 	}
 
 	if user.Mobile != g.Mobile {
-		mobile, _ := uc.repo.FindByMobile(ctx, g.Mobile)
+		mobile, _ := uc.userRepo.FindByMobile(ctx, g.Mobile)
 		if mobile != nil {
 			return errors.New("手机号已存在")
 		}
 	}
 
 	if user.Email != g.Email {
-		mobile, _ := uc.repo.FindByEmail(ctx, g.Email)
+		mobile, _ := uc.userRepo.FindByEmail(ctx, g.Email)
 		if mobile != nil {
 			return errors.New("邮箱已存在")
 		}
@@ -156,14 +154,14 @@ func (uc *UserUsecase) Update(ctx context.Context, g *User) error {
 	if err := mergo.Merge(user, *g, mergo.WithOverride); err != nil {
 		return errors.Errorf("数据合并失败：%v", err)
 	}
-	_, err := uc.repo.Update(ctx, user)
+	_, err := uc.userRepo.Update(ctx, user)
 	return err
 }
 
 // List 用户列表全部
 func (uc *UserUsecase) ListAll(ctx context.Context) ([]*User, int64) {
 	uc.log.WithContext(ctx).Infof("UserList")
-	return uc.repo.ListPage(ctx, pagination.NewPagination())
+	return uc.userRepo.ListPage(ctx, pagination.NewPagination())
 }
 
 // List 用户列表分页
@@ -184,19 +182,19 @@ func (uc *UserUsecase) ListPage(ctx context.Context, pageNum, pageSize int32, qu
 		pagination.WithConditions(conditions...),
 		pagination.WithOrders(orders...),
 	)
-	return uc.repo.ListPage(ctx, page)
+	return uc.userRepo.ListPage(ctx, page)
 }
 
 // GetID 获取用户ID
 func (uc *UserUsecase) GetID(ctx context.Context, g *User) (*User, error) {
 	uc.log.WithContext(ctx).Infof("GetUserID: %v", g)
-	return uc.repo.FindByID(ctx, g.ID)
+	return uc.userRepo.FindByID(ctx, g.ID)
 }
 
 // GetMobile 获取用户手机
 func (uc *UserUsecase) GetMobile(ctx context.Context, g *User) (*User, error) {
 	uc.log.WithContext(ctx).Infof("GetUserMobile: %v", g)
-	return uc.repo.FindByMobile(ctx, g.Mobile)
+	return uc.userRepo.FindByMobile(ctx, g.Mobile)
 }
 
 // Delete 删除用户
@@ -204,14 +202,17 @@ func (uc *UserUsecase) Delete(ctx context.Context, g *User) error {
 	uc.log.WithContext(ctx).Infof("DeleteUser: %v", g)
 	return uc.tm.InTx(ctx, func(ctx context.Context) error {
 		var wg sync.WaitGroup
-		if err := uc.repo.Delete(ctx, g); err != nil {
+		if err := uc.userRepo.Delete(ctx, g); err != nil {
 			return err
 		}
 		wg.Add(len(g.Domains))
 		for _, v := range g.Domains {
-			if err := uc.domainRepo.DeleteRoleForUserInDomain(ctx, g.ID, v.ID); err != nil {
-				uc.log.Errorf("删除删除用户的角色失败：%v", err)
-			}
+			fmt.Println(v)
+			// roles := uc.enforcer.GetRolesForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(v.DomainID))
+
+			// if _, err := uc.enforcer.DeleteRoleForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(v.ID)); err != nil {
+			// 	uc.log.Errorf("删除删除用户的角色失败：%v", err)
+			// }
 			wg.Done()
 		}
 		wg.Wait()

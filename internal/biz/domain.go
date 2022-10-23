@@ -5,8 +5,6 @@ import (
 	"time"
 
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
-	stdcasbin "github.com/casbin/casbin/v2"
-	"github.com/go-kratos/kratos/v2/log"
 )
 
 type DomainAuthorityUser struct {
@@ -39,7 +37,7 @@ type DomainRepo interface {
 	FindInDomainID(context.Context, ...string) ([]*Domain, error)
 
 	// 领域权限
-	stdcasbin.IEnforcer
+	// stdcasbin.IEnforcer
 	// SaveAuthorityUser 添加领域角色权限
 	// SaveAuthorityForUserInDomain(context.Context, uint /* userID */, uint /* authorityID */, uint /* domainID */) error
 	// GetAuthorityForUserInDomain 获取领域用户的角色
@@ -52,29 +50,27 @@ type DomainRepo interface {
 
 // DomainUsecase is a Domain usecase.
 type DomainUsecase struct {
-	repo DomainRepo
-	log  *log.Helper
-	tm   Transaction
+	*Biz
 }
 
 // NewDomainUsecase new a Domain usecase.
-func NewDomainUsecase(repo DomainRepo, tm Transaction, logger log.Logger) *DomainUsecase {
-	return &DomainUsecase{repo: repo, tm: tm, log: log.NewHelper(logger)}
+func NewDomainUsecase(biz *Biz) *DomainUsecase {
+	return &DomainUsecase{biz}
 }
 
 // Create creates a Domain, and returns the new Domain.
 func (uc *DomainUsecase) Create(ctx context.Context, g *Domain) (*Domain, error) {
 	uc.log.WithContext(ctx).Infof("Create: %v", g.Name)
-	return uc.repo.Save(ctx, g)
+	return uc.domainRepo.Save(ctx, g)
 }
 
 // GetDomainID 获取指定领域ID
 func (uc *DomainUsecase) GetByDomainID(ctx context.Context, domainId string) (*Domain, error) {
-	return uc.repo.FindByDomainID(ctx, domainId)
+	return uc.domainRepo.FindByDomainID(ctx, domainId)
 }
 
 // GetDomainInID 获取指定领域ID集合
 func (uc *DomainUsecase) ListByIDs(ctx context.Context, id ...uint) (domains []*Domain, err error) {
-	domains, _ = uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
+	domains, _ = uc.domainRepo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
 	return
 }

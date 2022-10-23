@@ -10,7 +10,7 @@ import (
 
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	myAuthz "github.com/beiduoke/go-scaffold/internal/pkg/authz"
-	"github.com/go-kratos/kratos/v2/log"
+	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/zzsds/go-tools/pkg/password"
 )
 
@@ -31,16 +31,13 @@ type AuthClaims struct {
 
 // AuthUsecase is a User usecase.
 type AuthUsecase struct {
-	ac         *conf.Auth
-	log        *log.Helper
-	tm         Transaction
-	userRepo   UserRepo
-	domainRepo DomainRepo
+	*Biz
+	ac *conf.Auth
 }
 
 // NewAuthUsecase new a User usecase.
-func NewAuthUsecase(ac *conf.Auth, userRepo UserRepo, tm Transaction, logger log.Logger, domainRepo DomainRepo) *AuthUsecase {
-	return &AuthUsecase{ac: ac, userRepo: userRepo, tm: tm, log: log.NewHelper(logger), domainRepo: domainRepo}
+func NewAuthUsecase(biz *Biz, ac *conf.Auth) *AuthUsecase {
+	return &AuthUsecase{ac: ac, Biz: biz}
 }
 
 func (ac *AuthUsecase) GetToken(claims *AuthClaims) error {
@@ -79,8 +76,9 @@ func (ac *AuthUsecase) LoginNamePassword(ctx context.Context, domainId string, g
 	if err != nil {
 		return nil, err
 	}
-	authorities := ac.domainRepo.FindAuthoritiesForUserInDomain(ctx, u.ID, domain.ID)
-	if len(authorities) == 0 || err != nil {
+
+	authorities := ac.enforcer.GetRolesForUserInDomain(convert.UnitToString(u.ID), convert.UnitToString(domain.ID))
+	if len(authorities) == 0 {
 		return nil, errors.New("权限未配置")
 	}
 
@@ -98,7 +96,7 @@ func (ac *AuthUsecase) LoginNamePassword(ctx context.Context, domainId string, g
 	}
 	// 组装权限
 	for _, v := range authorities {
-		authClaims.Authorities = append(authClaims.Authorities, v.ID)
+		authClaims.Authorities = append(authClaims.Authorities, convert.StringToUint(v))
 	}
 	if err := ac.GetToken(authClaims); err != nil {
 		return nil, err
@@ -125,5 +123,5 @@ func (ac *AuthUsecase) RegisterNamePassword(ctx context.Context, domainId string
 		return nil, errors.New("领域查询失败")
 	}
 	g.Domains = []*Domain{domain}
-	return (&UserUsecase{ac.log, ac.ac, ac.tm, ac.userRepo, ac.domainRepo}).Create(ctx, g)
+	return (&UserUsecase{ac.Biz, ac.ac}).Create(ctx, g)
 }

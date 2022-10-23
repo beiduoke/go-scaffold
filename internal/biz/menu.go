@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
-	"github.com/go-kratos/kratos/v2/log"
 )
 
 // Menu is a Menu model.
@@ -38,14 +37,13 @@ type MenuRepo interface {
 
 // MenuUsecase is a Menu usecase.
 type MenuUsecase struct {
+	*Biz
 	repo MenuRepo
-	log  *log.Helper
-	tm   Transaction
 }
 
 // NewMenuUsecase new a Menu usecase.
-func NewMenuUsecase(repo MenuRepo, tm Transaction, logger log.Logger) *MenuUsecase {
-	return &MenuUsecase{repo: repo, tm: tm, log: log.NewHelper(logger)}
+func NewMenuUsecase(biz *Biz, repo MenuRepo) *MenuUsecase {
+	return &MenuUsecase{repo: repo, Biz: biz}
 }
 
 // Create creates a Menu, and returns the new Menu.

@@ -6,6 +6,7 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	"github.com/bwmarrin/snowflake"
+	"github.com/casbin/casbin/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-redis/redis/v8"
 	"github.com/google/wire"
@@ -62,16 +63,17 @@ func NewSnowflake(logger log.Logger) *snowflake.Node {
 
 // Data .
 type Data struct {
-	log *log.Helper
-	db  *gorm.DB
-	rdb *redis.Client
-	sf  *snowflake.Node
+	log      *log.Helper
+	db       *gorm.DB
+	rdb      *redis.Client
+	sf       *snowflake.Node
+	enforcer casbin.IEnforcer
 }
 
 // NewData .
-func NewData(db *gorm.DB, rdb *redis.Client, sf *snowflake.Node, logger log.Logger) (*Data, func(), error) {
+func NewData(db *gorm.DB, rdb *redis.Client, enforcer casbin.IEnforcer, sf *snowflake.Node, logger log.Logger) (*Data, func(), error) {
 	l := log.NewHelper(log.With(logger, "module", "data/initialize"))
-	d := &Data{db: db, rdb: rdb, log: l, sf: sf}
+	d := &Data{db: db, rdb: rdb, log: l, sf: sf, enforcer: enforcer}
 	return d, func() {
 		l.Info("closing db")
 		sql, err := db.DB()
