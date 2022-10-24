@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/go-kratos/kratos/v2/log"
 	"github.com/pkg/errors"
 
 	"github.com/beiduoke/go-scaffold/internal/conf"
@@ -31,13 +32,14 @@ type AuthClaims struct {
 
 // AuthUsecase is a User usecase.
 type AuthUsecase struct {
-	*Biz
-	ac *conf.Auth
+	biz *Biz
+	ac  *conf.Auth
+	log *log.Helper
 }
 
 // NewAuthUsecase new a User usecase.
-func NewAuthUsecase(biz *Biz, ac *conf.Auth) *AuthUsecase {
-	return &AuthUsecase{ac: ac, Biz: biz}
+func NewAuthUsecase(logger log.Logger, biz *Biz, ac *conf.Auth) *AuthUsecase {
+	return &AuthUsecase{log: log.NewHelper(logger), ac: ac, biz: biz}
 }
 
 func (ac *AuthUsecase) GetToken(claims *AuthClaims) error {
@@ -64,11 +66,11 @@ func (ac *AuthUsecase) GetToken(claims *AuthClaims) error {
 
 // LoginNamePassword 登录-用户密码
 func (ac *AuthUsecase) LoginNamePassword(ctx context.Context, domainId string, g *User) (*AuthClaims, error) {
-	domain, err := ac.domainRepo.FindByDomainID(ctx, domainId)
+	domain, err := ac.biz.domainRepo.FindByDomainID(ctx, domainId)
 	if err != nil {
 		return nil, errors.New("domain查询失败")
 	}
-	u, err := ac.userRepo.FindByName(ctx, g.Name)
+	u, err := ac.biz.userRepo.FindByName(ctx, g.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +79,7 @@ func (ac *AuthUsecase) LoginNamePassword(ctx context.Context, domainId string, g
 		return nil, err
 	}
 
-	authorities := ac.enforcer.GetRolesForUserInDomain(convert.UnitToString(u.ID), convert.UnitToString(domain.ID))
+	authorities := ac.biz.enforcer.GetRolesForUserInDomain(convert.UnitToString(u.ID), convert.UnitToString(domain.ID))
 	if len(authorities) == 0 {
 		return nil, errors.New("权限未配置")
 	}
@@ -102,7 +104,7 @@ func (ac *AuthUsecase) LoginNamePassword(ctx context.Context, domainId string, g
 		return nil, err
 	}
 
-	if err := ac.userRepo.SetTokenCache(ctx, *authClaims); err != nil {
+	if err := ac.biz.userRepo.SetTokenCache(ctx, *authClaims); err != nil {
 		ac.log.Errorf("token 缓存失败 %v", err)
 	}
 
@@ -112,16 +114,16 @@ func (ac *AuthUsecase) LoginNamePassword(ctx context.Context, domainId string, g
 // LoginMobileSms 登录-手机验证码
 func (ac *AuthUsecase) LoginMobileSms(ctx context.Context, domainId string, g *User) (*User, error) {
 	ac.log.WithContext(ctx).Infof("mobileSmsLogin: %v", g)
-	return ac.userRepo.FindByMobile(ctx, g.Mobile)
+	return ac.biz.userRepo.FindByMobile(ctx, g.Mobile)
 }
 
 // RegisterNamePassword 注册-用户密码
 func (ac *AuthUsecase) RegisterNamePassword(ctx context.Context, domainId string, g *User) (*User, error) {
 	ac.log.WithContext(ctx).Infof("NamePasswordRegister: %v", g.Name)
-	domain, err := ac.domainRepo.FindByDomainID(ctx, domainId)
+	domain, err := ac.biz.domainRepo.FindByDomainID(ctx, domainId)
 	if err != nil {
 		return nil, errors.New("领域查询失败")
 	}
 	g.Domains = []*Domain{domain}
-	return (&UserUsecase{ac.Biz, ac.ac}).Create(ctx, g)
+	return (&UserUsecase{ac.biz, ac.log, ac.ac}).Create(ctx, g)
 }

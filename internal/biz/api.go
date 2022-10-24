@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
+	"github.com/go-kratos/kratos/v2/log"
 )
 
 // Api is a Api model.
@@ -31,13 +32,14 @@ type ApiRepo interface {
 
 // ApiUsecase is a Api usecase.
 type ApiUsecase struct {
-	*Biz
+	biz  *Biz
+	log  *log.Helper
 	repo ApiRepo
 }
 
 // NewApiUsecase new a Api usecase.
-func NewApiUsecase(biz *Biz, repo ApiRepo) *ApiUsecase {
-	return &ApiUsecase{repo: repo, Biz: biz}
+func NewApiUsecase(logger log.Logger, biz *Biz, repo ApiRepo) *ApiUsecase {
+	return &ApiUsecase{log: log.NewHelper(logger), repo: repo, biz: biz}
 }
 
 // Create creates a Api, and returns the new Api.

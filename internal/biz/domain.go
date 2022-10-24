@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
+	"github.com/go-kratos/kratos/v2/log"
 )
 
 type DomainAuthorityUser struct {
@@ -50,27 +51,28 @@ type DomainRepo interface {
 
 // DomainUsecase is a Domain usecase.
 type DomainUsecase struct {
-	*Biz
+	biz *Biz
+	log *log.Helper
 }
 
 // NewDomainUsecase new a Domain usecase.
-func NewDomainUsecase(biz *Biz) *DomainUsecase {
-	return &DomainUsecase{biz}
+func NewDomainUsecase(logger log.Logger, biz *Biz) *DomainUsecase {
+	return &DomainUsecase{biz: biz, log: log.NewHelper(logger)}
 }
 
 // Create creates a Domain, and returns the new Domain.
 func (uc *DomainUsecase) Create(ctx context.Context, g *Domain) (*Domain, error) {
 	uc.log.WithContext(ctx).Infof("Create: %v", g.Name)
-	return uc.domainRepo.Save(ctx, g)
+	return uc.biz.domainRepo.Save(ctx, g)
 }
 
 // GetDomainID 获取指定领域ID
 func (uc *DomainUsecase) GetByDomainID(ctx context.Context, domainId string) (*Domain, error) {
-	return uc.domainRepo.FindByDomainID(ctx, domainId)
+	return uc.biz.domainRepo.FindByDomainID(ctx, domainId)
 }
 
 // GetDomainInID 获取指定领域ID集合
 func (uc *DomainUsecase) ListByIDs(ctx context.Context, id ...uint) (domains []*Domain, err error) {
-	domains, _ = uc.domainRepo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
+	domains, _ = uc.biz.domainRepo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
 	return
 }

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
+	"github.com/go-kratos/kratos/v2/log"
 )
 
 // Authority is a Authority model.
@@ -27,13 +28,14 @@ type AuthorityRepo interface {
 
 // AuthorityUsecase is a Authority usecase.
 type AuthorityUsecase struct {
-	*Biz
+	biz  *Biz
+	log  *log.Helper
 	repo AuthorityRepo
 }
 
 // NewAuthorityUsecase new a Authority usecase.
-func NewAuthorityUsecase(biz *Biz, repo AuthorityRepo) *AuthorityUsecase {
-	return &AuthorityUsecase{repo: repo, Biz: biz}
+func NewAuthorityUsecase(logger log.Logger, biz *Biz, repo AuthorityRepo) *AuthorityUsecase {
+	return &AuthorityUsecase{log: log.NewHelper(logger), repo: repo, biz: biz}
 }
 
 // Create creates a Authority, and returns the new Authority.
