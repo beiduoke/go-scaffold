@@ -2,10 +2,9 @@ package biz
 
 import (
 	"context"
-	"fmt"
-	"sync"
 	"time"
 
+	"github.com/casbin/casbin/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/pkg/errors"
 
@@ -97,7 +96,7 @@ func (uc *UserUsecase) Create(ctx context.Context, g *User) (*User, error) {
 	}
 
 	err := uc.biz.tm.InTx(ctx, func(ctx context.Context) error {
-		g, err := uc.biz.userRepo.Save(ctx, g)
+		user, err := uc.biz.userRepo.Save(ctx, g)
 		if err != nil {
 			return err
 		}
@@ -106,9 +105,46 @@ func (uc *UserUsecase) Create(ctx context.Context, g *User) (*User, error) {
 				uc.log.Errorf("领域权限绑定失败 %v", err)
 			}
 		}
+		g = user
 		return nil
 	})
 	return g, err
+}
+
+// HandleDomain 绑定领域
+func (uc *UserUsecase) HandleDomain(ctx context.Context, g *User) error {
+	uc.log.WithContext(ctx).Infof("HandleDomain: %v", g)
+	domains := g.Domains
+	if len(domains) <= 0 {
+		return errors.New("领域未指定")
+	}
+	for _, domain := range domains {
+		if _, err := uc.biz.enforcer.AddRoleForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(domain.DefaultAuthorityID), convert.UnitToString(domain.ID)); err != nil {
+			uc.log.Errorf("领域权限绑定失败 %v", err)
+		}
+	}
+	return nil
+}
+
+// HandleAuthority 绑定权限
+func (uc *UserUsecase) HandleAuthority(ctx context.Context, g *User, domainId ...uint) error {
+	uc.log.WithContext(ctx).Infof("HandleAuthority: %v", g)
+	authorities := g.Authorities
+	if len(authorities) <= 0 {
+		return errors.New("权限未指定")
+	}
+	authorityIds := make([]string, 0, len(authorities))
+	for _, v := range authorities {
+		authorityIds = append(authorityIds, convert.UnitToString(v.ID))
+	}
+	domainIds := make([]string, len(domainId))
+	for _, v := range domainId {
+		domainIds = append(domainIds, convert.UnitToString(v))
+	}
+	if _, err := uc.biz.enforcer.(*casbin.SyncedEnforcer).AddRolesForUser(convert.UnitToString(g.ID), authorityIds, domainIds...); err != nil {
+		uc.log.Errorf("领域权限绑定失败 %v", err)
+	}
+	return nil
 }
 
 // Update 修改用户
@@ -203,21 +239,10 @@ func (uc *UserUsecase) GetMobile(ctx context.Context, g *User) (*User, error) {
 func (uc *UserUsecase) Delete(ctx context.Context, g *User) error {
 	uc.log.WithContext(ctx).Infof("DeleteUser: %v", g)
 	return uc.biz.tm.InTx(ctx, func(ctx context.Context) error {
-		var wg sync.WaitGroup
 		if err := uc.biz.userRepo.Delete(ctx, g); err != nil {
 			return err
 		}
-		wg.Add(len(g.Domains))
-		for _, v := range g.Domains {
-			fmt.Println(v)
-			// roles := uc.enforcer.GetRolesForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(v.DomainID))
-
-			// if _, err := uc.biz.enforcer.DeleteRolesForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(v.ID)); err != nil {
-			// 	uc.log.Errorf("删除删除用户的角色失败：%v", err)
-			// }
-			wg.Done()
-		}
-		wg.Wait()
-		return nil
+		_, err := uc.biz.enforcer.DeleteUser(convert.UnitToString(g.ID))
+		return err
 	})
 }

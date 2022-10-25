@@ -5,6 +5,7 @@ package api.admin.v1;
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
 import "validate/validate.proto";
 import "protobuf/enum.proto";
 import "protobuf/struct.proto";
@@ -125,7 +126,7 @@ service Admin {
   rpc CreateUser (CreateUserReq) returns (CreateUserReply) {
     option (google.api.http) = {
       post: "/admin/v1/users"
-      body: "data"
+      body: "*"
     };
   }
   // 获取用户
@@ -145,6 +146,20 @@ service Admin {
   rpc DeleteUser (DeleteUserReq) returns (DeleteUserReply) {
     option (google.api.http) = {
       delete: "/admin/v1/users/{id}"
+    };
+  }
+  // 绑定用户领域
+  rpc HandleUserDomain (HandleUserDomainReq) returns (HandleUserDomainReply) {
+    option (google.api.http) = {
+      post: "/admin/v1/users/{id}/domians"
+      body: "data"
+    };
+  }
+  // 绑定用户领域权限
+  rpc HandleUserDomainAuthority (HandleUserDomainAuthorityReq) returns (HandleUserDomainAuthorityReply) {
+    option (google.api.http) = {
+      post: "/admin/v1/users/{id}/domainAuthorities"
+      body: "data"
     };
   }
 
@@ -325,12 +340,14 @@ message RegisterReq {
 message RegisterReply {
   bool success = 1;
   string message = 2;
+  google.protobuf.Any data = 3;
 }
 
 // 回应 - 退出登录
 message LogoutReply {
   bool success = 1;
   string message = 2;
+  google.protobuf.Any data = 3;
 }
 
 // 用户模块
@@ -359,25 +376,52 @@ message ListUserReply {
 
 // 请求 - 创建用户
 message CreateUserReq {
-  uint64 id = 1;
-  message Data {
-    string name = 2 [(validate.rules).string = {min_len: 1, max_len: 10}];
-    optional string password = 3 [(validate.rules).string = {min_len: 6, max_len: 28}];
-    optional string nick_name = 4 [(validate.rules).string = {min_len: 1, max_len: 10}];
-    optional string real_name = 5 [(validate.rules).string = {min_len: 2, max_len: 10}];
-    optional string birthday = 6 [(validate.rules).string.pattern = "^[1-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$"];
-    optional api.protobuf.UserGender gender = 7 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-    string mobile = 8 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
-    optional string email = 9 [(validate.rules).string.email = true];
-    api.protobuf.UserState state = 10 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-    repeated uint64 domain_ids = 11 [(validate.rules).repeated = {min_items: 1, unique: true, items: {uint64: {gt: 0}}}];
-    optional string avatar = 12;
-  }
-  Data data = 2;
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  optional string avatar = 2;
+  optional string password = 3 [(validate.rules).string = {min_len: 6, max_len: 28}];
+  optional string nick_name = 4 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  optional string real_name = 5 [(validate.rules).string = {min_len: 2, max_len: 10}];
+  optional string birthday = 6 [(validate.rules).string.pattern = "^[1-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$"];
+  optional api.protobuf.UserGender gender = 7 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  string mobile = 8 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
+  optional string email = 9 [(validate.rules).string.email = true];
+  api.protobuf.UserState state = 10 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
 }
 
 // 回应 - 创建用户
 message CreateUserReply {
+  bool success = 1;
+  string message = 2;
+  google.protobuf.Any data = 3;
+}
+
+// 请求 - 绑定用户领域
+message HandleUserDomainReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    repeated uint64 domain_ids = 11 [(validate.rules).repeated = {min_items: 1, unique: true, items: {uint64: {gt: 0}}}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 绑定用户领域
+message HandleUserDomainReply {
+  bool success = 1;
+  string message = 2;
+}
+
+// 请求 - 绑定用户领域权限
+message HandleUserDomainAuthorityReq {
+  uint64 id = 1;
+  message Data {
+    uint64 domain_id = 2; 
+    repeated uint64 authority_ids = 11 [(validate.rules).repeated = {min_items: 1, unique: true, items: {uint64: {gt: 0}}}];
+  }
+  Data data = 3;
+}
+
+// 回应 - 绑定用户领域权限
+message HandleUserDomainAuthorityReply {
   bool success = 1;
   string message = 2;
 }
@@ -396,6 +440,7 @@ message DeleteUserReq {
 message DeleteUserReply {
   bool success = 1;
   string message = 2;
+  google.protobuf.Any data = 3;
 }
 
 // 请求 - 修改用户
@@ -421,6 +466,7 @@ message UpdateUserReq {
 message UpdateUserReply {
   bool success = 1;
   string message = 2;
+  google.protobuf.Any data = 3;
 }
 
 // 回应 - 获取用户菜单
@@ -450,6 +496,7 @@ message CreateDomainReq {
 message CreateDomainReply {
   bool success = 1;
   string message = 2;
+  google.protobuf.Any data = 3;
 }
 
 // 请求 - 修改领域
@@ -464,6 +511,7 @@ message UpdateDomainReq {
 message UpdateDomainReply {
   bool success = 1;
   string message = 2;
+  google.protobuf.Any data = 3;
 }
 
 // 请求 - 获取领域
@@ -480,6 +528,7 @@ message DeleteDomainReq {
 message DeleteDomainReply {
   bool success = 1;
   string message = 2;
+  google.protobuf.Any data = 3;
 }
 
 // 权限模块
@@ -500,6 +549,7 @@ message CreateAuthorityReq {
 message CreateAuthorityReply {
   bool success = 1;
   string message = 2;
+  google.protobuf.Any data = 3;
 }
 
 // 请求 - 修改权限
@@ -514,6 +564,7 @@ message UpdateAuthorityReq {
 message UpdateAuthorityReply {
   bool success = 1;
   string message = 2;
+  google.protobuf.Any data = 3;
 }
 
 // 请求 - 获取权限
@@ -530,6 +581,7 @@ message DeleteAuthorityReq {
 message DeleteAuthorityReply {
   bool success = 1;
   string message = 2;
+  google.protobuf.Any data = 3;
 }
 
 // 接口模块
@@ -557,6 +609,7 @@ message CreateApiReq {
 message CreateApiReply {
   bool success = 1;
   string message = 2;
+  google.protobuf.Any data = 3;
 }
 
 // 请求 - 修改接口
@@ -576,6 +629,7 @@ message UpdateApiReq {
 message UpdateApiReply {
   bool success = 1;
   string message = 2;
+  google.protobuf.Any data = 3;
 }
 
 // 请求 - 获取接口
@@ -592,6 +646,7 @@ message DeleteApiReq {
 message DeleteApiReply {
   bool success = 1;
   string message = 2;
+  google.protobuf.Any data = 3;
 }
 
 // 菜单模块
@@ -622,6 +677,7 @@ message CreateMenuReq {
 message CreateMenuReply {
   bool success = 1;
   string message = 2;
+  google.protobuf.Any data = 3;
 }
 
 // 请求 - 修改菜单
@@ -636,6 +692,7 @@ message UpdateMenuReq {
 message UpdateMenuReply {
   bool success = 1;
   string message = 2;
+  google.protobuf.Any data = 3;
 }
 
 // 请求 - 获取菜单
@@ -652,6 +709,7 @@ message DeleteMenuReq {
 message DeleteMenuReply {
   bool success = 1;
   string message = 2;
+  google.protobuf.Any data = 3;
 }
 
 // 回应 - 获取树形菜单

@@ -119,6 +119,30 @@ func ErrorUserDeleteFail(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_USER_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
+func IsUserHandleDomainFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_USER_HANDLE_DOMAIN_FAIL.String() && e.Code == 400
+}
+
+func ErrorUserHandleDomainFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_USER_HANDLE_DOMAIN_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsUserHandleAuthorityFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_USER_HANDLE_AUTHORITY_FAIL.String() && e.Code == 400
+}
+
+func ErrorUserHandleAuthorityFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_USER_HANDLE_AUTHORITY_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
 func IsDomainNotFound(err error) bool {
 	if err == nil {
 		return false

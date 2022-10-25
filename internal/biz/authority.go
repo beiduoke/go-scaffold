@@ -43,3 +43,9 @@ func (uc *AuthorityUsecase) Create(ctx context.Context, g *Authority) (*Authorit
 	uc.log.WithContext(ctx).Infof("Create: %v", g.Name)
 	return uc.repo.Save(ctx, g)
 }
+
+// GetDomainInID 获取指定领域ID集合
+func (uc *AuthorityUsecase) ListByIDs(ctx context.Context, id ...uint) (authorities []*Authority, err error) {
+	authorities, _ = uc.biz.authorityRepo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
+	return
+}

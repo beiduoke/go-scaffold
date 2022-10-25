@@ -45,6 +45,10 @@ type AdminClient interface {
 	UpdateUser(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*UpdateUserReply, error)
 	// 删除用户
 	DeleteUser(ctx context.Context, in *DeleteUserReq, opts ...grpc.CallOption) (*DeleteUserReply, error)
+	// 绑定用户领域
+	HandleUserDomain(ctx context.Context, in *HandleUserDomainReq, opts ...grpc.CallOption) (*HandleUserDomainReply, error)
+	// 绑定用户领域权限
+	HandleUserDomainAuthority(ctx context.Context, in *HandleUserDomainAuthorityReq, opts ...grpc.CallOption) (*HandleUserDomainAuthorityReply, error)
 	// 领域模块
 	// 列表领域
 	ListDomain(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
@@ -185,6 +189,24 @@ func (c *adminClient) UpdateUser(ctx context.Context, in *UpdateUserReq, opts ..
 func (c *adminClient) DeleteUser(ctx context.Context, in *DeleteUserReq, opts ...grpc.CallOption) (*DeleteUserReply, error) {
 	out := new(DeleteUserReply)
 	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/DeleteUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) HandleUserDomain(ctx context.Context, in *HandleUserDomainReq, opts ...grpc.CallOption) (*HandleUserDomainReply, error) {
+	out := new(HandleUserDomainReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/HandleUserDomain", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) HandleUserDomainAuthority(ctx context.Context, in *HandleUserDomainAuthorityReq, opts ...grpc.CallOption) (*HandleUserDomainAuthorityReply, error) {
+	out := new(HandleUserDomainAuthorityReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/HandleUserDomainAuthority", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -405,6 +427,10 @@ type AdminServer interface {
 	UpdateUser(context.Context, *UpdateUserReq) (*UpdateUserReply, error)
 	// 删除用户
 	DeleteUser(context.Context, *DeleteUserReq) (*DeleteUserReply, error)
+	// 绑定用户领域
+	HandleUserDomain(context.Context, *HandleUserDomainReq) (*HandleUserDomainReply, error)
+	// 绑定用户领域权限
+	HandleUserDomainAuthority(context.Context, *HandleUserDomainAuthorityReq) (*HandleUserDomainAuthorityReply, error)
 	// 领域模块
 	// 列表领域
 	ListDomain(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
@@ -487,6 +513,12 @@ func (UnimplementedAdminServer) UpdateUser(context.Context, *UpdateUserReq) (*Up
 }
 func (UnimplementedAdminServer) DeleteUser(context.Context, *DeleteUserReq) (*DeleteUserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
+}
+func (UnimplementedAdminServer) HandleUserDomain(context.Context, *HandleUserDomainReq) (*HandleUserDomainReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HandleUserDomain not implemented")
+}
+func (UnimplementedAdminServer) HandleUserDomainAuthority(context.Context, *HandleUserDomainAuthorityReq) (*HandleUserDomainAuthorityReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HandleUserDomainAuthority not implemented")
 }
 func (UnimplementedAdminServer) ListDomain(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDomain not implemented")
@@ -740,6 +772,42 @@ func _Admin_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServer).DeleteUser(ctx, req.(*DeleteUserReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_HandleUserDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HandleUserDomainReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).HandleUserDomain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/HandleUserDomain",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).HandleUserDomain(ctx, req.(*HandleUserDomainReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_HandleUserDomainAuthority_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HandleUserDomainAuthorityReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).HandleUserDomainAuthority(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/HandleUserDomainAuthority",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).HandleUserDomainAuthority(ctx, req.(*HandleUserDomainAuthorityReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1168,6 +1236,14 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteUser",
 			Handler:    _Admin_DeleteUser_Handler,
+		},
+		{
+			MethodName: "HandleUserDomain",
+			Handler:    _Admin_HandleUserDomain_Handler,
+		},
+		{
+			MethodName: "HandleUserDomainAuthority",
+			Handler:    _Admin_HandleUserDomainAuthority_Handler,
 		},
 		{
 			MethodName: "ListDomain",

@@ -2,7 +2,6 @@ package admin
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	v1 "github.com/beiduoke/go-scaffold/api/admin/v1"
@@ -55,7 +54,6 @@ func (s *AdminService) GetUserMenu(ctx context.Context, in *emptypb.Empty) (*v1.
 
 // ListUser 列表用户
 func (s *AdminService) ListUser(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
-	fmt.Printf("排序传值：%#v", in.GetOrderBy())
 	results, total := s.userCase.ListPage(ctx, in.GetPage(), in.GetPageSize(), in.GetQuery(), in.GetOrderBy())
 	items := make([]*anypb.Any, 0, len(results))
 	for _, v := range results {
@@ -86,6 +84,40 @@ func (s *AdminService) ListUser(ctx context.Context, in *protobuf.PagingReq) (*p
 
 // CreateUser 创建用户
 func (s *AdminService) CreateUser(ctx context.Context, in *v1.CreateUserReq) (*v1.CreateUserReply, error) {
+	var birthday *time.Time
+	if in.GetBirthday() != "" {
+		day, err := time.Parse("2006-01-02", in.GetBirthday())
+		if err != nil {
+			return nil, v1.ErrorUserCreateFail("生日格式错误")
+		}
+		birthday = &day
+	}
+	user, err := s.userCase.Create(ctx, &biz.User{
+		Name:     in.GetName(),
+		Avatar:   in.GetAvatar(),
+		Password: in.GetPassword(),
+		Gender:   int32(in.GetGender()),
+		NickName: in.GetNickName(),
+		RealName: in.GetRealName(),
+		Birthday: birthday,
+		Mobile:   in.GetMobile(),
+		Email:    in.GetEmail(),
+		State:    int32(in.GetState()),
+	})
+	if err != nil {
+		return nil, v1.ErrorUserCreateFail("用户创建失败: %v", err.Error())
+	}
+	data, _ := anypb.New(&protobuf.DataProto{
+		Id: uint64(user.ID),
+	})
+	return &v1.CreateUserReply{
+		Success: true,
+		Data:    data,
+	}, nil
+}
+
+// HandleUserDomain 绑定用户领域
+func (s *AdminService) HandleUserDomain(ctx context.Context, in *v1.HandleUserDomainReq) (*v1.HandleUserDomainReply, error) {
 	v := in.GetData()
 	domainIds := make([]uint, 0, len(v.GetDomainIds()))
 	for _, domainId := range v.GetDomainIds() {
@@ -93,32 +125,39 @@ func (s *AdminService) CreateUser(ctx context.Context, in *v1.CreateUserReq) (*v
 	}
 
 	domains, _ := s.domainCase.ListByIDs(ctx, domainIds...)
-	var birthday *time.Time
-	if v.GetBirthday() != "" {
-		day, err := time.Parse("2006-01-02", v.GetBirthday())
-		if err != nil {
-			return nil, v1.ErrorUserCreateFail("生日格式错误")
-		}
-		birthday = &day
-	}
-	_, err := s.userCase.Create(ctx, &biz.User{
-		Name:     v.GetName(),
-		Avatar:   v.GetAvatar(),
-		Password: v.GetPassword(),
-		Gender:   int32(v.GetGender()),
-		NickName: v.GetNickName(),
-		RealName: v.GetRealName(),
-		Birthday: birthday,
-		Mobile:   v.GetMobile(),
-		Email:    v.GetEmail(),
-		State:    int32(v.GetState()),
-		Domains:  domains,
+	err := s.userCase.HandleDomain(ctx, &biz.User{
+		ID:      uint(in.GetId()),
+		Domains: domains,
 	})
 	if err != nil {
-		return nil, v1.ErrorUserCreateFail("用户创建失败: %v", err.Error())
+		return nil, v1.ErrorUserHandleDomainFail("绑定用户领域失败: %v", err.Error())
 	}
-	return &v1.CreateUserReply{
+	return &v1.HandleUserDomainReply{
 		Success: true,
+		Message: "",
+	}, nil
+}
+
+// HandleUserAuthority 绑定用户权限
+func (s *AdminService) HandleUserDomainAuthority(ctx context.Context, in *v1.HandleUserDomainAuthorityReq) (*v1.HandleUserDomainAuthorityReply, error) {
+	v := in.GetData()
+	authorityIds := make([]uint, 0, len(v.GetAuthorityIds()))
+	for _, authorityId := range v.GetAuthorityIds() {
+		authorityIds = append(authorityIds, uint(authorityId))
+	}
+
+	authorities, _ := s.authorityCase.ListByIDs(ctx, authorityIds...)
+	err := s.userCase.HandleAuthority(ctx, &biz.User{
+		ID:          uint(in.GetId()),
+		Domains:     []*biz.Domain{{ID: uint(v.GetDomainId())}},
+		Authorities: authorities,
+	})
+	if err != nil {
+		return nil, v1.ErrorUserHandleAuthorityFail("绑定用户权限失败: %v", err.Error())
+	}
+	return &v1.HandleUserDomainAuthorityReply{
+		Success: true,
+		Message: "",
 	}, nil
 }
 

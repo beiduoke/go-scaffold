@@ -33,6 +33,8 @@ type Biz struct {
 	enforcer casbin.IEnforcer
 	// 领域数据接口
 	domainRepo DomainRepo
+	// 权限数据接口
+	authorityRepo AuthorityRepo
 	// 领域数据接口
 	userRepo UserRepo
 }

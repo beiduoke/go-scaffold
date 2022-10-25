@@ -39,6 +39,8 @@ const OperationAdminGetMenuTree = "/api.admin.v1.Admin/GetMenuTree"
 const OperationAdminGetUser = "/api.admin.v1.Admin/GetUser"
 const OperationAdminGetUserMenu = "/api.admin.v1.Admin/GetUserMenu"
 const OperationAdminGetUserProfile = "/api.admin.v1.Admin/GetUserProfile"
+const OperationAdminHandleUserDomain = "/api.admin.v1.Admin/HandleUserDomain"
+const OperationAdminHandleUserDomainAuthority = "/api.admin.v1.Admin/HandleUserDomainAuthority"
 const OperationAdminListApi = "/api.admin.v1.Admin/ListApi"
 const OperationAdminListAuthority = "/api.admin.v1.Admin/ListAuthority"
 const OperationAdminListDomain = "/api.admin.v1.Admin/ListDomain"
@@ -72,6 +74,8 @@ type AdminHTTPServer interface {
 	GetUser(context.Context, *GetUserReq) (*User, error)
 	GetUserMenu(context.Context, *emptypb.Empty) (*GetUserMenuReply, error)
 	GetUserProfile(context.Context, *emptypb.Empty) (*User, error)
+	HandleUserDomain(context.Context, *HandleUserDomainReq) (*HandleUserDomainReply, error)
+	HandleUserDomainAuthority(context.Context, *HandleUserDomainAuthorityReq) (*HandleUserDomainAuthorityReply, error)
 	ListApi(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
 	ListAuthority(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
 	ListDomain(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
@@ -100,6 +104,8 @@ func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
 	r.GET("/admin/v1/users/{id}", _Admin_GetUser0_HTTP_Handler(srv))
 	r.PUT("/admin/v1/users/{id}", _Admin_UpdateUser0_HTTP_Handler(srv))
 	r.DELETE("/admin/v1/users/{id}", _Admin_DeleteUser0_HTTP_Handler(srv))
+	r.POST("/admin/v1/users/{id}/domians", _Admin_HandleUserDomain0_HTTP_Handler(srv))
+	r.POST("/admin/v1/users/{id}/domainAuthorities", _Admin_HandleUserDomainAuthority0_HTTP_Handler(srv))
 	r.GET("/admin/v1/domains", _Admin_ListDomain0_HTTP_Handler(srv))
 	r.POST("/admin/v1/domains", _Admin_CreateDomain0_HTTP_Handler(srv))
 	r.GET("/admin/v1/domains/{id}", _Admin_GetDomain0_HTTP_Handler(srv))
@@ -271,10 +277,7 @@ func _Admin_ListUser0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) e
 func _Admin_CreateUser0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateUserReq
-		if err := ctx.Bind(&in.Data); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAdminCreateUser)
@@ -355,6 +358,56 @@ func _Admin_DeleteUser0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context)
 			return err
 		}
 		reply := out.(*DeleteUserReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_HandleUserDomain0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in HandleUserDomainReq
+		if err := ctx.Bind(&in.Data); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminHandleUserDomain)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.HandleUserDomain(ctx, req.(*HandleUserDomainReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*HandleUserDomainReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_HandleUserDomainAuthority0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in HandleUserDomainAuthorityReq
+		if err := ctx.Bind(&in.Data); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminHandleUserDomainAuthority)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.HandleUserDomainAuthority(ctx, req.(*HandleUserDomainAuthorityReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*HandleUserDomainAuthorityReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -837,6 +890,8 @@ type AdminHTTPClient interface {
 	GetUser(ctx context.Context, req *GetUserReq, opts ...http.CallOption) (rsp *User, err error)
 	GetUserMenu(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserMenuReply, err error)
 	GetUserProfile(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *User, err error)
+	HandleUserDomain(ctx context.Context, req *HandleUserDomainReq, opts ...http.CallOption) (rsp *HandleUserDomainReply, err error)
+	HandleUserDomainAuthority(ctx context.Context, req *HandleUserDomainAuthorityReq, opts ...http.CallOption) (rsp *HandleUserDomainAuthorityReply, err error)
 	ListApi(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
 	ListAuthority(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
 	ListDomain(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
@@ -918,7 +973,7 @@ func (c *AdminHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUserReq,
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminCreateUser))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1088,6 +1143,32 @@ func (c *AdminHTTPClientImpl) GetUserProfile(ctx context.Context, in *emptypb.Em
 	opts = append(opts, http.Operation(OperationAdminGetUserProfile))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AdminHTTPClientImpl) HandleUserDomain(ctx context.Context, in *HandleUserDomainReq, opts ...http.CallOption) (*HandleUserDomainReply, error) {
+	var out HandleUserDomainReply
+	pattern := "/admin/v1/users/{id}/domians"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminHandleUserDomain))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AdminHTTPClientImpl) HandleUserDomainAuthority(ctx context.Context, in *HandleUserDomainAuthorityReq, opts ...http.CallOption) (*HandleUserDomainAuthorityReply, error) {
+	var out HandleUserDomainAuthorityReply
+	pattern := "/admin/v1/users/{id}/domainAuthorities"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminHandleUserDomainAuthority))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

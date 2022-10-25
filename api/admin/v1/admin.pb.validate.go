@@ -597,6 +597,35 @@ func (m *RegisterReply) validate(all bool) error {
 
 	// no validation rules for Message
 
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, RegisterReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, RegisterReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return RegisterReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	if len(errors) > 0 {
 		return RegisterReplyMultiError(errors)
 	}
@@ -700,6 +729,35 @@ func (m *LogoutReply) validate(all bool) error {
 	// no validation rules for Success
 
 	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, LogoutReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, LogoutReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return LogoutReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return LogoutReplyMultiError(errors)
@@ -1180,35 +1238,154 @@ func (m *CreateUserReq) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
-
-	if all {
-		switch v := interface{}(m.GetData()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CreateUserReqValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, CreateUserReqValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
+		err := CreateUserReqValidationError{
+			field:  "Name",
+			reason: "value length must be between 1 and 10 runes, inclusive",
 		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CreateUserReqValidationError{
-				field:  "Data",
-				reason: "embedded message failed validation",
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if !_CreateUserReq_Mobile_Pattern.MatchString(m.GetMobile()) {
+		err := CreateUserReqValidationError{
+			field:  "Mobile",
+			reason: "value does not match regex pattern \"^1[0-9]{10}$\"",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := _CreateUserReq_State_NotInLookup[m.GetState()]; ok {
+		err := CreateUserReqValidationError{
+			field:  "State",
+			reason: "value must not be in list [0]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := protobuf.UserState_name[int32(m.GetState())]; !ok {
+		err := CreateUserReqValidationError{
+			field:  "State",
+			reason: "value must be one of the defined enum values",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.Avatar != nil {
+		// no validation rules for Avatar
+	}
+
+	if m.Password != nil {
+
+		if l := utf8.RuneCountInString(m.GetPassword()); l < 6 || l > 28 {
+			err := CreateUserReqValidationError{
+				field:  "Password",
+				reason: "value length must be between 6 and 28 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.NickName != nil {
+
+		if l := utf8.RuneCountInString(m.GetNickName()); l < 1 || l > 10 {
+			err := CreateUserReqValidationError{
+				field:  "NickName",
+				reason: "value length must be between 1 and 10 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.RealName != nil {
+
+		if l := utf8.RuneCountInString(m.GetRealName()); l < 2 || l > 10 {
+			err := CreateUserReqValidationError{
+				field:  "RealName",
+				reason: "value length must be between 2 and 10 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Birthday != nil {
+
+		if !_CreateUserReq_Birthday_Pattern.MatchString(m.GetBirthday()) {
+			err := CreateUserReqValidationError{
+				field:  "Birthday",
+				reason: "value does not match regex pattern \"^[1-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$\"",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Gender != nil {
+
+		if _, ok := _CreateUserReq_Gender_NotInLookup[m.GetGender()]; ok {
+			err := CreateUserReqValidationError{
+				field:  "Gender",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.UserGender_name[int32(m.GetGender())]; !ok {
+			err := CreateUserReqValidationError{
+				field:  "Gender",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Email != nil {
+
+		if err := m._validateEmail(m.GetEmail()); err != nil {
+			err = CreateUserReqValidationError{
+				field:  "Email",
+				reason: "value must be a valid email address",
 				cause:  err,
 			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
 		}
+
 	}
 
 	if len(errors) > 0 {
@@ -1216,6 +1393,56 @@ func (m *CreateUserReq) validate(all bool) error {
 	}
 
 	return nil
+}
+
+func (m *CreateUserReq) _validateHostname(host string) error {
+	s := strings.ToLower(strings.TrimSuffix(host, "."))
+
+	if len(host) > 253 {
+		return errors.New("hostname cannot exceed 253 characters")
+	}
+
+	for _, part := range strings.Split(s, ".") {
+		if l := len(part); l == 0 || l > 63 {
+			return errors.New("hostname part must be non-empty and cannot exceed 63 characters")
+		}
+
+		if part[0] == '-' {
+			return errors.New("hostname parts cannot begin with hyphens")
+		}
+
+		if part[len(part)-1] == '-' {
+			return errors.New("hostname parts cannot end with hyphens")
+		}
+
+		for _, r := range part {
+			if (r < 'a' || r > 'z') && (r < '0' || r > '9') && r != '-' {
+				return fmt.Errorf("hostname parts can only contain alphanumeric characters or hyphens, got %q", string(r))
+			}
+		}
+	}
+
+	return nil
+}
+
+func (m *CreateUserReq) _validateEmail(addr string) error {
+	a, err := mail.ParseAddress(addr)
+	if err != nil {
+		return err
+	}
+	addr = a.Address
+
+	if len(addr) > 254 {
+		return errors.New("email addresses cannot exceed 254 characters")
+	}
+
+	parts := strings.SplitN(addr, "@", 2)
+
+	if len(parts[0]) > 64 {
+		return errors.New("email address local phrase cannot exceed 64 characters")
+	}
+
+	return m._validateHostname(parts[1])
 }
 
 // CreateUserReqMultiError is an error wrapping multiple validation errors
@@ -1289,6 +1516,18 @@ var _ interface {
 	ErrorName() string
 } = CreateUserReqValidationError{}
 
+var _CreateUserReq_Birthday_Pattern = regexp.MustCompile("^[1-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$")
+
+var _CreateUserReq_Gender_NotInLookup = map[protobuf.UserGender]struct{}{
+	0: {},
+}
+
+var _CreateUserReq_Mobile_Pattern = regexp.MustCompile("^1[0-9]{10}$")
+
+var _CreateUserReq_State_NotInLookup = map[protobuf.UserState]struct{}{
+	0: {},
+}
+
 // Validate checks the field values on CreateUserReply with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
@@ -1314,6 +1553,35 @@ func (m *CreateUserReply) validate(all bool) error {
 	// no validation rules for Success
 
 	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, CreateUserReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, CreateUserReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CreateUserReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return CreateUserReplyMultiError(errors)
@@ -1392,6 +1660,495 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CreateUserReplyValidationError{}
+
+// Validate checks the field values on HandleUserDomainReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HandleUserDomainReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleUserDomainReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HandleUserDomainReqMultiError, or nil if none found.
+func (m *HandleUserDomainReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleUserDomainReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := HandleUserDomainReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, HandleUserDomainReqValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, HandleUserDomainReqValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return HandleUserDomainReqValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return HandleUserDomainReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleUserDomainReqMultiError is an error wrapping multiple validation
+// errors returned by HandleUserDomainReq.ValidateAll() if the designated
+// constraints aren't met.
+type HandleUserDomainReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleUserDomainReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleUserDomainReqMultiError) AllErrors() []error { return m }
+
+// HandleUserDomainReqValidationError is the validation error returned by
+// HandleUserDomainReq.Validate if the designated constraints aren't met.
+type HandleUserDomainReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleUserDomainReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleUserDomainReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleUserDomainReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleUserDomainReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleUserDomainReqValidationError) ErrorName() string {
+	return "HandleUserDomainReqValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleUserDomainReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleUserDomainReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleUserDomainReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleUserDomainReqValidationError{}
+
+// Validate checks the field values on HandleUserDomainReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HandleUserDomainReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleUserDomainReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HandleUserDomainReplyMultiError, or nil if none found.
+func (m *HandleUserDomainReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleUserDomainReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Success
+
+	// no validation rules for Message
+
+	if len(errors) > 0 {
+		return HandleUserDomainReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleUserDomainReplyMultiError is an error wrapping multiple validation
+// errors returned by HandleUserDomainReply.ValidateAll() if the designated
+// constraints aren't met.
+type HandleUserDomainReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleUserDomainReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleUserDomainReplyMultiError) AllErrors() []error { return m }
+
+// HandleUserDomainReplyValidationError is the validation error returned by
+// HandleUserDomainReply.Validate if the designated constraints aren't met.
+type HandleUserDomainReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleUserDomainReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleUserDomainReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleUserDomainReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleUserDomainReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleUserDomainReplyValidationError) ErrorName() string {
+	return "HandleUserDomainReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleUserDomainReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleUserDomainReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleUserDomainReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleUserDomainReplyValidationError{}
+
+// Validate checks the field values on HandleUserDomainAuthorityReq with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HandleUserDomainAuthorityReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleUserDomainAuthorityReq with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HandleUserDomainAuthorityReqMultiError, or nil if none found.
+func (m *HandleUserDomainAuthorityReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleUserDomainAuthorityReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, HandleUserDomainAuthorityReqValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, HandleUserDomainAuthorityReqValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return HandleUserDomainAuthorityReqValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return HandleUserDomainAuthorityReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleUserDomainAuthorityReqMultiError is an error wrapping multiple
+// validation errors returned by HandleUserDomainAuthorityReq.ValidateAll() if
+// the designated constraints aren't met.
+type HandleUserDomainAuthorityReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleUserDomainAuthorityReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleUserDomainAuthorityReqMultiError) AllErrors() []error { return m }
+
+// HandleUserDomainAuthorityReqValidationError is the validation error returned
+// by HandleUserDomainAuthorityReq.Validate if the designated constraints
+// aren't met.
+type HandleUserDomainAuthorityReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleUserDomainAuthorityReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleUserDomainAuthorityReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleUserDomainAuthorityReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleUserDomainAuthorityReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleUserDomainAuthorityReqValidationError) ErrorName() string {
+	return "HandleUserDomainAuthorityReqValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleUserDomainAuthorityReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleUserDomainAuthorityReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleUserDomainAuthorityReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleUserDomainAuthorityReqValidationError{}
+
+// Validate checks the field values on HandleUserDomainAuthorityReply with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HandleUserDomainAuthorityReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleUserDomainAuthorityReply with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// HandleUserDomainAuthorityReplyMultiError, or nil if none found.
+func (m *HandleUserDomainAuthorityReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleUserDomainAuthorityReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Success
+
+	// no validation rules for Message
+
+	if len(errors) > 0 {
+		return HandleUserDomainAuthorityReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleUserDomainAuthorityReplyMultiError is an error wrapping multiple
+// validation errors returned by HandleUserDomainAuthorityReply.ValidateAll()
+// if the designated constraints aren't met.
+type HandleUserDomainAuthorityReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleUserDomainAuthorityReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleUserDomainAuthorityReplyMultiError) AllErrors() []error { return m }
+
+// HandleUserDomainAuthorityReplyValidationError is the validation error
+// returned by HandleUserDomainAuthorityReply.Validate if the designated
+// constraints aren't met.
+type HandleUserDomainAuthorityReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleUserDomainAuthorityReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleUserDomainAuthorityReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleUserDomainAuthorityReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleUserDomainAuthorityReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleUserDomainAuthorityReplyValidationError) ErrorName() string {
+	return "HandleUserDomainAuthorityReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleUserDomainAuthorityReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleUserDomainAuthorityReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleUserDomainAuthorityReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleUserDomainAuthorityReplyValidationError{}
 
 // Validate checks the field values on GetUserReq with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
@@ -1621,6 +2378,35 @@ func (m *DeleteUserReply) validate(all bool) error {
 	// no validation rules for Success
 
 	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, DeleteUserReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, DeleteUserReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return DeleteUserReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return DeleteUserReplyMultiError(errors)
@@ -1865,6 +2651,35 @@ func (m *UpdateUserReply) validate(all bool) error {
 	// no validation rules for Success
 
 	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UpdateUserReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UpdateUserReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateUserReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return UpdateUserReplyMultiError(errors)
@@ -2415,6 +3230,35 @@ func (m *CreateDomainReply) validate(all bool) error {
 
 	// no validation rules for Message
 
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, CreateDomainReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, CreateDomainReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CreateDomainReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	if len(errors) > 0 {
 		return CreateDomainReplyMultiError(errors)
 	}
@@ -2651,6 +3495,35 @@ func (m *UpdateDomainReply) validate(all bool) error {
 	// no validation rules for Success
 
 	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UpdateDomainReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UpdateDomainReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateDomainReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return UpdateDomainReplyMultiError(errors)
@@ -2960,6 +3833,35 @@ func (m *DeleteDomainReply) validate(all bool) error {
 	// no validation rules for Success
 
 	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, DeleteDomainReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, DeleteDomainReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return DeleteDomainReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return DeleteDomainReplyMultiError(errors)
@@ -3375,6 +4277,35 @@ func (m *CreateAuthorityReply) validate(all bool) error {
 
 	// no validation rules for Message
 
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, CreateAuthorityReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, CreateAuthorityReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CreateAuthorityReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	if len(errors) > 0 {
 		return CreateAuthorityReplyMultiError(errors)
 	}
@@ -3613,6 +4544,35 @@ func (m *UpdateAuthorityReply) validate(all bool) error {
 	// no validation rules for Success
 
 	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UpdateAuthorityReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UpdateAuthorityReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateAuthorityReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return UpdateAuthorityReplyMultiError(errors)
@@ -3925,6 +4885,35 @@ func (m *DeleteAuthorityReply) validate(all bool) error {
 	// no validation rules for Success
 
 	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, DeleteAuthorityReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, DeleteAuthorityReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return DeleteAuthorityReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return DeleteAuthorityReplyMultiError(errors)
@@ -4336,6 +5325,35 @@ func (m *CreateApiReply) validate(all bool) error {
 
 	// no validation rules for Message
 
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, CreateApiReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, CreateApiReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CreateApiReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	if len(errors) > 0 {
 		return CreateApiReplyMultiError(errors)
 	}
@@ -4569,6 +5587,35 @@ func (m *UpdateApiReply) validate(all bool) error {
 	// no validation rules for Success
 
 	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UpdateApiReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UpdateApiReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateApiReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return UpdateApiReplyMultiError(errors)
@@ -4875,6 +5922,35 @@ func (m *DeleteApiReply) validate(all bool) error {
 	// no validation rules for Success
 
 	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, DeleteApiReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, DeleteApiReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return DeleteApiReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return DeleteApiReplyMultiError(errors)
@@ -5355,6 +6431,35 @@ func (m *CreateMenuReply) validate(all bool) error {
 
 	// no validation rules for Message
 
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, CreateMenuReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, CreateMenuReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CreateMenuReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	if len(errors) > 0 {
 		return CreateMenuReplyMultiError(errors)
 	}
@@ -5589,6 +6694,35 @@ func (m *UpdateMenuReply) validate(all bool) error {
 	// no validation rules for Success
 
 	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UpdateMenuReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UpdateMenuReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateMenuReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return UpdateMenuReplyMultiError(errors)
@@ -5897,6 +7031,35 @@ func (m *DeleteMenuReply) validate(all bool) error {
 
 	// no validation rules for Message
 
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, DeleteMenuReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, DeleteMenuReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return DeleteMenuReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	if len(errors) > 0 {
 		return DeleteMenuReplyMultiError(errors)
 	}
@@ -6077,74 +7240,30 @@ var _ interface {
 	ErrorName() string
 } = GetMenuTreeReqValidationError{}
 
-// Validate checks the field values on CreateUserReq_Data with the rules
+// Validate checks the field values on HandleUserDomainReq_Data with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *CreateUserReq_Data) Validate() error {
+func (m *HandleUserDomainReq_Data) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on CreateUserReq_Data with the rules
-// defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on HandleUserDomainReq_Data with the
+// rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// CreateUserReq_DataMultiError, or nil if none found.
-func (m *CreateUserReq_Data) ValidateAll() error {
+// HandleUserDomainReq_DataMultiError, or nil if none found.
+func (m *HandleUserDomainReq_Data) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *CreateUserReq_Data) validate(all bool) error {
+func (m *HandleUserDomainReq_Data) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
-		err := CreateUserReq_DataValidationError{
-			field:  "Name",
-			reason: "value length must be between 1 and 10 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if !_CreateUserReq_Data_Mobile_Pattern.MatchString(m.GetMobile()) {
-		err := CreateUserReq_DataValidationError{
-			field:  "Mobile",
-			reason: "value does not match regex pattern \"^1[0-9]{10}$\"",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := _CreateUserReq_Data_State_NotInLookup[m.GetState()]; ok {
-		err := CreateUserReq_DataValidationError{
-			field:  "State",
-			reason: "value must not be in list [0]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := protobuf.UserState_name[int32(m.GetState())]; !ok {
-		err := CreateUserReq_DataValidationError{
-			field:  "State",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if len(m.GetDomainIds()) < 1 {
-		err := CreateUserReq_DataValidationError{
+		err := HandleUserDomainReq_DataValidationError{
 			field:  "DomainIds",
 			reason: "value must contain at least 1 item(s)",
 		}
@@ -6154,13 +7273,13 @@ func (m *CreateUserReq_Data) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	_CreateUserReq_Data_DomainIds_Unique := make(map[uint64]struct{}, len(m.GetDomainIds()))
+	_HandleUserDomainReq_Data_DomainIds_Unique := make(map[uint64]struct{}, len(m.GetDomainIds()))
 
 	for idx, item := range m.GetDomainIds() {
 		_, _ = idx, item
 
-		if _, exists := _CreateUserReq_Data_DomainIds_Unique[item]; exists {
-			err := CreateUserReq_DataValidationError{
+		if _, exists := _HandleUserDomainReq_Data_DomainIds_Unique[item]; exists {
+			err := HandleUserDomainReq_DataValidationError{
 				field:  fmt.Sprintf("DomainIds[%v]", idx),
 				reason: "repeated value must contain unique items",
 			}
@@ -6169,11 +7288,11 @@ func (m *CreateUserReq_Data) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		} else {
-			_CreateUserReq_Data_DomainIds_Unique[item] = struct{}{}
+			_HandleUserDomainReq_Data_DomainIds_Unique[item] = struct{}{}
 		}
 
 		if item <= 0 {
-			err := CreateUserReq_DataValidationError{
+			err := HandleUserDomainReq_DataValidationError{
 				field:  fmt.Sprintf("DomainIds[%v]", idx),
 				reason: "value must be greater than 0",
 			}
@@ -6185,176 +7304,20 @@ func (m *CreateUserReq_Data) validate(all bool) error {
 
 	}
 
-	if m.Password != nil {
-
-		if l := utf8.RuneCountInString(m.GetPassword()); l < 6 || l > 28 {
-			err := CreateUserReq_DataValidationError{
-				field:  "Password",
-				reason: "value length must be between 6 and 28 runes, inclusive",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.NickName != nil {
-
-		if l := utf8.RuneCountInString(m.GetNickName()); l < 1 || l > 10 {
-			err := CreateUserReq_DataValidationError{
-				field:  "NickName",
-				reason: "value length must be between 1 and 10 runes, inclusive",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.RealName != nil {
-
-		if l := utf8.RuneCountInString(m.GetRealName()); l < 2 || l > 10 {
-			err := CreateUserReq_DataValidationError{
-				field:  "RealName",
-				reason: "value length must be between 2 and 10 runes, inclusive",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.Birthday != nil {
-
-		if !_CreateUserReq_Data_Birthday_Pattern.MatchString(m.GetBirthday()) {
-			err := CreateUserReq_DataValidationError{
-				field:  "Birthday",
-				reason: "value does not match regex pattern \"^[1-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$\"",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.Gender != nil {
-
-		if _, ok := _CreateUserReq_Data_Gender_NotInLookup[m.GetGender()]; ok {
-			err := CreateUserReq_DataValidationError{
-				field:  "Gender",
-				reason: "value must not be in list [0]",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-		if _, ok := protobuf.UserGender_name[int32(m.GetGender())]; !ok {
-			err := CreateUserReq_DataValidationError{
-				field:  "Gender",
-				reason: "value must be one of the defined enum values",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.Email != nil {
-
-		if err := m._validateEmail(m.GetEmail()); err != nil {
-			err = CreateUserReq_DataValidationError{
-				field:  "Email",
-				reason: "value must be a valid email address",
-				cause:  err,
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.Avatar != nil {
-		// no validation rules for Avatar
-	}
-
 	if len(errors) > 0 {
-		return CreateUserReq_DataMultiError(errors)
+		return HandleUserDomainReq_DataMultiError(errors)
 	}
 
 	return nil
 }
 
-func (m *CreateUserReq_Data) _validateHostname(host string) error {
-	s := strings.ToLower(strings.TrimSuffix(host, "."))
-
-	if len(host) > 253 {
-		return errors.New("hostname cannot exceed 253 characters")
-	}
-
-	for _, part := range strings.Split(s, ".") {
-		if l := len(part); l == 0 || l > 63 {
-			return errors.New("hostname part must be non-empty and cannot exceed 63 characters")
-		}
-
-		if part[0] == '-' {
-			return errors.New("hostname parts cannot begin with hyphens")
-		}
-
-		if part[len(part)-1] == '-' {
-			return errors.New("hostname parts cannot end with hyphens")
-		}
-
-		for _, r := range part {
-			if (r < 'a' || r > 'z') && (r < '0' || r > '9') && r != '-' {
-				return fmt.Errorf("hostname parts can only contain alphanumeric characters or hyphens, got %q", string(r))
-			}
-		}
-	}
-
-	return nil
-}
-
-func (m *CreateUserReq_Data) _validateEmail(addr string) error {
-	a, err := mail.ParseAddress(addr)
-	if err != nil {
-		return err
-	}
-	addr = a.Address
-
-	if len(addr) > 254 {
-		return errors.New("email addresses cannot exceed 254 characters")
-	}
-
-	parts := strings.SplitN(addr, "@", 2)
-
-	if len(parts[0]) > 64 {
-		return errors.New("email address local phrase cannot exceed 64 characters")
-	}
-
-	return m._validateHostname(parts[1])
-}
-
-// CreateUserReq_DataMultiError is an error wrapping multiple validation errors
-// returned by CreateUserReq_Data.ValidateAll() if the designated constraints
-// aren't met.
-type CreateUserReq_DataMultiError []error
+// HandleUserDomainReq_DataMultiError is an error wrapping multiple validation
+// errors returned by HandleUserDomainReq_Data.ValidateAll() if the designated
+// constraints aren't met.
+type HandleUserDomainReq_DataMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m CreateUserReq_DataMultiError) Error() string {
+func (m HandleUserDomainReq_DataMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -6363,11 +7326,11 @@ func (m CreateUserReq_DataMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m CreateUserReq_DataMultiError) AllErrors() []error { return m }
+func (m HandleUserDomainReq_DataMultiError) AllErrors() []error { return m }
 
-// CreateUserReq_DataValidationError is the validation error returned by
-// CreateUserReq_Data.Validate if the designated constraints aren't met.
-type CreateUserReq_DataValidationError struct {
+// HandleUserDomainReq_DataValidationError is the validation error returned by
+// HandleUserDomainReq_Data.Validate if the designated constraints aren't met.
+type HandleUserDomainReq_DataValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -6375,24 +7338,24 @@ type CreateUserReq_DataValidationError struct {
 }
 
 // Field function returns field value.
-func (e CreateUserReq_DataValidationError) Field() string { return e.field }
+func (e HandleUserDomainReq_DataValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e CreateUserReq_DataValidationError) Reason() string { return e.reason }
+func (e HandleUserDomainReq_DataValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e CreateUserReq_DataValidationError) Cause() error { return e.cause }
+func (e HandleUserDomainReq_DataValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e CreateUserReq_DataValidationError) Key() bool { return e.key }
+func (e HandleUserDomainReq_DataValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e CreateUserReq_DataValidationError) ErrorName() string {
-	return "CreateUserReq_DataValidationError"
+func (e HandleUserDomainReq_DataValidationError) ErrorName() string {
+	return "HandleUserDomainReq_DataValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e CreateUserReq_DataValidationError) Error() string {
+func (e HandleUserDomainReq_DataValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -6404,14 +7367,14 @@ func (e CreateUserReq_DataValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sCreateUserReq_Data.%s: %s%s",
+		"invalid %sHandleUserDomainReq_Data.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = CreateUserReq_DataValidationError{}
+var _ error = HandleUserDomainReq_DataValidationError{}
 
 var _ interface {
 	Field() string
@@ -6419,19 +7382,156 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = CreateUserReq_DataValidationError{}
+} = HandleUserDomainReq_DataValidationError{}
 
-var _CreateUserReq_Data_Birthday_Pattern = regexp.MustCompile("^[1-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$")
-
-var _CreateUserReq_Data_Gender_NotInLookup = map[protobuf.UserGender]struct{}{
-	0: {},
+// Validate checks the field values on HandleUserDomainAuthorityReq_Data with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the first error encountered is returned, or nil if there are
+// no violations.
+func (m *HandleUserDomainAuthorityReq_Data) Validate() error {
+	return m.validate(false)
 }
 
-var _CreateUserReq_Data_Mobile_Pattern = regexp.MustCompile("^1[0-9]{10}$")
-
-var _CreateUserReq_Data_State_NotInLookup = map[protobuf.UserState]struct{}{
-	0: {},
+// ValidateAll checks the field values on HandleUserDomainAuthorityReq_Data
+// with the rules defined in the proto definition for this message. If any
+// rules are violated, the result is a list of violation errors wrapped in
+// HandleUserDomainAuthorityReq_DataMultiError, or nil if none found.
+func (m *HandleUserDomainAuthorityReq_Data) ValidateAll() error {
+	return m.validate(true)
 }
+
+func (m *HandleUserDomainAuthorityReq_Data) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for DomainId
+
+	if len(m.GetAuthorityIds()) < 1 {
+		err := HandleUserDomainAuthorityReq_DataValidationError{
+			field:  "AuthorityIds",
+			reason: "value must contain at least 1 item(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	_HandleUserDomainAuthorityReq_Data_AuthorityIds_Unique := make(map[uint64]struct{}, len(m.GetAuthorityIds()))
+
+	for idx, item := range m.GetAuthorityIds() {
+		_, _ = idx, item
+
+		if _, exists := _HandleUserDomainAuthorityReq_Data_AuthorityIds_Unique[item]; exists {
+			err := HandleUserDomainAuthorityReq_DataValidationError{
+				field:  fmt.Sprintf("AuthorityIds[%v]", idx),
+				reason: "repeated value must contain unique items",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		} else {
+			_HandleUserDomainAuthorityReq_Data_AuthorityIds_Unique[item] = struct{}{}
+		}
+
+		if item <= 0 {
+			err := HandleUserDomainAuthorityReq_DataValidationError{
+				field:  fmt.Sprintf("AuthorityIds[%v]", idx),
+				reason: "value must be greater than 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return HandleUserDomainAuthorityReq_DataMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleUserDomainAuthorityReq_DataMultiError is an error wrapping multiple
+// validation errors returned by
+// HandleUserDomainAuthorityReq_Data.ValidateAll() if the designated
+// constraints aren't met.
+type HandleUserDomainAuthorityReq_DataMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleUserDomainAuthorityReq_DataMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleUserDomainAuthorityReq_DataMultiError) AllErrors() []error { return m }
+
+// HandleUserDomainAuthorityReq_DataValidationError is the validation error
+// returned by HandleUserDomainAuthorityReq_Data.Validate if the designated
+// constraints aren't met.
+type HandleUserDomainAuthorityReq_DataValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleUserDomainAuthorityReq_DataValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleUserDomainAuthorityReq_DataValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleUserDomainAuthorityReq_DataValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleUserDomainAuthorityReq_DataValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleUserDomainAuthorityReq_DataValidationError) ErrorName() string {
+	return "HandleUserDomainAuthorityReq_DataValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleUserDomainAuthorityReq_DataValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleUserDomainAuthorityReq_Data.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleUserDomainAuthorityReq_DataValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleUserDomainAuthorityReq_DataValidationError{}
 
 // Validate checks the field values on UpdateUserReq_Data with the rules
 // defined in the proto definition for this message. If any rules are

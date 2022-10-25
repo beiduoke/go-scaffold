@@ -1014,15 +1014,8 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1CreateUserReqData"
+              "$ref": "#/definitions/v1CreateUserReq"
             }
-          },
-          {
-            "name": "id",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "uint64"
           }
         ],
         "tags": [
@@ -1175,6 +1168,86 @@
           "Admin"
         ]
       }
+    },
+    "/admin/v1/users/{id}/domainAuthorities": {
+      "post": {
+        "summary": "绑定用户领域权限",
+        "operationId": "Admin_HandleUserDomainAuthority",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1HandleUserDomainAuthorityReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1HandleUserDomainAuthorityReqData"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/users/{id}/domians": {
+      "post": {
+        "summary": "绑定用户领域",
+        "operationId": "Admin_HandleUserDomain",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1HandleUserDomainReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1HandleUserDomainReqData"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
     }
   },
   "definitions": {
@@ -1264,15 +1337,6 @@
         }
       },
       "title": "分页通用结果"
-    },
-    "protobufSort": {
-      "type": "string",
-      "enum": [
-        "SORT_UNSPECIFIED",
-        "SORT_DESC",
-        "SORT_ASC"
-      ],
-      "default": "SORT_UNSPECIFIED"
     },
     "protobufUserGender": {
       "type": "string",
@@ -1389,6 +1453,9 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
         }
       },
       "title": "回应 - 创建接口"
@@ -1422,6 +1489,9 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
         }
       },
       "title": "回应 - 创建权限"
@@ -1434,6 +1504,9 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
         }
       },
       "title": "回应 - 创建领域"
@@ -1446,6 +1519,9 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
         }
       },
       "title": "回应 - 创建菜单"
@@ -1458,14 +1534,20 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
         }
       },
       "title": "回应 - 创建用户"
     },
-    "v1CreateUserReqData": {
+    "v1CreateUserReq": {
       "type": "object",
       "properties": {
         "name": {
+          "type": "string"
+        },
+        "avatar": {
           "type": "string"
         },
         "password": {
@@ -1491,18 +1573,9 @@
         },
         "state": {
           "$ref": "#/definitions/protobufUserState"
-        },
-        "domainIds": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "format": "uint64"
-          }
-        },
-        "avatar": {
-          "type": "string"
         }
-      }
+      },
+      "title": "请求 - 创建用户"
     },
     "v1DeleteApiReply": {
       "type": "object",
@@ -1512,6 +1585,9 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
         }
       },
       "title": "回应 - 删除接口"
@@ -1524,6 +1600,9 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
         }
       },
       "title": "回应 - 删除权限"
@@ -1536,6 +1615,9 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
         }
       },
       "title": "回应 - 删除领域"
@@ -1548,6 +1630,9 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
         }
       },
       "title": "回应 - 删除菜单"
@@ -1560,6 +1645,9 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
         }
       },
       "title": "回应 - 删除用户"
@@ -1609,6 +1697,58 @@
       },
       "title": "回应 - 获取用户菜单"
     },
+    "v1HandleUserDomainAuthorityReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 绑定用户领域权限"
+    },
+    "v1HandleUserDomainAuthorityReqData": {
+      "type": "object",
+      "properties": {
+        "domainId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "authorityIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
+        }
+      }
+    },
+    "v1HandleUserDomainReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 绑定用户领域"
+    },
+    "v1HandleUserDomainReqData": {
+      "type": "object",
+      "properties": {
+        "domainIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
+        }
+      }
+    },
     "v1LoginReply": {
       "type": "object",
       "properties": {
@@ -1632,6 +1772,9 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
         }
       },
       "title": "回应 - 退出登录"
@@ -1703,6 +1846,9 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
         }
       },
       "title": "回应 - 注册"
@@ -1715,6 +1861,9 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
         }
       },
       "title": "回应 - 创建接口"
@@ -1747,6 +1896,9 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
         }
       },
       "title": "回应 - 创建权限"
@@ -1762,6 +1914,9 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
         }
       },
       "title": "回应 - 创建领域"
@@ -1777,6 +1932,9 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
         }
       },
       "title": "回应 - 创建菜单"
@@ -1792,6 +1950,9 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
         }
       },
       "title": "回应 - 修改用户"

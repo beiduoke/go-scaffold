@@ -3,11 +3,18 @@ syntax = "proto3";
 package api.protobuf;
 
 import "google/protobuf/any.proto";
+import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/beiduoke/go-scaffold/api/protobuf";
 option java_multiple_files = true;
 option java_package = "dev.beiduoke.api.protobuf";
 option java_outer_classname = "StructProto";
+
+message DataProto {
+  uint64 id = 1;
+  optional google.protobuf.Timestamp created_at = 2;
+  optional google.protobuf.Timestamp updated_at = 3;
+}
 
 // 分页通用请求
 message PagingReq {
@@ -32,7 +39,6 @@ message PagingReply {
   int32 total = 1;
   repeated google.protobuf.Any items = 2;
 }
-
 
 message WebsocketProto  {
   string event_id = 1;
