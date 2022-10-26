@@ -59,7 +59,9 @@ type SysAuthority struct {
 	gorm.Model
 	Name          string          `gorm:"type:varchar(255);column:name;not null;comment:角色名称;"`
 	ParentID      uint            `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
-	DefaultRouter string          `gorm:"type:varchar(255);column:default_router;not null;default:'dashboard';comment:默认路由;"`
+	DefaultRouter string          `gorm:"type:varchar(255);column:default_router;not null;default:'/dashboard';comment:默认路由;"`
+	Sort          int32           `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
+	State         int32           `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:角色状态 0 未指定  1 启用 2 停用;"`
 	Parent        *SysAuthority   `gorm:"foreignKey:ParentID"`
 	Authorities   []SysAuthority  `gorm:"many2many:sys_authority_relations"`
 	Menus         []SysMenu       `gorm:"many2many:sys_authority_menus;"`

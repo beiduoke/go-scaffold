@@ -33,7 +33,10 @@ func (r *AuthorityRepo) toModel(d *biz.Authority) *SysAuthority {
 			CreatedAt: d.CreatedAt,
 			UpdatedAt: d.UpdatedAt,
 		},
-		Name: d.Name,
+		Name:          d.Name,
+		DefaultRouter: d.DefaultRouter,
+		State:         d.State,
+		ParentID:      d.ParentID,
 	}
 }
 
@@ -50,7 +53,9 @@ func (r *AuthorityRepo) toBiz(d *SysAuthority) *biz.Authority {
 }
 
 func (r *AuthorityRepo) Save(ctx context.Context, g *biz.Authority) (*biz.Authority, error) {
-	return g, nil
+	d := r.toModel(g)
+	result := r.data.DB(ctx).Omit(clause.Associations).Create(d).Error
+	return r.toBiz(d), result
 }
 
 func (r *AuthorityRepo) Update(ctx context.Context, g *biz.Authority) (*biz.Authority, error) {
@@ -59,6 +64,20 @@ func (r *AuthorityRepo) Update(ctx context.Context, g *biz.Authority) (*biz.Auth
 
 func (r *AuthorityRepo) FindByID(ctx context.Context, id uint) (*biz.Authority, error) {
 	return nil, nil
+}
+
+func (r *AuthorityRepo) ListByIDs(ctx context.Context, id ...uint) (authorities []*biz.Authority, err error) {
+	db := r.data.DB(ctx).Model(&SysDomain{})
+	sysAuthorities := []*SysAuthority{}
+
+	err = db.Find(&sysAuthorities).Error
+	if err != nil {
+		return authorities, err
+	}
+	for _, v := range sysAuthorities {
+		authorities = append(authorities, r.toBiz(v))
+	}
+	return
 }
 
 func (r *AuthorityRepo) ListByName(ctx context.Context, name string) ([]*biz.Authority, error) {
@@ -94,7 +113,7 @@ func (r *AuthorityRepo) ListPage(ctx context.Context, handler pagination.Paginat
 		authorities = append(authorities, r.toBiz(v))
 	}
 
-	if !handler.GetNopaging() {
+	if handler.GetNopaging() {
 		total = int64(len(authorities))
 	}
 

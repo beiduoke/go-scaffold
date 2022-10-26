@@ -10,10 +10,15 @@ import (
 
 // Authority is a Authority model.
 type Authority struct {
-	ID        uint
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	Name      string
+	ID            uint
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+	Name          string
+	ParentID      uint
+	DefaultRouter string
+	State         int32
+	Users         []*User
+	Domains       []*Domain
 }
 
 // AuthorityRepo is a Greater repo.
@@ -28,20 +33,19 @@ type AuthorityRepo interface {
 
 // AuthorityUsecase is a Authority usecase.
 type AuthorityUsecase struct {
-	biz  *Biz
-	log  *log.Helper
-	repo AuthorityRepo
+	biz *Biz
+	log *log.Helper
 }
 
 // NewAuthorityUsecase new a Authority usecase.
-func NewAuthorityUsecase(logger log.Logger, biz *Biz, repo AuthorityRepo) *AuthorityUsecase {
-	return &AuthorityUsecase{log: log.NewHelper(logger), repo: repo, biz: biz}
+func NewAuthorityUsecase(logger log.Logger, biz *Biz) *AuthorityUsecase {
+	return &AuthorityUsecase{log: log.NewHelper(logger), biz: biz}
 }
 
 // Create creates a Authority, and returns the new Authority.
 func (uc *AuthorityUsecase) Create(ctx context.Context, g *Authority) (*Authority, error) {
 	uc.log.WithContext(ctx).Infof("Create: %v", g.Name)
-	return uc.repo.Save(ctx, g)
+	return uc.biz.authorityRepo.Save(ctx, g)
 }
 
 // GetDomainInID 获取指定领域ID集合

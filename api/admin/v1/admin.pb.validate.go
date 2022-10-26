@@ -1931,7 +1931,16 @@ func (m *HandleUserDomainAuthorityReq) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	if m.GetId() <= 0 {
+		err := HandleUserDomainAuthorityReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if all {
 		switch v := interface{}(m.GetData()).(type) {
@@ -4142,33 +4151,74 @@ func (m *CreateAuthorityReq) validate(all bool) error {
 
 	var errors []error
 
-	if all {
-		switch v := interface{}(m.GetData()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CreateAuthorityReqValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, CreateAuthorityReqValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
+		err := CreateAuthorityReqValidationError{
+			field:  "Name",
+			reason: "value length must be between 1 and 10 runes, inclusive",
 		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CreateAuthorityReqValidationError{
-				field:  "Data",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
+		if !all {
+			return err
 		}
+		errors = append(errors, err)
+	}
+
+	if m.GetParentId() < 0 {
+		err := CreateAuthorityReqValidationError{
+			field:  "ParentId",
+			reason: "value must be greater than or equal to 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.GetSort() < 0 {
+		err := CreateAuthorityReqValidationError{
+			field:  "Sort",
+			reason: "value must be greater than or equal to 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := _CreateAuthorityReq_State_NotInLookup[m.GetState()]; ok {
+		err := CreateAuthorityReqValidationError{
+			field:  "State",
+			reason: "value must not be in list [0]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := protobuf.AuthorityState_name[int32(m.GetState())]; !ok {
+		err := CreateAuthorityReqValidationError{
+			field:  "State",
+			reason: "value must be one of the defined enum values",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.DefaultRouter != nil {
+
+		if l := utf8.RuneCountInString(m.GetDefaultRouter()); l < 1 || l > 100 {
+			err := CreateAuthorityReqValidationError{
+				field:  "DefaultRouter",
+				reason: "value length must be between 1 and 100 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if len(errors) > 0 {
@@ -4250,6 +4300,10 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CreateAuthorityReqValidationError{}
+
+var _CreateAuthorityReq_State_NotInLookup = map[protobuf.AuthorityState]struct{}{
+	0: {},
+}
 
 // Validate checks the field values on CreateAuthorityReply with the rules
 // defined in the proto definition for this message. If any rules are
@@ -7407,7 +7461,16 @@ func (m *HandleUserDomainAuthorityReq_Data) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for DomainId
+	if m.GetDomainId() <= 0 {
+		err := HandleUserDomainAuthorityReq_DataValidationError{
+			field:  "DomainId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(m.GetAuthorityIds()) < 1 {
 		err := HandleUserDomainAuthorityReq_DataValidationError{
@@ -7971,6 +8034,80 @@ func (m *UpdateAuthorityReq_Data) validate(all bool) error {
 
 	var errors []error
 
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
+		err := UpdateAuthorityReq_DataValidationError{
+			field:  "Name",
+			reason: "value length must be between 1 and 10 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.GetParentId() < 0 {
+		err := UpdateAuthorityReq_DataValidationError{
+			field:  "ParentId",
+			reason: "value must be greater than or equal to 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := _UpdateAuthorityReq_Data_State_NotInLookup[m.GetState()]; ok {
+		err := UpdateAuthorityReq_DataValidationError{
+			field:  "State",
+			reason: "value must not be in list [0]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := protobuf.AuthorityState_name[int32(m.GetState())]; !ok {
+		err := UpdateAuthorityReq_DataValidationError{
+			field:  "State",
+			reason: "value must be one of the defined enum values",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.DefaultRouter != nil {
+
+		if l := utf8.RuneCountInString(m.GetDefaultRouter()); l < 1 || l > 100 {
+			err := UpdateAuthorityReq_DataValidationError{
+				field:  "DefaultRouter",
+				reason: "value length must be between 1 and 100 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Sort != nil {
+
+		if m.GetSort() < 0 {
+			err := UpdateAuthorityReq_DataValidationError{
+				field:  "Sort",
+				reason: "value must be greater than or equal to 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if len(errors) > 0 {
 		return UpdateAuthorityReq_DataMultiError(errors)
 	}
@@ -8050,6 +8187,10 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = UpdateAuthorityReq_DataValidationError{}
+
+var _UpdateAuthorityReq_Data_State_NotInLookup = map[protobuf.AuthorityState]struct{}{
+	0: {},
+}
 
 // Validate checks the field values on UpdateApiReq_Data with the rules defined
 // in the proto definition for this message. If any rules are violated, the

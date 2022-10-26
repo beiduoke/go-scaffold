@@ -89,7 +89,6 @@ func (r *DomainRepo) ListByIDs(ctx context.Context, id ...uint) (domains []*biz.
 	for _, v := range sysDomains {
 		domains = append(domains, r.toBiz(v))
 	}
-
 	return
 }
 
@@ -126,7 +125,7 @@ func (r *DomainRepo) ListPage(ctx context.Context, handler pagination.Pagination
 		domains = append(domains, r.toBiz(v))
 	}
 
-	if !handler.GetNopaging() {
+	if handler.GetNopaging() {
 		total = int64(len(domains))
 	}
 

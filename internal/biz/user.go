@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/casbin/casbin/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/pkg/errors"
 
@@ -73,11 +72,6 @@ func NewUserUsecase(logger log.Logger, biz *Biz, ac *conf.Auth) *UserUsecase {
 // Create 创建用户
 func (uc *UserUsecase) Create(ctx context.Context, g *User) (*User, error) {
 	uc.log.WithContext(ctx).Infof("CreateUser: %v", g)
-	// 创建用户只能关联一次领域
-	domains := g.Domains
-	if len(domains) <= 0 {
-		return nil, errors.New("领域未指定")
-	}
 	user, _ := uc.biz.userRepo.FindByName(ctx, g.Name)
 	if user != nil && user.Name != "" {
 		return nil, errors.New("用户名已存在")
@@ -95,20 +89,7 @@ func (uc *UserUsecase) Create(ctx context.Context, g *User) (*User, error) {
 		g.State = int32(pb.UserState_USER_STATE_ACTIVE)
 	}
 
-	err := uc.biz.tm.InTx(ctx, func(ctx context.Context) error {
-		user, err := uc.biz.userRepo.Save(ctx, g)
-		if err != nil {
-			return err
-		}
-		for _, domain := range domains {
-			if _, err := uc.biz.enforcer.AddRoleForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(domain.DefaultAuthorityID), convert.UnitToString(domain.ID)); err != nil {
-				uc.log.Errorf("领域权限绑定失败 %v", err)
-			}
-		}
-		g = user
-		return nil
-	})
-	return g, err
+	return uc.biz.userRepo.Save(ctx, g)
 }
 
 // HandleDomain 绑定领域
@@ -126,24 +107,19 @@ func (uc *UserUsecase) HandleDomain(ctx context.Context, g *User) error {
 	return nil
 }
 
-// HandleAuthority 绑定权限
-func (uc *UserUsecase) HandleAuthority(ctx context.Context, g *User, domainId ...uint) error {
-	uc.log.WithContext(ctx).Infof("HandleAuthority: %v", g)
+// HandleDomainAuthority 绑定领域权限
+func (uc *UserUsecase) HandleDomainAuthority(ctx context.Context, g *User, domainId uint) error {
+	uc.log.WithContext(ctx).Infof("HandleDomainAuthority: %v", g)
 	authorities := g.Authorities
 	if len(authorities) <= 0 {
 		return errors.New("权限未指定")
 	}
-	authorityIds := make([]string, 0, len(authorities))
 	for _, v := range authorities {
-		authorityIds = append(authorityIds, convert.UnitToString(v.ID))
+		if _, err := uc.biz.enforcer.AddRoleForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(v.ID), convert.UnitToString(domainId)); err != nil {
+			uc.log.Errorf("领域权限绑定失败 %v", err)
+		}
 	}
-	domainIds := make([]string, len(domainId))
-	for _, v := range domainId {
-		domainIds = append(domainIds, convert.UnitToString(v))
-	}
-	if _, err := uc.biz.enforcer.(*casbin.SyncedEnforcer).AddRolesForUser(convert.UnitToString(g.ID), authorityIds, domainIds...); err != nil {
-		uc.log.Errorf("领域权限绑定失败 %v", err)
-	}
+
 	return nil
 }
 

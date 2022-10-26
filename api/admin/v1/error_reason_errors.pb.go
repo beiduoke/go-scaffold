@@ -131,16 +131,16 @@ func ErrorUserHandleDomainFail(format string, args ...interface{}) *errors.Error
 	return errors.New(400, ErrorReason_USER_HANDLE_DOMAIN_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
-func IsUserHandleAuthorityFail(err error) bool {
+func IsUserHandleDomainAuthorityFail(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_USER_HANDLE_AUTHORITY_FAIL.String() && e.Code == 400
+	return e.Reason == ErrorReason_USER_HANDLE_DOMAIN_AUTHORITY_FAIL.String() && e.Code == 400
 }
 
-func ErrorUserHandleAuthorityFail(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_USER_HANDLE_AUTHORITY_FAIL.String(), fmt.Sprintf(format, args...))
+func ErrorUserHandleDomainAuthorityFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_USER_HANDLE_DOMAIN_AUTHORITY_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
 func IsDomainNotFound(err error) bool {
@@ -153,6 +153,54 @@ func IsDomainNotFound(err error) bool {
 
 func ErrorDomainNotFound(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_DOMAIN_NOT_FOUND.String(), fmt.Sprintf(format, args...))
+}
+
+func IsAuthorityNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_AUTHORITY_NOT_FOUND.String() && e.Code == 400
+}
+
+func ErrorAuthorityNotFound(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_AUTHORITY_NOT_FOUND.String(), fmt.Sprintf(format, args...))
+}
+
+func IsAuthorityCreateFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_AUTHORITY_CREATE_FAIL.String() && e.Code == 400
+}
+
+func ErrorAuthorityCreateFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_AUTHORITY_CREATE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsAuthorityUpdateFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_AUTHORITY_UPDATE_FAIL.String() && e.Code == 400
+}
+
+func ErrorAuthorityUpdateFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_AUTHORITY_UPDATE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsAuthorityDeleteFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_AUTHORITY_DELETE_FAIL.String() && e.Code == 400
+}
+
+func ErrorAuthorityDeleteFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_AUTHORITY_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
 func IsMenuNotFound(err error) bool {

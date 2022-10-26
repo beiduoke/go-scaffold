@@ -35,16 +35,17 @@ type Biz struct {
 	domainRepo DomainRepo
 	// 权限数据接口
 	authorityRepo AuthorityRepo
-	// 领域数据接口
+	// 用户数据接口
 	userRepo UserRepo
 }
 
-func NewBiz(logger log.Logger, tm Transaction, enforcer casbin.IEnforcer, domainRepo DomainRepo, userRepo UserRepo) *Biz {
+func NewBiz(logger log.Logger, tm Transaction, enforcer casbin.IEnforcer, domainRepo DomainRepo, authorityRepo AuthorityRepo, userRepo UserRepo) *Biz {
 	return &Biz{
-		log:        log.NewHelper(log.With(logger, "module", "biz/initialize")),
-		tm:         tm,
-		enforcer:   enforcer,
-		domainRepo: domainRepo,
-		userRepo:   userRepo,
+		log:           log.NewHelper(log.With(logger, "module", "biz/initialize")),
+		tm:            tm,
+		enforcer:      enforcer,
+		domainRepo:    domainRepo,
+		authorityRepo: authorityRepo,
+		userRepo:      userRepo,
 	}
 }

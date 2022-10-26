@@ -544,10 +544,7 @@ func _Admin_ListAuthority0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Conte
 func _Admin_CreateAuthority0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateAuthorityReq
-		if err := ctx.Bind(&in.Data); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAdminCreateAuthority)
@@ -934,7 +931,7 @@ func (c *AdminHTTPClientImpl) CreateAuthority(ctx context.Context, in *CreateAut
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminCreateAuthority))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

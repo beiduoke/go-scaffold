@@ -231,7 +231,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.admin.v1.Authority'
+                            $ref: '#/components/schemas/api.admin.v1.CreateAuthorityReq'
                 required: true
             responses:
                 "200":
@@ -833,6 +833,23 @@ components:
                 data:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 创建权限
+        api.admin.v1.CreateAuthorityReq:
+            type: object
+            properties:
+                name:
+                    type: string
+                parentId:
+                    type: integer
+                    format: uint64
+                DefaultRouter:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                state:
+                    type: integer
+                    format: enum
+            description: 请求 - 创建权限
         api.admin.v1.CreateDomainReply:
             type: object
             properties:
@@ -1117,7 +1134,20 @@ components:
             description: 回应 - 创建权限
         api.admin.v1.UpdateAuthorityReq_Data:
             type: object
-            properties: {}
+            properties:
+                name:
+                    type: string
+                parentId:
+                    type: integer
+                    format: uint64
+                DefaultRouter:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                state:
+                    type: integer
+                    format: enum
         api.admin.v1.UpdateDomainReply:
             type: object
             properties:

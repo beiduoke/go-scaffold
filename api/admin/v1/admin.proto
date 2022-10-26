@@ -208,7 +208,7 @@ service Admin {
   rpc CreateAuthority (CreateAuthorityReq) returns (CreateAuthorityReply) {
     option (google.api.http) = {
       post: "/admin/v1/authorities"
-      body: "data"
+      body: "*"
     };
   }
   // 获取授权
@@ -412,9 +412,9 @@ message HandleUserDomainReply {
 
 // 请求 - 绑定用户领域权限
 message HandleUserDomainAuthorityReq {
-  uint64 id = 1;
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
-    uint64 domain_id = 2; 
+    uint64 domain_id = 2 [(validate.rules).uint64 = {gt: 0}]; 
     repeated uint64 authority_ids = 11 [(validate.rules).repeated = {min_items: 1, unique: true, items: {uint64: {gt: 0}}}];
   }
   Data data = 3;
@@ -542,7 +542,11 @@ message Authority {
 
 // 请求 - 创建权限
 message CreateAuthorityReq {
-  Authority data = 1;
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
+  optional string DefaultRouter = 3 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  int32 sort = 4 [(validate.rules).int32 = {gte: 0}];
+  api.protobuf.AuthorityState state = 5 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
 }
 
 // 回应 - 创建权限
@@ -556,6 +560,11 @@ message CreateAuthorityReply {
 message UpdateAuthorityReq {
   uint64 id = 1;
   message Data {
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
+    optional string DefaultRouter = 3 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    optional int32 sort = 4 [(validate.rules).int32 = {gte: 0}];
+    api.protobuf.AuthorityState state = 5 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
   }
   Data data = 2;
 }

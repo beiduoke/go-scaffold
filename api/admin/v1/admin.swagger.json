@@ -445,7 +445,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1Authority"
+              "$ref": "#/definitions/v1CreateAuthorityReq"
             }
           }
         ],
@@ -1496,6 +1496,29 @@
       },
       "title": "回应 - 创建权限"
     },
+    "v1CreateAuthorityReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "DefaultRouter": {
+          "type": "string"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "state": {
+          "$ref": "#/definitions/protobufAuthorityState"
+        }
+      },
+      "title": "请求 - 创建权限"
+    },
     "v1CreateDomainReply": {
       "type": "object",
       "properties": {
@@ -1904,7 +1927,26 @@
       "title": "回应 - 创建权限"
     },
     "v1UpdateAuthorityReqData": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "DefaultRouter": {
+          "type": "string"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "state": {
+          "$ref": "#/definitions/protobufAuthorityState"
+        }
+      }
     },
     "v1UpdateDomainReply": {
       "type": "object",

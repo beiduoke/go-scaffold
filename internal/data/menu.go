@@ -118,7 +118,7 @@ func (r *MenuRepo) ListPage(ctx context.Context, handler pagination.PaginationHa
 		menus = append(menus, r.toBiz(v))
 	}
 
-	if !handler.GetNopaging() {
+	if handler.GetNopaging() {
 		total = int64(len(menus))
 	}
 

@@ -119,7 +119,7 @@ func (r *ApiRepo) ListPage(ctx context.Context, handler pagination.PaginationHan
 		apis = append(apis, r.toBiz(v))
 	}
 
-	if !handler.GetNopaging() {
+	if handler.GetNopaging() {
 		total = int64(len(apis))
 	}
 

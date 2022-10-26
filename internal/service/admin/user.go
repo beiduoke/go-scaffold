@@ -2,6 +2,7 @@ package admin
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	v1 "github.com/beiduoke/go-scaffold/api/admin/v1"
@@ -112,6 +113,7 @@ func (s *AdminService) CreateUser(ctx context.Context, in *v1.CreateUserReq) (*v
 	})
 	return &v1.CreateUserReply{
 		Success: true,
+		Message: "创建成功",
 		Data:    data,
 	}, nil
 }
@@ -134,7 +136,7 @@ func (s *AdminService) HandleUserDomain(ctx context.Context, in *v1.HandleUserDo
 	}
 	return &v1.HandleUserDomainReply{
 		Success: true,
-		Message: "",
+		Message: "处理成功",
 	}, nil
 }
 
@@ -145,19 +147,18 @@ func (s *AdminService) HandleUserDomainAuthority(ctx context.Context, in *v1.Han
 	for _, authorityId := range v.GetAuthorityIds() {
 		authorityIds = append(authorityIds, uint(authorityId))
 	}
-
+	fmt.Printf("%#v", authorityIds)
 	authorities, _ := s.authorityCase.ListByIDs(ctx, authorityIds...)
-	err := s.userCase.HandleAuthority(ctx, &biz.User{
+	err := s.userCase.HandleDomainAuthority(ctx, &biz.User{
 		ID:          uint(in.GetId()),
-		Domains:     []*biz.Domain{{ID: uint(v.GetDomainId())}},
 		Authorities: authorities,
-	})
+	}, uint(v.GetDomainId()))
 	if err != nil {
-		return nil, v1.ErrorUserHandleAuthorityFail("绑定用户权限失败: %v", err.Error())
+		return nil, v1.ErrorUserHandleDomainAuthorityFail("绑定用户权限失败: %v", err.Error())
 	}
 	return &v1.HandleUserDomainAuthorityReply{
 		Success: true,
-		Message: "",
+		Message: "处理成功",
 	}, nil
 }
 
@@ -194,6 +195,7 @@ func (s *AdminService) UpdateUser(ctx context.Context, in *v1.UpdateUserReq) (*v
 	}
 	return &v1.UpdateUserReply{
 		Success: true,
+		Message: "修改成功",
 	}, nil
 }
 
@@ -228,8 +230,8 @@ func (s *AdminService) DeleteUser(ctx context.Context, in *v1.DeleteUserReq) (*v
 	if err := s.userCase.Delete(ctx, &biz.User{ID: uint(in.GetId())}); err != nil {
 		return nil, v1.ErrorUserDeleteFail("用户删除失败：%v", err)
 	}
-
 	return &v1.DeleteUserReply{
 		Success: true,
+		Message: "删除成功",
 	}, nil
 }
