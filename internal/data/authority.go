@@ -16,7 +16,7 @@ type AuthorityRepo struct {
 }
 
 // NewAuthorityRepo .
-func NewAuthorityRepo(data *Data, logger log.Logger) biz.AuthorityRepo {
+func NewAuthorityRepo(logger log.Logger, data *Data) biz.AuthorityRepo {
 	return &AuthorityRepo{
 		data: data,
 		log:  log.NewHelper(logger),
@@ -60,6 +60,15 @@ func (r *AuthorityRepo) Save(ctx context.Context, g *biz.Authority) (*biz.Author
 
 func (r *AuthorityRepo) Update(ctx context.Context, g *biz.Authority) (*biz.Authority, error) {
 	return g, nil
+}
+
+func (r *AuthorityRepo) FindByName(ctx context.Context, s string) (*biz.Authority, error) {
+	authority := SysAuthority{}
+	result := r.data.DB(ctx).Last(&authority, "name = ?", s)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return r.toBiz(&authority), nil
 }
 
 func (r *AuthorityRepo) FindByID(ctx context.Context, id uint) (*biz.Authority, error) {

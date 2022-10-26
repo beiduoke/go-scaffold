@@ -795,6 +795,14 @@ components:
                     format: uint64
                 name:
                     type: string
+                parentId:
+                    type: integer
+                    format: uint64
+                defaultRouter:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
                 state:
                     type: integer
                     format: enum
@@ -841,7 +849,7 @@ components:
                 parentId:
                     type: integer
                     format: uint64
-                DefaultRouter:
+                defaultRouter:
                     type: string
                 sort:
                     type: integer
@@ -1140,7 +1148,7 @@ components:
                 parentId:
                     type: integer
                     format: uint64
-                DefaultRouter:
+                defaultRouter:
                     type: string
                 sort:
                     type: integer
@@ -1246,10 +1254,6 @@ components:
                         $ref: '#/components/schemas/api.admin.v1.Authority'
                 avatar:
                     type: string
-                domains:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.admin.v1.Domain'
             description: 用户模块
         api.protobuf.PagingReply:
             type: object

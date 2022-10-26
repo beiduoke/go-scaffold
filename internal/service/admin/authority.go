@@ -7,15 +7,30 @@ import (
 	"github.com/beiduoke/go-scaffold/api/protobuf"
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"google.golang.org/protobuf/types/known/anypb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 var _ v1.AdminServer = (*AdminService)(nil)
 
 // ListAuthority 列表-授权
 func (s *AdminService) ListAuthority(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
+	results, total := s.authorityCase.ListPage(ctx, in.GetPage(), in.GetPageSize(), in.GetQuery(), in.GetOrderBy())
+	items := make([]*anypb.Any, 0, len(results))
+	for _, v := range results {
+		user := &v1.Authority{
+			Id:        uint64(v.ID),
+			Name:      v.Name,
+			ParentId:  uint64(v.ParentID),
+			State:     protobuf.AuthorityState(v.State),
+			CreatedAt: timestamppb.New(v.CreatedAt),
+			UpdatedAt: timestamppb.New(v.UpdatedAt),
+		}
+		item, _ := anypb.New(user)
+		items = append(items, item)
+	}
 	return &protobuf.PagingReply{
-		Total: 0,
-		Items: []*anypb.Any{},
+		Total: int32(total),
+		Items: items,
 	}, nil
 }
 

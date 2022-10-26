@@ -36,9 +36,9 @@ func wireApp(confServer *conf.Server, auth *conf.Auth, confData *conf.Data, logg
 		return nil, nil, err
 	}
 	transaction := data.NewTransaction(dataData)
-	domainRepo := data.NewDomainRepo(dataData, logger)
-	authorityRepo := data.NewAuthorityRepo(dataData, logger)
-	userRepo := data.NewUserRepo(dataData, logger)
+	domainRepo := data.NewDomainRepo(logger, dataData)
+	authorityRepo := data.NewAuthorityRepo(logger, dataData)
+	userRepo := data.NewUserRepo(logger, dataData)
 	bizBiz := biz.NewBiz(logger, transaction, iEnforcer, domainRepo, authorityRepo, userRepo)
 	authUsecase := biz.NewAuthUsecase(logger, bizBiz, auth)
 	userUsecase := biz.NewUserUsecase(logger, bizBiz, auth)
@@ -46,7 +46,7 @@ func wireApp(confServer *conf.Server, auth *conf.Auth, confData *conf.Data, logg
 	authorityUsecase := biz.NewAuthorityUsecase(logger, bizBiz)
 	menuRepo := data.NewMenuRepo(dataData, logger)
 	menuUsecase := biz.NewMenuUsecase(logger, bizBiz, menuRepo)
-	apiRepo := data.NewApiRepo(dataData, logger)
+	apiRepo := data.NewApiRepo(logger, dataData)
 	apiUsecase := biz.NewApiUsecase(logger, bizBiz, apiRepo)
 	adminService := admin.NewAdminService(logger, auth, websocketService, authUsecase, userUsecase, domainUsecase, authorityUsecase, menuUsecase, apiUsecase)
 	webService := web.NewWebService(logger, userUsecase, authUsecase)

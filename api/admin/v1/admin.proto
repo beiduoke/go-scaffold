@@ -357,7 +357,7 @@ message User {
   string nick_name = 4;
   string real_name = 5;
   string birthday = 6;
-  api.protobuf.UserGender gender = 7;
+  api.protobuf.UserGender gender = 7; 
   string mobile = 8;
   string email = 9;
   api.protobuf.UserState state = 10;
@@ -365,7 +365,6 @@ message User {
   google.protobuf.Timestamp updated_at = 12;
   repeated Authority authoritys = 13;
   string avatar = 14;
-  repeated Domain domains = 15;
 }
 
 // 回应 - 列表用户 - 未使用
@@ -533,19 +532,22 @@ message DeleteDomainReply {
 
 // 权限模块
 message Authority {
-  optional google.protobuf.Timestamp created_at = 1;
-  optional google.protobuf.Timestamp updated_at = 2;
-  optional uint64 id = 3;
-  optional string name = 4;
-  optional api.protobuf.AuthorityState state = 5;
+  google.protobuf.Timestamp created_at = 1;
+  google.protobuf.Timestamp updated_at = 2;
+  uint64 id = 3;
+  string name = 4;
+  uint64 parent_id = 5;
+  string default_router = 6;
+  int32 sort = 7;
+  api.protobuf.AuthorityState state = 8;
 }
 
 // 请求 - 创建权限
 message CreateAuthorityReq {
   string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
   uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
-  optional string DefaultRouter = 3 [(validate.rules).string = {min_len: 1, max_len: 100}];
-  int32 sort = 4 [(validate.rules).int32 = {gte: 0}];
+  optional string default_router = 3 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  optional int32 sort = 4 [(validate.rules).int32 = {gte: 0}];
   api.protobuf.AuthorityState state = 5 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
 }
 
@@ -562,7 +564,7 @@ message UpdateAuthorityReq {
   message Data {
     string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
     uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
-    optional string DefaultRouter = 3 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    optional string default_router = 3 [(validate.rules).string = {min_len: 1, max_len: 100}];
     optional int32 sort = 4 [(validate.rules).int32 = {gte: 0}];
     api.protobuf.AuthorityState state = 5 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
   }

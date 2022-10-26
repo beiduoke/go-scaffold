@@ -1439,6 +1439,17 @@
         "name": {
           "type": "string"
         },
+        "parentId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "defaultRouter": {
+          "type": "string"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32"
+        },
         "state": {
           "$ref": "#/definitions/protobufAuthorityState"
         }
@@ -1506,7 +1517,7 @@
           "type": "string",
           "format": "uint64"
         },
-        "DefaultRouter": {
+        "defaultRouter": {
           "type": "string"
         },
         "sort": {
@@ -1936,7 +1947,7 @@
           "type": "string",
           "format": "uint64"
         },
-        "DefaultRouter": {
+        "defaultRouter": {
           "type": "string"
         },
         "sort": {
@@ -2082,12 +2093,6 @@
         },
         "avatar": {
           "type": "string"
-        },
-        "domains": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1Domain"
-          }
         }
       },
       "title": "用户模块"

@@ -16,7 +16,7 @@ type DomainRepo struct {
 }
 
 // NewDomainRepo .
-func NewDomainRepo(data *Data, logger log.Logger) biz.DomainRepo {
+func NewDomainRepo(logger log.Logger, data *Data) biz.DomainRepo {
 	return &DomainRepo{
 		data: data,
 		log:  log.NewHelper(logger),

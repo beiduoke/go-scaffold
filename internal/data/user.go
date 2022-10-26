@@ -22,7 +22,7 @@ type UserRepo struct {
 }
 
 // NewUserRepo .
-func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
+func NewUserRepo(logger log.Logger, data *Data) biz.UserRepo {
 	return &UserRepo{
 		data:      data,
 		log:       log.NewHelper(logger),
@@ -137,7 +137,6 @@ func (r *UserRepo) ListPage(ctx context.Context, handler pagination.PaginationHa
 	if !handler.GetNopaging() {
 		db = db.Count(&total).Offset(handler.GetPageOffset())
 	}
-
 	result := db.Limit(int(handler.GetPageSize())).Find(&sysUsers)
 	if result.Error != nil {
 		return nil, 0

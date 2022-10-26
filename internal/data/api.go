@@ -16,7 +16,7 @@ type ApiRepo struct {
 }
 
 // NewApiRepo .
-func NewApiRepo(data *Data, logger log.Logger) biz.ApiRepo {
+func NewApiRepo(logger log.Logger, data *Data) biz.ApiRepo {
 	return &ApiRepo{
 		data: data,
 		log:  log.NewHelper(logger),
