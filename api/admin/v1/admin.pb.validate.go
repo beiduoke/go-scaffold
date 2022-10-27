@@ -36,7 +36,7 @@ var (
 	_ = anypb.Any{}
 	_ = sort.Sort
 
-	_ = protobuf.AuthorityState(0)
+	_ = protobuf.UserGender(0)
 )
 
 // Validate checks the field values on Auth with the rules defined in the proto
@@ -2147,7 +2147,16 @@ func (m *GetUserReq) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	if m.GetId() <= 0 {
+		err := GetUserReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return GetUserReqMultiError(errors)
@@ -2248,7 +2257,16 @@ func (m *DeleteUserReq) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	if m.GetId() <= 0 {
+		err := DeleteUserReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return DeleteUserReqMultiError(errors)
@@ -2895,83 +2913,75 @@ func (m *Domain) validate(all bool) error {
 
 	var errors []error
 
-	if m.CreatedAt != nil {
-
-		if all {
-			switch v := interface{}(m.GetCreatedAt()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, DomainValidationError{
-						field:  "CreatedAt",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, DomainValidationError{
-						field:  "CreatedAt",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetCreatedAt()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return DomainValidationError{
+	if all {
+		switch v := interface{}(m.GetCreatedAt()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, DomainValidationError{
 					field:  "CreatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
-				}
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, DomainValidationError{
+					field:  "CreatedAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
 			}
 		}
-
+	} else if v, ok := interface{}(m.GetCreatedAt()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return DomainValidationError{
+				field:  "CreatedAt",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
 	}
 
-	if m.UpdatedAt != nil {
-
-		if all {
-			switch v := interface{}(m.GetUpdatedAt()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, DomainValidationError{
-						field:  "UpdatedAt",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, DomainValidationError{
-						field:  "UpdatedAt",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetUpdatedAt()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return DomainValidationError{
+	if all {
+		switch v := interface{}(m.GetUpdatedAt()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, DomainValidationError{
 					field:  "UpdatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
-				}
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, DomainValidationError{
+					field:  "UpdatedAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
 			}
 		}
-
+	} else if v, ok := interface{}(m.GetUpdatedAt()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return DomainValidationError{
+				field:  "UpdatedAt",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
 	}
 
-	if m.Id != nil {
-		// no validation rules for Id
-	}
+	// no validation rules for Id
 
-	if m.Name != nil {
-		// no validation rules for Name
-	}
+	// no validation rules for Name
 
-	if m.State != nil {
-		// no validation rules for State
-	}
+	// no validation rules for ParentId
+
+	// no validation rules for Sort
+
+	// no validation rules for State
+
+	// no validation rules for DefaultAuthorityId
 
 	if len(errors) > 0 {
 		return DomainMultiError(errors)
@@ -3072,33 +3082,82 @@ func (m *CreateDomainReq) validate(all bool) error {
 
 	var errors []error
 
-	if all {
-		switch v := interface{}(m.GetData()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CreateDomainReqValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, CreateDomainReqValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
+		err := CreateDomainReqValidationError{
+			field:  "Name",
+			reason: "value length must be between 1 and 10 runes, inclusive",
 		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CreateDomainReqValidationError{
-				field:  "Data",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
+		if !all {
+			return err
 		}
+		errors = append(errors, err)
+	}
+
+	if m.GetDefaultAuthorityId() <= 0 {
+		err := CreateDomainReqValidationError{
+			field:  "DefaultAuthorityId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.ParentId != nil {
+
+		if m.GetParentId() < 0 {
+			err := CreateDomainReqValidationError{
+				field:  "ParentId",
+				reason: "value must be greater than or equal to 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Sort != nil {
+
+		if m.GetSort() < 0 {
+			err := CreateDomainReqValidationError{
+				field:  "Sort",
+				reason: "value must be greater than or equal to 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.State != nil {
+
+		if _, ok := _CreateDomainReq_State_NotInLookup[m.GetState()]; ok {
+			err := CreateDomainReqValidationError{
+				field:  "State",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.DomainState_name[int32(m.GetState())]; !ok {
+			err := CreateDomainReqValidationError{
+				field:  "State",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if len(errors) > 0 {
@@ -3178,6 +3237,10 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CreateDomainReqValidationError{}
+
+var _CreateDomainReq_State_NotInLookup = map[protobuf.DomainState]struct{}{
+	0: {},
+}
 
 // Validate checks the field values on CreateDomainReply with the rules defined
 // in the proto definition for this message. If any rules are violated, the
@@ -3336,7 +3399,16 @@ func (m *UpdateDomainReq) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	if m.GetId() <= 0 {
+		err := UpdateDomainReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if all {
 		switch v := interface{}(m.GetData()).(type) {
@@ -3602,7 +3674,16 @@ func (m *GetDomainReq) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	if m.GetId() <= 0 {
+		err := GetDomainReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return GetDomainReqMultiError(errors)
@@ -3703,7 +3784,16 @@ func (m *DeleteDomainReq) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	if m.GetId() <= 0 {
+		err := DeleteDomainReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return DeleteDomainReqMultiError(errors)
@@ -4424,7 +4514,16 @@ func (m *UpdateAuthorityReq) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	if m.GetId() <= 0 {
+		err := UpdateAuthorityReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if all {
 		switch v := interface{}(m.GetData()).(type) {
@@ -4692,7 +4791,16 @@ func (m *GetAuthorityReq) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	if m.GetId() <= 0 {
+		err := GetAuthorityReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return GetAuthorityReqMultiError(errors)
@@ -4794,7 +4902,16 @@ func (m *DeleteAuthorityReq) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	if m.GetId() <= 0 {
+		err := DeleteAuthorityReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return DeleteAuthorityReqMultiError(errors)
@@ -5223,10 +5340,10 @@ func (m *CreateApiReq) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetMethod()); l < 1 || l > 10 {
+	if _, ok := _CreateApiReq_Method_InLookup[m.GetMethod()]; !ok {
 		err := CreateApiReqValidationError{
 			field:  "Method",
-			reason: "value length must be between 1 and 10 runes, inclusive",
+			reason: "value must be in list [GET POST Head PUT PATCH DELETE OPTIONS CONNECT TRACE]",
 		}
 		if !all {
 			return err
@@ -5234,9 +5351,35 @@ func (m *CreateApiReq) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	// no validation rules for Group
+	if m.Group != nil {
 
-	// no validation rules for Description
+		if l := utf8.RuneCountInString(m.GetGroup()); l < 1 || l > 100 {
+			err := CreateApiReqValidationError{
+				field:  "Group",
+				reason: "value length must be between 1 and 100 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Description != nil {
+
+		if l := utf8.RuneCountInString(m.GetDescription()); l < 1 || l > 1000 {
+			err := CreateApiReqValidationError{
+				field:  "Description",
+				reason: "value length must be between 1 and 1000 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return CreateApiReqMultiError(errors)
@@ -5314,6 +5457,18 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CreateApiReqValidationError{}
+
+var _CreateApiReq_Method_InLookup = map[string]struct{}{
+	"GET":     {},
+	"POST":    {},
+	"Head":    {},
+	"PUT":     {},
+	"PATCH":   {},
+	"DELETE":  {},
+	"OPTIONS": {},
+	"CONNECT": {},
+	"TRACE":   {},
+}
 
 // Validate checks the field values on CreateApiReply with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
@@ -5470,7 +5625,16 @@ func (m *UpdateApiReq) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	if m.GetId() <= 0 {
+		err := UpdateApiReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if all {
 		switch v := interface{}(m.GetData()).(type) {
@@ -5733,7 +5897,16 @@ func (m *GetApiReq) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	if m.GetId() <= 0 {
+		err := GetApiReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return GetApiReqMultiError(errors)
@@ -5834,7 +6007,16 @@ func (m *DeleteApiReq) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	if m.GetId() <= 0 {
+		err := DeleteApiReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return DeleteApiReqMultiError(errors)
@@ -6067,6 +6249,88 @@ func (m *Menu) validate(all bool) error {
 
 	var errors []error
 
+	if all {
+		switch v := interface{}(m.GetCreatedAt()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, MenuValidationError{
+					field:  "CreatedAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, MenuValidationError{
+					field:  "CreatedAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetCreatedAt()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return MenuValidationError{
+				field:  "CreatedAt",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetUpdatedAt()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, MenuValidationError{
+					field:  "UpdatedAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, MenuValidationError{
+					field:  "UpdatedAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetUpdatedAt()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return MenuValidationError{
+				field:  "UpdatedAt",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for Id
+
+	// no validation rules for Name
+
+	// no validation rules for ParentId
+
+	// no validation rules for Path
+
+	// no validation rules for Hidden
+
+	// no validation rules for Component
+
+	// no validation rules for Sort
+
+	// no validation rules for Icon
+
+	// no validation rules for Title
+
+	// no validation rules for KeepAlive
+
+	// no validation rules for BaseMenu
+
+	// no validation rules for CloseTab
+
 	for idx, item := range m.GetChildrens() {
 		_, _ = idx, item
 
@@ -6099,120 +6363,6 @@ func (m *Menu) validate(all bool) error {
 			}
 		}
 
-	}
-
-	if m.CreatedAt != nil {
-
-		if all {
-			switch v := interface{}(m.GetCreatedAt()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, MenuValidationError{
-						field:  "CreatedAt",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, MenuValidationError{
-						field:  "CreatedAt",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetCreatedAt()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return MenuValidationError{
-					field:  "CreatedAt",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if m.UpdatedAt != nil {
-
-		if all {
-			switch v := interface{}(m.GetUpdatedAt()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, MenuValidationError{
-						field:  "UpdatedAt",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, MenuValidationError{
-						field:  "UpdatedAt",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetUpdatedAt()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return MenuValidationError{
-					field:  "UpdatedAt",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if m.Id != nil {
-		// no validation rules for Id
-	}
-
-	if m.Name != nil {
-		// no validation rules for Name
-	}
-
-	if m.ParentId != nil {
-		// no validation rules for ParentId
-	}
-
-	if m.Path != nil {
-		// no validation rules for Path
-	}
-
-	if m.Hidden != nil {
-		// no validation rules for Hidden
-	}
-
-	if m.Component != nil {
-		// no validation rules for Component
-	}
-
-	if m.Sort != nil {
-		// no validation rules for Sort
-	}
-
-	if m.Icon != nil {
-		// no validation rules for Icon
-	}
-
-	if m.Title != nil {
-		// no validation rules for Title
-	}
-
-	if m.KeepAlive != nil {
-		// no validation rules for KeepAlive
-	}
-
-	if m.BaseMenu != nil {
-		// no validation rules for BaseMenu
-	}
-
-	if m.CloseTab != nil {
-		// no validation rules for CloseTab
 	}
 
 	if len(errors) > 0 {
@@ -6314,33 +6464,169 @@ func (m *CreateMenuReq) validate(all bool) error {
 
 	var errors []error
 
-	if all {
-		switch v := interface{}(m.GetData()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CreateMenuReqValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, CreateMenuReqValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 50 {
+		err := CreateMenuReqValidationError{
+			field:  "Name",
+			reason: "value length must be between 1 and 50 runes, inclusive",
 		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CreateMenuReqValidationError{
-				field:  "Data",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
+		if !all {
+			return err
 		}
+		errors = append(errors, err)
+	}
+
+	if m.GetParentId() < 0 {
+		err := CreateMenuReqValidationError{
+			field:  "ParentId",
+			reason: "value must be greater than or equal to 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetPath()); l < 1 || l > 100 {
+		err := CreateMenuReqValidationError{
+			field:  "Path",
+			reason: "value length must be between 1 and 100 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := _CreateMenuReq_Hidden_NotInLookup[m.GetHidden()]; ok {
+		err := CreateMenuReqValidationError{
+			field:  "Hidden",
+			reason: "value must not be in list [0]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := protobuf.MenuHidden_name[int32(m.GetHidden())]; !ok {
+		err := CreateMenuReqValidationError{
+			field:  "Hidden",
+			reason: "value must be one of the defined enum values",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetComponent()); l < 1 || l > 100 {
+		err := CreateMenuReqValidationError{
+			field:  "Component",
+			reason: "value length must be between 1 and 100 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.GetSort() < 0 {
+		err := CreateMenuReqValidationError{
+			field:  "Sort",
+			reason: "value must be greater than or equal to 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetIcon()); l < 1 || l > 100 {
+		err := CreateMenuReqValidationError{
+			field:  "Icon",
+			reason: "value length must be between 1 and 100 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetTitle()); l < 1 || l > 100 {
+		err := CreateMenuReqValidationError{
+			field:  "Title",
+			reason: "value length must be between 1 and 100 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := _CreateMenuReq_KeepAlive_NotInLookup[m.GetKeepAlive()]; ok {
+		err := CreateMenuReqValidationError{
+			field:  "KeepAlive",
+			reason: "value must not be in list [0]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := protobuf.MenuKeepAlive_name[int32(m.GetKeepAlive())]; !ok {
+		err := CreateMenuReqValidationError{
+			field:  "KeepAlive",
+			reason: "value must be one of the defined enum values",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := _CreateMenuReq_BaseMenu_NotInLookup[m.GetBaseMenu()]; ok {
+		err := CreateMenuReqValidationError{
+			field:  "BaseMenu",
+			reason: "value must not be in list [0]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := protobuf.MenuBaseMenu_name[int32(m.GetBaseMenu())]; !ok {
+		err := CreateMenuReqValidationError{
+			field:  "BaseMenu",
+			reason: "value must be one of the defined enum values",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := _CreateMenuReq_CloseTab_NotInLookup[m.GetCloseTab()]; ok {
+		err := CreateMenuReqValidationError{
+			field:  "CloseTab",
+			reason: "value must not be in list [0]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := protobuf.MenuCloseTab_name[int32(m.GetCloseTab())]; !ok {
+		err := CreateMenuReqValidationError{
+			field:  "CloseTab",
+			reason: "value must be one of the defined enum values",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
 	}
 
 	if len(errors) > 0 {
@@ -6420,6 +6706,22 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CreateMenuReqValidationError{}
+
+var _CreateMenuReq_Hidden_NotInLookup = map[protobuf.MenuHidden]struct{}{
+	0: {},
+}
+
+var _CreateMenuReq_KeepAlive_NotInLookup = map[protobuf.MenuKeepAlive]struct{}{
+	0: {},
+}
+
+var _CreateMenuReq_BaseMenu_NotInLookup = map[protobuf.MenuBaseMenu]struct{}{
+	0: {},
+}
+
+var _CreateMenuReq_CloseTab_NotInLookup = map[protobuf.MenuCloseTab]struct{}{
+	0: {},
+}
 
 // Validate checks the field values on CreateMenuReply with the rules defined
 // in the proto definition for this message. If any rules are violated, the
@@ -6576,7 +6878,16 @@ func (m *UpdateMenuReq) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	if m.GetId() <= 0 {
+		err := UpdateMenuReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if all {
 		switch v := interface{}(m.GetData()).(type) {
@@ -6840,7 +7151,16 @@ func (m *GetMenuReq) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	if m.GetId() <= 0 {
+		err := GetMenuReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return GetMenuReqMultiError(errors)
@@ -6941,7 +7261,16 @@ func (m *DeleteMenuReq) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	if m.GetId() <= 0 {
+		err := DeleteMenuReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return DeleteMenuReqMultiError(errors)
@@ -7176,7 +7505,16 @@ func (m *GetMenuTreeReq) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	if m.GetId() <= 0 {
+		err := GetMenuTreeReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return GetMenuTreeReqMultiError(errors)
@@ -7894,6 +8232,84 @@ func (m *UpdateDomainReq_Data) validate(all bool) error {
 
 	var errors []error
 
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
+		err := UpdateDomainReq_DataValidationError{
+			field:  "Name",
+			reason: "value length must be between 1 and 10 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.GetDefaultAuthorityId() <= 0 {
+		err := UpdateDomainReq_DataValidationError{
+			field:  "DefaultAuthorityId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.ParentId != nil {
+
+		if m.GetParentId() < 0 {
+			err := UpdateDomainReq_DataValidationError{
+				field:  "ParentId",
+				reason: "value must be greater than or equal to 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Sort != nil {
+
+		if m.GetSort() < 0 {
+			err := UpdateDomainReq_DataValidationError{
+				field:  "Sort",
+				reason: "value must be greater than or equal to 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.State != nil {
+
+		if _, ok := _UpdateDomainReq_Data_State_NotInLookup[m.GetState()]; ok {
+			err := UpdateDomainReq_DataValidationError{
+				field:  "State",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.DomainState_name[int32(m.GetState())]; !ok {
+			err := UpdateDomainReq_DataValidationError{
+				field:  "State",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if len(errors) > 0 {
 		return UpdateDomainReq_DataMultiError(errors)
 	}
@@ -7973,6 +8389,10 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = UpdateDomainReq_DataValidationError{}
+
+var _UpdateDomainReq_Data_State_NotInLookup = map[protobuf.DomainState]struct{}{
+	0: {},
+}
 
 // Validate checks the field values on UpdateAuthorityReq_Data with the rules
 // defined in the proto definition for this message. If any rules are
@@ -8198,10 +8618,10 @@ func (m *UpdateApiReq_Data) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetMethod()); l < 1 || l > 10 {
+	if _, ok := _UpdateApiReq_Data_Method_InLookup[m.GetMethod()]; !ok {
 		err := UpdateApiReq_DataValidationError{
 			field:  "Method",
-			reason: "value length must be between 1 and 10 runes, inclusive",
+			reason: "value must be in list [GET POST Head PUT PATCH DELETE OPTIONS CONNECT TRACE]",
 		}
 		if !all {
 			return err
@@ -8209,9 +8629,35 @@ func (m *UpdateApiReq_Data) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	// no validation rules for Group
+	if m.Group != nil {
 
-	// no validation rules for Description
+		if l := utf8.RuneCountInString(m.GetGroup()); l < 1 || l > 100 {
+			err := UpdateApiReq_DataValidationError{
+				field:  "Group",
+				reason: "value length must be between 1 and 100 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Description != nil {
+
+		if l := utf8.RuneCountInString(m.GetDescription()); l < 1 || l > 1000 {
+			err := UpdateApiReq_DataValidationError{
+				field:  "Description",
+				reason: "value length must be between 1 and 1000 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return UpdateApiReq_DataMultiError(errors)
@@ -8293,6 +8739,18 @@ var _ interface {
 	ErrorName() string
 } = UpdateApiReq_DataValidationError{}
 
+var _UpdateApiReq_Data_Method_InLookup = map[string]struct{}{
+	"GET":     {},
+	"POST":    {},
+	"Head":    {},
+	"PUT":     {},
+	"PATCH":   {},
+	"DELETE":  {},
+	"OPTIONS": {},
+	"CONNECT": {},
+	"TRACE":   {},
+}
+
 // Validate checks the field values on UpdateMenuReq_Data with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -8314,6 +8772,171 @@ func (m *UpdateMenuReq_Data) validate(all bool) error {
 	}
 
 	var errors []error
+
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 50 {
+		err := UpdateMenuReq_DataValidationError{
+			field:  "Name",
+			reason: "value length must be between 1 and 50 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.GetParentId() < 0 {
+		err := UpdateMenuReq_DataValidationError{
+			field:  "ParentId",
+			reason: "value must be greater than or equal to 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetPath()); l < 1 || l > 100 {
+		err := UpdateMenuReq_DataValidationError{
+			field:  "Path",
+			reason: "value length must be between 1 and 100 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := _UpdateMenuReq_Data_Hidden_NotInLookup[m.GetHidden()]; ok {
+		err := UpdateMenuReq_DataValidationError{
+			field:  "Hidden",
+			reason: "value must not be in list [0]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := protobuf.MenuHidden_name[int32(m.GetHidden())]; !ok {
+		err := UpdateMenuReq_DataValidationError{
+			field:  "Hidden",
+			reason: "value must be one of the defined enum values",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetComponent()); l < 1 || l > 100 {
+		err := UpdateMenuReq_DataValidationError{
+			field:  "Component",
+			reason: "value length must be between 1 and 100 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.GetSort() < 0 {
+		err := UpdateMenuReq_DataValidationError{
+			field:  "Sort",
+			reason: "value must be greater than or equal to 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetIcon()); l < 1 || l > 100 {
+		err := UpdateMenuReq_DataValidationError{
+			field:  "Icon",
+			reason: "value length must be between 1 and 100 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetTitle()); l < 1 || l > 100 {
+		err := UpdateMenuReq_DataValidationError{
+			field:  "Title",
+			reason: "value length must be between 1 and 100 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := _UpdateMenuReq_Data_KeepAlive_NotInLookup[m.GetKeepAlive()]; ok {
+		err := UpdateMenuReq_DataValidationError{
+			field:  "KeepAlive",
+			reason: "value must not be in list [0]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := protobuf.MenuKeepAlive_name[int32(m.GetKeepAlive())]; !ok {
+		err := UpdateMenuReq_DataValidationError{
+			field:  "KeepAlive",
+			reason: "value must be one of the defined enum values",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := _UpdateMenuReq_Data_BaseMenu_NotInLookup[m.GetBaseMenu()]; ok {
+		err := UpdateMenuReq_DataValidationError{
+			field:  "BaseMenu",
+			reason: "value must not be in list [0]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := protobuf.MenuBaseMenu_name[int32(m.GetBaseMenu())]; !ok {
+		err := UpdateMenuReq_DataValidationError{
+			field:  "BaseMenu",
+			reason: "value must be one of the defined enum values",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := _UpdateMenuReq_Data_CloseTab_NotInLookup[m.GetCloseTab()]; ok {
+		err := UpdateMenuReq_DataValidationError{
+			field:  "CloseTab",
+			reason: "value must not be in list [0]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := protobuf.MenuCloseTab_name[int32(m.GetCloseTab())]; !ok {
+		err := UpdateMenuReq_DataValidationError{
+			field:  "CloseTab",
+			reason: "value must be one of the defined enum values",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return UpdateMenuReq_DataMultiError(errors)
@@ -8394,3 +9017,19 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = UpdateMenuReq_DataValidationError{}
+
+var _UpdateMenuReq_Data_Hidden_NotInLookup = map[protobuf.MenuHidden]struct{}{
+	0: {},
+}
+
+var _UpdateMenuReq_Data_KeepAlive_NotInLookup = map[protobuf.MenuKeepAlive]struct{}{
+	0: {},
+}
+
+var _UpdateMenuReq_Data_BaseMenu_NotInLookup = map[protobuf.MenuBaseMenu]struct{}{
+	0: {},
+}
+
+var _UpdateMenuReq_Data_CloseTab_NotInLookup = map[protobuf.MenuCloseTab]struct{}{
+	0: {},
+}

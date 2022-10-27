@@ -45,10 +45,14 @@ func (r *AuthorityRepo) toBiz(d *SysAuthority) *biz.Authority {
 		return nil
 	}
 	return &biz.Authority{
-		CreatedAt: d.CreatedAt,
-		UpdatedAt: d.UpdatedAt,
-		ID:        d.ID,
-		Name:      d.Name,
+		ID:            d.ID,
+		CreatedAt:     d.CreatedAt,
+		UpdatedAt:     d.UpdatedAt,
+		Name:          d.Name,
+		ParentID:      d.ParentID,
+		DefaultRouter: d.DefaultRouter,
+		Sort:          d.Sort,
+		State:         d.State,
 	}
 }
 
@@ -59,7 +63,9 @@ func (r *AuthorityRepo) Save(ctx context.Context, g *biz.Authority) (*biz.Author
 }
 
 func (r *AuthorityRepo) Update(ctx context.Context, g *biz.Authority) (*biz.Authority, error) {
-	return g, nil
+	d := r.toModel(g)
+	result := r.data.DB(ctx).Model(d).Updates(d)
+	return r.toBiz(d), result.Error
 }
 
 func (r *AuthorityRepo) FindByName(ctx context.Context, s string) (*biz.Authority, error) {
@@ -72,11 +78,16 @@ func (r *AuthorityRepo) FindByName(ctx context.Context, s string) (*biz.Authorit
 }
 
 func (r *AuthorityRepo) FindByID(ctx context.Context, id uint) (*biz.Authority, error) {
-	return nil, nil
+	authority := SysAuthority{}
+	result := r.data.DB(ctx).Last(&authority, id)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return r.toBiz(&authority), nil
 }
 
 func (r *AuthorityRepo) ListByIDs(ctx context.Context, id ...uint) (authorities []*biz.Authority, err error) {
-	db := r.data.DB(ctx).Model(&SysDomain{})
+	db := r.data.DB(ctx).Model(&SysAuthority{})
 	sysAuthorities := []*SysAuthority{}
 
 	err = db.Find(&sysAuthorities).Error
@@ -90,7 +101,19 @@ func (r *AuthorityRepo) ListByIDs(ctx context.Context, id ...uint) (authorities 
 }
 
 func (r *AuthorityRepo) ListByName(ctx context.Context, name string) ([]*biz.Authority, error) {
-	return nil, nil
+	sysAuthorities, bizAuthorities := []*SysAuthority{}, []*biz.Authority{}
+	result := r.data.DB(ctx).Find(&sysAuthorities, "name LIKE ?", "%"+name)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	for _, v := range sysAuthorities {
+		bizAuthorities = append(bizAuthorities, r.toBiz(v))
+	}
+	return bizAuthorities, nil
+}
+
+func (r *AuthorityRepo) Delete(ctx context.Context, g *biz.Authority) error {
+	return r.data.DB(ctx).Delete(r.toModel(g)).Error
 }
 
 func (r *AuthorityRepo) ListAll(ctx context.Context) ([]*biz.Authority, error) {

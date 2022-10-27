@@ -12,7 +12,7 @@ import (
 
 var _ v1.AdminServer = (*AdminService)(nil)
 
-// ListAuthority 列表-授权
+// ListAuthority 列表-权限角色
 func (s *AdminService) ListAuthority(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	results, total := s.authorityCase.ListPage(ctx, in.GetPage(), in.GetPageSize(), in.GetQuery(), in.GetOrderBy())
 	items := make([]*anypb.Any, 0, len(results))
@@ -52,5 +52,53 @@ func (s *AdminService) CreateAuthority(ctx context.Context, in *v1.CreateAuthori
 		Success: true,
 		Message: "创建成功",
 		Data:    data,
+	}, nil
+}
+
+// UpdateAuthority 创建权限角色
+func (s *AdminService) UpdateAuthority(ctx context.Context, in *v1.UpdateAuthorityReq) (*v1.UpdateAuthorityReply, error) {
+	v := in.GetData()
+	err := s.authorityCase.Update(ctx, &biz.Authority{
+		ID:            uint(in.GetId()),
+		Name:          v.GetName(),
+		ParentID:      uint(v.GetParentId()),
+		DefaultRouter: v.GetDefaultRouter(),
+		Sort:          v.GetSort(),
+		State:         int32(v.GetState()),
+	})
+	if err != nil {
+		return nil, v1.ErrorAuthorityUpdateFail("权限角色创建失败: %v", err.Error())
+	}
+	return &v1.UpdateAuthorityReply{
+		Success: true,
+		Message: "修改成功",
+	}, nil
+}
+
+// GetAuthority 获取权限角色
+func (s *AdminService) GetAuthority(ctx context.Context, in *v1.GetAuthorityReq) (*v1.Authority, error) {
+	authority, err := s.authorityCase.GetID(ctx, &biz.Authority{ID: uint(in.GetId())})
+	if err != nil {
+		return nil, v1.ErrorAuthorityNotFound("权限角色未找到")
+	}
+	return &v1.Authority{
+		Id:        uint64(authority.ID),
+		Name:      authority.Name,
+		ParentId:  uint64(authority.ParentID),
+		Sort:      int32(authority.Sort),
+		State:     protobuf.AuthorityState(authority.State),
+		CreatedAt: timestamppb.New(authority.CreatedAt),
+		UpdatedAt: timestamppb.New(authority.UpdatedAt),
+	}, nil
+}
+
+// DeleteAuthority 删除权限角色
+func (s *AdminService) DeleteAuthority(ctx context.Context, in *v1.DeleteAuthorityReq) (*v1.DeleteAuthorityReply, error) {
+	if err := s.authorityCase.Delete(ctx, &biz.Authority{ID: uint(in.GetId())}); err != nil {
+		return nil, v1.ErrorAuthorityDeleteFail("权限角色删除失败：%v", err)
+	}
+	return &v1.DeleteAuthorityReply{
+		Success: true,
+		Message: "删除成功",
 	}, nil
 }

@@ -102,7 +102,7 @@ func (r *UserRepo) Save(ctx context.Context, g *biz.User) (*biz.User, error) {
 
 func (r *UserRepo) Update(ctx context.Context, g *biz.User) (*biz.User, error) {
 	d := r.toModel(g)
-	result := r.data.DB(ctx).Debug().Model(d).Updates(d)
+	result := r.data.DB(ctx).Model(d).Updates(d)
 	return r.toBiz(d), result.Error
 }
 
@@ -124,7 +124,7 @@ func (r *UserRepo) Delete(ctx context.Context, g *biz.User) error {
 }
 
 func (r *UserRepo) ListPage(ctx context.Context, handler pagination.PaginationHandler) (users []*biz.User, total int64) {
-	db := r.data.DB(ctx).Model(&SysUser{}).Debug()
+	db := r.data.DB(ctx).Model(&SysUser{})
 	sysUsers := []*SysUser{}
 	// 查询条件
 	for _, v := range handler.GetConditions() {

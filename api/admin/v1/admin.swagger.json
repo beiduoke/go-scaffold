@@ -624,7 +624,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1Domain"
+              "$ref": "#/definitions/v1CreateDomainReq"
             }
           }
         ],
@@ -803,7 +803,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1Menu"
+              "$ref": "#/definitions/v1CreateMenuReq"
             }
           }
         ],
@@ -1545,6 +1545,30 @@
       },
       "title": "回应 - 创建领域"
     },
+    "v1CreateDomainReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "state": {
+          "$ref": "#/definitions/protobufDomainState"
+        },
+        "defaultAuthorityId": {
+          "type": "string",
+          "format": "uint64"
+        }
+      },
+      "title": "请求 - 创建领域"
+    },
     "v1CreateMenuReply": {
       "type": "object",
       "properties": {
@@ -1559,6 +1583,47 @@
         }
       },
       "title": "回应 - 创建菜单"
+    },
+    "v1CreateMenuReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "path": {
+          "type": "string"
+        },
+        "hidden": {
+          "$ref": "#/definitions/protobufMenuHidden"
+        },
+        "component": {
+          "type": "string"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "keepAlive": {
+          "$ref": "#/definitions/protobufMenuKeepAlive"
+        },
+        "baseMenu": {
+          "$ref": "#/definitions/protobufMenuBaseMenu"
+        },
+        "closeTab": {
+          "$ref": "#/definitions/protobufMenuCloseTab"
+        }
+      },
+      "title": "请求 - 创建菜单"
     },
     "v1CreateUserReply": {
       "type": "object",
@@ -1704,8 +1769,20 @@
         "name": {
           "type": "string"
         },
+        "parentId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32"
+        },
         "state": {
           "$ref": "#/definitions/protobufDomainState"
+        },
+        "defaultAuthorityId": {
+          "type": "string",
+          "format": "uint64"
         }
       },
       "title": "领域模块"
@@ -1845,8 +1922,8 @@
           "type": "string"
         },
         "sort": {
-          "type": "string",
-          "format": "int64"
+          "type": "integer",
+          "format": "int32"
         },
         "icon": {
           "type": "string"
@@ -1975,7 +2052,27 @@
       "title": "回应 - 创建领域"
     },
     "v1UpdateDomainReqData": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "state": {
+          "$ref": "#/definitions/protobufDomainState"
+        },
+        "defaultAuthorityId": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
     },
     "v1UpdateMenuReply": {
       "type": "object",
@@ -1993,7 +2090,44 @@
       "title": "回应 - 创建菜单"
     },
     "v1UpdateMenuReqData": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "path": {
+          "type": "string"
+        },
+        "hidden": {
+          "$ref": "#/definitions/protobufMenuHidden"
+        },
+        "component": {
+          "type": "string"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "keepAlive": {
+          "$ref": "#/definitions/protobufMenuKeepAlive"
+        },
+        "baseMenu": {
+          "$ref": "#/definitions/protobufMenuBaseMenu"
+        },
+        "closeTab": {
+          "$ref": "#/definitions/protobufMenuCloseTab"
+        }
+      }
     },
     "v1UpdateUserReply": {
       "type": "object",

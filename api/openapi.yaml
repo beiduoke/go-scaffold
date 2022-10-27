@@ -346,7 +346,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.admin.v1.Domain'
+                            $ref: '#/components/schemas/api.admin.v1.CreateDomainReq'
                 required: true
             responses:
                 "200":
@@ -461,7 +461,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.admin.v1.Menu'
+                            $ref: '#/components/schemas/api.admin.v1.CreateMenuReq'
                 required: true
             responses:
                 "200":
@@ -868,6 +868,24 @@ components:
                 data:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 创建领域
+        api.admin.v1.CreateDomainReq:
+            type: object
+            properties:
+                name:
+                    type: string
+                parentId:
+                    type: integer
+                    format: uint64
+                sort:
+                    type: integer
+                    format: int32
+                state:
+                    type: integer
+                    format: enum
+                defaultAuthorityId:
+                    type: integer
+                    format: uint64
+            description: 请求 - 创建领域
         api.admin.v1.CreateMenuReply:
             type: object
             properties:
@@ -878,6 +896,38 @@ components:
                 data:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 创建菜单
+        api.admin.v1.CreateMenuReq:
+            type: object
+            properties:
+                name:
+                    type: string
+                parentId:
+                    type: integer
+                    format: uint64
+                path:
+                    type: string
+                hidden:
+                    type: integer
+                    format: enum
+                component:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                icon:
+                    type: string
+                title:
+                    type: string
+                keepAlive:
+                    type: integer
+                    format: enum
+                baseMenu:
+                    type: integer
+                    format: enum
+                closeTab:
+                    type: integer
+                    format: enum
+            description: 请求 - 创建菜单
         api.admin.v1.CreateUserReply:
             type: object
             properties:
@@ -978,9 +1028,18 @@ components:
                     format: uint64
                 name:
                     type: string
+                parentId:
+                    type: integer
+                    format: uint64
+                sort:
+                    type: integer
+                    format: int32
                 state:
                     type: integer
                     format: enum
+                defaultAuthorityId:
+                    type: integer
+                    format: uint64
             description: 领域模块
         api.admin.v1.GetUserMenuReply:
             type: object
@@ -1078,7 +1137,7 @@ components:
                     type: string
                 sort:
                     type: integer
-                    format: int64
+                    format: int32
                 icon:
                     type: string
                 title:
@@ -1168,7 +1227,21 @@ components:
             description: 回应 - 创建领域
         api.admin.v1.UpdateDomainReq_Data:
             type: object
-            properties: {}
+            properties:
+                name:
+                    type: string
+                parentId:
+                    type: integer
+                    format: uint64
+                sort:
+                    type: integer
+                    format: int32
+                state:
+                    type: integer
+                    format: enum
+                defaultAuthorityId:
+                    type: integer
+                    format: uint64
         api.admin.v1.UpdateMenuReply:
             type: object
             properties:
@@ -1181,7 +1254,35 @@ components:
             description: 回应 - 创建菜单
         api.admin.v1.UpdateMenuReq_Data:
             type: object
-            properties: {}
+            properties:
+                name:
+                    type: string
+                parentId:
+                    type: integer
+                    format: uint64
+                path:
+                    type: string
+                hidden:
+                    type: integer
+                    format: enum
+                component:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                icon:
+                    type: string
+                title:
+                    type: string
+                keepAlive:
+                    type: integer
+                    format: enum
+                baseMenu:
+                    type: integer
+                    format: enum
+                closeTab:
+                    type: integer
+                    format: enum
         api.admin.v1.UpdateUserReply:
             type: object
             properties:

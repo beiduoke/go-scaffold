@@ -155,6 +155,42 @@ func ErrorDomainNotFound(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_DOMAIN_NOT_FOUND.String(), fmt.Sprintf(format, args...))
 }
 
+func IsDomainCreateFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_DOMAIN_CREATE_FAIL.String() && e.Code == 400
+}
+
+func ErrorDomainCreateFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_DOMAIN_CREATE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsDomainUpdateFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_DOMAIN_UPDATE_FAIL.String() && e.Code == 400
+}
+
+func ErrorDomainUpdateFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_DOMAIN_UPDATE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsDomainDeleteFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_DOMAIN_DELETE_FAIL.String() && e.Code == 400
+}
+
+func ErrorDomainDeleteFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_DOMAIN_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
 func IsAuthorityNotFound(err error) bool {
 	if err == nil {
 		return false
@@ -215,6 +251,42 @@ func ErrorMenuNotFound(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_MENU_NOT_FOUND.String(), fmt.Sprintf(format, args...))
 }
 
+func IsMenuCreateFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_MENU_CREATE_FAIL.String() && e.Code == 400
+}
+
+func ErrorMenuCreateFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_MENU_CREATE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsMenuUpdateFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_MENU_UPDATE_FAIL.String() && e.Code == 400
+}
+
+func ErrorMenuUpdateFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_MENU_UPDATE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsMenuDeleteFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_MENU_DELETE_FAIL.String() && e.Code == 400
+}
+
+func ErrorMenuDeleteFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_MENU_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
 func IsApiNotFound(err error) bool {
 	if err == nil {
 		return false
@@ -225,4 +297,40 @@ func IsApiNotFound(err error) bool {
 
 func ErrorApiNotFound(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_API_NOT_FOUND.String(), fmt.Sprintf(format, args...))
+}
+
+func IsApiCreateFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_API_CREATE_FAIL.String() && e.Code == 400
+}
+
+func ErrorApiCreateFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_API_CREATE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsApiUpdateFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_API_UPDATE_FAIL.String() && e.Code == 400
+}
+
+func ErrorApiUpdateFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_API_UPDATE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsApiDeleteFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_API_DELETE_FAIL.String() && e.Code == 400
+}
+
+func ErrorApiDeleteFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_API_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
 }

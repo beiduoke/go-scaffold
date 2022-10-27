@@ -174,7 +174,7 @@ service Admin {
   rpc CreateDomain (CreateDomainReq) returns (CreateDomainReply) {
     option (google.api.http) = {
       post: "/admin/v1/domains"
-      body: "data"
+      body: "*"
     };
   }
   // 获取领域
@@ -275,7 +275,7 @@ service Admin {
   rpc CreateMenu (CreateMenuReq) returns (CreateMenuReply) {
     option (google.api.http) = {
       post: "/admin/v1/menus"
-      body: "data"
+      body: "*"
     };
   }
   // 获取树形菜单
@@ -427,12 +427,12 @@ message HandleUserDomainAuthorityReply {
 
 // 请求 - 获取用户
 message GetUserReq {
-  uint64 id = 1;
+  uint64 id = 1  [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 请求 - 删除用户
 message DeleteUserReq {
-  uint64 id = 1;
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 删除用户
@@ -479,16 +479,23 @@ message GetUserMenuReply {
 
 // 领域模块
 message Domain {
-  optional google.protobuf.Timestamp created_at = 1;
-  optional google.protobuf.Timestamp updated_at = 2;
-  optional uint64 id = 3;
-  optional string name = 4;
-  optional api.protobuf.DomainState state = 5;
+  google.protobuf.Timestamp created_at = 1;
+  google.protobuf.Timestamp updated_at = 2;
+  uint64 id = 3;
+  string name = 4;
+  uint64 parent_id = 5;
+  int32 sort = 6;
+  api.protobuf.DomainState state = 7;
+  uint64 default_authority_id = 8;
 }
 
 // 请求 - 创建领域
 message CreateDomainReq {
-  Domain data = 1;
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  optional uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
+  optional int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
+  optional api.protobuf.DomainState state = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  uint64 default_authority_id = 5 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 创建领域
@@ -500,8 +507,13 @@ message CreateDomainReply {
 
 // 请求 - 修改领域
 message UpdateDomainReq {
-  uint64 id = 1;
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    optional uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
+    optional int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
+    optional api.protobuf.DomainState state = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    uint64 default_authority_id = 5 [(validate.rules).uint64 = {gt: 0}];
   }
   Data data = 2;
 }
@@ -515,12 +527,12 @@ message UpdateDomainReply {
 
 // 请求 - 获取领域
 message GetDomainReq {
-  uint64 id = 1;
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 请求 - 删除领域
 message DeleteDomainReq {
-  uint64 id = 1;
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 删除领域
@@ -560,7 +572,7 @@ message CreateAuthorityReply {
 
 // 请求 - 修改权限
 message UpdateAuthorityReq {
-  uint64 id = 1;
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
     uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
@@ -580,12 +592,12 @@ message UpdateAuthorityReply {
 
 // 请求 - 获取权限
 message GetAuthorityReq {
-  uint64 id = 1;
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 请求 - 删除权限
 message DeleteAuthorityReq {
-  uint64 id = 1;
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 删除权限
@@ -611,9 +623,9 @@ message Api {
 message CreateApiReq {
   string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
   string path = 2 [(validate.rules).string = {min_len: 1, max_len: 100}];
-  string method = 3 [(validate.rules).string = {min_len: 1, max_len: 10}];
-  string group = 4;
-  string description = 5;
+  string method = 3 [(validate.rules).string = {in: ["GET", "POST", "Head", "PUT", "PATCH", "DELETE", "OPTIONS", "CONNECT", "TRACE"]}];
+  optional string group = 4 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  optional string description = 5 [(validate.rules).string = {min_len: 1, max_len: 1000}];
 }
 
 // 回应 - 创建接口
@@ -625,13 +637,13 @@ message CreateApiReply {
 
 // 请求 - 修改接口
 message UpdateApiReq {
-  uint64 id = 1;
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
     string path = 2 [(validate.rules).string = {min_len: 1, max_len: 100}];
-    string method = 3 [(validate.rules).string = {min_len: 1, max_len: 10}];
-    string group = 4;
-    string description = 5;
+    string method = 3 [(validate.rules).string = {in: ["GET", "POST", "Head", "PUT", "PATCH", "DELETE", "OPTIONS", "CONNECT", "TRACE"]}];
+    optional string group = 4 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    optional string description = 5 [(validate.rules).string = {min_len: 1, max_len: 1000}];
   }
   Data data = 2;
 }
@@ -645,12 +657,12 @@ message UpdateApiReply {
 
 // 请求 - 获取接口
 message GetApiReq {
-  uint64 id = 1;
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 请求 - 删除接口
 message DeleteApiReq {
-  uint64 id = 1;
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 删除接口
@@ -662,26 +674,36 @@ message DeleteApiReply {
 
 // 菜单模块
 message Menu {
-  optional google.protobuf.Timestamp created_at = 1;
-  optional google.protobuf.Timestamp updated_at = 2;
-  optional uint64 id = 3;
-  optional string name = 4;
-  optional uint64 parent_id = 5;
-  optional string path = 6;
-  optional api.protobuf.MenuHidden hidden = 7;
-  optional string component = 8;
-  optional int64 sort = 9;
-  optional string icon = 10;
-  optional string title = 11;
-  optional api.protobuf.MenuKeepAlive keep_alive = 12;
-  optional api.protobuf.MenuBaseMenu base_menu = 13;
-  optional api.protobuf.MenuCloseTab close_tab = 14;
+  google.protobuf.Timestamp created_at = 1;
+  google.protobuf.Timestamp updated_at = 2;
+  uint64 id = 3;
+  string name = 4;
+  uint64 parent_id = 5;
+  string path = 6;
+  api.protobuf.MenuHidden hidden = 7;
+  string component = 8;
+  int32 sort = 9;
+  string icon = 10;
+  string title = 11;
+  api.protobuf.MenuKeepAlive keep_alive = 12;
+  api.protobuf.MenuBaseMenu base_menu = 13;
+  api.protobuf.MenuCloseTab close_tab = 14;
   repeated Menu childrens = 15;
 }
 
 // 请求 - 创建菜单
 message CreateMenuReq {
-  Menu data = 1;
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 50}];
+  uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
+  string path = 3 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  api.protobuf.MenuHidden hidden = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  string component = 5 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  int32 sort = 6 [(validate.rules).int32 = {gte: 0}];
+  string icon = 7 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  string title = 8 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  api.protobuf.MenuKeepAlive keep_alive = 9 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  api.protobuf.MenuBaseMenu base_menu = 10 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  api.protobuf.MenuCloseTab close_tab = 11 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
 }
 
 // 回应 - 创建菜单
@@ -693,8 +715,19 @@ message CreateMenuReply {
 
 // 请求 - 修改菜单
 message UpdateMenuReq {
-  uint64 id = 1;
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 50}];
+    uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
+    string path = 3 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    api.protobuf.MenuHidden hidden = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    string component = 5 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    int32 sort = 6 [(validate.rules).int32 = {gte: 0}];
+    string icon = 7 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    string title = 8 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    api.protobuf.MenuKeepAlive keep_alive = 9 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    api.protobuf.MenuBaseMenu base_menu = 10 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    api.protobuf.MenuCloseTab close_tab = 11 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
   }
   Data data = 2;
 }
@@ -708,12 +741,12 @@ message UpdateMenuReply {
 
 // 请求 - 获取菜单
 message GetMenuReq {
-  uint64 id = 1;
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 请求 - 删除菜单
 message DeleteMenuReq {
-  uint64 id = 1;
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 删除菜单
@@ -725,5 +758,5 @@ message DeleteMenuReply {
 
 // 回应 - 获取树形菜单
 message GetMenuTreeReq {
-  uint64 id = 1;
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }

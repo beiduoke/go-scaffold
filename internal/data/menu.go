@@ -73,20 +73,62 @@ func (r *MenuRepo) toBiz(d *SysMenu) *biz.Menu {
 
 func (r *MenuRepo) Save(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 	d := r.toModel(g)
-	result := r.data.DB(ctx).Create(d)
-	return r.toBiz(d), result.Error
+	result := r.data.DB(ctx).Omit(clause.Associations).Debug().Create(d).Error
+	return r.toBiz(d), result
 }
 
 func (r *MenuRepo) Update(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
-	return g, nil
+	d := r.toModel(g)
+	result := r.data.DB(ctx).Model(d).Updates(d)
+	return r.toBiz(d), result.Error
+}
+
+func (r *MenuRepo) FindByName(ctx context.Context, s string) (*biz.Menu, error) {
+	menu := SysMenu{}
+	result := r.data.DB(ctx).Last(&menu, "name = ?", s)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return r.toBiz(&menu), nil
 }
 
 func (r *MenuRepo) FindByID(ctx context.Context, id uint) (*biz.Menu, error) {
-	return nil, nil
+	menu := SysMenu{}
+	result := r.data.DB(ctx).Last(&menu, id)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return r.toBiz(&menu), nil
+}
+
+func (r *MenuRepo) ListByIDs(ctx context.Context, id ...uint) (menus []*biz.Menu, err error) {
+	db := r.data.DB(ctx).Model(&SysMenu{})
+	sysMenus := []*SysMenu{}
+
+	err = db.Find(&sysMenus).Error
+	if err != nil {
+		return menus, err
+	}
+	for _, v := range sysMenus {
+		menus = append(menus, r.toBiz(v))
+	}
+	return
 }
 
 func (r *MenuRepo) ListByName(ctx context.Context, name string) ([]*biz.Menu, error) {
-	return nil, nil
+	sysMenus, bizMenus := []*SysMenu{}, []*biz.Menu{}
+	result := r.data.DB(ctx).Find(&sysMenus, "name LIKE ?", "%"+name)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	for _, v := range sysMenus {
+		bizMenus = append(bizMenus, r.toBiz(v))
+	}
+	return bizMenus, nil
+}
+
+func (r *MenuRepo) Delete(ctx context.Context, g *biz.Menu) error {
+	return r.data.DB(ctx).Delete(r.toModel(g)).Error
 }
 
 func (r *MenuRepo) ListAll(ctx context.Context) ([]*biz.Menu, error) {

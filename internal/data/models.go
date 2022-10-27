@@ -31,10 +31,13 @@ type DomainModel struct {
 type SysDomain struct {
 	DomainModel
 	Name               string         `gorm:"type:varchar(255);column:name;not null;comment:名称;"`
+	ParentID           uint           `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
+	Sort               int32          `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
 	State              int32          `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
 	DefaultAuthorityID uint           `gorm:"type:bigint(20);column:default_authority_id;not null;index;comment:默认角色;"`
 	Users              []SysUser      `gorm:"-"`
 	Authorities        []SysAuthority `gorm:"-"`
+	Parent             *SysDomain     `gorm:"foreignKey:ParentID"`
 }
 
 // User 用户
@@ -102,7 +105,7 @@ type SysMenu struct {
 	Path           string             `gorm:"type:varchar(255);column:path;not null;comment:路由path"`
 	Hidden         int32              `gorm:"type:tinyint(1);column:hidden;not null;default:1;comment:隐藏 0 无指定 1 是 2 否"`
 	Component      string             `gorm:"type:varchar(255);column:component;not null;comment:对应前端文件路径"`
-	Sort           int                `gorm:"type:int(10);column:sort;not null;default:10;comment:排序标记"`
+	Sort           int32              `gorm:"type:int(10);column:sort;not null;default:10;comment:排序标记"`
 	Meta           SysMeta            `gorm:"embedded;comment:附加属性"`
 	Authorities    []SysAuthority     `gorm:"many2many:sys_authority_menus;"`
 	Apis           []SysApi           `gorm:"many2many:sys_menu_apis;"`

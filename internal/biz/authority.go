@@ -5,6 +5,7 @@ import (
 	"time"
 
 	pb "github.com/beiduoke/go-scaffold/api/protobuf"
+	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/imdario/mergo"
@@ -19,6 +20,7 @@ type Authority struct {
 	Name          string
 	ParentID      uint
 	DefaultRouter string
+	Sort          int32
 	State         int32
 	Users         []*User
 	Domains       []*Domain
@@ -32,6 +34,7 @@ type AuthorityRepo interface {
 	FindByName(context.Context, string) (*Authority, error)
 	ListByName(context.Context, string) ([]*Authority, error)
 	ListAll(context.Context) ([]*Authority, error)
+	Delete(context.Context, *Authority) error
 	ListPage(context.Context, pagination.PaginationHandler) ([]*Authority, int64)
 }
 
@@ -52,7 +55,7 @@ func (uc *AuthorityUsecase) Create(ctx context.Context, g *Authority) (*Authorit
 	return uc.biz.authorityRepo.Save(ctx, g)
 }
 
-// GetDomainInID 获取指定领域ID集合
+// ListByIDs 获取指定权限角色ID集合
 func (uc *AuthorityUsecase) ListByIDs(ctx context.Context, id ...uint) (authorities []*Authority, err error) {
 	authorities, _ = uc.biz.authorityRepo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
 	return
@@ -112,8 +115,20 @@ func (uc *AuthorityUsecase) ListPage(ctx context.Context, pageNum, pageSize int3
 	return uc.biz.authorityRepo.ListPage(ctx, page)
 }
 
-// GetID 获取权限角色ID
+// GetID 根据角色ID权限角色
 func (uc *AuthorityUsecase) GetID(ctx context.Context, g *Authority) (*Authority, error) {
 	uc.log.WithContext(ctx).Infof("GetAuthorityID: %v", g)
 	return uc.biz.authorityRepo.FindByID(ctx, g.ID)
+}
+
+// Delete 根据角色ID删除权限角色
+func (uc *AuthorityUsecase) Delete(ctx context.Context, g *Authority) error {
+	uc.log.WithContext(ctx).Infof("DeleteAuthority: %v", g)
+	return uc.biz.tm.InTx(ctx, func(ctx context.Context) error {
+		if err := uc.biz.authorityRepo.Delete(ctx, g); err != nil {
+			return err
+		}
+		_, err := uc.biz.enforcer.DeleteRole(convert.UnitToString(g.ID))
+		return err
+	})
 }

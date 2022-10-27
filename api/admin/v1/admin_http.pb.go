@@ -434,10 +434,7 @@ func _Admin_ListDomain0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context)
 func _Admin_CreateDomain0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateDomainReq
-		if err := ctx.Bind(&in.Data); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAdminCreateDomain)
@@ -758,10 +755,7 @@ func _Admin_ListMenu0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) e
 func _Admin_CreateMenu0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateMenuReq
-		if err := ctx.Bind(&in.Data); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAdminCreateMenu)
@@ -944,7 +938,7 @@ func (c *AdminHTTPClientImpl) CreateDomain(ctx context.Context, in *CreateDomain
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminCreateDomain))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -957,7 +951,7 @@ func (c *AdminHTTPClientImpl) CreateMenu(ctx context.Context, in *CreateMenuReq,
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminCreateMenu))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

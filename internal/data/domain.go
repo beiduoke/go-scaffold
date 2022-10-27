@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
-	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 	"gorm.io/gorm/clause"
@@ -37,6 +36,8 @@ func (r *DomainRepo) toModel(d *biz.Domain) *SysDomain {
 		Name:               d.Name,
 		State:              d.State,
 		DefaultAuthorityID: d.DefaultAuthorityID,
+		ParentID:           d.ParentID,
+		Sort:               d.Sort,
 	}
 }
 
@@ -57,19 +58,35 @@ func (r *DomainRepo) toBiz(d *SysDomain) *biz.Domain {
 
 func (r *DomainRepo) Save(ctx context.Context, g *biz.Domain) (*biz.Domain, error) {
 	d := r.toModel(g)
-	id := r.data.sf.Generate()
+	sfId := r.data.sf.Generate()
 	// g.DomainID = base64.StdEncoding.EncodeToString([]byte(id.String()))
-	d.DomainID = id.String()
+	d.DomainID = sfId.String()
 	result := r.data.DB(ctx).Create(d)
 	return r.toBiz(d), result.Error
 }
 
 func (r *DomainRepo) Update(ctx context.Context, g *biz.Domain) (*biz.Domain, error) {
-	return g, nil
+	d := r.toModel(g)
+	result := r.data.DB(ctx).Model(d).Debug().Omit("DomainID").Updates(d)
+	return r.toBiz(d), result.Error
 }
 
 func (r *DomainRepo) FindByID(ctx context.Context, id uint) (*biz.Domain, error) {
-	return nil, nil
+	domain := SysDomain{}
+	result := r.data.DB(ctx).Last(&domain, id)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return r.toBiz(&domain), nil
+}
+
+func (r *DomainRepo) FindByName(ctx context.Context, s string) (*biz.Domain, error) {
+	domain := SysDomain{}
+	result := r.data.DB(ctx).Last(&domain, "name = ?", s)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return r.toBiz(&domain), nil
 }
 
 func (r *DomainRepo) FindByDomainID(ctx context.Context, domainId string) (*biz.Domain, error) {
@@ -93,7 +110,19 @@ func (r *DomainRepo) ListByIDs(ctx context.Context, id ...uint) (domains []*biz.
 }
 
 func (r *DomainRepo) ListByName(ctx context.Context, name string) ([]*biz.Domain, error) {
-	return nil, nil
+	sysDomains, bizDomains := []*SysDomain{}, []*biz.Domain{}
+	result := r.data.DB(ctx).Find(&sysDomains, "name LIKE ?", "%"+name)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	for _, v := range sysDomains {
+		bizDomains = append(bizDomains, r.toBiz(v))
+	}
+	return bizDomains, nil
+}
+
+func (r *DomainRepo) Delete(ctx context.Context, g *biz.Domain) error {
+	return r.data.DB(ctx).Delete(r.toModel(g)).Error
 }
 
 func (r *DomainRepo) ListAll(ctx context.Context) ([]*biz.Domain, error) {
@@ -134,74 +163,10 @@ func (r *DomainRepo) ListPage(ctx context.Context, handler pagination.Pagination
 
 func (r *DomainRepo) FindInDomainID(ctx context.Context, domainIds ...string) ([]*biz.Domain, error) {
 	sysDomains, bizDomains := []*SysDomain{}, []*biz.Domain{}
-	result := r.data.DB(ctx).Debug().Where("domain_id", domainIds).Find(sysDomains)
+	result := r.data.DB(ctx).Where("domain_id", domainIds).Find(sysDomains)
 
 	for _, v := range sysDomains {
 		bizDomains = append(bizDomains, r.toBiz(v))
 	}
 	return bizDomains, result.Error
-}
-
-func (r *DomainRepo) SaveAuthorityForUserInDomain(ctx context.Context, userID, authorityID, domainID uint) error {
-	success, err := r.data.enforcer.AddRoleForUserInDomain(convert.UnitToString(userID), convert.UnitToString(authorityID), convert.UnitToString(domainID))
-	if !success {
-		r.log.Warnf("域内为用户添加角色 %v", success)
-	}
-	return err
-}
-
-func (r *DomainRepo) GetRolesForUserInDomain(ctx context.Context, userID, domainID uint) (authorities []*biz.Authority) {
-	roles := r.data.enforcer.GetRolesForUserInDomain(convert.UnitToString(userID), convert.UnitToString(domainID))
-	authorityIDs := []uint{}
-	for _, v := range roles {
-		authorityIDs = append(authorityIDs, convert.StringToUint(v))
-	}
-	sysAuthorities := []*SysAuthority{}
-	_ = r.data.DB(ctx).Find(&sysAuthorities, authorityIDs)
-
-	for _, v := range sysAuthorities {
-		authorities = append(authorities, &biz.Authority{
-			ID:        v.ID,
-			Name:      v.Name,
-			CreatedAt: v.CreatedAt,
-			UpdatedAt: v.UpdatedAt,
-		})
-	}
-	return
-}
-
-// FindUsersForRoleInDomain 获取具有域内角色的用户
-func (r *DomainRepo) GetUsersForRoleInDomain(ctx context.Context, authorityID, domainID uint) (users []*biz.User) {
-	roles := r.data.enforcer.GetUsersForRoleInDomain(convert.UnitToString(authorityID), convert.UnitToString(domainID))
-	userIDs := []uint{}
-	for _, v := range roles {
-		userIDs = append(userIDs, convert.StringToUint(v))
-	}
-	sysUsers := []*SysUser{}
-	_ = r.data.DB(ctx).Find(&sysUsers, userIDs)
-
-	userRepo := UserRepo{}
-	for _, v := range sysUsers {
-		users = append(users, userRepo.toBiz(v))
-	}
-	return
-}
-
-// DeleteRoleForUserInDomain 域内删除用户的角色
-func (r *DomainRepo) DeleteRoleForUserInDomain(ctx context.Context, userID, domainID uint) error {
-	roles := r.data.enforcer.GetRolesForUserInDomain(convert.UnitToString(userID), convert.UnitToString(domainID))
-	for _, role := range roles {
-		success, err := r.data.enforcer.DeleteRoleForUserInDomain(convert.UnitToString(userID), role, convert.UnitToString(domainID))
-		if err != nil {
-			r.log.Errorf("域内删除用户的角色失败 %v", success)
-		} else {
-			r.log.Infof("域内删除用户的角色 %v", success)
-		}
-	}
-	return nil
-}
-
-// DeleteRoleForUserInDomain 域内删除用户的角色
-func (r *DomainRepo) GetDomains(ctx context.Context, userID uint) error {
-	return nil
 }

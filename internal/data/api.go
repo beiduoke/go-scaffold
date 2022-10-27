@@ -65,7 +65,18 @@ func (r *ApiRepo) Save(ctx context.Context, g *biz.Api) (*biz.Api, error) {
 }
 
 func (r *ApiRepo) Update(ctx context.Context, g *biz.Api) (*biz.Api, error) {
-	return g, nil
+	d := r.toModel(g)
+	result := r.data.DB(ctx).Model(d).Updates(d)
+	return r.toBiz(d), result.Error
+}
+
+func (r *ApiRepo) FindByName(ctx context.Context, s string) (*biz.Api, error) {
+	api := SysApi{}
+	result := r.data.DB(ctx).Last(&api, "name = ?", s)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return r.toBiz(&api), nil
 }
 
 func (r *ApiRepo) FindByID(ctx context.Context, id uint) (*biz.Api, error) {
@@ -77,17 +88,34 @@ func (r *ApiRepo) FindByID(ctx context.Context, id uint) (*biz.Api, error) {
 	return r.toBiz(&api), nil
 }
 
-func (r *ApiRepo) ListByName(ctx context.Context, name string) ([]*biz.Api, error) {
+func (r *ApiRepo) ListByIDs(ctx context.Context, id ...uint) (apis []*biz.Api, err error) {
+	db := r.data.DB(ctx).Model(&SysApi{})
 	sysApis := []*SysApi{}
-	result := r.data.DB(ctx).Find(&sysApis, "name Like ?", name+"%")
-	if result.Error != nil {
-		return nil, result.Error
+
+	err = db.Find(&sysApis).Error
+	if err != nil {
+		return apis, err
 	}
-	apis := make([]*biz.Api, 0, len(sysApis))
 	for _, v := range sysApis {
 		apis = append(apis, r.toBiz(v))
 	}
-	return apis, nil
+	return
+}
+
+func (r *ApiRepo) ListByName(ctx context.Context, name string) ([]*biz.Api, error) {
+	sysApis, bizApis := []*SysApi{}, []*biz.Api{}
+	result := r.data.DB(ctx).Find(&sysApis, "name LIKE ?", "%"+name)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	for _, v := range sysApis {
+		bizApis = append(bizApis, r.toBiz(v))
+	}
+	return bizApis, nil
+}
+
+func (r *ApiRepo) Delete(ctx context.Context, g *biz.Api) error {
+	return r.data.DB(ctx).Delete(r.toModel(g)).Error
 }
 
 func (r *ApiRepo) ListAll(ctx context.Context) ([]*biz.Api, error) {
@@ -96,7 +124,7 @@ func (r *ApiRepo) ListAll(ctx context.Context) ([]*biz.Api, error) {
 
 func (r *ApiRepo) ListPage(ctx context.Context, handler pagination.PaginationHandler) (apis []*biz.Api, total int64) {
 	db := r.data.DB(ctx).Model(&SysApi{})
-	sysApi := []*SysApi{}
+	sysApis := []*SysApi{}
 	// 查询条件
 	for _, v := range handler.GetConditions() {
 		db = db.Where(v.Query, v.Args...)
@@ -110,12 +138,12 @@ func (r *ApiRepo) ListPage(ctx context.Context, handler pagination.PaginationHan
 		db = db.Count(&total).Offset(handler.GetPageOffset())
 	}
 
-	result := db.Limit(int(handler.GetPageSize())).Find(&sysApi)
+	result := db.Limit(int(handler.GetPageSize())).Find(&sysApis)
 	if result.Error != nil {
 		return nil, 0
 	}
 
-	for _, v := range sysApi {
+	for _, v := range sysApis {
 		apis = append(apis, r.toBiz(v))
 	}
 
