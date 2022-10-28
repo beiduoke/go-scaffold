@@ -123,7 +123,7 @@ func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
 	r.DELETE("/admin/v1/apis/{id}", _Admin_DeleteApi0_HTTP_Handler(srv))
 	r.GET("/admin/v1/menus", _Admin_ListMenu0_HTTP_Handler(srv))
 	r.POST("/admin/v1/menus", _Admin_CreateMenu0_HTTP_Handler(srv))
-	r.GET("/admin/v1/menus/{id}/tree", _Admin_GetMenuTree0_HTTP_Handler(srv))
+	r.GET("/admin/v1/menus/{parentId}/tree", _Admin_GetMenuTree0_HTTP_Handler(srv))
 	r.GET("/admin/v1/menus/{id}", _Admin_GetMenu0_HTTP_Handler(srv))
 	r.PUT("/admin/v1/menus/{id}", _Admin_UpdateMenu0_HTTP_Handler(srv))
 	r.DELETE("/admin/v1/menus/{id}", _Admin_DeleteMenu0_HTTP_Handler(srv))
@@ -1090,7 +1090,7 @@ func (c *AdminHTTPClientImpl) GetMenu(ctx context.Context, in *GetMenuReq, opts 
 
 func (c *AdminHTTPClientImpl) GetMenuTree(ctx context.Context, in *GetMenuTreeReq, opts ...http.CallOption) (*GetMenuTreeReply, error) {
 	var out GetMenuTreeReply
-	pattern := "/admin/v1/menus/{id}/tree"
+	pattern := "/admin/v1/menus/{parentId}/tree"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminGetMenuTree))
 	opts = append(opts, http.PathTemplate(pattern))

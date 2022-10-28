@@ -36,7 +36,7 @@ var (
 	_ = anypb.Any{}
 	_ = sort.Sort
 
-	_ = protobuf.UserGender(0)
+	_ = protobuf.MenuCloseTab(0)
 )
 
 // Validate checks the field values on Auth with the rules defined in the proto
@@ -7505,9 +7505,9 @@ func (m *GetMenuTreeReq) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetId() < 0 {
+	if m.GetParentId() < 0 {
 		err := GetMenuTreeReqValidationError{
-			field:  "Id",
+			field:  "ParentId",
 			reason: "value must be greater than or equal to 0",
 		}
 		if !all {

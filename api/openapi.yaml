@@ -534,14 +534,14 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.DeleteMenuReply'
-    /admin/v1/menus/{id}/tree:
+    /admin/v1/menus/{parentId}/tree:
         get:
             tags:
                 - Admin
             description: 获取树形菜单
             operationId: Admin_GetMenuTree
             parameters:
-                - name: id
+                - name: parentId
                   in: path
                   required: true
                   schema:

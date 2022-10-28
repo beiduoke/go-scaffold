@@ -118,7 +118,7 @@ func (uc *MenuUsecase) ListPage(ctx context.Context, pageNum, pageSize int32, qu
 // GetTree 获取菜单树形
 func (uc *MenuUsecase) GetTree(ctx context.Context, id uint) []*Menu {
 	uc.log.WithContext(ctx).Infof("GetTree")
-	menus, _ := uc.repo.ListAll(ctx)
+	menus, _ := uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithOrder("sort", false)))
 	return menus
 }
 

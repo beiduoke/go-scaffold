@@ -912,7 +912,7 @@
         ]
       }
     },
-    "/admin/v1/menus/{id}/tree": {
+    "/admin/v1/menus/{parentId}/tree": {
       "get": {
         "summary": "获取树形菜单",
         "operationId": "Admin_GetMenuTree",
@@ -932,7 +932,7 @@
         },
         "parameters": [
           {
-            "name": "id",
+            "name": "parentId",
             "in": "path",
             "required": true,
             "type": "string",

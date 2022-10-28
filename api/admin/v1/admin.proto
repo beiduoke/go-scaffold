@@ -281,7 +281,7 @@ service Admin {
   // 获取树形菜单
   rpc GetMenuTree (GetMenuTreeReq) returns (GetMenuTreeReply) {
     option (google.api.http) = {
-      get: "/admin/v1/menus/{id}/tree"
+      get: "/admin/v1/menus/{parentId}/tree"
     };
   }
   // 获取菜单
@@ -689,6 +689,19 @@ message Menu {
   api.protobuf.MenuBaseMenu base_menu = 13;
   api.protobuf.MenuCloseTab close_tab = 14;
   repeated Menu children = 15;
+  repeated MenuParameter parameters = 16;
+  repeated MenuButton buttons = 17;
+}
+
+message MenuButton {
+  string name = 1;
+  string remarks = 2;
+}
+
+message MenuParameter {
+  api.protobuf.MenuParameterType type = 1;
+  string key = 2;
+  string value = 3;
 }
 
 // 请求 - 创建菜单
@@ -704,6 +717,8 @@ message CreateMenuReq {
   api.protobuf.MenuKeepAlive keep_alive = 9 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
   api.protobuf.MenuBaseMenu base_menu = 10 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
   api.protobuf.MenuCloseTab close_tab = 11 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  repeated MenuParameter parameters = 12;
+  repeated MenuButton buttons = 13;
 }
 
 // 回应 - 创建菜单
@@ -728,6 +743,8 @@ message UpdateMenuReq {
     api.protobuf.MenuKeepAlive keep_alive = 9 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
     api.protobuf.MenuBaseMenu base_menu = 10 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
     api.protobuf.MenuCloseTab close_tab = 11 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    repeated MenuParameter parameters = 12;
+    repeated MenuButton buttons = 13;
   }
   Data data = 2;
 }
@@ -758,7 +775,7 @@ message DeleteMenuReply {
 
 // 请求 - 获取树形菜单
 message GetMenuTreeReq {
-  uint64 id = 1 [(validate.rules).uint64 = {gte: 0}];
+  uint64 parentId = 1 [(validate.rules).uint64 = {gte: 0}];
 }
 
 // 回应 - 获取树形菜单

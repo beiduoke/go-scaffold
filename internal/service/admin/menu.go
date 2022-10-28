@@ -38,9 +38,7 @@ func TreeMenu(menus []*biz.Menu, pid uint) []*v1.Menu {
 	for _, menu := range menus {
 		if menu.ParentID == pid {
 			m := TransformMenu(menu)
-			var mm []*biz.Menu
-			copy(menus, mm)
-			m.Children = TreeMenu(mm, menu.ParentID)
+			m.Children = append(m.Children, TreeMenu(menus, menu.ID)...)
 			list = append(list, m)
 		}
 	}
@@ -49,9 +47,9 @@ func TreeMenu(menus []*biz.Menu, pid uint) []*v1.Menu {
 
 // GetTreeMenu 列表菜单-树形
 func (s *AdminService) GetMenuTree(ctx context.Context, in *v1.GetMenuTreeReq) (*v1.GetMenuTreeReply, error) {
-	results := s.menuCase.GetTree(ctx, uint(in.GetId()))
+	results := s.menuCase.GetTree(ctx, uint(in.GetParentId()))
 	return &v1.GetMenuTreeReply{
-		Items: TreeMenu(results, uint(in.GetId())),
+		Items: TreeMenu(results, uint(in.GetParentId())),
 	}, nil
 }
 
