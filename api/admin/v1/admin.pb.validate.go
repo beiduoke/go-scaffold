@@ -2780,7 +2780,7 @@ func (m *GetUserMenuReply) validate(all bool) error {
 
 	// no validation rules for Component
 
-	for idx, item := range m.GetChildrens() {
+	for idx, item := range m.GetChildren() {
 		_, _ = idx, item
 
 		if all {
@@ -2788,7 +2788,7 @@ func (m *GetUserMenuReply) validate(all bool) error {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
 					errors = append(errors, GetUserMenuReplyValidationError{
-						field:  fmt.Sprintf("Childrens[%v]", idx),
+						field:  fmt.Sprintf("Children[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -2796,7 +2796,7 @@ func (m *GetUserMenuReply) validate(all bool) error {
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
 					errors = append(errors, GetUserMenuReplyValidationError{
-						field:  fmt.Sprintf("Childrens[%v]", idx),
+						field:  fmt.Sprintf("Children[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -2805,7 +2805,7 @@ func (m *GetUserMenuReply) validate(all bool) error {
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return GetUserMenuReplyValidationError{
-					field:  fmt.Sprintf("Childrens[%v]", idx),
+					field:  fmt.Sprintf("Children[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
 				}
@@ -6331,7 +6331,7 @@ func (m *Menu) validate(all bool) error {
 
 	// no validation rules for CloseTab
 
-	for idx, item := range m.GetChildrens() {
+	for idx, item := range m.GetChildren() {
 		_, _ = idx, item
 
 		if all {
@@ -6339,7 +6339,7 @@ func (m *Menu) validate(all bool) error {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
 					errors = append(errors, MenuValidationError{
-						field:  fmt.Sprintf("Childrens[%v]", idx),
+						field:  fmt.Sprintf("Children[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -6347,7 +6347,7 @@ func (m *Menu) validate(all bool) error {
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
 					errors = append(errors, MenuValidationError{
-						field:  fmt.Sprintf("Childrens[%v]", idx),
+						field:  fmt.Sprintf("Children[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -6356,7 +6356,7 @@ func (m *Menu) validate(all bool) error {
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return MenuValidationError{
-					field:  fmt.Sprintf("Childrens[%v]", idx),
+					field:  fmt.Sprintf("Children[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
 				}
@@ -7505,10 +7505,10 @@ func (m *GetMenuTreeReq) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetId() <= 0 {
+	if m.GetId() < 0 {
 		err := GetMenuTreeReqValidationError{
 			field:  "Id",
-			reason: "value must be greater than 0",
+			reason: "value must be greater than or equal to 0",
 		}
 		if !all {
 			return err
@@ -7593,6 +7593,140 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetMenuTreeReqValidationError{}
+
+// Validate checks the field values on GetMenuTreeReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *GetMenuTreeReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetMenuTreeReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetMenuTreeReplyMultiError, or nil if none found.
+func (m *GetMenuTreeReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetMenuTreeReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetItems() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GetMenuTreeReplyValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GetMenuTreeReplyValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetMenuTreeReplyValidationError{
+					field:  fmt.Sprintf("Items[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return GetMenuTreeReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetMenuTreeReplyMultiError is an error wrapping multiple validation errors
+// returned by GetMenuTreeReply.ValidateAll() if the designated constraints
+// aren't met.
+type GetMenuTreeReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetMenuTreeReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetMenuTreeReplyMultiError) AllErrors() []error { return m }
+
+// GetMenuTreeReplyValidationError is the validation error returned by
+// GetMenuTreeReply.Validate if the designated constraints aren't met.
+type GetMenuTreeReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetMenuTreeReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetMenuTreeReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetMenuTreeReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetMenuTreeReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetMenuTreeReplyValidationError) ErrorName() string { return "GetMenuTreeReplyValidationError" }
+
+// Error satisfies the builtin error interface
+func (e GetMenuTreeReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetMenuTreeReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetMenuTreeReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetMenuTreeReplyValidationError{}
 
 // Validate checks the field values on HandleUserDomainReq_Data with the rules
 // defined in the proto definition for this message. If any rules are

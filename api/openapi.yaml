@@ -470,26 +470,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.CreateMenuReply'
-    /admin/v1/menus/tree/{id}:
-        get:
-            tags:
-                - Admin
-            description: 获取树形菜单
-            operationId: Admin_GetMenuTree
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.Menu'
     /admin/v1/menus/{id}:
         get:
             tags:
@@ -554,6 +534,26 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.DeleteMenuReply'
+    /admin/v1/menus/{id}/tree:
+        get:
+            tags:
+                - Admin
+            description: 获取树形菜单
+            operationId: Admin_GetMenuTree
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.GetMenuTreeReply'
     /admin/v1/users:
         get:
             tags:
@@ -1041,6 +1041,14 @@ components:
                     type: integer
                     format: uint64
             description: 领域模块
+        api.admin.v1.GetMenuTreeReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.v1.Menu'
+            description: 回应 - 获取树形菜单
         api.admin.v1.GetUserMenuReply:
             type: object
             properties:
@@ -1050,7 +1058,7 @@ components:
                     type: string
                 component:
                     type: string
-                childrens:
+                children:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.admin.v1.GetUserMenuReply'
@@ -1151,7 +1159,7 @@ components:
                 closeTab:
                     type: integer
                     format: enum
-                childrens:
+                children:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.admin.v1.Menu'

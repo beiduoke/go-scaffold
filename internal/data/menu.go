@@ -131,8 +131,14 @@ func (r *MenuRepo) Delete(ctx context.Context, g *biz.Menu) error {
 	return r.data.DB(ctx).Delete(r.toModel(g)).Error
 }
 
-func (r *MenuRepo) ListAll(ctx context.Context) ([]*biz.Menu, error) {
-	return nil, nil
+func (r *MenuRepo) ListAll(ctx context.Context) (menus []*biz.Menu, err error) {
+	sysMenus := []*SysMenu{}
+	err = r.data.DB(ctx).Model(&SysMenu{}).Find(&sysMenus).Error
+
+	for _, v := range sysMenus {
+		menus = append(menus, r.toBiz(v))
+	}
+	return
 }
 
 func (r *MenuRepo) ListPage(ctx context.Context, handler pagination.PaginationHandler) (menus []*biz.Menu, total int64) {

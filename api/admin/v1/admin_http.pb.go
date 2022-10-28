@@ -70,7 +70,7 @@ type AdminHTTPServer interface {
 	GetAuthority(context.Context, *GetAuthorityReq) (*Authority, error)
 	GetDomain(context.Context, *GetDomainReq) (*Domain, error)
 	GetMenu(context.Context, *GetMenuReq) (*Menu, error)
-	GetMenuTree(context.Context, *GetMenuTreeReq) (*Menu, error)
+	GetMenuTree(context.Context, *GetMenuTreeReq) (*GetMenuTreeReply, error)
 	GetUser(context.Context, *GetUserReq) (*User, error)
 	GetUserMenu(context.Context, *emptypb.Empty) (*GetUserMenuReply, error)
 	GetUserProfile(context.Context, *emptypb.Empty) (*User, error)
@@ -123,7 +123,7 @@ func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
 	r.DELETE("/admin/v1/apis/{id}", _Admin_DeleteApi0_HTTP_Handler(srv))
 	r.GET("/admin/v1/menus", _Admin_ListMenu0_HTTP_Handler(srv))
 	r.POST("/admin/v1/menus", _Admin_CreateMenu0_HTTP_Handler(srv))
-	r.GET("/admin/v1/menus/tree/{id}", _Admin_GetMenuTree0_HTTP_Handler(srv))
+	r.GET("/admin/v1/menus/{id}/tree", _Admin_GetMenuTree0_HTTP_Handler(srv))
 	r.GET("/admin/v1/menus/{id}", _Admin_GetMenu0_HTTP_Handler(srv))
 	r.PUT("/admin/v1/menus/{id}", _Admin_UpdateMenu0_HTTP_Handler(srv))
 	r.DELETE("/admin/v1/menus/{id}", _Admin_DeleteMenu0_HTTP_Handler(srv))
@@ -788,7 +788,7 @@ func _Admin_GetMenuTree0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context
 		if err != nil {
 			return err
 		}
-		reply := out.(*Menu)
+		reply := out.(*GetMenuTreeReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -877,7 +877,7 @@ type AdminHTTPClient interface {
 	GetAuthority(ctx context.Context, req *GetAuthorityReq, opts ...http.CallOption) (rsp *Authority, err error)
 	GetDomain(ctx context.Context, req *GetDomainReq, opts ...http.CallOption) (rsp *Domain, err error)
 	GetMenu(ctx context.Context, req *GetMenuReq, opts ...http.CallOption) (rsp *Menu, err error)
-	GetMenuTree(ctx context.Context, req *GetMenuTreeReq, opts ...http.CallOption) (rsp *Menu, err error)
+	GetMenuTree(ctx context.Context, req *GetMenuTreeReq, opts ...http.CallOption) (rsp *GetMenuTreeReply, err error)
 	GetUser(ctx context.Context, req *GetUserReq, opts ...http.CallOption) (rsp *User, err error)
 	GetUserMenu(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserMenuReply, err error)
 	GetUserProfile(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *User, err error)
@@ -1088,9 +1088,9 @@ func (c *AdminHTTPClientImpl) GetMenu(ctx context.Context, in *GetMenuReq, opts 
 	return &out, err
 }
 
-func (c *AdminHTTPClientImpl) GetMenuTree(ctx context.Context, in *GetMenuTreeReq, opts ...http.CallOption) (*Menu, error) {
-	var out Menu
-	pattern := "/admin/v1/menus/tree/{id}"
+func (c *AdminHTTPClientImpl) GetMenuTree(ctx context.Context, in *GetMenuTreeReq, opts ...http.CallOption) (*GetMenuTreeReply, error) {
+	var out GetMenuTreeReply
+	pattern := "/admin/v1/menus/{id}/tree"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminGetMenuTree))
 	opts = append(opts, http.PathTemplate(pattern))

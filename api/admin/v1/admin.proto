@@ -279,9 +279,9 @@ service Admin {
     };
   }
   // 获取树形菜单
-  rpc GetMenuTree (GetMenuTreeReq) returns (Menu) {
+  rpc GetMenuTree (GetMenuTreeReq) returns (GetMenuTreeReply) {
     option (google.api.http) = {
-      get: "/admin/v1/menus/tree/{id}"
+      get: "/admin/v1/menus/{id}/tree"
     };
   }
   // 获取菜单
@@ -473,7 +473,7 @@ message GetUserMenuReply {
   string name = 1;
   string path = 2;
   string component = 3;
-  repeated GetUserMenuReply childrens = 4;
+  repeated GetUserMenuReply children = 4;
 }
 
 
@@ -688,7 +688,7 @@ message Menu {
   api.protobuf.MenuKeepAlive keep_alive = 12;
   api.protobuf.MenuBaseMenu base_menu = 13;
   api.protobuf.MenuCloseTab close_tab = 14;
-  repeated Menu childrens = 15;
+  repeated Menu children = 15;
 }
 
 // 请求 - 创建菜单
@@ -756,7 +756,12 @@ message DeleteMenuReply {
   google.protobuf.Any data = 3;
 }
 
-// 回应 - 获取树形菜单
+// 请求 - 获取树形菜单
 message GetMenuTreeReq {
-  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  uint64 id = 1 [(validate.rules).uint64 = {gte: 0}];
+}
+
+// 回应 - 获取树形菜单
+message GetMenuTreeReply {
+  repeated Menu items = 1;
 }

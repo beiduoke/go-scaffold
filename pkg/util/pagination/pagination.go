@@ -1,5 +1,7 @@
 package pagination
 
+import "github.com/iancoleman/strcase"
+
 const (
 	PAGE_NUM      = 1
 	PAGE_SIZE     = 10
@@ -27,8 +29,8 @@ type PaginationHandler interface {
 	GetConditions() []Condition
 	GetOrders() []Order
 	GetNopaging() bool
-	SetCondition(condition Condition)
-	SetOrder(order Order)
+	SetCondition(...Condition)
+	SetOrder(...Order)
 	Reset()
 }
 
@@ -73,7 +75,7 @@ func WithCondition(query string, args ...interface{}) Option {
 
 func WithConditions(condition ...Condition) Option {
 	return func(p *Pagination) {
-		p.conditions = append(p.conditions, condition...)
+		p.SetCondition(condition...)
 	}
 }
 
@@ -85,7 +87,7 @@ func WithOrder(column string, desc bool) Option {
 
 func WithOrders(order ...Order) Option {
 	return func(p *Pagination) {
-		p.orders = append(p.orders, order...)
+		p.SetOrder(order...)
 	}
 }
 
@@ -143,22 +145,28 @@ func (p *Pagination) GetOrders() []Order {
 	return p.orders
 }
 
-func (p *Pagination) SetCondition(condition Condition) {
-	for _, v := range p.conditions {
-		if v.Query == condition.Query {
-			v.Args = condition.Args
-			return
+func (p *Pagination) SetCondition(condition ...Condition) {
+	for _, v := range condition {
+		v.Query = strcase.ToSnakeWithIgnore(v.Query, " ")
+		for k, vc := range p.conditions {
+			if v.Query == vc.Query {
+				p.conditions[k].Args = v.Args
+				break
+			}
 		}
+		p.conditions = append(p.conditions, v)
 	}
-	p.conditions = append(p.conditions, condition)
 }
 
-func (p *Pagination) SetOrder(order Order) {
-	for _, v := range p.orders {
-		if v.Column == order.Column {
-			v.Desc = order.Desc
-			return
+func (p *Pagination) SetOrder(order ...Order) {
+	for _, v := range order {
+		v.Column = strcase.ToSnakeWithIgnore(v.Column, " ")
+		for k, vc := range p.orders {
+			if v.Column == vc.Column {
+				p.orders[k].Desc = v.Desc
+				break
+			}
 		}
+		p.orders = append(p.orders, v)
 	}
-	p.orders = append(p.orders, order)
 }

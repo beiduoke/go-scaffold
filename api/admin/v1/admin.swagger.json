@@ -812,38 +812,6 @@
         ]
       }
     },
-    "/admin/v1/menus/tree/{id}": {
-      "get": {
-        "summary": "获取树形菜单",
-        "operationId": "Admin_GetMenuTree",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1Menu"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
     "/admin/v1/menus/{id}": {
       "get": {
         "summary": "获取菜单",
@@ -937,6 +905,38 @@
             "schema": {
               "$ref": "#/definitions/v1UpdateMenuReqData"
             }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/menus/{id}/tree": {
+      "get": {
+        "summary": "获取树形菜单",
+        "operationId": "Admin_GetMenuTree",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetMenuTreeReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
           }
         ],
         "tags": [
@@ -1787,6 +1787,18 @@
       },
       "title": "领域模块"
     },
+    "v1GetMenuTreeReply": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Menu"
+          }
+        }
+      },
+      "title": "回应 - 获取树形菜单"
+    },
     "v1GetUserMenuReply": {
       "type": "object",
       "properties": {
@@ -1799,7 +1811,7 @@
         "component": {
           "type": "string"
         },
-        "childrens": {
+        "children": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/v1GetUserMenuReply"
@@ -1940,7 +1952,7 @@
         "closeTab": {
           "$ref": "#/definitions/protobufMenuCloseTab"
         },
-        "childrens": {
+        "children": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/v1Menu"

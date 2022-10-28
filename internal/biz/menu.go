@@ -26,6 +26,7 @@ type Menu struct {
 	KeepAlive int32
 	BaseMenu  int32
 	CloseTab  int32
+	Children  []*Menu
 }
 
 // MenuRepo is a Greater repo.
@@ -112,6 +113,13 @@ func (uc *MenuUsecase) ListPage(ctx context.Context, pageNum, pageSize int32, qu
 		pagination.WithOrders(orders...),
 	)
 	return uc.repo.ListPage(ctx, page)
+}
+
+// GetTree 获取菜单树形
+func (uc *MenuUsecase) GetTree(ctx context.Context, id uint) []*Menu {
+	uc.log.WithContext(ctx).Infof("GetTree")
+	menus, _ := uc.repo.ListAll(ctx)
+	return menus
 }
 
 // GetID 根据角色ID菜单

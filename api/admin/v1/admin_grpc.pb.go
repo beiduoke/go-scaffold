@@ -88,7 +88,7 @@ type AdminClient interface {
 	// 创建菜单
 	CreateMenu(ctx context.Context, in *CreateMenuReq, opts ...grpc.CallOption) (*CreateMenuReply, error)
 	// 获取树形菜单
-	GetMenuTree(ctx context.Context, in *GetMenuTreeReq, opts ...grpc.CallOption) (*Menu, error)
+	GetMenuTree(ctx context.Context, in *GetMenuTreeReq, opts ...grpc.CallOption) (*GetMenuTreeReply, error)
 	// 获取菜单
 	GetMenu(ctx context.Context, in *GetMenuReq, opts ...grpc.CallOption) (*Menu, error)
 	// 修改菜单
@@ -366,8 +366,8 @@ func (c *adminClient) CreateMenu(ctx context.Context, in *CreateMenuReq, opts ..
 	return out, nil
 }
 
-func (c *adminClient) GetMenuTree(ctx context.Context, in *GetMenuTreeReq, opts ...grpc.CallOption) (*Menu, error) {
-	out := new(Menu)
+func (c *adminClient) GetMenuTree(ctx context.Context, in *GetMenuTreeReq, opts ...grpc.CallOption) (*GetMenuTreeReply, error) {
+	out := new(GetMenuTreeReply)
 	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetMenuTree", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -470,7 +470,7 @@ type AdminServer interface {
 	// 创建菜单
 	CreateMenu(context.Context, *CreateMenuReq) (*CreateMenuReply, error)
 	// 获取树形菜单
-	GetMenuTree(context.Context, *GetMenuTreeReq) (*Menu, error)
+	GetMenuTree(context.Context, *GetMenuTreeReq) (*GetMenuTreeReply, error)
 	// 获取菜单
 	GetMenu(context.Context, *GetMenuReq) (*Menu, error)
 	// 修改菜单
@@ -571,7 +571,7 @@ func (UnimplementedAdminServer) ListMenu(context.Context, *protobuf.PagingReq) (
 func (UnimplementedAdminServer) CreateMenu(context.Context, *CreateMenuReq) (*CreateMenuReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateMenu not implemented")
 }
-func (UnimplementedAdminServer) GetMenuTree(context.Context, *GetMenuTreeReq) (*Menu, error) {
+func (UnimplementedAdminServer) GetMenuTree(context.Context, *GetMenuTreeReq) (*GetMenuTreeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMenuTree not implemented")
 }
 func (UnimplementedAdminServer) GetMenu(context.Context, *GetMenuReq) (*Menu, error) {

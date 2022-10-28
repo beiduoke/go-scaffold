@@ -12,28 +12,55 @@ import (
 
 var _ v1.AdminServer = (*AdminService)(nil)
 
+func TransformMenu(data *biz.Menu) *v1.Menu {
+	return &v1.Menu{
+		CreatedAt: timestamppb.New(data.CreatedAt),
+		UpdatedAt: timestamppb.New(data.UpdatedAt),
+		Id:        uint64(data.ID),
+		Name:      data.Name,
+		Path:      data.Path,
+		ParentId:  uint64(data.ParentID),
+		Hidden:    protobuf.MenuHidden(data.Hidden),
+		Component: data.Component,
+		Sort:      data.Sort,
+		Icon:      data.Icon,
+		Title:     data.Title,
+		KeepAlive: protobuf.MenuKeepAlive(data.KeepAlive),
+		BaseMenu:  protobuf.MenuBaseMenu(data.BaseMenu),
+		CloseTab:  protobuf.MenuCloseTab(data.CloseTab),
+		Children:  make([]*v1.Menu, 0),
+	}
+}
+
+// TreeMenu 菜单树形
+func TreeMenu(menus []*biz.Menu, pid uint) []*v1.Menu {
+	list := make([]*v1.Menu, 0)
+	for _, menu := range menus {
+		if menu.ParentID == pid {
+			m := TransformMenu(menu)
+			var mm []*biz.Menu
+			copy(menus, mm)
+			m.Children = TreeMenu(mm, menu.ParentID)
+			list = append(list, m)
+		}
+	}
+	return list
+}
+
+// GetTreeMenu 列表菜单-树形
+func (s *AdminService) GetMenuTree(ctx context.Context, in *v1.GetMenuTreeReq) (*v1.GetMenuTreeReply, error) {
+	results := s.menuCase.GetTree(ctx, uint(in.GetId()))
+	return &v1.GetMenuTreeReply{
+		Items: TreeMenu(results, uint(in.GetId())),
+	}, nil
+}
+
 // ListMenu 列表菜单
 func (s *AdminService) ListMenu(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	results, total := s.menuCase.ListPage(ctx, in.GetPage(), in.GetPageSize(), in.GetQuery(), in.GetOrderBy())
 	items := make([]*anypb.Any, 0, len(results))
 	for _, v := range results {
-		user := &v1.Menu{
-			CreatedAt: timestamppb.New(v.CreatedAt),
-			UpdatedAt: timestamppb.New(v.UpdatedAt),
-			Id:        uint64(v.ID),
-			Name:      v.Name,
-			Path:      v.Path,
-			ParentId:  uint64(v.ParentID),
-			Hidden:    protobuf.MenuHidden(v.Hidden),
-			Component: v.Component,
-			Sort:      v.Sort,
-			Icon:      v.Icon,
-			Title:     v.Title,
-			KeepAlive: protobuf.MenuKeepAlive(v.KeepAlive),
-			BaseMenu:  protobuf.MenuBaseMenu(v.BaseMenu),
-			CloseTab:  protobuf.MenuCloseTab(v.CloseTab),
-		}
-		item, _ := anypb.New(user)
+		item, _ := anypb.New(TransformMenu(v))
 		items = append(items, item)
 	}
 	return &protobuf.PagingReply{
@@ -102,22 +129,7 @@ func (s *AdminService) GetMenu(ctx context.Context, in *v1.GetMenuReq) (*v1.Menu
 	if err != nil {
 		return nil, v1.ErrorMenuNotFound("菜单未找到")
 	}
-	return &v1.Menu{
-		CreatedAt: timestamppb.New(menu.CreatedAt),
-		UpdatedAt: timestamppb.New(menu.UpdatedAt),
-		Id:        uint64(menu.ID),
-		Name:      menu.Name,
-		Path:      menu.Path,
-		ParentId:  uint64(menu.ParentID),
-		Hidden:    protobuf.MenuHidden(menu.Hidden),
-		Component: menu.Component,
-		Sort:      menu.Sort,
-		Icon:      menu.Icon,
-		Title:     menu.Title,
-		KeepAlive: protobuf.MenuKeepAlive(menu.KeepAlive),
-		BaseMenu:  protobuf.MenuBaseMenu(menu.BaseMenu),
-		CloseTab:  protobuf.MenuCloseTab(menu.CloseTab),
-	}, nil
+	return TransformMenu(menu), nil
 }
 
 // DeleteMenu 删除菜单
