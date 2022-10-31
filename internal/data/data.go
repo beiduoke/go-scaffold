@@ -5,6 +5,8 @@ import (
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/conf"
+	"github.com/beiduoke/go-scaffold/internal/pkg/authz"
+	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/bwmarrin/snowflake"
 	"github.com/casbin/casbin/v2"
 	"github.com/go-kratos/kratos/v2/log"
@@ -101,10 +103,39 @@ func (d *Data) InTx(ctx context.Context, fn func(ctx context.Context) error) err
 
 func (d *Data) DB(ctx context.Context) *gorm.DB {
 	tx, ok := ctx.Value(contextTxKey{}).(*gorm.DB)
+
 	if ok {
 		return tx
 	}
+
 	return d.db
+}
+
+func (d *Data) DomainDB(ctx context.Context) *gorm.DB {
+	tx, ok := ctx.Value(contextTxKey{}).(*gorm.DB)
+
+	domainStr := authz.ParseFromContext(ctx).GetDomain()
+	scopesDomain := d.DBScopesDomain(convert.StringToUint(domainStr))
+
+	if ok && domainStr != "" {
+		tx = tx.Scopes(scopesDomain)
+	}
+
+	if ok {
+		return tx
+	}
+
+	if domainStr != "" {
+		d.db = d.db.Scopes(scopesDomain)
+	}
+
+	return d.db
+}
+
+func (d *Data) DBScopesDomain(id ...uint) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Where("domain_id IN (?)", id)
+	}
 }
 
 // NewDB gorm Connecting to a Database

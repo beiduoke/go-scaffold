@@ -124,6 +124,16 @@ func (ac *AuthUsecase) RegisterNamePassword(ctx context.Context, domainId string
 	if err != nil {
 		return nil, errors.New("领域查询失败")
 	}
+	userUsecase := &UserUsecase{ac.biz, ac.log, ac.ac}
+	g, err = userUsecase.Create(ctx, g)
+	if err != nil {
+		return nil, err
+	}
+
 	g.Domains = []*Domain{domain}
-	return (&UserUsecase{ac.biz, ac.log, ac.ac}).Create(ctx, g)
+	if err != userUsecase.HandleDomain(ctx, g) {
+		return nil, err
+	}
+
+	return g, err
 }
