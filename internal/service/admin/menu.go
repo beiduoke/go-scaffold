@@ -14,21 +14,23 @@ var _ v1.AdminServer = (*AdminService)(nil)
 
 func TransformMenu(data *biz.Menu) *v1.Menu {
 	return &v1.Menu{
-		CreatedAt: timestamppb.New(data.CreatedAt),
-		UpdatedAt: timestamppb.New(data.UpdatedAt),
-		Id:        uint64(data.ID),
-		Name:      data.Name,
-		Path:      data.Path,
-		ParentId:  uint64(data.ParentID),
-		Hidden:    protobuf.MenuHidden(data.Hidden),
-		Component: data.Component,
-		Sort:      data.Sort,
-		Icon:      data.Icon,
-		Title:     data.Title,
-		KeepAlive: protobuf.MenuKeepAlive(data.KeepAlive),
-		BaseMenu:  protobuf.MenuBaseMenu(data.BaseMenu),
-		CloseTab:  protobuf.MenuCloseTab(data.CloseTab),
-		Children:  make([]*v1.Menu, 0),
+		CreatedAt:  timestamppb.New(data.CreatedAt),
+		UpdatedAt:  timestamppb.New(data.UpdatedAt),
+		Id:         uint64(data.ID),
+		Name:       data.Name,
+		Path:       data.Path,
+		ParentId:   uint64(data.ParentID),
+		Hidden:     protobuf.MenuHidden(data.Hidden),
+		Component:  data.Component,
+		Sort:       data.Sort,
+		Icon:       data.Icon,
+		Title:      data.Title,
+		KeepAlive:  protobuf.MenuKeepAlive(data.KeepAlive),
+		BaseMenu:   protobuf.MenuBaseMenu(data.BaseMenu),
+		CloseTab:   protobuf.MenuCloseTab(data.CloseTab),
+		Children:   make([]*v1.Menu, 0),
+		Parameters: make([]*v1.MenuParameter, 0),
+		Buttons:    make([]*v1.MenuButton, 0),
 	}
 }
 
@@ -69,18 +71,35 @@ func (s *AdminService) ListMenu(ctx context.Context, in *protobuf.PagingReq) (*p
 
 // CreateMenu 创建菜单
 func (s *AdminService) CreateMenu(ctx context.Context, in *v1.CreateMenuReq) (*v1.CreateMenuReply, error) {
+	parameters, buttons := make([]*biz.MenuParameter, 0, len(in.GetParameters())), make([]*biz.MenuButton, 0, len(in.GetButtons()))
+	for _, v := range in.GetParameters() {
+		parameters = append(parameters, &biz.MenuParameter{
+			Type:  int32(v.GetType()),
+			Key:   v.GetKey(),
+			Value: v.GetValue(),
+		})
+	}
+	for _, v := range in.GetButtons() {
+		buttons = append(buttons, &biz.MenuButton{
+			Name:    v.GetName(),
+			Remarks: v.GetRemarks(),
+		})
+	}
+
 	user, err := s.menuCase.Create(ctx, &biz.Menu{
-		Name:      in.GetName(),
-		Path:      in.GetPath(),
-		ParentID:  uint(in.GetParentId()),
-		Hidden:    int32(in.GetHidden()),
-		Component: in.GetComponent(),
-		Sort:      in.GetSort(),
-		Icon:      in.GetIcon(),
-		Title:     in.GetTitle(),
-		KeepAlive: int32(in.GetKeepAlive()),
-		BaseMenu:  int32(in.GetBaseMenu()),
-		CloseTab:  int32(in.GetCloseTab()),
+		Name:       in.GetName(),
+		Path:       in.GetPath(),
+		ParentID:   uint(in.GetParentId()),
+		Hidden:     int32(in.GetHidden()),
+		Component:  in.GetComponent(),
+		Sort:       in.GetSort(),
+		Icon:       in.GetIcon(),
+		Title:      in.GetTitle(),
+		KeepAlive:  int32(in.GetKeepAlive()),
+		BaseMenu:   int32(in.GetBaseMenu()),
+		CloseTab:   int32(in.GetCloseTab()),
+		Parameters: parameters,
+		Buttons:    buttons,
 	})
 	if err != nil {
 		return nil, v1.ErrorMenuCreateFail("菜单创建失败: %v", err.Error())
@@ -98,22 +117,39 @@ func (s *AdminService) CreateMenu(ctx context.Context, in *v1.CreateMenuReq) (*v
 // UpdateMenu 创建菜单
 func (s *AdminService) UpdateMenu(ctx context.Context, in *v1.UpdateMenuReq) (*v1.UpdateMenuReply, error) {
 	v := in.GetData()
+
+	parameters, buttons := make([]*biz.MenuParameter, 0, len(v.GetParameters())), make([]*biz.MenuButton, 0, len(v.GetButtons()))
+	for _, v := range v.GetParameters() {
+		parameters = append(parameters, &biz.MenuParameter{
+			Type:  int32(v.GetType()),
+			Key:   v.GetKey(),
+			Value: v.GetValue(),
+		})
+	}
+	for _, v := range v.GetButtons() {
+		buttons = append(buttons, &biz.MenuButton{
+			Name:    v.GetName(),
+			Remarks: v.GetRemarks(),
+		})
+	}
 	err := s.menuCase.Update(ctx, &biz.Menu{
-		ID:        uint(in.GetId()),
-		Name:      v.GetName(),
-		Path:      v.GetPath(),
-		ParentID:  uint(v.GetParentId()),
-		Hidden:    int32(v.GetHidden()),
-		Component: v.GetComponent(),
-		Sort:      v.GetSort(),
-		Icon:      v.GetIcon(),
-		Title:     v.GetTitle(),
-		KeepAlive: int32(v.GetKeepAlive()),
-		BaseMenu:  int32(v.GetBaseMenu()),
-		CloseTab:  int32(v.GetCloseTab()),
+		ID:         uint(in.GetId()),
+		Name:       v.GetName(),
+		Path:       v.GetPath(),
+		ParentID:   uint(v.GetParentId()),
+		Hidden:     int32(v.GetHidden()),
+		Component:  v.GetComponent(),
+		Sort:       v.GetSort(),
+		Icon:       v.GetIcon(),
+		Title:      v.GetTitle(),
+		KeepAlive:  int32(v.GetKeepAlive()),
+		BaseMenu:   int32(v.GetBaseMenu()),
+		CloseTab:   int32(v.GetCloseTab()),
+		Parameters: parameters,
+		Buttons:    buttons,
 	})
 	if err != nil {
-		return nil, v1.ErrorMenuUpdateFail("菜单创建失败: %v", err.Error())
+		return nil, v1.ErrorMenuUpdateFail("菜单修改失败: %v", err.Error())
 	}
 	return &v1.UpdateMenuReply{
 		Success: true,

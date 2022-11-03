@@ -6,7 +6,6 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
-	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -27,8 +26,24 @@ func (r *MenuRepo) toModel(d *biz.Menu) *SysMenu {
 	if d == nil {
 		return nil
 	}
+
+	parameters, buttons := make([]SysMenuParameter, 0, len(d.Parameters)), make([]SysMenuButton, 0, len(d.Buttons))
+	for _, v := range d.Parameters {
+		parameters = append(parameters, SysMenuParameter{
+			Type:  v.Type,
+			Key:   v.Key,
+			Value: v.Value,
+		})
+	}
+	for _, v := range d.Buttons {
+		buttons = append(buttons, SysMenuButton{
+			Name:    v.Name,
+			Remarks: v.Remarks,
+		})
+	}
+
 	return &SysMenu{
-		Model: gorm.Model{
+		DomainModel: DomainModel{
 			ID:        d.ID,
 			CreatedAt: d.CreatedAt,
 			UpdatedAt: d.UpdatedAt,
@@ -46,6 +61,8 @@ func (r *MenuRepo) toModel(d *biz.Menu) *SysMenu {
 			BaseMenu:  d.BaseMenu,
 			CloseTab:  d.CloseTab,
 		},
+		Parameters: parameters,
+		Buttons:    buttons,
 	}
 }
 
@@ -53,27 +70,44 @@ func (r *MenuRepo) toBiz(d *SysMenu) *biz.Menu {
 	if d == nil {
 		return nil
 	}
+	parameters, buttons := make([]*biz.MenuParameter, 0, len(d.Parameters)), make([]*biz.MenuButton, 0, len(d.Buttons))
+	for _, v := range d.Parameters {
+		parameters = append(parameters, &biz.MenuParameter{
+			Type:  v.Type,
+			Key:   v.Key,
+			Value: v.Value,
+		})
+	}
+	for _, v := range d.Buttons {
+		buttons = append(buttons, &biz.MenuButton{
+			Name:    v.Name,
+			Remarks: v.Remarks,
+		})
+	}
+
 	return &biz.Menu{
-		CreatedAt: d.CreatedAt,
-		UpdatedAt: d.UpdatedAt,
-		ID:        d.ID,
-		Name:      d.Name,
-		ParentID:  d.ParentID,
-		Path:      d.Path,
-		Hidden:    d.Hidden,
-		Component: d.Component,
-		Sort:      d.Sort,
-		Icon:      d.Meta.Icon,
-		Title:     d.Meta.Title,
-		KeepAlive: d.Meta.KeepAlive,
-		BaseMenu:  d.Meta.BaseMenu,
-		CloseTab:  d.Meta.CloseTab,
+		CreatedAt:  d.CreatedAt,
+		UpdatedAt:  d.UpdatedAt,
+		ID:         d.ID,
+		Name:       d.Name,
+		ParentID:   d.ParentID,
+		Path:       d.Path,
+		Hidden:     d.Hidden,
+		Component:  d.Component,
+		Sort:       d.Sort,
+		Icon:       d.Meta.Icon,
+		Title:      d.Meta.Title,
+		KeepAlive:  d.Meta.KeepAlive,
+		BaseMenu:   d.Meta.BaseMenu,
+		CloseTab:   d.Meta.CloseTab,
+		Parameters: parameters,
+		Buttons:    buttons,
 	}
 }
 
 func (r *MenuRepo) Save(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 	d := r.toModel(g)
-	result := r.data.DB(ctx).Omit(clause.Associations).Debug().Create(d).Error
+	result := r.data.DB(ctx).Debug().Create(d).Error
 	return r.toBiz(d), result
 }
 
@@ -85,7 +119,7 @@ func (r *MenuRepo) Update(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 
 func (r *MenuRepo) FindByName(ctx context.Context, s string) (*biz.Menu, error) {
 	menu := SysMenu{}
-	result := r.data.DB(ctx).Last(&menu, "name = ?", s)
+	result := r.data.DB(ctx).Preload("Parameters").Preload("Buttons").Last(&menu, "name = ?", s)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -94,7 +128,7 @@ func (r *MenuRepo) FindByName(ctx context.Context, s string) (*biz.Menu, error) 
 
 func (r *MenuRepo) FindByID(ctx context.Context, id uint) (*biz.Menu, error) {
 	menu := SysMenu{}
-	result := r.data.DB(ctx).Last(&menu, id)
+	result := r.data.DB(ctx).Preload("Parameters").Preload("Buttons").Last(&menu, id)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -128,7 +162,7 @@ func (r *MenuRepo) ListByName(ctx context.Context, name string) ([]*biz.Menu, er
 }
 
 func (r *MenuRepo) Delete(ctx context.Context, g *biz.Menu) error {
-	return r.data.DB(ctx).Delete(r.toModel(g)).Error
+	return r.data.DB(ctx).Select("Parameters", "Buttons").Delete(r.toModel(g)).Error
 }
 
 func (r *MenuRepo) ListAll(ctx context.Context) (menus []*biz.Menu, err error) {

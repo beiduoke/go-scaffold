@@ -6,7 +6,6 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
-	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -28,7 +27,7 @@ func (r *AuthorityRepo) toModel(d *biz.Authority) *SysAuthority {
 		return nil
 	}
 	return &SysAuthority{
-		Model: gorm.Model{
+		DomainModel: DomainModel{
 			ID:        d.ID,
 			CreatedAt: d.CreatedAt,
 			UpdatedAt: d.UpdatedAt,

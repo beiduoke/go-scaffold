@@ -12,21 +12,34 @@ import (
 
 // Menu is a Menu model.
 type Menu struct {
-	ID        uint
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	Name      string
-	ParentID  uint
-	Path      string
-	Hidden    int32
-	Component string
-	Sort      int32
-	Icon      string
-	Title     string
-	KeepAlive int32
-	BaseMenu  int32
-	CloseTab  int32
-	Children  []*Menu
+	ID         uint
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	Name       string
+	ParentID   uint
+	Path       string
+	Hidden     int32
+	Component  string
+	Sort       int32
+	Icon       string
+	Title      string
+	KeepAlive  int32
+	BaseMenu   int32
+	CloseTab   int32
+	Children   []*Menu
+	Parameters []*MenuParameter
+	Buttons    []*MenuButton
+}
+
+type MenuParameter struct {
+	Type  int32
+	Key   string
+	Value string
+}
+
+type MenuButton struct {
+	Name    string
+	Remarks string
 }
 
 // MenuRepo is a Greater repo.

@@ -68,7 +68,7 @@ func (ac *AuthUsecase) GetToken(claims *AuthClaims) error {
 func (ac *AuthUsecase) LoginNamePassword(ctx context.Context, domainCode string, g *User) (*AuthClaims, error) {
 	domain, err := ac.biz.domainRepo.FindByCode(ctx, domainCode)
 	if err != nil {
-		return nil, errors.New("domain查询失败")
+		return nil, errors.New("领域查询失败")
 	}
 	u, err := ac.biz.userRepo.FindByName(ctx, g.Name)
 	if err != nil {

@@ -36,7 +36,7 @@ var (
 	_ = anypb.Any{}
 	_ = sort.Sort
 
-	_ = protobuf.UserGender(0)
+	_ = protobuf.MenuCloseTab(0)
 )
 
 // Validate checks the field values on Auth with the rules defined in the proto

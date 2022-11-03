@@ -63,7 +63,7 @@ type SysUser struct {
 
 // Authority 角色
 type SysAuthority struct {
-	gorm.Model
+	DomainModel
 	Name          string          `gorm:"type:varchar(255);column:name;not null;comment:角色名称;"`
 	ParentID      uint            `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
 	DefaultRouter string          `gorm:"type:varchar(255);column:default_router;not null;default:'/dashboard';comment:默认路由;"`
@@ -103,18 +103,18 @@ type SysApi struct {
 
 // SysMenu 菜单
 type SysMenu struct {
-	gorm.Model
-	Name           string             `gorm:"type:varchar(255);column:name;not null;comment:路由名称;"`
-	ParentID       uint               `gorm:"type:bigint(20);column:parent_id;not null;default:0;index;comment:父菜单ID"`
-	Path           string             `gorm:"type:varchar(255);column:path;not null;comment:路由path"`
-	Hidden         int32              `gorm:"type:tinyint(1);column:hidden;not null;default:1;comment:隐藏 0 无指定 1 是 2 否"`
-	Component      string             `gorm:"type:varchar(255);column:component;not null;comment:对应前端文件路径"`
-	Sort           int32              `gorm:"type:int(10);column:sort;not null;default:10;comment:排序标记"`
-	Meta           SysMeta            `gorm:"embedded;comment:附加属性"`
-	Authorities    []SysAuthority     `gorm:"many2many:sys_authority_menus;"`
-	Apis           []SysApi           `gorm:"many2many:sys_menu_apis;"`
-	MenuParameters []SysMenuParameter `gorm:"foreignKey:MenuID;"`
-	MenuButtons    []SysMenuButton    `gorm:"foreignKey:MenuID;"`
+	DomainModel
+	Name        string             `gorm:"type:varchar(255);column:name;not null;comment:路由名称;"`
+	ParentID    uint               `gorm:"type:bigint(20);column:parent_id;not null;default:0;index;comment:父菜单ID"`
+	Path        string             `gorm:"type:varchar(255);column:path;not null;comment:路由path"`
+	Hidden      int32              `gorm:"type:tinyint(1);column:hidden;not null;default:1;comment:隐藏 0 无指定 1 是 2 否"`
+	Component   string             `gorm:"type:varchar(255);column:component;not null;comment:对应前端文件路径"`
+	Sort        int32              `gorm:"type:int(10);column:sort;not null;default:10;comment:排序标记"`
+	Meta        SysMeta            `gorm:"embedded;comment:附加属性"`
+	Authorities []SysAuthority     `gorm:"many2many:sys_authority_menus;"`
+	Apis        []SysApi           `gorm:"many2many:sys_menu_apis;"`
+	Parameters  []SysMenuParameter `gorm:"foreignKey:MenuID;"`
+	Buttons     []SysMenuButton    `gorm:"foreignKey:MenuID;"`
 }
 
 // SysMeta 元数据
@@ -160,15 +160,16 @@ type SysMenuButton struct {
 // SysMenuParameter 菜单参数
 type SysMenuParameter struct {
 	gorm.Model
-	MenuID uint   `gorm:"type:bigint(20);column:menu_id;not null;comment:菜单ID"`
-	Type   int32  `gorm:"type:tinyint(1);column:type;not null;default:1;comment:地址栏携带参类型 0 未指定 1 params 2 query"`
-	Key    string `gorm:"type:varchar(255);column:key;not null;default:'';comment:地址栏携带参数的key"`
-	Value  string `gorm:"type:varchar(255);column:value;not null;default:'';comment:地址栏携带参数的值"`
+	MenuID uint    `gorm:"type:bigint(20);column:menu_id;not null;comment:菜单ID"`
+	Type   int32   `gorm:"type:tinyint(1);column:type;not null;default:1;comment:地址栏携带参类型 0 未指定 1 params 2 query"`
+	Key    string  `gorm:"type:varchar(255);column:key;not null;default:'';comment:地址栏携带参数的key"`
+	Value  string  `gorm:"type:varchar(255);column:value;not null;default:'';comment:地址栏携带参数的值"`
+	Menu   SysMenu `gorm:"foreignKey:MenuID;"`
 }
 
 // ApiOperationLog API 请求日志
 type SysApiOperationLog struct {
-	gorm.Model
+	DomainModel
 	IP      string        `gorm:"type:varchar(100);column:ip;not null;comment:请求ip"`
 	Method  string        `gorm:"type:varchar(255);column:method;not null;comment:请求方法"`
 	Path    string        `gorm:"type:varchar(255);column:path;not null;comment:请求路径"`
