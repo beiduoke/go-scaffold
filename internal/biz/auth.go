@@ -65,8 +65,8 @@ func (ac *AuthUsecase) GetToken(claims *AuthClaims) error {
 }
 
 // LoginNamePassword 登录-用户密码
-func (ac *AuthUsecase) LoginNamePassword(ctx context.Context, domainId string, g *User) (*AuthClaims, error) {
-	domain, err := ac.biz.domainRepo.FindByDomainID(ctx, domainId)
+func (ac *AuthUsecase) LoginNamePassword(ctx context.Context, domainCode string, g *User) (*AuthClaims, error) {
+	domain, err := ac.biz.domainRepo.FindByCode(ctx, domainCode)
 	if err != nil {
 		return nil, errors.New("domain查询失败")
 	}
@@ -112,15 +112,15 @@ func (ac *AuthUsecase) LoginNamePassword(ctx context.Context, domainId string, g
 }
 
 // LoginMobileSms 登录-手机验证码
-func (ac *AuthUsecase) LoginMobileSms(ctx context.Context, domainId string, g *User) (*User, error) {
+func (ac *AuthUsecase) LoginMobileSms(ctx context.Context, domainCode string, g *User) (*User, error) {
 	ac.log.WithContext(ctx).Infof("mobileSmsLogin: %v", g)
 	return ac.biz.userRepo.FindByMobile(ctx, g.Mobile)
 }
 
 // RegisterNamePassword 注册-用户密码
-func (ac *AuthUsecase) RegisterNamePassword(ctx context.Context, domainId string, g *User) (*User, error) {
+func (ac *AuthUsecase) RegisterNamePassword(ctx context.Context, domainCode string, g *User) (*User, error) {
 	ac.log.WithContext(ctx).Infof("NamePasswordRegister: %v", g.Name)
-	domain, err := ac.biz.domainRepo.FindByDomainID(ctx, domainId)
+	domain, err := ac.biz.domainRepo.FindByCode(ctx, domainCode)
 	if err != nil {
 		return nil, errors.New("领域查询失败")
 	}

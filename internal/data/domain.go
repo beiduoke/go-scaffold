@@ -27,12 +27,10 @@ func (r *DomainRepo) toModel(d *biz.Domain) *SysDomain {
 		return nil
 	}
 	return &SysDomain{
-		DomainModel: DomainModel{
-			ID:        d.ID,
-			CreatedAt: d.CreatedAt,
-			UpdatedAt: d.UpdatedAt,
-			DomainID:  d.DomainID,
-		},
+		ID:                 d.ID,
+		CreatedAt:          d.CreatedAt,
+		UpdatedAt:          d.UpdatedAt,
+		Code:               d.Code,
 		Name:               d.Name,
 		State:              d.State,
 		DefaultAuthorityID: d.DefaultAuthorityID,
@@ -49,7 +47,7 @@ func (r *DomainRepo) toBiz(d *SysDomain) *biz.Domain {
 		CreatedAt:          d.CreatedAt,
 		UpdatedAt:          d.UpdatedAt,
 		ID:                 d.ID,
-		DomainID:           d.DomainID,
+		Code:               d.Code,
 		Name:               d.Name,
 		State:              d.State,
 		DefaultAuthorityID: d.DefaultAuthorityID,
@@ -60,14 +58,14 @@ func (r *DomainRepo) Save(ctx context.Context, g *biz.Domain) (*biz.Domain, erro
 	d := r.toModel(g)
 	sfId := r.data.sf.Generate()
 	// g.DomainID = base64.StdEncoding.EncodeToString([]byte(id.String()))
-	d.DomainID = sfId.String()
+	d.Code = sfId.String()
 	result := r.data.DB(ctx).Create(d)
 	return r.toBiz(d), result.Error
 }
 
 func (r *DomainRepo) Update(ctx context.Context, g *biz.Domain) (*biz.Domain, error) {
 	d := r.toModel(g)
-	result := r.data.DB(ctx).Model(d).Debug().Omit("DomainID").Updates(d)
+	result := r.data.DB(ctx).Model(d).Omit("Code").Updates(d)
 	return r.toBiz(d), result.Error
 }
 
@@ -89,9 +87,9 @@ func (r *DomainRepo) FindByName(ctx context.Context, s string) (*biz.Domain, err
 	return r.toBiz(&domain), nil
 }
 
-func (r *DomainRepo) FindByDomainID(ctx context.Context, domainId string) (*biz.Domain, error) {
+func (r *DomainRepo) FindByCode(ctx context.Context, code string) (*biz.Domain, error) {
 	sysDomain := &SysDomain{}
-	result := r.data.DB(ctx).Last(sysDomain, "domain_id", domainId)
+	result := r.data.DB(ctx).Last(sysDomain, "code", code)
 	return r.toBiz(sysDomain), result.Error
 }
 

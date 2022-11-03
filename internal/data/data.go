@@ -111,25 +111,23 @@ func (d *Data) DB(ctx context.Context) *gorm.DB {
 	return d.db
 }
 
-func (d *Data) DomainDB(ctx context.Context) *gorm.DB {
-	tx, ok := ctx.Value(contextTxKey{}).(*gorm.DB)
+func (d *Data) DBD(ctx context.Context) *gorm.DB {
+	var db *gorm.DB
 
 	domainStr := authz.ParseFromContext(ctx).GetDomain()
 	scopesDomain := d.DBScopesDomain(convert.StringToUint(domainStr))
 
-	if ok && domainStr != "" {
-		tx = tx.Scopes(scopesDomain)
-	}
-
-	if ok {
-		return tx
-	}
-
 	if domainStr != "" {
-		d.db = d.db.Scopes(scopesDomain)
+		defer db.Scopes(scopesDomain)
 	}
 
-	return d.db
+	if tx, ok := ctx.Value(contextTxKey{}).(*gorm.DB); ok {
+		db = tx
+	} else {
+		db = d.db
+	}
+
+	return db
 }
 
 func (d *Data) DBScopesDomain(id ...uint) func(db *gorm.DB) *gorm.DB {

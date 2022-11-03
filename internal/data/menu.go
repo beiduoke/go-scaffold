@@ -142,7 +142,7 @@ func (r *MenuRepo) ListAll(ctx context.Context) (menus []*biz.Menu, err error) {
 }
 
 func (r *MenuRepo) ListPage(ctx context.Context, handler pagination.PaginationHandler) (menus []*biz.Menu, total int64) {
-	db := r.data.DB(ctx).Model(&SysMenu{}).Debug()
+	db := r.data.DB(ctx).Model(&SysMenu{})
 	sysMenus := []*SysMenu{}
 	// 查询条件
 	for _, v := range handler.GetConditions() {

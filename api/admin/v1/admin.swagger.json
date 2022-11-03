@@ -1322,6 +1322,15 @@
       ],
       "default": "MENU_KEEP_ALIVE_UNSPECIFIED"
     },
+    "protobufMenuParameterType": {
+      "type": "string",
+      "enum": [
+        "MENU_PARAMETER_TYPE_UNSPECIFIED",
+        "MENU_PARAMETER_TYPE_PARAMS",
+        "MENU_PARAMETER_TYPE_QUERY"
+      ],
+      "default": "MENU_PARAMETER_TYPE_UNSPECIFIED"
+    },
     "protobufPagingReply": {
       "type": "object",
       "properties": {
@@ -1621,6 +1630,18 @@
         },
         "closeTab": {
           "$ref": "#/definitions/protobufMenuCloseTab"
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1MenuParameter"
+          }
+        },
+        "buttons": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1MenuButton"
+          }
         }
       },
       "title": "请求 - 创建菜单"
@@ -1957,9 +1978,46 @@
           "items": {
             "$ref": "#/definitions/v1Menu"
           }
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1MenuParameter"
+          }
+        },
+        "buttons": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1MenuButton"
+          }
         }
       },
       "title": "菜单模块"
+    },
+    "v1MenuButton": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "remarks": {
+          "type": "string"
+        }
+      }
+    },
+    "v1MenuParameter": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/protobufMenuParameterType"
+        },
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
     },
     "v1RegisterReply": {
       "type": "object",
@@ -2138,6 +2196,18 @@
         },
         "closeTab": {
           "$ref": "#/definitions/protobufMenuCloseTab"
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1MenuParameter"
+          }
+        },
+        "buttons": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1MenuButton"
+          }
         }
       }
     },

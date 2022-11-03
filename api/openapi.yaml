@@ -927,6 +927,14 @@ components:
                 closeTab:
                     type: integer
                     format: enum
+                parameters:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.v1.MenuParameter'
+                buttons:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.v1.MenuButton'
             description: 请求 - 创建菜单
         api.admin.v1.CreateUserReply:
             type: object
@@ -1163,7 +1171,32 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.admin.v1.Menu'
+                parameters:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.v1.MenuParameter'
+                buttons:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.v1.MenuButton'
             description: 菜单模块
+        api.admin.v1.MenuButton:
+            type: object
+            properties:
+                name:
+                    type: string
+                remarks:
+                    type: string
+        api.admin.v1.MenuParameter:
+            type: object
+            properties:
+                type:
+                    type: integer
+                    format: enum
+                key:
+                    type: string
+                value:
+                    type: string
         api.admin.v1.RegisterReply:
             type: object
             properties:
@@ -1291,6 +1324,14 @@ components:
                 closeTab:
                     type: integer
                     format: enum
+                parameters:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.v1.MenuParameter'
+                buttons:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.v1.MenuButton'
         api.admin.v1.UpdateUserReply:
             type: object
             properties:

@@ -24,7 +24,7 @@ type Domain struct {
 	CreatedAt          time.Time
 	UpdatedAt          time.Time
 	ID                 uint
-	DomainID           string
+	Code               string
 	ParentID           uint
 	Name               string
 	Sort               int32
@@ -37,7 +37,7 @@ type DomainRepo interface {
 	Save(context.Context, *Domain) (*Domain, error)
 	Update(context.Context, *Domain) (*Domain, error)
 	FindByID(context.Context, uint) (*Domain, error)
-	FindByDomainID(context.Context, string) (*Domain, error)
+	FindByCode(context.Context, string) (*Domain, error)
 	FindByName(context.Context, string) (*Domain, error)
 	ListByName(context.Context, string) ([]*Domain, error)
 	Delete(context.Context, *Domain) error

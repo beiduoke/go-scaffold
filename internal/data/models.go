@@ -25,11 +25,15 @@ type DomainModel struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
-	DomainID  string         `gorm:"type:varchar(100);column:domain_id;not null;index;comment:领域ID;"`
+	DomainID  string         `gorm:"type:bigint(20);column:domain_id;not null;index;comment:领域ID;"`
 }
 
 type SysDomain struct {
-	DomainModel
+	ID                 uint `gorm:"primarykey"`
+	CreatedAt          time.Time
+	UpdatedAt          time.Time
+	DeletedAt          gorm.DeletedAt `gorm:"index"`
+	Code               string         `gorm:"type:varchar(100);column:code;not null;index;comment:领域编码;"`
 	Name               string         `gorm:"type:varchar(255);column:name;not null;comment:名称;"`
 	ParentID           uint           `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
 	Sort               int32          `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
