@@ -377,7 +377,7 @@
     },
     "/admin/v1/authorities": {
       "get": {
-        "summary": "授权模块\n列表授权",
+        "summary": "权限角色模块\n列表权限角色",
         "operationId": "Admin_ListAuthority",
         "responses": {
           "200": {
@@ -423,7 +423,7 @@
         ]
       },
       "post": {
-        "summary": "创建授权",
+        "summary": "创建权限角色",
         "operationId": "Admin_CreateAuthority",
         "responses": {
           "200": {
@@ -456,7 +456,7 @@
     },
     "/admin/v1/authorities/{id}": {
       "get": {
-        "summary": "获取授权",
+        "summary": "获取权限角色",
         "operationId": "Admin_GetAuthority",
         "responses": {
           "200": {
@@ -486,7 +486,7 @@
         ]
       },
       "delete": {
-        "summary": "删除授权",
+        "summary": "删除权限角色",
         "operationId": "Admin_DeleteAuthority",
         "responses": {
           "200": {
@@ -516,7 +516,7 @@
         ]
       },
       "put": {
-        "summary": "修改授权",
+        "summary": "修改权限角色",
         "operationId": "Admin_UpdateAuthority",
         "responses": {
           "200": {
@@ -546,6 +546,86 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/v1UpdateAuthorityReqData"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/authorities/{id}/apis": {
+      "post": {
+        "summary": "处理权限角色接口",
+        "operationId": "Admin_HandleAuthorityApi",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1HandleAuthorityApiReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1HandleAuthorityApiReqData"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/authorities/{id}/menus": {
+      "post": {
+        "summary": "处理权限角色菜单",
+        "operationId": "Admin_HandleAuthorityMenu",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1HandleAuthorityMenuReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1HandleAuthorityMenuReqData"
             }
           }
         ],
@@ -1463,7 +1543,7 @@
           "$ref": "#/definitions/protobufAuthorityState"
         }
       },
-      "title": "权限模块"
+      "title": "权限角色模块"
     },
     "v1CreateApiReply": {
       "type": "object",
@@ -1514,7 +1594,7 @@
           "$ref": "#/definitions/protobufAny"
         }
       },
-      "title": "回应 - 创建权限"
+      "title": "回应 - 创建权限角色"
     },
     "v1CreateAuthorityReq": {
       "type": "object",
@@ -1537,7 +1617,7 @@
           "$ref": "#/definitions/protobufAuthorityState"
         }
       },
-      "title": "请求 - 创建权限"
+      "title": "请求 - 创建权限角色"
     },
     "v1CreateDomainReply": {
       "type": "object",
@@ -1725,7 +1805,7 @@
           "$ref": "#/definitions/protobufAny"
         }
       },
-      "title": "回应 - 删除权限"
+      "title": "回应 - 删除权限角色"
     },
     "v1DeleteDomainReply": {
       "type": "object",
@@ -1840,6 +1920,60 @@
         }
       },
       "title": "回应 - 获取用户菜单"
+    },
+    "v1HandleAuthorityApiReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
+        }
+      },
+      "title": "回应 - 处理权限角色接口"
+    },
+    "v1HandleAuthorityApiReqData": {
+      "type": "object",
+      "properties": {
+        "apiId": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
+        }
+      }
+    },
+    "v1HandleAuthorityMenuReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
+        }
+      },
+      "title": "回应 - 处理权限角色菜单"
+    },
+    "v1HandleAuthorityMenuReqData": {
+      "type": "object",
+      "properties": {
+        "menuId": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
+        }
+      }
     },
     "v1HandleUserDomainAuthorityReply": {
       "type": "object",
@@ -2082,7 +2216,7 @@
           "$ref": "#/definitions/protobufAny"
         }
       },
-      "title": "回应 - 创建权限"
+      "title": "回应 - 创建权限角色"
     },
     "v1UpdateAuthorityReqData": {
       "type": "object",

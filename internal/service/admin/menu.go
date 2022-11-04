@@ -163,7 +163,21 @@ func (s *AdminService) GetMenu(ctx context.Context, in *v1.GetMenuReq) (*v1.Menu
 	if err != nil {
 		return nil, v1.ErrorMenuNotFound("菜单未找到")
 	}
-	return TransformMenu(menu), nil
+	m := TransformMenu(menu)
+	for _, v := range menu.Buttons {
+		m.Buttons = append(m.Buttons, &v1.MenuButton{
+			Name:    v.Name,
+			Remarks: v.Remarks,
+		})
+	}
+	for _, v := range menu.Parameters {
+		m.Parameters = append(m.Parameters, &v1.MenuParameter{
+			Type:  protobuf.MenuParameterType(v.Type),
+			Key:   v.Key,
+			Value: v.Value,
+		})
+	}
+	return m, nil
 }
 
 // DeleteMenu 删除菜单

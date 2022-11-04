@@ -102,3 +102,37 @@ func (s *AdminService) DeleteAuthority(ctx context.Context, in *v1.DeleteAuthori
 		Message: "删除成功",
 	}, nil
 }
+
+// HandleAuthorityMenu 处理权限角色菜单
+func (s *AdminService) HandleAuthorityMenu(ctx context.Context, in *v1.HandleAuthorityMenuReq) (*v1.HandleAuthorityMenuReply, error) {
+	var menus []*biz.Menu
+	for _, v := range in.GetData().GetMenuId() {
+		menus = append(menus, &biz.Menu{
+			ID: uint(v),
+		})
+	}
+	if err := s.authorityCase.HandleMenu(ctx, &biz.Authority{ID: uint(in.GetId()), Menus: menus}); err != nil {
+		return nil, v1.ErrorAuthorityHandleMenuFail("权限角色菜单处理失败：%v", err)
+	}
+	return &v1.HandleAuthorityMenuReply{
+		Success: true,
+		Message: "处理成功",
+	}, nil
+}
+
+// HandleAuthorityApi 处理权限角色接口
+func (s *AdminService) HandleAuthorityApi(ctx context.Context, in *v1.HandleAuthorityApiReq) (*v1.HandleAuthorityApiReply, error) {
+	var apis []*biz.Api
+	for _, v := range in.GetData().GetApiId() {
+		apis = append(apis, &biz.Api{
+			ID: uint(v),
+		})
+	}
+	if err := s.authorityCase.HandleApi(ctx, &biz.Authority{ID: uint(in.GetId()), Apis: apis}); err != nil {
+		return nil, v1.ErrorAuthorityHandleApiFail("权限角色接口处理失败：%v", err)
+	}
+	return &v1.HandleAuthorityApiReply{
+		Success: true,
+		Message: "处理成功",
+	}, nil
+}

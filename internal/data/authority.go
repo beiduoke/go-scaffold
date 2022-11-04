@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
@@ -26,17 +27,17 @@ func (r *AuthorityRepo) toModel(d *biz.Authority) *SysAuthority {
 	if d == nil {
 		return nil
 	}
-	return &SysAuthority{
-		DomainModel: DomainModel{
-			ID:        d.ID,
-			CreatedAt: d.CreatedAt,
-			UpdatedAt: d.UpdatedAt,
-		},
+	sysData := &SysAuthority{
 		Name:          d.Name,
 		DefaultRouter: d.DefaultRouter,
 		State:         d.State,
 		ParentID:      d.ParentID,
 	}
+
+	sysData.ID = d.ID
+	sysData.CreatedAt = d.CreatedAt
+	sysData.CreatedAt = d.UpdatedAt
+	return sysData
 }
 
 func (r *AuthorityRepo) toBiz(d *SysAuthority) *biz.Authority {
@@ -57,19 +58,19 @@ func (r *AuthorityRepo) toBiz(d *SysAuthority) *biz.Authority {
 
 func (r *AuthorityRepo) Save(ctx context.Context, g *biz.Authority) (*biz.Authority, error) {
 	d := r.toModel(g)
-	result := r.data.DB(ctx).Omit(clause.Associations).Create(d).Error
+	result := r.data.DBD(ctx).Omit(clause.Associations).Create(d).Error
 	return r.toBiz(d), result
 }
 
 func (r *AuthorityRepo) Update(ctx context.Context, g *biz.Authority) (*biz.Authority, error) {
 	d := r.toModel(g)
-	result := r.data.DB(ctx).Model(d).Updates(d)
+	result := r.data.DBD(ctx).Model(d).Updates(d)
 	return r.toBiz(d), result.Error
 }
 
 func (r *AuthorityRepo) FindByName(ctx context.Context, s string) (*biz.Authority, error) {
 	authority := SysAuthority{}
-	result := r.data.DB(ctx).Last(&authority, "name = ?", s)
+	result := r.data.DBD(ctx).Last(&authority, "name = ?", s)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -78,7 +79,7 @@ func (r *AuthorityRepo) FindByName(ctx context.Context, s string) (*biz.Authorit
 
 func (r *AuthorityRepo) FindByID(ctx context.Context, id uint) (*biz.Authority, error) {
 	authority := SysAuthority{}
-	result := r.data.DB(ctx).Last(&authority, id)
+	result := r.data.DBD(ctx).Last(&authority, id)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -86,7 +87,7 @@ func (r *AuthorityRepo) FindByID(ctx context.Context, id uint) (*biz.Authority, 
 }
 
 func (r *AuthorityRepo) ListByIDs(ctx context.Context, id ...uint) (authorities []*biz.Authority, err error) {
-	db := r.data.DB(ctx).Model(&SysAuthority{})
+	db := r.data.DBD(ctx).Model(&SysAuthority{})
 	sysAuthorities := []*SysAuthority{}
 
 	err = db.Find(&sysAuthorities).Error
@@ -101,7 +102,7 @@ func (r *AuthorityRepo) ListByIDs(ctx context.Context, id ...uint) (authorities 
 
 func (r *AuthorityRepo) ListByName(ctx context.Context, name string) ([]*biz.Authority, error) {
 	sysAuthorities, bizAuthorities := []*SysAuthority{}, []*biz.Authority{}
-	result := r.data.DB(ctx).Find(&sysAuthorities, "name LIKE ?", "%"+name)
+	result := r.data.DBD(ctx).Find(&sysAuthorities, "name LIKE ?", "%"+name)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -112,7 +113,7 @@ func (r *AuthorityRepo) ListByName(ctx context.Context, name string) ([]*biz.Aut
 }
 
 func (r *AuthorityRepo) Delete(ctx context.Context, g *biz.Authority) error {
-	return r.data.DB(ctx).Delete(r.toModel(g)).Error
+	return r.data.DBD(ctx).Delete(r.toModel(g)).Error
 }
 
 func (r *AuthorityRepo) ListAll(ctx context.Context) ([]*biz.Authority, error) {
@@ -120,7 +121,7 @@ func (r *AuthorityRepo) ListAll(ctx context.Context) ([]*biz.Authority, error) {
 }
 
 func (r *AuthorityRepo) ListPage(ctx context.Context, handler pagination.PaginationHandler) (authorities []*biz.Authority, total int64) {
-	db := r.data.DB(ctx).Model(&SysAuthority{})
+	db := r.data.DBD(ctx).Model(&SysAuthority{}).Debug()
 	sysAuthorities := []*SysAuthority{}
 	// 查询条件
 	for _, v := range handler.GetConditions() {
@@ -149,4 +150,42 @@ func (r *AuthorityRepo) ListPage(ctx context.Context, handler pagination.Paginat
 	}
 
 	return authorities, total
+}
+
+func (r *AuthorityRepo) HandleMenu(ctx context.Context, g *biz.Authority) error {
+	sysAuthority := r.toModel(g)
+	err := r.data.DB(ctx).Debug().Model(sysAuthority).Association("Menus").Clear()
+	if err != nil {
+		return err
+	}
+	sysAuthorityMenus := []SysAuthorityMenu{}
+	for _, v := range g.Menus {
+		menuButtons := make([]uint, len(v.Buttons))
+		for _, m := range v.Buttons {
+			menuButtons = append(menuButtons, m.ID)
+		}
+		buttons, _ := json.Marshal(menuButtons)
+		menuParameters := make([]uint, len(v.Parameters))
+		for _, m := range v.Parameters {
+			menuParameters = append(menuParameters, m.ID)
+		}
+		parameters, _ := json.Marshal(menuParameters)
+		sysAuthorityMenus = append(sysAuthorityMenus, SysAuthorityMenu{
+			AuthorityID:   g.ID,
+			MenuID:        v.ID,
+			MenuButton:    string(buttons),
+			MenuParameter: string(parameters),
+		})
+	}
+	return r.data.DB(ctx).Model(&SysAuthorityMenu{}).CreateInBatches(&sysAuthorityMenus, len(g.Menus)).Error
+}
+
+func (r *AuthorityRepo) HandleApi(ctx context.Context, g *biz.Authority) error {
+	sysAuthority := r.toModel(g)
+
+	apiRepo := ApiRepo{}
+	for _, v := range g.Apis {
+		sysAuthority.Apis = append(sysAuthority.Apis, *apiRepo.toModel(v))
+	}
+	return r.data.DB(ctx).Model(sysAuthority).Debug().Association("Api").Replace(g.Apis)
 }

@@ -24,6 +24,8 @@ type Authority struct {
 	State         int32
 	Users         []*User
 	Domains       []*Domain
+	Menus         []*Menu
+	Apis          []*Api
 }
 
 // AuthorityRepo is a Greater repo.
@@ -36,6 +38,7 @@ type AuthorityRepo interface {
 	ListAll(context.Context) ([]*Authority, error)
 	Delete(context.Context, *Authority) error
 	ListPage(context.Context, pagination.PaginationHandler) ([]*Authority, int64)
+	HandleMenu(context.Context, *Authority) error
 }
 
 // AuthorityUsecase is a Authority usecase.
@@ -131,4 +134,17 @@ func (uc *AuthorityUsecase) Delete(ctx context.Context, g *Authority) error {
 		_, err := uc.biz.enforcer.DeleteRole(convert.UnitToString(g.ID))
 		return err
 	})
+}
+
+// HandleMenu 绑定菜单
+func (uc *AuthorityUsecase) HandleMenu(ctx context.Context, g *Authority) error {
+	uc.log.WithContext(ctx).Infof("HandleMenu: %v", g)
+	return uc.biz.authorityRepo.HandleMenu(ctx, g)
+}
+
+// HandleApi 绑定接口
+func (uc *AuthorityUsecase) HandleApi(ctx context.Context, g *Authority) error {
+	uc.log.WithContext(ctx).Infof("HandleApi: %v", g)
+
+	return nil
 }

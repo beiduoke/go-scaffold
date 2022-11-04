@@ -32,12 +32,14 @@ type Menu struct {
 }
 
 type MenuParameter struct {
+	ID    uint
 	Type  int32
 	Key   string
 	Value string
 }
 
 type MenuButton struct {
+	ID      uint
 	Name    string
 	Remarks string
 }
@@ -93,6 +95,9 @@ func (uc *MenuUsecase) Update(ctx context.Context, g *Menu) error {
 		}
 	}
 
+	// 清理原始数据
+	menu.Parameters = []*MenuParameter{}
+	menu.Buttons = []*MenuButton{}
 	// 新数据合并到源数据
 	if err := mergo.Merge(menu, *g, mergo.WithOverride); err != nil {
 		return errors.Errorf("数据合并失败：%v", err)

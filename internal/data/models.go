@@ -16,7 +16,7 @@ func NewSysModelMigrate() []interface{} {
 		&SysMenuButton{},
 		&SysMenuParameter{},
 		&SysAuthority{},
-		&SysAuthorityMenuButton{},
+		&SysAuthorityMenu{},
 	}
 }
 
@@ -25,7 +25,7 @@ type DomainModel struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
-	DomainID  string         `gorm:"type:bigint(20);column:domain_id;not null;index;comment:领域ID;"`
+	DomainID  uint           `gorm:"type:bigint(20);column:domain_id;not null;default:0;index:idx_domain_id_data;comment:领域ID;"`
 }
 
 type SysDomain struct {
@@ -64,18 +64,17 @@ type SysUser struct {
 // Authority 角色
 type SysAuthority struct {
 	DomainModel
-	Name          string          `gorm:"type:varchar(255);column:name;not null;comment:角色名称;"`
-	ParentID      uint            `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
-	DefaultRouter string          `gorm:"type:varchar(255);column:default_router;not null;default:'/dashboard';comment:默认路由;"`
-	Sort          int32           `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
-	State         int32           `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:角色状态 0 未指定  1 启用 2 停用;"`
-	Parent        *SysAuthority   `gorm:"foreignKey:ParentID"`
-	Authorities   []SysAuthority  `gorm:"many2many:sys_authority_relations"`
-	Menus         []SysMenu       `gorm:"many2many:sys_authority_menus;"`
-	MenuButtons   []SysMenuButton `gorm:"many2many:sys_authority_menu_buttons;"`
-	Apis          []SysApi        `gorm:"many2many:sys_authority_apis;"`
-	Users         []SysUser       `gorm:"-"`
-	Domains       []SysDomain     `gorm:"-"`
+	Name          string         `gorm:"type:varchar(255);column:name;not null;index:idx_domain_id_data;comment:角色名称;"`
+	ParentID      uint           `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
+	DefaultRouter string         `gorm:"type:varchar(255);column:default_router;not null;default:'/dashboard';comment:默认路由;"`
+	Sort          int32          `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
+	State         int32          `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:角色状态 0 未指定  1 启用 2 停用;"`
+	Parent        *SysAuthority  `gorm:"foreignKey:ParentID"`
+	Authorities   []SysAuthority `gorm:"many2many:sys_authority_relations"`
+	Menus         []SysMenu      `gorm:"many2many:sys_authority_menus;"`
+	Apis          []SysApi       `gorm:"many2many:sys_authority_apis;"`
+	Users         []SysUser      `gorm:"-"`
+	Domains       []SysDomain    `gorm:"-"`
 }
 
 // SysDomainAuthorityUser 领域用户权限 (弃用)
@@ -104,7 +103,7 @@ type SysApi struct {
 // SysMenu 菜单
 type SysMenu struct {
 	DomainModel
-	Name        string             `gorm:"type:varchar(255);column:name;not null;comment:路由名称;"`
+	Name        string             `gorm:"type:varchar(255);column:name;not null;index:idx_domain_id_data;comment:路由名称;"`
 	ParentID    uint               `gorm:"type:bigint(20);column:parent_id;not null;default:0;index;comment:父菜单ID"`
 	Path        string             `gorm:"type:varchar(255);column:path;not null;comment:路由path"`
 	Hidden      int32              `gorm:"type:tinyint(1);column:hidden;not null;default:1;comment:隐藏 0 无指定 1 是 2 否"`
@@ -126,17 +125,21 @@ type SysMeta struct {
 	CloseTab  int32  `gorm:"type:tinyint(1);column:close_tab;not null;default:1;comment:自动关闭TAB  0 无指定 1 是  2 否"`
 }
 
-// SysAuthorityMenu 角色菜单
+// SysAuthorityMenu 角色菜单-Many2Many 替换
 type SysAuthorityMenu struct {
-	ID             uint `gorm:"primarykey"`
-	CreatedAt      time.Time
-	AuthorityID    uint               `gorm:"type:bigint(20);column:authority_id;not null;uniqueIndex:idx_authority_menu_authority_id_menu_id;comment:角色ID"`
-	MenuID         uint               `gorm:"type:bigint(20);column:menu_id;not null;uniqueIndex:idx_authority_menu_authority_id_menu_id;comment:菜单ID"`
-	Menu           SysMenu            `gorm:"foreignKey:MenuID"`
-	MenuParameters []SysMenuParameter `gorm:"foreignKey:MenuID"`
+	CreatedAt     time.Time
+	AuthorityID   uint    `gorm:"type:bigint(20);column:sys_authority_id;not null;uniqueIndex:idx_authority_menu_authority_id_menu_id;comment:角色ID"`
+	MenuID        uint    `gorm:"type:bigint(20);column:sys_menu_id;not null;uniqueIndex:idx_authority_menu_authority_id_menu_id;comment:菜单ID"`
+	MenuButton    string  `gorm:"type:json;column:sys_menu_button;comment:菜单按钮"`
+	MenuParameter string  `gorm:"type:json;column:sys_menu_parameter;comment:菜单参数"`
+	Menu          SysMenu `gorm:"foreignKey:MenuID"`
 }
 
-// SysAuthorityMenuButton 角色菜单按钮-自定义关联表
+// func (SysAuthorityMenu) BeforeCreate(db *gorm.DB) error {
+// 	return db.SetupJoinTable(&SysMenu{}, "Menus", &SysAuthorityMenu{})
+// }
+
+// SysAuthorityMenuButton 角色菜单按钮-自定义关联表-未用
 type SysAuthorityMenuButton struct {
 	ID           uint `gorm:"primarykey"`
 	CreatedAt    time.Time
@@ -149,22 +152,23 @@ type SysAuthorityMenuButton struct {
 
 // SysMenuButton 菜单按钮
 type SysMenuButton struct {
-	gorm.Model
-	MenuID      uint           `gorm:"type:bigint(20);column:menu_id;not null;comment:菜单ID"`
-	Name        string         `gorm:"type:varchar(255);column:name;not null;comment:按钮关键key;"`
-	Remarks     string         `gorm:"type:varchar(255);column:remarks;not null;comment:按钮备注;"`
-	Menu        SysMenu        `gorm:"foreignKey:MenuID;"`
-	Authorities []SysAuthority `gorm:"many2many:sys_authority_menu_buttons;"`
+	ID        uint `gorm:"primarykey"`
+	CreatedAt time.Time
+	MenuID    uint    `gorm:"type:bigint(20);column:menu_id;not null;index;comment:菜单ID"`
+	Name      string  `gorm:"type:varchar(255);column:name;not null;comment:按钮关键key;"`
+	Remarks   string  `gorm:"type:varchar(255);column:remarks;not null;comment:按钮备注;"`
+	Menu      SysMenu `gorm:"foreignKey:MenuID;"`
 }
 
 // SysMenuParameter 菜单参数
 type SysMenuParameter struct {
-	gorm.Model
-	MenuID uint    `gorm:"type:bigint(20);column:menu_id;not null;comment:菜单ID"`
-	Type   int32   `gorm:"type:tinyint(1);column:type;not null;default:1;comment:地址栏携带参类型 0 未指定 1 params 2 query"`
-	Key    string  `gorm:"type:varchar(255);column:key;not null;default:'';comment:地址栏携带参数的key"`
-	Value  string  `gorm:"type:varchar(255);column:value;not null;default:'';comment:地址栏携带参数的值"`
-	Menu   SysMenu `gorm:"foreignKey:MenuID;"`
+	ID        uint `gorm:"primarykey"`
+	CreatedAt time.Time
+	MenuID    uint    `gorm:"type:bigint(20);column:menu_id;not null;index;comment:菜单ID"`
+	Type      int32   `gorm:"type:tinyint(1);column:type;not null;default:1;comment:地址栏携带参类型 0 未指定 1 params 2 query"`
+	Key       string  `gorm:"type:varchar(255);column:key;not null;default:'';comment:地址栏携带参数的key"`
+	Value     string  `gorm:"type:varchar(255);column:value;not null;default:'';comment:地址栏携带参数的值"`
+	Menu      SysMenu `gorm:"foreignKey:MenuID;"`
 }
 
 // ApiOperationLog API 请求日志

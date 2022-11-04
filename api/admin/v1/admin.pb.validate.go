@@ -36,7 +36,7 @@ var (
 	_ = anypb.Any{}
 	_ = sort.Sort
 
-	_ = protobuf.MenuCloseTab(0)
+	_ = protobuf.UserGender(0)
 )
 
 // Validate checks the field values on Auth with the rules defined in the proto
@@ -5128,6 +5128,560 @@ var _ interface {
 	ErrorName() string
 } = DeleteAuthorityReplyValidationError{}
 
+// Validate checks the field values on HandleAuthorityMenuReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HandleAuthorityMenuReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleAuthorityMenuReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HandleAuthorityMenuReqMultiError, or nil if none found.
+func (m *HandleAuthorityMenuReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleAuthorityMenuReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := HandleAuthorityMenuReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, HandleAuthorityMenuReqValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, HandleAuthorityMenuReqValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return HandleAuthorityMenuReqValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return HandleAuthorityMenuReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleAuthorityMenuReqMultiError is an error wrapping multiple validation
+// errors returned by HandleAuthorityMenuReq.ValidateAll() if the designated
+// constraints aren't met.
+type HandleAuthorityMenuReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleAuthorityMenuReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleAuthorityMenuReqMultiError) AllErrors() []error { return m }
+
+// HandleAuthorityMenuReqValidationError is the validation error returned by
+// HandleAuthorityMenuReq.Validate if the designated constraints aren't met.
+type HandleAuthorityMenuReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleAuthorityMenuReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleAuthorityMenuReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleAuthorityMenuReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleAuthorityMenuReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleAuthorityMenuReqValidationError) ErrorName() string {
+	return "HandleAuthorityMenuReqValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleAuthorityMenuReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleAuthorityMenuReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleAuthorityMenuReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleAuthorityMenuReqValidationError{}
+
+// Validate checks the field values on HandleAuthorityMenuReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HandleAuthorityMenuReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleAuthorityMenuReply with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HandleAuthorityMenuReplyMultiError, or nil if none found.
+func (m *HandleAuthorityMenuReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleAuthorityMenuReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Success
+
+	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, HandleAuthorityMenuReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, HandleAuthorityMenuReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return HandleAuthorityMenuReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return HandleAuthorityMenuReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleAuthorityMenuReplyMultiError is an error wrapping multiple validation
+// errors returned by HandleAuthorityMenuReply.ValidateAll() if the designated
+// constraints aren't met.
+type HandleAuthorityMenuReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleAuthorityMenuReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleAuthorityMenuReplyMultiError) AllErrors() []error { return m }
+
+// HandleAuthorityMenuReplyValidationError is the validation error returned by
+// HandleAuthorityMenuReply.Validate if the designated constraints aren't met.
+type HandleAuthorityMenuReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleAuthorityMenuReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleAuthorityMenuReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleAuthorityMenuReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleAuthorityMenuReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleAuthorityMenuReplyValidationError) ErrorName() string {
+	return "HandleAuthorityMenuReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleAuthorityMenuReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleAuthorityMenuReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleAuthorityMenuReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleAuthorityMenuReplyValidationError{}
+
+// Validate checks the field values on HandleAuthorityApiReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HandleAuthorityApiReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleAuthorityApiReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HandleAuthorityApiReqMultiError, or nil if none found.
+func (m *HandleAuthorityApiReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleAuthorityApiReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := HandleAuthorityApiReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, HandleAuthorityApiReqValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, HandleAuthorityApiReqValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return HandleAuthorityApiReqValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return HandleAuthorityApiReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleAuthorityApiReqMultiError is an error wrapping multiple validation
+// errors returned by HandleAuthorityApiReq.ValidateAll() if the designated
+// constraints aren't met.
+type HandleAuthorityApiReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleAuthorityApiReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleAuthorityApiReqMultiError) AllErrors() []error { return m }
+
+// HandleAuthorityApiReqValidationError is the validation error returned by
+// HandleAuthorityApiReq.Validate if the designated constraints aren't met.
+type HandleAuthorityApiReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleAuthorityApiReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleAuthorityApiReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleAuthorityApiReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleAuthorityApiReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleAuthorityApiReqValidationError) ErrorName() string {
+	return "HandleAuthorityApiReqValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleAuthorityApiReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleAuthorityApiReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleAuthorityApiReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleAuthorityApiReqValidationError{}
+
+// Validate checks the field values on HandleAuthorityApiReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HandleAuthorityApiReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleAuthorityApiReply with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HandleAuthorityApiReplyMultiError, or nil if none found.
+func (m *HandleAuthorityApiReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleAuthorityApiReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Success
+
+	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, HandleAuthorityApiReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, HandleAuthorityApiReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return HandleAuthorityApiReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return HandleAuthorityApiReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleAuthorityApiReplyMultiError is an error wrapping multiple validation
+// errors returned by HandleAuthorityApiReply.ValidateAll() if the designated
+// constraints aren't met.
+type HandleAuthorityApiReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleAuthorityApiReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleAuthorityApiReplyMultiError) AllErrors() []error { return m }
+
+// HandleAuthorityApiReplyValidationError is the validation error returned by
+// HandleAuthorityApiReply.Validate if the designated constraints aren't met.
+type HandleAuthorityApiReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleAuthorityApiReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleAuthorityApiReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleAuthorityApiReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleAuthorityApiReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleAuthorityApiReplyValidationError) ErrorName() string {
+	return "HandleAuthorityApiReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleAuthorityApiReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleAuthorityApiReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleAuthorityApiReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleAuthorityApiReplyValidationError{}
+
 // Validate checks the field values on Api with the rules defined in the proto
 // definition for this message. If any rules are violated, the first error
 // encountered is returned, or nil if there are no violations.
@@ -9052,6 +9606,211 @@ var _ interface {
 var _UpdateAuthorityReq_Data_State_NotInLookup = map[protobuf.AuthorityState]struct{}{
 	0: {},
 }
+
+// Validate checks the field values on HandleAuthorityMenuReq_Data with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HandleAuthorityMenuReq_Data) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleAuthorityMenuReq_Data with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HandleAuthorityMenuReq_DataMultiError, or nil if none found.
+func (m *HandleAuthorityMenuReq_Data) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleAuthorityMenuReq_Data) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return HandleAuthorityMenuReq_DataMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleAuthorityMenuReq_DataMultiError is an error wrapping multiple
+// validation errors returned by HandleAuthorityMenuReq_Data.ValidateAll() if
+// the designated constraints aren't met.
+type HandleAuthorityMenuReq_DataMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleAuthorityMenuReq_DataMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleAuthorityMenuReq_DataMultiError) AllErrors() []error { return m }
+
+// HandleAuthorityMenuReq_DataValidationError is the validation error returned
+// by HandleAuthorityMenuReq_Data.Validate if the designated constraints
+// aren't met.
+type HandleAuthorityMenuReq_DataValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleAuthorityMenuReq_DataValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleAuthorityMenuReq_DataValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleAuthorityMenuReq_DataValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleAuthorityMenuReq_DataValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleAuthorityMenuReq_DataValidationError) ErrorName() string {
+	return "HandleAuthorityMenuReq_DataValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleAuthorityMenuReq_DataValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleAuthorityMenuReq_Data.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleAuthorityMenuReq_DataValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleAuthorityMenuReq_DataValidationError{}
+
+// Validate checks the field values on HandleAuthorityApiReq_Data with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HandleAuthorityApiReq_Data) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleAuthorityApiReq_Data with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HandleAuthorityApiReq_DataMultiError, or nil if none found.
+func (m *HandleAuthorityApiReq_Data) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleAuthorityApiReq_Data) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return HandleAuthorityApiReq_DataMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleAuthorityApiReq_DataMultiError is an error wrapping multiple
+// validation errors returned by HandleAuthorityApiReq_Data.ValidateAll() if
+// the designated constraints aren't met.
+type HandleAuthorityApiReq_DataMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleAuthorityApiReq_DataMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleAuthorityApiReq_DataMultiError) AllErrors() []error { return m }
+
+// HandleAuthorityApiReq_DataValidationError is the validation error returned
+// by HandleAuthorityApiReq_Data.Validate if the designated constraints aren't met.
+type HandleAuthorityApiReq_DataValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleAuthorityApiReq_DataValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleAuthorityApiReq_DataValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleAuthorityApiReq_DataValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleAuthorityApiReq_DataValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleAuthorityApiReq_DataValidationError) ErrorName() string {
+	return "HandleAuthorityApiReq_DataValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleAuthorityApiReq_DataValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleAuthorityApiReq_Data.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleAuthorityApiReq_DataValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleAuthorityApiReq_DataValidationError{}
 
 // Validate checks the field values on UpdateApiReq_Data with the rules defined
 // in the proto definition for this message. If any rules are violated, the

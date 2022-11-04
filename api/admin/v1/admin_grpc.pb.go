@@ -60,17 +60,21 @@ type AdminClient interface {
 	UpdateDomain(ctx context.Context, in *UpdateDomainReq, opts ...grpc.CallOption) (*UpdateDomainReply, error)
 	// 删除领域
 	DeleteDomain(ctx context.Context, in *DeleteDomainReq, opts ...grpc.CallOption) (*DeleteDomainReply, error)
-	// 授权模块
-	// 列表授权
+	// 权限角色模块
+	// 列表权限角色
 	ListAuthority(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
-	// 创建授权
+	// 创建权限角色
 	CreateAuthority(ctx context.Context, in *CreateAuthorityReq, opts ...grpc.CallOption) (*CreateAuthorityReply, error)
-	// 获取授权
+	// 获取权限角色
 	GetAuthority(ctx context.Context, in *GetAuthorityReq, opts ...grpc.CallOption) (*Authority, error)
-	// 修改授权
+	// 修改权限角色
 	UpdateAuthority(ctx context.Context, in *UpdateAuthorityReq, opts ...grpc.CallOption) (*UpdateAuthorityReply, error)
-	// 删除授权
+	// 删除权限角色
 	DeleteAuthority(ctx context.Context, in *DeleteAuthorityReq, opts ...grpc.CallOption) (*DeleteAuthorityReply, error)
+	// 处理权限角色菜单
+	HandleAuthorityMenu(ctx context.Context, in *HandleAuthorityMenuReq, opts ...grpc.CallOption) (*HandleAuthorityMenuReply, error)
+	// 处理权限角色接口
+	HandleAuthorityApi(ctx context.Context, in *HandleAuthorityApiReq, opts ...grpc.CallOption) (*HandleAuthorityApiReply, error)
 	// 接口模块
 	// 列表接口
 	ListApi(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
@@ -303,6 +307,24 @@ func (c *adminClient) DeleteAuthority(ctx context.Context, in *DeleteAuthorityRe
 	return out, nil
 }
 
+func (c *adminClient) HandleAuthorityMenu(ctx context.Context, in *HandleAuthorityMenuReq, opts ...grpc.CallOption) (*HandleAuthorityMenuReply, error) {
+	out := new(HandleAuthorityMenuReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/HandleAuthorityMenu", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) HandleAuthorityApi(ctx context.Context, in *HandleAuthorityApiReq, opts ...grpc.CallOption) (*HandleAuthorityApiReply, error) {
+	out := new(HandleAuthorityApiReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/HandleAuthorityApi", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *adminClient) ListApi(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
 	out := new(protobuf.PagingReply)
 	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListApi", in, out, opts...)
@@ -442,17 +464,21 @@ type AdminServer interface {
 	UpdateDomain(context.Context, *UpdateDomainReq) (*UpdateDomainReply, error)
 	// 删除领域
 	DeleteDomain(context.Context, *DeleteDomainReq) (*DeleteDomainReply, error)
-	// 授权模块
-	// 列表授权
+	// 权限角色模块
+	// 列表权限角色
 	ListAuthority(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
-	// 创建授权
+	// 创建权限角色
 	CreateAuthority(context.Context, *CreateAuthorityReq) (*CreateAuthorityReply, error)
-	// 获取授权
+	// 获取权限角色
 	GetAuthority(context.Context, *GetAuthorityReq) (*Authority, error)
-	// 修改授权
+	// 修改权限角色
 	UpdateAuthority(context.Context, *UpdateAuthorityReq) (*UpdateAuthorityReply, error)
-	// 删除授权
+	// 删除权限角色
 	DeleteAuthority(context.Context, *DeleteAuthorityReq) (*DeleteAuthorityReply, error)
+	// 处理权限角色菜单
+	HandleAuthorityMenu(context.Context, *HandleAuthorityMenuReq) (*HandleAuthorityMenuReply, error)
+	// 处理权限角色接口
+	HandleAuthorityApi(context.Context, *HandleAuthorityApiReq) (*HandleAuthorityApiReply, error)
 	// 接口模块
 	// 列表接口
 	ListApi(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
@@ -549,6 +575,12 @@ func (UnimplementedAdminServer) UpdateAuthority(context.Context, *UpdateAuthorit
 }
 func (UnimplementedAdminServer) DeleteAuthority(context.Context, *DeleteAuthorityReq) (*DeleteAuthorityReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteAuthority not implemented")
+}
+func (UnimplementedAdminServer) HandleAuthorityMenu(context.Context, *HandleAuthorityMenuReq) (*HandleAuthorityMenuReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HandleAuthorityMenu not implemented")
+}
+func (UnimplementedAdminServer) HandleAuthorityApi(context.Context, *HandleAuthorityApiReq) (*HandleAuthorityApiReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HandleAuthorityApi not implemented")
 }
 func (UnimplementedAdminServer) ListApi(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListApi not implemented")
@@ -992,6 +1024,42 @@ func _Admin_DeleteAuthority_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Admin_HandleAuthorityMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HandleAuthorityMenuReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).HandleAuthorityMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/HandleAuthorityMenu",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).HandleAuthorityMenu(ctx, req.(*HandleAuthorityMenuReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_HandleAuthorityApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HandleAuthorityApiReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).HandleAuthorityApi(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/HandleAuthorityApi",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).HandleAuthorityApi(ctx, req.(*HandleAuthorityApiReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Admin_ListApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(protobuf.PagingReq)
 	if err := dec(in); err != nil {
@@ -1284,6 +1352,14 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteAuthority",
 			Handler:    _Admin_DeleteAuthority_Handler,
+		},
+		{
+			MethodName: "HandleAuthorityMenu",
+			Handler:    _Admin_HandleAuthorityMenu_Handler,
+		},
+		{
+			MethodName: "HandleAuthorityApi",
+			Handler:    _Admin_HandleAuthorityApi_Handler,
 		},
 		{
 			MethodName: "ListApi",

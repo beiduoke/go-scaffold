@@ -239,6 +239,30 @@ func ErrorAuthorityDeleteFail(format string, args ...interface{}) *errors.Error 
 	return errors.New(400, ErrorReason_AUTHORITY_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
+func IsAuthorityHandleMenuFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_AUTHORITY_HANDLE_MENU_FAIL.String() && e.Code == 400
+}
+
+func ErrorAuthorityHandleMenuFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_AUTHORITY_HANDLE_MENU_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsAuthorityHandleApiFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_AUTHORITY_HANDLE_API_FAIL.String() && e.Code == 400
+}
+
+func ErrorAuthorityHandleApiFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_AUTHORITY_HANDLE_API_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
 func IsMenuNotFound(err error) bool {
 	if err == nil {
 		return false

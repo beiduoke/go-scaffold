@@ -113,20 +113,15 @@ func (d *Data) DB(ctx context.Context) *gorm.DB {
 
 func (d *Data) DBD(ctx context.Context) *gorm.DB {
 	var db *gorm.DB
-
-	domainStr := authz.ParseFromContext(ctx).GetDomain()
-	scopesDomain := d.DBScopesDomain(convert.StringToUint(domainStr))
-
-	if domainStr != "" {
-		defer db.Scopes(scopesDomain)
-	}
-
+	domainId := d.DomainID(ctx)
 	if tx, ok := ctx.Value(contextTxKey{}).(*gorm.DB); ok {
 		db = tx
 	} else {
 		db = d.db
 	}
-
+	if domainId > 0 {
+		db = db.Scopes(d.DBScopesDomain(domainId))
+	}
 	return db
 }
 
@@ -134,6 +129,11 @@ func (d *Data) DBScopesDomain(id ...uint) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		return db.Where("domain_id IN (?)", id)
 	}
+}
+
+func (d *Data) DomainID(ctx context.Context) uint {
+	domainStr := authz.ParseFromContext(ctx).GetDomain()
+	return convert.StringToUint(domainStr)
 }
 
 // NewDB gorm Connecting to a Database

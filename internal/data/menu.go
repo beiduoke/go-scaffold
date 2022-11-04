@@ -26,28 +26,7 @@ func (r *MenuRepo) toModel(d *biz.Menu) *SysMenu {
 	if d == nil {
 		return nil
 	}
-
-	parameters, buttons := make([]SysMenuParameter, 0, len(d.Parameters)), make([]SysMenuButton, 0, len(d.Buttons))
-	for _, v := range d.Parameters {
-		parameters = append(parameters, SysMenuParameter{
-			Type:  v.Type,
-			Key:   v.Key,
-			Value: v.Value,
-		})
-	}
-	for _, v := range d.Buttons {
-		buttons = append(buttons, SysMenuButton{
-			Name:    v.Name,
-			Remarks: v.Remarks,
-		})
-	}
-
-	return &SysMenu{
-		DomainModel: DomainModel{
-			ID:        d.ID,
-			CreatedAt: d.CreatedAt,
-			UpdatedAt: d.UpdatedAt,
-		},
+	sysData := &SysMenu{
 		Name:      d.Name,
 		ParentID:  d.ParentID,
 		Path:      d.Path,
@@ -61,31 +40,33 @@ func (r *MenuRepo) toModel(d *biz.Menu) *SysMenu {
 			BaseMenu:  d.BaseMenu,
 			CloseTab:  d.CloseTab,
 		},
-		Parameters: parameters,
-		Buttons:    buttons,
+		Parameters: make([]SysMenuParameter, 0, len(d.Parameters)),
+		Buttons:    make([]SysMenuButton, 0, len(d.Buttons)),
 	}
-}
-
-func (r *MenuRepo) toBiz(d *SysMenu) *biz.Menu {
-	if d == nil {
-		return nil
-	}
-	parameters, buttons := make([]*biz.MenuParameter, 0, len(d.Parameters)), make([]*biz.MenuButton, 0, len(d.Buttons))
 	for _, v := range d.Parameters {
-		parameters = append(parameters, &biz.MenuParameter{
+		sysData.Parameters = append(sysData.Parameters, SysMenuParameter{
 			Type:  v.Type,
 			Key:   v.Key,
 			Value: v.Value,
 		})
 	}
 	for _, v := range d.Buttons {
-		buttons = append(buttons, &biz.MenuButton{
+		sysData.Buttons = append(sysData.Buttons, SysMenuButton{
 			Name:    v.Name,
 			Remarks: v.Remarks,
 		})
 	}
+	sysData.ID = d.ID
+	sysData.CreatedAt = d.CreatedAt
+	sysData.CreatedAt = d.UpdatedAt
+	return sysData
+}
 
-	return &biz.Menu{
+func (r *MenuRepo) toBiz(d *SysMenu) *biz.Menu {
+	if d == nil {
+		return nil
+	}
+	data := &biz.Menu{
 		CreatedAt:  d.CreatedAt,
 		UpdatedAt:  d.UpdatedAt,
 		ID:         d.ID,
@@ -100,26 +81,52 @@ func (r *MenuRepo) toBiz(d *SysMenu) *biz.Menu {
 		KeepAlive:  d.Meta.KeepAlive,
 		BaseMenu:   d.Meta.BaseMenu,
 		CloseTab:   d.Meta.CloseTab,
-		Parameters: parameters,
-		Buttons:    buttons,
+		Parameters: make([]*biz.MenuParameter, 0, len(d.Parameters)),
+		Buttons:    make([]*biz.MenuButton, 0, len(d.Buttons)),
 	}
+	for _, v := range d.Parameters {
+		data.Parameters = append(data.Parameters, &biz.MenuParameter{
+			Type:  v.Type,
+			Key:   v.Key,
+			Value: v.Value,
+		})
+	}
+	for _, v := range d.Buttons {
+		data.Buttons = append(data.Buttons, &biz.MenuButton{
+			Name:    v.Name,
+			Remarks: v.Remarks,
+		})
+	}
+	return data
 }
 
 func (r *MenuRepo) Save(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 	d := r.toModel(g)
-	result := r.data.DB(ctx).Debug().Create(d).Error
+	d.DomainID = r.data.DomainID(ctx)
+	result := r.data.DB(ctx).Create(d).Error
 	return r.toBiz(d), result
 }
 
 func (r *MenuRepo) Update(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 	d := r.toModel(g)
-	result := r.data.DB(ctx).Model(d).Updates(d)
+
+	// 一对多关联，删除原始按钮
+	if err := r.data.DB(ctx).Model(&SysMenuButton{}).Delete(&SysMenuButton{}, "menu_id", g.ID).Error; err != nil {
+		return nil, err
+	}
+
+	// 一对多关联，删除原始参数
+	if err := r.data.DB(ctx).Model(&SysMenuParameter{}).Delete(&SysMenuParameter{}, "menu_id", g.ID).Error; err != nil {
+		return nil, err
+	}
+
+	result := r.data.DBD(ctx).Model(d).Updates(d)
 	return r.toBiz(d), result.Error
 }
 
 func (r *MenuRepo) FindByName(ctx context.Context, s string) (*biz.Menu, error) {
 	menu := SysMenu{}
-	result := r.data.DB(ctx).Preload("Parameters").Preload("Buttons").Last(&menu, "name = ?", s)
+	result := r.data.DBD(ctx).Preload("Parameters").Preload("Buttons").Last(&menu, "name = ?", s)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -128,7 +135,7 @@ func (r *MenuRepo) FindByName(ctx context.Context, s string) (*biz.Menu, error) 
 
 func (r *MenuRepo) FindByID(ctx context.Context, id uint) (*biz.Menu, error) {
 	menu := SysMenu{}
-	result := r.data.DB(ctx).Preload("Parameters").Preload("Buttons").Last(&menu, id)
+	result := r.data.DBD(ctx).Preload("Parameters").Preload("Buttons").Last(&menu, id)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -136,7 +143,7 @@ func (r *MenuRepo) FindByID(ctx context.Context, id uint) (*biz.Menu, error) {
 }
 
 func (r *MenuRepo) ListByIDs(ctx context.Context, id ...uint) (menus []*biz.Menu, err error) {
-	db := r.data.DB(ctx).Model(&SysMenu{})
+	db := r.data.DBD(ctx).Model(&SysMenu{})
 	sysMenus := []*SysMenu{}
 
 	err = db.Find(&sysMenus).Error
@@ -151,7 +158,7 @@ func (r *MenuRepo) ListByIDs(ctx context.Context, id ...uint) (menus []*biz.Menu
 
 func (r *MenuRepo) ListByName(ctx context.Context, name string) ([]*biz.Menu, error) {
 	sysMenus, bizMenus := []*SysMenu{}, []*biz.Menu{}
-	result := r.data.DB(ctx).Find(&sysMenus, "name LIKE ?", "%"+name)
+	result := r.data.DBD(ctx).Find(&sysMenus, "name LIKE ?", "%"+name)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -162,12 +169,12 @@ func (r *MenuRepo) ListByName(ctx context.Context, name string) ([]*biz.Menu, er
 }
 
 func (r *MenuRepo) Delete(ctx context.Context, g *biz.Menu) error {
-	return r.data.DB(ctx).Select("Parameters", "Buttons").Delete(r.toModel(g)).Error
+	return r.data.DBD(ctx).Select("Parameters", "Buttons").Delete(r.toModel(g)).Error
 }
 
 func (r *MenuRepo) ListAll(ctx context.Context) (menus []*biz.Menu, err error) {
 	sysMenus := []*SysMenu{}
-	err = r.data.DB(ctx).Model(&SysMenu{}).Find(&sysMenus).Error
+	err = r.data.DBD(ctx).Model(&SysMenu{}).Find(&sysMenus).Error
 
 	for _, v := range sysMenus {
 		menus = append(menus, r.toBiz(v))
@@ -176,7 +183,7 @@ func (r *MenuRepo) ListAll(ctx context.Context) (menus []*biz.Menu, err error) {
 }
 
 func (r *MenuRepo) ListPage(ctx context.Context, handler pagination.PaginationHandler) (menus []*biz.Menu, total int64) {
-	db := r.data.DB(ctx).Model(&SysMenu{})
+	db := r.data.DBD(ctx).Model(&SysMenu{}).Debug()
 	sysMenus := []*SysMenu{}
 	// 查询条件
 	for _, v := range handler.GetConditions() {
