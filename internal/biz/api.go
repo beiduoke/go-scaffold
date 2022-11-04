@@ -54,8 +54,8 @@ func (uc *ApiUsecase) Create(ctx context.Context, g *Api) (*Api, error) {
 }
 
 // ListByIDs 获取指定接口ID集合
-func (uc *ApiUsecase) ListByIDs(ctx context.Context, id ...uint) (authorities []*Api, err error) {
-	authorities, _ = uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
+func (uc *ApiUsecase) ListByIDs(ctx context.Context, id ...uint) (apis []*Api, err error) {
+	apis, _ = uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
 	return
 }
 

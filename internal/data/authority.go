@@ -187,5 +187,6 @@ func (r *AuthorityRepo) HandleApi(ctx context.Context, g *biz.Authority) error {
 	for _, v := range g.Apis {
 		sysAuthority.Apis = append(sysAuthority.Apis, *apiRepo.toModel(v))
 	}
+
 	return r.data.DB(ctx).Model(sysAuthority).Debug().Association("Api").Replace(g.Apis)
 }

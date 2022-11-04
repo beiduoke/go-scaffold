@@ -122,11 +122,14 @@ func (s *AdminService) HandleAuthorityMenu(ctx context.Context, in *v1.HandleAut
 
 // HandleAuthorityApi 处理权限角色接口
 func (s *AdminService) HandleAuthorityApi(ctx context.Context, in *v1.HandleAuthorityApiReq) (*v1.HandleAuthorityApiReply, error) {
-	var apis []*biz.Api
-	for _, v := range in.GetData().GetApiId() {
-		apis = append(apis, &biz.Api{
-			ID: uint(v),
-		})
+	inApiIds := in.GetData().GetApiId()
+	apiIds := make([]uint, 0, len(inApiIds))
+	for _, v := range inApiIds {
+		apiIds = append(apiIds, uint(v))
+	}
+	apis, err := s.apiCase.ListByIDs(ctx, apiIds...)
+	if err != nil {
+		return nil, v1.ErrorAuthorityHandleApiFail("权限角色接口查询失败")
 	}
 	if err := s.authorityCase.HandleApi(ctx, &biz.Authority{ID: uint(in.GetId()), Apis: apis}); err != nil {
 		return nil, v1.ErrorAuthorityHandleApiFail("权限角色接口处理失败：%v", err)

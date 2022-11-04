@@ -145,6 +145,12 @@ func (uc *AuthorityUsecase) HandleMenu(ctx context.Context, g *Authority) error 
 // HandleApi 绑定接口
 func (uc *AuthorityUsecase) HandleApi(ctx context.Context, g *Authority) error {
 	uc.log.WithContext(ctx).Infof("HandleApi: %v", g)
-
-	return nil
+	// uc.biz.enforcer.AddPolicies()
+	var err error
+	for _, v := range g.Apis {
+		if _, err = uc.biz.enforcer.AddPermissionsForUser(convert.UnitToString(g.ID), []string{v.Path, v.Method}); err != nil {
+			break
+		}
+	}
+	return err
 }
