@@ -89,7 +89,7 @@ func (r *AuthorityRepo) FindByID(ctx context.Context, id uint) (*biz.Authority, 
 }
 
 func (r *AuthorityRepo) ListByIDs(ctx context.Context, id ...uint) (authorities []*biz.Authority, err error) {
-	db := r.data.DBD(ctx).Model(&SysAuthority{}).Debug()
+	db := r.data.DBD(ctx).Model(&SysAuthority{})
 	sysAuthorities := []*SysAuthority{}
 
 	err = db.Find(&sysAuthorities, id).Error

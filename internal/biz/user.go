@@ -56,6 +56,9 @@ type UserRepo interface {
 	// 缓存操作
 	SetTokenCache(context.Context, AuthClaims) error
 	GetTokenCache(context.Context, AuthClaims) error
+	// 用户领域权限操作
+	HandleDomain(context.Context, *User) error
+	HandleDomainAuthority(context.Context, *User) error
 }
 
 // UserUsecase is a User usecase.
@@ -89,7 +92,6 @@ func (uc *UserUsecase) Create(ctx context.Context, g *User) (*User, error) {
 	if g.State <= 0 {
 		g.State = int32(pb.UserState_USER_STATE_ACTIVE)
 	}
-
 	return uc.biz.userRepo.Save(ctx, g)
 }
 
@@ -100,12 +102,7 @@ func (uc *UserUsecase) HandleDomain(ctx context.Context, g *User) error {
 	if len(domains) <= 0 {
 		return errors.New("领域未指定")
 	}
-	for _, domain := range domains {
-		if _, err := uc.biz.enforcer.AddRoleForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(domain.DefaultAuthorityID), convert.UnitToString(domain.ID)); err != nil {
-			uc.log.Errorf("领域权限绑定失败 %v", err)
-		}
-	}
-	return nil
+	return uc.biz.userRepo.HandleDomain(ctx, g)
 }
 
 // HandleDomainAuthority 绑定领域权限
@@ -115,13 +112,8 @@ func (uc *UserUsecase) HandleDomainAuthority(ctx context.Context, g *User, domai
 	if len(authorities) <= 0 {
 		return errors.New("权限未指定")
 	}
-	for _, v := range authorities {
-		if _, err := uc.biz.enforcer.AddRoleForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(v.ID), convert.UnitToString(domainId)); err != nil {
-			uc.log.Errorf("领域权限绑定失败 %v", err)
-		}
-	}
 
-	return nil
+	return uc.biz.userRepo.HandleDomainAuthority(ctx, g)
 }
 
 // Update 修改用户
@@ -204,13 +196,17 @@ func (uc *UserUsecase) ListPage(ctx context.Context, pageNum, pageSize int32, qu
 func (uc *UserUsecase) GetID(ctx context.Context, g *User) (*User, error) {
 	uc.log.WithContext(ctx).Infof("GetUserID: %v", g)
 	user, err := uc.biz.userRepo.FindByID(ctx, g.ID)
-
+	if err != nil {
+		return nil, err
+	}
 	role := uc.biz.enforcer.GetRolesForUserInDomain(convert.UnitToString(g.ID), authz.ParseFromContext(ctx).GetDomain())
 	roleIds := make([]uint, 0, len(role))
 	for _, v := range role {
 		roleIds = append(roleIds, convert.StringToUint(v))
 	}
-	user.Authorities, _ = uc.biz.authorityRepo.ListByIDs(ctx, roleIds...)
+	if len(role) > 0 {
+		user.Authorities, _ = uc.biz.authorityRepo.ListByIDs(ctx, roleIds...)
+	}
 	return user, err
 }
 

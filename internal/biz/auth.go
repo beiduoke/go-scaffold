@@ -134,6 +134,5 @@ func (ac *AuthUsecase) RegisterNamePassword(ctx context.Context, domainCode stri
 	if err != userUsecase.HandleDomain(ctx, g) {
 		return nil, err
 	}
-
 	return g, err
 }

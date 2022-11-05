@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 	"gorm.io/gorm"
@@ -227,4 +228,27 @@ func (r *UserRepo) GetTokenCache(ctx context.Context, claims biz.AuthClaims) err
 	key := fmt.Sprintf(cacheKeyToken, claims.ID, claims.Domain)
 	result := r.data.rdb.Get(ctx, key)
 	return result.Err()
+}
+
+// HandleDomain 绑定领域
+func (r *UserRepo) HandleDomain(ctx context.Context, g *biz.User) error {
+	for _, domain := range g.Domains {
+		fmt.Println(convert.UnitToString(g.ID), convert.UnitToString(domain.DefaultAuthorityID), convert.UnitToString(domain.ID))
+		if _, err := r.data.enforcer.AddRoleForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(domain.DefaultAuthorityID), convert.UnitToString(domain.ID)); err != nil {
+			r.log.Errorf("领域绑定失败 %v", err)
+		}
+	}
+	return nil
+}
+
+// HandleDomainAuthority 绑定领域权限
+func (r *UserRepo) HandleDomainAuthority(ctx context.Context, g *biz.User) error {
+	domainId := r.data.Domain(ctx)
+	for _, v := range g.Authorities {
+		if _, err := r.data.enforcer.AddRoleForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(v.ID), domainId); err != nil {
+			r.log.Errorf("领域权限绑定失败 %v", err)
+		}
+	}
+
+	return nil
 }

@@ -87,6 +87,7 @@ func (s *AdminService) Register(ctx context.Context, in *v1.RegisterReq) (*v1.Re
 
 	return &v1.RegisterReply{
 		Success: true,
+		Message: "注册成功",
 	}, nil
 }
 
@@ -94,5 +95,6 @@ func (s *AdminService) Register(ctx context.Context, in *v1.RegisterReq) (*v1.Re
 func (s *AdminService) Logout(ctx context.Context, in *emptypb.Empty) (*v1.LogoutReply, error) {
 	return &v1.LogoutReply{
 		Success: true,
+		Message: "退出成功",
 	}, nil
 }

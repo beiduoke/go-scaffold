@@ -2,7 +2,6 @@ package admin
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	v1 "github.com/beiduoke/go-scaffold/api/admin/v1"
@@ -114,13 +113,17 @@ func (s *AdminService) CreateUser(ctx context.Context, in *v1.CreateUserReq) (*v
 // HandleUserDomain 绑定用户领域
 func (s *AdminService) HandleUserDomain(ctx context.Context, in *v1.HandleUserDomainReq) (*v1.HandleUserDomainReply, error) {
 	v := in.GetData()
+	_, err := s.userCase.GetID(ctx, &biz.User{ID: uint(in.GetId())})
+	if err != nil {
+		return nil, v1.ErrorUserNotFound("用户查询失败 %v", err)
+	}
 	domainIds := make([]uint, 0, len(v.GetDomainIds()))
 	for _, domainId := range v.GetDomainIds() {
 		domainIds = append(domainIds, uint(domainId))
 	}
 
 	domains, _ := s.domainCase.ListByIDs(ctx, domainIds...)
-	err := s.userCase.HandleDomain(ctx, &biz.User{
+	err = s.userCase.HandleDomain(ctx, &biz.User{
 		ID:      uint(in.GetId()),
 		Domains: domains,
 	})
@@ -136,13 +139,16 @@ func (s *AdminService) HandleUserDomain(ctx context.Context, in *v1.HandleUserDo
 // HandleUserAuthority 绑定用户权限
 func (s *AdminService) HandleUserDomainAuthority(ctx context.Context, in *v1.HandleUserDomainAuthorityReq) (*v1.HandleUserDomainAuthorityReply, error) {
 	v := in.GetData()
+	_, err := s.userCase.GetID(ctx, &biz.User{ID: uint(in.GetId())})
+	if err != nil {
+		return nil, v1.ErrorUserNotFound("用户查询失败 %v", err)
+	}
 	authorityIds := make([]uint, 0, len(v.GetAuthorityIds()))
 	for _, authorityId := range v.GetAuthorityIds() {
 		authorityIds = append(authorityIds, uint(authorityId))
 	}
-	fmt.Printf("%#v", authorityIds)
 	authorities, _ := s.authorityCase.ListByIDs(ctx, authorityIds...)
-	err := s.userCase.HandleDomainAuthority(ctx, &biz.User{
+	err = s.userCase.HandleDomainAuthority(ctx, &biz.User{
 		ID:          uint(in.GetId()),
 		Authorities: authorities,
 	}, uint(v.GetDomainId()))
