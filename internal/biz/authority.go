@@ -35,10 +35,12 @@ type AuthorityRepo interface {
 	FindByID(context.Context, uint) (*Authority, error)
 	FindByName(context.Context, string) (*Authority, error)
 	ListByName(context.Context, string) ([]*Authority, error)
+	ListByIDs(context.Context, ...uint) ([]*Authority, error)
 	ListAll(context.Context) ([]*Authority, error)
 	Delete(context.Context, *Authority) error
 	ListPage(context.Context, pagination.PaginationHandler) ([]*Authority, int64)
 	HandleMenu(context.Context, *Authority) error
+	HandleApi(context.Context, *Authority) error
 }
 
 // AuthorityUsecase is a Authority usecase.
@@ -145,12 +147,5 @@ func (uc *AuthorityUsecase) HandleMenu(ctx context.Context, g *Authority) error 
 // HandleApi 绑定接口
 func (uc *AuthorityUsecase) HandleApi(ctx context.Context, g *Authority) error {
 	uc.log.WithContext(ctx).Infof("HandleApi: %v", g)
-	// uc.biz.enforcer.AddPolicies()
-	var err error
-	for _, v := range g.Apis {
-		if _, err = uc.biz.enforcer.AddPermissionsForUser(convert.UnitToString(g.ID), []string{v.Path, v.Method}); err != nil {
-			break
-		}
-	}
-	return err
+	return uc.biz.authorityRepo.HandleApi(ctx, g)
 }

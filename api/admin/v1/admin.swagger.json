@@ -900,7 +900,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Menu"
+              "$ref": "#/definitions/adminv1Menu"
             }
           },
           "default": {
@@ -1289,7 +1289,7 @@
         ]
       }
     },
-    "/admin/v1/users/{id}/domians": {
+    "/admin/v1/users/{id}/domains": {
       "post": {
         "summary": "绑定用户领域",
         "operationId": "Admin_HandleUserDomain",
@@ -1331,6 +1331,77 @@
     }
   },
   "definitions": {
+    "adminv1Menu": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "path": {
+          "type": "string"
+        },
+        "hidden": {
+          "$ref": "#/definitions/protobufMenuHidden"
+        },
+        "component": {
+          "type": "string"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "keepAlive": {
+          "$ref": "#/definitions/protobufMenuKeepAlive"
+        },
+        "baseMenu": {
+          "$ref": "#/definitions/protobufMenuBaseMenu"
+        },
+        "closeTab": {
+          "$ref": "#/definitions/protobufMenuCloseTab"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/adminv1Menu"
+          }
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1MenuParameter"
+          }
+        },
+        "buttons": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1MenuButton"
+          }
+        }
+      },
+      "title": "菜单模块"
+    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -1493,6 +1564,9 @@
         },
         "description": {
           "type": "string"
+        },
+        "operation": {
+          "type": "string"
         }
       },
       "title": "接口模块"
@@ -1576,6 +1650,9 @@
           "type": "string"
         },
         "description": {
+          "type": "string"
+        },
+        "operation": {
           "type": "string"
         }
       },
@@ -1894,7 +1971,7 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/v1Menu"
+            "$ref": "#/definitions/adminv1Menu"
           }
         }
       },
@@ -1939,7 +2016,7 @@
     "v1HandleAuthorityApiReqData": {
       "type": "object",
       "properties": {
-        "apiId": {
+        "apiIds": {
           "type": "array",
           "items": {
             "type": "string",
@@ -1966,7 +2043,29 @@
     "v1HandleAuthorityMenuReqData": {
       "type": "object",
       "properties": {
+        "menus": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1HandleAuthorityMenuReqMenu"
+          }
+        }
+      }
+    },
+    "v1HandleAuthorityMenuReqMenu": {
+      "type": "object",
+      "properties": {
         "menuId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "menuParameterIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
+        },
+        "menuButtonIds": {
           "type": "array",
           "items": {
             "type": "string",
@@ -2057,77 +2156,6 @@
       },
       "title": "回应 - 退出登录"
     },
-    "v1Menu": {
-      "type": "object",
-      "properties": {
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "name": {
-          "type": "string"
-        },
-        "parentId": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "path": {
-          "type": "string"
-        },
-        "hidden": {
-          "$ref": "#/definitions/protobufMenuHidden"
-        },
-        "component": {
-          "type": "string"
-        },
-        "sort": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "icon": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        },
-        "keepAlive": {
-          "$ref": "#/definitions/protobufMenuKeepAlive"
-        },
-        "baseMenu": {
-          "$ref": "#/definitions/protobufMenuBaseMenu"
-        },
-        "closeTab": {
-          "$ref": "#/definitions/protobufMenuCloseTab"
-        },
-        "children": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1Menu"
-          }
-        },
-        "parameters": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1MenuParameter"
-          }
-        },
-        "buttons": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1MenuButton"
-          }
-        }
-      },
-      "title": "菜单模块"
-    },
     "v1MenuButton": {
       "type": "object",
       "properties": {
@@ -2199,6 +2227,9 @@
           "type": "string"
         },
         "description": {
+          "type": "string"
+        },
+        "operation": {
           "type": "string"
         }
       }
@@ -2435,7 +2466,7 @@
           "type": "string",
           "format": "date-time"
         },
-        "authoritys": {
+        "authorities": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/v1Authority"

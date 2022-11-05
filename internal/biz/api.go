@@ -19,6 +19,7 @@ type Api struct {
 	Name        string
 	Path        string
 	Method      string
+	Operation   string
 	Group       string
 	Description string
 }

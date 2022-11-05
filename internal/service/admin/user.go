@@ -17,6 +17,28 @@ import (
 
 var _ v1.AdminServer = (*AdminService)(nil)
 
+func TransformUser(data *biz.User) *v1.User {
+	var birthday string
+	if data.Birthday != nil {
+		birthday = data.Birthday.Format("2006-01-02")
+	}
+	return &v1.User{
+		CreatedAt:   timestamppb.New(data.CreatedAt),
+		UpdatedAt:   timestamppb.New(data.UpdatedAt),
+		Id:          uint64(data.ID),
+		Name:        data.Name,
+		Avatar:      data.Avatar,
+		NickName:    data.NickName,
+		RealName:    data.RealName,
+		Gender:      protobuf.UserGender(data.Gender),
+		Birthday:    birthday,
+		Mobile:      data.Mobile,
+		Email:       data.Email,
+		State:       protobuf.UserState(data.State),
+		Authorities: make([]*v1.Authority, 0, 0),
+	}
+}
+
 // ProfileUser 概括
 func (s *AdminService) GetUserProfile(ctx context.Context, in *emptypb.Empty) (*v1.User, error) {
 	id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
@@ -24,24 +46,11 @@ func (s *AdminService) GetUserProfile(ctx context.Context, in *emptypb.Empty) (*
 	if err != nil {
 		return nil, v1.ErrorUserNotFound("用户查询失败 %v", err)
 	}
-	var birthday string
-	if user.Birthday != nil {
-		birthday = user.Birthday.Format("2006-01-02")
+	result := TransformUser(user)
+	for _, v := range user.Authorities {
+		result.Authorities = append(result.Authorities, TransformAuthority(v))
 	}
-	return &v1.User{
-		Id:        uint64(user.ID),
-		Name:      user.Name,
-		Avatar:    user.Avatar,
-		NickName:  user.NickName,
-		RealName:  user.RealName,
-		Gender:    protobuf.UserGender(user.Gender),
-		Birthday:  birthday,
-		Mobile:    user.Mobile,
-		Email:     user.Email,
-		State:     protobuf.UserState(user.State),
-		CreatedAt: timestamppb.New(user.CreatedAt),
-		UpdatedAt: timestamppb.New(user.UpdatedAt),
-	}, nil
+	return result, nil
 }
 
 // ProfileUser 概括
@@ -58,23 +67,7 @@ func (s *AdminService) ListUser(ctx context.Context, in *protobuf.PagingReq) (*p
 	results, total := s.userCase.ListPage(ctx, in.GetPage(), in.GetPageSize(), in.GetQuery(), in.GetOrderBy())
 	items := make([]*anypb.Any, 0, len(results))
 	for _, v := range results {
-		user := &v1.User{
-			Id:        uint64(v.ID),
-			Name:      v.Name,
-			Avatar:    v.Avatar,
-			NickName:  v.NickName,
-			RealName:  v.RealName,
-			Gender:    protobuf.UserGender(v.Gender),
-			Mobile:    v.Mobile,
-			Email:     v.Email,
-			State:     protobuf.UserState(v.State),
-			CreatedAt: timestamppb.New(v.CreatedAt),
-			UpdatedAt: timestamppb.New(v.UpdatedAt),
-		}
-		if v.Birthday != nil {
-			user.Birthday = v.Birthday.Format("2006-01-02")
-		}
-		item, _ := anypb.New(user)
+		item, _ := anypb.New(TransformUser(v))
 		items = append(items, item)
 	}
 	return &protobuf.PagingReply{
@@ -205,24 +198,7 @@ func (s *AdminService) GetUser(ctx context.Context, in *v1.GetUserReq) (*v1.User
 	if err != nil {
 		return nil, v1.ErrorUserNotFound("用户未找到")
 	}
-	var birthday string
-	if user.Birthday != nil {
-		birthday = user.Birthday.Format("2006-01-02")
-	}
-	return &v1.User{
-		Id:        uint64(user.ID),
-		Name:      user.Name,
-		Avatar:    user.Avatar,
-		NickName:  user.NickName,
-		RealName:  user.RealName,
-		Birthday:  birthday,
-		Gender:    protobuf.UserGender(user.Gender),
-		Mobile:    user.Mobile,
-		Email:     user.Email,
-		State:     protobuf.UserState(user.State),
-		CreatedAt: timestamppb.New(user.CreatedAt),
-		UpdatedAt: timestamppb.New(user.UpdatedAt),
-	}, nil
+	return TransformUser(user), nil
 }
 
 // DeleteUser 删除用户

@@ -933,7 +933,7 @@ func (m *User) validate(all bool) error {
 		}
 	}
 
-	for idx, item := range m.GetAuthoritys() {
+	for idx, item := range m.GetAuthorities() {
 		_, _ = idx, item
 
 		if all {
@@ -941,7 +941,7 @@ func (m *User) validate(all bool) error {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
 					errors = append(errors, UserValidationError{
-						field:  fmt.Sprintf("Authoritys[%v]", idx),
+						field:  fmt.Sprintf("Authorities[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -949,7 +949,7 @@ func (m *User) validate(all bool) error {
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
 					errors = append(errors, UserValidationError{
-						field:  fmt.Sprintf("Authoritys[%v]", idx),
+						field:  fmt.Sprintf("Authorities[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -958,7 +958,7 @@ func (m *User) validate(all bool) error {
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return UserValidationError{
-					field:  fmt.Sprintf("Authoritys[%v]", idx),
+					field:  fmt.Sprintf("Authorities[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
 				}
@@ -3093,17 +3093,6 @@ func (m *CreateDomainReq) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.GetDefaultAuthorityId() <= 0 {
-		err := CreateDomainReqValidationError{
-			field:  "DefaultAuthorityId",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.ParentId != nil {
 
 		if m.GetParentId() < 0 {
@@ -3151,6 +3140,21 @@ func (m *CreateDomainReq) validate(all bool) error {
 			err := CreateDomainReqValidationError{
 				field:  "State",
 				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.DefaultAuthorityId != nil {
+
+		if m.GetDefaultAuthorityId() <= 0 {
+			err := CreateDomainReqValidationError{
+				field:  "DefaultAuthorityId",
+				reason: "value must be greater than 0",
 			}
 			if !all {
 				return err
@@ -5773,6 +5777,8 @@ func (m *Api) validate(all bool) error {
 
 	// no validation rules for Description
 
+	// no validation rules for Operation
+
 	if len(errors) > 0 {
 		return ApiMultiError(errors)
 	}
@@ -5897,7 +5903,7 @@ func (m *CreateApiReq) validate(all bool) error {
 	if _, ok := _CreateApiReq_Method_InLookup[m.GetMethod()]; !ok {
 		err := CreateApiReqValidationError{
 			field:  "Method",
-			reason: "value must be in list [GET POST Head PUT PATCH DELETE OPTIONS CONNECT TRACE]",
+			reason: "value must be in list [* GET POST Head PUT PATCH DELETE OPTIONS CONNECT TRACE]",
 		}
 		if !all {
 			return err
@@ -5926,6 +5932,21 @@ func (m *CreateApiReq) validate(all bool) error {
 			err := CreateApiReqValidationError{
 				field:  "Description",
 				reason: "value length must be between 1 and 1000 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Operation != nil {
+
+		if l := utf8.RuneCountInString(m.GetOperation()); l < 1 || l > 100 {
+			err := CreateApiReqValidationError{
+				field:  "Operation",
+				reason: "value length must be between 1 and 100 runes, inclusive",
 			}
 			if !all {
 				return err
@@ -6013,6 +6034,7 @@ var _ interface {
 } = CreateApiReqValidationError{}
 
 var _CreateApiReq_Method_InLookup = map[string]struct{}{
+	"*":       {},
 	"GET":     {},
 	"POST":    {},
 	"Head":    {},
@@ -9276,17 +9298,6 @@ func (m *UpdateDomainReq_Data) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.GetDefaultAuthorityId() <= 0 {
-		err := UpdateDomainReq_DataValidationError{
-			field:  "DefaultAuthorityId",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.ParentId != nil {
 
 		if m.GetParentId() < 0 {
@@ -9334,6 +9345,21 @@ func (m *UpdateDomainReq_Data) validate(all bool) error {
 			err := UpdateDomainReq_DataValidationError{
 				field:  "State",
 				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.DefaultAuthorityId != nil {
+
+		if m.GetDefaultAuthorityId() <= 0 {
+			err := UpdateDomainReq_DataValidationError{
+				field:  "DefaultAuthorityId",
+				reason: "value must be greater than 0",
 			}
 			if !all {
 				return err
@@ -9607,6 +9633,182 @@ var _UpdateAuthorityReq_Data_State_NotInLookup = map[protobuf.AuthorityState]str
 	0: {},
 }
 
+// Validate checks the field values on HandleAuthorityMenuReq_Menu with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HandleAuthorityMenuReq_Menu) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleAuthorityMenuReq_Menu with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HandleAuthorityMenuReq_MenuMultiError, or nil if none found.
+func (m *HandleAuthorityMenuReq_Menu) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleAuthorityMenuReq_Menu) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetMenuId() <= 0 {
+		err := HandleAuthorityMenuReq_MenuValidationError{
+			field:  "MenuId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	_HandleAuthorityMenuReq_Menu_MenuParameterIds_Unique := make(map[uint64]struct{}, len(m.GetMenuParameterIds()))
+
+	for idx, item := range m.GetMenuParameterIds() {
+		_, _ = idx, item
+
+		if _, exists := _HandleAuthorityMenuReq_Menu_MenuParameterIds_Unique[item]; exists {
+			err := HandleAuthorityMenuReq_MenuValidationError{
+				field:  fmt.Sprintf("MenuParameterIds[%v]", idx),
+				reason: "repeated value must contain unique items",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		} else {
+			_HandleAuthorityMenuReq_Menu_MenuParameterIds_Unique[item] = struct{}{}
+		}
+
+		if item <= 0 {
+			err := HandleAuthorityMenuReq_MenuValidationError{
+				field:  fmt.Sprintf("MenuParameterIds[%v]", idx),
+				reason: "value must be greater than 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	_HandleAuthorityMenuReq_Menu_MenuButtonIds_Unique := make(map[uint64]struct{}, len(m.GetMenuButtonIds()))
+
+	for idx, item := range m.GetMenuButtonIds() {
+		_, _ = idx, item
+
+		if _, exists := _HandleAuthorityMenuReq_Menu_MenuButtonIds_Unique[item]; exists {
+			err := HandleAuthorityMenuReq_MenuValidationError{
+				field:  fmt.Sprintf("MenuButtonIds[%v]", idx),
+				reason: "repeated value must contain unique items",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		} else {
+			_HandleAuthorityMenuReq_Menu_MenuButtonIds_Unique[item] = struct{}{}
+		}
+
+		if item <= 0 {
+			err := HandleAuthorityMenuReq_MenuValidationError{
+				field:  fmt.Sprintf("MenuButtonIds[%v]", idx),
+				reason: "value must be greater than 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return HandleAuthorityMenuReq_MenuMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleAuthorityMenuReq_MenuMultiError is an error wrapping multiple
+// validation errors returned by HandleAuthorityMenuReq_Menu.ValidateAll() if
+// the designated constraints aren't met.
+type HandleAuthorityMenuReq_MenuMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleAuthorityMenuReq_MenuMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleAuthorityMenuReq_MenuMultiError) AllErrors() []error { return m }
+
+// HandleAuthorityMenuReq_MenuValidationError is the validation error returned
+// by HandleAuthorityMenuReq_Menu.Validate if the designated constraints
+// aren't met.
+type HandleAuthorityMenuReq_MenuValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleAuthorityMenuReq_MenuValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleAuthorityMenuReq_MenuValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleAuthorityMenuReq_MenuValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleAuthorityMenuReq_MenuValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleAuthorityMenuReq_MenuValidationError) ErrorName() string {
+	return "HandleAuthorityMenuReq_MenuValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleAuthorityMenuReq_MenuValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleAuthorityMenuReq_Menu.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleAuthorityMenuReq_MenuValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleAuthorityMenuReq_MenuValidationError{}
+
 // Validate checks the field values on HandleAuthorityMenuReq_Data with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -9628,6 +9830,40 @@ func (m *HandleAuthorityMenuReq_Data) validate(all bool) error {
 	}
 
 	var errors []error
+
+	for idx, item := range m.GetMenus() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, HandleAuthorityMenuReq_DataValidationError{
+						field:  fmt.Sprintf("Menus[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, HandleAuthorityMenuReq_DataValidationError{
+						field:  fmt.Sprintf("Menus[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return HandleAuthorityMenuReq_DataValidationError{
+					field:  fmt.Sprintf("Menus[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return HandleAuthorityMenuReq_DataMultiError(errors)
@@ -9859,7 +10095,7 @@ func (m *UpdateApiReq_Data) validate(all bool) error {
 	if _, ok := _UpdateApiReq_Data_Method_InLookup[m.GetMethod()]; !ok {
 		err := UpdateApiReq_DataValidationError{
 			field:  "Method",
-			reason: "value must be in list [GET POST Head PUT PATCH DELETE OPTIONS CONNECT TRACE]",
+			reason: "value must be in list [* GET POST Head PUT PATCH DELETE OPTIONS CONNECT TRACE]",
 		}
 		if !all {
 			return err
@@ -9888,6 +10124,21 @@ func (m *UpdateApiReq_Data) validate(all bool) error {
 			err := UpdateApiReq_DataValidationError{
 				field:  "Description",
 				reason: "value length must be between 1 and 1000 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Operation != nil {
+
+		if l := utf8.RuneCountInString(m.GetOperation()); l < 1 || l > 100 {
+			err := UpdateApiReq_DataValidationError{
+				field:  "Operation",
+				reason: "value length must be between 1 and 100 runes, inclusive",
 			}
 			if !all {
 				return err
@@ -9978,6 +10229,7 @@ var _ interface {
 } = UpdateApiReq_DataValidationError{}
 
 var _UpdateApiReq_Data_Method_InLookup = map[string]struct{}{
+	"*":       {},
 	"GET":     {},
 	"POST":    {},
 	"Head":    {},

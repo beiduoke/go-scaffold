@@ -2,9 +2,12 @@ package biz
 
 import (
 	"context"
+	"strconv"
 	"time"
 
 	pb "github.com/beiduoke/go-scaffold/api/protobuf"
+	"github.com/beiduoke/go-scaffold/internal/pkg/authz"
+	casbinM "github.com/beiduoke/go-scaffold/pkg/authz/casbin"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
@@ -30,6 +33,7 @@ type Domain struct {
 	Sort               int32
 	State              int32
 	DefaultAuthorityID uint
+	Authority          *Authority
 }
 
 // DomainRepo is a Greater repo.
@@ -71,7 +75,23 @@ func NewDomainUsecase(logger log.Logger, biz *Biz) *DomainUsecase {
 // Create creates a Domain, and returns the new Domain.
 func (uc *DomainUsecase) Create(ctx context.Context, g *Domain) (*Domain, error) {
 	uc.log.WithContext(ctx).Infof("Create: %v", g.Name)
-	return uc.biz.domainRepo.Save(ctx, g)
+	err := uc.biz.tm.InTx(ctx, func(ctx context.Context) error {
+		domain, err := uc.biz.domainRepo.Save(ctx, g)
+		if err != nil {
+			return err
+		}
+		authCtx := context.WithValue(ctx, casbinM.SecurityUserContextKey, authz.SecurityUser{Domain: strconv.Itoa(int(domain.ID))})
+		authority, err := uc.biz.authorityRepo.Save(authCtx, &Authority{
+			Name: "default",
+		})
+		if err != nil {
+			return err
+		}
+		domain.DefaultAuthorityID = authority.ID
+		g, err = uc.biz.domainRepo.Update(ctx, domain)
+		return err
+	})
+	return g, err
 }
 
 // ListByIDs 获取指定领域ID集合

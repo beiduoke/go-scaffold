@@ -773,7 +773,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.HandleUserDomainAuthorityReply'
-    /admin/v1/users/{id}/domians:
+    /admin/v1/users/{id}/domains:
         post:
             tags:
                 - Admin
@@ -822,6 +822,8 @@ components:
                 group:
                     type: string
                 description:
+                    type: string
+                operation:
                     type: string
             description: 接口模块
         api.admin.v1.Auth:
@@ -881,6 +883,8 @@ components:
                 group:
                     type: string
                 description:
+                    type: string
+                operation:
                     type: string
             description: 请求 - 创建接口
         api.admin.v1.CreateAuthorityReply:
@@ -1136,7 +1140,7 @@ components:
         api.admin.v1.HandleAuthorityApiReq_Data:
             type: object
             properties:
-                apiId:
+                apiIds:
                     type: array
                     items:
                         type: integer
@@ -1154,7 +1158,22 @@ components:
         api.admin.v1.HandleAuthorityMenuReq_Data:
             type: object
             properties:
+                menus:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.v1.HandleAuthorityMenuReq_Menu'
+        api.admin.v1.HandleAuthorityMenuReq_Menu:
+            type: object
+            properties:
                 menuId:
+                    type: integer
+                    format: uint64
+                menuParameterIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
+                menuButtonIds:
                     type: array
                     items:
                         type: integer
@@ -1317,6 +1336,8 @@ components:
                 group:
                     type: string
                 description:
+                    type: string
+                operation:
                     type: string
         api.admin.v1.UpdateAuthorityReply:
             type: object
@@ -1486,7 +1507,7 @@ components:
                 updatedAt:
                     type: string
                     format: date-time
-                authoritys:
+                authorities:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.admin.v1.Authority'

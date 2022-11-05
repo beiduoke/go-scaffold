@@ -52,9 +52,9 @@ func (ac *AuthUsecase) GetToken(claims *AuthClaims) error {
 		expiresAt = *claims.ExpiresAt
 	}
 	securityUser := myAuthz.NewSecurityUserData(
-		myAuthz.WithID(strconv.Itoa(int(claims.ID))),
+		myAuthz.WithUser(strconv.Itoa(int(claims.ID))),
 		myAuthz.WithDomain(strconv.Itoa(int(claims.Domain))),
-		myAuthz.WithAuthority(strings.Join(authorities, ",")),
+		myAuthz.WithSubject(strings.Join(authorities, ",")),
 		myAuthz.WithExpires(expiresAt),
 	)
 	claims.Token = securityUser.CreateAccessJwtToken([]byte(ac.ac.ApiKey))

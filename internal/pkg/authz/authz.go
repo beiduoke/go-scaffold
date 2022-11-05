@@ -17,31 +17,36 @@ import (
 var _ authz.SecurityUser = (*SecurityUser)(nil)
 
 const (
-	ID             = "id"
-	Expires        = "exp"
-	ClaimAuthority = "authority"
-	ClaimDomain    = "domain"
+	User         = "user"
+	Expires      = "exp"
+	ClaimSubject = "subject"
+	ClaimDomain  = "domain"
 )
 
 type Option func(*SecurityUser)
 
-func WithID(id string) Option {
+// WithUser 设置用户
+func WithUser(user string) Option {
 	return func(o *SecurityUser) {
-		o.ID = id
+		o.User = user
 	}
 }
 
-func WithAuthority(authority string) Option {
+// WithSubject 设置角色
+func WithSubject(subject string) Option {
 	return func(o *SecurityUser) {
-		o.Authority = authority
+		o.Subject = subject
 	}
 }
 
+// WithDomain 设置域/租户
 func WithDomain(domain string) Option {
 	return func(o *SecurityUser) {
 		o.Domain = domain
 	}
 }
+
+// WithExpires 设置过期时间
 func WithExpires(expires time.Time) Option {
 	return func(o *SecurityUser) {
 		o.Expires = expires.Unix()
@@ -49,12 +54,18 @@ func WithExpires(expires time.Time) Option {
 }
 
 type SecurityUser struct {
-	Path      string
-	Method    string
-	ID        string
-	Domain    string
-	Authority string
-	Expires   int64
+	// 用户
+	User string `json:"user,omitempty" form:"user"`
+	// 域/租户
+	Domain string `json:"domain,omitempty" form:"domain"`
+	// 角色
+	Subject string `json:"sub,omitempty," form:"subject"`
+	// 资源
+	Object string `json:"object,omitempty" form:"object"`
+	// 方法
+	Action string `json:"action,omitempty" form:"action"`
+	// 过期
+	Expires int64 `json:"expires,omitempty" form:"expires"`
 }
 
 func NewSecurityUserData(opts ...Option) *SecurityUser {
@@ -80,12 +91,12 @@ func (su *SecurityUser) ParseFromContext(ctx context.Context) error {
 	}
 
 	if header, ok := transport.FromServerContext(ctx); ok {
-		su.Path = header.Operation()
-		su.Method = "*"
+		su.Object = header.Operation()
+		su.Action = "*"
 		// if header.Kind() == transport.KindHTTP {
 		// 	if ht, ok := header.(http.Transporter); ok {
-		// 		su.Path = ht.Request().URL.Path
-		// 		su.Method = ht.Request().Method
+		// 		su.Object = ht.Request().URL.Object
+		// 		su.Action = ht.Request().Action
 		// 	}
 		// }
 	} else {
@@ -94,22 +105,27 @@ func (su *SecurityUser) ParseFromContext(ctx context.Context) error {
 	return nil
 }
 
+// GetUser 用户
 func (su *SecurityUser) GetUser() string {
-	return su.ID
+	return su.User
 }
 
+// GetSubject 角色
 func (su *SecurityUser) GetSubject() string {
-	return su.Authority
+	return su.Subject
 }
 
+// GetObject 资源
 func (su *SecurityUser) GetObject() string {
-	return su.Path
+	return su.Object
 }
 
+// GetAction 方法
 func (su *SecurityUser) GetAction() string {
-	return su.Method
+	return su.Action
 }
 
+// GetDomain 域/租户
 func (su *SecurityUser) GetDomain() string {
 	return su.Domain
 }
@@ -117,10 +133,10 @@ func (su *SecurityUser) GetDomain() string {
 func (su *SecurityUser) CreateAccessJwtToken(secretKey []byte) string {
 	claims := jwtV4.NewWithClaims(jwtV4.SigningMethodHS256,
 		jwtV4.MapClaims{
-			ID:             su.ID,
-			Expires:        su.Expires,
-			ClaimAuthority: su.Authority,
-			ClaimDomain:    su.Domain,
+			User:         su.User,
+			Expires:      su.Expires,
+			ClaimSubject: su.Subject,
+			ClaimDomain:  su.Domain,
 		})
 
 	signedToken, err := claims.SignedString(secretKey)
@@ -173,15 +189,15 @@ func (su *SecurityUser) ParseAccessJwtToken(claims jwtV4.Claims) error {
 	if !ok {
 		return errors.New("claims is not map claims")
 	}
-	// 用户ID
-	str, ok := mc[ID]
+	// 用户User
+	str, ok := mc[User]
 	if ok {
-		su.ID = str.(string)
+		su.User = str.(string)
 	}
 	// 权限
-	str, ok = mc[ClaimAuthority]
+	str, ok = mc[ClaimSubject]
 	if ok {
-		su.Authority = str.(string)
+		su.Subject = str.(string)
 	}
 	// 领域
 	str, ok = mc[ClaimDomain]

@@ -132,8 +132,11 @@ func (d *Data) DBScopesDomain(id ...uint) func(db *gorm.DB) *gorm.DB {
 }
 
 func (d *Data) DomainID(ctx context.Context) uint {
-	domainStr := authz.ParseFromContext(ctx).GetDomain()
-	return convert.StringToUint(domainStr)
+	return convert.StringToUint(d.Domain(ctx))
+}
+
+func (d *Data) Domain(ctx context.Context) string {
+	return authz.ParseFromContext(ctx).GetDomain()
 }
 
 // NewDB gorm Connecting to a Database

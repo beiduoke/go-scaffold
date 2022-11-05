@@ -151,7 +151,7 @@ service Admin {
   // 绑定用户领域
   rpc HandleUserDomain (HandleUserDomainReq) returns (HandleUserDomainReply) {
     option (google.api.http) = {
-      post: "/admin/v1/users/{id}/domians"
+      post: "/admin/v1/users/{id}/domains"
       body: "data"
     };
   }
@@ -377,7 +377,7 @@ message User {
   api.protobuf.UserState state = 10;
   google.protobuf.Timestamp created_at = 11;
   google.protobuf.Timestamp updated_at = 12;
-  repeated Authority authoritys = 13;
+  repeated Authority authorities = 13;
   string avatar = 14;
 }
 
@@ -509,7 +509,7 @@ message CreateDomainReq {
   optional uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
   optional int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
   optional api.protobuf.DomainState state = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-  uint64 default_authority_id = 5 [(validate.rules).uint64 = {gt: 0}];
+  optional uint64 default_authority_id = 5 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 创建领域
@@ -527,7 +527,7 @@ message UpdateDomainReq {
     optional uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
     optional int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
     optional api.protobuf.DomainState state = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-    uint64 default_authority_id = 5 [(validate.rules).uint64 = {gt: 0}];
+    optional uint64 default_authority_id = 5 [(validate.rules).uint64 = {gt: 0}];
   }
   Data data = 2;
 }
@@ -624,8 +624,13 @@ message DeleteAuthorityReply {
 // 请求 - 处理权限角色菜单
 message HandleAuthorityMenuReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Menu {
+    uint64 menu_id = 1 [(validate.rules).uint64 = {gt: 0}];
+    repeated uint64 menu_parameter_ids = 2 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+    repeated uint64 menu_button_ids = 3 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+  }
   message Data {
-    repeated uint64 menu_id = 1;
+    repeated Menu menus = 1;
   }
   Data data = 2;
 }
@@ -641,7 +646,7 @@ message HandleAuthorityMenuReply {
 message HandleAuthorityApiReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
-    repeated uint64 api_id = 1;
+    repeated uint64 api_ids = 1;
   }
   Data data = 2;
 }
@@ -663,15 +668,17 @@ message Api {
   string method = 6;
   string group = 7;
   string description = 8;
+  string operation = 9;
 }
 
 // 请求 - 创建接口
 message CreateApiReq {
   string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
   string path = 2 [(validate.rules).string = {min_len: 1, max_len: 100}];
-  string method = 3 [(validate.rules).string = {in: ["GET", "POST", "Head", "PUT", "PATCH", "DELETE", "OPTIONS", "CONNECT", "TRACE"]}];
+  string method = 3 [(validate.rules).string = {in: ["*", "GET", "POST", "Head", "PUT", "PATCH", "DELETE", "OPTIONS", "CONNECT", "TRACE"]}];
   optional string group = 4 [(validate.rules).string = {min_len: 1, max_len: 100}];
   optional string description = 5 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+  optional string operation = 6 [(validate.rules).string = {min_len: 1, max_len: 100}];
 }
 
 // 回应 - 创建接口
@@ -687,9 +694,10 @@ message UpdateApiReq {
   message Data {
     string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
     string path = 2 [(validate.rules).string = {min_len: 1, max_len: 100}];
-    string method = 3 [(validate.rules).string = {in: ["GET", "POST", "Head", "PUT", "PATCH", "DELETE", "OPTIONS", "CONNECT", "TRACE"]}];
+    string method = 3 [(validate.rules).string = {in: ["*", "GET", "POST", "Head", "PUT", "PATCH", "DELETE", "OPTIONS", "CONNECT", "TRACE"]}];
     optional string group = 4 [(validate.rules).string = {min_len: 1, max_len: 100}];
     optional string description = 5 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+    optional string operation = 6 [(validate.rules).string = {min_len: 1, max_len: 100}];
   }
   Data data = 2;
 }

@@ -27,7 +27,9 @@ func (r *ApiRepo) toModel(d *biz.Api) *SysApi {
 	if d == nil {
 		return nil
 	}
-
+	if d.Operation == "" {
+		d.Operation = d.Path
+	}
 	return &SysApi{
 		Model: gorm.Model{
 			ID:        d.ID,
@@ -37,6 +39,7 @@ func (r *ApiRepo) toModel(d *biz.Api) *SysApi {
 		Name:        d.Name,
 		Path:        d.Path,
 		Method:      d.Method,
+		Operation:   d.Operation,
 		Group:       d.Group,
 		Description: d.Description,
 	}
@@ -53,6 +56,7 @@ func (r *ApiRepo) toBiz(d *SysApi) *biz.Api {
 		Name:        d.Name,
 		Path:        d.Path,
 		Method:      d.Method,
+		Operation:   d.Operation,
 		Group:       d.Group,
 		Description: d.Description,
 	}

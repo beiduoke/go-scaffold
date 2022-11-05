@@ -142,6 +142,12 @@ func Server(opts ...Option) middleware.Middleware {
 			} else {
 				allowed, err = o.enforcer.Enforce(securityUser.GetSubject(), securityUser.GetObject(), securityUser.GetAction())
 			}
+			// fmt.Printf("权限：%s \n", securityUser.GetSubject())
+			// fmt.Printf("领域：%s \n", securityUser.GetDomain())
+			// fmt.Printf("资源：%s \n", securityUser.GetObject())
+			// fmt.Printf("方法：%s \n", securityUser.GetAction())
+			// fmt.Printf("允许访问 %t \n", allowed)
+			// fmt.Printf("校验状态 %v \n", err)
 			if err != nil {
 				return nil, err
 			}

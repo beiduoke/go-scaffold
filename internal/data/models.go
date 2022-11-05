@@ -39,9 +39,10 @@ type SysDomain struct {
 	Sort               int32          `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
 	State              int32          `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
 	DefaultAuthorityID uint           `gorm:"type:bigint(20);column:default_authority_id;not null;index;comment:默认角色;"`
+	Menus              []SysMenu      `gorm:"many2many:sys_domain_menus;"`
+	Parent             *SysDomain     `gorm:"foreignKey:ParentID"`
 	Users              []SysUser      `gorm:"-"`
 	Authorities        []SysAuthority `gorm:"-"`
-	Parent             *SysDomain     `gorm:"foreignKey:ParentID"`
 }
 
 // User 用户
@@ -92,8 +93,9 @@ type SysDomainAuthorityUser struct {
 type SysApi struct {
 	gorm.Model
 	Name        string         `gorm:"type:varchar(255);column:name;not null;comment:名称;"`
-	Path        string         `gorm:"type:varchar(255);column:path;not null;uniqueIndex:idx_api_path_method;comment:api路径"`
+	Path        string         `gorm:"type:varchar(255);column:path;not null;uniqueIndex:idx_api_path_method;comment:请求路径"`
 	Method      string         `gorm:"type:varchar(255);column:method;not null;default:POST;uniqueIndex:idx_api_path_method;comment:方法"`
+	Operation   string         `gorm:"type:varchar(255);column:operation;not null;default:'';uniqueIndex:idx_api_path_method;comment:请求动作"`
 	Group       string         `gorm:"type:varchar(255);column:group;not null;comment:api分组"`
 	Description string         `gorm:"type:varchar(255);column:description;not null;default:'';comment:api描述"`
 	Authorities []SysAuthority `gorm:"many2many:sys_authority_apis;"`
@@ -111,6 +113,7 @@ type SysMenu struct {
 	Sort        int32              `gorm:"type:int(10);column:sort;not null;default:10;comment:排序标记"`
 	Meta        SysMeta            `gorm:"embedded;comment:附加属性"`
 	Authorities []SysAuthority     `gorm:"many2many:sys_authority_menus;"`
+	Menus       []SysMenu          `gorm:"many2many:sys_domain_menus;"`
 	Apis        []SysApi           `gorm:"many2many:sys_menu_apis;"`
 	Parameters  []SysMenuParameter `gorm:"foreignKey:MenuID;"`
 	Buttons     []SysMenuButton    `gorm:"foreignKey:MenuID;"`

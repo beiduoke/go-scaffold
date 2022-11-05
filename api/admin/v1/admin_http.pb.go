@@ -108,7 +108,7 @@ func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
 	r.GET("/admin/v1/users/{id}", _Admin_GetUser0_HTTP_Handler(srv))
 	r.PUT("/admin/v1/users/{id}", _Admin_UpdateUser0_HTTP_Handler(srv))
 	r.DELETE("/admin/v1/users/{id}", _Admin_DeleteUser0_HTTP_Handler(srv))
-	r.POST("/admin/v1/users/{id}/domians", _Admin_HandleUserDomain0_HTTP_Handler(srv))
+	r.POST("/admin/v1/users/{id}/domains", _Admin_HandleUserDomain0_HTTP_Handler(srv))
 	r.POST("/admin/v1/users/{id}/domainAuthorities", _Admin_HandleUserDomainAuthority0_HTTP_Handler(srv))
 	r.GET("/admin/v1/domains", _Admin_ListDomain0_HTTP_Handler(srv))
 	r.POST("/admin/v1/domains", _Admin_CreateDomain0_HTTP_Handler(srv))
@@ -1226,7 +1226,7 @@ func (c *AdminHTTPClientImpl) HandleAuthorityMenu(ctx context.Context, in *Handl
 
 func (c *AdminHTTPClientImpl) HandleUserDomain(ctx context.Context, in *HandleUserDomainReq, opts ...http.CallOption) (*HandleUserDomainReply, error) {
 	var out HandleUserDomainReply
-	pattern := "/admin/v1/users/{id}/domians"
+	pattern := "/admin/v1/users/{id}/domains"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminHandleUserDomain))
 	opts = append(opts, http.PathTemplate(pattern))

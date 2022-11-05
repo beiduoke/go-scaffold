@@ -12,22 +12,26 @@ import (
 
 var _ v1.AdminServer = (*AdminService)(nil)
 
+func TransformApi(data *biz.Api) *v1.Api {
+	return &v1.Api{
+		CreatedAt:   timestamppb.New(data.CreatedAt),
+		UpdatedAt:   timestamppb.New(data.UpdatedAt),
+		Id:          uint64(data.ID),
+		Name:        data.Name,
+		Path:        data.Path,
+		Method:      data.Method,
+		Group:       data.Group,
+		Description: data.Description,
+		Operation:   data.Operation,
+	}
+}
+
 // ListApi 列表接口
 func (s *AdminService) ListApi(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	results, total := s.apiCase.ListPage(ctx, in.GetPage(), in.GetPageSize(), in.GetQuery(), in.GetOrderBy())
 	items := make([]*anypb.Any, 0, len(results))
 	for _, v := range results {
-		user := &v1.Api{
-			Id:          uint64(v.ID),
-			Name:        v.Name,
-			Path:        v.Path,
-			Method:      v.Method,
-			Description: v.Description,
-			Group:       v.Group,
-			CreatedAt:   timestamppb.New(v.CreatedAt),
-			UpdatedAt:   timestamppb.New(v.UpdatedAt),
-		}
-		item, _ := anypb.New(user)
+		item, _ := anypb.New(TransformApi(v))
 		items = append(items, item)
 	}
 	return &protobuf.PagingReply{
@@ -44,6 +48,7 @@ func (s *AdminService) CreateApi(ctx context.Context, in *v1.CreateApiReq) (*v1.
 		Method:      in.GetMethod(),
 		Group:       in.GetGroup(),
 		Description: in.GetDescription(),
+		Operation:   in.GetOperation(),
 	})
 	if err != nil {
 		return nil, v1.ErrorApiCreateFail("接口创建失败: %v", err.Error())
@@ -68,6 +73,7 @@ func (s *AdminService) UpdateApi(ctx context.Context, in *v1.UpdateApiReq) (*v1.
 		Method:      v.GetMethod(),
 		Group:       v.GetGroup(),
 		Description: v.GetDescription(),
+		Operation:   v.GetOperation(),
 	})
 	if err != nil {
 		return nil, v1.ErrorApiUpdateFail("接口创建失败: %v", err.Error())
@@ -84,16 +90,7 @@ func (s *AdminService) GetApi(ctx context.Context, in *v1.GetApiReq) (*v1.Api, e
 	if err != nil {
 		return nil, v1.ErrorApiNotFound("接口未找到")
 	}
-	return &v1.Api{
-		Id:          uint64(api.ID),
-		Name:        api.Name,
-		Path:        api.Path,
-		Method:      api.Method,
-		Group:       api.Group,
-		Description: api.Description,
-		CreatedAt:   timestamppb.New(api.CreatedAt),
-		UpdatedAt:   timestamppb.New(api.UpdatedAt),
-	}, nil
+	return TransformApi(api), nil
 }
 
 // DeleteApi 删除接口

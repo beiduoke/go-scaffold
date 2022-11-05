@@ -112,6 +112,7 @@ func (r *UserRepo) FindByID(ctx context.Context, id uint) (*biz.User, error) {
 	if result.Error != nil {
 		return nil, result.Error
 	}
+
 	return r.toBiz(&user), nil
 }
 

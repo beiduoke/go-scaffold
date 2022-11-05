@@ -9,6 +9,7 @@ import (
 
 	pb "github.com/beiduoke/go-scaffold/api/protobuf"
 	"github.com/beiduoke/go-scaffold/internal/conf"
+	"github.com/beiduoke/go-scaffold/internal/pkg/authz"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/imdario/mergo"
@@ -202,7 +203,15 @@ func (uc *UserUsecase) ListPage(ctx context.Context, pageNum, pageSize int32, qu
 // GetID 获取用户ID
 func (uc *UserUsecase) GetID(ctx context.Context, g *User) (*User, error) {
 	uc.log.WithContext(ctx).Infof("GetUserID: %v", g)
-	return uc.biz.userRepo.FindByID(ctx, g.ID)
+	user, err := uc.biz.userRepo.FindByID(ctx, g.ID)
+
+	role := uc.biz.enforcer.GetRolesForUserInDomain(convert.UnitToString(g.ID), authz.ParseFromContext(ctx).GetDomain())
+	roleIds := make([]uint, 0, len(role))
+	for _, v := range role {
+		roleIds = append(roleIds, convert.StringToUint(v))
+	}
+	user.Authorities, _ = uc.biz.authorityRepo.ListByIDs(ctx, roleIds...)
+	return user, err
 }
 
 // GetMobile 获取用户手机

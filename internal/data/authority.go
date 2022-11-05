@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 	"gorm.io/gorm/clause"
@@ -58,7 +59,8 @@ func (r *AuthorityRepo) toBiz(d *SysAuthority) *biz.Authority {
 
 func (r *AuthorityRepo) Save(ctx context.Context, g *biz.Authority) (*biz.Authority, error) {
 	d := r.toModel(g)
-	result := r.data.DBD(ctx).Omit(clause.Associations).Create(d).Error
+	d.DomainID = r.data.DomainID(ctx)
+	result := r.data.DB(ctx).Omit(clause.Associations).Create(d).Error
 	return r.toBiz(d), result
 }
 
@@ -87,10 +89,10 @@ func (r *AuthorityRepo) FindByID(ctx context.Context, id uint) (*biz.Authority, 
 }
 
 func (r *AuthorityRepo) ListByIDs(ctx context.Context, id ...uint) (authorities []*biz.Authority, err error) {
-	db := r.data.DBD(ctx).Model(&SysAuthority{})
+	db := r.data.DBD(ctx).Model(&SysAuthority{}).Debug()
 	sysAuthorities := []*SysAuthority{}
 
-	err = db.Find(&sysAuthorities).Error
+	err = db.Find(&sysAuthorities, id).Error
 	if err != nil {
 		return authorities, err
 	}
@@ -121,7 +123,7 @@ func (r *AuthorityRepo) ListAll(ctx context.Context) ([]*biz.Authority, error) {
 }
 
 func (r *AuthorityRepo) ListPage(ctx context.Context, handler pagination.PaginationHandler) (authorities []*biz.Authority, total int64) {
-	db := r.data.DBD(ctx).Model(&SysAuthority{}).Debug()
+	db := r.data.DBD(ctx).Model(&SysAuthority{})
 	sysAuthorities := []*SysAuthority{}
 	// 查询条件
 	for _, v := range handler.GetConditions() {
@@ -160,12 +162,12 @@ func (r *AuthorityRepo) HandleMenu(ctx context.Context, g *biz.Authority) error 
 	}
 	sysAuthorityMenus := []SysAuthorityMenu{}
 	for _, v := range g.Menus {
-		menuButtons := make([]uint, len(v.Buttons))
+		menuButtons := make([]uint, 0, len(v.Buttons))
 		for _, m := range v.Buttons {
 			menuButtons = append(menuButtons, m.ID)
 		}
 		buttons, _ := json.Marshal(menuButtons)
-		menuParameters := make([]uint, len(v.Parameters))
+		menuParameters := make([]uint, 0, len(v.Parameters))
 		for _, m := range v.Parameters {
 			menuParameters = append(menuParameters, m.ID)
 		}
@@ -180,13 +182,33 @@ func (r *AuthorityRepo) HandleMenu(ctx context.Context, g *biz.Authority) error 
 	return r.data.DB(ctx).Model(&SysAuthorityMenu{}).CreateInBatches(&sysAuthorityMenus, len(g.Menus)).Error
 }
 
+// 处理角色绑定
 func (r *AuthorityRepo) HandleApi(ctx context.Context, g *biz.Authority) error {
-	sysAuthority := r.toModel(g)
+	domain := r.data.Domain(ctx)
 
-	apiRepo := ApiRepo{}
+	var apiRepo = ApiRepo{}
+	var apis []SysApi
 	for _, v := range g.Apis {
-		sysAuthority.Apis = append(sysAuthority.Apis, *apiRepo.toModel(v))
+		apis = append(apis, *apiRepo.toModel(v))
 	}
 
-	return r.data.DB(ctx).Model(sysAuthority).Debug().Association("Api").Replace(g.Apis)
+	sysAuthority := r.toModel(g)
+	if err := r.data.DB(ctx).Model(sysAuthority).Debug().Association("Apis").Replace(&apis); err != nil {
+		return err
+	}
+
+	role := convert.UnitToString(g.ID)
+	// 删除角色域下所有权限
+	for _, v := range r.data.enforcer.GetPermissionsForUser(role, domain) {
+		if _, err := r.data.enforcer.DeletePermissionForUser(role, v[1:]...); err != nil {
+			r.log.Errorf("删除casbin角色领域下权限失败 %v", err)
+		}
+	}
+	// 根据最新资源重新绑定
+	rules := make([][]string, 0, len(g.Apis))
+	for _, v := range g.Apis {
+		rules = append(rules, []string{domain, v.Path, v.Method})
+	}
+	_, err := r.data.enforcer.AddPermissionsForUser(role, rules...)
+	return err
 }
