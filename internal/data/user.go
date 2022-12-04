@@ -232,23 +232,29 @@ func (r *UserRepo) GetTokenCache(ctx context.Context, claims biz.AuthClaims) err
 
 // HandleDomain 绑定领域
 func (r *UserRepo) HandleDomain(ctx context.Context, g *biz.User) error {
+	rules := make([][]string, 0, len(g.Domains))
 	for _, domain := range g.Domains {
-		fmt.Println(convert.UnitToString(g.ID), convert.UnitToString(domain.DefaultAuthorityID), convert.UnitToString(domain.ID))
-		if _, err := r.data.enforcer.AddRoleForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(domain.DefaultAuthorityID), convert.UnitToString(domain.ID)); err != nil {
-			r.log.Errorf("领域绑定失败 %v", err)
-		}
+		rules = append(rules, []string{convert.UnitToString(g.ID), convert.UnitToString(domain.DefaultAuthorityID), convert.UnitToString(domain.ID), "0"})
+		// if _, err := r.data.enforcer.AddRoleForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(domain.DefaultAuthorityID), convert.UnitToString(domain.ID)); err != nil {
+		// 	r.log.Errorf("领域绑定失败 %v", err)
+		// }
 	}
-	return nil
+	_, err := r.data.enforcer.AddGroupingPolicies(rules)
+	// r.log.Debugf("策略添加 %t %v", success, err)
+	return err
 }
 
 // HandleDomainAuthority 绑定领域权限
 func (r *UserRepo) HandleDomainAuthority(ctx context.Context, g *biz.User) error {
 	domainId := r.data.Domain(ctx)
+	rules := make([][]string, 0, len(g.Authorities))
 	for _, v := range g.Authorities {
-		if _, err := r.data.enforcer.AddRoleForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(v.ID), domainId); err != nil {
-			r.log.Errorf("领域权限绑定失败 %v", err)
-		}
+		rules = append(rules, []string{convert.UnitToString(g.ID), convert.UnitToString(v.ID), domainId, "0"})
+		// if _, err := r.data.enforcer.AddRoleForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(v.ID), domainId); err != nil {
+		// 	r.log.Errorf("领域权限绑定失败 %v", err)
+		// }
 	}
-
-	return nil
+	_, err := r.data.enforcer.AddGroupingPolicies(rules)
+	// r.log.Debugf("策略添加 %t %v", success, err)
+	return err
 }

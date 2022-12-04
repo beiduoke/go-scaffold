@@ -296,15 +296,6 @@
       },
       "title": "分页通用结果"
     },
-    "protobufSort": {
-      "type": "string",
-      "enum": [
-        "SORT_UNSPECIFIED",
-        "SORT_DESC",
-        "SORT_ASC"
-      ],
-      "default": "SORT_UNSPECIFIED"
-    },
     "rpcStatus": {
       "type": "object",
       "properties": {

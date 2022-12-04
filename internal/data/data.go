@@ -38,6 +38,7 @@ var ProviderSet = wire.NewSet(
 	NewMenuRepo,
 	NewApiRepo,
 	NewUserRepo,
+	NewDepartmentRepo,
 )
 
 // NewModelMigrate 数据模型迁移

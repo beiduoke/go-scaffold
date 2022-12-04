@@ -17,6 +17,7 @@ func NewSysModelMigrate() []interface{} {
 		&SysMenuParameter{},
 		&SysAuthority{},
 		&SysAuthorityMenu{},
+		&SysDepartment{},
 	}
 }
 
@@ -70,6 +71,7 @@ type SysAuthority struct {
 	DefaultRouter string         `gorm:"type:varchar(255);column:default_router;not null;default:'/dashboard';comment:默认路由;"`
 	Sort          int32          `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
 	State         int32          `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:角色状态 0 未指定  1 启用 2 停用;"`
+	Remarks       string         `gorm:"type:varchar(255);column:remarks;not null;comment:备注;"`
 	Parent        *SysAuthority  `gorm:"foreignKey:ParentID"`
 	Authorities   []SysAuthority `gorm:"many2many:sys_authority_relations"`
 	Menus         []SysMenu      `gorm:"many2many:sys_authority_menus;"`
@@ -169,7 +171,7 @@ type SysMenuParameter struct {
 	CreatedAt time.Time
 	MenuID    uint    `gorm:"type:bigint(20);column:menu_id;not null;index;comment:菜单ID"`
 	Type      int32   `gorm:"type:tinyint(1);column:type;not null;default:1;comment:地址栏携带参类型 0 未指定 1 params 2 query"`
-	Key       string  `gorm:"type:varchar(255);column:key;not null;default:'';comment:地址栏携带参数的key"`
+	Name      string  `gorm:"type:varchar(255);column:name;not null;default:'';comment:地址栏携带参数的名称"`
 	Value     string  `gorm:"type:varchar(255);column:value;not null;default:'';comment:地址栏携带参数的值"`
 	Menu      SysMenu `gorm:"foreignKey:MenuID;"`
 }
@@ -194,4 +196,16 @@ type SysApiOperationLog struct {
 type JwtBlacklist struct {
 	gorm.Model
 	Jwt string `gorm:"type:text;column:jwt;comment:jwt;"`
+}
+
+type SysDepartment struct {
+	ID        uint `gorm:"primarykey"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+	Name      string         `gorm:"type:varchar(255);column:name;not null;comment:名称;"`
+	ParentID  uint           `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
+	Sort      int32          `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
+	Remarks   string         `gorm:"type:varchar(255);column:remarks;not null;comment:备注;"`
+	State     int32          `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
 }

@@ -64,6 +64,47 @@ func (ac *AuthUsecase) GetToken(claims *AuthClaims) error {
 	return nil
 }
 
+// PassLogin 登录-密码登录
+func (ac *AuthUsecase) PassLogin(ctx context.Context, g *User) (*AuthClaims, error) {
+	u, err := ac.biz.userRepo.FindByName(ctx, g.Name)
+	if err != nil {
+		return nil, err
+	}
+	err = password.Verify(u.Password, g.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	userUsecase := UserUsecase{log: ac.log, biz: ac.biz, ac: ac.ac}
+	domain, err := userUsecase.GetLastUseDomain(ctx, u)
+	if err != nil {
+		return nil, err
+	}
+	// 默认过期时间 24小时
+	var expiresAt = time.Now().Add(time.Hour * 24)
+	// 配置过期时间
+	if ac.ac.GetExpiresTime() != nil {
+		expiresAt = time.Now().Add(ac.ac.ExpiresTime.AsDuration())
+	}
+	// 生成token
+	authClaims := &AuthClaims{
+		ID:          u.ID,
+		ExpiresAt:   &expiresAt,
+		Domain:      domain.ID,
+		Authorities: []uint{domain.DefaultAuthorityID},
+	}
+
+	if err := ac.GetToken(authClaims); err != nil {
+		return nil, err
+	}
+
+	if err := ac.biz.userRepo.SetTokenCache(ctx, *authClaims); err != nil {
+		ac.log.Errorf("token 缓存失败 %v", err)
+	}
+
+	return authClaims, nil
+}
+
 // LoginNamePassword 登录-用户密码
 func (ac *AuthUsecase) LoginNamePassword(ctx context.Context, domainCode string, g *User) (*AuthClaims, error) {
 	domain, err := ac.biz.domainRepo.FindByCode(ctx, domainCode)
@@ -84,17 +125,18 @@ func (ac *AuthUsecase) LoginNamePassword(ctx context.Context, domainCode string,
 		return nil, errors.New("权限未配置")
 	}
 
+	// 默认过期时间 24小时
+	var expiresAt = time.Now().Add(time.Hour * 24)
+	// 配置过期时间
+	if ac.ac.GetExpiresTime() != nil {
+		expiresAt = time.Now().Add(ac.ac.ExpiresTime.AsDuration())
+	}
 	// 生成token
 	authClaims := &AuthClaims{
 		ID:          u.ID,
 		Domain:      domain.ID,
 		Authorities: []uint{},
-		ExpiresAt:   nil,
-	}
-	// 配置过期时间
-	if ac.ac.GetExpiresTime() != nil {
-		expiresAt := time.Now().Add(ac.ac.ExpiresTime.AsDuration())
-		authClaims.ExpiresAt = &expiresAt
+		ExpiresAt:   &expiresAt,
 	}
 	// 组装权限
 	for _, v := range authorities {
@@ -135,4 +177,10 @@ func (ac *AuthUsecase) RegisterNamePassword(ctx context.Context, domainCode stri
 		return nil, err
 	}
 	return g, err
+}
+
+// Logout 退出登录
+func (ac *AuthUsecase) Logout(ctx context.Context) error {
+
+	return nil
 }

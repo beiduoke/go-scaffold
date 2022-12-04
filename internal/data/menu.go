@@ -46,7 +46,7 @@ func (r *MenuRepo) toModel(d *biz.Menu) *SysMenu {
 	for _, v := range d.Parameters {
 		sysData.Parameters = append(sysData.Parameters, SysMenuParameter{
 			Type:  v.Type,
-			Key:   v.Key,
+			Name:  v.Name,
 			Value: v.Value,
 		})
 	}
@@ -87,7 +87,7 @@ func (r *MenuRepo) toBiz(d *SysMenu) *biz.Menu {
 	for _, v := range d.Parameters {
 		data.Parameters = append(data.Parameters, &biz.MenuParameter{
 			Type:  v.Type,
-			Key:   v.Key,
+			Name:  v.Name,
 			Value: v.Value,
 		})
 	}

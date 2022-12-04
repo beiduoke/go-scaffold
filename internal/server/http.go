@@ -41,8 +41,11 @@ var ProviderHttp = wire.NewSet(NewMiddleware, NewAuthMiddleware)
 // NewWhiteListMatcher 创建jwt白名单
 func NewWhiteListMatcher() selector.MatchFunc {
 	whiteList := make(map[string]struct{})
-	whiteList["/api.admin.v1.Admin/Login"] = struct{}{}
-	whiteList["/api.admin.v1.Admin/Register"] = struct{}{}
+	whiteList["/api.admin.v1.Admin/PassLogin"] = struct{}{}
+	whiteList["/api.admin.v1.Admin/SmsLogin"] = struct{}{}
+	whiteList["/api.admin.v1.Admin/EmailLogin"] = struct{}{}
+	whiteList["/api.admin.v1.Admin/LoginDomain"] = struct{}{}
+	whiteList["/api.admin.v1.Admin/RegisterDomain"] = struct{}{}
 	return func(ctx context.Context, operation string) bool {
 		if _, ok := whiteList[operation]; ok {
 			return false
@@ -88,7 +91,7 @@ func NewHTTPServer(c *conf.Server, as *admin.AdminService, bs *web.WebService, m
 	var opts = []http.ServerOption{
 		middleware,
 		http.Filter(handlers.CORS(
-			handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
+			handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization", myAuthz.HeaderDomainIDKey, myAuthz.HeaderDomainCodeKey}),
 			handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"}),
 			handlers.AllowedOrigins([]string{"*"}),
 		)),

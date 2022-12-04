@@ -4,12 +4,12 @@ import (
 	"context"
 	"time"
 
+	stdcasbin "github.com/casbin/casbin/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/pkg/errors"
 
 	pb "github.com/beiduoke/go-scaffold/api/protobuf"
 	"github.com/beiduoke/go-scaffold/internal/conf"
-	"github.com/beiduoke/go-scaffold/internal/pkg/authz"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/imdario/mergo"
@@ -199,14 +199,6 @@ func (uc *UserUsecase) GetID(ctx context.Context, g *User) (*User, error) {
 	if err != nil {
 		return nil, err
 	}
-	role := uc.biz.enforcer.GetRolesForUserInDomain(convert.UnitToString(g.ID), authz.ParseFromContext(ctx).GetDomain())
-	roleIds := make([]uint, 0, len(role))
-	for _, v := range role {
-		roleIds = append(roleIds, convert.StringToUint(v))
-	}
-	if len(role) > 0 {
-		user.Authorities, _ = uc.biz.authorityRepo.ListByIDs(ctx, roleIds...)
-	}
 	return user, err
 }
 
@@ -226,4 +218,76 @@ func (uc *UserUsecase) Delete(ctx context.Context, g *User) error {
 		_, err := uc.biz.enforcer.DeleteUser(convert.UnitToString(g.ID))
 		return err
 	})
+}
+
+// GetLastDomain 获取最后切换使用领域
+func (ac *UserUsecase) GetLastUseDomain(ctx context.Context, g *User) (*Domain, error) {
+	domainPolices := ac.biz.enforcer.GetFilteredGroupingPolicy(0, convert.UnitToString(g.ID))
+	if len(domainPolices) < 1 && len(domainPolices[0]) >= 2 {
+		return nil, errors.New("领域查询失败")
+	}
+	lastUseAuthority, lastUseDomain := domainPolices[0][1], domainPolices[0][2]
+	for _, policy := range domainPolices {
+		if p := policy[3]; p == "1" {
+			lastUseAuthority, lastUseDomain = policy[1], policy[2]
+			break
+		}
+	}
+	return &Domain{
+		ID:                 convert.StringToUint(lastUseDomain),
+		DefaultAuthorityID: convert.StringToUint(lastUseAuthority),
+	}, nil
+	// 暂无用
+	// 获取最近一次登录的领域下所有角色
+	roles, err := ac.biz.enforcer.(*stdcasbin.SyncedEnforcer).GetNamedRoleManager("g").GetRoles(convert.UnitToString(g.ID), lastUseDomain)
+	authorities := make([]uint, 0, len(roles))
+	for _, v := range roles {
+		authorities = append(authorities, convert.StringToUint(v))
+	}
+	ac.log.Infof("打印角色列表 %v", authorities)
+	return nil, err
+}
+
+// GetLastDomain 获取最后切换使用领域
+func (ac *UserUsecase) ListDomainAll(ctx context.Context, g *User) ([]*Domain, error) {
+	domainPolices := ac.biz.enforcer.GetFilteredGroupingPolicy(0, convert.UnitToString(g.ID))
+	if len(domainPolices) < 1 && len(domainPolices[0]) >= 2 {
+		return nil, errors.New("领域查询失败")
+	}
+	userDomainIds, err := ac.biz.enforcer.(*stdcasbin.SyncedEnforcer).GetDomainsForUser(convert.UnitToString(g.ID))
+	if err != nil {
+		return nil, err
+	}
+
+	domainIds := make([]uint, 0, len(userDomainIds))
+	for _, v := range userDomainIds {
+		domainIds = append(domainIds, convert.StringToUint(v))
+	}
+
+	return ac.biz.domainRepo.ListByIDs(ctx, domainIds...)
+}
+
+// ListAuthorityAll 获取最后切换使用领域
+func (ac *UserUsecase) ListAuthorityAll(ctx context.Context, g *User) (authorities []*Authority, err error) {
+	uidStr := convert.UnitToString(g.ID)
+	rolesIdsStr := make([]string, 0)
+	if len(g.Domains) < 1 {
+		rolesIdsStr, err = ac.biz.enforcer.GetRolesForUser(uidStr)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		domainIdStr := convert.UnitToString(g.Domains[0].ID)
+		rolesIdsStr = ac.biz.enforcer.GetRolesForUserInDomain(uidStr, domainIdStr)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	rolesIds := make([]uint, 0, len(rolesIdsStr))
+	for _, v := range rolesIdsStr {
+		rolesIds = append(rolesIds, convert.StringToUint(v))
+	}
+
+	return ac.biz.authorityRepo.ListByIDs(ctx, rolesIds...)
 }

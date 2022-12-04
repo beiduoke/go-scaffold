@@ -158,13 +158,3 @@ func (r *DomainRepo) ListPage(ctx context.Context, handler pagination.Pagination
 
 	return domains, total
 }
-
-func (r *DomainRepo) FindInDomainID(ctx context.Context, domainIds ...string) ([]*biz.Domain, error) {
-	sysDomains, bizDomains := []*SysDomain{}, []*biz.Domain{}
-	result := r.data.DB(ctx).Where("domain_id", domainIds).Find(sysDomains)
-
-	for _, v := range sysDomains {
-		bizDomains = append(bizDomains, r.toBiz(v))
-	}
-	return bizDomains, result.Error
-}

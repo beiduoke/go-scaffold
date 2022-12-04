@@ -205,10 +205,10 @@
         ]
       }
     },
-    "/admin/v1/auth/login": {
+    "/admin/v1/auth/emailLogin": {
       "post": {
-        "summary": "登陆",
-        "operationId": "Admin_Login",
+        "summary": "邮件登陆",
+        "operationId": "Admin_EmailLogin",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -230,55 +230,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1Auth"
-            }
-          },
-          {
-            "name": "domain",
-            "description": "领域.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
-    "/admin/v1/auth/login/{domain}": {
-      "patch": {
-        "summary": "登陆",
-        "operationId": "Admin_Login2",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1LoginReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "domain",
-            "description": "领域",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "description": "请求体",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1Auth"
+              "$ref": "#/definitions/EmailLoginReqEmailField"
             }
           }
         ],
@@ -288,6 +240,41 @@
       }
     },
     "/admin/v1/auth/logout": {
+      "get": {
+        "summary": "登出",
+        "operationId": "Admin_Logout2",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1LogoutReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Admin"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": [],
+            "OAuth2": [
+              "read",
+              "write"
+            ]
+          }
+        ],
+        "externalDocs": {
+          "description": "SayHello Query",
+          "url": "https://github.com/grpc-ecosystem/grpc-gateway"
+        },
+        "x-irreversible": true
+      },
       "post": {
         "summary": "登出",
         "operationId": "Admin_Logout",
@@ -334,6 +321,40 @@
         "x-irreversible": true
       }
     },
+    "/admin/v1/auth/passLogin": {
+      "post": {
+        "summary": "密码登陆",
+        "operationId": "Admin_PassLogin",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1LoginReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "请求体",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PassLoginReqPassField"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/admin/v1/auth/register": {
       "post": {
         "summary": "注册",
@@ -361,13 +382,40 @@
             "schema": {
               "$ref": "#/definitions/v1Auth"
             }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/auth/smsLogin": {
+      "post": {
+        "summary": "短信登陆",
+        "operationId": "Admin_SmsLogin",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1LoginReply"
+            }
           },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
           {
-            "name": "domain",
-            "description": "领域.",
-            "in": "query",
-            "required": false,
-            "type": "string"
+            "name": "body",
+            "description": "请求体",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SmsLoginReqSmsField"
+            }
           }
         ],
         "tags": [
@@ -634,9 +682,220 @@
         ]
       }
     },
+    "/admin/v1/departments": {
+      "get": {
+        "summary": "列表部门",
+        "operationId": "Admin_ListDepartment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protobufPagingReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": "当前页.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "description": "每一页的行数.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "nopaging",
+            "description": "是否不分页.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      },
+      "post": {
+        "summary": "创建部门",
+        "operationId": "Admin_CreateDepartment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateDepartmentReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateDepartmentReq"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/departments/{id}": {
+      "get": {
+        "summary": "获取部门",
+        "operationId": "Admin_GetDepartment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Department"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      },
+      "delete": {
+        "summary": "删除部门",
+        "operationId": "Admin_DeleteDepartment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeleteDepartmentReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      },
+      "put": {
+        "summary": "修改部门",
+        "operationId": "Admin_UpdateDepartment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateDepartmentReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1UpdateDepartmentReqData"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/departments/{parentId}/trees": {
+      "get": {
+        "summary": "获取树形部门",
+        "operationId": "Admin_ListDepartmentTree",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListDepartmentTreeReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parentId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/admin/v1/domains": {
       "get": {
-        "summary": "领域模块\n列表领域",
+        "summary": "列表领域",
         "operationId": "Admin_ListDomain",
         "responses": {
           "200": {
@@ -706,6 +965,129 @@
             "schema": {
               "$ref": "#/definitions/v1CreateDomainReq"
             }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/domains/login": {
+      "post": {
+        "summary": "领域模块\n登陆领域/租户",
+        "operationId": "Admin_LoginDomain",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1LoginReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "请求体",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1Auth"
+            }
+          },
+          {
+            "name": "domain",
+            "description": "领域.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/domains/login/{domain}": {
+      "patch": {
+        "summary": "领域模块\n登陆领域/租户",
+        "operationId": "Admin_LoginDomain2",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1LoginReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "domain",
+            "description": "领域",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": "请求体",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1Auth"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/domains/register": {
+      "post": {
+        "summary": "注册领域/租户",
+        "operationId": "Admin_RegisterDomain",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1RegisterReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "请求体",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1Auth"
+            }
+          },
+          {
+            "name": "domain",
+            "description": "领域.",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -992,15 +1374,15 @@
         ]
       }
     },
-    "/admin/v1/menus/{parentId}/tree": {
+    "/admin/v1/menus/{parentId}/trees": {
       "get": {
         "summary": "获取树形菜单",
-        "operationId": "Admin_GetMenuTree",
+        "operationId": "Admin_ListMenuTree",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1GetMenuTreeReply"
+              "$ref": "#/definitions/v1ListMenuTreeReply"
             }
           },
           "default": {
@@ -1103,15 +1485,132 @@
         ]
       }
     },
-    "/admin/v1/users/menus": {
+    "/admin/v1/users/authorities": {
       "get": {
-        "summary": "获取用户菜单",
-        "operationId": "Admin_GetUserMenu",
+        "summary": "当前登录用户拥有角色",
+        "operationId": "Admin_ListUserAuthority",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1GetUserMenuReply"
+              "$ref": "#/definitions/v1ListUserAuthorityReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/users/domains": {
+      "get": {
+        "summary": "当前登录用户拥有领域",
+        "operationId": "Admin_ListUserDomain",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListUserDomainReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/users/info": {
+      "get": {
+        "summary": "User 用户模块\n当前登录用户概述",
+        "operationId": "Admin_GetUserInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1User"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/users/menus": {
+      "get": {
+        "summary": "获取用户菜单",
+        "operationId": "Admin_ListUserMenu",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protobufPagingReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": "当前页.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "description": "每一页的行数.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "nopaging",
+            "description": "是否不分页.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/users/menus/trees": {
+      "get": {
+        "summary": "获取用户菜单-树形",
+        "operationId": "Admin_ListUserMenuTree",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UserMenuTreeReply"
             }
           },
           "default": {
@@ -1128,13 +1627,13 @@
     },
     "/admin/v1/users/profiles": {
       "get": {
-        "summary": "User 用户模块\n当前登录用户概述",
+        "summary": "当前登录用户概述",
         "operationId": "Admin_GetUserProfile",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1User"
+              "$ref": "#/definitions/v1GetUserProfileReply"
             }
           },
           "default": {
@@ -1331,6 +1830,39 @@
     }
   },
   "definitions": {
+    "EmailLoginReqEmailField": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        }
+      }
+    },
+    "PassLoginReqPassField": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "SmsLoginReqSmsField": {
+      "type": "object",
+      "properties": {
+        "mobile": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        }
+      }
+    },
     "adminv1Menu": {
       "type": "object",
       "properties": {
@@ -1426,6 +1958,16 @@
         "AUTHORITY_STATE_BANNED"
       ],
       "default": "AUTHORITY_STATE_UNSPECIFIED"
+    },
+    "protobufDepartmentState": {
+      "type": "string",
+      "enum": [
+        "DEPARTMENT_STATE_UNSPECIFIED",
+        "DEPARTMENT_STATE_ACTIVE",
+        "DEPARTMENT_STATE_INACTIVE",
+        "DEPARTMENT_STATE_BANNED"
+      ],
+      "default": "DEPARTMENT_STATE_UNSPECIFIED"
     },
     "protobufDomainState": {
       "type": "string",
@@ -1615,6 +2157,9 @@
         },
         "state": {
           "$ref": "#/definitions/protobufAuthorityState"
+        },
+        "remarks": {
+          "type": "string"
         }
       },
       "title": "权限角色模块"
@@ -1692,9 +2237,50 @@
         },
         "state": {
           "$ref": "#/definitions/protobufAuthorityState"
+        },
+        "remarks": {
+          "type": "string"
         }
       },
       "title": "请求 - 创建权限角色"
+    },
+    "v1CreateDepartmentReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
+        }
+      },
+      "title": "回应 - 创建部门"
+    },
+    "v1CreateDepartmentReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "state": {
+          "$ref": "#/definitions/protobufDepartmentState"
+        },
+        "remarks": {
+          "type": "string"
+        }
+      },
+      "title": "请求 - 创建部门"
     },
     "v1CreateDomainReply": {
       "type": "object",
@@ -1884,6 +2470,21 @@
       },
       "title": "回应 - 删除权限角色"
     },
+    "v1DeleteDepartmentReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
+        }
+      },
+      "title": "回应 - 删除部门"
+    },
     "v1DeleteDomainReply": {
       "type": "object",
       "properties": {
@@ -1929,6 +2530,47 @@
       },
       "title": "回应 - 删除用户"
     },
+    "v1Department": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "remarks": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/protobufDepartmentState"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Department"
+          }
+        }
+      },
+      "title": "部门模块"
+    },
     "v1Domain": {
       "type": "object",
       "properties": {
@@ -1965,38 +2607,20 @@
       },
       "title": "领域模块"
     },
-    "v1GetMenuTreeReply": {
+    "v1GetUserProfileReply": {
       "type": "object",
       "properties": {
-        "items": {
+        "user": {
+          "$ref": "#/definitions/v1User"
+        },
+        "authorities": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/adminv1Menu"
+            "$ref": "#/definitions/v1Authority"
           }
         }
       },
-      "title": "回应 - 获取树形菜单"
-    },
-    "v1GetUserMenuReply": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "path": {
-          "type": "string"
-        },
-        "component": {
-          "type": "string"
-        },
-        "children": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1GetUserMenuReply"
-          }
-        }
-      },
-      "title": "回应 - 获取用户菜单"
+      "title": "回应 - 用户概况详情"
     },
     "v1HandleAuthorityApiReply": {
       "type": "object",
@@ -2126,6 +2750,70 @@
         }
       }
     },
+    "v1ListDepartmentTreeReply": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Department"
+          }
+        }
+      },
+      "title": "回应 - 获取树形部门"
+    },
+    "v1ListMenuTreeReply": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/adminv1Menu"
+          }
+        }
+      },
+      "title": "回应 - 获取树形菜单"
+    },
+    "v1ListUserAuthorityReply": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Authority"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "回应 - 用户权限角色"
+    },
+    "v1ListUserDomainReply": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Domain"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "回应 - 用户领域"
+    },
     "v1LoginReply": {
       "type": "object",
       "properties": {
@@ -2173,7 +2861,7 @@
         "type": {
           "$ref": "#/definitions/protobufMenuParameterType"
         },
-        "key": {
+        "name": {
           "type": "string"
         },
         "value": {
@@ -2268,6 +2956,46 @@
         },
         "state": {
           "$ref": "#/definitions/protobufAuthorityState"
+        },
+        "remarks": {
+          "type": "string"
+        }
+      }
+    },
+    "v1UpdateDepartmentReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
+        }
+      },
+      "title": "回应 - 创建部门"
+    },
+    "v1UpdateDepartmentReqData": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "state": {
+          "$ref": "#/definitions/protobufDepartmentState"
+        },
+        "remarks": {
+          "type": "string"
         }
       }
     },
@@ -2455,6 +3183,9 @@
         "email": {
           "type": "string"
         },
+        "avatar": {
+          "type": "string"
+        },
         "state": {
           "$ref": "#/definitions/protobufUserState"
         },
@@ -2465,18 +3196,25 @@
         "updatedAt": {
           "type": "string",
           "format": "date-time"
-        },
-        "authorities": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1Authority"
-          }
-        },
-        "avatar": {
-          "type": "string"
         }
       },
       "title": "用户模块"
+    },
+    "v1UserMenuTreeReply": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/adminv1Menu"
+          }
+        }
+      },
+      "title": "回应 - 获取用户菜单"
     }
   },
   "securityDefinitions": {

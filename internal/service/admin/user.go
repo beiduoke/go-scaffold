@@ -22,43 +22,95 @@ func TransformUser(data *biz.User) *v1.User {
 		birthday = data.Birthday.Format("2006-01-02")
 	}
 	return &v1.User{
-		CreatedAt:   timestamppb.New(data.CreatedAt),
-		UpdatedAt:   timestamppb.New(data.UpdatedAt),
-		Id:          uint64(data.ID),
-		Name:        data.Name,
-		Avatar:      data.Avatar,
-		NickName:    data.NickName,
-		RealName:    data.RealName,
-		Gender:      protobuf.UserGender(data.Gender),
-		Birthday:    birthday,
-		Mobile:      data.Mobile,
-		Email:       data.Email,
-		State:       protobuf.UserState(data.State),
-		Authorities: make([]*v1.Authority, 0, 0),
+		CreatedAt: timestamppb.New(data.CreatedAt),
+		UpdatedAt: timestamppb.New(data.UpdatedAt),
+		Id:        uint64(data.ID),
+		Name:      data.Name,
+		Avatar:    data.Avatar,
+		NickName:  data.NickName,
+		RealName:  data.RealName,
+		Gender:    protobuf.UserGender(data.Gender),
+		Birthday:  birthday,
+		Mobile:    data.Mobile,
+		Email:     data.Email,
+		State:     protobuf.UserState(data.State),
 	}
 }
 
-// ProfileUser 概括
-func (s *AdminService) GetUserProfile(ctx context.Context, in *emptypb.Empty) (*v1.User, error) {
+// GetUserInfo 用户	详情
+func (s *AdminService) GetUserInfo(ctx context.Context, in *emptypb.Empty) (*v1.User, error) {
 	id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
 	user, err := s.userCase.GetID(ctx, &biz.User{ID: id})
 	if err != nil {
 		return nil, v1.ErrorUserNotFound("用户查询失败 %v", err)
 	}
-	result := TransformUser(user)
-	for _, v := range user.Authorities {
-		result.Authorities = append(result.Authorities, TransformAuthority(v))
+	return TransformUser(user), nil
+}
+
+// GetUserProfile 用户概括
+func (s *AdminService) GetUserProfile(ctx context.Context, in *emptypb.Empty) (*v1.GetUserProfileReply, error) {
+	id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
+	user, err := s.userCase.GetID(ctx, &biz.User{ID: id})
+	if err != nil {
+		return nil, v1.ErrorUserNotFound("用户查询失败 %v", err)
 	}
-	return result, nil
+	authorityResult, err := s.ListUserAuthority(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return &v1.GetUserProfileReply{
+		User:        TransformUser(user),
+		Authorities: authorityResult.GetItems(),
+	}, nil
+}
+
+// ListUserDomain 用户领域
+func (s *AdminService) ListUserDomain(ctx context.Context, in *emptypb.Empty) (*v1.ListUserDomainReply, error) {
+	id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
+	domainModels, err := s.userCase.ListDomainAll(ctx, &biz.User{ID: id})
+	if err != nil {
+		return nil, v1.ErrorUserDomainFindFail("用户领域失败 %v", err)
+	}
+	domains := make([]*v1.Domain, 0, len(domainModels))
+	for _, v := range domainModels {
+		domains = append(domains, TransformDomain(v))
+	}
+	return &v1.ListUserDomainReply{
+		Items: domains,
+	}, nil
+}
+
+// ListUserAuthority 用户权限角色
+func (s *AdminService) ListUserAuthority(ctx context.Context, in *emptypb.Empty) (*v1.ListUserAuthorityReply, error) {
+	id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
+	domainId := convert.StringToUint(authz.ParseFromContext(ctx).GetDomain())
+	authorityModels, err := s.userCase.ListAuthorityAll(ctx, &biz.User{ID: id, Domains: []*biz.Domain{{ID: domainId}}})
+	if err != nil {
+		return nil, v1.ErrorUserAuthorityFindFail("用户权限角色失败 %v", err)
+	}
+	authorities := make([]*v1.Authority, 0, len(authorityModels))
+	for _, v := range authorityModels {
+		authorities = append(authorities, TransformAuthority(v))
+	}
+	return &v1.ListUserAuthorityReply{
+		Items: authorities,
+	}, nil
 }
 
 // ProfileUser 概括
-func (s *AdminService) GetUserMenu(ctx context.Context, in *emptypb.Empty) (*v1.GetUserMenuReply, error) {
+func (s *AdminService) ListUserMenu(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	// id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
 	name := "菜单"
-	return &v1.GetUserMenuReply{
-		Name: name,
-	}, nil
+	println(name)
+	return &protobuf.PagingReply{}, nil
+}
+
+// ProfileUser 概括
+func (s *AdminService) ListUserMenuTree(ctx context.Context, in *emptypb.Empty) (*v1.UserMenuTreeReply, error) {
+	// id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
+	name := "菜单"
+	println(name)
+	return &v1.UserMenuTreeReply{}, nil
 }
 
 // ListUser 列表用户

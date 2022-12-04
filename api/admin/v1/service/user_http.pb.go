@@ -43,7 +43,7 @@ func RegisterUserServiceHTTPServer(s *http.Server, srv UserServiceHTTPServer) {
 	r := s.Route("/")
 	r.GET("/admin/v1/users/profiles", _UserService_GetUserProfile0_HTTP_Handler(srv))
 	r.GET("/admin/v1/users/menus", _UserService_GetUserMenu0_HTTP_Handler(srv))
-	r.GET("/admin/v1/users", _UserService_ListUser0_HTTP_Handler(srv))
+	r.GET("/admin/v1/users", _UserService_ListUser1_HTTP_Handler(srv))
 	r.POST("/admin/v1/users", _UserService_CreateUser0_HTTP_Handler(srv))
 	r.GET("/admin/v1/users/{id}", _UserService_GetUser0_HTTP_Handler(srv))
 	r.PUT("/admin/v1/users/{id}", _UserService_UpdateUser0_HTTP_Handler(srv))
@@ -88,7 +88,7 @@ func _UserService_GetUserMenu0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx 
 	}
 }
 
-func _UserService_ListUser0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
+func _UserService_ListUser1_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in protobuf.PagingReq
 		if err := ctx.BindQuery(&in); err != nil {

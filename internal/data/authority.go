@@ -33,6 +33,7 @@ func (r *AuthorityRepo) toModel(d *biz.Authority) *SysAuthority {
 		DefaultRouter: d.DefaultRouter,
 		State:         d.State,
 		ParentID:      d.ParentID,
+		Remarks:       d.Remarks,
 	}
 
 	sysData.ID = d.ID
@@ -54,6 +55,7 @@ func (r *AuthorityRepo) toBiz(d *SysAuthority) *biz.Authority {
 		DefaultRouter: d.DefaultRouter,
 		Sort:          d.Sort,
 		State:         d.State,
+		Remarks:       d.Remarks,
 	}
 }
 

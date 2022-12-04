@@ -22,6 +22,7 @@ func TransformAuthority(data *biz.Authority) *v1.Authority {
 		DefaultRouter: data.DefaultRouter,
 		Sort:          data.Sort,
 		State:         protobuf.AuthorityState(data.State),
+		Remarks:       data.Remarks,
 	}
 }
 
@@ -30,15 +31,7 @@ func (s *AdminService) ListAuthority(ctx context.Context, in *protobuf.PagingReq
 	results, total := s.authorityCase.ListPage(ctx, in.GetPage(), in.GetPageSize(), in.GetQuery(), in.GetOrderBy())
 	items := make([]*anypb.Any, 0, len(results))
 	for _, v := range results {
-		user := &v1.Authority{
-			Id:        uint64(v.ID),
-			Name:      v.Name,
-			ParentId:  uint64(v.ParentID),
-			State:     protobuf.AuthorityState(v.State),
-			CreatedAt: timestamppb.New(v.CreatedAt),
-			UpdatedAt: timestamppb.New(v.UpdatedAt),
-		}
-		item, _ := anypb.New(user)
+		item, _ := anypb.New(TransformAuthority(v))
 		items = append(items, item)
 	}
 	return &protobuf.PagingReply{
@@ -54,6 +47,7 @@ func (s *AdminService) CreateAuthority(ctx context.Context, in *v1.CreateAuthori
 		ParentID:      uint(in.GetParentId()),
 		DefaultRouter: in.GetDefaultRouter(),
 		State:         int32(in.GetState()),
+		Remarks:       in.GetRemarks(),
 	})
 	if err != nil {
 		return nil, v1.ErrorAuthorityCreateFail("权限角色创建失败: %v", err.Error())
@@ -78,6 +72,7 @@ func (s *AdminService) UpdateAuthority(ctx context.Context, in *v1.UpdateAuthori
 		DefaultRouter: v.GetDefaultRouter(),
 		Sort:          v.GetSort(),
 		State:         int32(v.GetState()),
+		Remarks:       v.GetRemarks(),
 	})
 	if err != nil {
 		return nil, v1.ErrorAuthorityUpdateFail("权限角色创建失败: %v", err.Error())
@@ -94,15 +89,7 @@ func (s *AdminService) GetAuthority(ctx context.Context, in *v1.GetAuthorityReq)
 	if err != nil {
 		return nil, v1.ErrorAuthorityNotFound("权限角色未找到")
 	}
-	return &v1.Authority{
-		Id:        uint64(authority.ID),
-		Name:      authority.Name,
-		ParentId:  uint64(authority.ParentID),
-		Sort:      int32(authority.Sort),
-		State:     protobuf.AuthorityState(authority.State),
-		CreatedAt: timestamppb.New(authority.CreatedAt),
-		UpdatedAt: timestamppb.New(authority.UpdatedAt),
-	}, nil
+	return TransformAuthority(authority), nil
 }
 
 // DeleteAuthority 删除权限角色

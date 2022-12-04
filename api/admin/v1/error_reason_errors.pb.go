@@ -143,6 +143,30 @@ func ErrorUserHandleDomainAuthorityFail(format string, args ...interface{}) *err
 	return errors.New(400, ErrorReason_USER_HANDLE_DOMAIN_AUTHORITY_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
+func IsUserDomainFindFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_USER_DOMAIN_FIND_FAIL.String() && e.Code == 400
+}
+
+func ErrorUserDomainFindFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_USER_DOMAIN_FIND_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsUserAuthorityFindFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_USER_AUTHORITY_FIND_FAIL.String() && e.Code == 400
+}
+
+func ErrorUserAuthorityFindFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_USER_AUTHORITY_FIND_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
 func IsDomainNotFound(err error) bool {
 	if err == nil {
 		return false
@@ -357,4 +381,52 @@ func IsApiDeleteFail(err error) bool {
 
 func ErrorApiDeleteFail(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_API_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsDepartmentNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_DEPARTMENT_NOT_FOUND.String() && e.Code == 400
+}
+
+func ErrorDepartmentNotFound(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_DEPARTMENT_NOT_FOUND.String(), fmt.Sprintf(format, args...))
+}
+
+func IsDepartmentCreateFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_DEPARTMENT_CREATE_FAIL.String() && e.Code == 400
+}
+
+func ErrorDepartmentCreateFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_DEPARTMENT_CREATE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsDepartmentUpdateFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_DEPARTMENT_UPDATE_FAIL.String() && e.Code == 400
+}
+
+func ErrorDepartmentUpdateFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_DEPARTMENT_UPDATE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsDepartmentDeleteFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_DEPARTMENT_DELETE_FAIL.String() && e.Code == 400
+}
+
+func ErrorDepartmentDeleteFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_DEPARTMENT_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
 }

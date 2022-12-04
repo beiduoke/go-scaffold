@@ -48,9 +48,9 @@ func TreeMenu(menus []*biz.Menu, pid uint) []*v1.Menu {
 }
 
 // GetTreeMenu 列表菜单-树形
-func (s *AdminService) GetMenuTree(ctx context.Context, in *v1.GetMenuTreeReq) (*v1.GetMenuTreeReply, error) {
+func (s *AdminService) ListMenuTree(ctx context.Context, in *v1.ListMenuTreeReq) (*v1.ListMenuTreeReply, error) {
 	results := s.menuCase.GetTree(ctx, uint(in.GetParentId()))
-	return &v1.GetMenuTreeReply{
+	return &v1.ListMenuTreeReply{
 		Items: TreeMenu(results, uint(in.GetParentId())),
 	}, nil
 }
@@ -75,7 +75,7 @@ func (s *AdminService) CreateMenu(ctx context.Context, in *v1.CreateMenuReq) (*v
 	for _, v := range in.GetParameters() {
 		parameters = append(parameters, &biz.MenuParameter{
 			Type:  int32(v.GetType()),
-			Key:   v.GetKey(),
+			Name:  v.GetName(),
 			Value: v.GetValue(),
 		})
 	}
@@ -122,7 +122,7 @@ func (s *AdminService) UpdateMenu(ctx context.Context, in *v1.UpdateMenuReq) (*v
 	for _, v := range v.GetParameters() {
 		parameters = append(parameters, &biz.MenuParameter{
 			Type:  int32(v.GetType()),
-			Key:   v.GetKey(),
+			Name:  v.GetName(),
 			Value: v.GetValue(),
 		})
 	}
@@ -173,7 +173,7 @@ func (s *AdminService) GetMenu(ctx context.Context, in *v1.GetMenuReq) (*v1.Menu
 	for _, v := range menu.Parameters {
 		m.Parameters = append(m.Parameters, &v1.MenuParameter{
 			Type:  protobuf.MenuParameterType(v.Type),
-			Key:   v.Key,
+			Name:  v.Name,
 			Value: v.Value,
 		})
 	}

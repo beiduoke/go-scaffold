@@ -22,6 +22,7 @@ require (
 	github.com/go-kratos/swagger-api v1.0.1
 	github.com/gorilla/handlers v1.5.1
 	github.com/hashicorp/consul/api v1.13.1
+	github.com/iancoleman/strcase v0.2.0
 	github.com/nacos-group/nacos-sdk-go v1.1.2
 	github.com/pkg/errors v0.9.1
 	github.com/tx7do/kratos-transport v0.0.0-20220715094448-1ce1a74fa1a6
@@ -66,7 +67,6 @@ require (
 	github.com/hashicorp/go-rootcerts v1.0.2 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/hashicorp/serf v0.9.7 // indirect
-	github.com/iancoleman/strcase v0.2.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.11.0 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect

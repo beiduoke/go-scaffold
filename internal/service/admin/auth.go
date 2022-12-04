@@ -29,8 +29,37 @@ var (
 	}
 )
 
-// Login 登录
-func (s *AdminService) Login(ctx context.Context, in *v1.LoginReq) (*v1.LoginReply, error) {
+// Logout 退出登录
+func (s *AdminService) Logout(ctx context.Context, in *emptypb.Empty) (*v1.LogoutReply, error) {
+	err := s.authCase.Logout(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &v1.LogoutReply{
+		Success: true,
+		Message: "退出成功",
+	}, nil
+}
+
+// PassLogin 密码登录
+func (s *AdminService) PassLogin(ctx context.Context, in *v1.PassLoginReq) (*v1.LoginReply, error) {
+	auth := in.GetAuth()
+	res, err := s.authCase.PassLogin(ctx, &biz.User{Name: auth.GetAccount(), Password: auth.GetPassword()})
+	if err != nil {
+		return nil, v1.ErrorUserLoginFail("账号 %s 登录失败：%v", auth.GetAccount(), err)
+	}
+	var expireTime *timestamppb.Timestamp
+	if res.ExpiresAt != nil {
+		expireTime = timestamppb.New(*res.ExpiresAt)
+	}
+	return &v1.LoginReply{
+		Token:      res.Token,
+		ExpireTime: expireTime,
+	}, nil
+}
+
+// Login 领域登录
+func (s *AdminService) LoginDomain(ctx context.Context, in *v1.LoginDomainReq) (*v1.LoginReply, error) {
 	auth := in.GetAuth()
 	if in.GetDomain() == "" {
 		return nil, v1.ErrorUserRegisterFail("领域不能为空")
@@ -62,8 +91,8 @@ func (s *AdminService) Login(ctx context.Context, in *v1.LoginReq) (*v1.LoginRep
 	}, nil
 }
 
-// Register 注册
-func (s *AdminService) Register(ctx context.Context, in *v1.RegisterReq) (*v1.RegisterReply, error) {
+// Register 领域注册
+func (s *AdminService) RegisterDomain(ctx context.Context, in *v1.RegisterDomainReq) (*v1.RegisterReply, error) {
 	auth := in.GetAuth()
 	if in.GetDomain() == "" {
 		return nil, v1.ErrorUserRegisterFail("领域不能为空")
@@ -88,13 +117,5 @@ func (s *AdminService) Register(ctx context.Context, in *v1.RegisterReq) (*v1.Re
 	return &v1.RegisterReply{
 		Success: true,
 		Message: "注册成功",
-	}, nil
-}
-
-// Logout 退出登录
-func (s *AdminService) Logout(ctx context.Context, in *emptypb.Empty) (*v1.LogoutReply, error) {
-	return &v1.LogoutReply{
-		Success: true,
-		Message: "退出成功",
 	}, nil
 }

@@ -22,6 +22,7 @@ type Authority struct {
 	DefaultRouter string
 	Sort          int32
 	State         int32
+	Remarks       string
 	Users         []*User
 	Domains       []*Domain
 	Menus         []*Menu

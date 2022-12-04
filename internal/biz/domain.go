@@ -43,11 +43,11 @@ type DomainRepo interface {
 	FindByID(context.Context, uint) (*Domain, error)
 	FindByCode(context.Context, string) (*Domain, error)
 	FindByName(context.Context, string) (*Domain, error)
+	ListByIDs(context.Context, ...uint) ([]*Domain, error)
 	ListByName(context.Context, string) ([]*Domain, error)
 	Delete(context.Context, *Domain) error
 	ListAll(context.Context) ([]*Domain, error)
 	ListPage(context.Context, pagination.PaginationHandler) ([]*Domain, int64)
-	FindInDomainID(context.Context, ...string) ([]*Domain, error)
 
 	// 领域权限
 	// stdcasbin.IEnforcer

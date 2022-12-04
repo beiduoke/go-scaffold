@@ -32,12 +32,12 @@ type AuthServiceHTTPServer interface {
 
 func RegisterAuthServiceHTTPServer(s *http.Server, srv AuthServiceHTTPServer) {
 	r := s.Route("/")
-	r.POST("/admin/v1/auth/logout", _AuthService_Logout0_HTTP_Handler(srv))
-	r.POST("/admin/v1/auth/login", _AuthService_Login0_HTTP_Handler(srv))
+	r.POST("/admin/v1/auth/logout", _AuthService_Logout1_HTTP_Handler(srv))
+	r.POST("/admin/v1/auth/login", _AuthService_Login1_HTTP_Handler(srv))
 	r.POST("/admin/v1/auth/register", _AuthService_Register0_HTTP_Handler(srv))
 }
 
-func _AuthService_Logout0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
+func _AuthService_Logout1_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in emptypb.Empty
 		if err := ctx.Bind(&in); err != nil {
@@ -56,7 +56,7 @@ func _AuthService_Logout0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.
 	}
 }
 
-func _AuthService_Login0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
+func _AuthService_Login1_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in LoginReq
 		if err := ctx.Bind(&in.Auth); err != nil {

@@ -34,7 +34,7 @@ type Menu struct {
 type MenuParameter struct {
 	ID    uint
 	Type  int32
-	Key   string
+	Name  string
 	Value string
 }
 

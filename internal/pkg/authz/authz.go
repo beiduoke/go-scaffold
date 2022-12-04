@@ -17,10 +17,12 @@ import (
 var _ authz.SecurityUser = (*SecurityUser)(nil)
 
 const (
-	User         = "user"
-	Expires      = "exp"
-	ClaimSubject = "subject"
-	ClaimDomain  = "domain"
+	User                = "user"
+	Expires             = "exp"
+	ClaimSubject        = "subject"
+	ClaimDomain         = "domain"
+	HeaderDomainIDKey   = "X-Domain-ID"
+	HeaderDomainCodeKey = "X-Domain-Code"
 )
 
 type Option func(*SecurityUser)
@@ -93,6 +95,11 @@ func (su *SecurityUser) ParseFromContext(ctx context.Context) error {
 	if header, ok := transport.FromServerContext(ctx); ok {
 		su.Object = header.Operation()
 		su.Action = "*"
+		if domainId := header.RequestHeader().Get(HeaderDomainIDKey); domainId != "" {
+			su.Domain = domainId
+		} else if domainCode := header.RequestHeader().Get(HeaderDomainCodeKey); domainCode != "" {
+			su.Domain = domainCode
+		}
 		// if header.Kind() == transport.KindHTTP {
 		// 	if ht, ok := header.(http.Transporter); ok {
 		// 		su.Object = ht.Request().URL.Object

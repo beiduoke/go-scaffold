@@ -36,7 +36,7 @@ var (
 	_ = anypb.Any{}
 	_ = sort.Sort
 
-	_ = protobuf.MenuHidden(0)
+	_ = protobuf.MenuCloseTab(0)
 )
 
 // Validate checks the field values on Menu with the rules defined in the proto

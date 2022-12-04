@@ -86,7 +86,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1serviceCreateUserReqData"
+              "$ref": "#/definitions/serviceCreateUserReqData"
             }
           },
           {
@@ -110,7 +110,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1serviceGetUserMenuReply"
+              "$ref": "#/definitions/serviceGetUserMenuReply"
             }
           },
           "default": {
@@ -281,15 +281,6 @@
       },
       "title": "分页通用结果"
     },
-    "protobufSort": {
-      "type": "string",
-      "enum": [
-        "SORT_UNSPECIFIED",
-        "SORT_DESC",
-        "SORT_ASC"
-      ],
-      "default": "SORT_UNSPECIFIED"
-    },
     "protobufUserState": {
       "type": "string",
       "enum": [
@@ -318,19 +309,7 @@
         }
       }
     },
-    "v1serviceCreateUserReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 创建用户"
-    },
-    "v1serviceCreateUserReqData": {
+    "serviceCreateUserReqData": {
       "type": "object",
       "properties": {
         "name": {
@@ -364,19 +343,7 @@
         }
       }
     },
-    "v1serviceDeleteUserReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 删除用户"
-    },
-    "v1serviceGetUserMenuReply": {
+    "serviceGetUserMenuReply": {
       "type": "object",
       "properties": {
         "name": {
@@ -391,11 +358,35 @@
         "childrens": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/v1serviceGetUserMenuReply"
+            "$ref": "#/definitions/serviceGetUserMenuReply"
           }
         }
       },
       "title": "回应 - 获取用户菜单"
+    },
+    "v1serviceCreateUserReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 创建用户"
+    },
+    "v1serviceDeleteUserReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 删除用户"
     },
     "v1serviceUpdateUserReply": {
       "type": "object",
