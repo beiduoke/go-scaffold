@@ -27,12 +27,14 @@ func (r *MenuRepo) toModel(d *biz.Menu) *SysMenu {
 		return nil
 	}
 	sysData := &SysMenu{
-		Name:      d.Name,
-		ParentID:  d.ParentID,
-		Path:      d.Path,
-		Hidden:    d.Hidden,
-		Component: d.Component,
-		Sort:      d.Sort,
+		Name:       d.Name,
+		Type:       d.Type,
+		ParentID:   d.ParentID,
+		Path:       d.Path,
+		Hidden:     d.Hidden,
+		Component:  d.Component,
+		Permission: d.Permission,
+		Sort:       d.Sort,
 		Meta: SysMeta{
 			Icon:      d.Icon,
 			Title:     d.Title,
@@ -71,10 +73,12 @@ func (r *MenuRepo) toBiz(d *SysMenu) *biz.Menu {
 		UpdatedAt:  d.UpdatedAt,
 		ID:         d.ID,
 		Name:       d.Name,
+		Type:       d.Type,
 		ParentID:   d.ParentID,
 		Path:       d.Path,
 		Hidden:     d.Hidden,
 		Component:  d.Component,
+		Permission: d.Permission,
 		Sort:       d.Sort,
 		Icon:       d.Meta.Icon,
 		Title:      d.Meta.Title,

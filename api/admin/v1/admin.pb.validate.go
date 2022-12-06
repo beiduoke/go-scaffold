@@ -36,7 +36,7 @@ var (
 	_ = anypb.Any{}
 	_ = sort.Sort
 
-	_ = protobuf.DepartmentState(0)
+	_ = protobuf.UserGender(0)
 )
 
 // Validate checks the field values on Auth with the rules defined in the proto
@@ -7888,6 +7888,8 @@ func (m *Menu) validate(all bool) error {
 
 	// no validation rules for Name
 
+	// no validation rules for Type
+
 	// no validation rules for ParentId
 
 	// no validation rules for Path
@@ -7895,6 +7897,8 @@ func (m *Menu) validate(all bool) error {
 	// no validation rules for Hidden
 
 	// no validation rules for Component
+
+	// no validation rules for Permission
 
 	// no validation rules for Sort
 
@@ -8318,10 +8322,21 @@ func (m *CreateMenuReq) validate(all bool) error {
 
 	var errors []error
 
-	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 50 {
+	if _, ok := _CreateMenuReq_Type_NotInLookup[m.GetType()]; ok {
 		err := CreateMenuReqValidationError{
-			field:  "Name",
-			reason: "value length must be between 1 and 50 runes, inclusive",
+			field:  "Type",
+			reason: "value must not be in list [0]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := protobuf.MenuType_name[int32(m.GetType())]; !ok {
+		err := CreateMenuReqValidationError{
+			field:  "Type",
+			reason: "value must be one of the defined enum values",
 		}
 		if !all {
 			return err
@@ -8333,17 +8348,6 @@ func (m *CreateMenuReq) validate(all bool) error {
 		err := CreateMenuReqValidationError{
 			field:  "ParentId",
 			reason: "value must be greater than or equal to 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if l := utf8.RuneCountInString(m.GetPath()); l < 1 || l > 100 {
-		err := CreateMenuReqValidationError{
-			field:  "Path",
-			reason: "value length must be between 1 and 100 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -8373,109 +8377,10 @@ func (m *CreateMenuReq) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetComponent()); l < 1 || l > 100 {
-		err := CreateMenuReqValidationError{
-			field:  "Component",
-			reason: "value length must be between 1 and 100 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if m.GetSort() < 0 {
-		err := CreateMenuReqValidationError{
-			field:  "Sort",
-			reason: "value must be greater than or equal to 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if l := utf8.RuneCountInString(m.GetIcon()); l < 1 || l > 100 {
-		err := CreateMenuReqValidationError{
-			field:  "Icon",
-			reason: "value length must be between 1 and 100 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if l := utf8.RuneCountInString(m.GetTitle()); l < 1 || l > 100 {
 		err := CreateMenuReqValidationError{
 			field:  "Title",
 			reason: "value length must be between 1 and 100 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := _CreateMenuReq_KeepAlive_NotInLookup[m.GetKeepAlive()]; ok {
-		err := CreateMenuReqValidationError{
-			field:  "KeepAlive",
-			reason: "value must not be in list [0]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := protobuf.MenuKeepAlive_name[int32(m.GetKeepAlive())]; !ok {
-		err := CreateMenuReqValidationError{
-			field:  "KeepAlive",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := _CreateMenuReq_BaseMenu_NotInLookup[m.GetBaseMenu()]; ok {
-		err := CreateMenuReqValidationError{
-			field:  "BaseMenu",
-			reason: "value must not be in list [0]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := protobuf.MenuBaseMenu_name[int32(m.GetBaseMenu())]; !ok {
-		err := CreateMenuReqValidationError{
-			field:  "BaseMenu",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := _CreateMenuReq_CloseTab_NotInLookup[m.GetCloseTab()]; ok {
-		err := CreateMenuReqValidationError{
-			field:  "CloseTab",
-			reason: "value must not be in list [0]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := protobuf.MenuCloseTab_name[int32(m.GetCloseTab())]; !ok {
-		err := CreateMenuReqValidationError{
-			field:  "CloseTab",
-			reason: "value must be one of the defined enum values",
 		}
 		if !all {
 			return err
@@ -8547,6 +8452,174 @@ func (m *CreateMenuReq) validate(all bool) error {
 					cause:  err,
 				}
 			}
+		}
+
+	}
+
+	if m.Name != nil {
+
+		if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 50 {
+			err := CreateMenuReqValidationError{
+				field:  "Name",
+				reason: "value length must be between 1 and 50 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Path != nil {
+
+		if l := utf8.RuneCountInString(m.GetPath()); l < 1 || l > 100 {
+			err := CreateMenuReqValidationError{
+				field:  "Path",
+				reason: "value length must be between 1 and 100 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Component != nil {
+
+		if l := utf8.RuneCountInString(m.GetComponent()); l < 1 || l > 100 {
+			err := CreateMenuReqValidationError{
+				field:  "Component",
+				reason: "value length must be between 1 and 100 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Permission != nil {
+
+		if l := utf8.RuneCountInString(m.GetPermission()); l < 1 || l > 100 {
+			err := CreateMenuReqValidationError{
+				field:  "Permission",
+				reason: "value length must be between 1 and 100 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Sort != nil {
+
+		if m.GetSort() < 0 {
+			err := CreateMenuReqValidationError{
+				field:  "Sort",
+				reason: "value must be greater than or equal to 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Icon != nil {
+
+		if l := utf8.RuneCountInString(m.GetIcon()); l < 1 || l > 100 {
+			err := CreateMenuReqValidationError{
+				field:  "Icon",
+				reason: "value length must be between 1 and 100 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.KeepAlive != nil {
+
+		if _, ok := _CreateMenuReq_KeepAlive_NotInLookup[m.GetKeepAlive()]; ok {
+			err := CreateMenuReqValidationError{
+				field:  "KeepAlive",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.MenuKeepAlive_name[int32(m.GetKeepAlive())]; !ok {
+			err := CreateMenuReqValidationError{
+				field:  "KeepAlive",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.BaseMenu != nil {
+
+		if _, ok := _CreateMenuReq_BaseMenu_NotInLookup[m.GetBaseMenu()]; ok {
+			err := CreateMenuReqValidationError{
+				field:  "BaseMenu",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.MenuBaseMenu_name[int32(m.GetBaseMenu())]; !ok {
+			err := CreateMenuReqValidationError{
+				field:  "BaseMenu",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.CloseTab != nil {
+
+		if _, ok := _CreateMenuReq_CloseTab_NotInLookup[m.GetCloseTab()]; ok {
+			err := CreateMenuReqValidationError{
+				field:  "CloseTab",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.MenuCloseTab_name[int32(m.GetCloseTab())]; !ok {
+			err := CreateMenuReqValidationError{
+				field:  "CloseTab",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
 		}
 
 	}
@@ -8628,6 +8701,10 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CreateMenuReqValidationError{}
+
+var _CreateMenuReq_Type_NotInLookup = map[protobuf.MenuType]struct{}{
+	0: {},
+}
 
 var _CreateMenuReq_Hidden_NotInLookup = map[protobuf.MenuHidden]struct{}{
 	0: {},
@@ -13113,10 +13190,21 @@ func (m *UpdateMenuReq_Data) validate(all bool) error {
 
 	var errors []error
 
-	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 50 {
+	if _, ok := _UpdateMenuReq_Data_Type_NotInLookup[m.GetType()]; ok {
 		err := UpdateMenuReq_DataValidationError{
-			field:  "Name",
-			reason: "value length must be between 1 and 50 runes, inclusive",
+			field:  "Type",
+			reason: "value must not be in list [0]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := protobuf.MenuType_name[int32(m.GetType())]; !ok {
+		err := UpdateMenuReq_DataValidationError{
+			field:  "Type",
+			reason: "value must be one of the defined enum values",
 		}
 		if !all {
 			return err
@@ -13135,142 +13223,10 @@ func (m *UpdateMenuReq_Data) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetPath()); l < 1 || l > 100 {
-		err := UpdateMenuReq_DataValidationError{
-			field:  "Path",
-			reason: "value length must be between 1 and 100 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := _UpdateMenuReq_Data_Hidden_NotInLookup[m.GetHidden()]; ok {
-		err := UpdateMenuReq_DataValidationError{
-			field:  "Hidden",
-			reason: "value must not be in list [0]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := protobuf.MenuHidden_name[int32(m.GetHidden())]; !ok {
-		err := UpdateMenuReq_DataValidationError{
-			field:  "Hidden",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if l := utf8.RuneCountInString(m.GetComponent()); l < 1 || l > 100 {
-		err := UpdateMenuReq_DataValidationError{
-			field:  "Component",
-			reason: "value length must be between 1 and 100 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if m.GetSort() < 0 {
-		err := UpdateMenuReq_DataValidationError{
-			field:  "Sort",
-			reason: "value must be greater than or equal to 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if l := utf8.RuneCountInString(m.GetIcon()); l < 1 || l > 100 {
-		err := UpdateMenuReq_DataValidationError{
-			field:  "Icon",
-			reason: "value length must be between 1 and 100 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if l := utf8.RuneCountInString(m.GetTitle()); l < 1 || l > 100 {
 		err := UpdateMenuReq_DataValidationError{
 			field:  "Title",
 			reason: "value length must be between 1 and 100 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := _UpdateMenuReq_Data_KeepAlive_NotInLookup[m.GetKeepAlive()]; ok {
-		err := UpdateMenuReq_DataValidationError{
-			field:  "KeepAlive",
-			reason: "value must not be in list [0]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := protobuf.MenuKeepAlive_name[int32(m.GetKeepAlive())]; !ok {
-		err := UpdateMenuReq_DataValidationError{
-			field:  "KeepAlive",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := _UpdateMenuReq_Data_BaseMenu_NotInLookup[m.GetBaseMenu()]; ok {
-		err := UpdateMenuReq_DataValidationError{
-			field:  "BaseMenu",
-			reason: "value must not be in list [0]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := protobuf.MenuBaseMenu_name[int32(m.GetBaseMenu())]; !ok {
-		err := UpdateMenuReq_DataValidationError{
-			field:  "BaseMenu",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := _UpdateMenuReq_Data_CloseTab_NotInLookup[m.GetCloseTab()]; ok {
-		err := UpdateMenuReq_DataValidationError{
-			field:  "CloseTab",
-			reason: "value must not be in list [0]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := protobuf.MenuCloseTab_name[int32(m.GetCloseTab())]; !ok {
-		err := UpdateMenuReq_DataValidationError{
-			field:  "CloseTab",
-			reason: "value must be one of the defined enum values",
 		}
 		if !all {
 			return err
@@ -13342,6 +13298,200 @@ func (m *UpdateMenuReq_Data) validate(all bool) error {
 					cause:  err,
 				}
 			}
+		}
+
+	}
+
+	if m.Name != nil {
+
+		if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 50 {
+			err := UpdateMenuReq_DataValidationError{
+				field:  "Name",
+				reason: "value length must be between 1 and 50 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Path != nil {
+
+		if l := utf8.RuneCountInString(m.GetPath()); l < 1 || l > 100 {
+			err := UpdateMenuReq_DataValidationError{
+				field:  "Path",
+				reason: "value length must be between 1 and 100 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Hidden != nil {
+
+		if _, ok := _UpdateMenuReq_Data_Hidden_NotInLookup[m.GetHidden()]; ok {
+			err := UpdateMenuReq_DataValidationError{
+				field:  "Hidden",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.MenuHidden_name[int32(m.GetHidden())]; !ok {
+			err := UpdateMenuReq_DataValidationError{
+				field:  "Hidden",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Component != nil {
+
+		if l := utf8.RuneCountInString(m.GetComponent()); l < 1 || l > 100 {
+			err := UpdateMenuReq_DataValidationError{
+				field:  "Component",
+				reason: "value length must be between 1 and 100 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Permission != nil {
+
+		if l := utf8.RuneCountInString(m.GetPermission()); l < 1 || l > 100 {
+			err := UpdateMenuReq_DataValidationError{
+				field:  "Permission",
+				reason: "value length must be between 1 and 100 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Sort != nil {
+
+		if m.GetSort() < 0 {
+			err := UpdateMenuReq_DataValidationError{
+				field:  "Sort",
+				reason: "value must be greater than or equal to 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Icon != nil {
+
+		if l := utf8.RuneCountInString(m.GetIcon()); l < 1 || l > 100 {
+			err := UpdateMenuReq_DataValidationError{
+				field:  "Icon",
+				reason: "value length must be between 1 and 100 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.KeepAlive != nil {
+
+		if _, ok := _UpdateMenuReq_Data_KeepAlive_NotInLookup[m.GetKeepAlive()]; ok {
+			err := UpdateMenuReq_DataValidationError{
+				field:  "KeepAlive",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.MenuKeepAlive_name[int32(m.GetKeepAlive())]; !ok {
+			err := UpdateMenuReq_DataValidationError{
+				field:  "KeepAlive",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.BaseMenu != nil {
+
+		if _, ok := _UpdateMenuReq_Data_BaseMenu_NotInLookup[m.GetBaseMenu()]; ok {
+			err := UpdateMenuReq_DataValidationError{
+				field:  "BaseMenu",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.MenuBaseMenu_name[int32(m.GetBaseMenu())]; !ok {
+			err := UpdateMenuReq_DataValidationError{
+				field:  "BaseMenu",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.CloseTab != nil {
+
+		if _, ok := _UpdateMenuReq_Data_CloseTab_NotInLookup[m.GetCloseTab()]; ok {
+			err := UpdateMenuReq_DataValidationError{
+				field:  "CloseTab",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.MenuCloseTab_name[int32(m.GetCloseTab())]; !ok {
+			err := UpdateMenuReq_DataValidationError{
+				field:  "CloseTab",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
 		}
 
 	}
@@ -13425,6 +13575,10 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = UpdateMenuReq_DataValidationError{}
+
+var _UpdateMenuReq_Data_Type_NotInLookup = map[protobuf.MenuType]struct{}{
+	0: {},
+}
 
 var _UpdateMenuReq_Data_Hidden_NotInLookup = map[protobuf.MenuHidden]struct{}{
 	0: {},

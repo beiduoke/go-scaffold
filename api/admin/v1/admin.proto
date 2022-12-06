@@ -880,19 +880,21 @@ message Menu {
   google.protobuf.Timestamp updated_at = 2;
   uint64 id = 3;
   string name = 4;
-  uint64 parent_id = 5;
-  string path = 6;
-  api.protobuf.MenuHidden hidden = 7;
-  string component = 8;
-  int32 sort = 9;
-  string icon = 10;
-  string title = 11;
-  api.protobuf.MenuKeepAlive keep_alive = 12;
-  api.protobuf.MenuBaseMenu base_menu = 13;
-  api.protobuf.MenuCloseTab close_tab = 14;
-  repeated Menu children = 15;
-  repeated MenuParameter parameters = 16;
-  repeated MenuButton buttons = 17;
+  api.protobuf.MenuType type = 5;
+  uint64 parent_id = 6;
+  string path = 7;
+  api.protobuf.MenuHidden hidden = 8;
+  string component = 9;
+  string permission = 10;
+  int32 sort = 11;
+  string icon = 12;
+  string title = 13;
+  api.protobuf.MenuKeepAlive keep_alive = 14;
+  api.protobuf.MenuBaseMenu base_menu = 15;
+  api.protobuf.MenuCloseTab close_tab = 16;
+  repeated Menu children = 17;
+  repeated MenuParameter parameters = 18;
+  repeated MenuButton buttons = 19;
 }
 
 message MenuButton {
@@ -908,19 +910,21 @@ message MenuParameter {
 
 // 请求 - 创建菜单
 message CreateMenuReq {
-  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 50}];
-  uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
-  string path = 3 [(validate.rules).string = {min_len: 1, max_len: 100}];
-  api.protobuf.MenuHidden hidden = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-  string component = 5 [(validate.rules).string = {min_len: 1, max_len: 100}];
-  int32 sort = 6 [(validate.rules).int32 = {gte: 0}];
-  string icon = 7 [(validate.rules).string = {min_len: 1, max_len: 100}];
-  string title = 8 [(validate.rules).string = {min_len: 1, max_len: 100}];
-  api.protobuf.MenuKeepAlive keep_alive = 9 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-  api.protobuf.MenuBaseMenu base_menu = 10 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-  api.protobuf.MenuCloseTab close_tab = 11 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-  repeated MenuParameter parameters = 12;
-  repeated MenuButton buttons = 13;
+  optional string name = 1 [(validate.rules).string = {min_len: 1, max_len: 50}];
+  api.protobuf.MenuType type = 2 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  uint64 parent_id = 4 [(validate.rules).uint64 = {gte: 0}];
+  optional string path = 5 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  api.protobuf.MenuHidden hidden = 6 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  optional string component = 7 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  optional string permission = 8 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  optional int32 sort = 9 [(validate.rules).int32 = {gte: 0}];
+  optional string icon = 10 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  string title = 11 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  optional api.protobuf.MenuKeepAlive keep_alive = 12 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  optional api.protobuf.MenuBaseMenu base_menu = 13 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  optional api.protobuf.MenuCloseTab close_tab = 14 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  repeated MenuParameter parameters = 15;
+  repeated MenuButton buttons = 16;
 }
 
 // 回应 - 创建菜单
@@ -934,19 +938,21 @@ message CreateMenuReply {
 message UpdateMenuReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
-    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 50}];
-    uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
-    string path = 3 [(validate.rules).string = {min_len: 1, max_len: 100}];
-    api.protobuf.MenuHidden hidden = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-    string component = 5 [(validate.rules).string = {min_len: 1, max_len: 100}];
-    int32 sort = 6 [(validate.rules).int32 = {gte: 0}];
-    string icon = 7 [(validate.rules).string = {min_len: 1, max_len: 100}];
-    string title = 8 [(validate.rules).string = {min_len: 1, max_len: 100}];
-    api.protobuf.MenuKeepAlive keep_alive = 9 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-    api.protobuf.MenuBaseMenu base_menu = 10 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-    api.protobuf.MenuCloseTab close_tab = 11 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-    repeated MenuParameter parameters = 12;
-    repeated MenuButton buttons = 13;
+    optional string name = 1 [(validate.rules).string = {min_len: 1, max_len: 50}];
+    api.protobuf.MenuType type = 2 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    uint64 parent_id = 4 [(validate.rules).uint64 = {gte: 0}];
+    optional string path = 5 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    optional api.protobuf.MenuHidden hidden = 6 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    optional string component = 7 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    optional string permission = 8 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    optional int32 sort = 9 [(validate.rules).int32 = {gte: 0}];
+    optional string icon = 10 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    string title = 11 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    optional api.protobuf.MenuKeepAlive keep_alive = 12 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    optional api.protobuf.MenuBaseMenu base_menu = 13 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    optional api.protobuf.MenuCloseTab close_tab = 14 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    repeated MenuParameter parameters = 15;
+    repeated MenuButton buttons = 16;
   }
   Data data = 2;
 }

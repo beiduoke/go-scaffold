@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	stdcasbin "github.com/casbin/casbin/v2"
@@ -227,8 +228,9 @@ func (ac *UserUsecase) GetLastUseDomain(ctx context.Context, g *User) (*Domain, 
 		return nil, errors.New("领域查询失败")
 	}
 	lastUseAuthority, lastUseDomain := domainPolices[0][1], domainPolices[0][2]
+	fmt.Println(domainPolices)
 	for _, policy := range domainPolices {
-		if p := policy[3]; p == "1" {
+		if p := policy[len(policy)-1]; p == "1" {
 			lastUseAuthority, lastUseDomain = policy[1], policy[2]
 			break
 		}

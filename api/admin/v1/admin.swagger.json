@@ -1881,6 +1881,9 @@
         "name": {
           "type": "string"
         },
+        "type": {
+          "$ref": "#/definitions/protobufMenuType"
+        },
         "parentId": {
           "type": "string",
           "format": "uint64"
@@ -1892,6 +1895,9 @@
           "$ref": "#/definitions/protobufMenuHidden"
         },
         "component": {
+          "type": "string"
+        },
+        "permission": {
           "type": "string"
         },
         "sort": {
@@ -2023,6 +2029,16 @@
         "MENU_PARAMETER_TYPE_QUERY"
       ],
       "default": "MENU_PARAMETER_TYPE_UNSPECIFIED"
+    },
+    "protobufMenuType": {
+      "type": "string",
+      "enum": [
+        "MENU_TYPE_UNSPECIFIED",
+        "MENU_TYPE_CATALOGUE",
+        "MENU_TYPE_MENU",
+        "MENU_TYPE_ABILITY"
+      ],
+      "default": "MENU_TYPE_UNSPECIFIED"
     },
     "protobufPagingReply": {
       "type": "object",
@@ -2342,6 +2358,9 @@
         "name": {
           "type": "string"
         },
+        "type": {
+          "$ref": "#/definitions/protobufMenuType"
+        },
         "parentId": {
           "type": "string",
           "format": "uint64"
@@ -2353,6 +2372,9 @@
           "$ref": "#/definitions/protobufMenuHidden"
         },
         "component": {
+          "type": "string"
+        },
+        "permission": {
           "type": "string"
         },
         "sort": {
@@ -3058,6 +3080,9 @@
         "name": {
           "type": "string"
         },
+        "type": {
+          "$ref": "#/definitions/protobufMenuType"
+        },
         "parentId": {
           "type": "string",
           "format": "uint64"
@@ -3069,6 +3094,9 @@
           "$ref": "#/definitions/protobufMenuHidden"
         },
         "component": {
+          "type": "string"
+        },
+        "permission": {
           "type": "string"
         },
         "sort": {

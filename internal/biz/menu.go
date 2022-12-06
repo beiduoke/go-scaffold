@@ -16,10 +16,12 @@ type Menu struct {
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 	Name       string
+	Type       int32
 	ParentID   uint
 	Path       string
 	Hidden     int32
 	Component  string
+	Permission string
 	Sort       int32
 	Icon       string
 	Title      string

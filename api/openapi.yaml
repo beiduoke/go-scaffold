@@ -1267,6 +1267,9 @@ components:
             properties:
                 name:
                     type: string
+                type:
+                    type: integer
+                    format: enum
                 parentId:
                     type: integer
                     format: uint64
@@ -1276,6 +1279,8 @@ components:
                     type: integer
                     format: enum
                 component:
+                    type: string
+                permission:
                     type: string
                 sort:
                     type: integer
@@ -1637,6 +1642,9 @@ components:
                     format: uint64
                 name:
                     type: string
+                type:
+                    type: integer
+                    format: enum
                 parentId:
                     type: integer
                     format: uint64
@@ -1646,6 +1654,8 @@ components:
                     type: integer
                     format: enum
                 component:
+                    type: string
+                permission:
                     type: string
                 sort:
                     type: integer
@@ -1838,6 +1848,9 @@ components:
             properties:
                 name:
                     type: string
+                type:
+                    type: integer
+                    format: enum
                 parentId:
                     type: integer
                     format: uint64
@@ -1847,6 +1860,8 @@ components:
                     type: integer
                     format: enum
                 component:
+                    type: string
+                permission:
                     type: string
                 sort:
                     type: integer

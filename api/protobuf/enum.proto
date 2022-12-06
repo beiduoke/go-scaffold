@@ -46,6 +46,13 @@ enum AuthorityState {
   AUTHORITY_STATE_BANNED = 3;
 }
 
+enum MenuType {
+  MENU_TYPE_UNSPECIFIED = 0;
+  MENU_TYPE_CATALOGUE = 1;
+  MENU_TYPE_MENU = 2;
+  MENU_TYPE_ABILITY = 3;
+}
+
 enum MenuState {
   MENU_STATE_UNSPECIFIED = 0;
   MENU_STATE_ACTIVE = 1;

@@ -107,11 +107,13 @@ type SysApi struct {
 // SysMenu 菜单
 type SysMenu struct {
 	DomainModel
-	Name        string             `gorm:"type:varchar(255);column:name;not null;index:idx_domain_id_data;comment:路由名称;"`
+	Name        string             `gorm:"type:varchar(255);column:name;not null;default:'';uniqueIndex:idx_menu_type_name;comment:路由名称;"`
+	Type        int32              `gorm:"type:tinyint(1);column:type;not null;default:1;uniqueIndex:idx_menu_type_name;comment:菜单类型 0 无指定 1 目录 2 菜单 3 功能(按钮等);"`
 	ParentID    uint               `gorm:"type:bigint(20);column:parent_id;not null;default:0;index;comment:父菜单ID"`
-	Path        string             `gorm:"type:varchar(255);column:path;not null;comment:路由path"`
+	Path        string             `gorm:"type:varchar(255);column:path;not null;default:'';comment:路由path"`
 	Hidden      int32              `gorm:"type:tinyint(1);column:hidden;not null;default:1;comment:隐藏 0 无指定 1 是 2 否"`
-	Component   string             `gorm:"type:varchar(255);column:component;not null;comment:对应前端文件路径"`
+	Component   string             `gorm:"type:varchar(255);column:component;not null;default:LAYOUT;comment:对应前端文件路径"`
+	Permission  string             `gorm:"type:varchar(255);column:permission;not null;default:'';comment:权限标识"`
 	Sort        int32              `gorm:"type:int(10);column:sort;not null;default:10;comment:排序标记"`
 	Meta        SysMeta            `gorm:"embedded;comment:附加属性"`
 	Authorities []SysAuthority     `gorm:"many2many:sys_authority_menus;"`
@@ -124,7 +126,7 @@ type SysMenu struct {
 // SysMeta 元数据
 type SysMeta struct {
 	Icon      string `gorm:"type:varchar(255);column:icon;not null;default:'';comment:图标"`
-	Title     string `gorm:"type:varchar(255);column:title;not null;comment:标题"`
+	Title     string `gorm:"type:varchar(255);column:title;not null;comment:菜单标题"`
 	KeepAlive int32  `gorm:"type:tinyint(1);column:keep_alive;not null;default:1;comment:是否缓存 0 无指定 1 是 2 否"`
 	BaseMenu  int32  `gorm:"type:tinyint(1);column:base_menu;not null;default:1;comment:基础菜单 0 无指定 1 是 2 否"`
 	CloseTab  int32  `gorm:"type:tinyint(1);column:close_tab;not null;default:1;comment:自动关闭TAB  0 无指定 1 是  2 否"`
