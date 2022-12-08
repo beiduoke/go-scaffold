@@ -682,6 +682,70 @@
         ]
       }
     },
+    "/admin/v1/authorities/{id}/menus/trees": {
+      "get": {
+        "summary": "获取权限角色菜单树形列表",
+        "operationId": "Admin_ListAuthorityMenuTree",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListAuthorityMenuTreeReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/authorities/{id}/permissions": {
+      "get": {
+        "summary": "获取权限角色菜单列表",
+        "operationId": "Admin_ListAuthorityPermission",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListAuthorityPermissionReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/admin/v1/departments": {
       "get": {
         "summary": "列表部门",
@@ -1841,6 +1905,81 @@
         }
       }
     },
+    "ListAuthorityMenuTreeReplyMenuMate": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "title": "路由title  一般必填"
+        },
+        "dynamicLevel": {
+          "type": "integer",
+          "format": "int32",
+          "title": "动态路由可打开Tab页数"
+        },
+        "realPath": {
+          "type": "string",
+          "title": "动态路由的实际Path, 即去除路由的动态部分;"
+        },
+        "ignoreKeepAlive": {
+          "type": "boolean",
+          "title": "是否忽略KeepAlive缓存"
+        },
+        "affix": {
+          "type": "boolean",
+          "title": "是否固定标签"
+        },
+        "icon": {
+          "type": "string",
+          "title": "图标，也是菜单图标"
+        },
+        "frameSrc": {
+          "type": "string",
+          "title": "内嵌iframe的地址"
+        },
+        "transitionName": {
+          "type": "string",
+          "title": "指定该路由切换的动画名"
+        },
+        "hideBreadcrumb": {
+          "type": "boolean",
+          "title": "隐藏该路由在面包屑上面的显示"
+        },
+        "carryParam": {
+          "type": "boolean",
+          "title": "如果该路由会携带参数，且需要在tab页上面显示。则需要设置为true"
+        },
+        "hideChildrenInMenu": {
+          "type": "boolean",
+          "title": "隐藏所有子菜单"
+        },
+        "currentActiveMenu": {
+          "type": "string",
+          "title": "当前激活的菜单。用于配置详情页时左侧激活的菜单路径"
+        },
+        "hideTab": {
+          "type": "boolean",
+          "title": "当前路由不再标签页显示"
+        },
+        "hideMenu": {
+          "type": "boolean",
+          "title": "当前路由不再菜单显示"
+        },
+        "orderNo": {
+          "type": "integer",
+          "format": "int32",
+          "title": "菜单排序，只对第一级有效"
+        },
+        "ignoreRoute": {
+          "type": "boolean",
+          "title": "忽略路由。用于在ROUTE_MAPPING以及BACK权限模式下，生成对应的菜单而忽略路由。2.5.3以上版本有效"
+        },
+        "hidePathForChildren": {
+          "type": "boolean",
+          "title": "是否在子级菜单的完整path中忽略本级path。2.5.3以上版本有效"
+        }
+      }
+    },
     "PassLoginReqPassField": {
       "type": "object",
       "properties": {
@@ -2771,6 +2910,69 @@
           }
         }
       }
+    },
+    "v1ListAuthorityMenuTreeReply": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1ListAuthorityMenuTreeReplyMenu"
+          }
+        }
+      },
+      "title": "回应 - 获取权限菜单树形"
+    },
+    "v1ListAuthorityMenuTreeReplyMenu": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "component": {
+          "type": "string"
+        },
+        "redirect": {
+          "type": "string"
+        },
+        "fullPath": {
+          "type": "string"
+        },
+        "alias": {
+          "type": "string"
+        },
+        "caseSensitive": {
+          "type": "boolean"
+        },
+        "mate": {
+          "$ref": "#/definitions/ListAuthorityMenuTreeReplyMenuMate"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1ListAuthorityMenuTreeReplyMenu"
+          }
+        }
+      }
+    },
+    "v1ListAuthorityPermissionReply": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "回应 - 获取权限列表"
     },
     "v1ListDepartmentTreeReply": {
       "type": "object",

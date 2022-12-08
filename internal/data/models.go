@@ -112,7 +112,7 @@ type SysMenu struct {
 	ParentID    uint               `gorm:"type:bigint(20);column:parent_id;not null;default:0;index;comment:父菜单ID"`
 	Path        string             `gorm:"type:varchar(255);column:path;not null;default:'';comment:路由path"`
 	Hidden      int32              `gorm:"type:tinyint(1);column:hidden;not null;default:1;comment:隐藏 0 无指定 1 是 2 否"`
-	Component   string             `gorm:"type:varchar(255);column:component;not null;default:LAYOUT;comment:对应前端文件路径"`
+	Component   string             `gorm:"type:varchar(255);column:component;not null;default:'';comment:对应前端文件路径"`
 	Permission  string             `gorm:"type:varchar(255);column:permission;not null;default:'';comment:权限标识"`
 	Sort        int32              `gorm:"type:int(10);column:sort;not null;default:10;comment:排序标记"`
 	Meta        SysMeta            `gorm:"embedded;comment:附加属性"`
