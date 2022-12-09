@@ -87,6 +87,13 @@ service Admin {
       }
     };
   }
+  // 中台密码登陆
+  rpc MiddlePassLogin (PassLoginReq) returns (LoginReply) {
+    option (google.api.http) = {
+      post: "/admin/v1/auth/middlePassLogin"
+      body: "auth"
+    };
+  }
   // 密码登陆
   rpc PassLogin (PassLoginReq) returns (LoginReply) {
     option (google.api.http) = {
@@ -129,18 +136,18 @@ service Admin {
       get: "/admin/v1/users/profiles"
     };
   }
-  // 获取用户菜单
-  rpc ListUserMenu (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
-    option (google.api.http) = {
-      get: "/admin/v1/users/menus"
-    };
-  }
-  // 获取用户菜单-树形
-  rpc ListUserMenuTree (google.protobuf.Empty) returns (UserMenuTreeReply) {
-    option (google.api.http) = {
-      get: "/admin/v1/users/menus/trees"
-    };
-  }
+  // // 获取用户菜单 - 弃用
+  // rpc ListUserMenu (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+  //   option (google.api.http) = {
+  //     get: "/admin/v1/users/menus"
+  //   };
+  // }
+  // // 获取用户菜单-树形 - 弃用
+  // rpc ListUserMenuTree (google.protobuf.Empty) returns (UserMenuTreeReply) {
+  //   option (google.api.http) = {
+  //     get: "/admin/v1/users/menus/trees"
+  //   };
+  // }
   // 当前登录用户拥有领域
   rpc ListUserDomain (google.protobuf.Empty) returns (ListUserDomainReply) {
     option (google.api.http) = {
@@ -151,6 +158,25 @@ service Admin {
   rpc ListUserAuthority (google.protobuf.Empty) returns (ListUserAuthorityReply) {
     option (google.api.http) = {
       get: "/admin/v1/users/authorities"
+    };
+  }
+  // 获取权限角色菜单树形列表
+  rpc ListUserAuthorityMenuTree (ListUserAuthorityMenuTreeReq) returns (ListUserAuthorityMenuTreeReply) {
+    option (google.api.http) = {
+      get: "/admin/v1/users/authorities/{authority_id}/menus/trees"
+      additional_bindings {
+        get: "/admin/v1/users/menus/trees"
+      }
+    };
+  }
+  
+  // 获取权限角色权限列表
+  rpc ListUserAuthorityPermission (ListUserAuthorityPermissionReq) returns (ListUserAuthorityPermissionReply) {
+    option (google.api.http) = {
+      get: "/admin/v1/users/authorities/{authority_id}/permissions"
+      additional_bindings {
+        get: "/admin/v1/users/permissions"
+      }
     };
   }
   // 列表用户
@@ -297,20 +323,6 @@ service Admin {
     option (google.api.http) = {
       post: "/admin/v1/authorities/{id}/apis"
       body: "data"
-    };
-  }
-  
-  // 获取权限角色菜单树形列表
-  rpc ListAuthorityMenuTree (ListAuthorityMenuTreeReq) returns (ListAuthorityMenuTreeReply) {
-    option (google.api.http) = {
-      get: "/admin/v1/authorities/{id}/menus/trees"
-    };
-  }
-  
-  // 获取权限角色菜单列表
-  rpc ListAuthorityPermission (ListAuthorityPermissionReq) returns (ListAuthorityPermissionReply) {
-    option (google.api.http) = {
-      get: "/admin/v1/authorities/{id}/permissions"
     };
   }
 
@@ -530,6 +542,75 @@ message ListUserAuthorityReply {
 message ListUserReply {
   repeated User items = 1;
   int32 total = 2;
+}
+
+// 请求 - 获取用户权限角色菜单树形
+message ListUserAuthorityMenuTreeReq {
+  uint64 authority_id = 1 [(validate.rules).uint64 = {gte: 0}];
+}
+
+// 回应 - 获取用户权限角色菜单树形
+message ListUserAuthorityMenuTreeReply {
+  message MenuMate {
+    // 路由title  一般必填
+    string title = 1;
+    // 动态路由可打开Tab页数
+    int32 dynamicLevel = 2;
+    // 动态路由的实际Path, 即去除路由的动态部分;
+    string realPath = 3;;
+    // 是否忽略KeepAlive缓存
+    bool ignoreKeepAlive = 4;
+    // 是否固定标签
+    bool affix = 5;
+    // 图标，也是菜单图标
+    string icon = 6;
+    // 内嵌iframe的地址
+    string frameSrc = 7;
+    // 指定该路由切换的动画名
+    string transitionName = 8;
+    // 隐藏该路由在面包屑上面的显示
+    bool hideBreadcrumb = 9;
+    // 如果该路由会携带参数，且需要在tab页上面显示。则需要设置为true
+    bool carryParam = 10;
+    // 隐藏所有子菜单
+    bool hideChildrenInMenu = 11;
+    // 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
+    string currentActiveMenu = 12;
+    // 当前路由不再标签页显示
+    bool hideTab = 13;
+    // 当前路由不再菜单显示
+    bool hideMenu = 14;
+    // 菜单排序，只对第一级有效
+    int32 orderNo = 15;
+    // 忽略路由。用于在ROUTE_MAPPING以及BACK权限模式下，生成对应的菜单而忽略路由。2.5.3以上版本有效
+    bool ignoreRoute = 16;
+    // 是否在子级菜单的完整path中忽略本级path。2.5.3以上版本有效
+    bool hidePathForChildren = 17;
+  }
+  message Menu {
+    string name = 1;
+    string path = 2;
+    string component = 3;
+    string redirect = 4;
+    string fullPath = 5;
+    string alias = 6;
+    bool caseSensitive = 7;
+    MenuMate mate = 8;
+    repeated Menu children = 9;
+  }
+  int32 total = 1;
+  repeated Menu items = 2;
+}
+
+// 请求 - 获取用户权限角色列表
+message ListUserAuthorityPermissionReq {
+  uint64 authority_id = 1 [(validate.rules).uint64 = {gte: 0}];
+}
+
+// 回应 - 获取用户权限角色列表
+message ListUserAuthorityPermissionReply {
+  int32 total = 1;
+  repeated string items = 2;
 }
 
 // 请求 - 创建用户
@@ -1002,75 +1083,6 @@ message ListMenuTreeReq {
 
 // 回应 - 获取树形菜单
 message ListMenuTreeReply {
-  int32 total = 1;
-  repeated Menu items = 2;
-}
-
-
-// 请求 - 获取权限列表
-message ListAuthorityPermissionReq {
-  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
-}
-
-// 回应 - 获取权限列表
-message ListAuthorityPermissionReply {
-  repeated string data = 1;
-}
-
-// 请求 - 获取权限菜单树形
-message ListAuthorityMenuTreeReq {
-  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
-}
-
-// 回应 - 获取权限菜单树形
-message ListAuthorityMenuTreeReply {
-  message MenuMate {
-    // 路由title  一般必填
-    string title = 1;
-    // 动态路由可打开Tab页数
-    optional int32 dynamicLevel = 2;
-    // 动态路由的实际Path, 即去除路由的动态部分;
-    optional string realPath = 3;;
-    // 是否忽略KeepAlive缓存
-    optional bool ignoreKeepAlive = 4;
-    // 是否固定标签
-    optional bool affix = 5;
-    // 图标，也是菜单图标
-    optional string icon = 6;
-    // 内嵌iframe的地址
-    optional string frameSrc = 7;
-    // 指定该路由切换的动画名
-    optional string transitionName = 8;
-    // 隐藏该路由在面包屑上面的显示
-    optional bool hideBreadcrumb = 9;
-    // 如果该路由会携带参数，且需要在tab页上面显示。则需要设置为true
-    optional bool carryParam = 10;
-    // 隐藏所有子菜单
-    optional bool hideChildrenInMenu = 11;
-    // 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
-    optional string currentActiveMenu = 12;
-    // 当前路由不再标签页显示
-    optional bool hideTab = 13;
-    // 当前路由不再菜单显示
-    optional bool hideMenu = 14;
-    // 菜单排序，只对第一级有效
-    optional int32 orderNo = 15;
-    // 忽略路由。用于在ROUTE_MAPPING以及BACK权限模式下，生成对应的菜单而忽略路由。2.5.3以上版本有效
-    optional bool ignoreRoute = 16;
-    // 是否在子级菜单的完整path中忽略本级path。2.5.3以上版本有效
-    optional bool hidePathForChildren = 17;
-  }
-  message Menu {
-    string name = 1;
-    string path = 2;
-    string component = 3;
-    string redirect = 4;
-    string fullPath = 5;
-    string alias = 6;
-    bool caseSensitive = 7;
-    MenuMate mate = 8;
-    repeated Menu children = 9;
-  }
   int32 total = 1;
   repeated Menu items = 2;
 }

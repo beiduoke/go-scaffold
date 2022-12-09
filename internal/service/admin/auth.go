@@ -41,6 +41,23 @@ func (s *AdminService) Logout(ctx context.Context, in *emptypb.Empty) (*v1.Logou
 	}, nil
 }
 
+// MiddlePassLogin 中台密码登录
+func (s *AdminService) MiddlePassLogin(ctx context.Context, in *v1.PassLoginReq) (*v1.LoginReply, error) {
+	auth := in.GetAuth()
+	res, err := s.authCase.MiddlePassLogin(ctx, &biz.User{Name: auth.GetAccount(), Password: auth.GetPassword()})
+	if err != nil {
+		return nil, v1.ErrorUserLoginFail("账号 %s 登录失败：%v", auth.GetAccount(), err)
+	}
+	var expireTime *timestamppb.Timestamp
+	if res.ExpiresAt != nil {
+		expireTime = timestamppb.New(*res.ExpiresAt)
+	}
+	return &v1.LoginReply{
+		Token:      res.Token,
+		ExpireTime: expireTime,
+	}, nil
+}
+
 // PassLogin 密码登录
 func (s *AdminService) PassLogin(ctx context.Context, in *v1.PassLoginReq) (*v1.LoginReply, error) {
 	auth := in.GetAuth()

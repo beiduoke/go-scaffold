@@ -269,21 +269,19 @@ func (ac *UserUsecase) ListDomainAll(ctx context.Context, g *User) ([]*Domain, e
 	return ac.biz.domainRepo.ListByIDs(ctx, domainIds...)
 }
 
-// ListAuthorityAll 获取最后切换使用领域
-func (ac *UserUsecase) ListAuthorityAll(ctx context.Context, g *User) (authorities []*Authority, err error) {
+// ListAuthorityID 获取权限角色ID列表
+func (ac *UserUsecase) ListAuthorityID(ctx context.Context, g *User) (authorityIds []uint, err error) {
 	uidStr := convert.UnitToString(g.ID)
-	rolesIdsStr := make([]string, 0)
+	var rolesIdsStr []string
 	if len(g.Domains) < 1 {
-		rolesIdsStr, err = ac.biz.enforcer.GetRolesForUser(uidStr)
-		if err != nil {
-			return nil, err
-		}
+		rolesIdsStr, err = ac.biz.enforcer.GetRolesForUser(uidStr, "0")
 	} else {
 		domainIdStr := convert.UnitToString(g.Domains[0].ID)
 		rolesIdsStr = ac.biz.enforcer.GetRolesForUserInDomain(uidStr, domainIdStr)
-		if err != nil {
-			return nil, err
-		}
+	}
+
+	if err != nil {
+		return nil, err
 	}
 
 	rolesIds := make([]uint, 0, len(rolesIdsStr))
@@ -291,5 +289,27 @@ func (ac *UserUsecase) ListAuthorityAll(ctx context.Context, g *User) (authoriti
 		rolesIds = append(rolesIds, convert.StringToUint(v))
 	}
 
-	return ac.biz.authorityRepo.ListByIDs(ctx, rolesIds...)
+	return rolesIds, nil
+}
+
+// ListAuthorityAll 获取权限角色列表
+func (ac *UserUsecase) ListAuthorityAll(ctx context.Context, g *User) (authorities []*Authority, err error) {
+	authorityIds, err := ac.ListAuthorityID(ctx, g)
+	if err != nil || len(authorityIds) < 1 {
+		return authorities, err
+	}
+	return ac.biz.authorityRepo.ListByIDs(ctx, authorityIds...)
+}
+
+// ListUserAuthorityMenuAll 用户权限角色菜单列表(包含权限标识)
+func (ac *UserUsecase) ListAuthorityMenuAll(ctx context.Context, g *User) ([]*Menu, error) {
+	authorityIds := make([]uint, 0)
+	for _, v := range g.Authorities {
+		authorityIds = append(authorityIds, v.ID)
+	}
+	if len(authorityIds) < 1 {
+		return nil, errors.Errorf("查询权限不能为空")
+	}
+
+	return ac.biz.authorityRepo.ListMenuByIDs(ctx, authorityIds...)
 }

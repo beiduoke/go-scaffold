@@ -17,10 +17,11 @@ import (
 var _ authz.SecurityUser = (*SecurityUser)(nil)
 
 const (
-	User                = "user"
-	Expires             = "exp"
-	ClaimSubject        = "subject"
-	ClaimDomain         = "domain"
+	User         = "user"
+	Expires      = "exp"
+	ClaimSubject = "subject"
+	ClaimDomain  = "domain"
+	// custom header const
 	HeaderDomainIDKey   = "X-Domain-ID"
 	HeaderDomainCodeKey = "X-Domain-Code"
 )

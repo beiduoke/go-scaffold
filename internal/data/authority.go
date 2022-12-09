@@ -214,3 +214,22 @@ func (r *AuthorityRepo) HandleApi(ctx context.Context, g *biz.Authority) error {
 	_, err := r.data.enforcer.AddPermissionsForUser(role, rules...)
 	return err
 }
+
+func (r *AuthorityRepo) ListMenuByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu, error) {
+	var authorities []*SysAuthority
+	db := r.data.DBD(ctx).Model(&SysAuthority{}).Debug()
+	db = db.Where(ids).Preload("Menus")
+	result := db.Find(&authorities, ids)
+	if err := result.Error; err != nil {
+		return nil, err
+	}
+	sysMenus, bizMenus := []SysMenu{}, []*biz.Menu{}
+	for _, v := range authorities {
+		sysMenus = append(sysMenus, v.Menus...)
+	}
+	var menuRepo MenuRepo
+	for _, v := range sysMenus {
+		bizMenus = append(bizMenus, menuRepo.toBiz(&v))
+	}
+	return bizMenus, nil
+}

@@ -42,6 +42,7 @@ type AuthorityRepo interface {
 	ListPage(context.Context, pagination.PaginationHandler) ([]*Authority, int64)
 	HandleMenu(context.Context, *Authority) error
 	HandleApi(context.Context, *Authority) error
+	ListMenuByIDs(context.Context, ...uint) ([]*Menu, error)
 }
 
 // AuthorityUsecase is a Authority usecase.

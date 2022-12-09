@@ -158,6 +158,25 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.LogoutReply'
+    /admin/v1/auth/middlePassLogin:
+        post:
+            tags:
+                - Admin
+            description: 中台密码登陆
+            operationId: Admin_MiddlePassLogin
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.v1.PassLoginReq_PassField'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.LoginReply'
     /admin/v1/auth/passLogin:
         post:
             tags:
@@ -382,46 +401,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.HandleAuthorityMenuReply'
-    /admin/v1/authorities/{id}/menus/trees:
-        get:
-            tags:
-                - Admin
-            description: 获取权限角色菜单树形列表
-            operationId: Admin_ListAuthorityMenuTree
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.ListAuthorityMenuTreeReply'
-    /admin/v1/authorities/{id}/permissions:
-        get:
-            tags:
-                - Admin
-            description: 获取权限角色菜单列表
-            operationId: Admin_ListAuthorityPermission
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.ListAuthorityPermissionReply'
     /admin/v1/departments:
         get:
             tags:
@@ -917,11 +896,64 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.ListUserAuthorityReply'
+    /admin/v1/users/authorities/{authorityId}/menus/trees:
+        get:
+            tags:
+                - Admin
+            description: 获取权限角色菜单树形列表
+            operationId: Admin_ListUserAuthorityMenuTree
+            parameters:
+                - name: authorityId
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.ListUserAuthorityMenuTreeReply'
+    /admin/v1/users/authorities/{authorityId}/permissions:
+        get:
+            tags:
+                - Admin
+            description: 获取权限角色权限列表
+            operationId: Admin_ListUserAuthorityPermission
+            parameters:
+                - name: authorityId
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.ListUserAuthorityPermissionReply'
     /admin/v1/users/domains:
         get:
             tags:
                 - Admin
-            description: 当前登录用户拥有领域
+            description: |-
+                // 获取用户菜单 - 弃用
+                 rpc ListUserMenu (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+                   option (google.api.http) = {
+                     get: "/admin/v1/users/menus"
+                   };
+                 }
+                 // 获取用户菜单-树形 - 弃用
+                 rpc ListUserMenuTree (google.protobuf.Empty) returns (UserMenuTreeReply) {
+                   option (google.api.http) = {
+                     get: "/admin/v1/users/menus/trees"
+                   };
+                 }
+                 当前登录用户拥有领域
             operationId: Admin_ListUserDomain
             responses:
                 "200":
@@ -945,50 +977,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.User'
-    /admin/v1/users/menus:
-        get:
-            tags:
-                - Admin
-            description: 获取用户菜单
-            operationId: Admin_ListUserMenu
-            parameters:
-                - name: page
-                  in: query
-                  description: 当前页
-                  schema:
-                    type: integer
-                    format: int32
-                - name: pageSize
-                  in: query
-                  description: 每一页的行数
-                  schema:
-                    type: integer
-                    format: int32
-                - name: nopaging
-                  in: query
-                  description: 是否不分页
-                  schema:
-                    type: boolean
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.protobuf.PagingReply'
-    /admin/v1/users/menus/trees:
-        get:
-            tags:
-                - Admin
-            description: 获取用户菜单-树形
-            operationId: Admin_ListUserMenuTree
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.UserMenuTreeReply'
     /admin/v1/users/profiles:
         get:
             tags:
@@ -1603,7 +1591,7 @@ components:
                     items:
                         type: integer
                         format: uint64
-        api.admin.v1.ListAuthorityMenuTreeReply:
+        api.admin.v1.ListDepartmentTreeReply:
             type: object
             properties:
                 total:
@@ -1612,9 +1600,31 @@ components:
                 items:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.admin.v1.ListAuthorityMenuTreeReply_Menu'
-            description: 回应 - 获取权限菜单树形
-        api.admin.v1.ListAuthorityMenuTreeReply_Menu:
+                        $ref: '#/components/schemas/api.admin.v1.Department'
+            description: 回应 - 获取树形部门
+        api.admin.v1.ListMenuTreeReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int32
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.v1.Menu'
+            description: 回应 - 获取树形菜单
+        api.admin.v1.ListUserAuthorityMenuTreeReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int32
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.v1.ListUserAuthorityMenuTreeReply_Menu'
+            description: 回应 - 获取用户权限角色菜单树形
+        api.admin.v1.ListUserAuthorityMenuTreeReply_Menu:
             type: object
             properties:
                 name:
@@ -1632,12 +1642,12 @@ components:
                 caseSensitive:
                     type: boolean
                 mate:
-                    $ref: '#/components/schemas/api.admin.v1.ListAuthorityMenuTreeReply_MenuMate'
+                    $ref: '#/components/schemas/api.admin.v1.ListUserAuthorityMenuTreeReply_MenuMate'
                 children:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.admin.v1.ListAuthorityMenuTreeReply_Menu'
-        api.admin.v1.ListAuthorityMenuTreeReply_MenuMate:
+                        $ref: '#/components/schemas/api.admin.v1.ListUserAuthorityMenuTreeReply_Menu'
+        api.admin.v1.ListUserAuthorityMenuTreeReply_MenuMate:
             type: object
             properties:
                 title:
@@ -1693,36 +1703,17 @@ components:
                 hidePathForChildren:
                     type: boolean
                     description: 是否在子级菜单的完整path中忽略本级path。2.5.3以上版本有效
-        api.admin.v1.ListAuthorityPermissionReply:
+        api.admin.v1.ListUserAuthorityPermissionReply:
             type: object
             properties:
-                data:
+                total:
+                    type: integer
+                    format: int32
+                items:
                     type: array
                     items:
                         type: string
-            description: 回应 - 获取权限列表
-        api.admin.v1.ListDepartmentTreeReply:
-            type: object
-            properties:
-                total:
-                    type: integer
-                    format: int32
-                items:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.admin.v1.Department'
-            description: 回应 - 获取树形部门
-        api.admin.v1.ListMenuTreeReply:
-            type: object
-            properties:
-                total:
-                    type: integer
-                    format: int32
-                items:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.admin.v1.Menu'
-            description: 回应 - 获取树形菜单
+            description: 回应 - 获取用户权限角色列表
         api.admin.v1.ListUserAuthorityReply:
             type: object
             properties:
@@ -2094,17 +2085,6 @@ components:
                     type: string
                     format: date-time
             description: 用户模块
-        api.admin.v1.UserMenuTreeReply:
-            type: object
-            properties:
-                total:
-                    type: integer
-                    format: int32
-                items:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.admin.v1.Menu'
-            description: 回应 - 获取用户菜单
         api.protobuf.PagingReply:
             type: object
             properties:

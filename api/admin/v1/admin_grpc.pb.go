@@ -26,6 +26,8 @@ const _ = grpc.SupportPackageIsVersion7
 type AdminClient interface {
 	// 登出
 	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*LogoutReply, error)
+	// 中台密码登陆
+	MiddlePassLogin(ctx context.Context, in *PassLoginReq, opts ...grpc.CallOption) (*LoginReply, error)
 	// 密码登陆
 	PassLogin(ctx context.Context, in *PassLoginReq, opts ...grpc.CallOption) (*LoginReply, error)
 	// 短信登陆
@@ -39,14 +41,26 @@ type AdminClient interface {
 	GetUserInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*User, error)
 	// 当前登录用户概述
 	GetUserProfile(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserProfileReply, error)
-	// 获取用户菜单
-	ListUserMenu(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
-	// 获取用户菜单-树形
-	ListUserMenuTree(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserMenuTreeReply, error)
+	// // 获取用户菜单 - 弃用
+	// rpc ListUserMenu (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+	//   option (google.api.http) = {
+	//     get: "/admin/v1/users/menus"
+	//   };
+	// }
+	// // 获取用户菜单-树形 - 弃用
+	// rpc ListUserMenuTree (google.protobuf.Empty) returns (UserMenuTreeReply) {
+	//   option (google.api.http) = {
+	//     get: "/admin/v1/users/menus/trees"
+	//   };
+	// }
 	// 当前登录用户拥有领域
 	ListUserDomain(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserDomainReply, error)
 	// 当前登录用户拥有角色
 	ListUserAuthority(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserAuthorityReply, error)
+	// 获取权限角色菜单树形列表
+	ListUserAuthorityMenuTree(ctx context.Context, in *ListUserAuthorityMenuTreeReq, opts ...grpc.CallOption) (*ListUserAuthorityMenuTreeReply, error)
+	// 获取权限角色权限列表
+	ListUserAuthorityPermission(ctx context.Context, in *ListUserAuthorityPermissionReq, opts ...grpc.CallOption) (*ListUserAuthorityPermissionReply, error)
 	// 列表用户
 	ListUser(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
 	// 创建用户
@@ -91,10 +105,6 @@ type AdminClient interface {
 	HandleAuthorityMenu(ctx context.Context, in *HandleAuthorityMenuReq, opts ...grpc.CallOption) (*HandleAuthorityMenuReply, error)
 	// 处理权限角色接口
 	HandleAuthorityApi(ctx context.Context, in *HandleAuthorityApiReq, opts ...grpc.CallOption) (*HandleAuthorityApiReply, error)
-	// 获取权限角色菜单树形列表
-	ListAuthorityMenuTree(ctx context.Context, in *ListAuthorityMenuTreeReq, opts ...grpc.CallOption) (*ListAuthorityMenuTreeReply, error)
-	// 获取权限角色菜单列表
-	ListAuthorityPermission(ctx context.Context, in *ListAuthorityPermissionReq, opts ...grpc.CallOption) (*ListAuthorityPermissionReply, error)
 	// 接口模块
 	// 列表接口
 	ListApi(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
@@ -144,6 +154,15 @@ func NewAdminClient(cc grpc.ClientConnInterface) AdminClient {
 func (c *adminClient) Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*LogoutReply, error) {
 	out := new(LogoutReply)
 	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/Logout", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) MiddlePassLogin(ctx context.Context, in *PassLoginReq, opts ...grpc.CallOption) (*LoginReply, error) {
+	out := new(LoginReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/MiddlePassLogin", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -204,24 +223,6 @@ func (c *adminClient) GetUserProfile(ctx context.Context, in *emptypb.Empty, opt
 	return out, nil
 }
 
-func (c *adminClient) ListUserMenu(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
-	out := new(protobuf.PagingReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListUserMenu", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *adminClient) ListUserMenuTree(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserMenuTreeReply, error) {
-	out := new(UserMenuTreeReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListUserMenuTree", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *adminClient) ListUserDomain(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserDomainReply, error) {
 	out := new(ListUserDomainReply)
 	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListUserDomain", in, out, opts...)
@@ -234,6 +235,24 @@ func (c *adminClient) ListUserDomain(ctx context.Context, in *emptypb.Empty, opt
 func (c *adminClient) ListUserAuthority(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserAuthorityReply, error) {
 	out := new(ListUserAuthorityReply)
 	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListUserAuthority", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) ListUserAuthorityMenuTree(ctx context.Context, in *ListUserAuthorityMenuTreeReq, opts ...grpc.CallOption) (*ListUserAuthorityMenuTreeReply, error) {
+	out := new(ListUserAuthorityMenuTreeReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListUserAuthorityMenuTree", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) ListUserAuthorityPermission(ctx context.Context, in *ListUserAuthorityPermissionReq, opts ...grpc.CallOption) (*ListUserAuthorityPermissionReply, error) {
+	out := new(ListUserAuthorityPermissionReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListUserAuthorityPermission", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -429,24 +448,6 @@ func (c *adminClient) HandleAuthorityApi(ctx context.Context, in *HandleAuthorit
 	return out, nil
 }
 
-func (c *adminClient) ListAuthorityMenuTree(ctx context.Context, in *ListAuthorityMenuTreeReq, opts ...grpc.CallOption) (*ListAuthorityMenuTreeReply, error) {
-	out := new(ListAuthorityMenuTreeReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListAuthorityMenuTree", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *adminClient) ListAuthorityPermission(ctx context.Context, in *ListAuthorityPermissionReq, opts ...grpc.CallOption) (*ListAuthorityPermissionReply, error) {
-	out := new(ListAuthorityPermissionReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListAuthorityPermission", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *adminClient) ListApi(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
 	out := new(protobuf.PagingReply)
 	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListApi", in, out, opts...)
@@ -606,6 +607,8 @@ func (c *adminClient) ListDepartmentTree(ctx context.Context, in *ListDepartment
 type AdminServer interface {
 	// 登出
 	Logout(context.Context, *emptypb.Empty) (*LogoutReply, error)
+	// 中台密码登陆
+	MiddlePassLogin(context.Context, *PassLoginReq) (*LoginReply, error)
 	// 密码登陆
 	PassLogin(context.Context, *PassLoginReq) (*LoginReply, error)
 	// 短信登陆
@@ -619,14 +622,26 @@ type AdminServer interface {
 	GetUserInfo(context.Context, *emptypb.Empty) (*User, error)
 	// 当前登录用户概述
 	GetUserProfile(context.Context, *emptypb.Empty) (*GetUserProfileReply, error)
-	// 获取用户菜单
-	ListUserMenu(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
-	// 获取用户菜单-树形
-	ListUserMenuTree(context.Context, *emptypb.Empty) (*UserMenuTreeReply, error)
+	// // 获取用户菜单 - 弃用
+	// rpc ListUserMenu (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+	//   option (google.api.http) = {
+	//     get: "/admin/v1/users/menus"
+	//   };
+	// }
+	// // 获取用户菜单-树形 - 弃用
+	// rpc ListUserMenuTree (google.protobuf.Empty) returns (UserMenuTreeReply) {
+	//   option (google.api.http) = {
+	//     get: "/admin/v1/users/menus/trees"
+	//   };
+	// }
 	// 当前登录用户拥有领域
 	ListUserDomain(context.Context, *emptypb.Empty) (*ListUserDomainReply, error)
 	// 当前登录用户拥有角色
 	ListUserAuthority(context.Context, *emptypb.Empty) (*ListUserAuthorityReply, error)
+	// 获取权限角色菜单树形列表
+	ListUserAuthorityMenuTree(context.Context, *ListUserAuthorityMenuTreeReq) (*ListUserAuthorityMenuTreeReply, error)
+	// 获取权限角色权限列表
+	ListUserAuthorityPermission(context.Context, *ListUserAuthorityPermissionReq) (*ListUserAuthorityPermissionReply, error)
 	// 列表用户
 	ListUser(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
 	// 创建用户
@@ -671,10 +686,6 @@ type AdminServer interface {
 	HandleAuthorityMenu(context.Context, *HandleAuthorityMenuReq) (*HandleAuthorityMenuReply, error)
 	// 处理权限角色接口
 	HandleAuthorityApi(context.Context, *HandleAuthorityApiReq) (*HandleAuthorityApiReply, error)
-	// 获取权限角色菜单树形列表
-	ListAuthorityMenuTree(context.Context, *ListAuthorityMenuTreeReq) (*ListAuthorityMenuTreeReply, error)
-	// 获取权限角色菜单列表
-	ListAuthorityPermission(context.Context, *ListAuthorityPermissionReq) (*ListAuthorityPermissionReply, error)
 	// 接口模块
 	// 列表接口
 	ListApi(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
@@ -721,6 +732,9 @@ type UnimplementedAdminServer struct {
 func (UnimplementedAdminServer) Logout(context.Context, *emptypb.Empty) (*LogoutReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
 }
+func (UnimplementedAdminServer) MiddlePassLogin(context.Context, *PassLoginReq) (*LoginReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MiddlePassLogin not implemented")
+}
 func (UnimplementedAdminServer) PassLogin(context.Context, *PassLoginReq) (*LoginReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PassLogin not implemented")
 }
@@ -739,17 +753,17 @@ func (UnimplementedAdminServer) GetUserInfo(context.Context, *emptypb.Empty) (*U
 func (UnimplementedAdminServer) GetUserProfile(context.Context, *emptypb.Empty) (*GetUserProfileReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserProfile not implemented")
 }
-func (UnimplementedAdminServer) ListUserMenu(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListUserMenu not implemented")
-}
-func (UnimplementedAdminServer) ListUserMenuTree(context.Context, *emptypb.Empty) (*UserMenuTreeReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListUserMenuTree not implemented")
-}
 func (UnimplementedAdminServer) ListUserDomain(context.Context, *emptypb.Empty) (*ListUserDomainReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUserDomain not implemented")
 }
 func (UnimplementedAdminServer) ListUserAuthority(context.Context, *emptypb.Empty) (*ListUserAuthorityReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUserAuthority not implemented")
+}
+func (UnimplementedAdminServer) ListUserAuthorityMenuTree(context.Context, *ListUserAuthorityMenuTreeReq) (*ListUserAuthorityMenuTreeReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUserAuthorityMenuTree not implemented")
+}
+func (UnimplementedAdminServer) ListUserAuthorityPermission(context.Context, *ListUserAuthorityPermissionReq) (*ListUserAuthorityPermissionReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUserAuthorityPermission not implemented")
 }
 func (UnimplementedAdminServer) ListUser(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUser not implemented")
@@ -813,12 +827,6 @@ func (UnimplementedAdminServer) HandleAuthorityMenu(context.Context, *HandleAuth
 }
 func (UnimplementedAdminServer) HandleAuthorityApi(context.Context, *HandleAuthorityApiReq) (*HandleAuthorityApiReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HandleAuthorityApi not implemented")
-}
-func (UnimplementedAdminServer) ListAuthorityMenuTree(context.Context, *ListAuthorityMenuTreeReq) (*ListAuthorityMenuTreeReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListAuthorityMenuTree not implemented")
-}
-func (UnimplementedAdminServer) ListAuthorityPermission(context.Context, *ListAuthorityPermissionReq) (*ListAuthorityPermissionReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListAuthorityPermission not implemented")
 }
 func (UnimplementedAdminServer) ListApi(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListApi not implemented")
@@ -898,6 +906,24 @@ func _Admin_Logout_Handler(srv interface{}, ctx context.Context, dec func(interf
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServer).Logout(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_MiddlePassLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PassLoginReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).MiddlePassLogin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/MiddlePassLogin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).MiddlePassLogin(ctx, req.(*PassLoginReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1010,42 +1036,6 @@ func _Admin_GetUserProfile_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_ListUserMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(protobuf.PagingReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AdminServer).ListUserMenu(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/ListUserMenu",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).ListUserMenu(ctx, req.(*protobuf.PagingReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Admin_ListUserMenuTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AdminServer).ListUserMenuTree(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/ListUserMenuTree",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).ListUserMenuTree(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Admin_ListUserDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
@@ -1078,6 +1068,42 @@ func _Admin_ListUserAuthority_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServer).ListUserAuthority(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_ListUserAuthorityMenuTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUserAuthorityMenuTreeReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).ListUserAuthorityMenuTree(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/ListUserAuthorityMenuTree",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).ListUserAuthorityMenuTree(ctx, req.(*ListUserAuthorityMenuTreeReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_ListUserAuthorityPermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUserAuthorityPermissionReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).ListUserAuthorityPermission(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/ListUserAuthorityPermission",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).ListUserAuthorityPermission(ctx, req.(*ListUserAuthorityPermissionReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1460,42 +1486,6 @@ func _Admin_HandleAuthorityApi_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_ListAuthorityMenuTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListAuthorityMenuTreeReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AdminServer).ListAuthorityMenuTree(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/ListAuthorityMenuTree",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).ListAuthorityMenuTree(ctx, req.(*ListAuthorityMenuTreeReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Admin_ListAuthorityPermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListAuthorityPermissionReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AdminServer).ListAuthorityPermission(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/ListAuthorityPermission",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).ListAuthorityPermission(ctx, req.(*ListAuthorityPermissionReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Admin_ListApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(protobuf.PagingReq)
 	if err := dec(in); err != nil {
@@ -1814,6 +1804,10 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Admin_Logout_Handler,
 		},
 		{
+			MethodName: "MiddlePassLogin",
+			Handler:    _Admin_MiddlePassLogin_Handler,
+		},
+		{
 			MethodName: "PassLogin",
 			Handler:    _Admin_PassLogin_Handler,
 		},
@@ -1838,20 +1832,20 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Admin_GetUserProfile_Handler,
 		},
 		{
-			MethodName: "ListUserMenu",
-			Handler:    _Admin_ListUserMenu_Handler,
-		},
-		{
-			MethodName: "ListUserMenuTree",
-			Handler:    _Admin_ListUserMenuTree_Handler,
-		},
-		{
 			MethodName: "ListUserDomain",
 			Handler:    _Admin_ListUserDomain_Handler,
 		},
 		{
 			MethodName: "ListUserAuthority",
 			Handler:    _Admin_ListUserAuthority_Handler,
+		},
+		{
+			MethodName: "ListUserAuthorityMenuTree",
+			Handler:    _Admin_ListUserAuthorityMenuTree_Handler,
+		},
+		{
+			MethodName: "ListUserAuthorityPermission",
+			Handler:    _Admin_ListUserAuthorityPermission_Handler,
 		},
 		{
 			MethodName: "ListUser",
@@ -1936,14 +1930,6 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "HandleAuthorityApi",
 			Handler:    _Admin_HandleAuthorityApi_Handler,
-		},
-		{
-			MethodName: "ListAuthorityMenuTree",
-			Handler:    _Admin_ListAuthorityMenuTree_Handler,
-		},
-		{
-			MethodName: "ListAuthorityPermission",
-			Handler:    _Admin_ListAuthorityPermission_Handler,
 		},
 		{
 			MethodName: "ListApi",

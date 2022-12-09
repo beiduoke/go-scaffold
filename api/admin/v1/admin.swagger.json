@@ -321,6 +321,40 @@
         "x-irreversible": true
       }
     },
+    "/admin/v1/auth/middlePassLogin": {
+      "post": {
+        "summary": "中台密码登陆",
+        "operationId": "Admin_MiddlePassLogin",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1LoginReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "请求体",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PassLoginReqPassField"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/admin/v1/auth/passLogin": {
       "post": {
         "summary": "密码登陆",
@@ -675,70 +709,6 @@
             "schema": {
               "$ref": "#/definitions/v1HandleAuthorityMenuReqData"
             }
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
-    "/admin/v1/authorities/{id}/menus/trees": {
-      "get": {
-        "summary": "获取权限角色菜单树形列表",
-        "operationId": "Admin_ListAuthorityMenuTree",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1ListAuthorityMenuTreeReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
-    "/admin/v1/authorities/{id}/permissions": {
-      "get": {
-        "summary": "获取权限角色菜单列表",
-        "operationId": "Admin_ListAuthorityPermission",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1ListAuthorityPermissionReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
           }
         ],
         "tags": [
@@ -1572,9 +1542,73 @@
         ]
       }
     },
+    "/admin/v1/users/authorities/{authorityId}/menus/trees": {
+      "get": {
+        "summary": "获取权限角色菜单树形列表",
+        "operationId": "Admin_ListUserAuthorityMenuTree",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListUserAuthorityMenuTreeReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "authorityId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/users/authorities/{authorityId}/permissions": {
+      "get": {
+        "summary": "获取权限角色权限列表",
+        "operationId": "Admin_ListUserAuthorityPermission",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListUserAuthorityPermissionReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "authorityId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/admin/v1/users/domains": {
       "get": {
-        "summary": "当前登录用户拥有领域",
+        "summary": "// 获取用户菜单 - 弃用\nrpc ListUserMenu (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {\n  option (google.api.http) = {\n    get: \"/admin/v1/users/menus\"\n  };\n}\n// 获取用户菜单-树形 - 弃用\nrpc ListUserMenuTree (google.protobuf.Empty) returns (UserMenuTreeReply) {\n  option (google.api.http) = {\n    get: \"/admin/v1/users/menus/trees\"\n  };\n}\n当前登录用户拥有领域",
         "operationId": "Admin_ListUserDomain",
         "responses": {
           "200": {
@@ -1618,15 +1652,15 @@
         ]
       }
     },
-    "/admin/v1/users/menus": {
+    "/admin/v1/users/menus/trees": {
       "get": {
-        "summary": "获取用户菜单",
-        "operationId": "Admin_ListUserMenu",
+        "summary": "获取权限角色菜单树形列表",
+        "operationId": "Admin_ListUserAuthorityMenuTree2",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/protobufPagingReply"
+              "$ref": "#/definitions/v1ListUserAuthorityMenuTreeReply"
             }
           },
           "default": {
@@ -1638,27 +1672,11 @@
         },
         "parameters": [
           {
-            "name": "page",
-            "description": "当前页.",
+            "name": "authorityId",
             "in": "query",
             "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "pageSize",
-            "description": "每一页的行数.",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "nopaging",
-            "description": "是否不分页.",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
+            "type": "string",
+            "format": "uint64"
           }
         ],
         "tags": [
@@ -1666,15 +1684,15 @@
         ]
       }
     },
-    "/admin/v1/users/menus/trees": {
+    "/admin/v1/users/permissions": {
       "get": {
-        "summary": "获取用户菜单-树形",
-        "operationId": "Admin_ListUserMenuTree",
+        "summary": "获取权限角色权限列表",
+        "operationId": "Admin_ListUserAuthorityPermission2",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1UserMenuTreeReply"
+              "$ref": "#/definitions/v1ListUserAuthorityPermissionReply"
             }
           },
           "default": {
@@ -1684,6 +1702,15 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "authorityId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
         "tags": [
           "Admin"
         ]
@@ -1905,7 +1932,7 @@
         }
       }
     },
-    "ListAuthorityMenuTreeReplyMenuMate": {
+    "ListUserAuthorityMenuTreeReplyMenuMate": {
       "type": "object",
       "properties": {
         "title": {
@@ -2911,69 +2938,6 @@
         }
       }
     },
-    "v1ListAuthorityMenuTreeReply": {
-      "type": "object",
-      "properties": {
-        "total": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "items": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1ListAuthorityMenuTreeReplyMenu"
-          }
-        }
-      },
-      "title": "回应 - 获取权限菜单树形"
-    },
-    "v1ListAuthorityMenuTreeReplyMenu": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "path": {
-          "type": "string"
-        },
-        "component": {
-          "type": "string"
-        },
-        "redirect": {
-          "type": "string"
-        },
-        "fullPath": {
-          "type": "string"
-        },
-        "alias": {
-          "type": "string"
-        },
-        "caseSensitive": {
-          "type": "boolean"
-        },
-        "mate": {
-          "$ref": "#/definitions/ListAuthorityMenuTreeReplyMenuMate"
-        },
-        "children": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1ListAuthorityMenuTreeReplyMenu"
-          }
-        }
-      }
-    },
-    "v1ListAuthorityPermissionReply": {
-      "type": "object",
-      "properties": {
-        "data": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "title": "回应 - 获取权限列表"
-    },
     "v1ListDepartmentTreeReply": {
       "type": "object",
       "properties": {
@@ -3005,6 +2969,73 @@
         }
       },
       "title": "回应 - 获取树形菜单"
+    },
+    "v1ListUserAuthorityMenuTreeReply": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1ListUserAuthorityMenuTreeReplyMenu"
+          }
+        }
+      },
+      "title": "回应 - 获取用户权限角色菜单树形"
+    },
+    "v1ListUserAuthorityMenuTreeReplyMenu": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "component": {
+          "type": "string"
+        },
+        "redirect": {
+          "type": "string"
+        },
+        "fullPath": {
+          "type": "string"
+        },
+        "alias": {
+          "type": "string"
+        },
+        "caseSensitive": {
+          "type": "boolean"
+        },
+        "mate": {
+          "$ref": "#/definitions/ListUserAuthorityMenuTreeReplyMenuMate"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1ListUserAuthorityMenuTreeReplyMenu"
+          }
+        }
+      }
+    },
+    "v1ListUserAuthorityPermissionReply": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "回应 - 获取用户权限角色列表"
     },
     "v1ListUserAuthorityReply": {
       "type": "object",
@@ -3429,22 +3460,6 @@
         }
       },
       "title": "用户模块"
-    },
-    "v1UserMenuTreeReply": {
-      "type": "object",
-      "properties": {
-        "total": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "items": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/adminv1Menu"
-          }
-        }
-      },
-      "title": "回应 - 获取用户菜单"
     }
   },
   "securityDefinitions": {

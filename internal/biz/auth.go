@@ -64,6 +64,40 @@ func (ac *AuthUsecase) GetToken(claims *AuthClaims) error {
 	return nil
 }
 
+// MiddlePassLogin 中台登录-密码登录
+func (ac *AuthUsecase) MiddlePassLogin(ctx context.Context, g *User) (*AuthClaims, error) {
+	u, err := ac.biz.userRepo.FindByName(ctx, g.Name)
+	if err != nil {
+		return nil, err
+	}
+	err = password.Verify(u.Password, g.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	// 默认过期时间 24小时
+	var expiresAt = time.Now().Add(time.Hour * 24)
+	// 配置过期时间
+	if ac.ac.GetExpiresTime() != nil {
+		expiresAt = time.Now().Add(ac.ac.ExpiresTime.AsDuration())
+	}
+	// 生成token
+	authClaims := &AuthClaims{
+		ID:        u.ID,
+		ExpiresAt: &expiresAt,
+	}
+
+	if err := ac.GetToken(authClaims); err != nil {
+		return nil, err
+	}
+
+	if err := ac.biz.userRepo.SetTokenCache(ctx, *authClaims); err != nil {
+		ac.log.Errorf("token 缓存失败 %v", err)
+	}
+
+	return authClaims, nil
+}
+
 // PassLogin 登录-密码登录
 func (ac *AuthUsecase) PassLogin(ctx context.Context, g *User) (*AuthClaims, error) {
 	u, err := ac.biz.userRepo.FindByName(ctx, g.Name)
