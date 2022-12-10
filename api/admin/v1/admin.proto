@@ -551,7 +551,7 @@ message ListUserAuthorityMenuTreeReq {
 
 // 回应 - 获取用户权限角色菜单树形
 message ListUserAuthorityMenuTreeReply {
-  message MenuMate {
+  message MenuMeta {
     // 路由title  一般必填
     string title = 1;
     // 动态路由可打开Tab页数
@@ -595,7 +595,7 @@ message ListUserAuthorityMenuTreeReply {
     string fullPath = 5;
     string alias = 6;
     bool caseSensitive = 7;
-    MenuMate mate = 8;
+    MenuMeta meta = 8;
     repeated Menu children = 9;
   }
   int32 total = 1;

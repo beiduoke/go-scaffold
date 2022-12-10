@@ -277,7 +277,7 @@ func (s *AdminService) UserMenuToReplyMenu(menu *biz.Menu) *v1.ListUserAuthority
 		Path:      menu.Path,
 		Component: menu.Component,
 		Children:  make([]*v1.ListUserAuthorityMenuTreeReply_Menu, 0),
-		Mate: &v1.ListUserAuthorityMenuTreeReply_MenuMate{
+		Meta: &v1.ListUserAuthorityMenuTreeReply_MenuMeta{
 			// 路由title  一般必填
 			Title: menu.Title,
 			// 动态路由可打开Tab页数
@@ -287,7 +287,7 @@ func (s *AdminService) UserMenuToReplyMenu(menu *biz.Menu) *v1.ListUserAuthority
 			// 是否忽略KeepAlive缓存
 			IgnoreKeepAlive: menu.KeepAlive == int32(protobuf.MenuKeepAlive_MENU_KEEP_ALIVE_NO),
 			// 是否固定标签
-			Affix: true,
+			Affix: false,
 			// 图标，也是菜单图标
 			Icon: menu.Icon,
 			// 内嵌iframe的地址
@@ -295,7 +295,7 @@ func (s *AdminService) UserMenuToReplyMenu(menu *biz.Menu) *v1.ListUserAuthority
 			// 指定该路由切换的动画名
 			// TransitionName: menu.TransitionName,
 			// 隐藏该路由在面包屑上面的显示
-			HideBreadcrumb: false,
+			HideBreadcrumb: true,
 			// 如果该路由会携带参数，且需要在tab页上面显示。则需要设置为true
 			CarryParam: true,
 			// 隐藏所有子菜单

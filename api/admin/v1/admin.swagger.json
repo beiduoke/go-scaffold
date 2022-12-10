@@ -1932,7 +1932,7 @@
         }
       }
     },
-    "ListUserAuthorityMenuTreeReplyMenuMate": {
+    "ListUserAuthorityMenuTreeReplyMenuMeta": {
       "type": "object",
       "properties": {
         "title": {
@@ -3010,8 +3010,8 @@
         "caseSensitive": {
           "type": "boolean"
         },
-        "mate": {
-          "$ref": "#/definitions/ListUserAuthorityMenuTreeReplyMenuMate"
+        "meta": {
+          "$ref": "#/definitions/ListUserAuthorityMenuTreeReplyMenuMeta"
         },
         "children": {
           "type": "array",

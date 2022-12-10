@@ -1641,13 +1641,13 @@ components:
                     type: string
                 caseSensitive:
                     type: boolean
-                mate:
-                    $ref: '#/components/schemas/api.admin.v1.ListUserAuthorityMenuTreeReply_MenuMate'
+                meta:
+                    $ref: '#/components/schemas/api.admin.v1.ListUserAuthorityMenuTreeReply_MenuMeta'
                 children:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.admin.v1.ListUserAuthorityMenuTreeReply_Menu'
-        api.admin.v1.ListUserAuthorityMenuTreeReply_MenuMate:
+        api.admin.v1.ListUserAuthorityMenuTreeReply_MenuMeta:
             type: object
             properties:
                 title:

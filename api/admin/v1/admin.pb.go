@@ -5473,7 +5473,7 @@ func (x *EmailLoginReq_EmailField) GetCode() string {
 	return ""
 }
 
-type ListUserAuthorityMenuTreeReply_MenuMate struct {
+type ListUserAuthorityMenuTreeReply_MenuMeta struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -5514,8 +5514,8 @@ type ListUserAuthorityMenuTreeReply_MenuMate struct {
 	HidePathForChildren bool `protobuf:"varint,17,opt,name=hidePathForChildren,proto3" json:"hidePathForChildren,omitempty"`
 }
 
-func (x *ListUserAuthorityMenuTreeReply_MenuMate) Reset() {
-	*x = ListUserAuthorityMenuTreeReply_MenuMate{}
+func (x *ListUserAuthorityMenuTreeReply_MenuMeta) Reset() {
+	*x = ListUserAuthorityMenuTreeReply_MenuMeta{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_admin_v1_admin_proto_msgTypes[84]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -5523,13 +5523,13 @@ func (x *ListUserAuthorityMenuTreeReply_MenuMate) Reset() {
 	}
 }
 
-func (x *ListUserAuthorityMenuTreeReply_MenuMate) String() string {
+func (x *ListUserAuthorityMenuTreeReply_MenuMeta) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListUserAuthorityMenuTreeReply_MenuMate) ProtoMessage() {}
+func (*ListUserAuthorityMenuTreeReply_MenuMeta) ProtoMessage() {}
 
-func (x *ListUserAuthorityMenuTreeReply_MenuMate) ProtoReflect() protoreflect.Message {
+func (x *ListUserAuthorityMenuTreeReply_MenuMeta) ProtoReflect() protoreflect.Message {
 	mi := &file_admin_v1_admin_proto_msgTypes[84]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -5541,124 +5541,124 @@ func (x *ListUserAuthorityMenuTreeReply_MenuMate) ProtoReflect() protoreflect.Me
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListUserAuthorityMenuTreeReply_MenuMate.ProtoReflect.Descriptor instead.
-func (*ListUserAuthorityMenuTreeReply_MenuMate) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListUserAuthorityMenuTreeReply_MenuMeta.ProtoReflect.Descriptor instead.
+func (*ListUserAuthorityMenuTreeReply_MenuMeta) Descriptor() ([]byte, []int) {
 	return file_admin_v1_admin_proto_rawDescGZIP(), []int{14, 0}
 }
 
-func (x *ListUserAuthorityMenuTreeReply_MenuMate) GetTitle() string {
+func (x *ListUserAuthorityMenuTreeReply_MenuMeta) GetTitle() string {
 	if x != nil {
 		return x.Title
 	}
 	return ""
 }
 
-func (x *ListUserAuthorityMenuTreeReply_MenuMate) GetDynamicLevel() int32 {
+func (x *ListUserAuthorityMenuTreeReply_MenuMeta) GetDynamicLevel() int32 {
 	if x != nil {
 		return x.DynamicLevel
 	}
 	return 0
 }
 
-func (x *ListUserAuthorityMenuTreeReply_MenuMate) GetRealPath() string {
+func (x *ListUserAuthorityMenuTreeReply_MenuMeta) GetRealPath() string {
 	if x != nil {
 		return x.RealPath
 	}
 	return ""
 }
 
-func (x *ListUserAuthorityMenuTreeReply_MenuMate) GetIgnoreKeepAlive() bool {
+func (x *ListUserAuthorityMenuTreeReply_MenuMeta) GetIgnoreKeepAlive() bool {
 	if x != nil {
 		return x.IgnoreKeepAlive
 	}
 	return false
 }
 
-func (x *ListUserAuthorityMenuTreeReply_MenuMate) GetAffix() bool {
+func (x *ListUserAuthorityMenuTreeReply_MenuMeta) GetAffix() bool {
 	if x != nil {
 		return x.Affix
 	}
 	return false
 }
 
-func (x *ListUserAuthorityMenuTreeReply_MenuMate) GetIcon() string {
+func (x *ListUserAuthorityMenuTreeReply_MenuMeta) GetIcon() string {
 	if x != nil {
 		return x.Icon
 	}
 	return ""
 }
 
-func (x *ListUserAuthorityMenuTreeReply_MenuMate) GetFrameSrc() string {
+func (x *ListUserAuthorityMenuTreeReply_MenuMeta) GetFrameSrc() string {
 	if x != nil {
 		return x.FrameSrc
 	}
 	return ""
 }
 
-func (x *ListUserAuthorityMenuTreeReply_MenuMate) GetTransitionName() string {
+func (x *ListUserAuthorityMenuTreeReply_MenuMeta) GetTransitionName() string {
 	if x != nil {
 		return x.TransitionName
 	}
 	return ""
 }
 
-func (x *ListUserAuthorityMenuTreeReply_MenuMate) GetHideBreadcrumb() bool {
+func (x *ListUserAuthorityMenuTreeReply_MenuMeta) GetHideBreadcrumb() bool {
 	if x != nil {
 		return x.HideBreadcrumb
 	}
 	return false
 }
 
-func (x *ListUserAuthorityMenuTreeReply_MenuMate) GetCarryParam() bool {
+func (x *ListUserAuthorityMenuTreeReply_MenuMeta) GetCarryParam() bool {
 	if x != nil {
 		return x.CarryParam
 	}
 	return false
 }
 
-func (x *ListUserAuthorityMenuTreeReply_MenuMate) GetHideChildrenInMenu() bool {
+func (x *ListUserAuthorityMenuTreeReply_MenuMeta) GetHideChildrenInMenu() bool {
 	if x != nil {
 		return x.HideChildrenInMenu
 	}
 	return false
 }
 
-func (x *ListUserAuthorityMenuTreeReply_MenuMate) GetCurrentActiveMenu() string {
+func (x *ListUserAuthorityMenuTreeReply_MenuMeta) GetCurrentActiveMenu() string {
 	if x != nil {
 		return x.CurrentActiveMenu
 	}
 	return ""
 }
 
-func (x *ListUserAuthorityMenuTreeReply_MenuMate) GetHideTab() bool {
+func (x *ListUserAuthorityMenuTreeReply_MenuMeta) GetHideTab() bool {
 	if x != nil {
 		return x.HideTab
 	}
 	return false
 }
 
-func (x *ListUserAuthorityMenuTreeReply_MenuMate) GetHideMenu() bool {
+func (x *ListUserAuthorityMenuTreeReply_MenuMeta) GetHideMenu() bool {
 	if x != nil {
 		return x.HideMenu
 	}
 	return false
 }
 
-func (x *ListUserAuthorityMenuTreeReply_MenuMate) GetOrderNo() int32 {
+func (x *ListUserAuthorityMenuTreeReply_MenuMeta) GetOrderNo() int32 {
 	if x != nil {
 		return x.OrderNo
 	}
 	return 0
 }
 
-func (x *ListUserAuthorityMenuTreeReply_MenuMate) GetIgnoreRoute() bool {
+func (x *ListUserAuthorityMenuTreeReply_MenuMeta) GetIgnoreRoute() bool {
 	if x != nil {
 		return x.IgnoreRoute
 	}
 	return false
 }
 
-func (x *ListUserAuthorityMenuTreeReply_MenuMate) GetHidePathForChildren() bool {
+func (x *ListUserAuthorityMenuTreeReply_MenuMeta) GetHidePathForChildren() bool {
 	if x != nil {
 		return x.HidePathForChildren
 	}
@@ -5677,7 +5677,7 @@ type ListUserAuthorityMenuTreeReply_Menu struct {
 	FullPath      string                                   `protobuf:"bytes,5,opt,name=fullPath,proto3" json:"fullPath,omitempty"`
 	Alias         string                                   `protobuf:"bytes,6,opt,name=alias,proto3" json:"alias,omitempty"`
 	CaseSensitive bool                                     `protobuf:"varint,7,opt,name=caseSensitive,proto3" json:"caseSensitive,omitempty"`
-	Mate          *ListUserAuthorityMenuTreeReply_MenuMate `protobuf:"bytes,8,opt,name=mate,proto3" json:"mate,omitempty"`
+	Meta          *ListUserAuthorityMenuTreeReply_MenuMeta `protobuf:"bytes,8,opt,name=meta,proto3" json:"meta,omitempty"`
 	Children      []*ListUserAuthorityMenuTreeReply_Menu   `protobuf:"bytes,9,rep,name=children,proto3" json:"children,omitempty"`
 }
 
@@ -5762,9 +5762,9 @@ func (x *ListUserAuthorityMenuTreeReply_Menu) GetCaseSensitive() bool {
 	return false
 }
 
-func (x *ListUserAuthorityMenuTreeReply_Menu) GetMate() *ListUserAuthorityMenuTreeReply_MenuMate {
+func (x *ListUserAuthorityMenuTreeReply_Menu) GetMeta() *ListUserAuthorityMenuTreeReply_MenuMeta {
 	if x != nil {
-		return x.Mate
+		return x.Meta
 	}
 	return nil
 }
@@ -6791,7 +6791,7 @@ var file_admin_v1_admin_proto_rawDesc = []byte{
 	0x69, 0x73, 0x74, 0x55, 0x73, 0x65, 0x72, 0x41, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x74, 0x79,
 	0x4d, 0x65, 0x6e, 0x75, 0x54, 0x72, 0x65, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x2e, 0x4d, 0x65,
 	0x6e, 0x75, 0x52, 0x05, 0x69, 0x74, 0x65, 0x6d, 0x73, 0x1a, 0xc2, 0x04, 0x0a, 0x08, 0x4d, 0x65,
-	0x6e, 0x75, 0x4d, 0x61, 0x74, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65, 0x18,
+	0x6e, 0x75, 0x4d, 0x65, 0x74, 0x61, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65, 0x18,
 	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65, 0x12, 0x22, 0x0a, 0x0c,
 	0x64, 0x79, 0x6e, 0x61, 0x6d, 0x69, 0x63, 0x4c, 0x65, 0x76, 0x65, 0x6c, 0x18, 0x02, 0x20, 0x01,
 	0x28, 0x05, 0x52, 0x0c, 0x64, 0x79, 0x6e, 0x61, 0x6d, 0x69, 0x63, 0x4c, 0x65, 0x76, 0x65, 0x6c,
@@ -6839,11 +6839,11 @@ var file_admin_v1_admin_proto_rawDesc = []byte{
 	0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x61, 0x6c, 0x69, 0x61, 0x73, 0x12, 0x24, 0x0a, 0x0d, 0x63,
 	0x61, 0x73, 0x65, 0x53, 0x65, 0x6e, 0x73, 0x69, 0x74, 0x69, 0x76, 0x65, 0x18, 0x07, 0x20, 0x01,
 	0x28, 0x08, 0x52, 0x0d, 0x63, 0x61, 0x73, 0x65, 0x53, 0x65, 0x6e, 0x73, 0x69, 0x74, 0x69, 0x76,
-	0x65, 0x12, 0x49, 0x0a, 0x04, 0x6d, 0x61, 0x74, 0x65, 0x18, 0x08, 0x20, 0x01, 0x28, 0x0b, 0x32,
+	0x65, 0x12, 0x49, 0x0a, 0x04, 0x6d, 0x65, 0x74, 0x61, 0x18, 0x08, 0x20, 0x01, 0x28, 0x0b, 0x32,
 	0x35, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x4c,
 	0x69, 0x73, 0x74, 0x55, 0x73, 0x65, 0x72, 0x41, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x74, 0x79,
 	0x4d, 0x65, 0x6e, 0x75, 0x54, 0x72, 0x65, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x2e, 0x4d, 0x65,
-	0x6e, 0x75, 0x4d, 0x61, 0x74, 0x65, 0x52, 0x04, 0x6d, 0x61, 0x74, 0x65, 0x12, 0x4d, 0x0a, 0x08,
+	0x6e, 0x75, 0x4d, 0x65, 0x74, 0x61, 0x52, 0x04, 0x6d, 0x65, 0x74, 0x61, 0x12, 0x4d, 0x0a, 0x08,
 	0x63, 0x68, 0x69, 0x6c, 0x64, 0x72, 0x65, 0x6e, 0x18, 0x09, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x31,
 	0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x4c, 0x69,
 	0x73, 0x74, 0x55, 0x73, 0x65, 0x72, 0x41, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x74, 0x79, 0x4d,
@@ -8153,7 +8153,7 @@ var file_admin_v1_admin_proto_goTypes = []interface{}{
 	(*PassLoginReq_PassField)(nil),                  // 81: api.admin.v1.PassLoginReq.PassField
 	(*SmsLoginReq_SmsField)(nil),                    // 82: api.admin.v1.SmsLoginReq.SmsField
 	(*EmailLoginReq_EmailField)(nil),                // 83: api.admin.v1.EmailLoginReq.EmailField
-	(*ListUserAuthorityMenuTreeReply_MenuMate)(nil), // 84: api.admin.v1.ListUserAuthorityMenuTreeReply.MenuMate
+	(*ListUserAuthorityMenuTreeReply_MenuMeta)(nil), // 84: api.admin.v1.ListUserAuthorityMenuTreeReply.MenuMeta
 	(*ListUserAuthorityMenuTreeReply_Menu)(nil),     // 85: api.admin.v1.ListUserAuthorityMenuTreeReply.Menu
 	(*HandleUserDomainReq_Data)(nil),                // 86: api.admin.v1.HandleUserDomainReq.Data
 	(*HandleUserDomainAuthorityReq_Data)(nil),       // 87: api.admin.v1.HandleUserDomainAuthorityReq.Data
@@ -8271,7 +8271,7 @@ var file_admin_v1_admin_proto_depIdxs = []int32{
 	98,  // 84: api.admin.v1.UpdateDepartmentReply.data:type_name -> google.protobuf.Any
 	98,  // 85: api.admin.v1.DeleteDepartmentReply.data:type_name -> google.protobuf.Any
 	71,  // 86: api.admin.v1.ListDepartmentTreeReply.items:type_name -> api.admin.v1.Department
-	84,  // 87: api.admin.v1.ListUserAuthorityMenuTreeReply.Menu.mate:type_name -> api.admin.v1.ListUserAuthorityMenuTreeReply.MenuMate
+	84,  // 87: api.admin.v1.ListUserAuthorityMenuTreeReply.Menu.meta:type_name -> api.admin.v1.ListUserAuthorityMenuTreeReply.MenuMeta
 	85,  // 88: api.admin.v1.ListUserAuthorityMenuTreeReply.Menu.children:type_name -> api.admin.v1.ListUserAuthorityMenuTreeReply.Menu
 	99,  // 89: api.admin.v1.UpdateUserReq.Data.gender:type_name -> api.protobuf.UserGender
 	100, // 90: api.admin.v1.UpdateUserReq.Data.state:type_name -> api.protobuf.UserState
@@ -9408,7 +9408,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[84].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListUserAuthorityMenuTreeReply_MenuMate); i {
+			switch v := v.(*ListUserAuthorityMenuTreeReply_MenuMeta); i {
 			case 0:
 				return &v.state
 			case 1:

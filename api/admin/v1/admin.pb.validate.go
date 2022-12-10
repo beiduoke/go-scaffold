@@ -12035,24 +12035,24 @@ var _ interface {
 
 var _EmailLoginReq_EmailField_Code_Pattern = regexp.MustCompile("^[0-9]{6}$")
 
-// Validate checks the field values on ListUserAuthorityMenuTreeReply_MenuMate
+// Validate checks the field values on ListUserAuthorityMenuTreeReply_MenuMeta
 // with the rules defined in the proto definition for this message. If any
 // rules are violated, the first error encountered is returned, or nil if
 // there are no violations.
-func (m *ListUserAuthorityMenuTreeReply_MenuMate) Validate() error {
+func (m *ListUserAuthorityMenuTreeReply_MenuMeta) Validate() error {
 	return m.validate(false)
 }
 
 // ValidateAll checks the field values on
-// ListUserAuthorityMenuTreeReply_MenuMate with the rules defined in the proto
+// ListUserAuthorityMenuTreeReply_MenuMeta with the rules defined in the proto
 // definition for this message. If any rules are violated, the result is a
 // list of violation errors wrapped in
-// ListUserAuthorityMenuTreeReply_MenuMateMultiError, or nil if none found.
-func (m *ListUserAuthorityMenuTreeReply_MenuMate) ValidateAll() error {
+// ListUserAuthorityMenuTreeReply_MenuMetaMultiError, or nil if none found.
+func (m *ListUserAuthorityMenuTreeReply_MenuMeta) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ListUserAuthorityMenuTreeReply_MenuMate) validate(all bool) error {
+func (m *ListUserAuthorityMenuTreeReply_MenuMeta) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -12094,20 +12094,20 @@ func (m *ListUserAuthorityMenuTreeReply_MenuMate) validate(all bool) error {
 	// no validation rules for HidePathForChildren
 
 	if len(errors) > 0 {
-		return ListUserAuthorityMenuTreeReply_MenuMateMultiError(errors)
+		return ListUserAuthorityMenuTreeReply_MenuMetaMultiError(errors)
 	}
 
 	return nil
 }
 
-// ListUserAuthorityMenuTreeReply_MenuMateMultiError is an error wrapping
+// ListUserAuthorityMenuTreeReply_MenuMetaMultiError is an error wrapping
 // multiple validation errors returned by
-// ListUserAuthorityMenuTreeReply_MenuMate.ValidateAll() if the designated
+// ListUserAuthorityMenuTreeReply_MenuMeta.ValidateAll() if the designated
 // constraints aren't met.
-type ListUserAuthorityMenuTreeReply_MenuMateMultiError []error
+type ListUserAuthorityMenuTreeReply_MenuMetaMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ListUserAuthorityMenuTreeReply_MenuMateMultiError) Error() string {
+func (m ListUserAuthorityMenuTreeReply_MenuMetaMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -12116,12 +12116,12 @@ func (m ListUserAuthorityMenuTreeReply_MenuMateMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ListUserAuthorityMenuTreeReply_MenuMateMultiError) AllErrors() []error { return m }
+func (m ListUserAuthorityMenuTreeReply_MenuMetaMultiError) AllErrors() []error { return m }
 
-// ListUserAuthorityMenuTreeReply_MenuMateValidationError is the validation
-// error returned by ListUserAuthorityMenuTreeReply_MenuMate.Validate if the
+// ListUserAuthorityMenuTreeReply_MenuMetaValidationError is the validation
+// error returned by ListUserAuthorityMenuTreeReply_MenuMeta.Validate if the
 // designated constraints aren't met.
-type ListUserAuthorityMenuTreeReply_MenuMateValidationError struct {
+type ListUserAuthorityMenuTreeReply_MenuMetaValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -12129,24 +12129,24 @@ type ListUserAuthorityMenuTreeReply_MenuMateValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListUserAuthorityMenuTreeReply_MenuMateValidationError) Field() string { return e.field }
+func (e ListUserAuthorityMenuTreeReply_MenuMetaValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ListUserAuthorityMenuTreeReply_MenuMateValidationError) Reason() string { return e.reason }
+func (e ListUserAuthorityMenuTreeReply_MenuMetaValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ListUserAuthorityMenuTreeReply_MenuMateValidationError) Cause() error { return e.cause }
+func (e ListUserAuthorityMenuTreeReply_MenuMetaValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ListUserAuthorityMenuTreeReply_MenuMateValidationError) Key() bool { return e.key }
+func (e ListUserAuthorityMenuTreeReply_MenuMetaValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListUserAuthorityMenuTreeReply_MenuMateValidationError) ErrorName() string {
-	return "ListUserAuthorityMenuTreeReply_MenuMateValidationError"
+func (e ListUserAuthorityMenuTreeReply_MenuMetaValidationError) ErrorName() string {
+	return "ListUserAuthorityMenuTreeReply_MenuMetaValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ListUserAuthorityMenuTreeReply_MenuMateValidationError) Error() string {
+func (e ListUserAuthorityMenuTreeReply_MenuMetaValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -12158,14 +12158,14 @@ func (e ListUserAuthorityMenuTreeReply_MenuMateValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListUserAuthorityMenuTreeReply_MenuMate.%s: %s%s",
+		"invalid %sListUserAuthorityMenuTreeReply_MenuMeta.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListUserAuthorityMenuTreeReply_MenuMateValidationError{}
+var _ error = ListUserAuthorityMenuTreeReply_MenuMetaValidationError{}
 
 var _ interface {
 	Field() string
@@ -12173,7 +12173,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListUserAuthorityMenuTreeReply_MenuMateValidationError{}
+} = ListUserAuthorityMenuTreeReply_MenuMetaValidationError{}
 
 // Validate checks the field values on ListUserAuthorityMenuTreeReply_Menu with
 // the rules defined in the proto definition for this message. If any rules
@@ -12213,11 +12213,11 @@ func (m *ListUserAuthorityMenuTreeReply_Menu) validate(all bool) error {
 	// no validation rules for CaseSensitive
 
 	if all {
-		switch v := interface{}(m.GetMate()).(type) {
+		switch v := interface{}(m.GetMeta()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, ListUserAuthorityMenuTreeReply_MenuValidationError{
-					field:  "Mate",
+					field:  "Meta",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -12225,16 +12225,16 @@ func (m *ListUserAuthorityMenuTreeReply_Menu) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, ListUserAuthorityMenuTreeReply_MenuValidationError{
-					field:  "Mate",
+					field:  "Meta",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetMate()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetMeta()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return ListUserAuthorityMenuTreeReply_MenuValidationError{
-				field:  "Mate",
+				field:  "Meta",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
