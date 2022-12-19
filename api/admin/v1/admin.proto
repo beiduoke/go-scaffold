@@ -311,6 +311,12 @@ service Admin {
       delete: "/admin/v1/authorities/{id}"
     };
   }
+  // 获取权限角色菜单
+  rpc ListAuthorityMenu (ListAuthorityMenuReq) returns (ListAuthorityMenuReply) {
+    option (google.api.http) = {
+      get: "/admin/v1/authorities/{id}/menus"
+    };
+  }
   // 处理权限角色菜单
   rpc HandleAuthorityMenu (HandleAuthorityMenuReq) returns (HandleAuthorityMenuReply) {
     option (google.api.http) = {
@@ -549,8 +555,8 @@ message ListUserAuthorityMenuTreeReq {
   uint64 authority_id = 1 [(validate.rules).uint64 = {gte: 0}];
 }
 
-// 回应 - 获取用户权限角色菜单树形
-message ListUserAuthorityMenuTreeReply {
+// 回应 - 获取用户权限角色菜单树形 Deprecated
+message ListUserAuthorityMenuTreeReply_Deprecated {
   message MenuMeta {
     // 路由title  一般必填
     string title = 1;
@@ -597,6 +603,37 @@ message ListUserAuthorityMenuTreeReply {
     bool caseSensitive = 7;
     MenuMeta meta = 8;
     repeated Menu children = 9;
+  }
+  int32 total = 1;
+  repeated Menu items = 2;
+}
+
+message ListUserAuthorityMenuTreeReply {
+  message Meta {
+    // 路由title  一般必填
+    string title = 1;
+    // 是否忽略KeepAlive缓存
+    optional bool ignoreKeepAlive = 4;
+    // 图标，也是菜单图标
+    optional string icon = 6;
+    // 内嵌iframe的地址
+    optional string frameSrc = 7;
+    // 隐藏该路由在面包屑上面的显示
+    optional bool hideBreadcrumb = 9;
+    // 当前路由不再菜单显示
+    optional bool hideMenu = 14;
+    // 菜单排序，只对第一级有效
+    optional int32 orderNo = 15;
+    // 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
+    optional string currentActiveMenu = 12;
+  }
+  message Menu {
+    string name = 1;
+    string path = 2;
+    string component = 3;
+    optional string redirect = 4;
+    Meta meta = 5;
+    repeated Menu children = 6;
   }
   int32 total = 1;
   repeated Menu items = 2;
@@ -864,6 +901,16 @@ message DeleteAuthorityReply {
   google.protobuf.Any data = 3;
 }
 
+// 请求 - 获取权限角色菜单
+message ListAuthorityMenuReq {
+  
+}
+
+// 回应 - 获取权限角色菜单
+message ListAuthorityMenuReply {
+  
+}
+
 // 请求 - 处理权限角色菜单
 message HandleAuthorityMenuReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
@@ -987,9 +1034,10 @@ message Menu {
   api.protobuf.MenuKeepAlive keep_alive = 14;
   api.protobuf.MenuBaseMenu base_menu = 15;
   api.protobuf.MenuCloseTab close_tab = 16;
-  repeated Menu children = 17;
-  repeated MenuParameter parameters = 18;
-  repeated MenuButton buttons = 19;
+  api.protobuf.MenuExtType ext_type = 17;
+  repeated Menu children = 18;
+  repeated MenuParameter parameters = 19;
+  repeated MenuButton buttons = 20;
 }
 
 message MenuButton {
@@ -1018,8 +1066,9 @@ message CreateMenuReq {
   optional api.protobuf.MenuKeepAlive keep_alive = 12 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
   optional api.protobuf.MenuBaseMenu base_menu = 13 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
   optional api.protobuf.MenuCloseTab close_tab = 14 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-  repeated MenuParameter parameters = 15;
-  repeated MenuButton buttons = 16;
+  optional api.protobuf.MenuExtType ext_type = 15 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  repeated MenuParameter parameters = 16;
+  repeated MenuButton buttons = 17;
 }
 
 // 回应 - 创建菜单
@@ -1046,8 +1095,9 @@ message UpdateMenuReq {
     optional api.protobuf.MenuKeepAlive keep_alive = 12 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
     optional api.protobuf.MenuBaseMenu base_menu = 13 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
     optional api.protobuf.MenuCloseTab close_tab = 14 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-    repeated MenuParameter parameters = 15;
-    repeated MenuButton buttons = 16;
+    optional api.protobuf.MenuExtType ext_type = 15 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    repeated MenuParameter parameters = 16;
+    repeated MenuButton buttons = 17;
   }
   Data data = 2;
 }
