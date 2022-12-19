@@ -36,7 +36,7 @@ var (
 	_ = anypb.Any{}
 	_ = sort.Sort
 
-	_ = protobuf.UserGender(0)
+	_ = protobuf.DepartmentState(0)
 )
 
 // Validate checks the field values on Auth with the rules defined in the proto
@@ -1977,6 +1977,148 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListUserAuthorityMenuTreeReqValidationError{}
+
+// Validate checks the field values on
+// ListUserAuthorityMenuTreeReply_Deprecated with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *ListUserAuthorityMenuTreeReply_Deprecated) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on
+// ListUserAuthorityMenuTreeReply_Deprecated with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in
+// ListUserAuthorityMenuTreeReply_DeprecatedMultiError, or nil if none found.
+func (m *ListUserAuthorityMenuTreeReply_Deprecated) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListUserAuthorityMenuTreeReply_Deprecated) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Total
+
+	for idx, item := range m.GetItems() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListUserAuthorityMenuTreeReply_DeprecatedValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListUserAuthorityMenuTreeReply_DeprecatedValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListUserAuthorityMenuTreeReply_DeprecatedValidationError{
+					field:  fmt.Sprintf("Items[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListUserAuthorityMenuTreeReply_DeprecatedMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListUserAuthorityMenuTreeReply_DeprecatedMultiError is an error wrapping
+// multiple validation errors returned by
+// ListUserAuthorityMenuTreeReply_Deprecated.ValidateAll() if the designated
+// constraints aren't met.
+type ListUserAuthorityMenuTreeReply_DeprecatedMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListUserAuthorityMenuTreeReply_DeprecatedMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListUserAuthorityMenuTreeReply_DeprecatedMultiError) AllErrors() []error { return m }
+
+// ListUserAuthorityMenuTreeReply_DeprecatedValidationError is the validation
+// error returned by ListUserAuthorityMenuTreeReply_Deprecated.Validate if the
+// designated constraints aren't met.
+type ListUserAuthorityMenuTreeReply_DeprecatedValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListUserAuthorityMenuTreeReply_DeprecatedValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListUserAuthorityMenuTreeReply_DeprecatedValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListUserAuthorityMenuTreeReply_DeprecatedValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListUserAuthorityMenuTreeReply_DeprecatedValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListUserAuthorityMenuTreeReply_DeprecatedValidationError) ErrorName() string {
+	return "ListUserAuthorityMenuTreeReply_DeprecatedValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListUserAuthorityMenuTreeReply_DeprecatedValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListUserAuthorityMenuTreeReply_Deprecated.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListUserAuthorityMenuTreeReply_DeprecatedValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListUserAuthorityMenuTreeReply_DeprecatedValidationError{}
 
 // Validate checks the field values on ListUserAuthorityMenuTreeReply with the
 // rules defined in the proto definition for this message. If any rules are
@@ -8386,6 +8528,8 @@ func (m *Menu) validate(all bool) error {
 
 	// no validation rules for CloseTab
 
+	// no validation rules for ExtType
+
 	for idx, item := range m.GetChildren() {
 		_, _ = idx, item
 
@@ -9098,6 +9242,32 @@ func (m *CreateMenuReq) validate(all bool) error {
 
 	}
 
+	if m.ExtType != nil {
+
+		if _, ok := _CreateMenuReq_ExtType_NotInLookup[m.GetExtType()]; ok {
+			err := CreateMenuReqValidationError{
+				field:  "ExtType",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.MenuExtType_name[int32(m.GetExtType())]; !ok {
+			err := CreateMenuReqValidationError{
+				field:  "ExtType",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if len(errors) > 0 {
 		return CreateMenuReqMultiError(errors)
 	}
@@ -9193,6 +9363,10 @@ var _CreateMenuReq_BaseMenu_NotInLookup = map[protobuf.MenuBaseMenu]struct{}{
 }
 
 var _CreateMenuReq_CloseTab_NotInLookup = map[protobuf.MenuCloseTab]struct{}{
+	0: {},
+}
+
+var _CreateMenuReq_ExtType_NotInLookup = map[protobuf.MenuExtType]struct{}{
 	0: {},
 }
 
@@ -12035,24 +12209,25 @@ var _ interface {
 
 var _EmailLoginReq_EmailField_Code_Pattern = regexp.MustCompile("^[0-9]{6}$")
 
-// Validate checks the field values on ListUserAuthorityMenuTreeReply_MenuMeta
-// with the rules defined in the proto definition for this message. If any
-// rules are violated, the first error encountered is returned, or nil if
-// there are no violations.
-func (m *ListUserAuthorityMenuTreeReply_MenuMeta) Validate() error {
+// Validate checks the field values on
+// ListUserAuthorityMenuTreeReply_Deprecated_MenuMeta with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *ListUserAuthorityMenuTreeReply_Deprecated_MenuMeta) Validate() error {
 	return m.validate(false)
 }
 
 // ValidateAll checks the field values on
-// ListUserAuthorityMenuTreeReply_MenuMeta with the rules defined in the proto
-// definition for this message. If any rules are violated, the result is a
-// list of violation errors wrapped in
-// ListUserAuthorityMenuTreeReply_MenuMetaMultiError, or nil if none found.
-func (m *ListUserAuthorityMenuTreeReply_MenuMeta) ValidateAll() error {
+// ListUserAuthorityMenuTreeReply_Deprecated_MenuMeta with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in
+// ListUserAuthorityMenuTreeReply_Deprecated_MenuMetaMultiError, or nil if
+// none found.
+func (m *ListUserAuthorityMenuTreeReply_Deprecated_MenuMeta) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ListUserAuthorityMenuTreeReply_MenuMeta) validate(all bool) error {
+func (m *ListUserAuthorityMenuTreeReply_Deprecated_MenuMeta) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -12094,20 +12269,20 @@ func (m *ListUserAuthorityMenuTreeReply_MenuMeta) validate(all bool) error {
 	// no validation rules for HidePathForChildren
 
 	if len(errors) > 0 {
-		return ListUserAuthorityMenuTreeReply_MenuMetaMultiError(errors)
+		return ListUserAuthorityMenuTreeReply_Deprecated_MenuMetaMultiError(errors)
 	}
 
 	return nil
 }
 
-// ListUserAuthorityMenuTreeReply_MenuMetaMultiError is an error wrapping
-// multiple validation errors returned by
-// ListUserAuthorityMenuTreeReply_MenuMeta.ValidateAll() if the designated
-// constraints aren't met.
-type ListUserAuthorityMenuTreeReply_MenuMetaMultiError []error
+// ListUserAuthorityMenuTreeReply_Deprecated_MenuMetaMultiError is an error
+// wrapping multiple validation errors returned by
+// ListUserAuthorityMenuTreeReply_Deprecated_MenuMeta.ValidateAll() if the
+// designated constraints aren't met.
+type ListUserAuthorityMenuTreeReply_Deprecated_MenuMetaMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ListUserAuthorityMenuTreeReply_MenuMetaMultiError) Error() string {
+func (m ListUserAuthorityMenuTreeReply_Deprecated_MenuMetaMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -12116,12 +12291,13 @@ func (m ListUserAuthorityMenuTreeReply_MenuMetaMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ListUserAuthorityMenuTreeReply_MenuMetaMultiError) AllErrors() []error { return m }
+func (m ListUserAuthorityMenuTreeReply_Deprecated_MenuMetaMultiError) AllErrors() []error { return m }
 
-// ListUserAuthorityMenuTreeReply_MenuMetaValidationError is the validation
-// error returned by ListUserAuthorityMenuTreeReply_MenuMeta.Validate if the
+// ListUserAuthorityMenuTreeReply_Deprecated_MenuMetaValidationError is the
+// validation error returned by
+// ListUserAuthorityMenuTreeReply_Deprecated_MenuMeta.Validate if the
 // designated constraints aren't met.
-type ListUserAuthorityMenuTreeReply_MenuMetaValidationError struct {
+type ListUserAuthorityMenuTreeReply_Deprecated_MenuMetaValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -12129,24 +12305,30 @@ type ListUserAuthorityMenuTreeReply_MenuMetaValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListUserAuthorityMenuTreeReply_MenuMetaValidationError) Field() string { return e.field }
+func (e ListUserAuthorityMenuTreeReply_Deprecated_MenuMetaValidationError) Field() string {
+	return e.field
+}
 
 // Reason function returns reason value.
-func (e ListUserAuthorityMenuTreeReply_MenuMetaValidationError) Reason() string { return e.reason }
+func (e ListUserAuthorityMenuTreeReply_Deprecated_MenuMetaValidationError) Reason() string {
+	return e.reason
+}
 
 // Cause function returns cause value.
-func (e ListUserAuthorityMenuTreeReply_MenuMetaValidationError) Cause() error { return e.cause }
+func (e ListUserAuthorityMenuTreeReply_Deprecated_MenuMetaValidationError) Cause() error {
+	return e.cause
+}
 
 // Key function returns key value.
-func (e ListUserAuthorityMenuTreeReply_MenuMetaValidationError) Key() bool { return e.key }
+func (e ListUserAuthorityMenuTreeReply_Deprecated_MenuMetaValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListUserAuthorityMenuTreeReply_MenuMetaValidationError) ErrorName() string {
-	return "ListUserAuthorityMenuTreeReply_MenuMetaValidationError"
+func (e ListUserAuthorityMenuTreeReply_Deprecated_MenuMetaValidationError) ErrorName() string {
+	return "ListUserAuthorityMenuTreeReply_Deprecated_MenuMetaValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ListUserAuthorityMenuTreeReply_MenuMetaValidationError) Error() string {
+func (e ListUserAuthorityMenuTreeReply_Deprecated_MenuMetaValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -12158,14 +12340,14 @@ func (e ListUserAuthorityMenuTreeReply_MenuMetaValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListUserAuthorityMenuTreeReply_MenuMeta.%s: %s%s",
+		"invalid %sListUserAuthorityMenuTreeReply_Deprecated_MenuMeta.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListUserAuthorityMenuTreeReply_MenuMetaValidationError{}
+var _ error = ListUserAuthorityMenuTreeReply_Deprecated_MenuMetaValidationError{}
 
 var _ interface {
 	Field() string
@@ -12173,7 +12355,328 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListUserAuthorityMenuTreeReply_MenuMetaValidationError{}
+} = ListUserAuthorityMenuTreeReply_Deprecated_MenuMetaValidationError{}
+
+// Validate checks the field values on
+// ListUserAuthorityMenuTreeReply_Deprecated_Menu with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *ListUserAuthorityMenuTreeReply_Deprecated_Menu) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on
+// ListUserAuthorityMenuTreeReply_Deprecated_Menu with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in
+// ListUserAuthorityMenuTreeReply_Deprecated_MenuMultiError, or nil if none found.
+func (m *ListUserAuthorityMenuTreeReply_Deprecated_Menu) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListUserAuthorityMenuTreeReply_Deprecated_Menu) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Name
+
+	// no validation rules for Path
+
+	// no validation rules for Component
+
+	// no validation rules for Redirect
+
+	// no validation rules for FullPath
+
+	// no validation rules for Alias
+
+	// no validation rules for CaseSensitive
+
+	if all {
+		switch v := interface{}(m.GetMeta()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ListUserAuthorityMenuTreeReply_Deprecated_MenuValidationError{
+					field:  "Meta",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ListUserAuthorityMenuTreeReply_Deprecated_MenuValidationError{
+					field:  "Meta",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetMeta()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ListUserAuthorityMenuTreeReply_Deprecated_MenuValidationError{
+				field:  "Meta",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	for idx, item := range m.GetChildren() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListUserAuthorityMenuTreeReply_Deprecated_MenuValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListUserAuthorityMenuTreeReply_Deprecated_MenuValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListUserAuthorityMenuTreeReply_Deprecated_MenuValidationError{
+					field:  fmt.Sprintf("Children[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListUserAuthorityMenuTreeReply_Deprecated_MenuMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListUserAuthorityMenuTreeReply_Deprecated_MenuMultiError is an error
+// wrapping multiple validation errors returned by
+// ListUserAuthorityMenuTreeReply_Deprecated_Menu.ValidateAll() if the
+// designated constraints aren't met.
+type ListUserAuthorityMenuTreeReply_Deprecated_MenuMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListUserAuthorityMenuTreeReply_Deprecated_MenuMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListUserAuthorityMenuTreeReply_Deprecated_MenuMultiError) AllErrors() []error { return m }
+
+// ListUserAuthorityMenuTreeReply_Deprecated_MenuValidationError is the
+// validation error returned by
+// ListUserAuthorityMenuTreeReply_Deprecated_Menu.Validate if the designated
+// constraints aren't met.
+type ListUserAuthorityMenuTreeReply_Deprecated_MenuValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListUserAuthorityMenuTreeReply_Deprecated_MenuValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListUserAuthorityMenuTreeReply_Deprecated_MenuValidationError) Reason() string {
+	return e.reason
+}
+
+// Cause function returns cause value.
+func (e ListUserAuthorityMenuTreeReply_Deprecated_MenuValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListUserAuthorityMenuTreeReply_Deprecated_MenuValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListUserAuthorityMenuTreeReply_Deprecated_MenuValidationError) ErrorName() string {
+	return "ListUserAuthorityMenuTreeReply_Deprecated_MenuValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListUserAuthorityMenuTreeReply_Deprecated_MenuValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListUserAuthorityMenuTreeReply_Deprecated_Menu.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListUserAuthorityMenuTreeReply_Deprecated_MenuValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListUserAuthorityMenuTreeReply_Deprecated_MenuValidationError{}
+
+// Validate checks the field values on ListUserAuthorityMenuTreeReply_Meta with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the first error encountered is returned, or nil if there are
+// no violations.
+func (m *ListUserAuthorityMenuTreeReply_Meta) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListUserAuthorityMenuTreeReply_Meta
+// with the rules defined in the proto definition for this message. If any
+// rules are violated, the result is a list of violation errors wrapped in
+// ListUserAuthorityMenuTreeReply_MetaMultiError, or nil if none found.
+func (m *ListUserAuthorityMenuTreeReply_Meta) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListUserAuthorityMenuTreeReply_Meta) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Title
+
+	if m.IgnoreKeepAlive != nil {
+		// no validation rules for IgnoreKeepAlive
+	}
+
+	if m.Icon != nil {
+		// no validation rules for Icon
+	}
+
+	if m.FrameSrc != nil {
+		// no validation rules for FrameSrc
+	}
+
+	if m.HideBreadcrumb != nil {
+		// no validation rules for HideBreadcrumb
+	}
+
+	if m.HideMenu != nil {
+		// no validation rules for HideMenu
+	}
+
+	if m.OrderNo != nil {
+		// no validation rules for OrderNo
+	}
+
+	if m.CurrentActiveMenu != nil {
+		// no validation rules for CurrentActiveMenu
+	}
+
+	if len(errors) > 0 {
+		return ListUserAuthorityMenuTreeReply_MetaMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListUserAuthorityMenuTreeReply_MetaMultiError is an error wrapping multiple
+// validation errors returned by
+// ListUserAuthorityMenuTreeReply_Meta.ValidateAll() if the designated
+// constraints aren't met.
+type ListUserAuthorityMenuTreeReply_MetaMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListUserAuthorityMenuTreeReply_MetaMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListUserAuthorityMenuTreeReply_MetaMultiError) AllErrors() []error { return m }
+
+// ListUserAuthorityMenuTreeReply_MetaValidationError is the validation error
+// returned by ListUserAuthorityMenuTreeReply_Meta.Validate if the designated
+// constraints aren't met.
+type ListUserAuthorityMenuTreeReply_MetaValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListUserAuthorityMenuTreeReply_MetaValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListUserAuthorityMenuTreeReply_MetaValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListUserAuthorityMenuTreeReply_MetaValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListUserAuthorityMenuTreeReply_MetaValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListUserAuthorityMenuTreeReply_MetaValidationError) ErrorName() string {
+	return "ListUserAuthorityMenuTreeReply_MetaValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListUserAuthorityMenuTreeReply_MetaValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListUserAuthorityMenuTreeReply_Meta.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListUserAuthorityMenuTreeReply_MetaValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListUserAuthorityMenuTreeReply_MetaValidationError{}
 
 // Validate checks the field values on ListUserAuthorityMenuTreeReply_Menu with
 // the rules defined in the proto definition for this message. If any rules
@@ -12203,14 +12706,6 @@ func (m *ListUserAuthorityMenuTreeReply_Menu) validate(all bool) error {
 	// no validation rules for Path
 
 	// no validation rules for Component
-
-	// no validation rules for Redirect
-
-	// no validation rules for FullPath
-
-	// no validation rules for Alias
-
-	// no validation rules for CaseSensitive
 
 	if all {
 		switch v := interface{}(m.GetMeta()).(type) {
@@ -12273,6 +12768,10 @@ func (m *ListUserAuthorityMenuTreeReply_Menu) validate(all bool) error {
 			}
 		}
 
+	}
+
+	if m.Redirect != nil {
+		// no validation rules for Redirect
 	}
 
 	if len(errors) > 0 {
@@ -14292,6 +14791,32 @@ func (m *UpdateMenuReq_Data) validate(all bool) error {
 
 	}
 
+	if m.ExtType != nil {
+
+		if _, ok := _UpdateMenuReq_Data_ExtType_NotInLookup[m.GetExtType()]; ok {
+			err := UpdateMenuReq_DataValidationError{
+				field:  "ExtType",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.MenuExtType_name[int32(m.GetExtType())]; !ok {
+			err := UpdateMenuReq_DataValidationError{
+				field:  "ExtType",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if len(errors) > 0 {
 		return UpdateMenuReq_DataMultiError(errors)
 	}
@@ -14389,6 +14914,10 @@ var _UpdateMenuReq_Data_BaseMenu_NotInLookup = map[protobuf.MenuBaseMenu]struct{
 }
 
 var _UpdateMenuReq_Data_CloseTab_NotInLookup = map[protobuf.MenuCloseTab]struct{}{
+	0: {},
+}
+
+var _UpdateMenuReq_Data_ExtType_NotInLookup = map[protobuf.MenuExtType]struct{}{
 	0: {},
 }
 

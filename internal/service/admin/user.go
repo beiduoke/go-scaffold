@@ -2,6 +2,7 @@ package admin
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	v1 "github.com/beiduoke/go-scaffold/api/admin/v1"
@@ -272,47 +273,33 @@ func (s *AdminService) ListUserMenuTree(ctx context.Context, in *emptypb.Empty) 
 
 // 将用户菜单转换树形结构
 func (s *AdminService) UserMenuToReplyMenu(menu *biz.Menu) *v1.ListUserAuthorityMenuTreeReply_Menu {
+
+	meta := &v1.ListUserAuthorityMenuTreeReply_Meta{
+		// 路由title  一般必填
+		Title: menu.Title,
+		// 图标，也是菜单图标
+		Icon: &menu.Icon,
+		// 菜单排序，只对第一级有效
+		OrderNo: &menu.Sort,
+	}
+	if keepAlive := menu.KeepAlive == int32(protobuf.MenuKeepAlive_MENU_KEEP_ALIVE_NO); keepAlive {
+		meta.IgnoreKeepAlive = &keepAlive
+	}
+	if hideMenu := (menu.Hidden == int32(protobuf.MenuHidden_MENU_HIDDEN_YES)); hideMenu {
+		meta.HideMenu = &hideMenu
+	}
+	component := menu.Component
+	if menu.ExtType == int32(protobuf.MenuExtType_MENU_EXT_TYPE_IFRAME) {
+		meta.FrameSrc = &menu.Path
+		menu.Path = menu.Name
+	}
+
 	return &v1.ListUserAuthorityMenuTreeReply_Menu{
 		Name:      menu.Name,
 		Path:      menu.Path,
-		Component: menu.Component,
+		Component: component,
 		Children:  make([]*v1.ListUserAuthorityMenuTreeReply_Menu, 0),
-		Meta: &v1.ListUserAuthorityMenuTreeReply_MenuMeta{
-			// 路由title  一般必填
-			Title: menu.Title,
-			// 动态路由可打开Tab页数
-			DynamicLevel: 100,
-			// 动态路由的实际Path, 即去除路由的动态部分;
-			// RealPath: menu.RealPath,
-			// 是否忽略KeepAlive缓存
-			IgnoreKeepAlive: menu.KeepAlive == int32(protobuf.MenuKeepAlive_MENU_KEEP_ALIVE_NO),
-			// 是否固定标签
-			Affix: false,
-			// 图标，也是菜单图标
-			Icon: menu.Icon,
-			// 内嵌iframe的地址
-			// FrameSrc: menu.FrameSrc,
-			// 指定该路由切换的动画名
-			// TransitionName: menu.TransitionName,
-			// 隐藏该路由在面包屑上面的显示
-			HideBreadcrumb: true,
-			// 如果该路由会携带参数，且需要在tab页上面显示。则需要设置为true
-			CarryParam: true,
-			// 隐藏所有子菜单
-			HideChildrenInMenu: false,
-			// 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
-			// CurrentActiveMenu: menu.CurrentActiveMenu,
-			// 当前路由不再标签页显示
-			HideTab: false,
-			// 当前路由不再菜单显示
-			HideMenu: (menu.Hidden == int32(protobuf.MenuHidden_MENU_HIDDEN_YES)),
-			// 菜单排序，只对第一级有效
-			OrderNo: menu.Sort,
-			// 忽略路由。用于在ROUTE_MAPPING以及BACK权限模式下，生成对应的菜单而忽略路由。2.5.3以上版本有效
-			IgnoreRoute: false,
-			// 是否在子级菜单的完整path中忽略本级path。2.5.3以上版本有效
-			HidePathForChildren: false,
-		},
+		Meta:      meta,
 	}
 }
 
@@ -326,6 +313,14 @@ func (s *AdminService) UserMenuTransformTree(menus []*biz.Menu, parentID uint) [
 		if menu.ParentID == parentID {
 			m := s.UserMenuToReplyMenu(menu)
 			m.Children = append(m.Children, s.UserMenuTransformTree(menus, menu.ID)...)
+			if num := len(m.Children); num > 0 {
+				redirect := m.Path
+				if !strings.HasPrefix(m.Children[0].Path, "/") {
+					redirect += "/"
+				}
+				redirect += m.Children[0].Path
+				m.Redirect = &redirect
+			}
 			list = append(list, m)
 		}
 	}

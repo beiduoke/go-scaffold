@@ -41,6 +41,7 @@ func (r *MenuRepo) toModel(d *biz.Menu) *SysMenu {
 			KeepAlive: d.KeepAlive,
 			BaseMenu:  d.BaseMenu,
 			CloseTab:  d.CloseTab,
+			ExtType:   d.ExtType,
 		},
 		Parameters: make([]SysMenuParameter, 0, len(d.Parameters)),
 		Buttons:    make([]SysMenuButton, 0, len(d.Buttons)),
@@ -85,6 +86,7 @@ func (r *MenuRepo) toBiz(d *SysMenu) *biz.Menu {
 		KeepAlive:  d.Meta.KeepAlive,
 		BaseMenu:   d.Meta.BaseMenu,
 		CloseTab:   d.Meta.CloseTab,
+		ExtType:    d.Meta.ExtType,
 		Parameters: make([]*biz.MenuParameter, 0, len(d.Parameters)),
 		Buttons:    make([]*biz.MenuButton, 0, len(d.Buttons)),
 	}

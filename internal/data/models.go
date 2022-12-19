@@ -130,6 +130,7 @@ type SysMeta struct {
 	KeepAlive int32  `gorm:"type:tinyint(1);column:keep_alive;not null;default:1;comment:是否缓存 0 无指定 1 是 2 否"`
 	BaseMenu  int32  `gorm:"type:tinyint(1);column:base_menu;not null;default:1;comment:基础菜单 0 无指定 1 是 2 否"`
 	CloseTab  int32  `gorm:"type:tinyint(1);column:close_tab;not null;default:1;comment:自动关闭TAB  0 无指定 1 是  2 否"`
+	ExtType   int32  `gorm:"type:tinyint(1);column:ext_type;not null;default:1;comment:外链类型  0 无指定 1 无外链 2 新窗口  3 内框架"`
 }
 
 // SysAuthorityMenu 角色菜单-Many2Many 替换

@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
@@ -28,6 +29,7 @@ type Menu struct {
 	KeepAlive  int32
 	BaseMenu   int32
 	CloseTab   int32
+	ExtType    int32
 	Children   []*Menu
 	Parameters []*MenuParameter
 	Buttons    []*MenuButton
@@ -100,10 +102,12 @@ func (uc *MenuUsecase) Update(ctx context.Context, g *Menu) error {
 	// 清理原始数据
 	menu.Parameters = []*MenuParameter{}
 	menu.Buttons = []*MenuButton{}
+	menu.Component = ""
 	// 新数据合并到源数据
 	if err := mergo.Merge(menu, *g, mergo.WithOverride); err != nil {
 		return errors.Errorf("数据合并失败：%v", err)
 	}
+	fmt.Println(menu.Component, "384837373737373737337373737")
 	_, err := uc.repo.Update(ctx, menu)
 	return err
 }

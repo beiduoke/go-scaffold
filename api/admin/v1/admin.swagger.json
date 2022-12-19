@@ -1932,29 +1932,16 @@
         }
       }
     },
-    "ListUserAuthorityMenuTreeReplyMenuMeta": {
+    "ListUserAuthorityMenuTreeReplyMeta": {
       "type": "object",
       "properties": {
         "title": {
           "type": "string",
           "title": "路由title  一般必填"
         },
-        "dynamicLevel": {
-          "type": "integer",
-          "format": "int32",
-          "title": "动态路由可打开Tab页数"
-        },
-        "realPath": {
-          "type": "string",
-          "title": "动态路由的实际Path, 即去除路由的动态部分;"
-        },
         "ignoreKeepAlive": {
           "type": "boolean",
           "title": "是否忽略KeepAlive缓存"
-        },
-        "affix": {
-          "type": "boolean",
-          "title": "是否固定标签"
         },
         "icon": {
           "type": "string",
@@ -1964,29 +1951,9 @@
           "type": "string",
           "title": "内嵌iframe的地址"
         },
-        "transitionName": {
-          "type": "string",
-          "title": "指定该路由切换的动画名"
-        },
         "hideBreadcrumb": {
           "type": "boolean",
           "title": "隐藏该路由在面包屑上面的显示"
-        },
-        "carryParam": {
-          "type": "boolean",
-          "title": "如果该路由会携带参数，且需要在tab页上面显示。则需要设置为true"
-        },
-        "hideChildrenInMenu": {
-          "type": "boolean",
-          "title": "隐藏所有子菜单"
-        },
-        "currentActiveMenu": {
-          "type": "string",
-          "title": "当前激活的菜单。用于配置详情页时左侧激活的菜单路径"
-        },
-        "hideTab": {
-          "type": "boolean",
-          "title": "当前路由不再标签页显示"
         },
         "hideMenu": {
           "type": "boolean",
@@ -1997,13 +1964,9 @@
           "format": "int32",
           "title": "菜单排序，只对第一级有效"
         },
-        "ignoreRoute": {
-          "type": "boolean",
-          "title": "忽略路由。用于在ROUTE_MAPPING以及BACK权限模式下，生成对应的菜单而忽略路由。2.5.3以上版本有效"
-        },
-        "hidePathForChildren": {
-          "type": "boolean",
-          "title": "是否在子级菜单的完整path中忽略本级path。2.5.3以上版本有效"
+        "currentActiveMenu": {
+          "type": "string",
+          "title": "当前激活的菜单。用于配置详情页时左侧激活的菜单路径"
         }
       }
     },
@@ -2084,6 +2047,9 @@
         },
         "closeTab": {
           "$ref": "#/definitions/protobufMenuCloseTab"
+        },
+        "extType": {
+          "$ref": "#/definitions/protobufMenuExtType"
         },
         "children": {
           "type": "array",
@@ -2168,6 +2134,16 @@
         "MENU_CLOSE_TAB_NO"
       ],
       "default": "MENU_CLOSE_TAB_UNSPECIFIED"
+    },
+    "protobufMenuExtType": {
+      "type": "string",
+      "enum": [
+        "MENU_EXT_TYPE_UNSPECIFIED",
+        "MENU_EXT_TYPE_NO",
+        "MENU_EXT_TYPE_BLANK",
+        "MENU_EXT_TYPE_IFRAME"
+      ],
+      "default": "MENU_EXT_TYPE_UNSPECIFIED"
     },
     "protobufMenuHidden": {
       "type": "string",
@@ -2561,6 +2537,9 @@
         },
         "closeTab": {
           "$ref": "#/definitions/protobufMenuCloseTab"
+        },
+        "extType": {
+          "$ref": "#/definitions/protobufMenuExtType"
         },
         "parameters": {
           "type": "array",
@@ -2983,8 +2962,7 @@
             "$ref": "#/definitions/v1ListUserAuthorityMenuTreeReplyMenu"
           }
         }
-      },
-      "title": "回应 - 获取用户权限角色菜单树形"
+      }
     },
     "v1ListUserAuthorityMenuTreeReplyMenu": {
       "type": "object",
@@ -3001,17 +2979,8 @@
         "redirect": {
           "type": "string"
         },
-        "fullPath": {
-          "type": "string"
-        },
-        "alias": {
-          "type": "string"
-        },
-        "caseSensitive": {
-          "type": "boolean"
-        },
         "meta": {
-          "$ref": "#/definitions/ListUserAuthorityMenuTreeReplyMenuMeta"
+          "$ref": "#/definitions/ListUserAuthorityMenuTreeReplyMeta"
         },
         "children": {
           "type": "array",
@@ -3350,6 +3319,9 @@
         },
         "closeTab": {
           "$ref": "#/definitions/protobufMenuCloseTab"
+        },
+        "extType": {
+          "$ref": "#/definitions/protobufMenuExtType"
         },
         "parameters": {
           "type": "array",

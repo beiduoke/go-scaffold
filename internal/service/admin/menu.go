@@ -30,6 +30,7 @@ func TransformMenu(data *biz.Menu) *v1.Menu {
 		KeepAlive:  protobuf.MenuKeepAlive(data.KeepAlive),
 		BaseMenu:   protobuf.MenuBaseMenu(data.BaseMenu),
 		CloseTab:   protobuf.MenuCloseTab(data.CloseTab),
+		ExtType:    protobuf.MenuExtType(data.ExtType),
 		Children:   make([]*v1.Menu, 0),
 		Parameters: make([]*v1.MenuParameter, 0),
 		Buttons:    make([]*v1.MenuButton, 0),
@@ -102,6 +103,7 @@ func (s *AdminService) CreateMenu(ctx context.Context, in *v1.CreateMenuReq) (*v
 		KeepAlive:  int32(in.GetKeepAlive()),
 		BaseMenu:   int32(in.GetBaseMenu()),
 		CloseTab:   int32(in.GetCloseTab()),
+		ExtType:    int32(in.GetExtType()),
 		Parameters: parameters,
 		Buttons:    buttons,
 	})
@@ -151,6 +153,7 @@ func (s *AdminService) UpdateMenu(ctx context.Context, in *v1.UpdateMenuReq) (*v
 		KeepAlive:  int32(v.GetKeepAlive()),
 		BaseMenu:   int32(v.GetBaseMenu()),
 		CloseTab:   int32(v.GetCloseTab()),
+		ExtType:    int32(v.GetExtType()),
 		Parameters: parameters,
 		Buttons:    buttons,
 	})
