@@ -103,6 +103,17 @@ func (s *AdminService) DeleteAuthority(ctx context.Context, in *v1.DeleteAuthori
 	}, nil
 }
 
+// ListAuthorityMenu 获取权限角色菜单
+func (s *AdminService) ListAuthorityMenu(ctx context.Context, in *v1.ListAuthorityMenuReq) (*v1.ListAuthorityMenuReply, error) {
+	id := in.GetId()
+	menus, _ := s.authorityCase.ListMenuByID(ctx, &biz.Authority{ID: uint(id)})
+	items := make([]*v1.Menu, 0, len(menus))
+	for _, v := range menus {
+		items = append(items, TransformMenu(v))
+	}
+	return &v1.ListAuthorityMenuReply{Items: items, Total: int32(len(items))}, nil
+}
+
 // HandleAuthorityMenu 处理权限角色菜单
 func (s *AdminService) HandleAuthorityMenu(ctx context.Context, in *v1.HandleAuthorityMenuReq) (*v1.HandleAuthorityMenuReply, error) {
 	var menus []*biz.Menu
