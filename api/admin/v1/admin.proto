@@ -903,12 +903,13 @@ message DeleteAuthorityReply {
 
 // 请求 - 获取权限角色菜单
 message ListAuthorityMenuReq {
-  
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 获取权限角色菜单
 message ListAuthorityMenuReply {
-  
+  int32 total = 1;
+  repeated Menu items = 2;
 }
 
 // 请求 - 处理权限角色菜单

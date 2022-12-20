@@ -140,6 +140,12 @@ func (uc *AuthorityUsecase) Delete(ctx context.Context, g *Authority) error {
 	})
 }
 
+// HandleMenu 获取权限角色菜单
+func (uc *AuthorityUsecase) ListMenuByID(ctx context.Context, g *Authority) ([]*Menu, error) {
+	uc.log.WithContext(ctx).Infof("ListMenuByIDs: %v", g)
+	return uc.biz.authorityRepo.ListMenuByIDs(ctx, g.ID)
+}
+
 // HandleMenu 绑定菜单
 func (uc *AuthorityUsecase) HandleMenu(ctx context.Context, g *Authority) error {
 	uc.log.WithContext(ctx).Infof("HandleMenu: %v", g)

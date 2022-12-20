@@ -376,6 +376,25 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.HandleAuthorityApiReply'
     /admin/v1/authorities/{id}/menus:
+        get:
+            tags:
+                - Admin
+            description: 获取权限角色菜单
+            operationId: Admin_ListAuthorityMenu
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.ListAuthorityMenuReply'
         post:
             tags:
                 - Admin
@@ -1594,6 +1613,17 @@ components:
                     items:
                         type: integer
                         format: uint64
+        api.admin.v1.ListAuthorityMenuReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int32
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.v1.Menu'
+            description: 回应 - 获取权限角色菜单
         api.admin.v1.ListDepartmentTreeReply:
             type: object
             properties:

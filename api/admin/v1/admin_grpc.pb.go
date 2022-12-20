@@ -101,6 +101,8 @@ type AdminClient interface {
 	UpdateAuthority(ctx context.Context, in *UpdateAuthorityReq, opts ...grpc.CallOption) (*UpdateAuthorityReply, error)
 	// 删除权限角色
 	DeleteAuthority(ctx context.Context, in *DeleteAuthorityReq, opts ...grpc.CallOption) (*DeleteAuthorityReply, error)
+	// 获取权限角色菜单
+	ListAuthorityMenu(ctx context.Context, in *ListAuthorityMenuReq, opts ...grpc.CallOption) (*ListAuthorityMenuReply, error)
 	// 处理权限角色菜单
 	HandleAuthorityMenu(ctx context.Context, in *HandleAuthorityMenuReq, opts ...grpc.CallOption) (*HandleAuthorityMenuReply, error)
 	// 处理权限角色接口
@@ -430,6 +432,15 @@ func (c *adminClient) DeleteAuthority(ctx context.Context, in *DeleteAuthorityRe
 	return out, nil
 }
 
+func (c *adminClient) ListAuthorityMenu(ctx context.Context, in *ListAuthorityMenuReq, opts ...grpc.CallOption) (*ListAuthorityMenuReply, error) {
+	out := new(ListAuthorityMenuReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListAuthorityMenu", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *adminClient) HandleAuthorityMenu(ctx context.Context, in *HandleAuthorityMenuReq, opts ...grpc.CallOption) (*HandleAuthorityMenuReply, error) {
 	out := new(HandleAuthorityMenuReply)
 	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/HandleAuthorityMenu", in, out, opts...)
@@ -682,6 +693,8 @@ type AdminServer interface {
 	UpdateAuthority(context.Context, *UpdateAuthorityReq) (*UpdateAuthorityReply, error)
 	// 删除权限角色
 	DeleteAuthority(context.Context, *DeleteAuthorityReq) (*DeleteAuthorityReply, error)
+	// 获取权限角色菜单
+	ListAuthorityMenu(context.Context, *ListAuthorityMenuReq) (*ListAuthorityMenuReply, error)
 	// 处理权限角色菜单
 	HandleAuthorityMenu(context.Context, *HandleAuthorityMenuReq) (*HandleAuthorityMenuReply, error)
 	// 处理权限角色接口
@@ -821,6 +834,9 @@ func (UnimplementedAdminServer) UpdateAuthority(context.Context, *UpdateAuthorit
 }
 func (UnimplementedAdminServer) DeleteAuthority(context.Context, *DeleteAuthorityReq) (*DeleteAuthorityReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteAuthority not implemented")
+}
+func (UnimplementedAdminServer) ListAuthorityMenu(context.Context, *ListAuthorityMenuReq) (*ListAuthorityMenuReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListAuthorityMenu not implemented")
 }
 func (UnimplementedAdminServer) HandleAuthorityMenu(context.Context, *HandleAuthorityMenuReq) (*HandleAuthorityMenuReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HandleAuthorityMenu not implemented")
@@ -1450,6 +1466,24 @@ func _Admin_DeleteAuthority_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Admin_ListAuthorityMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAuthorityMenuReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).ListAuthorityMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/ListAuthorityMenu",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).ListAuthorityMenu(ctx, req.(*ListAuthorityMenuReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Admin_HandleAuthorityMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(HandleAuthorityMenuReq)
 	if err := dec(in); err != nil {
@@ -1922,6 +1956,10 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteAuthority",
 			Handler:    _Admin_DeleteAuthority_Handler,
+		},
+		{
+			MethodName: "ListAuthorityMenu",
+			Handler:    _Admin_ListAuthorityMenu_Handler,
 		},
 		{
 			MethodName: "HandleAuthorityMenu",

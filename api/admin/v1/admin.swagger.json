@@ -677,6 +677,36 @@
       }
     },
     "/admin/v1/authorities/{id}/menus": {
+      "get": {
+        "summary": "获取权限角色菜单",
+        "operationId": "Admin_ListAuthorityMenu",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListAuthorityMenuReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      },
       "post": {
         "summary": "处理权限角色菜单",
         "operationId": "Admin_HandleAuthorityMenu",
@@ -2916,6 +2946,22 @@
           }
         }
       }
+    },
+    "v1ListAuthorityMenuReply": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/adminv1Menu"
+          }
+        }
+      },
+      "title": "回应 - 获取权限角色菜单"
     },
     "v1ListDepartmentTreeReply": {
       "type": "object",
