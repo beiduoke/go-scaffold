@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
@@ -68,7 +69,7 @@ func (r *AuthorityRepo) Save(ctx context.Context, g *biz.Authority) (*biz.Author
 
 func (r *AuthorityRepo) Update(ctx context.Context, g *biz.Authority) (*biz.Authority, error) {
 	d := r.toModel(g)
-	result := r.data.DBD(ctx).Model(d).Updates(d)
+	result := r.data.DBD(ctx).Debug().Model(d).Select("*").Omit("CreatedAt").Updates(d)
 	return r.toBiz(d), result.Error
 }
 
@@ -216,20 +217,22 @@ func (r *AuthorityRepo) HandleApi(ctx context.Context, g *biz.Authority) error {
 }
 
 func (r *AuthorityRepo) ListMenuByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu, error) {
-	var authorities []*SysAuthority
-	db := r.data.DBD(ctx).Model(&SysAuthority{}).Debug()
-	db = db.Where(ids).Preload("Menus")
-	result := db.Find(&authorities, ids)
-	if err := result.Error; err != nil {
-		return nil, err
-	}
-	sysMenus, bizMenus := []SysMenu{}, []*biz.Menu{}
-	for _, v := range authorities {
-		sysMenus = append(sysMenus, v.Menus...)
-	}
+	// var authorityMenus []*SysAuthorityMenu
+	// db := r.data.DBD(ctx).Model(&SysAuthorityMenu{}).Debug()
+	// result := db.Preload("Menu").Find(&authorityMenus, "sys_authority_id in ?", ids)
+	// if err := result.Error; err != nil {
+	// 	return nil, err
+	// }
+	sysMenus, bizMenus := []*SysMenu{}, []*biz.Menu{}
+	// for _, v := range authorityMenus {
+	// 	sysMenus = append(sysMenus, &v.Menu)
+	// }
+
+	sysMenus = r.data.ListMenu(ctx)
 	var menuRepo MenuRepo
 	for _, v := range sysMenus {
-		bizMenus = append(bizMenus, menuRepo.toBiz(&v))
+		fmt.Printf("打印缓存菜单 %#v \n", v.Name)
+		bizMenus = append(bizMenus, menuRepo.toBiz(v))
 	}
 	return bizMenus, nil
 }

@@ -854,6 +854,7 @@ message CreateAuthorityReq {
   optional int32 sort = 4 [(validate.rules).int32 = {gte: 0}];
   api.protobuf.AuthorityState state = 5 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
   optional string remarks = 6 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+  // repeated uint64 menus = 7 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
 }
 
 // 回应 - 创建权限角色
@@ -872,7 +873,8 @@ message UpdateAuthorityReq {
     optional string default_router = 3 [(validate.rules).string = {min_len: 1, max_len: 100}];
     optional int32 sort = 4 [(validate.rules).int32 = {gte: 0}];
     api.protobuf.AuthorityState state = 5 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-    optional string remarks = 6 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+    optional string remarks = 6 [(validate.rules).string = {min_len: 0, max_len: 1000}];
+    // repeated uint64 menus = 7 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
   }
   Data data = 2;
 }
@@ -916,7 +918,7 @@ message ListAuthorityMenuReply {
 message HandleAuthorityMenuReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Menu {
-    uint64 menu_id = 1 [(validate.rules).uint64 = {gt: 0}];
+    uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
     repeated uint64 menu_parameter_ids = 2 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
     repeated uint64 menu_button_ids = 3 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
   }

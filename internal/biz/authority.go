@@ -88,7 +88,7 @@ func (uc *AuthorityUsecase) Update(ctx context.Context, g *Authority) error {
 		g.State = int32(pb.AuthorityState_AUTHORITY_STATE_ACTIVE)
 	}
 	// 新数据合并到源数据
-	if err := mergo.Merge(authority, *g, mergo.WithOverride); err != nil {
+	if err := mergo.Merge(authority, *g, mergo.WithOverwriteWithEmptyValue); err != nil {
 		return errors.Errorf("数据合并失败：%v", err)
 	}
 	_, err := uc.biz.authorityRepo.Update(ctx, authority)

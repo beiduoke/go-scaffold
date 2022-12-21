@@ -2,8 +2,10 @@ package data
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 	"gorm.io/gorm/clause"
@@ -109,8 +111,11 @@ func (r *MenuRepo) toBiz(d *SysMenu) *biz.Menu {
 func (r *MenuRepo) Save(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 	d := r.toModel(g)
 	d.DomainID = r.data.DomainID(ctx)
-	result := r.data.DB(ctx).Create(d).Error
-	return r.toBiz(d), result
+	result := r.data.DB(ctx).Create(d)
+	if result.Error == nil {
+		r.setCache(ctx, d)
+	}
+	return r.toBiz(d), result.Error
 }
 
 func (r *MenuRepo) Update(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
@@ -127,6 +132,10 @@ func (r *MenuRepo) Update(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 	}
 
 	result := r.data.DBD(ctx).Model(d).Updates(d)
+
+	if result.Error == nil {
+		r.setCache(ctx, d)
+	}
 	return r.toBiz(d), result.Error
 }
 
@@ -175,7 +184,11 @@ func (r *MenuRepo) ListByName(ctx context.Context, name string) ([]*biz.Menu, er
 }
 
 func (r *MenuRepo) Delete(ctx context.Context, g *biz.Menu) error {
-	return r.data.DBD(ctx).Select("Parameters", "Buttons").Delete(r.toModel(g)).Error
+	result := r.data.DBD(ctx).Select("Parameters", "Buttons").Delete(r.toModel(g))
+	if err := result.Error; err != nil {
+		return err
+	}
+	return r.data.rdb.HDel(ctx, cacheMenuKey, convert.UnitToString(g.ID)).Err()
 }
 
 func (r *MenuRepo) ListAll(ctx context.Context) (menus []*biz.Menu, err error) {
@@ -218,4 +231,24 @@ func (r *MenuRepo) ListPage(ctx context.Context, handler pagination.PaginationHa
 	}
 
 	return menus, total
+}
+
+func (r *MenuRepo) setCache(ctx context.Context, g *SysMenu) error {
+	dataStr, err := json.Marshal(g)
+	if err != nil {
+		r.log.Errorf("菜单缓存失败 %v", err)
+		return err
+	}
+	return r.data.rdb.HSet(ctx, cacheMenuKey, convert.UnitToString(g.ID), dataStr).Err()
+}
+
+func (r *MenuRepo) getCache(ctx context.Context, key string) (sysMenu *SysMenu) {
+	dataStr, err := r.data.rdb.HGet(ctx, cacheMenuKey, key).Result()
+	if err != nil {
+		return nil
+	}
+	if err := json.Unmarshal([]byte(dataStr), &sysMenu); err != nil {
+		r.log.Errorf("缓存反序列化失败 %v", err)
+	}
+	return sysMenu
 }

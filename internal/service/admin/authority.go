@@ -65,6 +65,7 @@ func (s *AdminService) CreateAuthority(ctx context.Context, in *v1.CreateAuthori
 // UpdateAuthority 创建权限角色
 func (s *AdminService) UpdateAuthority(ctx context.Context, in *v1.UpdateAuthorityReq) (*v1.UpdateAuthorityReply, error) {
 	v := in.GetData()
+
 	err := s.authorityCase.Update(ctx, &biz.Authority{
 		ID:            uint(in.GetId()),
 		Name:          v.GetName(),
@@ -127,7 +128,7 @@ func (s *AdminService) HandleAuthorityMenu(ctx context.Context, in *v1.HandleAut
 			buttons = append(buttons, &biz.MenuButton{ID: uint(v)})
 		}
 		menus = append(menus, &biz.Menu{
-			ID:         uint(v.GetMenuId()),
+			ID:         uint(v.GetId()),
 			Parameters: parameters,
 			Buttons:    buttons,
 		})

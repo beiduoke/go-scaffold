@@ -1565,7 +1565,7 @@ components:
         api.admin.v1.HandleAuthorityMenuReq_Menu:
             type: object
             properties:
-                menuId:
+                id:
                     type: integer
                     format: uint64
                 menuParameterIds:

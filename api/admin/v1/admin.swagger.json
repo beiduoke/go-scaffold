@@ -2875,7 +2875,7 @@
     "v1HandleAuthorityMenuReqMenu": {
       "type": "object",
       "properties": {
-        "menuId": {
+        "id": {
           "type": "string",
           "format": "uint64"
         },

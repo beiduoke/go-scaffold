@@ -36,7 +36,7 @@ var (
 	_ = anypb.Any{}
 	_ = sort.Sort
 
-	_ = protobuf.DepartmentState(0)
+	_ = protobuf.UserGender(0)
 )
 
 // Validate checks the field values on Auth with the rules defined in the proto
@@ -14009,10 +14009,10 @@ func (m *UpdateAuthorityReq_Data) validate(all bool) error {
 
 	if m.Remarks != nil {
 
-		if l := utf8.RuneCountInString(m.GetRemarks()); l < 1 || l > 1000 {
+		if l := utf8.RuneCountInString(m.GetRemarks()); l < 0 || l > 1000 {
 			err := UpdateAuthorityReq_DataValidationError{
 				field:  "Remarks",
-				reason: "value length must be between 1 and 1000 runes, inclusive",
+				reason: "value length must be between 0 and 1000 runes, inclusive",
 			}
 			if !all {
 				return err
@@ -14128,9 +14128,9 @@ func (m *HandleAuthorityMenuReq_Menu) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetMenuId() <= 0 {
+	if m.GetId() <= 0 {
 		err := HandleAuthorityMenuReq_MenuValidationError{
-			field:  "MenuId",
+			field:  "Id",
 			reason: "value must be greater than 0",
 		}
 		if !all {

@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/conf"
@@ -16,6 +17,10 @@ import (
 	"gorm.io/gorm"
 	gormLogger "gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
+)
+
+const (
+	cacheMenuKey = "hashSysMenu"
 )
 
 // ProviderSet is data providers.
@@ -138,6 +143,40 @@ func (d *Data) DomainID(ctx context.Context) uint {
 
 func (d *Data) Domain(ctx context.Context) string {
 	return authz.ParseFromContext(ctx).GetDomain()
+}
+
+func (d *Data) ListMenu(ctx context.Context) (menus []*SysMenu) {
+	if l, _ := d.rdb.HLen(ctx, cacheMenuKey).Result(); l > 0 {
+		menuMap, _ := d.rdb.HGetAll(ctx, cacheMenuKey).Result()
+		for _, v := range menuMap {
+			sysMenu := SysMenu{}
+			err := json.Unmarshal([]byte(v), &sysMenu)
+			if err != nil {
+				d.log.Errorf("菜单缓存反序列失败 %v", err)
+				continue
+			}
+			menus = append(menus, &sysMenu)
+		}
+	} else {
+		result := d.DB(ctx).Find(&menus)
+		if result.Error != nil {
+			return nil
+		}
+		menuMap := make(map[string]interface{})
+		for _, v := range menus {
+			if menuStr, err := json.Marshal(v); err != nil {
+				d.log.Errorf("菜单缓存序列化失败 %v", err)
+				continue
+			} else {
+				menuMap[convert.UnitToString(v.ID)] = string(menuStr)
+			}
+		}
+		if err := d.rdb.HSet(ctx, cacheMenuKey, menuMap).Err(); err != nil {
+			d.log.Errorf("菜单缓存失败 %v", err)
+		}
+	}
+
+	return menus
 }
 
 // NewDB gorm Connecting to a Database
