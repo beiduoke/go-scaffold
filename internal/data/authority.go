@@ -3,7 +3,6 @@ package data
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
@@ -15,13 +14,15 @@ import (
 type AuthorityRepo struct {
 	data *Data
 	log  *log.Helper
+	menu biz.MenuRepo
 }
 
 // NewAuthorityRepo .
-func NewAuthorityRepo(logger log.Logger, data *Data) biz.AuthorityRepo {
+func NewAuthorityRepo(logger log.Logger, data *Data, menu biz.MenuRepo) biz.AuthorityRepo {
 	return &AuthorityRepo{
 		data: data,
 		log:  log.NewHelper(logger),
+		menu: menu,
 	}
 }
 
@@ -216,23 +217,59 @@ func (r *AuthorityRepo) HandleApi(ctx context.Context, g *biz.Authority) error {
 	return err
 }
 
+// 获取指定权限菜单列表
 func (r *AuthorityRepo) ListMenuByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu, error) {
-	// var authorityMenus []*SysAuthorityMenu
-	// db := r.data.DBD(ctx).Model(&SysAuthorityMenu{}).Debug()
-	// result := db.Preload("Menu").Find(&authorityMenus, "sys_authority_id in ?", ids)
-	// if err := result.Error; err != nil {
-	// 	return nil, err
-	// }
-	sysMenus, bizMenus := []*SysMenu{}, []*biz.Menu{}
-	// for _, v := range authorityMenus {
-	// 	sysMenus = append(sysMenus, &v.Menu)
-	// }
-
-	sysMenus = r.data.ListMenu(ctx)
-	var menuRepo MenuRepo
-	for _, v := range sysMenus {
-		fmt.Printf("打印缓存菜单 %#v \n", v.Name)
-		bizMenus = append(bizMenus, menuRepo.toBiz(v))
+	var authorityMenus []*SysAuthorityMenu
+	db := r.data.DBD(ctx).Model(&SysAuthorityMenu{})
+	result := db.Find(&authorityMenus, "sys_authority_id in ?", ids)
+	if err := result.Error; err != nil {
+		return nil, err
 	}
-	return bizMenus, nil
+	bizAllMenus, err := r.menu.ListAll(ctx)
+	bizMenus := make([]*biz.Menu, 0, len(authorityMenus))
+	for _, menu := range bizAllMenus {
+		for _, authMenu := range authorityMenus {
+			if authMenu.MenuID == menu.ID {
+				bizMenus = append(bizMenus, menu)
+				continue
+			}
+		}
+	}
+	return bizMenus, err
+}
+
+// 获取指定权限菜单列表-返回父级菜单
+func (r *AuthorityRepo) ListMenuAndParentByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu, error) {
+	var authorityMenus []*SysAuthorityMenu
+	db := r.data.DBD(ctx).Model(&SysAuthorityMenu{})
+	result := db.Find(&authorityMenus, "sys_authority_id in ?", ids)
+	if err := result.Error; err != nil {
+		return nil, err
+	}
+	bizAllMenus, _ := r.menu.ListAll(ctx)
+	menuIds := []uint{}
+	for _, v := range authorityMenus {
+		menuIds = append(menuIds, v.MenuID)
+	}
+	return authorityMenuRecursiveParent(bizAllMenus, menuIds...), nil
+}
+
+// 根据ID递归查询父级菜单
+func authorityMenuRecursiveParent(menus []*biz.Menu, ids ...uint) []*biz.Menu {
+	result, mid := []*biz.Menu{}, map[uint]uint{}
+	for _, v := range menus {
+		for _, id := range ids {
+			if _, o := mid[v.ID]; v.ID == id && !o {
+				mid[v.ID] = v.ID
+				result = append(result, v)
+				for _, m := range authorityMenuRecursiveParent(menus, v.ParentID) {
+					if _, ok := mid[m.ID]; !ok {
+						mid[m.ID] = m.ID
+						result = append(result, m)
+					}
+				}
+			}
+		}
+	}
+	return result
 }

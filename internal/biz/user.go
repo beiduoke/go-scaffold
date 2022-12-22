@@ -303,13 +303,24 @@ func (ac *UserUsecase) ListAuthorityAll(ctx context.Context, g *User) (authoriti
 
 // ListUserAuthorityMenuAll 用户权限角色菜单列表(包含权限标识)
 func (ac *UserUsecase) ListAuthorityMenuAll(ctx context.Context, g *User) ([]*Menu, error) {
-	authorityIds := make([]uint, 0)
-	for _, v := range g.Authorities {
-		authorityIds = append(authorityIds, v.ID)
-	}
-	if len(authorityIds) < 1 {
-		return nil, errors.Errorf("查询权限不能为空")
+	authorityIds, err := ac.ListAuthorityID(ctx, g)
+	if err != nil {
+		return nil, errors.Errorf("用户权限角色查询失败 %v", err)
 	}
 
-	return ac.biz.authorityRepo.ListMenuByIDs(ctx, authorityIds...)
+	if len(g.Authorities) < 1 {
+		return ac.biz.authorityRepo.ListMenuAndParentByIDs(ctx, authorityIds...)
+	}
+
+	authorityIdsReq := []uint{}
+	for _, v := range g.Authorities {
+		for _, a := range authorityIds {
+			if a == v.ID {
+				authorityIdsReq = append(authorityIdsReq, v.ID)
+				break
+			}
+		}
+	}
+
+	return ac.biz.authorityRepo.ListMenuAndParentByIDs(ctx, authorityIdsReq...)
 }

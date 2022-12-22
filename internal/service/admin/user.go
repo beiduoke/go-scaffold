@@ -329,30 +329,11 @@ func (s *AdminService) UserMenuTransformTree(menus []*biz.Menu, parentID uint) [
 
 // 获取权限角色菜单树形列表
 func (s *AdminService) ListUserAuthorityMenuTree(ctx context.Context, in *v1.ListUserAuthorityMenuTreeReq) (*v1.ListUserAuthorityMenuTreeReply, error) {
-	id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
-	authorityIds, err := s.userCase.ListAuthorityID(ctx, &biz.User{ID: id})
-	if err != nil {
-		return nil, v1.ErrorUserAuthorityFindFail("用户权限角色查询失败 %v", err)
+	var authorities []*biz.Authority
+	if authorityId := in.GetAuthorityId(); authorityId > 0 {
+		authorities = append(authorities, &biz.Authority{ID: uint(authorityId)})
 	}
-	authorityModels := make([]*biz.Authority, 0)
-	if in.GetAuthorityId() > 0 {
-		authId := uint(in.GetAuthorityId())
-		isExit := false
-		for _, v := range authorityIds {
-			if v == authId {
-				isExit = true
-				authorityModels = []*biz.Authority{{ID: v}}
-				break
-			}
-		}
-		if !isExit {
-			return nil, v1.ErrorUserAuthorityFindFail("用户权限角色不存在")
-		}
-	}
-	for _, v := range authorityIds {
-		authorityModels = append(authorityModels, &biz.Authority{ID: v})
-	}
-	menuModels, _ := s.userCase.ListAuthorityMenuAll(ctx, &biz.User{ID: id, Authorities: authorityModels})
+	menuModels, _ := s.userCase.ListAuthorityMenuAll(ctx, &biz.User{ID: convert.StringToUint(authz.ParseFromContext(ctx).GetUser()), Authorities: authorities})
 	return &v1.ListUserAuthorityMenuTreeReply{
 		Items: s.UserMenuTransformTree(menuModels, 0),
 	}, nil
@@ -360,30 +341,11 @@ func (s *AdminService) ListUserAuthorityMenuTree(ctx context.Context, in *v1.Lis
 
 // 获取权限角色权限列表
 func (s *AdminService) ListUserAuthorityPermission(ctx context.Context, in *v1.ListUserAuthorityPermissionReq) (*v1.ListUserAuthorityPermissionReply, error) {
-	id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
-	authorityIds, err := s.userCase.ListAuthorityID(ctx, &biz.User{ID: id})
-	if err != nil {
-		return nil, v1.ErrorUserAuthorityFindFail("用户权限角色查询失败 %v", err)
+	var authorities []*biz.Authority
+	if authorityId := in.GetAuthorityId(); authorityId > 0 {
+		authorities = append(authorities, &biz.Authority{ID: uint(authorityId)})
 	}
-	authorityModels := make([]*biz.Authority, 0)
-	if in.GetAuthorityId() > 0 {
-		authId := uint(in.GetAuthorityId())
-		isExit := false
-		for _, v := range authorityIds {
-			if v == authId {
-				isExit = true
-				authorityModels = []*biz.Authority{{ID: v}}
-				break
-			}
-		}
-		if !isExit {
-			return nil, v1.ErrorUserAuthorityFindFail("用户权限角色不存在")
-		}
-	}
-	for _, v := range authorityIds {
-		authorityModels = append(authorityModels, &biz.Authority{ID: v})
-	}
-	menuModels, _ := s.userCase.ListAuthorityMenuAll(ctx, &biz.User{ID: id, Authorities: authorityModels})
+	menuModels, _ := s.userCase.ListAuthorityMenuAll(ctx, &biz.User{ID: convert.StringToUint(authz.ParseFromContext(ctx).GetUser()), Authorities: authorities})
 	perms := make([]string, 0)
 	for _, v := range menuModels {
 		perms = append(perms, v.Permission)

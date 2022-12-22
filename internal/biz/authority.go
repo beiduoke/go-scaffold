@@ -43,6 +43,7 @@ type AuthorityRepo interface {
 	HandleMenu(context.Context, *Authority) error
 	HandleApi(context.Context, *Authority) error
 	ListMenuByIDs(context.Context, ...uint) ([]*Menu, error)
+	ListMenuAndParentByIDs(context.Context, ...uint) ([]*Menu, error)
 }
 
 // AuthorityUsecase is a Authority usecase.
