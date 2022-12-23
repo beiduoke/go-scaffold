@@ -36,8 +36,8 @@ func wireApp(confServer *conf.Server, auth *conf.Auth, confData *conf.Data, logg
 		return nil, nil, err
 	}
 	transaction := data.NewTransaction(dataData)
-	domainRepo := data.NewDomainRepo(logger, dataData)
 	menuRepo := data.NewMenuRepo(dataData, logger)
+	domainRepo := data.NewDomainRepo(logger, dataData, menuRepo)
 	authorityRepo := data.NewAuthorityRepo(logger, dataData, menuRepo)
 	userRepo := data.NewUserRepo(logger, dataData)
 	bizBiz := biz.NewBiz(logger, transaction, iEnforcer, domainRepo, authorityRepo, userRepo)

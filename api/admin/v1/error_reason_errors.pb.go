@@ -215,6 +215,18 @@ func ErrorDomainDeleteFail(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_DOMAIN_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
+func IsDomainHandleMenuFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_DOMAIN_HANDLE_MENU_FAIL.String() && e.Code == 400
+}
+
+func ErrorDomainHandleMenuFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_DOMAIN_HANDLE_MENU_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
 func IsAuthorityNotFound(err error) bool {
 	if err == nil {
 		return false

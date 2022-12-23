@@ -12,13 +12,15 @@ import (
 type DomainRepo struct {
 	data *Data
 	log  *log.Helper
+	menu biz.MenuRepo
 }
 
 // NewDomainRepo .
-func NewDomainRepo(logger log.Logger, data *Data) biz.DomainRepo {
+func NewDomainRepo(logger log.Logger, data *Data, menu biz.MenuRepo) biz.DomainRepo {
 	return &DomainRepo{
 		data: data,
 		log:  log.NewHelper(logger),
+		menu: menu,
 	}
 }
 
@@ -157,4 +159,37 @@ func (r *DomainRepo) ListPage(ctx context.Context, handler pagination.Pagination
 	}
 
 	return domains, total
+}
+
+func (r *DomainRepo) HandleMenu(ctx context.Context, g *biz.Domain) error {
+	sysDomain := r.toModel(g)
+	err := r.data.DB(ctx).Model(sysDomain).Association("Menus").Clear()
+	if err != nil {
+		return err
+	}
+	sysMenu := make([]*SysMenu, 0)
+
+	for _, v := range g.Menus {
+		sysMenu = append(sysMenu, r.menu.(*MenuRepo).toModel(v))
+	}
+
+	return r.data.DB(ctx).Model(&sysDomain).Association("Menus").Replace(sysMenu)
+}
+
+// 获取指定权限菜单列表
+func (r *DomainRepo) ListMenuByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu, error) {
+	var sysDomains []*SysDomain
+	db := r.data.DBD(ctx).Model(&SysDomain{})
+	result := db.Preload("Menus").Find(&sysDomains, ids)
+	if err := result.Error; err != nil {
+		return nil, err
+	}
+	// bizAllMenus, err := r.menu.ListAll(ctx)
+	bizMenus := make([]*biz.Menu, 0)
+	for _, v := range sysDomains {
+		for _, m := range v.Menus {
+			bizMenus = append(bizMenus, r.menu.(*MenuRepo).toBiz(&m))
+		}
+	}
+	return bizMenus, nil
 }

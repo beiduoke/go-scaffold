@@ -5612,6 +5612,534 @@ var _ interface {
 	ErrorName() string
 } = DeleteDomainReplyValidationError{}
 
+// Validate checks the field values on ListDomainMenuReq with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *ListDomainMenuReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListDomainMenuReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListDomainMenuReqMultiError, or nil if none found.
+func (m *ListDomainMenuReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListDomainMenuReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := ListDomainMenuReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return ListDomainMenuReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListDomainMenuReqMultiError is an error wrapping multiple validation errors
+// returned by ListDomainMenuReq.ValidateAll() if the designated constraints
+// aren't met.
+type ListDomainMenuReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListDomainMenuReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListDomainMenuReqMultiError) AllErrors() []error { return m }
+
+// ListDomainMenuReqValidationError is the validation error returned by
+// ListDomainMenuReq.Validate if the designated constraints aren't met.
+type ListDomainMenuReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListDomainMenuReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListDomainMenuReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListDomainMenuReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListDomainMenuReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListDomainMenuReqValidationError) ErrorName() string {
+	return "ListDomainMenuReqValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListDomainMenuReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListDomainMenuReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListDomainMenuReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListDomainMenuReqValidationError{}
+
+// Validate checks the field values on ListDomainMenuReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListDomainMenuReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListDomainMenuReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListDomainMenuReplyMultiError, or nil if none found.
+func (m *ListDomainMenuReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListDomainMenuReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Total
+
+	for idx, item := range m.GetItems() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListDomainMenuReplyValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListDomainMenuReplyValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListDomainMenuReplyValidationError{
+					field:  fmt.Sprintf("Items[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListDomainMenuReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListDomainMenuReplyMultiError is an error wrapping multiple validation
+// errors returned by ListDomainMenuReply.ValidateAll() if the designated
+// constraints aren't met.
+type ListDomainMenuReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListDomainMenuReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListDomainMenuReplyMultiError) AllErrors() []error { return m }
+
+// ListDomainMenuReplyValidationError is the validation error returned by
+// ListDomainMenuReply.Validate if the designated constraints aren't met.
+type ListDomainMenuReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListDomainMenuReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListDomainMenuReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListDomainMenuReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListDomainMenuReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListDomainMenuReplyValidationError) ErrorName() string {
+	return "ListDomainMenuReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListDomainMenuReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListDomainMenuReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListDomainMenuReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListDomainMenuReplyValidationError{}
+
+// Validate checks the field values on HandleDomainMenuReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HandleDomainMenuReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleDomainMenuReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HandleDomainMenuReqMultiError, or nil if none found.
+func (m *HandleDomainMenuReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleDomainMenuReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := HandleDomainMenuReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, HandleDomainMenuReqValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, HandleDomainMenuReqValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return HandleDomainMenuReqValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return HandleDomainMenuReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleDomainMenuReqMultiError is an error wrapping multiple validation
+// errors returned by HandleDomainMenuReq.ValidateAll() if the designated
+// constraints aren't met.
+type HandleDomainMenuReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleDomainMenuReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleDomainMenuReqMultiError) AllErrors() []error { return m }
+
+// HandleDomainMenuReqValidationError is the validation error returned by
+// HandleDomainMenuReq.Validate if the designated constraints aren't met.
+type HandleDomainMenuReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleDomainMenuReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleDomainMenuReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleDomainMenuReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleDomainMenuReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleDomainMenuReqValidationError) ErrorName() string {
+	return "HandleDomainMenuReqValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleDomainMenuReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleDomainMenuReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleDomainMenuReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleDomainMenuReqValidationError{}
+
+// Validate checks the field values on HandleDomainMenuReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HandleDomainMenuReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleDomainMenuReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HandleDomainMenuReplyMultiError, or nil if none found.
+func (m *HandleDomainMenuReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleDomainMenuReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Success
+
+	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, HandleDomainMenuReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, HandleDomainMenuReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return HandleDomainMenuReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return HandleDomainMenuReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleDomainMenuReplyMultiError is an error wrapping multiple validation
+// errors returned by HandleDomainMenuReply.ValidateAll() if the designated
+// constraints aren't met.
+type HandleDomainMenuReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleDomainMenuReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleDomainMenuReplyMultiError) AllErrors() []error { return m }
+
+// HandleDomainMenuReplyValidationError is the validation error returned by
+// HandleDomainMenuReply.Validate if the designated constraints aren't met.
+type HandleDomainMenuReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleDomainMenuReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleDomainMenuReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleDomainMenuReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleDomainMenuReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleDomainMenuReplyValidationError) ErrorName() string {
+	return "HandleDomainMenuReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleDomainMenuReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleDomainMenuReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleDomainMenuReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleDomainMenuReplyValidationError{}
+
 // Validate checks the field values on Authority with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -13910,6 +14438,317 @@ var _ interface {
 var _UpdateDomainReq_Data_State_NotInLookup = map[protobuf.DomainState]struct{}{
 	0: {},
 }
+
+// Validate checks the field values on HandleDomainMenuReq_Menu with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HandleDomainMenuReq_Menu) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleDomainMenuReq_Menu with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HandleDomainMenuReq_MenuMultiError, or nil if none found.
+func (m *HandleDomainMenuReq_Menu) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleDomainMenuReq_Menu) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := HandleDomainMenuReq_MenuValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	_HandleDomainMenuReq_Menu_MenuParameterIds_Unique := make(map[uint64]struct{}, len(m.GetMenuParameterIds()))
+
+	for idx, item := range m.GetMenuParameterIds() {
+		_, _ = idx, item
+
+		if _, exists := _HandleDomainMenuReq_Menu_MenuParameterIds_Unique[item]; exists {
+			err := HandleDomainMenuReq_MenuValidationError{
+				field:  fmt.Sprintf("MenuParameterIds[%v]", idx),
+				reason: "repeated value must contain unique items",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		} else {
+			_HandleDomainMenuReq_Menu_MenuParameterIds_Unique[item] = struct{}{}
+		}
+
+		if item <= 0 {
+			err := HandleDomainMenuReq_MenuValidationError{
+				field:  fmt.Sprintf("MenuParameterIds[%v]", idx),
+				reason: "value must be greater than 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	_HandleDomainMenuReq_Menu_MenuButtonIds_Unique := make(map[uint64]struct{}, len(m.GetMenuButtonIds()))
+
+	for idx, item := range m.GetMenuButtonIds() {
+		_, _ = idx, item
+
+		if _, exists := _HandleDomainMenuReq_Menu_MenuButtonIds_Unique[item]; exists {
+			err := HandleDomainMenuReq_MenuValidationError{
+				field:  fmt.Sprintf("MenuButtonIds[%v]", idx),
+				reason: "repeated value must contain unique items",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		} else {
+			_HandleDomainMenuReq_Menu_MenuButtonIds_Unique[item] = struct{}{}
+		}
+
+		if item <= 0 {
+			err := HandleDomainMenuReq_MenuValidationError{
+				field:  fmt.Sprintf("MenuButtonIds[%v]", idx),
+				reason: "value must be greater than 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return HandleDomainMenuReq_MenuMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleDomainMenuReq_MenuMultiError is an error wrapping multiple validation
+// errors returned by HandleDomainMenuReq_Menu.ValidateAll() if the designated
+// constraints aren't met.
+type HandleDomainMenuReq_MenuMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleDomainMenuReq_MenuMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleDomainMenuReq_MenuMultiError) AllErrors() []error { return m }
+
+// HandleDomainMenuReq_MenuValidationError is the validation error returned by
+// HandleDomainMenuReq_Menu.Validate if the designated constraints aren't met.
+type HandleDomainMenuReq_MenuValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleDomainMenuReq_MenuValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleDomainMenuReq_MenuValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleDomainMenuReq_MenuValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleDomainMenuReq_MenuValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleDomainMenuReq_MenuValidationError) ErrorName() string {
+	return "HandleDomainMenuReq_MenuValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleDomainMenuReq_MenuValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleDomainMenuReq_Menu.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleDomainMenuReq_MenuValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleDomainMenuReq_MenuValidationError{}
+
+// Validate checks the field values on HandleDomainMenuReq_Data with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HandleDomainMenuReq_Data) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleDomainMenuReq_Data with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HandleDomainMenuReq_DataMultiError, or nil if none found.
+func (m *HandleDomainMenuReq_Data) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleDomainMenuReq_Data) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetMenus() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, HandleDomainMenuReq_DataValidationError{
+						field:  fmt.Sprintf("Menus[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, HandleDomainMenuReq_DataValidationError{
+						field:  fmt.Sprintf("Menus[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return HandleDomainMenuReq_DataValidationError{
+					field:  fmt.Sprintf("Menus[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return HandleDomainMenuReq_DataMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleDomainMenuReq_DataMultiError is an error wrapping multiple validation
+// errors returned by HandleDomainMenuReq_Data.ValidateAll() if the designated
+// constraints aren't met.
+type HandleDomainMenuReq_DataMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleDomainMenuReq_DataMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleDomainMenuReq_DataMultiError) AllErrors() []error { return m }
+
+// HandleDomainMenuReq_DataValidationError is the validation error returned by
+// HandleDomainMenuReq_Data.Validate if the designated constraints aren't met.
+type HandleDomainMenuReq_DataValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleDomainMenuReq_DataValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleDomainMenuReq_DataValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleDomainMenuReq_DataValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleDomainMenuReq_DataValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleDomainMenuReq_DataValidationError) ErrorName() string {
+	return "HandleDomainMenuReq_DataValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleDomainMenuReq_DataValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleDomainMenuReq_Data.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleDomainMenuReq_DataValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleDomainMenuReq_DataValidationError{}
 
 // Validate checks the field values on UpdateAuthorityReq_Data with the rules
 // defined in the proto definition for this message. If any rules are

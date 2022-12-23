@@ -268,7 +268,7 @@ func (r *MenuRepo) allCache(ctx context.Context) (menus []*SysMenu) {
 			menus = append(menus, &sysMenu)
 		}
 	} else {
-		result := r.data.DB(ctx).Debug().Find(&menus)
+		result := r.data.DB(ctx).Find(&menus)
 		if result.Error != nil && !errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			r.log.Errorf("菜单查询失败 %v", result.Error)
 			return nil
@@ -291,4 +291,28 @@ func (r *MenuRepo) allCache(ctx context.Context) (menus []*SysMenu) {
 		return menus[i].Sort < menus[j].Sort
 	})
 	return menus
+}
+
+// 根据ID递归查询父级菜单
+func menuRecursiveParent(menus []*biz.Menu, ids ...uint) []*biz.Menu {
+	result, mid := []*biz.Menu{}, map[uint]uint{}
+	for _, v := range menus {
+		for _, id := range ids {
+			if _, o := mid[v.ID]; v.ID == id && !o {
+				mid[v.ID] = v.ID
+				result = append(result, v)
+				for _, m := range menuRecursiveParent(menus, v.ParentID) {
+					if _, ok := mid[m.ID]; !ok {
+						mid[m.ID] = m.ID
+						result = append(result, m)
+					}
+				}
+			}
+		}
+	}
+	// 根据序号进行排序
+	sort.SliceStable(result, func(i, j int) bool {
+		return result[i].Sort < result[j].Sort
+	})
+	return result
 }

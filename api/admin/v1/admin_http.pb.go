@@ -44,6 +44,7 @@ const OperationAdminGetUserInfo = "/api.admin.v1.Admin/GetUserInfo"
 const OperationAdminGetUserProfile = "/api.admin.v1.Admin/GetUserProfile"
 const OperationAdminHandleAuthorityApi = "/api.admin.v1.Admin/HandleAuthorityApi"
 const OperationAdminHandleAuthorityMenu = "/api.admin.v1.Admin/HandleAuthorityMenu"
+const OperationAdminHandleDomainMenu = "/api.admin.v1.Admin/HandleDomainMenu"
 const OperationAdminHandleUserDomain = "/api.admin.v1.Admin/HandleUserDomain"
 const OperationAdminHandleUserDomainAuthority = "/api.admin.v1.Admin/HandleUserDomainAuthority"
 const OperationAdminListApi = "/api.admin.v1.Admin/ListApi"
@@ -52,6 +53,7 @@ const OperationAdminListAuthorityMenu = "/api.admin.v1.Admin/ListAuthorityMenu"
 const OperationAdminListDepartment = "/api.admin.v1.Admin/ListDepartment"
 const OperationAdminListDepartmentTree = "/api.admin.v1.Admin/ListDepartmentTree"
 const OperationAdminListDomain = "/api.admin.v1.Admin/ListDomain"
+const OperationAdminListDomainMenu = "/api.admin.v1.Admin/ListDomainMenu"
 const OperationAdminListMenu = "/api.admin.v1.Admin/ListMenu"
 const OperationAdminListMenuTree = "/api.admin.v1.Admin/ListMenuTree"
 const OperationAdminListUser = "/api.admin.v1.Admin/ListUser"
@@ -97,6 +99,7 @@ type AdminHTTPServer interface {
 	GetUserProfile(context.Context, *emptypb.Empty) (*GetUserProfileReply, error)
 	HandleAuthorityApi(context.Context, *HandleAuthorityApiReq) (*HandleAuthorityApiReply, error)
 	HandleAuthorityMenu(context.Context, *HandleAuthorityMenuReq) (*HandleAuthorityMenuReply, error)
+	HandleDomainMenu(context.Context, *HandleDomainMenuReq) (*HandleDomainMenuReply, error)
 	HandleUserDomain(context.Context, *HandleUserDomainReq) (*HandleUserDomainReply, error)
 	HandleUserDomainAuthority(context.Context, *HandleUserDomainAuthorityReq) (*HandleUserDomainAuthorityReply, error)
 	ListApi(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
@@ -105,6 +108,7 @@ type AdminHTTPServer interface {
 	ListDepartment(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
 	ListDepartmentTree(context.Context, *ListDepartmentTreeReq) (*ListDepartmentTreeReply, error)
 	ListDomain(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	ListDomainMenu(context.Context, *ListDomainMenuReq) (*ListDomainMenuReply, error)
 	ListMenu(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
 	ListMenuTree(context.Context, *ListMenuTreeReq) (*ListMenuTreeReply, error)
 	ListUser(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
@@ -159,6 +163,8 @@ func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
 	r.GET("/admin/v1/domains/{id}", _Admin_GetDomain0_HTTP_Handler(srv))
 	r.PUT("/admin/v1/domains/{id}", _Admin_UpdateDomain0_HTTP_Handler(srv))
 	r.DELETE("/admin/v1/domains/{id}", _Admin_DeleteDomain0_HTTP_Handler(srv))
+	r.GET("/admin/v1/domains/{id}/menus", _Admin_ListDomainMenu0_HTTP_Handler(srv))
+	r.POST("/admin/v1/domains/{id}/menus", _Admin_HandleDomainMenu0_HTTP_Handler(srv))
 	r.GET("/admin/v1/authorities", _Admin_ListAuthority0_HTTP_Handler(srv))
 	r.POST("/admin/v1/authorities", _Admin_CreateAuthority0_HTTP_Handler(srv))
 	r.GET("/admin/v1/authorities/{id}", _Admin_GetAuthority0_HTTP_Handler(srv))
@@ -825,6 +831,53 @@ func _Admin_DeleteDomain0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Contex
 	}
 }
 
+func _Admin_ListDomainMenu0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListDomainMenuReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminListDomainMenu)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListDomainMenu(ctx, req.(*ListDomainMenuReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListDomainMenuReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_HandleDomainMenu0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in HandleDomainMenuReq
+		if err := ctx.Bind(&in.Data); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminHandleDomainMenu)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.HandleDomainMenu(ctx, req.(*HandleDomainMenuReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*HandleDomainMenuReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _Admin_ListAuthority0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in protobuf.PagingReq
@@ -1393,6 +1446,7 @@ type AdminHTTPClient interface {
 	GetUserProfile(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserProfileReply, err error)
 	HandleAuthorityApi(ctx context.Context, req *HandleAuthorityApiReq, opts ...http.CallOption) (rsp *HandleAuthorityApiReply, err error)
 	HandleAuthorityMenu(ctx context.Context, req *HandleAuthorityMenuReq, opts ...http.CallOption) (rsp *HandleAuthorityMenuReply, err error)
+	HandleDomainMenu(ctx context.Context, req *HandleDomainMenuReq, opts ...http.CallOption) (rsp *HandleDomainMenuReply, err error)
 	HandleUserDomain(ctx context.Context, req *HandleUserDomainReq, opts ...http.CallOption) (rsp *HandleUserDomainReply, err error)
 	HandleUserDomainAuthority(ctx context.Context, req *HandleUserDomainAuthorityReq, opts ...http.CallOption) (rsp *HandleUserDomainAuthorityReply, err error)
 	ListApi(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
@@ -1401,6 +1455,7 @@ type AdminHTTPClient interface {
 	ListDepartment(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
 	ListDepartmentTree(ctx context.Context, req *ListDepartmentTreeReq, opts ...http.CallOption) (rsp *ListDepartmentTreeReply, err error)
 	ListDomain(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
+	ListDomainMenu(ctx context.Context, req *ListDomainMenuReq, opts ...http.CallOption) (rsp *ListDomainMenuReply, err error)
 	ListMenu(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
 	ListMenuTree(ctx context.Context, req *ListMenuTreeReq, opts ...http.CallOption) (rsp *ListMenuTreeReply, err error)
 	ListUser(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
@@ -1730,6 +1785,19 @@ func (c *AdminHTTPClientImpl) HandleAuthorityMenu(ctx context.Context, in *Handl
 	return &out, err
 }
 
+func (c *AdminHTTPClientImpl) HandleDomainMenu(ctx context.Context, in *HandleDomainMenuReq, opts ...http.CallOption) (*HandleDomainMenuReply, error) {
+	var out HandleDomainMenuReply
+	pattern := "/admin/v1/domains/{id}/menus"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminHandleDomainMenu))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *AdminHTTPClientImpl) HandleUserDomain(ctx context.Context, in *HandleUserDomainReq, opts ...http.CallOption) (*HandleUserDomainReply, error) {
 	var out HandleUserDomainReply
 	pattern := "/admin/v1/users/{id}/domains"
@@ -1826,6 +1894,19 @@ func (c *AdminHTTPClientImpl) ListDomain(ctx context.Context, in *protobuf.Pagin
 	pattern := "/admin/v1/domains"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminListDomain))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AdminHTTPClientImpl) ListDomainMenu(ctx context.Context, in *ListDomainMenuReq, opts ...http.CallOption) (*ListDomainMenuReply, error) {
+	var out ListDomainMenuReply
+	pattern := "/admin/v1/domains/{id}/menus"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminListDomainMenu))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

@@ -90,6 +90,10 @@ type AdminClient interface {
 	UpdateDomain(ctx context.Context, in *UpdateDomainReq, opts ...grpc.CallOption) (*UpdateDomainReply, error)
 	// 删除领域
 	DeleteDomain(ctx context.Context, in *DeleteDomainReq, opts ...grpc.CallOption) (*DeleteDomainReply, error)
+	// 获取权限角色菜单
+	ListDomainMenu(ctx context.Context, in *ListDomainMenuReq, opts ...grpc.CallOption) (*ListDomainMenuReply, error)
+	// 处理权限角色菜单
+	HandleDomainMenu(ctx context.Context, in *HandleDomainMenuReq, opts ...grpc.CallOption) (*HandleDomainMenuReply, error)
 	// 权限角色模块
 	// 列表权限角色
 	ListAuthority(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
@@ -381,6 +385,24 @@ func (c *adminClient) UpdateDomain(ctx context.Context, in *UpdateDomainReq, opt
 func (c *adminClient) DeleteDomain(ctx context.Context, in *DeleteDomainReq, opts ...grpc.CallOption) (*DeleteDomainReply, error) {
 	out := new(DeleteDomainReply)
 	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/DeleteDomain", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) ListDomainMenu(ctx context.Context, in *ListDomainMenuReq, opts ...grpc.CallOption) (*ListDomainMenuReply, error) {
+	out := new(ListDomainMenuReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListDomainMenu", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) HandleDomainMenu(ctx context.Context, in *HandleDomainMenuReq, opts ...grpc.CallOption) (*HandleDomainMenuReply, error) {
+	out := new(HandleDomainMenuReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/HandleDomainMenu", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -682,6 +704,10 @@ type AdminServer interface {
 	UpdateDomain(context.Context, *UpdateDomainReq) (*UpdateDomainReply, error)
 	// 删除领域
 	DeleteDomain(context.Context, *DeleteDomainReq) (*DeleteDomainReply, error)
+	// 获取权限角色菜单
+	ListDomainMenu(context.Context, *ListDomainMenuReq) (*ListDomainMenuReply, error)
+	// 处理权限角色菜单
+	HandleDomainMenu(context.Context, *HandleDomainMenuReq) (*HandleDomainMenuReply, error)
 	// 权限角色模块
 	// 列表权限角色
 	ListAuthority(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
@@ -819,6 +845,12 @@ func (UnimplementedAdminServer) UpdateDomain(context.Context, *UpdateDomainReq) 
 }
 func (UnimplementedAdminServer) DeleteDomain(context.Context, *DeleteDomainReq) (*DeleteDomainReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDomain not implemented")
+}
+func (UnimplementedAdminServer) ListDomainMenu(context.Context, *ListDomainMenuReq) (*ListDomainMenuReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListDomainMenu not implemented")
+}
+func (UnimplementedAdminServer) HandleDomainMenu(context.Context, *HandleDomainMenuReq) (*HandleDomainMenuReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HandleDomainMenu not implemented")
 }
 func (UnimplementedAdminServer) ListAuthority(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAuthority not implemented")
@@ -1372,6 +1404,42 @@ func _Admin_DeleteDomain_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServer).DeleteDomain(ctx, req.(*DeleteDomainReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_ListDomainMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListDomainMenuReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).ListDomainMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/ListDomainMenu",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).ListDomainMenu(ctx, req.(*ListDomainMenuReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_HandleDomainMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HandleDomainMenuReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).HandleDomainMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/HandleDomainMenu",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).HandleDomainMenu(ctx, req.(*HandleDomainMenuReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1936,6 +2004,14 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteDomain",
 			Handler:    _Admin_DeleteDomain_Handler,
+		},
+		{
+			MethodName: "ListDomainMenu",
+			Handler:    _Admin_ListDomainMenu_Handler,
+		},
+		{
+			MethodName: "HandleDomainMenu",
+			Handler:    _Admin_HandleDomainMenu_Handler,
 		},
 		{
 			MethodName: "ListAuthority",

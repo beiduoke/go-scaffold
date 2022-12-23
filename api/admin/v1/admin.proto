@@ -277,6 +277,20 @@ service Admin {
       delete: "/admin/v1/domains/{id}"
     };
   }
+  
+  // 获取权限角色菜单
+  rpc ListDomainMenu (ListDomainMenuReq) returns (ListDomainMenuReply) {
+    option (google.api.http) = {
+      get: "/admin/v1/domains/{id}/menus"
+    };
+  }
+  // 处理权限角色菜单
+  rpc HandleDomainMenu (HandleDomainMenuReq) returns (HandleDomainMenuReply) {
+    option (google.api.http) = {
+      post: "/admin/v1/domains/{id}/menus"
+      body: "data"
+    };
+  }
 
   // 权限角色模块
   // 列表权限角色
@@ -828,6 +842,38 @@ message DeleteDomainReq {
 
 // 回应 - 删除领域
 message DeleteDomainReply {
+  bool success = 1;
+  string message = 2;
+  google.protobuf.Any data = 3;
+}
+
+// 请求 - 获取领域菜单
+message ListDomainMenuReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 获取领域菜单
+message ListDomainMenuReply {
+  int32 total = 1;
+  repeated Menu items = 2;
+}
+
+// 请求 - 处理领域菜单
+message HandleDomainMenuReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Menu {
+    uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+    repeated uint64 menu_parameter_ids = 2 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+    repeated uint64 menu_button_ids = 3 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+  }
+  message Data {
+    repeated Menu menus = 1;
+  }
+  Data data = 2;
+}
+
+// 回应 - 处理领域菜单
+message HandleDomainMenuReply {
   bool success = 1;
   string message = 2;
   google.protobuf.Any data = 3;

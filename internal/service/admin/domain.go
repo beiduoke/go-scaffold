@@ -98,3 +98,41 @@ func (s *AdminService) DeleteDomain(ctx context.Context, in *v1.DeleteDomainReq)
 		Message: "删除成功",
 	}, nil
 }
+
+// ListDomainMenu 获取权限角色菜单
+func (s *AdminService) ListDomainMenu(ctx context.Context, in *v1.ListDomainMenuReq) (*v1.ListDomainMenuReply, error) {
+	id := in.GetId()
+	menus, _ := s.domainCase.ListMenuByID(ctx, &biz.Domain{ID: uint(id)})
+	items := make([]*v1.Menu, 0, len(menus))
+	for _, v := range menus {
+		items = append(items, TransformMenu(v))
+	}
+	return &v1.ListDomainMenuReply{Items: items, Total: int32(len(items))}, nil
+}
+
+// HandleDomainMenu 处理权限角色菜单
+func (s *AdminService) HandleDomainMenu(ctx context.Context, in *v1.HandleDomainMenuReq) (*v1.HandleDomainMenuReply, error) {
+	var menus []*biz.Menu
+	data := in.GetData()
+	for _, v := range data.GetMenus() {
+		parameters, buttons := make([]*biz.MenuParameter, 0, len(v.GetMenuParameterIds())), make([]*biz.MenuButton, 0, len(v.GetMenuButtonIds()))
+		for _, v := range v.GetMenuParameterIds() {
+			parameters = append(parameters, &biz.MenuParameter{ID: uint(v)})
+		}
+		for _, v := range v.GetMenuButtonIds() {
+			buttons = append(buttons, &biz.MenuButton{ID: uint(v)})
+		}
+		menus = append(menus, &biz.Menu{
+			ID:         uint(v.GetId()),
+			Parameters: parameters,
+			Buttons:    buttons,
+		})
+	}
+	if err := s.domainCase.HandleMenu(ctx, &biz.Domain{ID: uint(in.GetId()), Menus: menus}); err != nil {
+		return nil, v1.ErrorDomainHandleMenuFail("领域菜单处理失败：%v", err)
+	}
+	return &v1.HandleDomainMenuReply{
+		Success: true,
+		Message: "处理成功",
+	}, nil
+}

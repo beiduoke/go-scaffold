@@ -34,6 +34,7 @@ type Domain struct {
 	State              int32
 	DefaultAuthorityID uint
 	Authority          *Authority
+	Menus              []*Menu
 }
 
 // DomainRepo is a Greater repo.
@@ -48,6 +49,8 @@ type DomainRepo interface {
 	Delete(context.Context, *Domain) error
 	ListAll(context.Context) ([]*Domain, error)
 	ListPage(context.Context, pagination.PaginationHandler) ([]*Domain, int64)
+	ListMenuByIDs(context.Context, ...uint) ([]*Menu, error)
+	HandleMenu(context.Context, *Domain) error
 
 	// 领域权限
 	// stdcasbin.IEnforcer
@@ -138,7 +141,7 @@ func (uc *DomainUsecase) ListAll(ctx context.Context) ([]*Domain, int64) {
 // List 领域列表分页
 func (uc *DomainUsecase) ListPage(ctx context.Context, pageNum, pageSize int32, query map[string]string, order map[string]bool) ([]*Domain, int64) {
 	uc.log.WithContext(ctx).Infof("DomainPage")
-	conditions := []pagination.Condition{}
+	conditions := []pagination.Condition{{Query: "id > 0"}}
 	for k, v := range query {
 		conditions = append(conditions, pagination.Condition{Query: k, Args: []interface{}{v}})
 	}
@@ -172,4 +175,16 @@ func (uc *DomainUsecase) Delete(ctx context.Context, g *Domain) error {
 		_, err := uc.biz.enforcer.DeleteRole(convert.UnitToString(g.ID))
 		return err
 	})
+}
+
+// HandleMenu 绑定菜单
+func (uc *DomainUsecase) HandleMenu(ctx context.Context, g *Domain) error {
+	uc.log.WithContext(ctx).Infof("HandleMenu: %v", g)
+	return uc.biz.domainRepo.HandleMenu(ctx, g)
+}
+
+// HandleMenu 获取领域菜单
+func (uc *DomainUsecase) ListMenuByID(ctx context.Context, g *Domain) ([]*Menu, error) {
+	uc.log.WithContext(ctx).Infof("ListMenuByIDs: %v", g)
+	return uc.biz.domainRepo.ListMenuByIDs(ctx, g.ID)
 }

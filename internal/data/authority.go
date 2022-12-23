@@ -251,25 +251,5 @@ func (r *AuthorityRepo) ListMenuAndParentByIDs(ctx context.Context, ids ...uint)
 	for _, v := range authorityMenus {
 		menuIds = append(menuIds, v.MenuID)
 	}
-	return authorityMenuRecursiveParent(bizAllMenus, menuIds...), nil
-}
-
-// 根据ID递归查询父级菜单
-func authorityMenuRecursiveParent(menus []*biz.Menu, ids ...uint) []*biz.Menu {
-	result, mid := []*biz.Menu{}, map[uint]uint{}
-	for _, v := range menus {
-		for _, id := range ids {
-			if _, o := mid[v.ID]; v.ID == id && !o {
-				mid[v.ID] = v.ID
-				result = append(result, v)
-				for _, m := range authorityMenuRecursiveParent(menus, v.ParentID) {
-					if _, ok := mid[m.ID]; !ok {
-						mid[m.ID] = m.ID
-						result = append(result, m)
-					}
-				}
-			}
-		}
-	}
-	return result
+	return menuRecursiveParent(bizAllMenus, menuIds...), nil
 }

@@ -1259,6 +1259,76 @@
         ]
       }
     },
+    "/admin/v1/domains/{id}/menus": {
+      "get": {
+        "summary": "获取权限角色菜单",
+        "operationId": "Admin_ListDomainMenu",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListDomainMenuReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      },
+      "post": {
+        "summary": "处理权限角色菜单",
+        "operationId": "Admin_HandleDomainMenu",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1HandleDomainMenuReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1HandleDomainMenuReqData"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/admin/v1/menus": {
       "get": {
         "summary": "菜单模块\n列表菜单",
@@ -2895,6 +2965,55 @@
         }
       }
     },
+    "v1HandleDomainMenuReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
+        }
+      },
+      "title": "回应 - 处理领域菜单"
+    },
+    "v1HandleDomainMenuReqData": {
+      "type": "object",
+      "properties": {
+        "menus": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1HandleDomainMenuReqMenu"
+          }
+        }
+      }
+    },
+    "v1HandleDomainMenuReqMenu": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "menuParameterIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
+        },
+        "menuButtonIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
+        }
+      }
+    },
     "v1HandleUserDomainAuthorityReply": {
       "type": "object",
       "properties": {
@@ -2978,6 +3097,22 @@
         }
       },
       "title": "回应 - 获取树形部门"
+    },
+    "v1ListDomainMenuReply": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/adminv1Menu"
+          }
+        }
+      },
+      "title": "回应 - 获取领域菜单"
     },
     "v1ListMenuTreeReply": {
       "type": "object",
