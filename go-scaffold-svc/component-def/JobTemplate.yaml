@@ -1,0 +1,62 @@
+apiVersion: oam.coding.net/v1alpha1
+kind: ComponentDefinition
+metadata:
+  name: JobTemplate
+spec:
+  description: 系统内置的Job服务模板
+  available: true
+  type: JOB
+  workload:
+    kube:
+      template: |-
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: {{.name}}
+        spec:
+          template:
+            spec:
+              containers:
+              - name: {{.name}}
+                image: {{.image}}
+                {{- if .cmd}}
+                command:
+                - {{.cmd}}
+                {{- end}}
+                {{- if .args}}
+                args:
+                {{- range .args}}
+                - {{.}}
+                {{- end}}
+                {{- end}}
+              restartPolicy: {{.restart}}
+          backoffLimit: 3
+          {{- if .parallel}}
+          parallelism: {{.parallel}}
+          completions: {{.parallel}}
+          {{- end }}
+  customVariables:
+  - name: args
+    description: 参数
+    required: false
+    type: ARRAY
+  - name: image
+    description: 容器的镜像
+    required: true
+    type: IMAGE
+  - name: parallel
+    description: 并发数
+    required: false
+    type: INT
+  - name: restart
+    description: 重启策略
+    required: false
+    type: STRING
+  - name: name
+    description: 任务名称
+    required: true
+    type: STRING
+  - name: cmd
+    description: 启动命令
+    required: false
+    type: STRING
