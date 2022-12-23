@@ -1,0 +1,54 @@
+apiVersion: oam.coding.net/v1alpha1
+kind: Trait
+metadata:
+  name: metrics-expose
+  annotations:
+    name: 监控暴露
+spec:
+  description: 监控暴露
+  available: true
+  strategy: PATCH
+  targetGVK:
+    apiVersion: apps/v1
+    kind: Deployment
+  contextVariables:
+  - name: src
+    description: 目标对象
+    required: true
+    type: STRING
+  - name: namespace
+    description: 目标对象命名空间
+    required: true
+    type: STRING
+  - name: name
+    description: 目标对象名称
+    required: true
+    type: STRING
+  customVariables:
+  - name: prom_path
+    description: 容器暴露 prometheus 指标的路径，默认路径是 “/metrics”
+    required: false
+    type: STRING
+  - name: prom_port
+    description: 容器暴露 prometheus 指标的端口
+    required: true
+    type: INT
+  traitDefinition:
+    kube:
+      template: |-
+        #运维插件的定义
+        #假设运维插件的 id 和 name 都是 metrics-expose
+        # patch 类型的插件，作用对象类型 Deployment
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: {{.name}}
+          namespace: {{.namespace}}
+          labels:
+            coding.oam.trait/metrics-expose: "true"
+          annotations:
+            prometheus.io/port: {{.prom_port|quote}}
+            prometheus.io/scrape: "true"
+            {{- if .prom_path}}
+            prometheus.io/path: {{.prom_path}}
+            {{end -}}
