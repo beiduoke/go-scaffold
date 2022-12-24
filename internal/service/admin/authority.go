@@ -84,6 +84,22 @@ func (s *AdminService) UpdateAuthority(ctx context.Context, in *v1.UpdateAuthori
 	}, nil
 }
 
+// UpdateAuthorityState 修改权限角色-状态
+func (s *AdminService) UpdateAuthorityState(ctx context.Context, in *v1.UpdateAuthorityStateReq) (*v1.UpdateAuthorityStateReply, error) {
+	v := in.GetData()
+	err := s.authorityCase.UpdateState(ctx, &biz.Authority{
+		ID:    uint(in.GetId()),
+		State: int32(v.GetState()),
+	})
+	if err != nil {
+		return nil, v1.ErrorDomainUpdateFail("领域状态修改失败: %v", err.Error())
+	}
+	return &v1.UpdateAuthorityStateReply{
+		Success: true,
+		Message: "修改成功",
+	}, nil
+}
+
 // GetAuthority 获取权限角色
 func (s *AdminService) GetAuthority(ctx context.Context, in *v1.GetAuthorityReq) (*v1.Authority, error) {
 	authority, err := s.authorityCase.GetID(ctx, &biz.Authority{ID: uint(in.GetId())})
@@ -142,21 +158,21 @@ func (s *AdminService) HandleAuthorityMenu(ctx context.Context, in *v1.HandleAut
 	}, nil
 }
 
-// HandleAuthorityApi 处理权限角色接口
-func (s *AdminService) HandleAuthorityApi(ctx context.Context, in *v1.HandleAuthorityApiReq) (*v1.HandleAuthorityApiReply, error) {
-	inApiIds := in.GetData().GetApiIds()
-	apiIds := make([]uint, 0, len(inApiIds))
-	for _, v := range inApiIds {
+// HandleAuthorityResource 处理权限角色资源
+func (s *AdminService) HandleAuthorityResource(ctx context.Context, in *v1.HandleAuthorityResourceReq) (*v1.HandleAuthorityResourceReply, error) {
+	inResourceIds := in.GetData().GetResourceIds()
+	apiIds := make([]uint, 0, len(inResourceIds))
+	for _, v := range inResourceIds {
 		apiIds = append(apiIds, uint(v))
 	}
-	apis, err := s.apiCase.ListByIDs(ctx, apiIds...)
+	resources, err := s.resourceCase.ListByIDs(ctx, apiIds...)
 	if err != nil {
-		return nil, v1.ErrorAuthorityHandleApiFail("权限角色接口查询失败")
+		return nil, v1.ErrorAuthorityHandleResourceFail("权限角色资源查询失败")
 	}
-	if err := s.authorityCase.HandleApi(ctx, &biz.Authority{ID: uint(in.GetId()), Apis: apis}); err != nil {
-		return nil, v1.ErrorAuthorityHandleApiFail("权限角色接口处理失败：%v", err)
+	if err := s.authorityCase.HandleResource(ctx, &biz.Authority{ID: uint(in.GetId()), Resources: resources}); err != nil {
+		return nil, v1.ErrorAuthorityHandleResourceFail("权限角色资源处理失败：%v", err)
 	}
-	return &v1.HandleAuthorityApiReply{
+	return &v1.HandleAuthorityResourceReply{
 		Success: true,
 		Message: "处理成功",
 	}, nil

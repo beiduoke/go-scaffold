@@ -26,7 +26,7 @@ type Authority struct {
 	Users         []*User
 	Domains       []*Domain
 	Menus         []*Menu
-	Apis          []*Api
+	Resources     []*Resource
 }
 
 // AuthorityRepo is a Greater repo.
@@ -41,7 +41,7 @@ type AuthorityRepo interface {
 	Delete(context.Context, *Authority) error
 	ListPage(context.Context, pagination.PaginationHandler) ([]*Authority, int64)
 	HandleMenu(context.Context, *Authority) error
-	HandleApi(context.Context, *Authority) error
+	HandleResource(context.Context, *Authority) error
 	ListMenuByIDs(context.Context, ...uint) ([]*Menu, error)
 	ListMenuAndParentByIDs(context.Context, ...uint) ([]*Menu, error)
 }
@@ -92,6 +92,24 @@ func (uc *AuthorityUsecase) Update(ctx context.Context, g *Authority) error {
 	if err := mergo.Merge(authority, *g, mergo.WithOverwriteWithEmptyValue); err != nil {
 		return errors.Errorf("数据合并失败：%v", err)
 	}
+	_, err := uc.biz.authorityRepo.Update(ctx, authority)
+	return err
+}
+
+// UpdateState 修改权限角色状态
+func (uc *AuthorityUsecase) UpdateState(ctx context.Context, g *Authority) error {
+	uc.log.WithContext(ctx).Infof("UpdateAuthorityState: %v", g)
+
+	authority, _ := uc.biz.authorityRepo.FindByID(ctx, g.ID)
+	if authority == nil {
+		return errors.New("权限角色未不存在")
+	}
+
+	if g.State <= 0 {
+		g.State = int32(pb.AuthorityState_AUTHORITY_STATE_ACTIVE)
+	}
+
+	authority.State = g.State
 	_, err := uc.biz.authorityRepo.Update(ctx, authority)
 	return err
 }
@@ -153,8 +171,8 @@ func (uc *AuthorityUsecase) HandleMenu(ctx context.Context, g *Authority) error 
 	return uc.biz.authorityRepo.HandleMenu(ctx, g)
 }
 
-// HandleApi 绑定接口
-func (uc *AuthorityUsecase) HandleApi(ctx context.Context, g *Authority) error {
-	uc.log.WithContext(ctx).Infof("HandleApi: %v", g)
-	return uc.biz.authorityRepo.HandleApi(ctx, g)
+// HandleResource 绑定资源
+func (uc *AuthorityUsecase) HandleResource(ctx context.Context, g *Authority) error {
+	uc.log.WithContext(ctx).Infof("HandleResource: %v", g)
+	return uc.biz.authorityRepo.HandleResource(ctx, g)
 }

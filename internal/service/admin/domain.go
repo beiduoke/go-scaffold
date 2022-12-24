@@ -59,7 +59,7 @@ func (s *AdminService) CreateDomain(ctx context.Context, in *v1.CreateDomainReq)
 	}, nil
 }
 
-// UpdateDomain 创建领域
+// UpdateDomain 修改领域
 func (s *AdminService) UpdateDomain(ctx context.Context, in *v1.UpdateDomainReq) (*v1.UpdateDomainReply, error) {
 	v := in.GetData()
 	err := s.domainCase.Update(ctx, &biz.Domain{
@@ -71,9 +71,25 @@ func (s *AdminService) UpdateDomain(ctx context.Context, in *v1.UpdateDomainReq)
 		State:              int32(v.GetState()),
 	})
 	if err != nil {
-		return nil, v1.ErrorDomainUpdateFail("领域创建失败: %v", err.Error())
+		return nil, v1.ErrorDomainUpdateFail("领域修改失败: %v", err.Error())
 	}
 	return &v1.UpdateDomainReply{
+		Success: true,
+		Message: "修改成功",
+	}, nil
+}
+
+// UpdateDomainState 修改领域-状态
+func (s *AdminService) UpdateDomainState(ctx context.Context, in *v1.UpdateDomainStateReq) (*v1.UpdateDomainStateReply, error) {
+	v := in.GetData()
+	err := s.domainCase.UpdateState(ctx, &biz.Domain{
+		ID:    uint(in.GetId()),
+		State: int32(v.GetState()),
+	})
+	if err != nil {
+		return nil, v1.ErrorDomainUpdateFail("领域状态修改失败: %v", err.Error())
+	}
+	return &v1.UpdateDomainStateReply{
 		Success: true,
 		Message: "修改成功",
 	}, nil
@@ -99,7 +115,7 @@ func (s *AdminService) DeleteDomain(ctx context.Context, in *v1.DeleteDomainReq)
 	}, nil
 }
 
-// ListDomainMenu 获取权限角色菜单
+// ListDomainMenu 获取领域菜单
 func (s *AdminService) ListDomainMenu(ctx context.Context, in *v1.ListDomainMenuReq) (*v1.ListDomainMenuReply, error) {
 	id := in.GetId()
 	menus, _ := s.domainCase.ListMenuByID(ctx, &biz.Domain{ID: uint(id)})
@@ -110,7 +126,7 @@ func (s *AdminService) ListDomainMenu(ctx context.Context, in *v1.ListDomainMenu
 	return &v1.ListDomainMenuReply{Items: items, Total: int32(len(items))}, nil
 }
 
-// HandleDomainMenu 处理权限角色菜单
+// HandleDomainMenu 处理领域菜单
 func (s *AdminService) HandleDomainMenu(ctx context.Context, in *v1.HandleDomainMenuReq) (*v1.HandleDomainMenuReply, error) {
 	var menus []*biz.Menu
 	data := in.GetData()

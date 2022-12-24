@@ -15,7 +15,7 @@ import (
 	"github.com/zzsds/go-tools/pkg/password"
 )
 
-// Auth 多登录方式进行接口封装
+// Auth 多登录方式进行资源封装
 type Auth interface {
 	Login() (AuthClaims, error)
 	Register() error

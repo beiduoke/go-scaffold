@@ -5256,6 +5256,283 @@ var _ interface {
 	ErrorName() string
 } = UpdateDomainReplyValidationError{}
 
+// Validate checks the field values on UpdateDomainStateReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateDomainStateReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateDomainStateReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateDomainStateReqMultiError, or nil if none found.
+func (m *UpdateDomainStateReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateDomainStateReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := UpdateDomainStateReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UpdateDomainStateReqValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UpdateDomainStateReqValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateDomainStateReqValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return UpdateDomainStateReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateDomainStateReqMultiError is an error wrapping multiple validation
+// errors returned by UpdateDomainStateReq.ValidateAll() if the designated
+// constraints aren't met.
+type UpdateDomainStateReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateDomainStateReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateDomainStateReqMultiError) AllErrors() []error { return m }
+
+// UpdateDomainStateReqValidationError is the validation error returned by
+// UpdateDomainStateReq.Validate if the designated constraints aren't met.
+type UpdateDomainStateReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateDomainStateReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateDomainStateReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateDomainStateReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateDomainStateReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateDomainStateReqValidationError) ErrorName() string {
+	return "UpdateDomainStateReqValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateDomainStateReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateDomainStateReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateDomainStateReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateDomainStateReqValidationError{}
+
+// Validate checks the field values on UpdateDomainStateReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateDomainStateReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateDomainStateReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateDomainStateReplyMultiError, or nil if none found.
+func (m *UpdateDomainStateReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateDomainStateReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Success
+
+	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UpdateDomainStateReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UpdateDomainStateReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateDomainStateReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return UpdateDomainStateReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateDomainStateReplyMultiError is an error wrapping multiple validation
+// errors returned by UpdateDomainStateReply.ValidateAll() if the designated
+// constraints aren't met.
+type UpdateDomainStateReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateDomainStateReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateDomainStateReplyMultiError) AllErrors() []error { return m }
+
+// UpdateDomainStateReplyValidationError is the validation error returned by
+// UpdateDomainStateReply.Validate if the designated constraints aren't met.
+type UpdateDomainStateReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateDomainStateReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateDomainStateReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateDomainStateReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateDomainStateReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateDomainStateReplyValidationError) ErrorName() string {
+	return "UpdateDomainStateReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateDomainStateReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateDomainStateReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateDomainStateReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateDomainStateReplyValidationError{}
+
 // Validate checks the field values on GetDomainReq with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -6918,6 +7195,283 @@ var _ interface {
 	ErrorName() string
 } = UpdateAuthorityReplyValidationError{}
 
+// Validate checks the field values on UpdateAuthorityStateReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateAuthorityStateReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateAuthorityStateReq with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateAuthorityStateReqMultiError, or nil if none found.
+func (m *UpdateAuthorityStateReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateAuthorityStateReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := UpdateAuthorityStateReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UpdateAuthorityStateReqValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UpdateAuthorityStateReqValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateAuthorityStateReqValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return UpdateAuthorityStateReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateAuthorityStateReqMultiError is an error wrapping multiple validation
+// errors returned by UpdateAuthorityStateReq.ValidateAll() if the designated
+// constraints aren't met.
+type UpdateAuthorityStateReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateAuthorityStateReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateAuthorityStateReqMultiError) AllErrors() []error { return m }
+
+// UpdateAuthorityStateReqValidationError is the validation error returned by
+// UpdateAuthorityStateReq.Validate if the designated constraints aren't met.
+type UpdateAuthorityStateReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateAuthorityStateReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateAuthorityStateReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateAuthorityStateReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateAuthorityStateReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateAuthorityStateReqValidationError) ErrorName() string {
+	return "UpdateAuthorityStateReqValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateAuthorityStateReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateAuthorityStateReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateAuthorityStateReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateAuthorityStateReqValidationError{}
+
+// Validate checks the field values on UpdateAuthorityStateReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateAuthorityStateReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateAuthorityStateReply with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateAuthorityStateReplyMultiError, or nil if none found.
+func (m *UpdateAuthorityStateReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateAuthorityStateReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Success
+
+	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UpdateAuthorityStateReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UpdateAuthorityStateReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateAuthorityStateReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return UpdateAuthorityStateReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateAuthorityStateReplyMultiError is an error wrapping multiple validation
+// errors returned by UpdateAuthorityStateReply.ValidateAll() if the
+// designated constraints aren't met.
+type UpdateAuthorityStateReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateAuthorityStateReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateAuthorityStateReplyMultiError) AllErrors() []error { return m }
+
+// UpdateAuthorityStateReplyValidationError is the validation error returned by
+// UpdateAuthorityStateReply.Validate if the designated constraints aren't met.
+type UpdateAuthorityStateReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateAuthorityStateReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateAuthorityStateReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateAuthorityStateReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateAuthorityStateReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateAuthorityStateReplyValidationError) ErrorName() string {
+	return "UpdateAuthorityStateReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateAuthorityStateReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateAuthorityStateReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateAuthorityStateReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateAuthorityStateReplyValidationError{}
+
 // Validate checks the field values on GetAuthorityReq with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
@@ -7805,22 +8359,22 @@ var _ interface {
 	ErrorName() string
 } = HandleAuthorityMenuReplyValidationError{}
 
-// Validate checks the field values on HandleAuthorityApiReq with the rules
-// defined in the proto definition for this message. If any rules are
+// Validate checks the field values on HandleAuthorityResourceReq with the
+// rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *HandleAuthorityApiReq) Validate() error {
+func (m *HandleAuthorityResourceReq) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on HandleAuthorityApiReq with the rules
-// defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on HandleAuthorityResourceReq with the
+// rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// HandleAuthorityApiReqMultiError, or nil if none found.
-func (m *HandleAuthorityApiReq) ValidateAll() error {
+// HandleAuthorityResourceReqMultiError, or nil if none found.
+func (m *HandleAuthorityResourceReq) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *HandleAuthorityApiReq) validate(all bool) error {
+func (m *HandleAuthorityResourceReq) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -7828,7 +8382,7 @@ func (m *HandleAuthorityApiReq) validate(all bool) error {
 	var errors []error
 
 	if m.GetId() <= 0 {
-		err := HandleAuthorityApiReqValidationError{
+		err := HandleAuthorityResourceReqValidationError{
 			field:  "Id",
 			reason: "value must be greater than 0",
 		}
@@ -7842,7 +8396,7 @@ func (m *HandleAuthorityApiReq) validate(all bool) error {
 		switch v := interface{}(m.GetData()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, HandleAuthorityApiReqValidationError{
+				errors = append(errors, HandleAuthorityResourceReqValidationError{
 					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -7850,7 +8404,7 @@ func (m *HandleAuthorityApiReq) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, HandleAuthorityApiReqValidationError{
+				errors = append(errors, HandleAuthorityResourceReqValidationError{
 					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -7859,7 +8413,7 @@ func (m *HandleAuthorityApiReq) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return HandleAuthorityApiReqValidationError{
+			return HandleAuthorityResourceReqValidationError{
 				field:  "Data",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -7868,19 +8422,19 @@ func (m *HandleAuthorityApiReq) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return HandleAuthorityApiReqMultiError(errors)
+		return HandleAuthorityResourceReqMultiError(errors)
 	}
 
 	return nil
 }
 
-// HandleAuthorityApiReqMultiError is an error wrapping multiple validation
-// errors returned by HandleAuthorityApiReq.ValidateAll() if the designated
-// constraints aren't met.
-type HandleAuthorityApiReqMultiError []error
+// HandleAuthorityResourceReqMultiError is an error wrapping multiple
+// validation errors returned by HandleAuthorityResourceReq.ValidateAll() if
+// the designated constraints aren't met.
+type HandleAuthorityResourceReqMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m HandleAuthorityApiReqMultiError) Error() string {
+func (m HandleAuthorityResourceReqMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -7889,11 +8443,11 @@ func (m HandleAuthorityApiReqMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m HandleAuthorityApiReqMultiError) AllErrors() []error { return m }
+func (m HandleAuthorityResourceReqMultiError) AllErrors() []error { return m }
 
-// HandleAuthorityApiReqValidationError is the validation error returned by
-// HandleAuthorityApiReq.Validate if the designated constraints aren't met.
-type HandleAuthorityApiReqValidationError struct {
+// HandleAuthorityResourceReqValidationError is the validation error returned
+// by HandleAuthorityResourceReq.Validate if the designated constraints aren't met.
+type HandleAuthorityResourceReqValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -7901,24 +8455,24 @@ type HandleAuthorityApiReqValidationError struct {
 }
 
 // Field function returns field value.
-func (e HandleAuthorityApiReqValidationError) Field() string { return e.field }
+func (e HandleAuthorityResourceReqValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e HandleAuthorityApiReqValidationError) Reason() string { return e.reason }
+func (e HandleAuthorityResourceReqValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e HandleAuthorityApiReqValidationError) Cause() error { return e.cause }
+func (e HandleAuthorityResourceReqValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e HandleAuthorityApiReqValidationError) Key() bool { return e.key }
+func (e HandleAuthorityResourceReqValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e HandleAuthorityApiReqValidationError) ErrorName() string {
-	return "HandleAuthorityApiReqValidationError"
+func (e HandleAuthorityResourceReqValidationError) ErrorName() string {
+	return "HandleAuthorityResourceReqValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e HandleAuthorityApiReqValidationError) Error() string {
+func (e HandleAuthorityResourceReqValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -7930,14 +8484,14 @@ func (e HandleAuthorityApiReqValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sHandleAuthorityApiReq.%s: %s%s",
+		"invalid %sHandleAuthorityResourceReq.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = HandleAuthorityApiReqValidationError{}
+var _ error = HandleAuthorityResourceReqValidationError{}
 
 var _ interface {
 	Field() string
@@ -7945,24 +8499,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = HandleAuthorityApiReqValidationError{}
+} = HandleAuthorityResourceReqValidationError{}
 
-// Validate checks the field values on HandleAuthorityApiReply with the rules
-// defined in the proto definition for this message. If any rules are
+// Validate checks the field values on HandleAuthorityResourceReply with the
+// rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *HandleAuthorityApiReply) Validate() error {
+func (m *HandleAuthorityResourceReply) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on HandleAuthorityApiReply with the
+// ValidateAll checks the field values on HandleAuthorityResourceReply with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// HandleAuthorityApiReplyMultiError, or nil if none found.
-func (m *HandleAuthorityApiReply) ValidateAll() error {
+// HandleAuthorityResourceReplyMultiError, or nil if none found.
+func (m *HandleAuthorityResourceReply) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *HandleAuthorityApiReply) validate(all bool) error {
+func (m *HandleAuthorityResourceReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -7977,7 +8531,7 @@ func (m *HandleAuthorityApiReply) validate(all bool) error {
 		switch v := interface{}(m.GetData()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, HandleAuthorityApiReplyValidationError{
+				errors = append(errors, HandleAuthorityResourceReplyValidationError{
 					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -7985,7 +8539,7 @@ func (m *HandleAuthorityApiReply) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, HandleAuthorityApiReplyValidationError{
+				errors = append(errors, HandleAuthorityResourceReplyValidationError{
 					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -7994,7 +8548,7 @@ func (m *HandleAuthorityApiReply) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return HandleAuthorityApiReplyValidationError{
+			return HandleAuthorityResourceReplyValidationError{
 				field:  "Data",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -8003,19 +8557,19 @@ func (m *HandleAuthorityApiReply) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return HandleAuthorityApiReplyMultiError(errors)
+		return HandleAuthorityResourceReplyMultiError(errors)
 	}
 
 	return nil
 }
 
-// HandleAuthorityApiReplyMultiError is an error wrapping multiple validation
-// errors returned by HandleAuthorityApiReply.ValidateAll() if the designated
-// constraints aren't met.
-type HandleAuthorityApiReplyMultiError []error
+// HandleAuthorityResourceReplyMultiError is an error wrapping multiple
+// validation errors returned by HandleAuthorityResourceReply.ValidateAll() if
+// the designated constraints aren't met.
+type HandleAuthorityResourceReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m HandleAuthorityApiReplyMultiError) Error() string {
+func (m HandleAuthorityResourceReplyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -8024,11 +8578,12 @@ func (m HandleAuthorityApiReplyMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m HandleAuthorityApiReplyMultiError) AllErrors() []error { return m }
+func (m HandleAuthorityResourceReplyMultiError) AllErrors() []error { return m }
 
-// HandleAuthorityApiReplyValidationError is the validation error returned by
-// HandleAuthorityApiReply.Validate if the designated constraints aren't met.
-type HandleAuthorityApiReplyValidationError struct {
+// HandleAuthorityResourceReplyValidationError is the validation error returned
+// by HandleAuthorityResourceReply.Validate if the designated constraints
+// aren't met.
+type HandleAuthorityResourceReplyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -8036,24 +8591,24 @@ type HandleAuthorityApiReplyValidationError struct {
 }
 
 // Field function returns field value.
-func (e HandleAuthorityApiReplyValidationError) Field() string { return e.field }
+func (e HandleAuthorityResourceReplyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e HandleAuthorityApiReplyValidationError) Reason() string { return e.reason }
+func (e HandleAuthorityResourceReplyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e HandleAuthorityApiReplyValidationError) Cause() error { return e.cause }
+func (e HandleAuthorityResourceReplyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e HandleAuthorityApiReplyValidationError) Key() bool { return e.key }
+func (e HandleAuthorityResourceReplyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e HandleAuthorityApiReplyValidationError) ErrorName() string {
-	return "HandleAuthorityApiReplyValidationError"
+func (e HandleAuthorityResourceReplyValidationError) ErrorName() string {
+	return "HandleAuthorityResourceReplyValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e HandleAuthorityApiReplyValidationError) Error() string {
+func (e HandleAuthorityResourceReplyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -8065,14 +8620,14 @@ func (e HandleAuthorityApiReplyValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sHandleAuthorityApiReply.%s: %s%s",
+		"invalid %sHandleAuthorityResourceReply.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = HandleAuthorityApiReplyValidationError{}
+var _ error = HandleAuthorityResourceReplyValidationError{}
 
 var _ interface {
 	Field() string
@@ -8080,23 +8635,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = HandleAuthorityApiReplyValidationError{}
+} = HandleAuthorityResourceReplyValidationError{}
 
-// Validate checks the field values on Api with the rules defined in the proto
-// definition for this message. If any rules are violated, the first error
-// encountered is returned, or nil if there are no violations.
-func (m *Api) Validate() error {
+// Validate checks the field values on Resource with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *Resource) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on Api with the rules defined in the
-// proto definition for this message. If any rules are violated, the result is
-// a list of violation errors wrapped in ApiMultiError, or nil if none found.
-func (m *Api) ValidateAll() error {
+// ValidateAll checks the field values on Resource with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in ResourceMultiError, or nil
+// if none found.
+func (m *Resource) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *Api) validate(all bool) error {
+func (m *Resource) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -8107,7 +8663,7 @@ func (m *Api) validate(all bool) error {
 		switch v := interface{}(m.GetCreatedAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, ApiValidationError{
+				errors = append(errors, ResourceValidationError{
 					field:  "CreatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -8115,7 +8671,7 @@ func (m *Api) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, ApiValidationError{
+				errors = append(errors, ResourceValidationError{
 					field:  "CreatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -8124,7 +8680,7 @@ func (m *Api) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetCreatedAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return ApiValidationError{
+			return ResourceValidationError{
 				field:  "CreatedAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -8136,7 +8692,7 @@ func (m *Api) validate(all bool) error {
 		switch v := interface{}(m.GetUpdatedAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, ApiValidationError{
+				errors = append(errors, ResourceValidationError{
 					field:  "UpdatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -8144,7 +8700,7 @@ func (m *Api) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, ApiValidationError{
+				errors = append(errors, ResourceValidationError{
 					field:  "UpdatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -8153,7 +8709,7 @@ func (m *Api) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetUpdatedAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return ApiValidationError{
+			return ResourceValidationError{
 				field:  "UpdatedAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -8176,18 +8732,18 @@ func (m *Api) validate(all bool) error {
 	// no validation rules for Operation
 
 	if len(errors) > 0 {
-		return ApiMultiError(errors)
+		return ResourceMultiError(errors)
 	}
 
 	return nil
 }
 
-// ApiMultiError is an error wrapping multiple validation errors returned by
-// Api.ValidateAll() if the designated constraints aren't met.
-type ApiMultiError []error
+// ResourceMultiError is an error wrapping multiple validation errors returned
+// by Resource.ValidateAll() if the designated constraints aren't met.
+type ResourceMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ApiMultiError) Error() string {
+func (m ResourceMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -8196,11 +8752,11 @@ func (m ApiMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ApiMultiError) AllErrors() []error { return m }
+func (m ResourceMultiError) AllErrors() []error { return m }
 
-// ApiValidationError is the validation error returned by Api.Validate if the
-// designated constraints aren't met.
-type ApiValidationError struct {
+// ResourceValidationError is the validation error returned by
+// Resource.Validate if the designated constraints aren't met.
+type ResourceValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -8208,22 +8764,22 @@ type ApiValidationError struct {
 }
 
 // Field function returns field value.
-func (e ApiValidationError) Field() string { return e.field }
+func (e ResourceValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ApiValidationError) Reason() string { return e.reason }
+func (e ResourceValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ApiValidationError) Cause() error { return e.cause }
+func (e ResourceValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ApiValidationError) Key() bool { return e.key }
+func (e ResourceValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ApiValidationError) ErrorName() string { return "ApiValidationError" }
+func (e ResourceValidationError) ErrorName() string { return "ResourceValidationError" }
 
 // Error satisfies the builtin error interface
-func (e ApiValidationError) Error() string {
+func (e ResourceValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -8235,14 +8791,14 @@ func (e ApiValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sApi.%s: %s%s",
+		"invalid %sResource.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ApiValidationError{}
+var _ error = ResourceValidationError{}
 
 var _ interface {
 	Field() string
@@ -8250,24 +8806,128 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ApiValidationError{}
+} = ResourceValidationError{}
 
-// Validate checks the field values on CreateApiReq with the rules defined in
-// the proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *CreateApiReq) Validate() error {
+// Validate checks the field values on ListResourceGroupReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListResourceGroupReply) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on CreateApiReq with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in CreateApiReqMultiError, or
-// nil if none found.
-func (m *CreateApiReq) ValidateAll() error {
+// ValidateAll checks the field values on ListResourceGroupReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListResourceGroupReplyMultiError, or nil if none found.
+func (m *ListResourceGroupReply) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *CreateApiReq) validate(all bool) error {
+func (m *ListResourceGroupReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Total
+
+	if len(errors) > 0 {
+		return ListResourceGroupReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListResourceGroupReplyMultiError is an error wrapping multiple validation
+// errors returned by ListResourceGroupReply.ValidateAll() if the designated
+// constraints aren't met.
+type ListResourceGroupReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListResourceGroupReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListResourceGroupReplyMultiError) AllErrors() []error { return m }
+
+// ListResourceGroupReplyValidationError is the validation error returned by
+// ListResourceGroupReply.Validate if the designated constraints aren't met.
+type ListResourceGroupReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListResourceGroupReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListResourceGroupReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListResourceGroupReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListResourceGroupReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListResourceGroupReplyValidationError) ErrorName() string {
+	return "ListResourceGroupReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListResourceGroupReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListResourceGroupReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListResourceGroupReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListResourceGroupReplyValidationError{}
+
+// Validate checks the field values on CreateResourceReq with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *CreateResourceReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on CreateResourceReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// CreateResourceReqMultiError, or nil if none found.
+func (m *CreateResourceReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *CreateResourceReq) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -8275,7 +8935,7 @@ func (m *CreateApiReq) validate(all bool) error {
 	var errors []error
 
 	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
-		err := CreateApiReqValidationError{
+		err := CreateResourceReqValidationError{
 			field:  "Name",
 			reason: "value length must be between 1 and 10 runes, inclusive",
 		}
@@ -8286,7 +8946,7 @@ func (m *CreateApiReq) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetPath()); l < 1 || l > 100 {
-		err := CreateApiReqValidationError{
+		err := CreateResourceReqValidationError{
 			field:  "Path",
 			reason: "value length must be between 1 and 100 runes, inclusive",
 		}
@@ -8296,10 +8956,10 @@ func (m *CreateApiReq) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if _, ok := _CreateApiReq_Method_InLookup[m.GetMethod()]; !ok {
-		err := CreateApiReqValidationError{
+	if _, ok := _CreateResourceReq_Method_InLookup[m.GetMethod()]; !ok {
+		err := CreateResourceReqValidationError{
 			field:  "Method",
-			reason: "value must be in list [* GET POST Head PUT PATCH DELETE OPTIONS CONNECT TRACE]",
+			reason: "value must be in list [* GET POST HEAD PUT PATCH DELETE OPTIONS CONNECT TRACE]",
 		}
 		if !all {
 			return err
@@ -8309,10 +8969,10 @@ func (m *CreateApiReq) validate(all bool) error {
 
 	if m.Group != nil {
 
-		if l := utf8.RuneCountInString(m.GetGroup()); l < 1 || l > 100 {
-			err := CreateApiReqValidationError{
+		if l := utf8.RuneCountInString(m.GetGroup()); l < 0 || l > 100 {
+			err := CreateResourceReqValidationError{
 				field:  "Group",
-				reason: "value length must be between 1 and 100 runes, inclusive",
+				reason: "value length must be between 0 and 100 runes, inclusive",
 			}
 			if !all {
 				return err
@@ -8324,10 +8984,10 @@ func (m *CreateApiReq) validate(all bool) error {
 
 	if m.Description != nil {
 
-		if l := utf8.RuneCountInString(m.GetDescription()); l < 1 || l > 1000 {
-			err := CreateApiReqValidationError{
+		if l := utf8.RuneCountInString(m.GetDescription()); l < 0 || l > 1000 {
+			err := CreateResourceReqValidationError{
 				field:  "Description",
-				reason: "value length must be between 1 and 1000 runes, inclusive",
+				reason: "value length must be between 0 and 1000 runes, inclusive",
 			}
 			if !all {
 				return err
@@ -8339,10 +8999,10 @@ func (m *CreateApiReq) validate(all bool) error {
 
 	if m.Operation != nil {
 
-		if l := utf8.RuneCountInString(m.GetOperation()); l < 1 || l > 100 {
-			err := CreateApiReqValidationError{
+		if l := utf8.RuneCountInString(m.GetOperation()); l < 0 || l > 100 {
+			err := CreateResourceReqValidationError{
 				field:  "Operation",
-				reason: "value length must be between 1 and 100 runes, inclusive",
+				reason: "value length must be between 0 and 100 runes, inclusive",
 			}
 			if !all {
 				return err
@@ -8353,18 +9013,19 @@ func (m *CreateApiReq) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return CreateApiReqMultiError(errors)
+		return CreateResourceReqMultiError(errors)
 	}
 
 	return nil
 }
 
-// CreateApiReqMultiError is an error wrapping multiple validation errors
-// returned by CreateApiReq.ValidateAll() if the designated constraints aren't met.
-type CreateApiReqMultiError []error
+// CreateResourceReqMultiError is an error wrapping multiple validation errors
+// returned by CreateResourceReq.ValidateAll() if the designated constraints
+// aren't met.
+type CreateResourceReqMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m CreateApiReqMultiError) Error() string {
+func (m CreateResourceReqMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -8373,11 +9034,11 @@ func (m CreateApiReqMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m CreateApiReqMultiError) AllErrors() []error { return m }
+func (m CreateResourceReqMultiError) AllErrors() []error { return m }
 
-// CreateApiReqValidationError is the validation error returned by
-// CreateApiReq.Validate if the designated constraints aren't met.
-type CreateApiReqValidationError struct {
+// CreateResourceReqValidationError is the validation error returned by
+// CreateResourceReq.Validate if the designated constraints aren't met.
+type CreateResourceReqValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -8385,22 +9046,24 @@ type CreateApiReqValidationError struct {
 }
 
 // Field function returns field value.
-func (e CreateApiReqValidationError) Field() string { return e.field }
+func (e CreateResourceReqValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e CreateApiReqValidationError) Reason() string { return e.reason }
+func (e CreateResourceReqValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e CreateApiReqValidationError) Cause() error { return e.cause }
+func (e CreateResourceReqValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e CreateApiReqValidationError) Key() bool { return e.key }
+func (e CreateResourceReqValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e CreateApiReqValidationError) ErrorName() string { return "CreateApiReqValidationError" }
+func (e CreateResourceReqValidationError) ErrorName() string {
+	return "CreateResourceReqValidationError"
+}
 
 // Error satisfies the builtin error interface
-func (e CreateApiReqValidationError) Error() string {
+func (e CreateResourceReqValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -8412,14 +9075,14 @@ func (e CreateApiReqValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sCreateApiReq.%s: %s%s",
+		"invalid %sCreateResourceReq.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = CreateApiReqValidationError{}
+var _ error = CreateResourceReqValidationError{}
 
 var _ interface {
 	Field() string
@@ -8427,13 +9090,13 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = CreateApiReqValidationError{}
+} = CreateResourceReqValidationError{}
 
-var _CreateApiReq_Method_InLookup = map[string]struct{}{
+var _CreateResourceReq_Method_InLookup = map[string]struct{}{
 	"*":       {},
 	"GET":     {},
 	"POST":    {},
-	"Head":    {},
+	"HEAD":    {},
 	"PUT":     {},
 	"PATCH":   {},
 	"DELETE":  {},
@@ -8442,22 +9105,22 @@ var _CreateApiReq_Method_InLookup = map[string]struct{}{
 	"TRACE":   {},
 }
 
-// Validate checks the field values on CreateApiReply with the rules defined in
-// the proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *CreateApiReply) Validate() error {
+// Validate checks the field values on CreateResourceReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *CreateResourceReply) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on CreateApiReply with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in CreateApiReplyMultiError,
-// or nil if none found.
-func (m *CreateApiReply) ValidateAll() error {
+// ValidateAll checks the field values on CreateResourceReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// CreateResourceReplyMultiError, or nil if none found.
+func (m *CreateResourceReply) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *CreateApiReply) validate(all bool) error {
+func (m *CreateResourceReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -8472,7 +9135,7 @@ func (m *CreateApiReply) validate(all bool) error {
 		switch v := interface{}(m.GetData()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CreateApiReplyValidationError{
+				errors = append(errors, CreateResourceReplyValidationError{
 					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -8480,7 +9143,7 @@ func (m *CreateApiReply) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, CreateApiReplyValidationError{
+				errors = append(errors, CreateResourceReplyValidationError{
 					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -8489,7 +9152,7 @@ func (m *CreateApiReply) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return CreateApiReplyValidationError{
+			return CreateResourceReplyValidationError{
 				field:  "Data",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -8498,19 +9161,19 @@ func (m *CreateApiReply) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return CreateApiReplyMultiError(errors)
+		return CreateResourceReplyMultiError(errors)
 	}
 
 	return nil
 }
 
-// CreateApiReplyMultiError is an error wrapping multiple validation errors
-// returned by CreateApiReply.ValidateAll() if the designated constraints
-// aren't met.
-type CreateApiReplyMultiError []error
+// CreateResourceReplyMultiError is an error wrapping multiple validation
+// errors returned by CreateResourceReply.ValidateAll() if the designated
+// constraints aren't met.
+type CreateResourceReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m CreateApiReplyMultiError) Error() string {
+func (m CreateResourceReplyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -8519,11 +9182,11 @@ func (m CreateApiReplyMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m CreateApiReplyMultiError) AllErrors() []error { return m }
+func (m CreateResourceReplyMultiError) AllErrors() []error { return m }
 
-// CreateApiReplyValidationError is the validation error returned by
-// CreateApiReply.Validate if the designated constraints aren't met.
-type CreateApiReplyValidationError struct {
+// CreateResourceReplyValidationError is the validation error returned by
+// CreateResourceReply.Validate if the designated constraints aren't met.
+type CreateResourceReplyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -8531,22 +9194,24 @@ type CreateApiReplyValidationError struct {
 }
 
 // Field function returns field value.
-func (e CreateApiReplyValidationError) Field() string { return e.field }
+func (e CreateResourceReplyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e CreateApiReplyValidationError) Reason() string { return e.reason }
+func (e CreateResourceReplyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e CreateApiReplyValidationError) Cause() error { return e.cause }
+func (e CreateResourceReplyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e CreateApiReplyValidationError) Key() bool { return e.key }
+func (e CreateResourceReplyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e CreateApiReplyValidationError) ErrorName() string { return "CreateApiReplyValidationError" }
+func (e CreateResourceReplyValidationError) ErrorName() string {
+	return "CreateResourceReplyValidationError"
+}
 
 // Error satisfies the builtin error interface
-func (e CreateApiReplyValidationError) Error() string {
+func (e CreateResourceReplyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -8558,14 +9223,14 @@ func (e CreateApiReplyValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sCreateApiReply.%s: %s%s",
+		"invalid %sCreateResourceReply.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = CreateApiReplyValidationError{}
+var _ error = CreateResourceReplyValidationError{}
 
 var _ interface {
 	Field() string
@@ -8573,24 +9238,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = CreateApiReplyValidationError{}
+} = CreateResourceReplyValidationError{}
 
-// Validate checks the field values on UpdateApiReq with the rules defined in
-// the proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *UpdateApiReq) Validate() error {
+// Validate checks the field values on UpdateResourceReq with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *UpdateResourceReq) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on UpdateApiReq with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in UpdateApiReqMultiError, or
-// nil if none found.
-func (m *UpdateApiReq) ValidateAll() error {
+// ValidateAll checks the field values on UpdateResourceReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateResourceReqMultiError, or nil if none found.
+func (m *UpdateResourceReq) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *UpdateApiReq) validate(all bool) error {
+func (m *UpdateResourceReq) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -8598,7 +9263,7 @@ func (m *UpdateApiReq) validate(all bool) error {
 	var errors []error
 
 	if m.GetId() <= 0 {
-		err := UpdateApiReqValidationError{
+		err := UpdateResourceReqValidationError{
 			field:  "Id",
 			reason: "value must be greater than 0",
 		}
@@ -8612,7 +9277,7 @@ func (m *UpdateApiReq) validate(all bool) error {
 		switch v := interface{}(m.GetData()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UpdateApiReqValidationError{
+				errors = append(errors, UpdateResourceReqValidationError{
 					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -8620,7 +9285,7 @@ func (m *UpdateApiReq) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, UpdateApiReqValidationError{
+				errors = append(errors, UpdateResourceReqValidationError{
 					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -8629,7 +9294,7 @@ func (m *UpdateApiReq) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return UpdateApiReqValidationError{
+			return UpdateResourceReqValidationError{
 				field:  "Data",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -8638,18 +9303,19 @@ func (m *UpdateApiReq) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return UpdateApiReqMultiError(errors)
+		return UpdateResourceReqMultiError(errors)
 	}
 
 	return nil
 }
 
-// UpdateApiReqMultiError is an error wrapping multiple validation errors
-// returned by UpdateApiReq.ValidateAll() if the designated constraints aren't met.
-type UpdateApiReqMultiError []error
+// UpdateResourceReqMultiError is an error wrapping multiple validation errors
+// returned by UpdateResourceReq.ValidateAll() if the designated constraints
+// aren't met.
+type UpdateResourceReqMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m UpdateApiReqMultiError) Error() string {
+func (m UpdateResourceReqMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -8658,11 +9324,11 @@ func (m UpdateApiReqMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m UpdateApiReqMultiError) AllErrors() []error { return m }
+func (m UpdateResourceReqMultiError) AllErrors() []error { return m }
 
-// UpdateApiReqValidationError is the validation error returned by
-// UpdateApiReq.Validate if the designated constraints aren't met.
-type UpdateApiReqValidationError struct {
+// UpdateResourceReqValidationError is the validation error returned by
+// UpdateResourceReq.Validate if the designated constraints aren't met.
+type UpdateResourceReqValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -8670,22 +9336,24 @@ type UpdateApiReqValidationError struct {
 }
 
 // Field function returns field value.
-func (e UpdateApiReqValidationError) Field() string { return e.field }
+func (e UpdateResourceReqValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e UpdateApiReqValidationError) Reason() string { return e.reason }
+func (e UpdateResourceReqValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e UpdateApiReqValidationError) Cause() error { return e.cause }
+func (e UpdateResourceReqValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e UpdateApiReqValidationError) Key() bool { return e.key }
+func (e UpdateResourceReqValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e UpdateApiReqValidationError) ErrorName() string { return "UpdateApiReqValidationError" }
+func (e UpdateResourceReqValidationError) ErrorName() string {
+	return "UpdateResourceReqValidationError"
+}
 
 // Error satisfies the builtin error interface
-func (e UpdateApiReqValidationError) Error() string {
+func (e UpdateResourceReqValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -8697,14 +9365,14 @@ func (e UpdateApiReqValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sUpdateApiReq.%s: %s%s",
+		"invalid %sUpdateResourceReq.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = UpdateApiReqValidationError{}
+var _ error = UpdateResourceReqValidationError{}
 
 var _ interface {
 	Field() string
@@ -8712,24 +9380,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = UpdateApiReqValidationError{}
+} = UpdateResourceReqValidationError{}
 
-// Validate checks the field values on UpdateApiReply with the rules defined in
-// the proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *UpdateApiReply) Validate() error {
+// Validate checks the field values on UpdateResourceReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateResourceReply) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on UpdateApiReply with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in UpdateApiReplyMultiError,
-// or nil if none found.
-func (m *UpdateApiReply) ValidateAll() error {
+// ValidateAll checks the field values on UpdateResourceReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateResourceReplyMultiError, or nil if none found.
+func (m *UpdateResourceReply) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *UpdateApiReply) validate(all bool) error {
+func (m *UpdateResourceReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -8744,7 +9412,7 @@ func (m *UpdateApiReply) validate(all bool) error {
 		switch v := interface{}(m.GetData()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UpdateApiReplyValidationError{
+				errors = append(errors, UpdateResourceReplyValidationError{
 					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -8752,7 +9420,7 @@ func (m *UpdateApiReply) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, UpdateApiReplyValidationError{
+				errors = append(errors, UpdateResourceReplyValidationError{
 					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -8761,7 +9429,7 @@ func (m *UpdateApiReply) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return UpdateApiReplyValidationError{
+			return UpdateResourceReplyValidationError{
 				field:  "Data",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -8770,19 +9438,19 @@ func (m *UpdateApiReply) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return UpdateApiReplyMultiError(errors)
+		return UpdateResourceReplyMultiError(errors)
 	}
 
 	return nil
 }
 
-// UpdateApiReplyMultiError is an error wrapping multiple validation errors
-// returned by UpdateApiReply.ValidateAll() if the designated constraints
-// aren't met.
-type UpdateApiReplyMultiError []error
+// UpdateResourceReplyMultiError is an error wrapping multiple validation
+// errors returned by UpdateResourceReply.ValidateAll() if the designated
+// constraints aren't met.
+type UpdateResourceReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m UpdateApiReplyMultiError) Error() string {
+func (m UpdateResourceReplyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -8791,11 +9459,11 @@ func (m UpdateApiReplyMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m UpdateApiReplyMultiError) AllErrors() []error { return m }
+func (m UpdateResourceReplyMultiError) AllErrors() []error { return m }
 
-// UpdateApiReplyValidationError is the validation error returned by
-// UpdateApiReply.Validate if the designated constraints aren't met.
-type UpdateApiReplyValidationError struct {
+// UpdateResourceReplyValidationError is the validation error returned by
+// UpdateResourceReply.Validate if the designated constraints aren't met.
+type UpdateResourceReplyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -8803,22 +9471,24 @@ type UpdateApiReplyValidationError struct {
 }
 
 // Field function returns field value.
-func (e UpdateApiReplyValidationError) Field() string { return e.field }
+func (e UpdateResourceReplyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e UpdateApiReplyValidationError) Reason() string { return e.reason }
+func (e UpdateResourceReplyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e UpdateApiReplyValidationError) Cause() error { return e.cause }
+func (e UpdateResourceReplyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e UpdateApiReplyValidationError) Key() bool { return e.key }
+func (e UpdateResourceReplyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e UpdateApiReplyValidationError) ErrorName() string { return "UpdateApiReplyValidationError" }
+func (e UpdateResourceReplyValidationError) ErrorName() string {
+	return "UpdateResourceReplyValidationError"
+}
 
 // Error satisfies the builtin error interface
-func (e UpdateApiReplyValidationError) Error() string {
+func (e UpdateResourceReplyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -8830,14 +9500,14 @@ func (e UpdateApiReplyValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sUpdateApiReply.%s: %s%s",
+		"invalid %sUpdateResourceReply.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = UpdateApiReplyValidationError{}
+var _ error = UpdateResourceReplyValidationError{}
 
 var _ interface {
 	Field() string
@@ -8845,244 +9515,248 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = UpdateApiReplyValidationError{}
+} = UpdateResourceReplyValidationError{}
 
-// Validate checks the field values on GetApiReq with the rules defined in the
-// proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *GetApiReq) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on GetApiReq with the rules defined in
-// the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in GetApiReqMultiError, or nil
-// if none found.
-func (m *GetApiReq) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *GetApiReq) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetId() <= 0 {
-		err := GetApiReqValidationError{
-			field:  "Id",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if len(errors) > 0 {
-		return GetApiReqMultiError(errors)
-	}
-
-	return nil
-}
-
-// GetApiReqMultiError is an error wrapping multiple validation errors returned
-// by GetApiReq.ValidateAll() if the designated constraints aren't met.
-type GetApiReqMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m GetApiReqMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m GetApiReqMultiError) AllErrors() []error { return m }
-
-// GetApiReqValidationError is the validation error returned by
-// GetApiReq.Validate if the designated constraints aren't met.
-type GetApiReqValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e GetApiReqValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e GetApiReqValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e GetApiReqValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e GetApiReqValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e GetApiReqValidationError) ErrorName() string { return "GetApiReqValidationError" }
-
-// Error satisfies the builtin error interface
-func (e GetApiReqValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sGetApiReq.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = GetApiReqValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = GetApiReqValidationError{}
-
-// Validate checks the field values on DeleteApiReq with the rules defined in
+// Validate checks the field values on GetResourceReq with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *DeleteApiReq) Validate() error {
+func (m *GetResourceReq) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on DeleteApiReq with the rules defined
+// ValidateAll checks the field values on GetResourceReq with the rules defined
 // in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in DeleteApiReqMultiError, or
-// nil if none found.
-func (m *DeleteApiReq) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *DeleteApiReq) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetId() <= 0 {
-		err := DeleteApiReqValidationError{
-			field:  "Id",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if len(errors) > 0 {
-		return DeleteApiReqMultiError(errors)
-	}
-
-	return nil
-}
-
-// DeleteApiReqMultiError is an error wrapping multiple validation errors
-// returned by DeleteApiReq.ValidateAll() if the designated constraints aren't met.
-type DeleteApiReqMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m DeleteApiReqMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m DeleteApiReqMultiError) AllErrors() []error { return m }
-
-// DeleteApiReqValidationError is the validation error returned by
-// DeleteApiReq.Validate if the designated constraints aren't met.
-type DeleteApiReqValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e DeleteApiReqValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e DeleteApiReqValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e DeleteApiReqValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e DeleteApiReqValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e DeleteApiReqValidationError) ErrorName() string { return "DeleteApiReqValidationError" }
-
-// Error satisfies the builtin error interface
-func (e DeleteApiReqValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sDeleteApiReq.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = DeleteApiReqValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = DeleteApiReqValidationError{}
-
-// Validate checks the field values on DeleteApiReply with the rules defined in
-// the proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *DeleteApiReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on DeleteApiReply with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in DeleteApiReplyMultiError,
+// result is a list of violation errors wrapped in GetResourceReqMultiError,
 // or nil if none found.
-func (m *DeleteApiReply) ValidateAll() error {
+func (m *GetResourceReq) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *DeleteApiReply) validate(all bool) error {
+func (m *GetResourceReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := GetResourceReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return GetResourceReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetResourceReqMultiError is an error wrapping multiple validation errors
+// returned by GetResourceReq.ValidateAll() if the designated constraints
+// aren't met.
+type GetResourceReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetResourceReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetResourceReqMultiError) AllErrors() []error { return m }
+
+// GetResourceReqValidationError is the validation error returned by
+// GetResourceReq.Validate if the designated constraints aren't met.
+type GetResourceReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetResourceReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetResourceReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetResourceReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetResourceReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetResourceReqValidationError) ErrorName() string { return "GetResourceReqValidationError" }
+
+// Error satisfies the builtin error interface
+func (e GetResourceReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetResourceReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetResourceReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetResourceReqValidationError{}
+
+// Validate checks the field values on DeleteResourceReq with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *DeleteResourceReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on DeleteResourceReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// DeleteResourceReqMultiError, or nil if none found.
+func (m *DeleteResourceReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *DeleteResourceReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := DeleteResourceReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return DeleteResourceReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// DeleteResourceReqMultiError is an error wrapping multiple validation errors
+// returned by DeleteResourceReq.ValidateAll() if the designated constraints
+// aren't met.
+type DeleteResourceReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m DeleteResourceReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m DeleteResourceReqMultiError) AllErrors() []error { return m }
+
+// DeleteResourceReqValidationError is the validation error returned by
+// DeleteResourceReq.Validate if the designated constraints aren't met.
+type DeleteResourceReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DeleteResourceReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DeleteResourceReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DeleteResourceReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DeleteResourceReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DeleteResourceReqValidationError) ErrorName() string {
+	return "DeleteResourceReqValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e DeleteResourceReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDeleteResourceReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DeleteResourceReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DeleteResourceReqValidationError{}
+
+// Validate checks the field values on DeleteResourceReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *DeleteResourceReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on DeleteResourceReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// DeleteResourceReplyMultiError, or nil if none found.
+func (m *DeleteResourceReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *DeleteResourceReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -9097,7 +9771,7 @@ func (m *DeleteApiReply) validate(all bool) error {
 		switch v := interface{}(m.GetData()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, DeleteApiReplyValidationError{
+				errors = append(errors, DeleteResourceReplyValidationError{
 					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -9105,7 +9779,7 @@ func (m *DeleteApiReply) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, DeleteApiReplyValidationError{
+				errors = append(errors, DeleteResourceReplyValidationError{
 					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -9114,7 +9788,7 @@ func (m *DeleteApiReply) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return DeleteApiReplyValidationError{
+			return DeleteResourceReplyValidationError{
 				field:  "Data",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -9123,19 +9797,19 @@ func (m *DeleteApiReply) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return DeleteApiReplyMultiError(errors)
+		return DeleteResourceReplyMultiError(errors)
 	}
 
 	return nil
 }
 
-// DeleteApiReplyMultiError is an error wrapping multiple validation errors
-// returned by DeleteApiReply.ValidateAll() if the designated constraints
-// aren't met.
-type DeleteApiReplyMultiError []error
+// DeleteResourceReplyMultiError is an error wrapping multiple validation
+// errors returned by DeleteResourceReply.ValidateAll() if the designated
+// constraints aren't met.
+type DeleteResourceReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m DeleteApiReplyMultiError) Error() string {
+func (m DeleteResourceReplyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -9144,11 +9818,11 @@ func (m DeleteApiReplyMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m DeleteApiReplyMultiError) AllErrors() []error { return m }
+func (m DeleteResourceReplyMultiError) AllErrors() []error { return m }
 
-// DeleteApiReplyValidationError is the validation error returned by
-// DeleteApiReply.Validate if the designated constraints aren't met.
-type DeleteApiReplyValidationError struct {
+// DeleteResourceReplyValidationError is the validation error returned by
+// DeleteResourceReply.Validate if the designated constraints aren't met.
+type DeleteResourceReplyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -9156,22 +9830,24 @@ type DeleteApiReplyValidationError struct {
 }
 
 // Field function returns field value.
-func (e DeleteApiReplyValidationError) Field() string { return e.field }
+func (e DeleteResourceReplyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e DeleteApiReplyValidationError) Reason() string { return e.reason }
+func (e DeleteResourceReplyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e DeleteApiReplyValidationError) Cause() error { return e.cause }
+func (e DeleteResourceReplyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e DeleteApiReplyValidationError) Key() bool { return e.key }
+func (e DeleteResourceReplyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e DeleteApiReplyValidationError) ErrorName() string { return "DeleteApiReplyValidationError" }
+func (e DeleteResourceReplyValidationError) ErrorName() string {
+	return "DeleteResourceReplyValidationError"
+}
 
 // Error satisfies the builtin error interface
-func (e DeleteApiReplyValidationError) Error() string {
+func (e DeleteResourceReplyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -9183,14 +9859,14 @@ func (e DeleteApiReplyValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sDeleteApiReply.%s: %s%s",
+		"invalid %sDeleteResourceReply.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = DeleteApiReplyValidationError{}
+var _ error = DeleteResourceReplyValidationError{}
 
 var _ interface {
 	Field() string
@@ -9198,7 +9874,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = DeleteApiReplyValidationError{}
+} = DeleteResourceReplyValidationError{}
 
 // Validate checks the field values on Menu with the rules defined in the proto
 // definition for this message. If any rules are violated, the first error
@@ -14439,6 +15115,138 @@ var _UpdateDomainReq_Data_State_NotInLookup = map[protobuf.DomainState]struct{}{
 	0: {},
 }
 
+// Validate checks the field values on UpdateDomainStateReq_Data with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateDomainStateReq_Data) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateDomainStateReq_Data with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateDomainStateReq_DataMultiError, or nil if none found.
+func (m *UpdateDomainStateReq_Data) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateDomainStateReq_Data) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.State != nil {
+
+		if _, ok := _UpdateDomainStateReq_Data_State_NotInLookup[m.GetState()]; ok {
+			err := UpdateDomainStateReq_DataValidationError{
+				field:  "State",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.DomainState_name[int32(m.GetState())]; !ok {
+			err := UpdateDomainStateReq_DataValidationError{
+				field:  "State",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return UpdateDomainStateReq_DataMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateDomainStateReq_DataMultiError is an error wrapping multiple validation
+// errors returned by UpdateDomainStateReq_Data.ValidateAll() if the
+// designated constraints aren't met.
+type UpdateDomainStateReq_DataMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateDomainStateReq_DataMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateDomainStateReq_DataMultiError) AllErrors() []error { return m }
+
+// UpdateDomainStateReq_DataValidationError is the validation error returned by
+// UpdateDomainStateReq_Data.Validate if the designated constraints aren't met.
+type UpdateDomainStateReq_DataValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateDomainStateReq_DataValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateDomainStateReq_DataValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateDomainStateReq_DataValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateDomainStateReq_DataValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateDomainStateReq_DataValidationError) ErrorName() string {
+	return "UpdateDomainStateReq_DataValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateDomainStateReq_DataValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateDomainStateReq_Data.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateDomainStateReq_DataValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateDomainStateReq_DataValidationError{}
+
+var _UpdateDomainStateReq_Data_State_NotInLookup = map[protobuf.DomainState]struct{}{
+	0: {},
+}
+
 // Validate checks the field values on HandleDomainMenuReq_Menu with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -14945,6 +15753,135 @@ var _UpdateAuthorityReq_Data_State_NotInLookup = map[protobuf.AuthorityState]str
 	0: {},
 }
 
+// Validate checks the field values on UpdateAuthorityStateReq_Data with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateAuthorityStateReq_Data) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateAuthorityStateReq_Data with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateAuthorityStateReq_DataMultiError, or nil if none found.
+func (m *UpdateAuthorityStateReq_Data) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateAuthorityStateReq_Data) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if _, ok := _UpdateAuthorityStateReq_Data_State_NotInLookup[m.GetState()]; ok {
+		err := UpdateAuthorityStateReq_DataValidationError{
+			field:  "State",
+			reason: "value must not be in list [0]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := protobuf.AuthorityState_name[int32(m.GetState())]; !ok {
+		err := UpdateAuthorityStateReq_DataValidationError{
+			field:  "State",
+			reason: "value must be one of the defined enum values",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return UpdateAuthorityStateReq_DataMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateAuthorityStateReq_DataMultiError is an error wrapping multiple
+// validation errors returned by UpdateAuthorityStateReq_Data.ValidateAll() if
+// the designated constraints aren't met.
+type UpdateAuthorityStateReq_DataMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateAuthorityStateReq_DataMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateAuthorityStateReq_DataMultiError) AllErrors() []error { return m }
+
+// UpdateAuthorityStateReq_DataValidationError is the validation error returned
+// by UpdateAuthorityStateReq_Data.Validate if the designated constraints
+// aren't met.
+type UpdateAuthorityStateReq_DataValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateAuthorityStateReq_DataValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateAuthorityStateReq_DataValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateAuthorityStateReq_DataValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateAuthorityStateReq_DataValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateAuthorityStateReq_DataValidationError) ErrorName() string {
+	return "UpdateAuthorityStateReq_DataValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateAuthorityStateReq_DataValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateAuthorityStateReq_Data.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateAuthorityStateReq_DataValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateAuthorityStateReq_DataValidationError{}
+
+var _UpdateAuthorityStateReq_Data_State_NotInLookup = map[protobuf.AuthorityState]struct{}{
+	0: {},
+}
+
 // Validate checks the field values on HandleAuthorityMenuReq_Menu with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -15258,22 +16195,22 @@ var _ interface {
 	ErrorName() string
 } = HandleAuthorityMenuReq_DataValidationError{}
 
-// Validate checks the field values on HandleAuthorityApiReq_Data with the
+// Validate checks the field values on HandleAuthorityResourceReq_Data with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *HandleAuthorityApiReq_Data) Validate() error {
+func (m *HandleAuthorityResourceReq_Data) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on HandleAuthorityApiReq_Data with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// HandleAuthorityApiReq_DataMultiError, or nil if none found.
-func (m *HandleAuthorityApiReq_Data) ValidateAll() error {
+// ValidateAll checks the field values on HandleAuthorityResourceReq_Data with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// HandleAuthorityResourceReq_DataMultiError, or nil if none found.
+func (m *HandleAuthorityResourceReq_Data) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *HandleAuthorityApiReq_Data) validate(all bool) error {
+func (m *HandleAuthorityResourceReq_Data) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -15281,19 +16218,19 @@ func (m *HandleAuthorityApiReq_Data) validate(all bool) error {
 	var errors []error
 
 	if len(errors) > 0 {
-		return HandleAuthorityApiReq_DataMultiError(errors)
+		return HandleAuthorityResourceReq_DataMultiError(errors)
 	}
 
 	return nil
 }
 
-// HandleAuthorityApiReq_DataMultiError is an error wrapping multiple
-// validation errors returned by HandleAuthorityApiReq_Data.ValidateAll() if
-// the designated constraints aren't met.
-type HandleAuthorityApiReq_DataMultiError []error
+// HandleAuthorityResourceReq_DataMultiError is an error wrapping multiple
+// validation errors returned by HandleAuthorityResourceReq_Data.ValidateAll()
+// if the designated constraints aren't met.
+type HandleAuthorityResourceReq_DataMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m HandleAuthorityApiReq_DataMultiError) Error() string {
+func (m HandleAuthorityResourceReq_DataMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -15302,11 +16239,12 @@ func (m HandleAuthorityApiReq_DataMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m HandleAuthorityApiReq_DataMultiError) AllErrors() []error { return m }
+func (m HandleAuthorityResourceReq_DataMultiError) AllErrors() []error { return m }
 
-// HandleAuthorityApiReq_DataValidationError is the validation error returned
-// by HandleAuthorityApiReq_Data.Validate if the designated constraints aren't met.
-type HandleAuthorityApiReq_DataValidationError struct {
+// HandleAuthorityResourceReq_DataValidationError is the validation error
+// returned by HandleAuthorityResourceReq_Data.Validate if the designated
+// constraints aren't met.
+type HandleAuthorityResourceReq_DataValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -15314,24 +16252,24 @@ type HandleAuthorityApiReq_DataValidationError struct {
 }
 
 // Field function returns field value.
-func (e HandleAuthorityApiReq_DataValidationError) Field() string { return e.field }
+func (e HandleAuthorityResourceReq_DataValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e HandleAuthorityApiReq_DataValidationError) Reason() string { return e.reason }
+func (e HandleAuthorityResourceReq_DataValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e HandleAuthorityApiReq_DataValidationError) Cause() error { return e.cause }
+func (e HandleAuthorityResourceReq_DataValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e HandleAuthorityApiReq_DataValidationError) Key() bool { return e.key }
+func (e HandleAuthorityResourceReq_DataValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e HandleAuthorityApiReq_DataValidationError) ErrorName() string {
-	return "HandleAuthorityApiReq_DataValidationError"
+func (e HandleAuthorityResourceReq_DataValidationError) ErrorName() string {
+	return "HandleAuthorityResourceReq_DataValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e HandleAuthorityApiReq_DataValidationError) Error() string {
+func (e HandleAuthorityResourceReq_DataValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -15343,14 +16281,14 @@ func (e HandleAuthorityApiReq_DataValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sHandleAuthorityApiReq_Data.%s: %s%s",
+		"invalid %sHandleAuthorityResourceReq_Data.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = HandleAuthorityApiReq_DataValidationError{}
+var _ error = HandleAuthorityResourceReq_DataValidationError{}
 
 var _ interface {
 	Field() string
@@ -15358,24 +16296,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = HandleAuthorityApiReq_DataValidationError{}
+} = HandleAuthorityResourceReq_DataValidationError{}
 
-// Validate checks the field values on UpdateApiReq_Data with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *UpdateApiReq_Data) Validate() error {
+// Validate checks the field values on UpdateResourceReq_Data with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateResourceReq_Data) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on UpdateApiReq_Data with the rules
+// ValidateAll checks the field values on UpdateResourceReq_Data with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// UpdateApiReq_DataMultiError, or nil if none found.
-func (m *UpdateApiReq_Data) ValidateAll() error {
+// UpdateResourceReq_DataMultiError, or nil if none found.
+func (m *UpdateResourceReq_Data) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *UpdateApiReq_Data) validate(all bool) error {
+func (m *UpdateResourceReq_Data) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -15383,7 +16321,7 @@ func (m *UpdateApiReq_Data) validate(all bool) error {
 	var errors []error
 
 	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
-		err := UpdateApiReq_DataValidationError{
+		err := UpdateResourceReq_DataValidationError{
 			field:  "Name",
 			reason: "value length must be between 1 and 10 runes, inclusive",
 		}
@@ -15394,7 +16332,7 @@ func (m *UpdateApiReq_Data) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetPath()); l < 1 || l > 100 {
-		err := UpdateApiReq_DataValidationError{
+		err := UpdateResourceReq_DataValidationError{
 			field:  "Path",
 			reason: "value length must be between 1 and 100 runes, inclusive",
 		}
@@ -15404,10 +16342,10 @@ func (m *UpdateApiReq_Data) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if _, ok := _UpdateApiReq_Data_Method_InLookup[m.GetMethod()]; !ok {
-		err := UpdateApiReq_DataValidationError{
+	if _, ok := _UpdateResourceReq_Data_Method_InLookup[m.GetMethod()]; !ok {
+		err := UpdateResourceReq_DataValidationError{
 			field:  "Method",
-			reason: "value must be in list [* GET POST Head PUT PATCH DELETE OPTIONS CONNECT TRACE]",
+			reason: "value must be in list [* GET POST HEAD PUT PATCH DELETE OPTIONS CONNECT TRACE]",
 		}
 		if !all {
 			return err
@@ -15417,10 +16355,10 @@ func (m *UpdateApiReq_Data) validate(all bool) error {
 
 	if m.Group != nil {
 
-		if l := utf8.RuneCountInString(m.GetGroup()); l < 1 || l > 100 {
-			err := UpdateApiReq_DataValidationError{
+		if l := utf8.RuneCountInString(m.GetGroup()); l < 0 || l > 100 {
+			err := UpdateResourceReq_DataValidationError{
 				field:  "Group",
-				reason: "value length must be between 1 and 100 runes, inclusive",
+				reason: "value length must be between 0 and 100 runes, inclusive",
 			}
 			if !all {
 				return err
@@ -15432,10 +16370,10 @@ func (m *UpdateApiReq_Data) validate(all bool) error {
 
 	if m.Description != nil {
 
-		if l := utf8.RuneCountInString(m.GetDescription()); l < 1 || l > 1000 {
-			err := UpdateApiReq_DataValidationError{
+		if l := utf8.RuneCountInString(m.GetDescription()); l < 0 || l > 1000 {
+			err := UpdateResourceReq_DataValidationError{
 				field:  "Description",
-				reason: "value length must be between 1 and 1000 runes, inclusive",
+				reason: "value length must be between 0 and 1000 runes, inclusive",
 			}
 			if !all {
 				return err
@@ -15447,10 +16385,10 @@ func (m *UpdateApiReq_Data) validate(all bool) error {
 
 	if m.Operation != nil {
 
-		if l := utf8.RuneCountInString(m.GetOperation()); l < 1 || l > 100 {
-			err := UpdateApiReq_DataValidationError{
+		if l := utf8.RuneCountInString(m.GetOperation()); l < 0 || l > 100 {
+			err := UpdateResourceReq_DataValidationError{
 				field:  "Operation",
-				reason: "value length must be between 1 and 100 runes, inclusive",
+				reason: "value length must be between 0 and 100 runes, inclusive",
 			}
 			if !all {
 				return err
@@ -15461,19 +16399,19 @@ func (m *UpdateApiReq_Data) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return UpdateApiReq_DataMultiError(errors)
+		return UpdateResourceReq_DataMultiError(errors)
 	}
 
 	return nil
 }
 
-// UpdateApiReq_DataMultiError is an error wrapping multiple validation errors
-// returned by UpdateApiReq_Data.ValidateAll() if the designated constraints
-// aren't met.
-type UpdateApiReq_DataMultiError []error
+// UpdateResourceReq_DataMultiError is an error wrapping multiple validation
+// errors returned by UpdateResourceReq_Data.ValidateAll() if the designated
+// constraints aren't met.
+type UpdateResourceReq_DataMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m UpdateApiReq_DataMultiError) Error() string {
+func (m UpdateResourceReq_DataMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -15482,11 +16420,11 @@ func (m UpdateApiReq_DataMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m UpdateApiReq_DataMultiError) AllErrors() []error { return m }
+func (m UpdateResourceReq_DataMultiError) AllErrors() []error { return m }
 
-// UpdateApiReq_DataValidationError is the validation error returned by
-// UpdateApiReq_Data.Validate if the designated constraints aren't met.
-type UpdateApiReq_DataValidationError struct {
+// UpdateResourceReq_DataValidationError is the validation error returned by
+// UpdateResourceReq_Data.Validate if the designated constraints aren't met.
+type UpdateResourceReq_DataValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -15494,24 +16432,24 @@ type UpdateApiReq_DataValidationError struct {
 }
 
 // Field function returns field value.
-func (e UpdateApiReq_DataValidationError) Field() string { return e.field }
+func (e UpdateResourceReq_DataValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e UpdateApiReq_DataValidationError) Reason() string { return e.reason }
+func (e UpdateResourceReq_DataValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e UpdateApiReq_DataValidationError) Cause() error { return e.cause }
+func (e UpdateResourceReq_DataValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e UpdateApiReq_DataValidationError) Key() bool { return e.key }
+func (e UpdateResourceReq_DataValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e UpdateApiReq_DataValidationError) ErrorName() string {
-	return "UpdateApiReq_DataValidationError"
+func (e UpdateResourceReq_DataValidationError) ErrorName() string {
+	return "UpdateResourceReq_DataValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e UpdateApiReq_DataValidationError) Error() string {
+func (e UpdateResourceReq_DataValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -15523,14 +16461,14 @@ func (e UpdateApiReq_DataValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sUpdateApiReq_Data.%s: %s%s",
+		"invalid %sUpdateResourceReq_Data.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = UpdateApiReq_DataValidationError{}
+var _ error = UpdateResourceReq_DataValidationError{}
 
 var _ interface {
 	Field() string
@@ -15538,13 +16476,13 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = UpdateApiReq_DataValidationError{}
+} = UpdateResourceReq_DataValidationError{}
 
-var _UpdateApiReq_Data_Method_InLookup = map[string]struct{}{
+var _UpdateResourceReq_Data_Method_InLookup = map[string]struct{}{
 	"*":       {},
 	"GET":     {},
 	"POST":    {},
-	"Head":    {},
+	"HEAD":    {},
 	"PUT":     {},
 	"PATCH":   {},
 	"DELETE":  {},

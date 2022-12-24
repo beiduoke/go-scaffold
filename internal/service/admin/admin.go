@@ -36,7 +36,7 @@ type AdminService struct {
 	domainCase     *biz.DomainUsecase
 	authorityCase  *biz.AuthorityUsecase
 	menuCase       *biz.MenuUsecase
-	apiCase        *biz.ApiUsecase
+	resourceCase   *biz.ResourceUsecase
 	departmentCase *biz.DepartmentUsecase
 }
 
@@ -50,7 +50,7 @@ func NewAdminService(
 	domainCase *biz.DomainUsecase,
 	authorityCase *biz.AuthorityUsecase,
 	menuCase *biz.MenuUsecase,
-	apiCase *biz.ApiUsecase,
+	resourceCase *biz.ResourceUsecase,
 	departmentCase *biz.DepartmentUsecase,
 ) *AdminService {
 	l := log.NewHelper(log.With(logger, "module", "service/admin"))
@@ -63,7 +63,7 @@ func NewAdminService(
 		domainCase:     domainCase,
 		authorityCase:  authorityCase,
 		menuCase:       menuCase,
-		apiCase:        apiCase,
+		resourceCase:   resourceCase,
 		departmentCase: departmentCase,
 	}
 }

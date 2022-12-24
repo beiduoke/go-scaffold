@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
@@ -163,7 +164,8 @@ func (r *DomainRepo) ListPage(ctx context.Context, handler pagination.Pagination
 
 func (r *DomainRepo) HandleMenu(ctx context.Context, g *biz.Domain) error {
 	sysDomain := r.toModel(g)
-	err := r.data.DB(ctx).Model(sysDomain).Association("Menus").Clear()
+	fmt.Printf("%#v \n 切换", sysDomain)
+	err := r.data.DB(ctx).Model(&sysDomain).Association("Menus").Clear()
 	if err != nil {
 		return err
 	}
@@ -172,7 +174,6 @@ func (r *DomainRepo) HandleMenu(ctx context.Context, g *biz.Domain) error {
 	for _, v := range g.Menus {
 		sysMenu = append(sysMenu, r.menu.(*MenuRepo).toModel(v))
 	}
-
 	return r.data.DB(ctx).Model(&sysDomain).Association("Menus").Replace(sysMenu)
 }
 

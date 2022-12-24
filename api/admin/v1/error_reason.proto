@@ -6,7 +6,7 @@ import "errors/errors.proto";
 option go_package = "github.com/beiduoke/go-scaffold/api/admin/v1;v1";
 option java_multiple_files = true;
 option java_package = "admin.v1";
-option objc_class_prefix = "APIadminV1";
+option objc_class_prefix = "RESOURCEadminV1";
 
 enum ErrorReason {
   // 设置缺省错误码
@@ -34,15 +34,15 @@ enum ErrorReason {
   AUTHORITY_UPDATE_FAIL = 303;
   AUTHORITY_DELETE_FAIL = 304;
   AUTHORITY_HANDLE_MENU_FAIL = 305;
-  AUTHORITY_HANDLE_API_FAIL = 306;
+  AUTHORITY_HANDLE_RESOURCE_FAIL = 306;
   MENU_NOT_FOUND = 401;
   MENU_CREATE_FAIL = 402;
   MENU_UPDATE_FAIL = 403;
   MENU_DELETE_FAIL = 404;
-  API_NOT_FOUND = 501;
-  API_CREATE_FAIL = 502;
-  API_UPDATE_FAIL = 503;
-  API_DELETE_FAIL = 504;
+  RESOURCE_NOT_FOUND = 501;
+  RESOURCE_CREATE_FAIL = 502;
+  RESOURCE_UPDATE_FAIL = 503;
+  RESOURCE_DELETE_FAIL = 504;
   DEPARTMENT_NOT_FOUND = 601;
   DEPARTMENT_CREATE_FAIL = 602;
   DEPARTMENT_UPDATE_FAIL = 603;

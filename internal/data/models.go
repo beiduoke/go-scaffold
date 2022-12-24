@@ -10,7 +10,7 @@ func NewSysModelMigrate() []interface{} {
 	return []interface{}{
 		&SysDomain{},
 		&SysUser{},
-		&SysApi{},
+		&SysResource{},
 		&SysApiOperationLog{},
 		&SysMenu{},
 		&SysMenuButton{},
@@ -75,7 +75,7 @@ type SysAuthority struct {
 	Parent        *SysAuthority  `gorm:"foreignKey:ParentID"`
 	Authorities   []SysAuthority `gorm:"many2many:sys_authority_relations"`
 	Menus         []SysMenu      `gorm:"many2many:sys_authority_menus;"`
-	Apis          []SysApi       `gorm:"many2many:sys_authority_apis;"`
+	Resources     []SysResource  `gorm:"many2many:sys_authority_resources;"`
 	Users         []SysUser      `gorm:"-"`
 	Domains       []SysDomain    `gorm:"-"`
 }
@@ -91,8 +91,8 @@ type SysDomainAuthorityUser struct {
 	User        SysUser      `gorm:"foreignKey:UserID"`
 }
 
-// Api api接口
-type SysApi struct {
+// Resource api资源
+type SysResource struct {
 	gorm.Model
 	Name        string         `gorm:"type:varchar(255);column:name;not null;comment:名称;"`
 	Path        string         `gorm:"type:varchar(255);column:path;not null;uniqueIndex:idx_api_path_method;comment:请求路径"`
@@ -100,8 +100,8 @@ type SysApi struct {
 	Operation   string         `gorm:"type:varchar(255);column:operation;not null;default:'';uniqueIndex:idx_api_path_method;comment:请求动作"`
 	Group       string         `gorm:"type:varchar(255);column:group;not null;comment:api分组"`
 	Description string         `gorm:"type:varchar(255);column:description;not null;default:'';comment:api描述"`
-	Authorities []SysAuthority `gorm:"many2many:sys_authority_apis;"`
-	Menus       []SysMenu      `gorm:"many2many:sys_menu_apis;"`
+	Authorities []SysAuthority `gorm:"many2many:sys_authority_resources;"`
+	Menus       []SysMenu      `gorm:"many2many:sys_menu_resources;"`
 }
 
 // SysMenu 菜单
@@ -117,8 +117,8 @@ type SysMenu struct {
 	Sort        int32              `gorm:"type:int(10);column:sort;not null;default:10;comment:排序标记"`
 	Meta        SysMeta            `gorm:"embedded;comment:附加属性"`
 	Authorities []SysAuthority     `gorm:"many2many:sys_authority_menus;"`
-	Menus       []SysMenu          `gorm:"many2many:sys_domain_menus;"`
-	Apis        []SysApi           `gorm:"many2many:sys_menu_apis;"`
+	Domains     []SysDomain        `gorm:"many2many:sys_domain_menus;"`
+	Resources   []SysResource      `gorm:"many2many:sys_menu_resources;"`
 	Parameters  []SysMenuParameter `gorm:"foreignKey:MenuID;"`
 	Buttons     []SysMenuButton    `gorm:"foreignKey:MenuID;"`
 }

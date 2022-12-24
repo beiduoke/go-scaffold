@@ -90,6 +90,8 @@ type AdminClient interface {
 	UpdateDomain(ctx context.Context, in *UpdateDomainReq, opts ...grpc.CallOption) (*UpdateDomainReply, error)
 	// 删除领域
 	DeleteDomain(ctx context.Context, in *DeleteDomainReq, opts ...grpc.CallOption) (*DeleteDomainReply, error)
+	// 设置领域状态
+	UpdateDomainState(ctx context.Context, in *UpdateDomainStateReq, opts ...grpc.CallOption) (*UpdateDomainStateReply, error)
 	// 获取权限角色菜单
 	ListDomainMenu(ctx context.Context, in *ListDomainMenuReq, opts ...grpc.CallOption) (*ListDomainMenuReply, error)
 	// 处理权限角色菜单
@@ -103,25 +105,29 @@ type AdminClient interface {
 	GetAuthority(ctx context.Context, in *GetAuthorityReq, opts ...grpc.CallOption) (*Authority, error)
 	// 修改权限角色
 	UpdateAuthority(ctx context.Context, in *UpdateAuthorityReq, opts ...grpc.CallOption) (*UpdateAuthorityReply, error)
+	// 设置领域状态
+	UpdateAuthorityState(ctx context.Context, in *UpdateAuthorityStateReq, opts ...grpc.CallOption) (*UpdateAuthorityStateReply, error)
 	// 删除权限角色
 	DeleteAuthority(ctx context.Context, in *DeleteAuthorityReq, opts ...grpc.CallOption) (*DeleteAuthorityReply, error)
 	// 获取权限角色菜单
 	ListAuthorityMenu(ctx context.Context, in *ListAuthorityMenuReq, opts ...grpc.CallOption) (*ListAuthorityMenuReply, error)
 	// 处理权限角色菜单
 	HandleAuthorityMenu(ctx context.Context, in *HandleAuthorityMenuReq, opts ...grpc.CallOption) (*HandleAuthorityMenuReply, error)
-	// 处理权限角色接口
-	HandleAuthorityApi(ctx context.Context, in *HandleAuthorityApiReq, opts ...grpc.CallOption) (*HandleAuthorityApiReply, error)
-	// 接口模块
-	// 列表接口
-	ListApi(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
-	// 创建接口
-	CreateApi(ctx context.Context, in *CreateApiReq, opts ...grpc.CallOption) (*CreateApiReply, error)
-	// 获取接口
-	GetApi(ctx context.Context, in *GetApiReq, opts ...grpc.CallOption) (*Api, error)
-	// 修改接口
-	UpdateApi(ctx context.Context, in *UpdateApiReq, opts ...grpc.CallOption) (*UpdateApiReply, error)
-	// 删除接口
-	DeleteApi(ctx context.Context, in *DeleteApiReq, opts ...grpc.CallOption) (*DeleteApiReply, error)
+	// 处理权限角色资源
+	HandleAuthorityResource(ctx context.Context, in *HandleAuthorityResourceReq, opts ...grpc.CallOption) (*HandleAuthorityResourceReply, error)
+	// 资源模块
+	// 列表资源
+	ListResource(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
+	// 列表资源-分组
+	ListResourceGroup(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*ListResourceGroupReply, error)
+	// 创建资源
+	CreateResource(ctx context.Context, in *CreateResourceReq, opts ...grpc.CallOption) (*CreateResourceReply, error)
+	// 获取资源
+	GetResource(ctx context.Context, in *GetResourceReq, opts ...grpc.CallOption) (*Resource, error)
+	// 修改资源
+	UpdateResource(ctx context.Context, in *UpdateResourceReq, opts ...grpc.CallOption) (*UpdateResourceReply, error)
+	// 删除资源
+	DeleteResource(ctx context.Context, in *DeleteResourceReq, opts ...grpc.CallOption) (*DeleteResourceReply, error)
 	// 菜单模块
 	// 列表菜单
 	ListMenu(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
@@ -391,6 +397,15 @@ func (c *adminClient) DeleteDomain(ctx context.Context, in *DeleteDomainReq, opt
 	return out, nil
 }
 
+func (c *adminClient) UpdateDomainState(ctx context.Context, in *UpdateDomainStateReq, opts ...grpc.CallOption) (*UpdateDomainStateReply, error) {
+	out := new(UpdateDomainStateReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/UpdateDomainState", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *adminClient) ListDomainMenu(ctx context.Context, in *ListDomainMenuReq, opts ...grpc.CallOption) (*ListDomainMenuReply, error) {
 	out := new(ListDomainMenuReply)
 	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListDomainMenu", in, out, opts...)
@@ -445,6 +460,15 @@ func (c *adminClient) UpdateAuthority(ctx context.Context, in *UpdateAuthorityRe
 	return out, nil
 }
 
+func (c *adminClient) UpdateAuthorityState(ctx context.Context, in *UpdateAuthorityStateReq, opts ...grpc.CallOption) (*UpdateAuthorityStateReply, error) {
+	out := new(UpdateAuthorityStateReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/UpdateAuthorityState", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *adminClient) DeleteAuthority(ctx context.Context, in *DeleteAuthorityReq, opts ...grpc.CallOption) (*DeleteAuthorityReply, error) {
 	out := new(DeleteAuthorityReply)
 	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/DeleteAuthority", in, out, opts...)
@@ -472,54 +496,63 @@ func (c *adminClient) HandleAuthorityMenu(ctx context.Context, in *HandleAuthori
 	return out, nil
 }
 
-func (c *adminClient) HandleAuthorityApi(ctx context.Context, in *HandleAuthorityApiReq, opts ...grpc.CallOption) (*HandleAuthorityApiReply, error) {
-	out := new(HandleAuthorityApiReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/HandleAuthorityApi", in, out, opts...)
+func (c *adminClient) HandleAuthorityResource(ctx context.Context, in *HandleAuthorityResourceReq, opts ...grpc.CallOption) (*HandleAuthorityResourceReply, error) {
+	out := new(HandleAuthorityResourceReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/HandleAuthorityResource", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) ListApi(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
+func (c *adminClient) ListResource(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
 	out := new(protobuf.PagingReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListApi", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListResource", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) CreateApi(ctx context.Context, in *CreateApiReq, opts ...grpc.CallOption) (*CreateApiReply, error) {
-	out := new(CreateApiReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/CreateApi", in, out, opts...)
+func (c *adminClient) ListResourceGroup(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*ListResourceGroupReply, error) {
+	out := new(ListResourceGroupReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListResourceGroup", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) GetApi(ctx context.Context, in *GetApiReq, opts ...grpc.CallOption) (*Api, error) {
-	out := new(Api)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetApi", in, out, opts...)
+func (c *adminClient) CreateResource(ctx context.Context, in *CreateResourceReq, opts ...grpc.CallOption) (*CreateResourceReply, error) {
+	out := new(CreateResourceReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/CreateResource", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) UpdateApi(ctx context.Context, in *UpdateApiReq, opts ...grpc.CallOption) (*UpdateApiReply, error) {
-	out := new(UpdateApiReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/UpdateApi", in, out, opts...)
+func (c *adminClient) GetResource(ctx context.Context, in *GetResourceReq, opts ...grpc.CallOption) (*Resource, error) {
+	out := new(Resource)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetResource", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) DeleteApi(ctx context.Context, in *DeleteApiReq, opts ...grpc.CallOption) (*DeleteApiReply, error) {
-	out := new(DeleteApiReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/DeleteApi", in, out, opts...)
+func (c *adminClient) UpdateResource(ctx context.Context, in *UpdateResourceReq, opts ...grpc.CallOption) (*UpdateResourceReply, error) {
+	out := new(UpdateResourceReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/UpdateResource", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) DeleteResource(ctx context.Context, in *DeleteResourceReq, opts ...grpc.CallOption) (*DeleteResourceReply, error) {
+	out := new(DeleteResourceReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/DeleteResource", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -704,6 +737,8 @@ type AdminServer interface {
 	UpdateDomain(context.Context, *UpdateDomainReq) (*UpdateDomainReply, error)
 	// 删除领域
 	DeleteDomain(context.Context, *DeleteDomainReq) (*DeleteDomainReply, error)
+	// 设置领域状态
+	UpdateDomainState(context.Context, *UpdateDomainStateReq) (*UpdateDomainStateReply, error)
 	// 获取权限角色菜单
 	ListDomainMenu(context.Context, *ListDomainMenuReq) (*ListDomainMenuReply, error)
 	// 处理权限角色菜单
@@ -717,25 +752,29 @@ type AdminServer interface {
 	GetAuthority(context.Context, *GetAuthorityReq) (*Authority, error)
 	// 修改权限角色
 	UpdateAuthority(context.Context, *UpdateAuthorityReq) (*UpdateAuthorityReply, error)
+	// 设置领域状态
+	UpdateAuthorityState(context.Context, *UpdateAuthorityStateReq) (*UpdateAuthorityStateReply, error)
 	// 删除权限角色
 	DeleteAuthority(context.Context, *DeleteAuthorityReq) (*DeleteAuthorityReply, error)
 	// 获取权限角色菜单
 	ListAuthorityMenu(context.Context, *ListAuthorityMenuReq) (*ListAuthorityMenuReply, error)
 	// 处理权限角色菜单
 	HandleAuthorityMenu(context.Context, *HandleAuthorityMenuReq) (*HandleAuthorityMenuReply, error)
-	// 处理权限角色接口
-	HandleAuthorityApi(context.Context, *HandleAuthorityApiReq) (*HandleAuthorityApiReply, error)
-	// 接口模块
-	// 列表接口
-	ListApi(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
-	// 创建接口
-	CreateApi(context.Context, *CreateApiReq) (*CreateApiReply, error)
-	// 获取接口
-	GetApi(context.Context, *GetApiReq) (*Api, error)
-	// 修改接口
-	UpdateApi(context.Context, *UpdateApiReq) (*UpdateApiReply, error)
-	// 删除接口
-	DeleteApi(context.Context, *DeleteApiReq) (*DeleteApiReply, error)
+	// 处理权限角色资源
+	HandleAuthorityResource(context.Context, *HandleAuthorityResourceReq) (*HandleAuthorityResourceReply, error)
+	// 资源模块
+	// 列表资源
+	ListResource(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	// 列表资源-分组
+	ListResourceGroup(context.Context, *protobuf.PagingReq) (*ListResourceGroupReply, error)
+	// 创建资源
+	CreateResource(context.Context, *CreateResourceReq) (*CreateResourceReply, error)
+	// 获取资源
+	GetResource(context.Context, *GetResourceReq) (*Resource, error)
+	// 修改资源
+	UpdateResource(context.Context, *UpdateResourceReq) (*UpdateResourceReply, error)
+	// 删除资源
+	DeleteResource(context.Context, *DeleteResourceReq) (*DeleteResourceReply, error)
 	// 菜单模块
 	// 列表菜单
 	ListMenu(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
@@ -846,6 +885,9 @@ func (UnimplementedAdminServer) UpdateDomain(context.Context, *UpdateDomainReq) 
 func (UnimplementedAdminServer) DeleteDomain(context.Context, *DeleteDomainReq) (*DeleteDomainReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDomain not implemented")
 }
+func (UnimplementedAdminServer) UpdateDomainState(context.Context, *UpdateDomainStateReq) (*UpdateDomainStateReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateDomainState not implemented")
+}
 func (UnimplementedAdminServer) ListDomainMenu(context.Context, *ListDomainMenuReq) (*ListDomainMenuReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDomainMenu not implemented")
 }
@@ -864,6 +906,9 @@ func (UnimplementedAdminServer) GetAuthority(context.Context, *GetAuthorityReq) 
 func (UnimplementedAdminServer) UpdateAuthority(context.Context, *UpdateAuthorityReq) (*UpdateAuthorityReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAuthority not implemented")
 }
+func (UnimplementedAdminServer) UpdateAuthorityState(context.Context, *UpdateAuthorityStateReq) (*UpdateAuthorityStateReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAuthorityState not implemented")
+}
 func (UnimplementedAdminServer) DeleteAuthority(context.Context, *DeleteAuthorityReq) (*DeleteAuthorityReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteAuthority not implemented")
 }
@@ -873,23 +918,26 @@ func (UnimplementedAdminServer) ListAuthorityMenu(context.Context, *ListAuthorit
 func (UnimplementedAdminServer) HandleAuthorityMenu(context.Context, *HandleAuthorityMenuReq) (*HandleAuthorityMenuReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HandleAuthorityMenu not implemented")
 }
-func (UnimplementedAdminServer) HandleAuthorityApi(context.Context, *HandleAuthorityApiReq) (*HandleAuthorityApiReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method HandleAuthorityApi not implemented")
+func (UnimplementedAdminServer) HandleAuthorityResource(context.Context, *HandleAuthorityResourceReq) (*HandleAuthorityResourceReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HandleAuthorityResource not implemented")
 }
-func (UnimplementedAdminServer) ListApi(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListApi not implemented")
+func (UnimplementedAdminServer) ListResource(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListResource not implemented")
 }
-func (UnimplementedAdminServer) CreateApi(context.Context, *CreateApiReq) (*CreateApiReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateApi not implemented")
+func (UnimplementedAdminServer) ListResourceGroup(context.Context, *protobuf.PagingReq) (*ListResourceGroupReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListResourceGroup not implemented")
 }
-func (UnimplementedAdminServer) GetApi(context.Context, *GetApiReq) (*Api, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetApi not implemented")
+func (UnimplementedAdminServer) CreateResource(context.Context, *CreateResourceReq) (*CreateResourceReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateResource not implemented")
 }
-func (UnimplementedAdminServer) UpdateApi(context.Context, *UpdateApiReq) (*UpdateApiReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateApi not implemented")
+func (UnimplementedAdminServer) GetResource(context.Context, *GetResourceReq) (*Resource, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetResource not implemented")
 }
-func (UnimplementedAdminServer) DeleteApi(context.Context, *DeleteApiReq) (*DeleteApiReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteApi not implemented")
+func (UnimplementedAdminServer) UpdateResource(context.Context, *UpdateResourceReq) (*UpdateResourceReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateResource not implemented")
+}
+func (UnimplementedAdminServer) DeleteResource(context.Context, *DeleteResourceReq) (*DeleteResourceReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteResource not implemented")
 }
 func (UnimplementedAdminServer) ListMenu(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMenu not implemented")
@@ -1408,6 +1456,24 @@ func _Admin_DeleteDomain_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Admin_UpdateDomainState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateDomainStateReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).UpdateDomainState(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/UpdateDomainState",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).UpdateDomainState(ctx, req.(*UpdateDomainStateReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Admin_ListDomainMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListDomainMenuReq)
 	if err := dec(in); err != nil {
@@ -1516,6 +1582,24 @@ func _Admin_UpdateAuthority_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Admin_UpdateAuthorityState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAuthorityStateReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).UpdateAuthorityState(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/UpdateAuthorityState",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).UpdateAuthorityState(ctx, req.(*UpdateAuthorityStateReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Admin_DeleteAuthority_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteAuthorityReq)
 	if err := dec(in); err != nil {
@@ -1570,110 +1654,128 @@ func _Admin_HandleAuthorityMenu_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_HandleAuthorityApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HandleAuthorityApiReq)
+func _Admin_HandleAuthorityResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HandleAuthorityResourceReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).HandleAuthorityApi(ctx, in)
+		return srv.(AdminServer).HandleAuthorityResource(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/HandleAuthorityApi",
+		FullMethod: "/api.admin.v1.Admin/HandleAuthorityResource",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).HandleAuthorityApi(ctx, req.(*HandleAuthorityApiReq))
+		return srv.(AdminServer).HandleAuthorityResource(ctx, req.(*HandleAuthorityResourceReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_ListApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Admin_ListResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(protobuf.PagingReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).ListApi(ctx, in)
+		return srv.(AdminServer).ListResource(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/ListApi",
+		FullMethod: "/api.admin.v1.Admin/ListResource",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).ListApi(ctx, req.(*protobuf.PagingReq))
+		return srv.(AdminServer).ListResource(ctx, req.(*protobuf.PagingReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_CreateApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateApiReq)
+func _Admin_ListResourceGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(protobuf.PagingReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).CreateApi(ctx, in)
+		return srv.(AdminServer).ListResourceGroup(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/CreateApi",
+		FullMethod: "/api.admin.v1.Admin/ListResourceGroup",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).CreateApi(ctx, req.(*CreateApiReq))
+		return srv.(AdminServer).ListResourceGroup(ctx, req.(*protobuf.PagingReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_GetApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetApiReq)
+func _Admin_CreateResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateResourceReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).GetApi(ctx, in)
+		return srv.(AdminServer).CreateResource(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/GetApi",
+		FullMethod: "/api.admin.v1.Admin/CreateResource",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).GetApi(ctx, req.(*GetApiReq))
+		return srv.(AdminServer).CreateResource(ctx, req.(*CreateResourceReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_UpdateApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateApiReq)
+func _Admin_GetResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetResourceReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).UpdateApi(ctx, in)
+		return srv.(AdminServer).GetResource(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/UpdateApi",
+		FullMethod: "/api.admin.v1.Admin/GetResource",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).UpdateApi(ctx, req.(*UpdateApiReq))
+		return srv.(AdminServer).GetResource(ctx, req.(*GetResourceReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_DeleteApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteApiReq)
+func _Admin_UpdateResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateResourceReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).DeleteApi(ctx, in)
+		return srv.(AdminServer).UpdateResource(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/DeleteApi",
+		FullMethod: "/api.admin.v1.Admin/UpdateResource",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).DeleteApi(ctx, req.(*DeleteApiReq))
+		return srv.(AdminServer).UpdateResource(ctx, req.(*UpdateResourceReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_DeleteResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteResourceReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).DeleteResource(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/DeleteResource",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).DeleteResource(ctx, req.(*DeleteResourceReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2006,6 +2108,10 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Admin_DeleteDomain_Handler,
 		},
 		{
+			MethodName: "UpdateDomainState",
+			Handler:    _Admin_UpdateDomainState_Handler,
+		},
+		{
 			MethodName: "ListDomainMenu",
 			Handler:    _Admin_ListDomainMenu_Handler,
 		},
@@ -2030,6 +2136,10 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Admin_UpdateAuthority_Handler,
 		},
 		{
+			MethodName: "UpdateAuthorityState",
+			Handler:    _Admin_UpdateAuthorityState_Handler,
+		},
+		{
 			MethodName: "DeleteAuthority",
 			Handler:    _Admin_DeleteAuthority_Handler,
 		},
@@ -2042,28 +2152,32 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Admin_HandleAuthorityMenu_Handler,
 		},
 		{
-			MethodName: "HandleAuthorityApi",
-			Handler:    _Admin_HandleAuthorityApi_Handler,
+			MethodName: "HandleAuthorityResource",
+			Handler:    _Admin_HandleAuthorityResource_Handler,
 		},
 		{
-			MethodName: "ListApi",
-			Handler:    _Admin_ListApi_Handler,
+			MethodName: "ListResource",
+			Handler:    _Admin_ListResource_Handler,
 		},
 		{
-			MethodName: "CreateApi",
-			Handler:    _Admin_CreateApi_Handler,
+			MethodName: "ListResourceGroup",
+			Handler:    _Admin_ListResourceGroup_Handler,
 		},
 		{
-			MethodName: "GetApi",
-			Handler:    _Admin_GetApi_Handler,
+			MethodName: "CreateResource",
+			Handler:    _Admin_CreateResource_Handler,
 		},
 		{
-			MethodName: "UpdateApi",
-			Handler:    _Admin_UpdateApi_Handler,
+			MethodName: "GetResource",
+			Handler:    _Admin_GetResource_Handler,
 		},
 		{
-			MethodName: "DeleteApi",
-			Handler:    _Admin_DeleteApi_Handler,
+			MethodName: "UpdateResource",
+			Handler:    _Admin_UpdateResource_Handler,
+		},
+		{
+			MethodName: "DeleteResource",
+			Handler:    _Admin_DeleteResource_Handler,
 		},
 		{
 			MethodName: "ListMenu",

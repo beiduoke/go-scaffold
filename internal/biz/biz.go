@@ -13,7 +13,7 @@ var ProviderSet = wire.NewSet(
 	NewBiz,
 	NewDomainUsecase,
 	NewAuthorityUsecase,
-	NewApiUsecase,
+	NewResourceUsecase,
 	NewMenuUsecase,
 	NewAuthUsecase,
 	NewUserUsecase,
@@ -29,14 +29,14 @@ type Biz struct {
 	log *log.Helper
 	// 逻辑事务操作
 	tm Transaction
-	// 公共接口
-	// 权限认证接口
+	// 公共
+	// 权限认证
 	enforcer casbin.IEnforcer
-	// 领域数据接口
+	// 领域数据
 	domainRepo DomainRepo
-	// 权限数据接口
+	// 权限数据
 	authorityRepo AuthorityRepo
-	// 用户数据接口
+	// 用户数据
 	userRepo UserRepo
 }
 

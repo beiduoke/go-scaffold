@@ -70,7 +70,7 @@ func (r *AuthorityRepo) Save(ctx context.Context, g *biz.Authority) (*biz.Author
 
 func (r *AuthorityRepo) Update(ctx context.Context, g *biz.Authority) (*biz.Authority, error) {
 	d := r.toModel(g)
-	result := r.data.DBD(ctx).Debug().Model(d).Select("*").Omit("CreatedAt").Updates(d)
+	result := r.data.DBD(ctx).Model(d).Select("*").Omit("CreatedAt").Updates(d)
 	return r.toBiz(d), result.Error
 }
 
@@ -187,17 +187,17 @@ func (r *AuthorityRepo) HandleMenu(ctx context.Context, g *biz.Authority) error 
 }
 
 // 处理角色绑定
-func (r *AuthorityRepo) HandleApi(ctx context.Context, g *biz.Authority) error {
+func (r *AuthorityRepo) HandleResource(ctx context.Context, g *biz.Authority) error {
 	domain := r.data.Domain(ctx)
 
-	var apiRepo = ApiRepo{}
-	var apis []SysApi
-	for _, v := range g.Apis {
-		apis = append(apis, *apiRepo.toModel(v))
+	var apiRepo = ResourceRepo{}
+	var resources []SysResource
+	for _, v := range g.Resources {
+		resources = append(resources, *apiRepo.toModel(v))
 	}
 
 	sysAuthority := r.toModel(g)
-	if err := r.data.DB(ctx).Model(sysAuthority).Debug().Association("Apis").Replace(&apis); err != nil {
+	if err := r.data.DB(ctx).Model(sysAuthority).Debug().Association("Resources").Replace(&resources); err != nil {
 		return err
 	}
 
@@ -209,8 +209,8 @@ func (r *AuthorityRepo) HandleApi(ctx context.Context, g *biz.Authority) error {
 		}
 	}
 	// 根据最新资源重新绑定
-	rules := make([][]string, 0, len(g.Apis))
-	for _, v := range g.Apis {
+	rules := make([][]string, 0, len(g.Resources))
+	for _, v := range g.Resources {
 		rules = append(rules, []string{domain, v.Path, v.Method})
 	}
 	_, err := r.data.enforcer.AddPermissionsForUser(role, rules...)

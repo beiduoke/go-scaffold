@@ -132,6 +132,24 @@ func (uc *DomainUsecase) Update(ctx context.Context, g *Domain) error {
 	return err
 }
 
+// UpdateState 修改领域状态
+func (uc *DomainUsecase) UpdateState(ctx context.Context, g *Domain) error {
+	uc.log.WithContext(ctx).Infof("UpdateDomainState: %v", g)
+
+	domain, _ := uc.biz.domainRepo.FindByID(ctx, g.ID)
+	if domain == nil {
+		return errors.New("领域不存在")
+	}
+
+	if g.State <= 0 {
+		g.State = int32(pb.DomainState_DOMAIN_STATE_ACTIVE)
+	}
+
+	domain.State = g.State
+	_, err := uc.biz.domainRepo.Update(ctx, domain)
+	return err
+}
+
 // List 领域列表全部
 func (uc *DomainUsecase) ListAll(ctx context.Context) ([]*Domain, int64) {
 	uc.log.WithContext(ctx).Infof("DomainList")

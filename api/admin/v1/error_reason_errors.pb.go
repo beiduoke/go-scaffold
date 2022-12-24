@@ -287,16 +287,16 @@ func ErrorAuthorityHandleMenuFail(format string, args ...interface{}) *errors.Er
 	return errors.New(400, ErrorReason_AUTHORITY_HANDLE_MENU_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
-func IsAuthorityHandleApiFail(err error) bool {
+func IsAuthorityHandleResourceFail(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_AUTHORITY_HANDLE_API_FAIL.String() && e.Code == 400
+	return e.Reason == ErrorReason_AUTHORITY_HANDLE_RESOURCE_FAIL.String() && e.Code == 400
 }
 
-func ErrorAuthorityHandleApiFail(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_AUTHORITY_HANDLE_API_FAIL.String(), fmt.Sprintf(format, args...))
+func ErrorAuthorityHandleResourceFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_AUTHORITY_HANDLE_RESOURCE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
 func IsMenuNotFound(err error) bool {
@@ -347,52 +347,52 @@ func ErrorMenuDeleteFail(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_MENU_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
-func IsApiNotFound(err error) bool {
+func IsResourceNotFound(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_API_NOT_FOUND.String() && e.Code == 400
+	return e.Reason == ErrorReason_RESOURCE_NOT_FOUND.String() && e.Code == 400
 }
 
-func ErrorApiNotFound(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_API_NOT_FOUND.String(), fmt.Sprintf(format, args...))
+func ErrorResourceNotFound(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_RESOURCE_NOT_FOUND.String(), fmt.Sprintf(format, args...))
 }
 
-func IsApiCreateFail(err error) bool {
+func IsResourceCreateFail(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_API_CREATE_FAIL.String() && e.Code == 400
+	return e.Reason == ErrorReason_RESOURCE_CREATE_FAIL.String() && e.Code == 400
 }
 
-func ErrorApiCreateFail(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_API_CREATE_FAIL.String(), fmt.Sprintf(format, args...))
+func ErrorResourceCreateFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_RESOURCE_CREATE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
-func IsApiUpdateFail(err error) bool {
+func IsResourceUpdateFail(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_API_UPDATE_FAIL.String() && e.Code == 400
+	return e.Reason == ErrorReason_RESOURCE_UPDATE_FAIL.String() && e.Code == 400
 }
 
-func ErrorApiUpdateFail(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_API_UPDATE_FAIL.String(), fmt.Sprintf(format, args...))
+func ErrorResourceUpdateFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_RESOURCE_UPDATE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
-func IsApiDeleteFail(err error) bool {
+func IsResourceDeleteFail(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_API_DELETE_FAIL.String() && e.Code == 400
+	return e.Reason == ErrorReason_RESOURCE_DELETE_FAIL.String() && e.Code == 400
 }
 
-func ErrorApiDeleteFail(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_API_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
+func ErrorResourceDeleteFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_RESOURCE_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
 func IsDepartmentNotFound(err error) bool {

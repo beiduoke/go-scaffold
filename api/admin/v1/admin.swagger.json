@@ -26,185 +26,6 @@
     "application/json"
   ],
   "paths": {
-    "/admin/v1/apis": {
-      "get": {
-        "summary": "接口模块\n列表接口",
-        "operationId": "Admin_ListApi",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/protobufPagingReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "page",
-            "description": "当前页.",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "pageSize",
-            "description": "每一页的行数.",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "nopaging",
-            "description": "是否不分页.",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      },
-      "post": {
-        "summary": "创建接口",
-        "operationId": "Admin_CreateApi",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1CreateApiReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1CreateApiReq"
-            }
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
-    "/admin/v1/apis/{id}": {
-      "get": {
-        "summary": "获取接口",
-        "operationId": "Admin_GetApi",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1Api"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      },
-      "delete": {
-        "summary": "删除接口",
-        "operationId": "Admin_DeleteApi",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1DeleteApiReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      },
-      "put": {
-        "summary": "修改接口",
-        "operationId": "Admin_UpdateApi",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1UpdateApiReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1UpdateApiReqData"
-            }
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
     "/admin/v1/auth/emailLogin": {
       "post": {
         "summary": "邮件登陆",
@@ -262,11 +83,11 @@
         ],
         "security": [
           {
-            "ApiKeyAuth": [],
             "OAuth2": [
               "read",
               "write"
-            ]
+            ],
+            "ResourceKeyAuth": []
           }
         ],
         "externalDocs": {
@@ -307,11 +128,11 @@
         ],
         "security": [
           {
-            "ApiKeyAuth": [],
             "OAuth2": [
               "read",
               "write"
-            ]
+            ],
+            "ResourceKeyAuth": []
           }
         ],
         "externalDocs": {
@@ -636,46 +457,6 @@
         ]
       }
     },
-    "/admin/v1/authorities/{id}/apis": {
-      "post": {
-        "summary": "处理权限角色接口",
-        "operationId": "Admin_HandleAuthorityApi",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1HandleAuthorityApiReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1HandleAuthorityApiReqData"
-            }
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
     "/admin/v1/authorities/{id}/menus": {
       "get": {
         "summary": "获取权限角色菜单",
@@ -738,6 +519,86 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/v1HandleAuthorityMenuReqData"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/authorities/{id}/resources": {
+      "post": {
+        "summary": "处理权限角色资源",
+        "operationId": "Admin_HandleAuthorityResource",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1HandleAuthorityResourceReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1HandleAuthorityResourceReqData"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/authorities/{id}/state": {
+      "put": {
+        "summary": "设置领域状态",
+        "operationId": "Admin_UpdateAuthorityState",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateAuthorityStateReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1UpdateAuthorityStateReqData"
             }
           }
         ],
@@ -1329,6 +1190,46 @@
         ]
       }
     },
+    "/admin/v1/domains/{id}/state": {
+      "put": {
+        "summary": "设置领域状态",
+        "operationId": "Admin_UpdateDomainState",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateDomainStateReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1UpdateDomainStateReqData"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/admin/v1/menus": {
       "get": {
         "summary": "菜单模块\n列表菜单",
@@ -1533,6 +1434,233 @@
             "required": true,
             "type": "string",
             "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/resources": {
+      "get": {
+        "summary": "资源模块\n列表资源",
+        "operationId": "Admin_ListResource",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protobufPagingReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": "当前页.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "description": "每一页的行数.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "nopaging",
+            "description": "是否不分页.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      },
+      "post": {
+        "summary": "创建资源",
+        "operationId": "Admin_CreateResource",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateResourceReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateResourceReq"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/resources/groups": {
+      "get": {
+        "summary": "列表资源-分组",
+        "operationId": "Admin_ListResourceGroup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListResourceGroupReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": "当前页.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "description": "每一页的行数.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "nopaging",
+            "description": "是否不分页.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/resources/{id}": {
+      "get": {
+        "summary": "获取资源",
+        "operationId": "Admin_GetResource",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Resource"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      },
+      "delete": {
+        "summary": "删除资源",
+        "operationId": "Admin_DeleteResource",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeleteResourceReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      },
+      "put": {
+        "summary": "修改资源",
+        "operationId": "Admin_UpdateResource",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateResourceReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1UpdateResourceReqData"
+            }
           }
         ],
         "tags": [
@@ -2335,42 +2463,6 @@
         }
       }
     },
-    "v1Api": {
-      "type": "object",
-      "properties": {
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "name": {
-          "type": "string"
-        },
-        "path": {
-          "type": "string"
-        },
-        "method": {
-          "type": "string"
-        },
-        "group": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "operation": {
-          "type": "string"
-        }
-      },
-      "title": "接口模块"
-    },
     "v1Auth": {
       "type": "object",
       "properties": {
@@ -2421,45 +2513,6 @@
         }
       },
       "title": "权限角色模块"
-    },
-    "v1CreateApiReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        },
-        "data": {
-          "$ref": "#/definitions/protobufAny"
-        }
-      },
-      "title": "回应 - 创建接口"
-    },
-    "v1CreateApiReq": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "path": {
-          "type": "string"
-        },
-        "method": {
-          "type": "string"
-        },
-        "group": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "operation": {
-          "type": "string"
-        }
-      },
-      "title": "请求 - 创建接口"
     },
     "v1CreateAuthorityReply": {
       "type": "object",
@@ -2656,6 +2709,45 @@
       },
       "title": "请求 - 创建菜单"
     },
+    "v1CreateResourceReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
+        }
+      },
+      "title": "回应 - 创建资源"
+    },
+    "v1CreateResourceReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "group": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "operation": {
+          "type": "string"
+        }
+      },
+      "title": "请求 - 创建资源"
+    },
     "v1CreateUserReply": {
       "type": "object",
       "properties": {
@@ -2706,21 +2798,6 @@
         }
       },
       "title": "请求 - 创建用户"
-    },
-    "v1DeleteApiReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        },
-        "data": {
-          "$ref": "#/definitions/protobufAny"
-        }
-      },
-      "title": "回应 - 删除接口"
     },
     "v1DeleteAuthorityReply": {
       "type": "object",
@@ -2781,6 +2858,21 @@
         }
       },
       "title": "回应 - 删除菜单"
+    },
+    "v1DeleteResourceReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
+        }
+      },
+      "title": "回应 - 删除资源"
     },
     "v1DeleteUserReply": {
       "type": "object",
@@ -2889,33 +2981,6 @@
       },
       "title": "回应 - 用户概况详情"
     },
-    "v1HandleAuthorityApiReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        },
-        "data": {
-          "$ref": "#/definitions/protobufAny"
-        }
-      },
-      "title": "回应 - 处理权限角色接口"
-    },
-    "v1HandleAuthorityApiReqData": {
-      "type": "object",
-      "properties": {
-        "apiIds": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "format": "uint64"
-          }
-        }
-      }
-    },
     "v1HandleAuthorityMenuReply": {
       "type": "object",
       "properties": {
@@ -2957,6 +3022,33 @@
           }
         },
         "menuButtonIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
+        }
+      }
+    },
+    "v1HandleAuthorityResourceReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
+        }
+      },
+      "title": "回应 - 处理权限角色资源"
+    },
+    "v1HandleAuthorityResourceReqData": {
+      "type": "object",
+      "properties": {
+        "resourceIds": {
           "type": "array",
           "items": {
             "type": "string",
@@ -3130,6 +3222,22 @@
       },
       "title": "回应 - 获取树形菜单"
     },
+    "v1ListResourceGroupReply": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "回应 - 创建资源"
+    },
     "v1ListUserAuthorityMenuTreeReply": {
       "type": "object",
       "properties": {
@@ -3289,24 +3397,21 @@
       },
       "title": "回应 - 注册"
     },
-    "v1UpdateApiReply": {
+    "v1Resource": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
         },
-        "message": {
-          "type": "string"
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
         },
-        "data": {
-          "$ref": "#/definitions/protobufAny"
-        }
-      },
-      "title": "回应 - 创建接口"
-    },
-    "v1UpdateApiReqData": {
-      "type": "object",
-      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
         "name": {
           "type": "string"
         },
@@ -3325,7 +3430,8 @@
         "operation": {
           "type": "string"
         }
-      }
+      },
+      "title": "资源模块"
     },
     "v1UpdateAuthorityReply": {
       "type": "object",
@@ -3364,6 +3470,29 @@
         },
         "remarks": {
           "type": "string"
+        }
+      }
+    },
+    "v1UpdateAuthorityStateReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
+        }
+      },
+      "title": "回应 - 创建权限角色"
+    },
+    "v1UpdateAuthorityStateReqData": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "#/definitions/protobufAuthorityState"
         }
       }
     },
@@ -3442,6 +3571,29 @@
         }
       }
     },
+    "v1UpdateDomainStateReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
+        }
+      },
+      "title": "回应 - 创建领域-状态"
+    },
+    "v1UpdateDomainStateReqData": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "#/definitions/protobufDomainState"
+        }
+      }
+    },
     "v1UpdateMenuReply": {
       "type": "object",
       "properties": {
@@ -3515,6 +3667,44 @@
           "items": {
             "$ref": "#/definitions/v1MenuButton"
           }
+        }
+      }
+    },
+    "v1UpdateResourceReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
+        }
+      },
+      "title": "回应 - 创建资源"
+    },
+    "v1UpdateResourceReqData": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "group": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "operation": {
+          "type": "string"
         }
       }
     },
