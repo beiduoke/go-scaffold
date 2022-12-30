@@ -4188,6 +4188,212 @@ var _ interface {
 	ErrorName() string
 } = UserMenuTreeReplyValidationError{}
 
+// Validate checks the field values on ExistUserNameReq with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *ExistUserNameReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ExistUserNameReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ExistUserNameReqMultiError, or nil if none found.
+func (m *ExistUserNameReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ExistUserNameReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Name
+
+	if len(errors) > 0 {
+		return ExistUserNameReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// ExistUserNameReqMultiError is an error wrapping multiple validation errors
+// returned by ExistUserNameReq.ValidateAll() if the designated constraints
+// aren't met.
+type ExistUserNameReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ExistUserNameReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ExistUserNameReqMultiError) AllErrors() []error { return m }
+
+// ExistUserNameReqValidationError is the validation error returned by
+// ExistUserNameReq.Validate if the designated constraints aren't met.
+type ExistUserNameReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ExistUserNameReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ExistUserNameReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ExistUserNameReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ExistUserNameReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ExistUserNameReqValidationError) ErrorName() string { return "ExistUserNameReqValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ExistUserNameReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sExistUserNameReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ExistUserNameReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ExistUserNameReqValidationError{}
+
+// Validate checks the field values on ExistUserNameReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ExistUserNameReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ExistUserNameReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ExistUserNameReplyMultiError, or nil if none found.
+func (m *ExistUserNameReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ExistUserNameReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Exist
+
+	if len(errors) > 0 {
+		return ExistUserNameReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// ExistUserNameReplyMultiError is an error wrapping multiple validation errors
+// returned by ExistUserNameReply.ValidateAll() if the designated constraints
+// aren't met.
+type ExistUserNameReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ExistUserNameReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ExistUserNameReplyMultiError) AllErrors() []error { return m }
+
+// ExistUserNameReplyValidationError is the validation error returned by
+// ExistUserNameReply.Validate if the designated constraints aren't met.
+type ExistUserNameReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ExistUserNameReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ExistUserNameReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ExistUserNameReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ExistUserNameReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ExistUserNameReplyValidationError) ErrorName() string {
+	return "ExistUserNameReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ExistUserNameReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sExistUserNameReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ExistUserNameReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ExistUserNameReplyValidationError{}
+
 // Validate checks the field values on Domain with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.

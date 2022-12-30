@@ -34,6 +34,7 @@ const OperationAdminDeleteMenu = "/api.admin.v1.Admin/DeleteMenu"
 const OperationAdminDeleteResource = "/api.admin.v1.Admin/DeleteResource"
 const OperationAdminDeleteUser = "/api.admin.v1.Admin/DeleteUser"
 const OperationAdminEmailLogin = "/api.admin.v1.Admin/EmailLogin"
+const OperationAdminExistUserName = "/api.admin.v1.Admin/ExistUserName"
 const OperationAdminGetAuthority = "/api.admin.v1.Admin/GetAuthority"
 const OperationAdminGetDepartment = "/api.admin.v1.Admin/GetDepartment"
 const OperationAdminGetDomain = "/api.admin.v1.Admin/GetDomain"
@@ -92,6 +93,7 @@ type AdminHTTPServer interface {
 	DeleteResource(context.Context, *DeleteResourceReq) (*DeleteResourceReply, error)
 	DeleteUser(context.Context, *DeleteUserReq) (*DeleteUserReply, error)
 	EmailLogin(context.Context, *EmailLoginReq) (*LoginReply, error)
+	ExistUserName(context.Context, *ExistUserNameReq) (*ExistUserNameReply, error)
 	GetAuthority(context.Context, *GetAuthorityReq) (*Authority, error)
 	GetDepartment(context.Context, *GetDepartmentReq) (*Department, error)
 	GetDomain(context.Context, *GetDomainReq) (*Domain, error)
@@ -159,6 +161,7 @@ func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
 	r.GET("/admin/v1/users/{id}", _Admin_GetUser0_HTTP_Handler(srv))
 	r.PUT("/admin/v1/users/{id}", _Admin_UpdateUser0_HTTP_Handler(srv))
 	r.DELETE("/admin/v1/users/{id}", _Admin_DeleteUser0_HTTP_Handler(srv))
+	r.POST("/admin/v1/users/existName", _Admin_ExistUserName0_HTTP_Handler(srv))
 	r.POST("/admin/v1/users/{id}/domains", _Admin_HandleUserDomain0_HTTP_Handler(srv))
 	r.POST("/admin/v1/users/{id}/domainAuthorities", _Admin_HandleUserDomainAuthority0_HTTP_Handler(srv))
 	r.PATCH("/admin/v1/domains/login/{domain}", _Admin_LoginDomain0_HTTP_Handler(srv))
@@ -610,6 +613,25 @@ func _Admin_DeleteUser0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context)
 			return err
 		}
 		reply := out.(*DeleteUserReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_ExistUserName0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ExistUserNameReq
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminExistUserName)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ExistUserName(ctx, req.(*ExistUserNameReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ExistUserNameReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -1514,6 +1536,7 @@ type AdminHTTPClient interface {
 	DeleteResource(ctx context.Context, req *DeleteResourceReq, opts ...http.CallOption) (rsp *DeleteResourceReply, err error)
 	DeleteUser(ctx context.Context, req *DeleteUserReq, opts ...http.CallOption) (rsp *DeleteUserReply, err error)
 	EmailLogin(ctx context.Context, req *EmailLoginReq, opts ...http.CallOption) (rsp *LoginReply, err error)
+	ExistUserName(ctx context.Context, req *ExistUserNameReq, opts ...http.CallOption) (rsp *ExistUserNameReply, err error)
 	GetAuthority(ctx context.Context, req *GetAuthorityReq, opts ...http.CallOption) (rsp *Authority, err error)
 	GetDepartment(ctx context.Context, req *GetDepartmentReq, opts ...http.CallOption) (rsp *Department, err error)
 	GetDomain(ctx context.Context, req *GetDomainReq, opts ...http.CallOption) (rsp *Domain, err error)
@@ -1730,6 +1753,19 @@ func (c *AdminHTTPClientImpl) EmailLogin(ctx context.Context, in *EmailLoginReq,
 	opts = append(opts, http.Operation(OperationAdminEmailLogin))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.Auth, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AdminHTTPClientImpl) ExistUserName(ctx context.Context, in *ExistUserNameReq, opts ...http.CallOption) (*ExistUserNameReply, error) {
+	var out ExistUserNameReply
+	pattern := "/admin/v1/users/existName"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminExistUserName))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

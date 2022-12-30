@@ -1857,6 +1857,39 @@
         ]
       }
     },
+    "/admin/v1/users/existName": {
+      "post": {
+        "summary": "验证用户名是否存在",
+        "operationId": "Admin_ExistUserName",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ExistUserNameReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1ExistUserNameReq"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/admin/v1/users/info": {
       "get": {
         "summary": "User 用户模块\n当前登录用户概述",
@@ -2965,6 +2998,24 @@
         }
       },
       "title": "领域模块"
+    },
+    "v1ExistUserNameReply": {
+      "type": "object",
+      "properties": {
+        "exist": {
+          "type": "boolean"
+        }
+      },
+      "title": "回应 - 验证用户是否存在"
+    },
+    "v1ExistUserNameReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "请求 - 验证用户是否存在"
     },
     "v1GetUserProfileReply": {
       "type": "object",

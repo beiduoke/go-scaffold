@@ -209,6 +209,12 @@ func (uc *UserUsecase) GetMobile(ctx context.Context, g *User) (*User, error) {
 	return uc.biz.userRepo.FindByMobile(ctx, g.Mobile)
 }
 
+// GetName 获取用户名
+func (uc *UserUsecase) GetName(ctx context.Context, g *User) (*User, error) {
+	uc.log.WithContext(ctx).Infof("GetUserName: %v", g)
+	return uc.biz.userRepo.FindByName(ctx, g.Name)
+}
+
 // Delete 删除用户
 func (uc *UserUsecase) Delete(ctx context.Context, g *User) error {
 	uc.log.WithContext(ctx).Infof("DeleteUser: %v", g)

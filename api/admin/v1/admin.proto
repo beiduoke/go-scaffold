@@ -211,6 +211,13 @@ service Admin {
       delete: "/admin/v1/users/{id}"
     };
   }
+  // 验证用户名是否存在
+  rpc ExistUserName (ExistUserNameReq) returns (ExistUserNameReply) {
+    option (google.api.http) = {
+      post: "/admin/v1/users/existName"
+      body: "*"
+    };
+  }
   // 绑定用户领域
   rpc HandleUserDomain (HandleUserDomainReq) returns (HandleUserDomainReply) {
     option (google.api.http) = {
@@ -784,6 +791,16 @@ message UpdateUserReply {
 message UserMenuTreeReply {
   int32 total = 1;
   repeated Menu items = 2;
+}
+
+// 请求 - 验证用户是否存在
+message ExistUserNameReq {
+  string name = 1;
+}
+
+// 回应 - 验证用户是否存在
+message ExistUserNameReply {
+  bool exist = 1;
 }
 
 

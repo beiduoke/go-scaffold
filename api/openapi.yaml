@@ -1109,6 +1109,25 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.ListUserDomainReply'
+    /admin/v1/users/existName:
+        post:
+            tags:
+                - Admin
+            description: 验证用户名是否存在
+            operationId: Admin_ExistUserName
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.v1.ExistUserNameReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.ExistUserNameReply'
     /admin/v1/users/info:
         get:
             tags:
@@ -1620,6 +1639,18 @@ components:
                     type: string
                 code:
                     type: string
+        api.admin.v1.ExistUserNameReply:
+            type: object
+            properties:
+                exist:
+                    type: boolean
+            description: 回应 - 验证用户是否存在
+        api.admin.v1.ExistUserNameReq:
+            type: object
+            properties:
+                name:
+                    type: string
+            description: 请求 - 验证用户是否存在
         api.admin.v1.GetUserProfileReply:
             type: object
             properties:

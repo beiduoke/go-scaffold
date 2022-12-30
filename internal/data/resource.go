@@ -127,7 +127,7 @@ func (r *ResourceRepo) ListAll(ctx context.Context) ([]*biz.Resource, error) {
 }
 
 func (r *ResourceRepo) ListPage(ctx context.Context, handler pagination.PaginationHandler) (resources []*biz.Resource, total int64) {
-	db := r.data.DB(ctx).Model(&SysResource{})
+	db := r.data.DB(ctx).Model(&SysResource{}).Debug()
 	sysResources := []*SysResource{}
 	// 查询条件
 	for _, v := range handler.GetConditions() {

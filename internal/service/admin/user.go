@@ -144,6 +144,22 @@ func (s *AdminService) DeleteUser(ctx context.Context, in *v1.DeleteUserReq) (*v
 	}, nil
 }
 
+// ExistUserName 用户名是否存在
+func (s *AdminService) ExistUserName(ctx context.Context, in *v1.ExistUserNameReq) (*v1.ExistUserNameReply, error) {
+	user, err := s.userCase.GetName(ctx, &biz.User{Name: in.GetName()})
+	if err != nil {
+		return nil, v1.ErrorUserDeleteFail("用户查询失败：%v", err)
+	}
+	exist := false
+	if user.ID > 0 {
+		exist = true
+	}
+
+	return &v1.ExistUserNameReply{
+		Exist: exist,
+	}, nil
+}
+
 // HandleUserDomain 绑定用户领域
 func (s *AdminService) HandleUserDomain(ctx context.Context, in *v1.HandleUserDomainReq) (*v1.HandleUserDomainReply, error) {
 	v := in.GetData()
