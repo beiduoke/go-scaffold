@@ -800,7 +800,9 @@ message ExistUserNameReq {
 
 // 回应 - 验证用户是否存在
 message ExistUserNameReply {
-  bool exist = 1;
+  bool success = 1;
+  string message = 2;
+  google.protobuf.Any data = 3;
 }
 
 

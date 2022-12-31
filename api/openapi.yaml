@@ -1642,8 +1642,12 @@ components:
         api.admin.v1.ExistUserNameReply:
             type: object
             properties:
-                exist:
+                success:
                     type: boolean
+                message:
+                    type: string
+                data:
+                    $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 验证用户是否存在
         api.admin.v1.ExistUserNameReq:
             type: object

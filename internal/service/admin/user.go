@@ -146,17 +146,16 @@ func (s *AdminService) DeleteUser(ctx context.Context, in *v1.DeleteUserReq) (*v
 
 // ExistUserName 用户名是否存在
 func (s *AdminService) ExistUserName(ctx context.Context, in *v1.ExistUserNameReq) (*v1.ExistUserNameReply, error) {
-	user, err := s.userCase.GetName(ctx, &biz.User{Name: in.GetName()})
-	if err != nil {
-		return nil, v1.ErrorUserDeleteFail("用户查询失败：%v", err)
-	}
-	exist := false
-	if user.ID > 0 {
+	user, _ := s.userCase.GetName(ctx, &biz.User{Name: in.GetName()})
+	exist, message := false, "用户不存在"
+	if user != nil && user.ID > 0 {
 		exist = true
+		message = "用户存在"
 	}
 
 	return &v1.ExistUserNameReply{
-		Exist: exist,
+		Success: exist,
+		Message: message,
 	}, nil
 }
 
