@@ -80,17 +80,6 @@ type SysAuthority struct {
 	Domains       []SysDomain    `gorm:"-"`
 }
 
-// SysDomainAuthorityUser 领域用户权限 (弃用)
-type SysDomainAuthorityUser struct {
-	DomainID    uint `gorm:"type:bigint(20);column:domain_id;not null;uniqueIndex:idx_sys_domain_authority_users_domain_id_authority_id_user_id;comment:领域ID"`
-	AuthorityID uint `gorm:"type:bigint(20);column:authority_id;not null;uniqueIndex:idx_sys_domain_authority_users_domain_id_authority_id_user_id;comment:角色ID"`
-	UserID      uint `gorm:"type:bigint(20);column:user_id;not null;uniqueIndex:idx_sys_domain_authority_users_domain_id_authority_id_user_id;comment:用户ID"`
-	CreatedAt   time.Time
-	Domain      SysDomain    `gorm:"foreignKey:DomainID"`
-	Authority   SysAuthority `gorm:"foreignKey:AuthorityID"`
-	User        SysUser      `gorm:"foreignKey:UserID"`
-}
-
 // Resource api资源
 type SysResource struct {
 	gorm.Model
@@ -106,7 +95,7 @@ type SysResource struct {
 
 // SysMenu 菜单
 type SysMenu struct {
-	DomainModel
+	gorm.Model
 	Name        string             `gorm:"type:varchar(255);column:name;not null;default:'';uniqueIndex:idx_menu_type_name;comment:路由名称;"`
 	Type        int32              `gorm:"type:tinyint(1);column:type;not null;default:1;uniqueIndex:idx_menu_type_name;comment:菜单类型 0 无指定 1 目录 2 菜单 3 功能(按钮等);"`
 	ParentID    uint               `gorm:"type:bigint(20);column:parent_id;not null;default:0;index;comment:父菜单ID"`
@@ -143,10 +132,6 @@ type SysAuthorityMenu struct {
 	Menu          SysMenu `gorm:"foreignKey:MenuID"`
 }
 
-// func (SysAuthorityMenu) BeforeCreate(db *gorm.DB) error {
-// 	return db.SetupJoinTable(&SysMenu{}, "Menus", &SysAuthorityMenu{})
-// }
-
 // SysAuthorityMenuButton 角色菜单按钮-自定义关联表-未用
 type SysAuthorityMenuButton struct {
 	ID           uint `gorm:"primarykey"`
@@ -179,6 +164,19 @@ type SysMenuParameter struct {
 	Menu      SysMenu `gorm:"foreignKey:MenuID;"`
 }
 
+// SysDepartment 部门
+type SysDepartment struct {
+	DomainModel
+	Name     string  `gorm:"type:varchar(255);column:name;not null;comment:名称;"`
+	ParentID uint    `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
+	Sort     int32   `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
+	Remarks  string  `gorm:"type:varchar(255);column:remarks;not null;comment:备注;"`
+	State    int32   `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
+	UserID   uint    `gorm:"type:bigint(20);column:user_id;not null;default:0;comment:用户id"`
+	User     SysUser `gorm:"foreignKey:UserID;"`
+	// User     SysUser `gorm:"many2many:sys_dept_users;"`
+}
+
 // ApiOperationLog API 请求日志
 type SysApiOperationLog struct {
 	DomainModel
@@ -191,24 +189,13 @@ type SysApiOperationLog struct {
 	Error   string        `gorm:"type:varchar(255);column:error;not null;default:'';comment:错误信息"`
 	Body    string        `gorm:"type:text;column:body;comment:请求Body"`
 	Resp    string        `gorm:"type:text;column:resp;comment:响应Body"`
-	UserID  uint          `gorm:"type:bigint(20);column:user_id;not null;comment:用户id"`
+	UserID  uint          `gorm:"type:bigint(20);column:user_id;not null;default:0;comment:用户id"`
 	User    SysUser       `gorm:"foreignKey:UserID;"`
 }
 
 // Jwt 黑名单
 type JwtBlacklist struct {
 	gorm.Model
-	Jwt string `gorm:"type:text;column:jwt;comment:jwt;"`
-}
-
-type SysDepartment struct {
-	ID        uint `gorm:"primarykey"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
-	Name      string         `gorm:"type:varchar(255);column:name;not null;comment:名称;"`
-	ParentID  uint           `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
-	Sort      int32          `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
-	Remarks   string         `gorm:"type:varchar(255);column:remarks;not null;comment:备注;"`
-	State     int32          `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
+	UserID uint   `gorm:"type:bigint(20);column:user_id;not null;default:0;comment:用户id"`
+	Jwt    string `gorm:"type:text;column:jwt;comment:jwt;"`
 }
