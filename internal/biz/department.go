@@ -53,8 +53,8 @@ func (uc *DepartmentUsecase) Create(ctx context.Context, g *Department) (*Depart
 }
 
 // ListByIDs 获取指定部门ID集合
-func (uc *DepartmentUsecase) ListByIDs(ctx context.Context, id ...uint) (authorities []*Department, err error) {
-	authorities, _ = uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
+func (uc *DepartmentUsecase) ListByIDs(ctx context.Context, id ...uint) (roles []*Department, err error) {
+	roles, _ = uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
 	return
 }
 

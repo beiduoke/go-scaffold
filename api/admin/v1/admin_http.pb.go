@@ -21,35 +21,33 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationAdminCreateAuthority = "/api.admin.v1.Admin/CreateAuthority"
 const OperationAdminCreateDepartment = "/api.admin.v1.Admin/CreateDepartment"
 const OperationAdminCreateDomain = "/api.admin.v1.Admin/CreateDomain"
 const OperationAdminCreateMenu = "/api.admin.v1.Admin/CreateMenu"
 const OperationAdminCreateResource = "/api.admin.v1.Admin/CreateResource"
+const OperationAdminCreateRole = "/api.admin.v1.Admin/CreateRole"
 const OperationAdminCreateUser = "/api.admin.v1.Admin/CreateUser"
-const OperationAdminDeleteAuthority = "/api.admin.v1.Admin/DeleteAuthority"
 const OperationAdminDeleteDepartment = "/api.admin.v1.Admin/DeleteDepartment"
 const OperationAdminDeleteDomain = "/api.admin.v1.Admin/DeleteDomain"
 const OperationAdminDeleteMenu = "/api.admin.v1.Admin/DeleteMenu"
 const OperationAdminDeleteResource = "/api.admin.v1.Admin/DeleteResource"
+const OperationAdminDeleteRole = "/api.admin.v1.Admin/DeleteRole"
 const OperationAdminDeleteUser = "/api.admin.v1.Admin/DeleteUser"
 const OperationAdminEmailLogin = "/api.admin.v1.Admin/EmailLogin"
 const OperationAdminExistUserName = "/api.admin.v1.Admin/ExistUserName"
-const OperationAdminGetAuthority = "/api.admin.v1.Admin/GetAuthority"
 const OperationAdminGetDepartment = "/api.admin.v1.Admin/GetDepartment"
 const OperationAdminGetDomain = "/api.admin.v1.Admin/GetDomain"
 const OperationAdminGetMenu = "/api.admin.v1.Admin/GetMenu"
 const OperationAdminGetResource = "/api.admin.v1.Admin/GetResource"
+const OperationAdminGetRole = "/api.admin.v1.Admin/GetRole"
 const OperationAdminGetUser = "/api.admin.v1.Admin/GetUser"
 const OperationAdminGetUserInfo = "/api.admin.v1.Admin/GetUserInfo"
 const OperationAdminGetUserProfile = "/api.admin.v1.Admin/GetUserProfile"
-const OperationAdminHandleAuthorityMenu = "/api.admin.v1.Admin/HandleAuthorityMenu"
-const OperationAdminHandleAuthorityResource = "/api.admin.v1.Admin/HandleAuthorityResource"
 const OperationAdminHandleDomainMenu = "/api.admin.v1.Admin/HandleDomainMenu"
+const OperationAdminHandleRoleMenu = "/api.admin.v1.Admin/HandleRoleMenu"
+const OperationAdminHandleRoleResource = "/api.admin.v1.Admin/HandleRoleResource"
 const OperationAdminHandleUserDomain = "/api.admin.v1.Admin/HandleUserDomain"
-const OperationAdminHandleUserDomainAuthority = "/api.admin.v1.Admin/HandleUserDomainAuthority"
-const OperationAdminListAuthority = "/api.admin.v1.Admin/ListAuthority"
-const OperationAdminListAuthorityMenu = "/api.admin.v1.Admin/ListAuthorityMenu"
+const OperationAdminHandleUserDomainRole = "/api.admin.v1.Admin/HandleUserDomainRole"
 const OperationAdminListDepartment = "/api.admin.v1.Admin/ListDepartment"
 const OperationAdminListDepartmentTree = "/api.admin.v1.Admin/ListDepartmentTree"
 const OperationAdminListDomain = "/api.admin.v1.Admin/ListDomain"
@@ -58,11 +56,13 @@ const OperationAdminListMenu = "/api.admin.v1.Admin/ListMenu"
 const OperationAdminListMenuTree = "/api.admin.v1.Admin/ListMenuTree"
 const OperationAdminListResource = "/api.admin.v1.Admin/ListResource"
 const OperationAdminListResourceGroup = "/api.admin.v1.Admin/ListResourceGroup"
+const OperationAdminListRole = "/api.admin.v1.Admin/ListRole"
+const OperationAdminListRoleMenu = "/api.admin.v1.Admin/ListRoleMenu"
 const OperationAdminListUser = "/api.admin.v1.Admin/ListUser"
-const OperationAdminListUserAuthority = "/api.admin.v1.Admin/ListUserAuthority"
-const OperationAdminListUserAuthorityMenuTree = "/api.admin.v1.Admin/ListUserAuthorityMenuTree"
-const OperationAdminListUserAuthorityPermission = "/api.admin.v1.Admin/ListUserAuthorityPermission"
 const OperationAdminListUserDomain = "/api.admin.v1.Admin/ListUserDomain"
+const OperationAdminListUserRole = "/api.admin.v1.Admin/ListUserRole"
+const OperationAdminListUserRoleMenuTree = "/api.admin.v1.Admin/ListUserRoleMenuTree"
+const OperationAdminListUserRolePermission = "/api.admin.v1.Admin/ListUserRolePermission"
 const OperationAdminLoginDomain = "/api.admin.v1.Admin/LoginDomain"
 const OperationAdminLogout = "/api.admin.v1.Admin/Logout"
 const OperationAdminMiddlePassLogin = "/api.admin.v1.Admin/MiddlePassLogin"
@@ -70,45 +70,43 @@ const OperationAdminPassLogin = "/api.admin.v1.Admin/PassLogin"
 const OperationAdminRegister = "/api.admin.v1.Admin/Register"
 const OperationAdminRegisterDomain = "/api.admin.v1.Admin/RegisterDomain"
 const OperationAdminSmsLogin = "/api.admin.v1.Admin/SmsLogin"
-const OperationAdminUpdateAuthority = "/api.admin.v1.Admin/UpdateAuthority"
-const OperationAdminUpdateAuthorityState = "/api.admin.v1.Admin/UpdateAuthorityState"
 const OperationAdminUpdateDepartment = "/api.admin.v1.Admin/UpdateDepartment"
 const OperationAdminUpdateDomain = "/api.admin.v1.Admin/UpdateDomain"
 const OperationAdminUpdateDomainState = "/api.admin.v1.Admin/UpdateDomainState"
 const OperationAdminUpdateMenu = "/api.admin.v1.Admin/UpdateMenu"
 const OperationAdminUpdateResource = "/api.admin.v1.Admin/UpdateResource"
+const OperationAdminUpdateRole = "/api.admin.v1.Admin/UpdateRole"
+const OperationAdminUpdateRoleState = "/api.admin.v1.Admin/UpdateRoleState"
 const OperationAdminUpdateUser = "/api.admin.v1.Admin/UpdateUser"
 
 type AdminHTTPServer interface {
-	CreateAuthority(context.Context, *CreateAuthorityReq) (*CreateAuthorityReply, error)
 	CreateDepartment(context.Context, *CreateDepartmentReq) (*CreateDepartmentReply, error)
 	CreateDomain(context.Context, *CreateDomainReq) (*CreateDomainReply, error)
 	CreateMenu(context.Context, *CreateMenuReq) (*CreateMenuReply, error)
 	CreateResource(context.Context, *CreateResourceReq) (*CreateResourceReply, error)
+	CreateRole(context.Context, *CreateRoleReq) (*CreateRoleReply, error)
 	CreateUser(context.Context, *CreateUserReq) (*CreateUserReply, error)
-	DeleteAuthority(context.Context, *DeleteAuthorityReq) (*DeleteAuthorityReply, error)
 	DeleteDepartment(context.Context, *DeleteDepartmentReq) (*DeleteDepartmentReply, error)
 	DeleteDomain(context.Context, *DeleteDomainReq) (*DeleteDomainReply, error)
 	DeleteMenu(context.Context, *DeleteMenuReq) (*DeleteMenuReply, error)
 	DeleteResource(context.Context, *DeleteResourceReq) (*DeleteResourceReply, error)
+	DeleteRole(context.Context, *DeleteRoleReq) (*DeleteRoleReply, error)
 	DeleteUser(context.Context, *DeleteUserReq) (*DeleteUserReply, error)
 	EmailLogin(context.Context, *EmailLoginReq) (*LoginReply, error)
 	ExistUserName(context.Context, *ExistUserNameReq) (*ExistUserNameReply, error)
-	GetAuthority(context.Context, *GetAuthorityReq) (*Authority, error)
 	GetDepartment(context.Context, *GetDepartmentReq) (*Department, error)
 	GetDomain(context.Context, *GetDomainReq) (*Domain, error)
 	GetMenu(context.Context, *GetMenuReq) (*Menu, error)
 	GetResource(context.Context, *GetResourceReq) (*Resource, error)
+	GetRole(context.Context, *GetRoleReq) (*Role, error)
 	GetUser(context.Context, *GetUserReq) (*User, error)
 	GetUserInfo(context.Context, *emptypb.Empty) (*User, error)
 	GetUserProfile(context.Context, *emptypb.Empty) (*GetUserProfileReply, error)
-	HandleAuthorityMenu(context.Context, *HandleAuthorityMenuReq) (*HandleAuthorityMenuReply, error)
-	HandleAuthorityResource(context.Context, *HandleAuthorityResourceReq) (*HandleAuthorityResourceReply, error)
 	HandleDomainMenu(context.Context, *HandleDomainMenuReq) (*HandleDomainMenuReply, error)
+	HandleRoleMenu(context.Context, *HandleRoleMenuReq) (*HandleRoleMenuReply, error)
+	HandleRoleResource(context.Context, *HandleRoleResourceReq) (*HandleRoleResourceReply, error)
 	HandleUserDomain(context.Context, *HandleUserDomainReq) (*HandleUserDomainReply, error)
-	HandleUserDomainAuthority(context.Context, *HandleUserDomainAuthorityReq) (*HandleUserDomainAuthorityReply, error)
-	ListAuthority(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
-	ListAuthorityMenu(context.Context, *ListAuthorityMenuReq) (*ListAuthorityMenuReply, error)
+	HandleUserDomainRole(context.Context, *HandleUserDomainRoleReq) (*HandleUserDomainRoleReply, error)
 	ListDepartment(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
 	ListDepartmentTree(context.Context, *ListDepartmentTreeReq) (*ListDepartmentTreeReply, error)
 	ListDomain(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
@@ -117,11 +115,13 @@ type AdminHTTPServer interface {
 	ListMenuTree(context.Context, *ListMenuTreeReq) (*ListMenuTreeReply, error)
 	ListResource(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
 	ListResourceGroup(context.Context, *protobuf.PagingReq) (*ListResourceGroupReply, error)
+	ListRole(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	ListRoleMenu(context.Context, *ListRoleMenuReq) (*ListRoleMenuReply, error)
 	ListUser(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
-	ListUserAuthority(context.Context, *emptypb.Empty) (*ListUserAuthorityReply, error)
-	ListUserAuthorityMenuTree(context.Context, *ListUserAuthorityMenuTreeReq) (*ListUserAuthorityMenuTreeReply, error)
-	ListUserAuthorityPermission(context.Context, *ListUserAuthorityPermissionReq) (*ListUserAuthorityPermissionReply, error)
 	ListUserDomain(context.Context, *emptypb.Empty) (*ListUserDomainReply, error)
+	ListUserRole(context.Context, *emptypb.Empty) (*ListUserRoleReply, error)
+	ListUserRoleMenuTree(context.Context, *ListUserRoleMenuTreeReq) (*ListUserRoleMenuTreeReply, error)
+	ListUserRolePermission(context.Context, *ListUserRolePermissionReq) (*ListUserRolePermissionReply, error)
 	LoginDomain(context.Context, *LoginDomainReq) (*LoginReply, error)
 	Logout(context.Context, *emptypb.Empty) (*LogoutReply, error)
 	MiddlePassLogin(context.Context, *PassLoginReq) (*LoginReply, error)
@@ -129,13 +129,13 @@ type AdminHTTPServer interface {
 	Register(context.Context, *RegisterReq) (*RegisterReply, error)
 	RegisterDomain(context.Context, *RegisterDomainReq) (*RegisterReply, error)
 	SmsLogin(context.Context, *SmsLoginReq) (*LoginReply, error)
-	UpdateAuthority(context.Context, *UpdateAuthorityReq) (*UpdateAuthorityReply, error)
-	UpdateAuthorityState(context.Context, *UpdateAuthorityStateReq) (*UpdateAuthorityStateReply, error)
 	UpdateDepartment(context.Context, *UpdateDepartmentReq) (*UpdateDepartmentReply, error)
 	UpdateDomain(context.Context, *UpdateDomainReq) (*UpdateDomainReply, error)
 	UpdateDomainState(context.Context, *UpdateDomainStateReq) (*UpdateDomainStateReply, error)
 	UpdateMenu(context.Context, *UpdateMenuReq) (*UpdateMenuReply, error)
 	UpdateResource(context.Context, *UpdateResourceReq) (*UpdateResourceReply, error)
+	UpdateRole(context.Context, *UpdateRoleReq) (*UpdateRoleReply, error)
+	UpdateRoleState(context.Context, *UpdateRoleStateReq) (*UpdateRoleStateReply, error)
 	UpdateUser(context.Context, *UpdateUserReq) (*UpdateUserReply, error)
 }
 
@@ -151,11 +151,11 @@ func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
 	r.GET("/admin/v1/users/info", _Admin_GetUserInfo0_HTTP_Handler(srv))
 	r.GET("/admin/v1/users/profiles", _Admin_GetUserProfile0_HTTP_Handler(srv))
 	r.GET("/admin/v1/users/domains", _Admin_ListUserDomain0_HTTP_Handler(srv))
-	r.GET("/admin/v1/users/authorities", _Admin_ListUserAuthority0_HTTP_Handler(srv))
-	r.GET("/admin/v1/users/menus/trees", _Admin_ListUserAuthorityMenuTree0_HTTP_Handler(srv))
-	r.GET("/admin/v1/users/authorities/{authority_id}/menus/trees", _Admin_ListUserAuthorityMenuTree1_HTTP_Handler(srv))
-	r.GET("/admin/v1/users/permissions", _Admin_ListUserAuthorityPermission0_HTTP_Handler(srv))
-	r.GET("/admin/v1/users/authorities/{authority_id}/permissions", _Admin_ListUserAuthorityPermission1_HTTP_Handler(srv))
+	r.GET("/admin/v1/users/roles", _Admin_ListUserRole0_HTTP_Handler(srv))
+	r.GET("/admin/v1/users/menus/trees", _Admin_ListUserRoleMenuTree0_HTTP_Handler(srv))
+	r.GET("/admin/v1/users/roles/{role_id}/menus/trees", _Admin_ListUserRoleMenuTree1_HTTP_Handler(srv))
+	r.GET("/admin/v1/users/permissions", _Admin_ListUserRolePermission0_HTTP_Handler(srv))
+	r.GET("/admin/v1/users/roles/{role_id}/permissions", _Admin_ListUserRolePermission1_HTTP_Handler(srv))
 	r.GET("/admin/v1/users", _Admin_ListUser0_HTTP_Handler(srv))
 	r.POST("/admin/v1/users", _Admin_CreateUser0_HTTP_Handler(srv))
 	r.GET("/admin/v1/users/{id}", _Admin_GetUser0_HTTP_Handler(srv))
@@ -163,7 +163,7 @@ func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
 	r.DELETE("/admin/v1/users/{id}", _Admin_DeleteUser0_HTTP_Handler(srv))
 	r.POST("/admin/v1/users/existName", _Admin_ExistUserName0_HTTP_Handler(srv))
 	r.POST("/admin/v1/users/{id}/domains", _Admin_HandleUserDomain0_HTTP_Handler(srv))
-	r.POST("/admin/v1/users/{id}/domainAuthorities", _Admin_HandleUserDomainAuthority0_HTTP_Handler(srv))
+	r.POST("/admin/v1/users/{id}/domainRoles", _Admin_HandleUserDomainRole0_HTTP_Handler(srv))
 	r.PATCH("/admin/v1/domains/login/{domain}", _Admin_LoginDomain0_HTTP_Handler(srv))
 	r.POST("/admin/v1/domains/login", _Admin_LoginDomain1_HTTP_Handler(srv))
 	r.POST("/admin/v1/domains/register", _Admin_RegisterDomain0_HTTP_Handler(srv))
@@ -175,15 +175,15 @@ func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
 	r.PUT("/admin/v1/domains/{id}/state", _Admin_UpdateDomainState0_HTTP_Handler(srv))
 	r.GET("/admin/v1/domains/{id}/menus", _Admin_ListDomainMenu0_HTTP_Handler(srv))
 	r.POST("/admin/v1/domains/{id}/menus", _Admin_HandleDomainMenu0_HTTP_Handler(srv))
-	r.GET("/admin/v1/authorities", _Admin_ListAuthority0_HTTP_Handler(srv))
-	r.POST("/admin/v1/authorities", _Admin_CreateAuthority0_HTTP_Handler(srv))
-	r.GET("/admin/v1/authorities/{id}", _Admin_GetAuthority0_HTTP_Handler(srv))
-	r.PUT("/admin/v1/authorities/{id}", _Admin_UpdateAuthority0_HTTP_Handler(srv))
-	r.PUT("/admin/v1/authorities/{id}/state", _Admin_UpdateAuthorityState0_HTTP_Handler(srv))
-	r.DELETE("/admin/v1/authorities/{id}", _Admin_DeleteAuthority0_HTTP_Handler(srv))
-	r.GET("/admin/v1/authorities/{id}/menus", _Admin_ListAuthorityMenu0_HTTP_Handler(srv))
-	r.POST("/admin/v1/authorities/{id}/menus", _Admin_HandleAuthorityMenu0_HTTP_Handler(srv))
-	r.POST("/admin/v1/authorities/{id}/resources", _Admin_HandleAuthorityResource0_HTTP_Handler(srv))
+	r.GET("/admin/v1/roles", _Admin_ListRole0_HTTP_Handler(srv))
+	r.POST("/admin/v1/roles", _Admin_CreateRole0_HTTP_Handler(srv))
+	r.GET("/admin/v1/roles/{id}", _Admin_GetRole0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/roles/{id}", _Admin_UpdateRole0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/roles/{id}/state", _Admin_UpdateRoleState0_HTTP_Handler(srv))
+	r.DELETE("/admin/v1/roles/{id}", _Admin_DeleteRole0_HTTP_Handler(srv))
+	r.GET("/admin/v1/roles/{id}/menus", _Admin_ListRoleMenu0_HTTP_Handler(srv))
+	r.POST("/admin/v1/roles/{id}/menus", _Admin_HandleRoleMenu0_HTTP_Handler(srv))
+	r.POST("/admin/v1/roles/{id}/resources", _Admin_HandleRoleResource0_HTTP_Handler(srv))
 	r.GET("/admin/v1/resources", _Admin_ListResource0_HTTP_Handler(srv))
 	r.GET("/admin/v1/resources/groups", _Admin_ListResourceGroup0_HTTP_Handler(srv))
 	r.POST("/admin/v1/resources", _Admin_CreateResource0_HTTP_Handler(srv))
@@ -409,103 +409,103 @@ func _Admin_ListUserDomain0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Cont
 	}
 }
 
-func _Admin_ListUserAuthority0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+func _Admin_ListUserRole0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in emptypb.Empty
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAdminListUserAuthority)
+		http.SetOperation(ctx, OperationAdminListUserRole)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListUserAuthority(ctx, req.(*emptypb.Empty))
+			return srv.ListUserRole(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*ListUserAuthorityReply)
+		reply := out.(*ListUserRoleReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Admin_ListUserAuthorityMenuTree0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+func _Admin_ListUserRoleMenuTree0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in ListUserAuthorityMenuTreeReq
+		var in ListUserRoleMenuTreeReq
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAdminListUserAuthorityMenuTree)
+		http.SetOperation(ctx, OperationAdminListUserRoleMenuTree)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListUserAuthorityMenuTree(ctx, req.(*ListUserAuthorityMenuTreeReq))
+			return srv.ListUserRoleMenuTree(ctx, req.(*ListUserRoleMenuTreeReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*ListUserAuthorityMenuTreeReply)
+		reply := out.(*ListUserRoleMenuTreeReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Admin_ListUserAuthorityMenuTree1_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+func _Admin_ListUserRoleMenuTree1_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in ListUserAuthorityMenuTreeReq
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAdminListUserAuthorityMenuTree)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListUserAuthorityMenuTree(ctx, req.(*ListUserAuthorityMenuTreeReq))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListUserAuthorityMenuTreeReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Admin_ListUserAuthorityPermission0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ListUserAuthorityPermissionReq
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAdminListUserAuthorityPermission)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListUserAuthorityPermission(ctx, req.(*ListUserAuthorityPermissionReq))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListUserAuthorityPermissionReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Admin_ListUserAuthorityPermission1_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ListUserAuthorityPermissionReq
+		var in ListUserRoleMenuTreeReq
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAdminListUserAuthorityPermission)
+		http.SetOperation(ctx, OperationAdminListUserRoleMenuTree)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListUserAuthorityPermission(ctx, req.(*ListUserAuthorityPermissionReq))
+			return srv.ListUserRoleMenuTree(ctx, req.(*ListUserRoleMenuTreeReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*ListUserAuthorityPermissionReply)
+		reply := out.(*ListUserRoleMenuTreeReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_ListUserRolePermission0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListUserRolePermissionReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminListUserRolePermission)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListUserRolePermission(ctx, req.(*ListUserRolePermissionReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListUserRolePermissionReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_ListUserRolePermission1_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListUserRolePermissionReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminListUserRolePermission)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListUserRolePermission(ctx, req.(*ListUserRolePermissionReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListUserRolePermissionReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -661,9 +661,9 @@ func _Admin_HandleUserDomain0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Co
 	}
 }
 
-func _Admin_HandleUserDomainAuthority0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+func _Admin_HandleUserDomainRole0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in HandleUserDomainAuthorityReq
+		var in HandleUserDomainRoleReq
 		if err := ctx.Bind(&in.Data); err != nil {
 			return err
 		}
@@ -673,15 +673,15 @@ func _Admin_HandleUserDomainAuthority0_HTTP_Handler(srv AdminHTTPServer) func(ct
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAdminHandleUserDomainAuthority)
+		http.SetOperation(ctx, OperationAdminHandleUserDomainRole)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.HandleUserDomainAuthority(ctx, req.(*HandleUserDomainAuthorityReq))
+			return srv.HandleUserDomainRole(ctx, req.(*HandleUserDomainRoleReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*HandleUserDomainAuthorityReply)
+		reply := out.(*HandleUserDomainRoleReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -934,15 +934,15 @@ func _Admin_HandleDomainMenu0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Co
 	}
 }
 
-func _Admin_ListAuthority0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+func _Admin_ListRole0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in protobuf.PagingReq
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAdminListAuthority)
+		http.SetOperation(ctx, OperationAdminListRole)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListAuthority(ctx, req.(*protobuf.PagingReq))
+			return srv.ListRole(ctx, req.(*protobuf.PagingReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -953,50 +953,50 @@ func _Admin_ListAuthority0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Conte
 	}
 }
 
-func _Admin_CreateAuthority0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+func _Admin_CreateRole0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in CreateAuthorityReq
+		var in CreateRoleReq
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAdminCreateAuthority)
+		http.SetOperation(ctx, OperationAdminCreateRole)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.CreateAuthority(ctx, req.(*CreateAuthorityReq))
+			return srv.CreateRole(ctx, req.(*CreateRoleReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*CreateAuthorityReply)
+		reply := out.(*CreateRoleReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Admin_GetAuthority0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+func _Admin_GetRole0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in GetAuthorityReq
+		var in GetRoleReq
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAdminGetAuthority)
+		http.SetOperation(ctx, OperationAdminGetRole)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetAuthority(ctx, req.(*GetAuthorityReq))
+			return srv.GetRole(ctx, req.(*GetRoleReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*Authority)
+		reply := out.(*Role)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Admin_UpdateAuthority0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+func _Admin_UpdateRole0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in UpdateAuthorityReq
+		var in UpdateRoleReq
 		if err := ctx.Bind(&in.Data); err != nil {
 			return err
 		}
@@ -1006,22 +1006,22 @@ func _Admin_UpdateAuthority0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Con
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAdminUpdateAuthority)
+		http.SetOperation(ctx, OperationAdminUpdateRole)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdateAuthority(ctx, req.(*UpdateAuthorityReq))
+			return srv.UpdateRole(ctx, req.(*UpdateRoleReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*UpdateAuthorityReply)
+		reply := out.(*UpdateRoleReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Admin_UpdateAuthorityState0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+func _Admin_UpdateRoleState0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in UpdateAuthorityStateReq
+		var in UpdateRoleStateReq
 		if err := ctx.Bind(&in.Data); err != nil {
 			return err
 		}
@@ -1031,66 +1031,66 @@ func _Admin_UpdateAuthorityState0_HTTP_Handler(srv AdminHTTPServer) func(ctx htt
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAdminUpdateAuthorityState)
+		http.SetOperation(ctx, OperationAdminUpdateRoleState)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdateAuthorityState(ctx, req.(*UpdateAuthorityStateReq))
+			return srv.UpdateRoleState(ctx, req.(*UpdateRoleStateReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*UpdateAuthorityStateReply)
+		reply := out.(*UpdateRoleStateReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Admin_DeleteAuthority0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+func _Admin_DeleteRole0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in DeleteAuthorityReq
+		var in DeleteRoleReq
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAdminDeleteAuthority)
+		http.SetOperation(ctx, OperationAdminDeleteRole)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.DeleteAuthority(ctx, req.(*DeleteAuthorityReq))
+			return srv.DeleteRole(ctx, req.(*DeleteRoleReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*DeleteAuthorityReply)
+		reply := out.(*DeleteRoleReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Admin_ListAuthorityMenu0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+func _Admin_ListRoleMenu0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in ListAuthorityMenuReq
+		var in ListRoleMenuReq
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAdminListAuthorityMenu)
+		http.SetOperation(ctx, OperationAdminListRoleMenu)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListAuthorityMenu(ctx, req.(*ListAuthorityMenuReq))
+			return srv.ListRoleMenu(ctx, req.(*ListRoleMenuReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*ListAuthorityMenuReply)
+		reply := out.(*ListRoleMenuReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Admin_HandleAuthorityMenu0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+func _Admin_HandleRoleMenu0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in HandleAuthorityMenuReq
+		var in HandleRoleMenuReq
 		if err := ctx.Bind(&in.Data); err != nil {
 			return err
 		}
@@ -1100,22 +1100,22 @@ func _Admin_HandleAuthorityMenu0_HTTP_Handler(srv AdminHTTPServer) func(ctx http
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAdminHandleAuthorityMenu)
+		http.SetOperation(ctx, OperationAdminHandleRoleMenu)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.HandleAuthorityMenu(ctx, req.(*HandleAuthorityMenuReq))
+			return srv.HandleRoleMenu(ctx, req.(*HandleRoleMenuReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*HandleAuthorityMenuReply)
+		reply := out.(*HandleRoleMenuReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Admin_HandleAuthorityResource0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+func _Admin_HandleRoleResource0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in HandleAuthorityResourceReq
+		var in HandleRoleResourceReq
 		if err := ctx.Bind(&in.Data); err != nil {
 			return err
 		}
@@ -1125,15 +1125,15 @@ func _Admin_HandleAuthorityResource0_HTTP_Handler(srv AdminHTTPServer) func(ctx 
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAdminHandleAuthorityResource)
+		http.SetOperation(ctx, OperationAdminHandleRoleResource)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.HandleAuthorityResource(ctx, req.(*HandleAuthorityResourceReq))
+			return srv.HandleRoleResource(ctx, req.(*HandleRoleResourceReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*HandleAuthorityResourceReply)
+		reply := out.(*HandleRoleResourceReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -1523,35 +1523,33 @@ func _Admin_ListDepartmentTree0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.
 }
 
 type AdminHTTPClient interface {
-	CreateAuthority(ctx context.Context, req *CreateAuthorityReq, opts ...http.CallOption) (rsp *CreateAuthorityReply, err error)
 	CreateDepartment(ctx context.Context, req *CreateDepartmentReq, opts ...http.CallOption) (rsp *CreateDepartmentReply, err error)
 	CreateDomain(ctx context.Context, req *CreateDomainReq, opts ...http.CallOption) (rsp *CreateDomainReply, err error)
 	CreateMenu(ctx context.Context, req *CreateMenuReq, opts ...http.CallOption) (rsp *CreateMenuReply, err error)
 	CreateResource(ctx context.Context, req *CreateResourceReq, opts ...http.CallOption) (rsp *CreateResourceReply, err error)
+	CreateRole(ctx context.Context, req *CreateRoleReq, opts ...http.CallOption) (rsp *CreateRoleReply, err error)
 	CreateUser(ctx context.Context, req *CreateUserReq, opts ...http.CallOption) (rsp *CreateUserReply, err error)
-	DeleteAuthority(ctx context.Context, req *DeleteAuthorityReq, opts ...http.CallOption) (rsp *DeleteAuthorityReply, err error)
 	DeleteDepartment(ctx context.Context, req *DeleteDepartmentReq, opts ...http.CallOption) (rsp *DeleteDepartmentReply, err error)
 	DeleteDomain(ctx context.Context, req *DeleteDomainReq, opts ...http.CallOption) (rsp *DeleteDomainReply, err error)
 	DeleteMenu(ctx context.Context, req *DeleteMenuReq, opts ...http.CallOption) (rsp *DeleteMenuReply, err error)
 	DeleteResource(ctx context.Context, req *DeleteResourceReq, opts ...http.CallOption) (rsp *DeleteResourceReply, err error)
+	DeleteRole(ctx context.Context, req *DeleteRoleReq, opts ...http.CallOption) (rsp *DeleteRoleReply, err error)
 	DeleteUser(ctx context.Context, req *DeleteUserReq, opts ...http.CallOption) (rsp *DeleteUserReply, err error)
 	EmailLogin(ctx context.Context, req *EmailLoginReq, opts ...http.CallOption) (rsp *LoginReply, err error)
 	ExistUserName(ctx context.Context, req *ExistUserNameReq, opts ...http.CallOption) (rsp *ExistUserNameReply, err error)
-	GetAuthority(ctx context.Context, req *GetAuthorityReq, opts ...http.CallOption) (rsp *Authority, err error)
 	GetDepartment(ctx context.Context, req *GetDepartmentReq, opts ...http.CallOption) (rsp *Department, err error)
 	GetDomain(ctx context.Context, req *GetDomainReq, opts ...http.CallOption) (rsp *Domain, err error)
 	GetMenu(ctx context.Context, req *GetMenuReq, opts ...http.CallOption) (rsp *Menu, err error)
 	GetResource(ctx context.Context, req *GetResourceReq, opts ...http.CallOption) (rsp *Resource, err error)
+	GetRole(ctx context.Context, req *GetRoleReq, opts ...http.CallOption) (rsp *Role, err error)
 	GetUser(ctx context.Context, req *GetUserReq, opts ...http.CallOption) (rsp *User, err error)
 	GetUserInfo(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *User, err error)
 	GetUserProfile(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserProfileReply, err error)
-	HandleAuthorityMenu(ctx context.Context, req *HandleAuthorityMenuReq, opts ...http.CallOption) (rsp *HandleAuthorityMenuReply, err error)
-	HandleAuthorityResource(ctx context.Context, req *HandleAuthorityResourceReq, opts ...http.CallOption) (rsp *HandleAuthorityResourceReply, err error)
 	HandleDomainMenu(ctx context.Context, req *HandleDomainMenuReq, opts ...http.CallOption) (rsp *HandleDomainMenuReply, err error)
+	HandleRoleMenu(ctx context.Context, req *HandleRoleMenuReq, opts ...http.CallOption) (rsp *HandleRoleMenuReply, err error)
+	HandleRoleResource(ctx context.Context, req *HandleRoleResourceReq, opts ...http.CallOption) (rsp *HandleRoleResourceReply, err error)
 	HandleUserDomain(ctx context.Context, req *HandleUserDomainReq, opts ...http.CallOption) (rsp *HandleUserDomainReply, err error)
-	HandleUserDomainAuthority(ctx context.Context, req *HandleUserDomainAuthorityReq, opts ...http.CallOption) (rsp *HandleUserDomainAuthorityReply, err error)
-	ListAuthority(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
-	ListAuthorityMenu(ctx context.Context, req *ListAuthorityMenuReq, opts ...http.CallOption) (rsp *ListAuthorityMenuReply, err error)
+	HandleUserDomainRole(ctx context.Context, req *HandleUserDomainRoleReq, opts ...http.CallOption) (rsp *HandleUserDomainRoleReply, err error)
 	ListDepartment(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
 	ListDepartmentTree(ctx context.Context, req *ListDepartmentTreeReq, opts ...http.CallOption) (rsp *ListDepartmentTreeReply, err error)
 	ListDomain(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
@@ -1560,11 +1558,13 @@ type AdminHTTPClient interface {
 	ListMenuTree(ctx context.Context, req *ListMenuTreeReq, opts ...http.CallOption) (rsp *ListMenuTreeReply, err error)
 	ListResource(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
 	ListResourceGroup(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *ListResourceGroupReply, err error)
+	ListRole(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
+	ListRoleMenu(ctx context.Context, req *ListRoleMenuReq, opts ...http.CallOption) (rsp *ListRoleMenuReply, err error)
 	ListUser(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
-	ListUserAuthority(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *ListUserAuthorityReply, err error)
-	ListUserAuthorityMenuTree(ctx context.Context, req *ListUserAuthorityMenuTreeReq, opts ...http.CallOption) (rsp *ListUserAuthorityMenuTreeReply, err error)
-	ListUserAuthorityPermission(ctx context.Context, req *ListUserAuthorityPermissionReq, opts ...http.CallOption) (rsp *ListUserAuthorityPermissionReply, err error)
 	ListUserDomain(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *ListUserDomainReply, err error)
+	ListUserRole(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *ListUserRoleReply, err error)
+	ListUserRoleMenuTree(ctx context.Context, req *ListUserRoleMenuTreeReq, opts ...http.CallOption) (rsp *ListUserRoleMenuTreeReply, err error)
+	ListUserRolePermission(ctx context.Context, req *ListUserRolePermissionReq, opts ...http.CallOption) (rsp *ListUserRolePermissionReply, err error)
 	LoginDomain(ctx context.Context, req *LoginDomainReq, opts ...http.CallOption) (rsp *LoginReply, err error)
 	Logout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *LogoutReply, err error)
 	MiddlePassLogin(ctx context.Context, req *PassLoginReq, opts ...http.CallOption) (rsp *LoginReply, err error)
@@ -1572,13 +1572,13 @@ type AdminHTTPClient interface {
 	Register(ctx context.Context, req *RegisterReq, opts ...http.CallOption) (rsp *RegisterReply, err error)
 	RegisterDomain(ctx context.Context, req *RegisterDomainReq, opts ...http.CallOption) (rsp *RegisterReply, err error)
 	SmsLogin(ctx context.Context, req *SmsLoginReq, opts ...http.CallOption) (rsp *LoginReply, err error)
-	UpdateAuthority(ctx context.Context, req *UpdateAuthorityReq, opts ...http.CallOption) (rsp *UpdateAuthorityReply, err error)
-	UpdateAuthorityState(ctx context.Context, req *UpdateAuthorityStateReq, opts ...http.CallOption) (rsp *UpdateAuthorityStateReply, err error)
 	UpdateDepartment(ctx context.Context, req *UpdateDepartmentReq, opts ...http.CallOption) (rsp *UpdateDepartmentReply, err error)
 	UpdateDomain(ctx context.Context, req *UpdateDomainReq, opts ...http.CallOption) (rsp *UpdateDomainReply, err error)
 	UpdateDomainState(ctx context.Context, req *UpdateDomainStateReq, opts ...http.CallOption) (rsp *UpdateDomainStateReply, err error)
 	UpdateMenu(ctx context.Context, req *UpdateMenuReq, opts ...http.CallOption) (rsp *UpdateMenuReply, err error)
 	UpdateResource(ctx context.Context, req *UpdateResourceReq, opts ...http.CallOption) (rsp *UpdateResourceReply, err error)
+	UpdateRole(ctx context.Context, req *UpdateRoleReq, opts ...http.CallOption) (rsp *UpdateRoleReply, err error)
+	UpdateRoleState(ctx context.Context, req *UpdateRoleStateReq, opts ...http.CallOption) (rsp *UpdateRoleStateReply, err error)
 	UpdateUser(ctx context.Context, req *UpdateUserReq, opts ...http.CallOption) (rsp *UpdateUserReply, err error)
 }
 
@@ -1588,19 +1588,6 @@ type AdminHTTPClientImpl struct {
 
 func NewAdminHTTPClient(client *http.Client) AdminHTTPClient {
 	return &AdminHTTPClientImpl{client}
-}
-
-func (c *AdminHTTPClientImpl) CreateAuthority(ctx context.Context, in *CreateAuthorityReq, opts ...http.CallOption) (*CreateAuthorityReply, error) {
-	var out CreateAuthorityReply
-	pattern := "/admin/v1/authorities"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAdminCreateAuthority))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
 }
 
 func (c *AdminHTTPClientImpl) CreateDepartment(ctx context.Context, in *CreateDepartmentReq, opts ...http.CallOption) (*CreateDepartmentReply, error) {
@@ -1655,11 +1642,11 @@ func (c *AdminHTTPClientImpl) CreateResource(ctx context.Context, in *CreateReso
 	return &out, err
 }
 
-func (c *AdminHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUserReq, opts ...http.CallOption) (*CreateUserReply, error) {
-	var out CreateUserReply
-	pattern := "/admin/v1/users"
+func (c *AdminHTTPClientImpl) CreateRole(ctx context.Context, in *CreateRoleReq, opts ...http.CallOption) (*CreateRoleReply, error) {
+	var out CreateRoleReply
+	pattern := "/admin/v1/roles"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAdminCreateUser))
+	opts = append(opts, http.Operation(OperationAdminCreateRole))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -1668,13 +1655,13 @@ func (c *AdminHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUserReq,
 	return &out, err
 }
 
-func (c *AdminHTTPClientImpl) DeleteAuthority(ctx context.Context, in *DeleteAuthorityReq, opts ...http.CallOption) (*DeleteAuthorityReply, error) {
-	var out DeleteAuthorityReply
-	pattern := "/admin/v1/authorities/{id}"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAdminDeleteAuthority))
+func (c *AdminHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUserReq, opts ...http.CallOption) (*CreateUserReply, error) {
+	var out CreateUserReply
+	pattern := "/admin/v1/users"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminCreateUser))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1733,6 +1720,19 @@ func (c *AdminHTTPClientImpl) DeleteResource(ctx context.Context, in *DeleteReso
 	return &out, err
 }
 
+func (c *AdminHTTPClientImpl) DeleteRole(ctx context.Context, in *DeleteRoleReq, opts ...http.CallOption) (*DeleteRoleReply, error) {
+	var out DeleteRoleReply
+	pattern := "/admin/v1/roles/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminDeleteRole))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *AdminHTTPClientImpl) DeleteUser(ctx context.Context, in *DeleteUserReq, opts ...http.CallOption) (*DeleteUserReply, error) {
 	var out DeleteUserReply
 	pattern := "/admin/v1/users/{id}"
@@ -1766,19 +1766,6 @@ func (c *AdminHTTPClientImpl) ExistUserName(ctx context.Context, in *ExistUserNa
 	opts = append(opts, http.Operation(OperationAdminExistUserName))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *AdminHTTPClientImpl) GetAuthority(ctx context.Context, in *GetAuthorityReq, opts ...http.CallOption) (*Authority, error) {
-	var out Authority
-	pattern := "/admin/v1/authorities/{id}"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAdminGetAuthority))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1837,6 +1824,19 @@ func (c *AdminHTTPClientImpl) GetResource(ctx context.Context, in *GetResourceRe
 	return &out, err
 }
 
+func (c *AdminHTTPClientImpl) GetRole(ctx context.Context, in *GetRoleReq, opts ...http.CallOption) (*Role, error) {
+	var out Role
+	pattern := "/admin/v1/roles/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminGetRole))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *AdminHTTPClientImpl) GetUser(ctx context.Context, in *GetUserReq, opts ...http.CallOption) (*User, error) {
 	var out User
 	pattern := "/admin/v1/users/{id}"
@@ -1876,37 +1876,37 @@ func (c *AdminHTTPClientImpl) GetUserProfile(ctx context.Context, in *emptypb.Em
 	return &out, err
 }
 
-func (c *AdminHTTPClientImpl) HandleAuthorityMenu(ctx context.Context, in *HandleAuthorityMenuReq, opts ...http.CallOption) (*HandleAuthorityMenuReply, error) {
-	var out HandleAuthorityMenuReply
-	pattern := "/admin/v1/authorities/{id}/menus"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAdminHandleAuthorityMenu))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *AdminHTTPClientImpl) HandleAuthorityResource(ctx context.Context, in *HandleAuthorityResourceReq, opts ...http.CallOption) (*HandleAuthorityResourceReply, error) {
-	var out HandleAuthorityResourceReply
-	pattern := "/admin/v1/authorities/{id}/resources"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAdminHandleAuthorityResource))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
 func (c *AdminHTTPClientImpl) HandleDomainMenu(ctx context.Context, in *HandleDomainMenuReq, opts ...http.CallOption) (*HandleDomainMenuReply, error) {
 	var out HandleDomainMenuReply
 	pattern := "/admin/v1/domains/{id}/menus"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminHandleDomainMenu))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AdminHTTPClientImpl) HandleRoleMenu(ctx context.Context, in *HandleRoleMenuReq, opts ...http.CallOption) (*HandleRoleMenuReply, error) {
+	var out HandleRoleMenuReply
+	pattern := "/admin/v1/roles/{id}/menus"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminHandleRoleMenu))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AdminHTTPClientImpl) HandleRoleResource(ctx context.Context, in *HandleRoleResourceReq, opts ...http.CallOption) (*HandleRoleResourceReply, error) {
+	var out HandleRoleResourceReply
+	pattern := "/admin/v1/roles/{id}/resources"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminHandleRoleResource))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
 	if err != nil {
@@ -1928,39 +1928,13 @@ func (c *AdminHTTPClientImpl) HandleUserDomain(ctx context.Context, in *HandleUs
 	return &out, err
 }
 
-func (c *AdminHTTPClientImpl) HandleUserDomainAuthority(ctx context.Context, in *HandleUserDomainAuthorityReq, opts ...http.CallOption) (*HandleUserDomainAuthorityReply, error) {
-	var out HandleUserDomainAuthorityReply
-	pattern := "/admin/v1/users/{id}/domainAuthorities"
+func (c *AdminHTTPClientImpl) HandleUserDomainRole(ctx context.Context, in *HandleUserDomainRoleReq, opts ...http.CallOption) (*HandleUserDomainRoleReply, error) {
+	var out HandleUserDomainRoleReply
+	pattern := "/admin/v1/users/{id}/domainRoles"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAdminHandleUserDomainAuthority))
+	opts = append(opts, http.Operation(OperationAdminHandleUserDomainRole))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *AdminHTTPClientImpl) ListAuthority(ctx context.Context, in *protobuf.PagingReq, opts ...http.CallOption) (*protobuf.PagingReply, error) {
-	var out protobuf.PagingReply
-	pattern := "/admin/v1/authorities"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAdminListAuthority))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *AdminHTTPClientImpl) ListAuthorityMenu(ctx context.Context, in *ListAuthorityMenuReq, opts ...http.CallOption) (*ListAuthorityMenuReply, error) {
-	var out ListAuthorityMenuReply
-	pattern := "/admin/v1/authorities/{id}/menus"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAdminListAuthorityMenu))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2071,6 +2045,32 @@ func (c *AdminHTTPClientImpl) ListResourceGroup(ctx context.Context, in *protobu
 	return &out, err
 }
 
+func (c *AdminHTTPClientImpl) ListRole(ctx context.Context, in *protobuf.PagingReq, opts ...http.CallOption) (*protobuf.PagingReply, error) {
+	var out protobuf.PagingReply
+	pattern := "/admin/v1/roles"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminListRole))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AdminHTTPClientImpl) ListRoleMenu(ctx context.Context, in *ListRoleMenuReq, opts ...http.CallOption) (*ListRoleMenuReply, error) {
+	var out ListRoleMenuReply
+	pattern := "/admin/v1/roles/{id}/menus"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminListRoleMenu))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *AdminHTTPClientImpl) ListUser(ctx context.Context, in *protobuf.PagingReq, opts ...http.CallOption) (*protobuf.PagingReply, error) {
 	var out protobuf.PagingReply
 	pattern := "/admin/v1/users"
@@ -2084,50 +2084,50 @@ func (c *AdminHTTPClientImpl) ListUser(ctx context.Context, in *protobuf.PagingR
 	return &out, err
 }
 
-func (c *AdminHTTPClientImpl) ListUserAuthority(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*ListUserAuthorityReply, error) {
-	var out ListUserAuthorityReply
-	pattern := "/admin/v1/users/authorities"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAdminListUserAuthority))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *AdminHTTPClientImpl) ListUserAuthorityMenuTree(ctx context.Context, in *ListUserAuthorityMenuTreeReq, opts ...http.CallOption) (*ListUserAuthorityMenuTreeReply, error) {
-	var out ListUserAuthorityMenuTreeReply
-	pattern := "/admin/v1/users/authorities/{authority_id}/menus/trees"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAdminListUserAuthorityMenuTree))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *AdminHTTPClientImpl) ListUserAuthorityPermission(ctx context.Context, in *ListUserAuthorityPermissionReq, opts ...http.CallOption) (*ListUserAuthorityPermissionReply, error) {
-	var out ListUserAuthorityPermissionReply
-	pattern := "/admin/v1/users/authorities/{authority_id}/permissions"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAdminListUserAuthorityPermission))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
 func (c *AdminHTTPClientImpl) ListUserDomain(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*ListUserDomainReply, error) {
 	var out ListUserDomainReply
 	pattern := "/admin/v1/users/domains"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminListUserDomain))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AdminHTTPClientImpl) ListUserRole(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*ListUserRoleReply, error) {
+	var out ListUserRoleReply
+	pattern := "/admin/v1/users/roles"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminListUserRole))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AdminHTTPClientImpl) ListUserRoleMenuTree(ctx context.Context, in *ListUserRoleMenuTreeReq, opts ...http.CallOption) (*ListUserRoleMenuTreeReply, error) {
+	var out ListUserRoleMenuTreeReply
+	pattern := "/admin/v1/users/roles/{role_id}/menus/trees"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminListUserRoleMenuTree))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AdminHTTPClientImpl) ListUserRolePermission(ctx context.Context, in *ListUserRolePermissionReq, opts ...http.CallOption) (*ListUserRolePermissionReply, error) {
+	var out ListUserRolePermissionReply
+	pattern := "/admin/v1/users/roles/{role_id}/permissions"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminListUserRolePermission))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -2227,32 +2227,6 @@ func (c *AdminHTTPClientImpl) SmsLogin(ctx context.Context, in *SmsLoginReq, opt
 	return &out, err
 }
 
-func (c *AdminHTTPClientImpl) UpdateAuthority(ctx context.Context, in *UpdateAuthorityReq, opts ...http.CallOption) (*UpdateAuthorityReply, error) {
-	var out UpdateAuthorityReply
-	pattern := "/admin/v1/authorities/{id}"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAdminUpdateAuthority))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in.Data, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *AdminHTTPClientImpl) UpdateAuthorityState(ctx context.Context, in *UpdateAuthorityStateReq, opts ...http.CallOption) (*UpdateAuthorityStateReply, error) {
-	var out UpdateAuthorityStateReply
-	pattern := "/admin/v1/authorities/{id}/state"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAdminUpdateAuthorityState))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in.Data, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
 func (c *AdminHTTPClientImpl) UpdateDepartment(ctx context.Context, in *UpdateDepartmentReq, opts ...http.CallOption) (*UpdateDepartmentReply, error) {
 	var out UpdateDepartmentReply
 	pattern := "/admin/v1/departments/{id}"
@@ -2310,6 +2284,32 @@ func (c *AdminHTTPClientImpl) UpdateResource(ctx context.Context, in *UpdateReso
 	pattern := "/admin/v1/resources/{id}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminUpdateResource))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in.Data, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AdminHTTPClientImpl) UpdateRole(ctx context.Context, in *UpdateRoleReq, opts ...http.CallOption) (*UpdateRoleReply, error) {
+	var out UpdateRoleReply
+	pattern := "/admin/v1/roles/{id}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminUpdateRole))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in.Data, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AdminHTTPClientImpl) UpdateRoleState(ctx context.Context, in *UpdateRoleStateReq, opts ...http.CallOption) (*UpdateRoleStateReply, error) {
+	var out UpdateRoleStateReply
+	pattern := "/admin/v1/roles/{id}/state"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminUpdateRoleState))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in.Data, &out, opts...)
 	if err != nil {

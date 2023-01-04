@@ -6,7 +6,6 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
-	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -31,7 +30,7 @@ func (r *ResourceRepo) toModel(d *biz.Resource) *SysResource {
 		d.Operation = d.Path
 	}
 	return &SysResource{
-		Model: gorm.Model{
+		Model: Model{
 			ID:        d.ID,
 			CreatedAt: d.CreatedAt,
 			UpdatedAt: d.UpdatedAt,

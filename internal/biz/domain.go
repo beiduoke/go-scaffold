@@ -15,26 +15,26 @@ import (
 	"github.com/pkg/errors"
 )
 
-type DomainAuthorityUser struct {
-	DomainID    uint
-	AuthorityID uint
-	UserID      uint
-	CreatedAt   time.Time
+type DomainRoleUser struct {
+	DomainID  uint
+	RoleID    uint
+	UserID    uint
+	CreatedAt time.Time
 }
 
 // Domain is a Domain model.
 type Domain struct {
-	CreatedAt          time.Time
-	UpdatedAt          time.Time
-	ID                 uint
-	Code               string
-	ParentID           uint
-	Name               string
-	Sort               int32
-	State              int32
-	DefaultAuthorityID uint
-	Authority          *Authority
-	Menus              []*Menu
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+	ID            uint
+	Code          string
+	ParentID      uint
+	Name          string
+	Sort          int32
+	State         int32
+	DefaultRoleID uint
+	Role          *Role
+	Menus         []*Menu
 }
 
 // DomainRepo is a Greater repo.
@@ -54,12 +54,12 @@ type DomainRepo interface {
 
 	// 领域权限
 	// stdcasbin.IEnforcer
-	// SaveAuthorityUser 添加领域角色权限
-	// SaveAuthorityForUserInDomain(context.Context, uint /* userID */, uint /* authorityID */, uint /* domainID */) error
-	// GetAuthorityForUserInDomain 获取领域用户的角色
-	// GetAuthoritiesForUserInDomain(context.Context, uint /* userID */, uint /* domainID */) []*Authority
-	// GetAuthoritiesForUserInDomain 获取具有域内角色的用户
-	// GetUsersForRoleInDomain(context.Context, uint /* authorityID */, uint /* domainID */) []*User
+	// SaveRoleUser 添加领域角色权限
+	// SaveRoleForUserInDomain(context.Context, uint /* userID */, uint /* roleID */, uint /* domainID */) error
+	// GetRoleForUserInDomain 获取领域用户的角色
+	// GetRolesForUserInDomain(context.Context, uint /* userID */, uint /* domainID */) []*Role
+	// GetRolesForUserInDomain 获取具有域内角色的用户
+	// GetUsersForRoleInDomain(context.Context, uint /* roleID */, uint /* domainID */) []*User
 	// DeleteRoleForUserInDomain 域内删除用户的角色域内删除用户的角色
 	// DeleteRoleForUserInDomain(context.Context, uint /* userID */, uint /* domainID */) error
 }
@@ -84,13 +84,13 @@ func (uc *DomainUsecase) Create(ctx context.Context, g *Domain) (*Domain, error)
 			return err
 		}
 		authCtx := context.WithValue(ctx, casbinM.SecurityUserContextKey, authz.SecurityUser{Domain: strconv.Itoa(int(domain.ID))})
-		authority, err := uc.biz.authorityRepo.Save(authCtx, &Authority{
+		role, err := uc.biz.roleRepo.Save(authCtx, &Role{
 			Name: "default",
 		})
 		if err != nil {
 			return err
 		}
-		domain.DefaultAuthorityID = authority.ID
+		domain.DefaultRoleID = role.ID
 		g, err = uc.biz.domainRepo.Update(ctx, domain)
 		return err
 	})
@@ -98,8 +98,8 @@ func (uc *DomainUsecase) Create(ctx context.Context, g *Domain) (*Domain, error)
 }
 
 // ListByIDs 获取指定领域ID集合
-func (uc *DomainUsecase) ListByIDs(ctx context.Context, id ...uint) (authorities []*Domain, err error) {
-	authorities, _ = uc.biz.domainRepo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
+func (uc *DomainUsecase) ListByIDs(ctx context.Context, id ...uint) (roles []*Domain, err error) {
+	roles, _ = uc.biz.domainRepo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
 	return
 }
 

@@ -32,7 +32,7 @@ type User struct {
 	Password   *string  `protobuf:"bytes,3,opt,name=password,proto3,oneof" json:"password,omitempty"`
 	NickName   *string  `protobuf:"bytes,4,opt,name=nick_name,json=nickName,proto3,oneof" json:"nick_name,omitempty"`
 	Email      *string  `protobuf:"bytes,5,opt,name=email,proto3,oneof" json:"email,omitempty"`
-	Authoritys []string `protobuf:"bytes,6,rep,name=authoritys,proto3" json:"authoritys,omitempty"`
+	Roles []string `protobuf:"bytes,6,rep,name=roles,proto3" json:"roles,omitempty"`
 	// Deprecated: Do not use.
 	Token *string `protobuf:"bytes,7,opt,name=token,proto3,oneof" json:"token,omitempty"`
 }
@@ -104,9 +104,9 @@ func (x *User) GetEmail() string {
 	return ""
 }
 
-func (x *User) GetAuthoritys() []string {
+func (x *User) GetRoles() []string {
 	if x != nil {
-		return x.Authoritys
+		return x.Roles
 	}
 	return nil
 }

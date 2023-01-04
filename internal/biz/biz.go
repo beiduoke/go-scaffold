@@ -12,7 +12,7 @@ import (
 var ProviderSet = wire.NewSet(
 	NewBiz,
 	NewDomainUsecase,
-	NewAuthorityUsecase,
+	NewRoleUsecase,
 	NewResourceUsecase,
 	NewMenuUsecase,
 	NewAuthUsecase,
@@ -35,18 +35,18 @@ type Biz struct {
 	// 领域数据
 	domainRepo DomainRepo
 	// 权限数据
-	authorityRepo AuthorityRepo
+	roleRepo RoleRepo
 	// 用户数据
 	userRepo UserRepo
 }
 
-func NewBiz(logger log.Logger, tm Transaction, enforcer casbin.IEnforcer, domainRepo DomainRepo, authorityRepo AuthorityRepo, userRepo UserRepo) *Biz {
+func NewBiz(logger log.Logger, tm Transaction, enforcer casbin.IEnforcer, domainRepo DomainRepo, roleRepo RoleRepo, userRepo UserRepo) *Biz {
 	return &Biz{
-		log:           log.NewHelper(log.With(logger, "module", "biz/initialize")),
-		tm:            tm,
-		enforcer:      enforcer,
-		domainRepo:    domainRepo,
-		authorityRepo: authorityRepo,
-		userRepo:      userRepo,
+		log:        log.NewHelper(log.With(logger, "module", "biz/initialize")),
+		tm:         tm,
+		enforcer:   enforcer,
+		domainRepo: domainRepo,
+		roleRepo:   roleRepo,
+		userRepo:   userRepo,
 	}
 }

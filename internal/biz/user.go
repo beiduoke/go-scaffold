@@ -19,22 +19,22 @@ import (
 
 // User is a User model.
 type User struct {
-	CreatedAt            time.Time
-	UpdatedAt            time.Time
-	ID                   uint
-	Name                 string
-	Avatar               string
-	NickName             string
-	RealName             string
-	Password             string
-	Birthday             *time.Time
-	Gender               int32
-	Mobile               string
-	Email                string
-	State                int32
-	Domains              []*Domain
-	Authorities          []*Authority
-	DomainAuthorityUsers []*DomainAuthorityUser
+	CreatedAt       time.Time
+	UpdatedAt       time.Time
+	ID              uint
+	Name            string
+	Avatar          string
+	NickName        string
+	RealName        string
+	Password        string
+	Birthday        *time.Time
+	Gender          int32
+	Mobile          string
+	Email           string
+	State           int32
+	Domains         []*Domain
+	Roles           []*Role
+	DomainRoleUsers []*DomainRoleUser
 }
 
 // UserRepo is a Greater repo.
@@ -59,7 +59,7 @@ type UserRepo interface {
 	GetTokenCache(context.Context, AuthClaims) error
 	// 用户领域权限操作
 	HandleDomain(context.Context, *User) error
-	HandleDomainAuthority(context.Context, *User) error
+	HandleDomainRole(context.Context, *User) error
 }
 
 // UserUsecase is a User usecase.
@@ -106,15 +106,15 @@ func (uc *UserUsecase) HandleDomain(ctx context.Context, g *User) error {
 	return uc.biz.userRepo.HandleDomain(ctx, g)
 }
 
-// HandleDomainAuthority 绑定领域权限
-func (uc *UserUsecase) HandleDomainAuthority(ctx context.Context, g *User, domainId uint) error {
-	uc.log.WithContext(ctx).Infof("HandleDomainAuthority: %v", g)
-	authorities := g.Authorities
-	if len(authorities) <= 0 {
+// HandleDomainRole 绑定领域权限
+func (uc *UserUsecase) HandleDomainRole(ctx context.Context, g *User, domainId uint) error {
+	uc.log.WithContext(ctx).Infof("HandleDomainRole: %v", g)
+	roles := g.Roles
+	if len(roles) <= 0 {
 		return errors.New("权限未指定")
 	}
 
-	return uc.biz.userRepo.HandleDomainAuthority(ctx, g)
+	return uc.biz.userRepo.HandleDomainRole(ctx, g)
 }
 
 // Update 修改用户
@@ -233,26 +233,26 @@ func (ac *UserUsecase) GetLastUseDomain(ctx context.Context, g *User) (*Domain, 
 	if len(domainPolices) < 1 && len(domainPolices[0]) >= 2 {
 		return nil, errors.New("领域查询失败")
 	}
-	lastUseAuthority, lastUseDomain := domainPolices[0][1], domainPolices[0][2]
+	lastUseRole, lastUseDomain := domainPolices[0][1], domainPolices[0][2]
 	fmt.Println(domainPolices)
 	for _, policy := range domainPolices {
 		if p := policy[len(policy)-1]; p == "1" {
-			lastUseAuthority, lastUseDomain = policy[1], policy[2]
+			lastUseRole, lastUseDomain = policy[1], policy[2]
 			break
 		}
 	}
 	return &Domain{
-		ID:                 convert.StringToUint(lastUseDomain),
-		DefaultAuthorityID: convert.StringToUint(lastUseAuthority),
+		ID:            convert.StringToUint(lastUseDomain),
+		DefaultRoleID: convert.StringToUint(lastUseRole),
 	}, nil
 	// 暂无用
 	// 获取最近一次登录的领域下所有角色
 	roles, err := ac.biz.enforcer.(*stdcasbin.SyncedEnforcer).GetNamedRoleManager("g").GetRoles(convert.UnitToString(g.ID), lastUseDomain)
-	authorities := make([]uint, 0, len(roles))
+	roleIds := make([]uint, 0, len(roles))
 	for _, v := range roles {
-		authorities = append(authorities, convert.StringToUint(v))
+		roleIds = append(roleIds, convert.StringToUint(v))
 	}
-	ac.log.Infof("打印角色列表 %v", authorities)
+	ac.log.Infof("打印角色列表 %v", roles)
 	return nil, err
 }
 
@@ -275,8 +275,8 @@ func (ac *UserUsecase) ListDomainAll(ctx context.Context, g *User) ([]*Domain, e
 	return ac.biz.domainRepo.ListByIDs(ctx, domainIds...)
 }
 
-// ListAuthorityID 获取权限角色ID列表
-func (ac *UserUsecase) ListAuthorityID(ctx context.Context, g *User) (authorityIds []uint, err error) {
+// ListRoleID 获取权限角色ID列表
+func (ac *UserUsecase) ListRoleID(ctx context.Context, g *User) (roleIds []uint, err error) {
 	uidStr := convert.UnitToString(g.ID)
 	var rolesIdsStr []string
 	if len(g.Domains) < 1 {
@@ -298,35 +298,35 @@ func (ac *UserUsecase) ListAuthorityID(ctx context.Context, g *User) (authorityI
 	return rolesIds, nil
 }
 
-// ListAuthorityAll 获取权限角色列表
-func (ac *UserUsecase) ListAuthorityAll(ctx context.Context, g *User) (authorities []*Authority, err error) {
-	authorityIds, err := ac.ListAuthorityID(ctx, g)
-	if err != nil || len(authorityIds) < 1 {
-		return authorities, err
+// ListRoleAll 获取权限角色列表
+func (ac *UserUsecase) ListRoleAll(ctx context.Context, g *User) (roles []*Role, err error) {
+	roleIds, err := ac.ListRoleID(ctx, g)
+	if err != nil || len(roleIds) < 1 {
+		return roles, err
 	}
-	return ac.biz.authorityRepo.ListByIDs(ctx, authorityIds...)
+	return ac.biz.roleRepo.ListByIDs(ctx, roleIds...)
 }
 
-// ListUserAuthorityMenuAll 用户权限角色菜单列表(包含权限标识)
-func (ac *UserUsecase) ListAuthorityMenuAll(ctx context.Context, g *User) ([]*Menu, error) {
-	authorityIds, err := ac.ListAuthorityID(ctx, g)
+// ListUserRoleMenuAll 用户权限角色菜单列表(包含权限标识)
+func (ac *UserUsecase) ListRoleMenuAll(ctx context.Context, g *User) ([]*Menu, error) {
+	roleIds, err := ac.ListRoleID(ctx, g)
 	if err != nil {
 		return nil, errors.Errorf("用户权限角色查询失败 %v", err)
 	}
 
-	if len(g.Authorities) < 1 {
-		return ac.biz.authorityRepo.ListMenuAndParentByIDs(ctx, authorityIds...)
+	if len(g.Roles) < 1 {
+		return ac.biz.roleRepo.ListMenuAndParentByIDs(ctx, roleIds...)
 	}
 
-	authorityIdsReq := []uint{}
-	for _, v := range g.Authorities {
-		for _, a := range authorityIds {
+	roleIdsReq := []uint{}
+	for _, v := range g.Roles {
+		for _, a := range roleIds {
 			if a == v.ID {
-				authorityIdsReq = append(authorityIdsReq, v.ID)
+				roleIdsReq = append(roleIdsReq, v.ID)
 				break
 			}
 		}
 	}
 
-	return ac.biz.authorityRepo.ListMenuAndParentByIDs(ctx, authorityIdsReq...)
+	return ac.biz.roleRepo.ListMenuAndParentByIDs(ctx, roleIdsReq...)
 }

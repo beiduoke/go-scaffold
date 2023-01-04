@@ -155,15 +155,15 @@ service Admin {
     };
   }
   // 当前登录用户拥有角色
-  rpc ListUserAuthority (google.protobuf.Empty) returns (ListUserAuthorityReply) {
+  rpc ListUserRole (google.protobuf.Empty) returns (ListUserRoleReply) {
     option (google.api.http) = {
-      get: "/admin/v1/users/authorities"
+      get: "/admin/v1/users/roles"
     };
   }
   // 获取权限角色菜单树形列表
-  rpc ListUserAuthorityMenuTree (ListUserAuthorityMenuTreeReq) returns (ListUserAuthorityMenuTreeReply) {
+  rpc ListUserRoleMenuTree (ListUserRoleMenuTreeReq) returns (ListUserRoleMenuTreeReply) {
     option (google.api.http) = {
-      get: "/admin/v1/users/authorities/{authority_id}/menus/trees"
+      get: "/admin/v1/users/roles/{role_id}/menus/trees"
       additional_bindings {
         get: "/admin/v1/users/menus/trees"
       }
@@ -171,9 +171,9 @@ service Admin {
   }
   
   // 获取权限角色权限列表
-  rpc ListUserAuthorityPermission (ListUserAuthorityPermissionReq) returns (ListUserAuthorityPermissionReply) {
+  rpc ListUserRolePermission (ListUserRolePermissionReq) returns (ListUserRolePermissionReply) {
     option (google.api.http) = {
-      get: "/admin/v1/users/authorities/{authority_id}/permissions"
+      get: "/admin/v1/users/roles/{role_id}/permissions"
       additional_bindings {
         get: "/admin/v1/users/permissions"
       }
@@ -226,9 +226,9 @@ service Admin {
     };
   }
   // 绑定用户领域权限
-  rpc HandleUserDomainAuthority (HandleUserDomainAuthorityReq) returns (HandleUserDomainAuthorityReply) {
+  rpc HandleUserDomainRole (HandleUserDomainRoleReq) returns (HandleUserDomainRoleReply) {
     option (google.api.http) = {
-      post: "/admin/v1/users/{id}/domainAuthorities"
+      post: "/admin/v1/users/{id}/domainRoles"
       body: "data"
     };
   }
@@ -309,61 +309,61 @@ service Admin {
 
   // 权限角色模块
   // 列表权限角色
-  rpc ListAuthority (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+  rpc ListRole (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
     option (google.api.http) = {
-      get: "/admin/v1/authorities"
+      get: "/admin/v1/roles"
     };
   }
   // 创建权限角色
-  rpc CreateAuthority (CreateAuthorityReq) returns (CreateAuthorityReply) {
+  rpc CreateRole (CreateRoleReq) returns (CreateRoleReply) {
     option (google.api.http) = {
-      post: "/admin/v1/authorities"
+      post: "/admin/v1/roles"
       body: "*"
     };
   }
   // 获取权限角色
-  rpc GetAuthority (GetAuthorityReq) returns (Authority) {
+  rpc GetRole (GetRoleReq) returns (Role) {
     option (google.api.http) = {
-      get: "/admin/v1/authorities/{id}"
+      get: "/admin/v1/roles/{id}"
     };
   }
   // 修改权限角色
-  rpc UpdateAuthority (UpdateAuthorityReq) returns (UpdateAuthorityReply) {
+  rpc UpdateRole (UpdateRoleReq) returns (UpdateRoleReply) {
     option (google.api.http) = {
-      put: "/admin/v1/authorities/{id}"
+      put: "/admin/v1/roles/{id}"
       body: "data"
     };
   }
   // 设置领域状态
-  rpc UpdateAuthorityState (UpdateAuthorityStateReq) returns (UpdateAuthorityStateReply) {
+  rpc UpdateRoleState (UpdateRoleStateReq) returns (UpdateRoleStateReply) {
     option (google.api.http) = {
-      put: "/admin/v1/authorities/{id}/state"
+      put: "/admin/v1/roles/{id}/state"
       body: "data"
     };
   }
   // 删除权限角色
-  rpc DeleteAuthority (DeleteAuthorityReq) returns (DeleteAuthorityReply) {
+  rpc DeleteRole (DeleteRoleReq) returns (DeleteRoleReply) {
     option (google.api.http) = {
-      delete: "/admin/v1/authorities/{id}"
+      delete: "/admin/v1/roles/{id}"
     };
   }
   // 获取权限角色菜单
-  rpc ListAuthorityMenu (ListAuthorityMenuReq) returns (ListAuthorityMenuReply) {
+  rpc ListRoleMenu (ListRoleMenuReq) returns (ListRoleMenuReply) {
     option (google.api.http) = {
-      get: "/admin/v1/authorities/{id}/menus"
+      get: "/admin/v1/roles/{id}/menus"
     };
   }
   // 处理权限角色菜单
-  rpc HandleAuthorityMenu (HandleAuthorityMenuReq) returns (HandleAuthorityMenuReply) {
+  rpc HandleRoleMenu (HandleRoleMenuReq) returns (HandleRoleMenuReply) {
     option (google.api.http) = {
-      post: "/admin/v1/authorities/{id}/menus"
+      post: "/admin/v1/roles/{id}/menus"
       body: "data"
     };
   }
   // 处理权限角色资源
-  rpc HandleAuthorityResource (HandleAuthorityResourceReq) returns (HandleAuthorityResourceReply) {
+  rpc HandleRoleResource (HandleRoleResourceReq) returns (HandleRoleResourceReply) {
     option (google.api.http) = {
-      post: "/admin/v1/authorities/{id}/resources"
+      post: "/admin/v1/roles/{id}/resources"
       body: "data"
     };
   }
@@ -571,7 +571,7 @@ message User {
 // 回应 - 用户概况详情
 message GetUserProfileReply {
   User user = 1;
-  repeated Authority authorities = 2;
+  repeated Role roles = 2;
 }
 
 // 回应 - 用户领域
@@ -581,8 +581,8 @@ message ListUserDomainReply {
 }
 
 // 回应 - 用户权限角色
-message ListUserAuthorityReply {
-  repeated Authority items = 1;
+message ListUserRoleReply {
+  repeated Role items = 1;
   int32 total = 2;
 }
 
@@ -593,12 +593,12 @@ message ListUserReply {
 }
 
 // 请求 - 获取用户权限角色菜单树形
-message ListUserAuthorityMenuTreeReq {
-  uint64 authority_id = 1 [(validate.rules).uint64 = {gte: 0}];
+message ListUserRoleMenuTreeReq {
+  uint64 role_id = 1 [(validate.rules).uint64 = {gte: 0}];
 }
 
 // 回应 - 获取用户权限角色菜单树形 Deprecated
-message ListUserAuthorityMenuTreeReply_Deprecated {
+message ListUserRoleMenuTreeReply_Deprecated {
   message MenuMeta {
     // 路由title  一般必填
     string title = 1;
@@ -650,7 +650,7 @@ message ListUserAuthorityMenuTreeReply_Deprecated {
   repeated Menu items = 2;
 }
 
-message ListUserAuthorityMenuTreeReply {
+message ListUserRoleMenuTreeReply {
   message Meta {
     // 路由title  一般必填
     string title = 1;
@@ -682,12 +682,12 @@ message ListUserAuthorityMenuTreeReply {
 }
 
 // 请求 - 获取用户权限角色列表
-message ListUserAuthorityPermissionReq {
-  uint64 authority_id = 1 [(validate.rules).uint64 = {gte: 0}];
+message ListUserRolePermissionReq {
+  uint64 role_id = 1 [(validate.rules).uint64 = {gte: 0}];
 }
 
 // 回应 - 获取用户权限角色列表
-message ListUserAuthorityPermissionReply {
+message ListUserRolePermissionReply {
   int32 total = 1;
   repeated string items = 2;
 }
@@ -729,17 +729,17 @@ message HandleUserDomainReply {
 }
 
 // 请求 - 绑定用户领域权限
-message HandleUserDomainAuthorityReq {
+message HandleUserDomainRoleReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     uint64 domain_id = 2 [(validate.rules).uint64 = {gt: 0}]; 
-    repeated uint64 authority_ids = 11 [(validate.rules).repeated = {min_items: 1, unique: true, items: {uint64: {gt: 0}}}];
+    repeated uint64 role_ids = 11 [(validate.rules).repeated = {min_items: 1, unique: true, items: {uint64: {gt: 0}}}];
   }
   Data data = 3;
 }
 
 // 回应 - 绑定用户领域权限
-message HandleUserDomainAuthorityReply {
+message HandleUserDomainRoleReply {
   bool success = 1;
   string message = 2;
 }
@@ -815,7 +815,7 @@ message Domain {
   uint64 parent_id = 5;
   int32 sort = 6;
   api.protobuf.DomainState state = 7;
-  uint64 default_authority_id = 8;
+  uint64 default_role_id = 8;
 }
 
 // 请求 - 领域登录
@@ -840,7 +840,7 @@ message CreateDomainReq {
   optional uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
   optional int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
   optional api.protobuf.DomainState state = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-  optional uint64 default_authority_id = 5 [(validate.rules).uint64 = {gt: 0}];
+  optional uint64 default_role_id = 5 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 创建领域
@@ -858,7 +858,7 @@ message UpdateDomainReq {
     optional uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
     optional int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
     optional api.protobuf.DomainState state = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-    optional uint64 default_authority_id = 5 [(validate.rules).uint64 = {gt: 0}];
+    optional uint64 default_role_id = 5 [(validate.rules).uint64 = {gt: 0}];
   }
   Data data = 2;
 }
@@ -936,7 +936,7 @@ message HandleDomainMenuReply {
 }
 
 // 权限角色模块
-message Authority {
+message Role {
   google.protobuf.Timestamp created_at = 1;
   google.protobuf.Timestamp updated_at = 2;
   uint64 id = 3;
@@ -944,37 +944,37 @@ message Authority {
   uint64 parent_id = 5;
   string default_router = 6;
   int32 sort = 7;
-  api.protobuf.AuthorityState state = 8;
+  api.protobuf.RoleState state = 8;
   string remarks = 9;
 }
 
 // 请求 - 创建权限角色
-message CreateAuthorityReq {
+message CreateRoleReq {
   string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
   uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
   optional string default_router = 3 [(validate.rules).string = {min_len: 1, max_len: 100}];
   optional int32 sort = 4 [(validate.rules).int32 = {gte: 0}];
-  api.protobuf.AuthorityState state = 5 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  api.protobuf.RoleState state = 5 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
   optional string remarks = 6 [(validate.rules).string = {min_len: 1, max_len: 1000}];
   // repeated uint64 menus = 7 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
 }
 
 // 回应 - 创建权限角色
-message CreateAuthorityReply {
+message CreateRoleReply {
   bool success = 1;
   string message = 2;
   google.protobuf.Any data = 3;
 }
 
 // 请求 - 修改权限角色
-message UpdateAuthorityReq {
+message UpdateRoleReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
     uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
     optional string default_router = 3 [(validate.rules).string = {min_len: 1, max_len: 100}];
     optional int32 sort = 4 [(validate.rules).int32 = {gte: 0}];
-    api.protobuf.AuthorityState state = 5 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    api.protobuf.RoleState state = 5 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
     optional string remarks = 6 [(validate.rules).string = {min_len: 0, max_len: 1000}];
     // repeated uint64 menus = 7 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
   }
@@ -982,58 +982,58 @@ message UpdateAuthorityReq {
 }
 
 // 回应 - 创建权限角色
-message UpdateAuthorityReply {
+message UpdateRoleReply {
   bool success = 1;
   string message = 2;
   google.protobuf.Any data = 3;
 }
 
 // 请求 - 修改权限角色
-message UpdateAuthorityStateReq {
+message UpdateRoleStateReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
-    api.protobuf.AuthorityState state = 1 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    api.protobuf.RoleState state = 1 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
   }
   Data data = 2;
 }
 
 // 回应 - 创建权限角色
-message UpdateAuthorityStateReply {
+message UpdateRoleStateReply {
   bool success = 1;
   string message = 2;
   google.protobuf.Any data = 3;
 }
 
 // 请求 - 获取权限角色
-message GetAuthorityReq {
+message GetRoleReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 请求 - 删除权限角色
-message DeleteAuthorityReq {
+message DeleteRoleReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 删除权限角色
-message DeleteAuthorityReply {
+message DeleteRoleReply {
   bool success = 1;
   string message = 2;
   google.protobuf.Any data = 3;
 }
 
 // 请求 - 获取权限角色菜单
-message ListAuthorityMenuReq {
+message ListRoleMenuReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 获取权限角色菜单
-message ListAuthorityMenuReply {
+message ListRoleMenuReply {
   int32 total = 1;
   repeated Menu items = 2;
 }
 
 // 请求 - 处理权限角色菜单
-message HandleAuthorityMenuReq {
+message HandleRoleMenuReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Menu {
     uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
@@ -1047,14 +1047,14 @@ message HandleAuthorityMenuReq {
 }
 
 // 回应 - 处理权限角色菜单
-message HandleAuthorityMenuReply {
+message HandleRoleMenuReply {
   bool success = 1;
   string message = 2;
   google.protobuf.Any data = 3;
 }
 
 // 请求 - 处理权限角色资源
-message HandleAuthorityResourceReq {
+message HandleRoleResourceReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     repeated uint64 resource_ids = 1;
@@ -1063,7 +1063,7 @@ message HandleAuthorityResourceReq {
 }
 
 // 回应 - 处理权限角色资源
-message HandleAuthorityResourceReply {
+message HandleRoleResourceReply {
   bool success = 1;
   string message = 2;
   google.protobuf.Any data = 3;

@@ -185,26 +185,26 @@ func (s *AdminService) HandleUserDomain(ctx context.Context, in *v1.HandleUserDo
 	}, nil
 }
 
-// HandleUserAuthority 绑定用户权限
-func (s *AdminService) HandleUserDomainAuthority(ctx context.Context, in *v1.HandleUserDomainAuthorityReq) (*v1.HandleUserDomainAuthorityReply, error) {
+// HandleUserRole 绑定用户权限
+func (s *AdminService) HandleUserDomainRole(ctx context.Context, in *v1.HandleUserDomainRoleReq) (*v1.HandleUserDomainRoleReply, error) {
 	v := in.GetData()
 	_, err := s.userCase.GetID(ctx, &biz.User{ID: uint(in.GetId())})
 	if err != nil {
 		return nil, v1.ErrorUserNotFound("用户查询失败 %v", err)
 	}
-	authorityIds := make([]uint, 0, len(v.GetAuthorityIds()))
-	for _, authorityId := range v.GetAuthorityIds() {
-		authorityIds = append(authorityIds, uint(authorityId))
+	roleIds := make([]uint, 0, len(v.GetRoleIds()))
+	for _, roleId := range v.GetRoleIds() {
+		roleIds = append(roleIds, uint(roleId))
 	}
-	authorities, _ := s.authorityCase.ListByIDs(ctx, authorityIds...)
-	err = s.userCase.HandleDomainAuthority(ctx, &biz.User{
-		ID:          uint(in.GetId()),
-		Authorities: authorities,
+	roles, _ := s.roleCase.ListByIDs(ctx, roleIds...)
+	err = s.userCase.HandleDomainRole(ctx, &biz.User{
+		ID:    uint(in.GetId()),
+		Roles: roles,
 	}, uint(v.GetDomainId()))
 	if err != nil {
-		return nil, v1.ErrorUserHandleDomainAuthorityFail("绑定用户权限失败: %v", err.Error())
+		return nil, v1.ErrorUserHandleDomainRoleFail("绑定用户权限失败: %v", err.Error())
 	}
-	return &v1.HandleUserDomainAuthorityReply{
+	return &v1.HandleUserDomainRoleReply{
 		Success: true,
 		Message: "处理成功",
 	}, nil
@@ -227,13 +227,13 @@ func (s *AdminService) GetUserProfile(ctx context.Context, in *emptypb.Empty) (*
 	if err != nil {
 		return nil, v1.ErrorUserNotFound("用户查询失败 %v", err)
 	}
-	authorityResult, err := s.ListUserAuthority(ctx, in)
+	roleResult, err := s.ListUserRole(ctx, in)
 	if err != nil {
 		return nil, err
 	}
 	return &v1.GetUserProfileReply{
-		User:        TransformUser(user),
-		Authorities: authorityResult.GetItems(),
+		User:  TransformUser(user),
+		Roles: roleResult.GetItems(),
 	}, nil
 }
 
@@ -253,20 +253,20 @@ func (s *AdminService) ListUserDomain(ctx context.Context, in *emptypb.Empty) (*
 	}, nil
 }
 
-// ListUserAuthority 用户权限角色
-func (s *AdminService) ListUserAuthority(ctx context.Context, in *emptypb.Empty) (*v1.ListUserAuthorityReply, error) {
+// ListUserRole 用户权限角色
+func (s *AdminService) ListUserRole(ctx context.Context, in *emptypb.Empty) (*v1.ListUserRoleReply, error) {
 	id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
 	domainId := convert.StringToUint(authz.ParseFromContext(ctx).GetDomain())
-	authorityModels, err := s.userCase.ListAuthorityAll(ctx, &biz.User{ID: id, Domains: []*biz.Domain{{ID: domainId}}})
+	roleModels, err := s.userCase.ListRoleAll(ctx, &biz.User{ID: id, Domains: []*biz.Domain{{ID: domainId}}})
 	if err != nil {
-		return nil, v1.ErrorUserAuthorityFindFail("用户权限角色失败 %v", err)
+		return nil, v1.ErrorUserRoleFindFail("用户权限角色失败 %v", err)
 	}
-	authorities := make([]*v1.Authority, 0, len(authorityModels))
-	for _, v := range authorityModels {
-		authorities = append(authorities, TransformAuthority(v))
+	roles := make([]*v1.Role, 0, len(roleModels))
+	for _, v := range roleModels {
+		roles = append(roles, TransformRole(v))
 	}
-	return &v1.ListUserAuthorityReply{
-		Items: authorities,
+	return &v1.ListUserRoleReply{
+		Items: roles,
 	}, nil
 }
 
@@ -287,9 +287,9 @@ func (s *AdminService) ListUserMenuTree(ctx context.Context, in *emptypb.Empty) 
 }
 
 // 将用户菜单转换树形结构
-func (s *AdminService) UserMenuToReplyMenu(menu *biz.Menu) *v1.ListUserAuthorityMenuTreeReply_Menu {
+func (s *AdminService) UserMenuToReplyMenu(menu *biz.Menu) *v1.ListUserRoleMenuTreeReply_Menu {
 
-	meta := &v1.ListUserAuthorityMenuTreeReply_Meta{
+	meta := &v1.ListUserRoleMenuTreeReply_Meta{
 		// 路由title  一般必填
 		Title: menu.Title,
 		// 图标，也是菜单图标
@@ -309,18 +309,18 @@ func (s *AdminService) UserMenuToReplyMenu(menu *biz.Menu) *v1.ListUserAuthority
 		menu.Path = menu.Name
 	}
 
-	return &v1.ListUserAuthorityMenuTreeReply_Menu{
+	return &v1.ListUserRoleMenuTreeReply_Menu{
 		Name:      menu.Name,
 		Path:      menu.Path,
 		Component: component,
-		Children:  make([]*v1.ListUserAuthorityMenuTreeReply_Menu, 0),
+		Children:  make([]*v1.ListUserRoleMenuTreeReply_Menu, 0),
 		Meta:      meta,
 	}
 }
 
 // 将用户菜单转换树形结构
-func (s *AdminService) UserMenuTransformTree(menus []*biz.Menu, parentID uint) []*v1.ListUserAuthorityMenuTreeReply_Menu {
-	list := make([]*v1.ListUserAuthorityMenuTreeReply_Menu, 0)
+func (s *AdminService) UserMenuTransformTree(menus []*biz.Menu, parentID uint) []*v1.ListUserRoleMenuTreeReply_Menu {
+	list := make([]*v1.ListUserRoleMenuTreeReply_Menu, 0)
 	for _, menu := range menus {
 		if menu.Type == int32(protobuf.MenuType_MENU_TYPE_ABILITY) {
 			continue
@@ -343,30 +343,30 @@ func (s *AdminService) UserMenuTransformTree(menus []*biz.Menu, parentID uint) [
 }
 
 // 获取权限角色菜单树形列表
-func (s *AdminService) ListUserAuthorityMenuTree(ctx context.Context, in *v1.ListUserAuthorityMenuTreeReq) (*v1.ListUserAuthorityMenuTreeReply, error) {
-	var authorities []*biz.Authority
-	if authorityId := in.GetAuthorityId(); authorityId > 0 {
-		authorities = append(authorities, &biz.Authority{ID: uint(authorityId)})
+func (s *AdminService) ListUserRoleMenuTree(ctx context.Context, in *v1.ListUserRoleMenuTreeReq) (*v1.ListUserRoleMenuTreeReply, error) {
+	var roles []*biz.Role
+	if roleId := in.GetRoleId(); roleId > 0 {
+		roles = append(roles, &biz.Role{ID: uint(roleId)})
 	}
-	menuModels, _ := s.userCase.ListAuthorityMenuAll(ctx, &biz.User{ID: convert.StringToUint(authz.ParseFromContext(ctx).GetUser()), Authorities: authorities})
-	return &v1.ListUserAuthorityMenuTreeReply{
+	menuModels, _ := s.userCase.ListRoleMenuAll(ctx, &biz.User{ID: convert.StringToUint(authz.ParseFromContext(ctx).GetUser()), Roles: roles})
+	return &v1.ListUserRoleMenuTreeReply{
 		Items: s.UserMenuTransformTree(menuModels, 0),
 	}, nil
 }
 
 // 获取权限角色权限列表
-func (s *AdminService) ListUserAuthorityPermission(ctx context.Context, in *v1.ListUserAuthorityPermissionReq) (*v1.ListUserAuthorityPermissionReply, error) {
-	var authorities []*biz.Authority
-	if authorityId := in.GetAuthorityId(); authorityId > 0 {
-		authorities = append(authorities, &biz.Authority{ID: uint(authorityId)})
+func (s *AdminService) ListUserRolePermission(ctx context.Context, in *v1.ListUserRolePermissionReq) (*v1.ListUserRolePermissionReply, error) {
+	var roles []*biz.Role
+	if roleId := in.GetRoleId(); roleId > 0 {
+		roles = append(roles, &biz.Role{ID: uint(roleId)})
 	}
-	menuModels, _ := s.userCase.ListAuthorityMenuAll(ctx, &biz.User{ID: convert.StringToUint(authz.ParseFromContext(ctx).GetUser()), Authorities: authorities})
+	menuModels, _ := s.userCase.ListRoleMenuAll(ctx, &biz.User{ID: convert.StringToUint(authz.ParseFromContext(ctx).GetUser()), Roles: roles})
 	perms := make([]string, 0)
 	for _, v := range menuModels {
 		perms = append(perms, v.Permission)
 	}
 	perms = convert.ArrayStrUnique(perms)
-	return &v1.ListUserAuthorityPermissionReply{
+	return &v1.ListUserRolePermissionReply{
 		Items: perms,
 	}, nil
 }

@@ -9,25 +9,24 @@ import (
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
-	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
 const cacheKeyToken string = "%d-%d"
 
 type UserRepo struct {
-	data      *Data
-	log       *log.Helper
-	domain    DomainRepo
-	authority AuthorityRepo
+	data   *Data
+	log    *log.Helper
+	domain DomainRepo
+	role   RoleRepo
 }
 
 // NewUserRepo .
 func NewUserRepo(logger log.Logger, data *Data) biz.UserRepo {
 	return &UserRepo{
-		data:      data,
-		log:       log.NewHelper(logger),
-		authority: AuthorityRepo{},
+		data: data,
+		log:  log.NewHelper(logger),
+		role: RoleRepo{},
 	}
 }
 
@@ -39,28 +38,28 @@ func (r *UserRepo) toModel(d *biz.User) *SysUser {
 	for _, v := range d.Domains {
 		domains = append(domains, *r.domain.toModel(v))
 	}
-	authorities := []SysAuthority{}
-	for _, v := range d.Authorities {
-		authorities = append(authorities, *r.authority.toModel(v))
+	roles := []SysRole{}
+	for _, v := range d.Roles {
+		roles = append(roles, *r.role.toModel(v))
 	}
 	return &SysUser{
-		Model: gorm.Model{
+		Model: Model{
 			ID:        d.ID,
 			CreatedAt: d.CreatedAt,
 			UpdatedAt: d.UpdatedAt,
 		},
-		Name:        d.Name,
-		Avatar:      d.Avatar,
-		NickName:    d.NickName,
-		RealName:    d.RealName,
-		Password:    d.Password,
-		Birthday:    d.Birthday,
-		Gender:      d.Gender,
-		Mobile:      d.Mobile,
-		Email:       d.Email,
-		State:       d.State,
-		Domains:     domains,
-		Authorities: authorities,
+		Name:     d.Name,
+		Avatar:   d.Avatar,
+		NickName: d.NickName,
+		RealName: d.RealName,
+		Password: d.Password,
+		Birthday: d.Birthday,
+		Gender:   d.Gender,
+		Mobile:   d.Mobile,
+		Email:    d.Email,
+		State:    d.State,
+		Domains:  domains,
+		Roles:    roles,
 	}
 }
 
@@ -72,26 +71,26 @@ func (r *UserRepo) toBiz(d *SysUser) *biz.User {
 	for _, v := range d.Domains {
 		domains = append(domains, r.domain.toBiz(&v))
 	}
-	authorities := []*biz.Authority{}
-	for _, v := range d.Authorities {
-		authorities = append(authorities, r.authority.toBiz(&v))
+	roles := []*biz.Role{}
+	for _, v := range d.Roles {
+		roles = append(roles, r.role.toBiz(&v))
 	}
 	return &biz.User{
-		CreatedAt:   d.CreatedAt,
-		UpdatedAt:   d.UpdatedAt,
-		ID:          d.ID,
-		Avatar:      d.Avatar,
-		Name:        d.Name,
-		NickName:    d.NickName,
-		RealName:    d.RealName,
-		Password:    d.Password,
-		Birthday:    d.Birthday,
-		Gender:      d.Gender,
-		Mobile:      d.Mobile,
-		Email:       d.Email,
-		State:       d.State,
-		Domains:     domains,
-		Authorities: authorities,
+		CreatedAt: d.CreatedAt,
+		UpdatedAt: d.UpdatedAt,
+		ID:        d.ID,
+		Avatar:    d.Avatar,
+		Name:      d.Name,
+		NickName:  d.NickName,
+		RealName:  d.RealName,
+		Password:  d.Password,
+		Birthday:  d.Birthday,
+		Gender:    d.Gender,
+		Mobile:    d.Mobile,
+		Email:     d.Email,
+		State:     d.State,
+		Domains:   domains,
+		Roles:     roles,
 	}
 }
 
@@ -234,8 +233,8 @@ func (r *UserRepo) GetTokenCache(ctx context.Context, claims biz.AuthClaims) err
 func (r *UserRepo) HandleDomain(ctx context.Context, g *biz.User) error {
 	rules := make([][]string, 0, len(g.Domains))
 	for _, domain := range g.Domains {
-		rules = append(rules, []string{convert.UnitToString(g.ID), convert.UnitToString(domain.DefaultAuthorityID), convert.UnitToString(domain.ID), "0"})
-		// if _, err := r.data.enforcer.AddRoleForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(domain.DefaultAuthorityID), convert.UnitToString(domain.ID)); err != nil {
+		rules = append(rules, []string{convert.UnitToString(g.ID), convert.UnitToString(domain.DefaultRoleID), convert.UnitToString(domain.ID), "0"})
+		// if _, err := r.data.enforcer.AddRoleForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(domain.DefaultRoleID), convert.UnitToString(domain.ID)); err != nil {
 		// 	r.log.Errorf("领域绑定失败 %v", err)
 		// }
 	}
@@ -244,11 +243,11 @@ func (r *UserRepo) HandleDomain(ctx context.Context, g *biz.User) error {
 	return err
 }
 
-// HandleDomainAuthority 绑定领域权限
-func (r *UserRepo) HandleDomainAuthority(ctx context.Context, g *biz.User) error {
+// HandleDomainRole 绑定领域权限
+func (r *UserRepo) HandleDomainRole(ctx context.Context, g *biz.User) error {
 	domainId := r.data.Domain(ctx)
-	rules := make([][]string, 0, len(g.Authorities))
-	for _, v := range g.Authorities {
+	rules := make([][]string, 0, len(g.Roles))
+	for _, v := range g.Roles {
 		rules = append(rules, []string{convert.UnitToString(g.ID), convert.UnitToString(v.ID), domainId, "0"})
 		// if _, err := r.data.enforcer.AddRoleForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(v.ID), domainId); err != nil {
 		// 	r.log.Errorf("领域权限绑定失败 %v", err)

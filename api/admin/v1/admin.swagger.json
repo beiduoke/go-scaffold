@@ -278,335 +278,6 @@
         ]
       }
     },
-    "/admin/v1/authorities": {
-      "get": {
-        "summary": "权限角色模块\n列表权限角色",
-        "operationId": "Admin_ListAuthority",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/protobufPagingReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "page",
-            "description": "当前页.",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "pageSize",
-            "description": "每一页的行数.",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "nopaging",
-            "description": "是否不分页.",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      },
-      "post": {
-        "summary": "创建权限角色",
-        "operationId": "Admin_CreateAuthority",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1CreateAuthorityReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1CreateAuthorityReq"
-            }
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
-    "/admin/v1/authorities/{id}": {
-      "get": {
-        "summary": "获取权限角色",
-        "operationId": "Admin_GetAuthority",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1Authority"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      },
-      "delete": {
-        "summary": "删除权限角色",
-        "operationId": "Admin_DeleteAuthority",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1DeleteAuthorityReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      },
-      "put": {
-        "summary": "修改权限角色",
-        "operationId": "Admin_UpdateAuthority",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1UpdateAuthorityReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1UpdateAuthorityReqData"
-            }
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
-    "/admin/v1/authorities/{id}/menus": {
-      "get": {
-        "summary": "获取权限角色菜单",
-        "operationId": "Admin_ListAuthorityMenu",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1ListAuthorityMenuReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      },
-      "post": {
-        "summary": "处理权限角色菜单",
-        "operationId": "Admin_HandleAuthorityMenu",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1HandleAuthorityMenuReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1HandleAuthorityMenuReqData"
-            }
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
-    "/admin/v1/authorities/{id}/resources": {
-      "post": {
-        "summary": "处理权限角色资源",
-        "operationId": "Admin_HandleAuthorityResource",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1HandleAuthorityResourceReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1HandleAuthorityResourceReqData"
-            }
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
-    "/admin/v1/authorities/{id}/state": {
-      "put": {
-        "summary": "设置领域状态",
-        "operationId": "Admin_UpdateAuthorityState",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1UpdateAuthorityStateReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1UpdateAuthorityStateReqData"
-            }
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
     "/admin/v1/departments": {
       "get": {
         "summary": "列表部门",
@@ -1668,6 +1339,335 @@
         ]
       }
     },
+    "/admin/v1/roles": {
+      "get": {
+        "summary": "权限角色模块\n列表权限角色",
+        "operationId": "Admin_ListRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protobufPagingReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": "当前页.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "description": "每一页的行数.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "nopaging",
+            "description": "是否不分页.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      },
+      "post": {
+        "summary": "创建权限角色",
+        "operationId": "Admin_CreateRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateRoleReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateRoleReq"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/roles/{id}": {
+      "get": {
+        "summary": "获取权限角色",
+        "operationId": "Admin_GetRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Role"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      },
+      "delete": {
+        "summary": "删除权限角色",
+        "operationId": "Admin_DeleteRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeleteRoleReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      },
+      "put": {
+        "summary": "修改权限角色",
+        "operationId": "Admin_UpdateRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateRoleReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1UpdateRoleReqData"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/roles/{id}/menus": {
+      "get": {
+        "summary": "获取权限角色菜单",
+        "operationId": "Admin_ListRoleMenu",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListRoleMenuReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      },
+      "post": {
+        "summary": "处理权限角色菜单",
+        "operationId": "Admin_HandleRoleMenu",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1HandleRoleMenuReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1HandleRoleMenuReqData"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/roles/{id}/resources": {
+      "post": {
+        "summary": "处理权限角色资源",
+        "operationId": "Admin_HandleRoleResource",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1HandleRoleResourceReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1HandleRoleResourceReqData"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/roles/{id}/state": {
+      "put": {
+        "summary": "设置领域状态",
+        "operationId": "Admin_UpdateRoleState",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateRoleStateReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1UpdateRoleStateReqData"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/admin/v1/users": {
       "get": {
         "summary": "列表用户",
@@ -1740,93 +1740,6 @@
             "schema": {
               "$ref": "#/definitions/v1CreateUserReq"
             }
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
-    "/admin/v1/users/authorities": {
-      "get": {
-        "summary": "当前登录用户拥有角色",
-        "operationId": "Admin_ListUserAuthority",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1ListUserAuthorityReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
-    "/admin/v1/users/authorities/{authorityId}/menus/trees": {
-      "get": {
-        "summary": "获取权限角色菜单树形列表",
-        "operationId": "Admin_ListUserAuthorityMenuTree",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1ListUserAuthorityMenuTreeReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "authorityId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
-    "/admin/v1/users/authorities/{authorityId}/permissions": {
-      "get": {
-        "summary": "获取权限角色权限列表",
-        "operationId": "Admin_ListUserAuthorityPermission",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1ListUserAuthorityPermissionReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "authorityId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
           }
         ],
         "tags": [
@@ -1916,12 +1829,12 @@
     "/admin/v1/users/menus/trees": {
       "get": {
         "summary": "获取权限角色菜单树形列表",
-        "operationId": "Admin_ListUserAuthorityMenuTree2",
+        "operationId": "Admin_ListUserRoleMenuTree2",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1ListUserAuthorityMenuTreeReply"
+              "$ref": "#/definitions/v1ListUserRoleMenuTreeReply"
             }
           },
           "default": {
@@ -1933,7 +1846,7 @@
         },
         "parameters": [
           {
-            "name": "authorityId",
+            "name": "roleId",
             "in": "query",
             "required": false,
             "type": "string",
@@ -1948,12 +1861,12 @@
     "/admin/v1/users/permissions": {
       "get": {
         "summary": "获取权限角色权限列表",
-        "operationId": "Admin_ListUserAuthorityPermission2",
+        "operationId": "Admin_ListUserRolePermission2",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1ListUserAuthorityPermissionReply"
+              "$ref": "#/definitions/v1ListUserRolePermissionReply"
             }
           },
           "default": {
@@ -1965,7 +1878,7 @@
         },
         "parameters": [
           {
-            "name": "authorityId",
+            "name": "roleId",
             "in": "query",
             "required": false,
             "type": "string",
@@ -1995,6 +1908,93 @@
             }
           }
         },
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/users/roles": {
+      "get": {
+        "summary": "当前登录用户拥有角色",
+        "operationId": "Admin_ListUserRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListUserRoleReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/users/roles/{roleId}/menus/trees": {
+      "get": {
+        "summary": "获取权限角色菜单树形列表",
+        "operationId": "Admin_ListUserRoleMenuTree",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListUserRoleMenuTreeReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/users/roles/{roleId}/permissions": {
+      "get": {
+        "summary": "获取权限角色权限列表",
+        "operationId": "Admin_ListUserRolePermission",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListUserRolePermissionReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
         "tags": [
           "Admin"
         ]
@@ -2100,15 +2100,15 @@
         ]
       }
     },
-    "/admin/v1/users/{id}/domainAuthorities": {
+    "/admin/v1/users/{id}/domainRoles": {
       "post": {
         "summary": "绑定用户领域权限",
-        "operationId": "Admin_HandleUserDomainAuthority",
+        "operationId": "Admin_HandleUserDomainRole",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1HandleUserDomainAuthorityReply"
+              "$ref": "#/definitions/v1HandleUserDomainRoleReply"
             }
           },
           "default": {
@@ -2131,7 +2131,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1HandleUserDomainAuthorityReqData"
+              "$ref": "#/definitions/v1HandleUserDomainRoleReqData"
             }
           }
         ],
@@ -2193,7 +2193,7 @@
         }
       }
     },
-    "ListUserAuthorityMenuTreeReplyMeta": {
+    "ListUserRoleMenuTreeReplyMeta": {
       "type": "object",
       "properties": {
         "title": {
@@ -2348,16 +2348,6 @@
       },
       "description": "`Any` contains an arbitrary serialized protocol buffer message along with a\nURL that describes the type of the serialized message.\n\nProtobuf library provides support to pack/unpack Any values in the form\nof utility functions or additional generated methods of the Any type.\n\nExample 1: Pack and unpack a message in C++.\n\n    Foo foo = ...;\n    Any any;\n    any.PackFrom(foo);\n    ...\n    if (any.UnpackTo(\u0026foo)) {\n      ...\n    }\n\nExample 2: Pack and unpack a message in Java.\n\n    Foo foo = ...;\n    Any any = Any.pack(foo);\n    ...\n    if (any.is(Foo.class)) {\n      foo = any.unpack(Foo.class);\n    }\n\nExample 3: Pack and unpack a message in Python.\n\n    foo = Foo(...)\n    any = Any()\n    any.Pack(foo)\n    ...\n    if any.Is(Foo.DESCRIPTOR):\n      any.Unpack(foo)\n      ...\n\nExample 4: Pack and unpack a message in Go\n\n     foo := \u0026pb.Foo{...}\n     any, err := anypb.New(foo)\n     if err != nil {\n       ...\n     }\n     ...\n     foo := \u0026pb.Foo{}\n     if err := any.UnmarshalTo(foo); err != nil {\n       ...\n     }\n\nThe pack methods provided by protobuf library will by default use\n'type.googleapis.com/full.type.name' as the type URL and the unpack\nmethods only use the fully qualified type name after the last '/'\nin the type URL, for example \"foo.bar.com/x/y.z\" will yield type\nname \"y.z\".\n\n\nJSON\n\nThe JSON representation of an `Any` value uses the regular\nrepresentation of the deserialized, embedded message, with an\nadditional field `@type` which contains the type URL. Example:\n\n    package google.profile;\n    message Person {\n      string first_name = 1;\n      string last_name = 2;\n    }\n\n    {\n      \"@type\": \"type.googleapis.com/google.profile.Person\",\n      \"firstName\": \u003cstring\u003e,\n      \"lastName\": \u003cstring\u003e\n    }\n\nIf the embedded message type is well-known and has a custom JSON\nrepresentation, that representation will be embedded adding a field\n`value` which holds the custom JSON in addition to the `@type`\nfield. Example (for message [google.protobuf.Duration][]):\n\n    {\n      \"@type\": \"type.googleapis.com/google.protobuf.Duration\",\n      \"value\": \"1.212s\"\n    }"
     },
-    "protobufAuthorityState": {
-      "type": "string",
-      "enum": [
-        "AUTHORITY_STATE_UNSPECIFIED",
-        "AUTHORITY_STATE_ACTIVE",
-        "AUTHORITY_STATE_INACTIVE",
-        "AUTHORITY_STATE_BANNED"
-      ],
-      "default": "AUTHORITY_STATE_UNSPECIFIED"
-    },
     "protobufDepartmentState": {
       "type": "string",
       "enum": [
@@ -2459,6 +2449,16 @@
       },
       "title": "分页通用结果"
     },
+    "protobufRoleState": {
+      "type": "string",
+      "enum": [
+        "ROLE_STATE_UNSPECIFIED",
+        "ROLE_STATE_ACTIVE",
+        "ROLE_STATE_INACTIVE",
+        "ROLE_STATE_BANNED"
+      ],
+      "default": "ROLE_STATE_UNSPECIFIED"
+    },
     "protobufUserGender": {
       "type": "string",
       "enum": [
@@ -2508,85 +2508,6 @@
           "title": "密码"
         }
       }
-    },
-    "v1Authority": {
-      "type": "object",
-      "properties": {
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "name": {
-          "type": "string"
-        },
-        "parentId": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "defaultRouter": {
-          "type": "string"
-        },
-        "sort": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "state": {
-          "$ref": "#/definitions/protobufAuthorityState"
-        },
-        "remarks": {
-          "type": "string"
-        }
-      },
-      "title": "权限角色模块"
-    },
-    "v1CreateAuthorityReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        },
-        "data": {
-          "$ref": "#/definitions/protobufAny"
-        }
-      },
-      "title": "回应 - 创建权限角色"
-    },
-    "v1CreateAuthorityReq": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "parentId": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "defaultRouter": {
-          "type": "string"
-        },
-        "sort": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "state": {
-          "$ref": "#/definitions/protobufAuthorityState"
-        },
-        "remarks": {
-          "type": "string"
-        }
-      },
-      "title": "请求 - 创建权限角色"
     },
     "v1CreateDepartmentReply": {
       "type": "object",
@@ -2658,7 +2579,7 @@
         "state": {
           "$ref": "#/definitions/protobufDomainState"
         },
-        "defaultAuthorityId": {
+        "defaultRoleId": {
           "type": "string",
           "format": "uint64"
         }
@@ -2781,6 +2702,47 @@
       },
       "title": "请求 - 创建资源"
     },
+    "v1CreateRoleReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
+        }
+      },
+      "title": "回应 - 创建权限角色"
+    },
+    "v1CreateRoleReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "defaultRouter": {
+          "type": "string"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "state": {
+          "$ref": "#/definitions/protobufRoleState"
+        },
+        "remarks": {
+          "type": "string"
+        }
+      },
+      "title": "请求 - 创建权限角色"
+    },
     "v1CreateUserReply": {
       "type": "object",
       "properties": {
@@ -2831,21 +2793,6 @@
         }
       },
       "title": "请求 - 创建用户"
-    },
-    "v1DeleteAuthorityReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        },
-        "data": {
-          "$ref": "#/definitions/protobufAny"
-        }
-      },
-      "title": "回应 - 删除权限角色"
     },
     "v1DeleteDepartmentReply": {
       "type": "object",
@@ -2906,6 +2853,21 @@
         }
       },
       "title": "回应 - 删除资源"
+    },
+    "v1DeleteRoleReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
+        }
+      },
+      "title": "回应 - 删除权限角色"
     },
     "v1DeleteUserReply": {
       "type": "object",
@@ -2992,7 +2954,7 @@
         "state": {
           "$ref": "#/definitions/protobufDomainState"
         },
-        "defaultAuthorityId": {
+        "defaultRoleId": {
           "type": "string",
           "format": "uint64"
         }
@@ -3029,90 +2991,14 @@
         "user": {
           "$ref": "#/definitions/v1User"
         },
-        "authorities": {
+        "roles": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/v1Authority"
+            "$ref": "#/definitions/v1Role"
           }
         }
       },
       "title": "回应 - 用户概况详情"
-    },
-    "v1HandleAuthorityMenuReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        },
-        "data": {
-          "$ref": "#/definitions/protobufAny"
-        }
-      },
-      "title": "回应 - 处理权限角色菜单"
-    },
-    "v1HandleAuthorityMenuReqData": {
-      "type": "object",
-      "properties": {
-        "menus": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1HandleAuthorityMenuReqMenu"
-          }
-        }
-      }
-    },
-    "v1HandleAuthorityMenuReqMenu": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "menuParameterIds": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "format": "uint64"
-          }
-        },
-        "menuButtonIds": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "format": "uint64"
-          }
-        }
-      }
-    },
-    "v1HandleAuthorityResourceReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        },
-        "data": {
-          "$ref": "#/definitions/protobufAny"
-        }
-      },
-      "title": "回应 - 处理权限角色资源"
-    },
-    "v1HandleAuthorityResourceReqData": {
-      "type": "object",
-      "properties": {
-        "resourceIds": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "format": "uint64"
-          }
-        }
-      }
     },
     "v1HandleDomainMenuReply": {
       "type": "object",
@@ -3163,7 +3049,7 @@
         }
       }
     },
-    "v1HandleUserDomainAuthorityReply": {
+    "v1HandleRoleMenuReply": {
       "type": "object",
       "properties": {
         "success": {
@@ -3171,18 +3057,66 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
         }
       },
-      "title": "回应 - 绑定用户领域权限"
+      "title": "回应 - 处理权限角色菜单"
     },
-    "v1HandleUserDomainAuthorityReqData": {
+    "v1HandleRoleMenuReqData": {
       "type": "object",
       "properties": {
-        "domainId": {
+        "menus": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1HandleRoleMenuReqMenu"
+          }
+        }
+      }
+    },
+    "v1HandleRoleMenuReqMenu": {
+      "type": "object",
+      "properties": {
+        "id": {
           "type": "string",
           "format": "uint64"
         },
-        "authorityIds": {
+        "menuParameterIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
+        },
+        "menuButtonIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
+        }
+      }
+    },
+    "v1HandleRoleResourceReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
+        }
+      },
+      "title": "回应 - 处理权限角色资源"
+    },
+    "v1HandleRoleResourceReqData": {
+      "type": "object",
+      "properties": {
+        "resourceIds": {
           "type": "array",
           "items": {
             "type": "string",
@@ -3215,21 +3149,33 @@
         }
       }
     },
-    "v1ListAuthorityMenuReply": {
+    "v1HandleUserDomainRoleReply": {
       "type": "object",
       "properties": {
-        "total": {
-          "type": "integer",
-          "format": "int32"
+        "success": {
+          "type": "boolean"
         },
-        "items": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/adminv1Menu"
-          }
+        "message": {
+          "type": "string"
         }
       },
-      "title": "回应 - 获取权限角色菜单"
+      "title": "回应 - 绑定用户领域权限"
+    },
+    "v1HandleUserDomainRoleReqData": {
+      "type": "object",
+      "properties": {
+        "domainId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "roleIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
+        }
+      }
     },
     "v1ListDepartmentTreeReply": {
       "type": "object",
@@ -3295,7 +3241,7 @@
       },
       "title": "回应 - 创建资源"
     },
-    "v1ListUserAuthorityMenuTreeReply": {
+    "v1ListRoleMenuReply": {
       "type": "object",
       "properties": {
         "total": {
@@ -3305,68 +3251,11 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/v1ListUserAuthorityMenuTreeReplyMenu"
-          }
-        }
-      }
-    },
-    "v1ListUserAuthorityMenuTreeReplyMenu": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "path": {
-          "type": "string"
-        },
-        "component": {
-          "type": "string"
-        },
-        "redirect": {
-          "type": "string"
-        },
-        "meta": {
-          "$ref": "#/definitions/ListUserAuthorityMenuTreeReplyMeta"
-        },
-        "children": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1ListUserAuthorityMenuTreeReplyMenu"
-          }
-        }
-      }
-    },
-    "v1ListUserAuthorityPermissionReply": {
-      "type": "object",
-      "properties": {
-        "total": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "items": {
-          "type": "array",
-          "items": {
-            "type": "string"
+            "$ref": "#/definitions/adminv1Menu"
           }
         }
       },
-      "title": "回应 - 获取用户权限角色列表"
-    },
-    "v1ListUserAuthorityReply": {
-      "type": "object",
-      "properties": {
-        "items": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1Authority"
-          }
-        },
-        "total": {
-          "type": "integer",
-          "format": "int32"
-        }
-      },
-      "title": "回应 - 用户权限角色"
+      "title": "回应 - 获取权限角色菜单"
     },
     "v1ListUserDomainReply": {
       "type": "object",
@@ -3383,6 +3272,79 @@
         }
       },
       "title": "回应 - 用户领域"
+    },
+    "v1ListUserRoleMenuTreeReply": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1ListUserRoleMenuTreeReplyMenu"
+          }
+        }
+      }
+    },
+    "v1ListUserRoleMenuTreeReplyMenu": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "component": {
+          "type": "string"
+        },
+        "redirect": {
+          "type": "string"
+        },
+        "meta": {
+          "$ref": "#/definitions/ListUserRoleMenuTreeReplyMeta"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1ListUserRoleMenuTreeReplyMenu"
+          }
+        }
+      }
+    },
+    "v1ListUserRolePermissionReply": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "回应 - 获取用户权限角色列表"
+    },
+    "v1ListUserRoleReply": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Role"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "回应 - 用户权限角色"
     },
     "v1LoginReply": {
       "type": "object",
@@ -3490,24 +3452,21 @@
       },
       "title": "资源模块"
     },
-    "v1UpdateAuthorityReply": {
+    "v1Role": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
         },
-        "message": {
-          "type": "string"
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
         },
-        "data": {
-          "$ref": "#/definitions/protobufAny"
-        }
-      },
-      "title": "回应 - 创建权限角色"
-    },
-    "v1UpdateAuthorityReqData": {
-      "type": "object",
-      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
         "name": {
           "type": "string"
         },
@@ -3523,35 +3482,13 @@
           "format": "int32"
         },
         "state": {
-          "$ref": "#/definitions/protobufAuthorityState"
+          "$ref": "#/definitions/protobufRoleState"
         },
         "remarks": {
           "type": "string"
         }
-      }
-    },
-    "v1UpdateAuthorityStateReply": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        },
-        "data": {
-          "$ref": "#/definitions/protobufAny"
-        }
       },
-      "title": "回应 - 创建权限角色"
-    },
-    "v1UpdateAuthorityStateReqData": {
-      "type": "object",
-      "properties": {
-        "state": {
-          "$ref": "#/definitions/protobufAuthorityState"
-        }
-      }
+      "title": "权限角色模块"
     },
     "v1UpdateDepartmentReply": {
       "type": "object",
@@ -3622,7 +3559,7 @@
         "state": {
           "$ref": "#/definitions/protobufDomainState"
         },
-        "defaultAuthorityId": {
+        "defaultRoleId": {
           "type": "string",
           "format": "uint64"
         }
@@ -3762,6 +3699,69 @@
         },
         "operation": {
           "type": "string"
+        }
+      }
+    },
+    "v1UpdateRoleReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
+        }
+      },
+      "title": "回应 - 创建权限角色"
+    },
+    "v1UpdateRoleReqData": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "defaultRouter": {
+          "type": "string"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "state": {
+          "$ref": "#/definitions/protobufRoleState"
+        },
+        "remarks": {
+          "type": "string"
+        }
+      }
+    },
+    "v1UpdateRoleStateReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
+        }
+      },
+      "title": "回应 - 创建权限角色"
+    },
+    "v1UpdateRoleStateReqData": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "#/definitions/protobufRoleState"
         }
       }
     },

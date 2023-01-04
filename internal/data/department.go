@@ -26,16 +26,18 @@ func (r *DepartmentRepo) toModel(d *biz.Department) *SysDepartment {
 	if d == nil {
 		return nil
 	}
-	return &SysDepartment{
-		ID:        d.ID,
-		CreatedAt: d.CreatedAt,
-		UpdatedAt: d.UpdatedAt,
-		Name:      d.Name,
-		ParentID:  d.ParentID,
-		Sort:      d.Sort,
-		State:     d.State,
-		Remarks:   d.Remarks,
+	sysData := &SysDepartment{
+		Name:     d.Name,
+		ParentID: d.ParentID,
+		Sort:     d.Sort,
+		State:    d.State,
+		Remarks:  d.Remarks,
 	}
+	sysData.ID = d.ID
+	sysData.CreatedAt = d.CreatedAt
+	sysData.CreatedAt = d.UpdatedAt
+
+	return sysData
 }
 
 func (r *DepartmentRepo) toBiz(d *SysDepartment) *biz.Department {

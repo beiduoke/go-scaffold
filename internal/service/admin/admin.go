@@ -34,7 +34,7 @@ type AdminService struct {
 	authCase       *biz.AuthUsecase
 	userCase       *biz.UserUsecase
 	domainCase     *biz.DomainUsecase
-	authorityCase  *biz.AuthorityUsecase
+	roleCase       *biz.RoleUsecase
 	menuCase       *biz.MenuUsecase
 	resourceCase   *biz.ResourceUsecase
 	departmentCase *biz.DepartmentUsecase
@@ -48,7 +48,7 @@ func NewAdminService(
 	authCase *biz.AuthUsecase,
 	userCase *biz.UserUsecase,
 	domainCase *biz.DomainUsecase,
-	authorityCase *biz.AuthorityUsecase,
+	roleCase *biz.RoleUsecase,
 	menuCase *biz.MenuUsecase,
 	resourceCase *biz.ResourceUsecase,
 	departmentCase *biz.DepartmentUsecase,
@@ -61,7 +61,7 @@ func NewAdminService(
 		authCase:       authCase,
 		userCase:       userCase,
 		domainCase:     domainCase,
-		authorityCase:  authorityCase,
+		roleCase:       roleCase,
 		menuCase:       menuCase,
 		resourceCase:   resourceCase,
 		departmentCase: departmentCase,

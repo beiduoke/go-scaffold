@@ -78,8 +78,8 @@ func (uc *MenuUsecase) Create(ctx context.Context, g *Menu) (*Menu, error) {
 }
 
 // ListByIDs 获取指定菜单ID集合
-func (uc *MenuUsecase) ListByIDs(ctx context.Context, id ...uint) (authorities []*Menu, err error) {
-	authorities, _ = uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
+func (uc *MenuUsecase) ListByIDs(ctx context.Context, id ...uint) (roles []*Menu, err error) {
+	roles, _ = uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
 	return
 }
 

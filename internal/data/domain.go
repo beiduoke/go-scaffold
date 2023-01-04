@@ -29,17 +29,18 @@ func (r *DomainRepo) toModel(d *biz.Domain) *SysDomain {
 	if d == nil {
 		return nil
 	}
-	return &SysDomain{
-		ID:                 d.ID,
-		CreatedAt:          d.CreatedAt,
-		UpdatedAt:          d.UpdatedAt,
-		Code:               d.Code,
-		Name:               d.Name,
-		State:              d.State,
-		DefaultAuthorityID: d.DefaultAuthorityID,
-		ParentID:           d.ParentID,
-		Sort:               d.Sort,
+	sysData := &SysDomain{
+		Code:          d.Code,
+		Name:          d.Name,
+		State:         d.State,
+		DefaultRoleID: d.DefaultRoleID,
+		ParentID:      d.ParentID,
+		Sort:          d.Sort,
 	}
+	sysData.ID = d.ID
+	sysData.CreatedAt = d.CreatedAt
+	sysData.CreatedAt = d.UpdatedAt
+	return sysData
 }
 
 func (r *DomainRepo) toBiz(d *SysDomain) *biz.Domain {
@@ -47,13 +48,13 @@ func (r *DomainRepo) toBiz(d *SysDomain) *biz.Domain {
 		return nil
 	}
 	return &biz.Domain{
-		CreatedAt:          d.CreatedAt,
-		UpdatedAt:          d.UpdatedAt,
-		ID:                 d.ID,
-		Code:               d.Code,
-		Name:               d.Name,
-		State:              d.State,
-		DefaultAuthorityID: d.DefaultAuthorityID,
+		CreatedAt:     d.CreatedAt,
+		UpdatedAt:     d.UpdatedAt,
+		ID:            d.ID,
+		Code:          d.Code,
+		Name:          d.Name,
+		State:         d.State,
+		DefaultRoleID: d.DefaultRoleID,
 	}
 }
 

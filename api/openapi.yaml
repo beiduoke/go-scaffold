@@ -119,218 +119,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.LoginReply'
-    /admin/v1/authorities:
-        get:
-            tags:
-                - Admin
-            description: |-
-                权限角色模块
-                 列表权限角色
-            operationId: Admin_ListAuthority
-            parameters:
-                - name: page
-                  in: query
-                  description: 当前页
-                  schema:
-                    type: integer
-                    format: int32
-                - name: pageSize
-                  in: query
-                  description: 每一页的行数
-                  schema:
-                    type: integer
-                    format: int32
-                - name: nopaging
-                  in: query
-                  description: 是否不分页
-                  schema:
-                    type: boolean
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.protobuf.PagingReply'
-        post:
-            tags:
-                - Admin
-            description: 创建权限角色
-            operationId: Admin_CreateAuthority
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.admin.v1.CreateAuthorityReq'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.CreateAuthorityReply'
-    /admin/v1/authorities/{id}:
-        get:
-            tags:
-                - Admin
-            description: 获取权限角色
-            operationId: Admin_GetAuthority
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.Authority'
-        put:
-            tags:
-                - Admin
-            description: 修改权限角色
-            operationId: Admin_UpdateAuthority
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.admin.v1.UpdateAuthorityReq_Data'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.UpdateAuthorityReply'
-        delete:
-            tags:
-                - Admin
-            description: 删除权限角色
-            operationId: Admin_DeleteAuthority
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.DeleteAuthorityReply'
-    /admin/v1/authorities/{id}/menus:
-        get:
-            tags:
-                - Admin
-            description: 获取权限角色菜单
-            operationId: Admin_ListAuthorityMenu
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.ListAuthorityMenuReply'
-        post:
-            tags:
-                - Admin
-            description: 处理权限角色菜单
-            operationId: Admin_HandleAuthorityMenu
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.admin.v1.HandleAuthorityMenuReq_Data'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.HandleAuthorityMenuReply'
-    /admin/v1/authorities/{id}/resources:
-        post:
-            tags:
-                - Admin
-            description: 处理权限角色资源
-            operationId: Admin_HandleAuthorityResource
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.admin.v1.HandleAuthorityResourceReq_Data'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.HandleAuthorityResourceReply'
-    /admin/v1/authorities/{id}/state:
-        put:
-            tags:
-                - Admin
-            description: 设置领域状态
-            operationId: Admin_UpdateAuthorityState
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.admin.v1.UpdateAuthorityStateReq_Data'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.UpdateAuthorityStateReply'
     /admin/v1/departments:
         get:
             tags:
@@ -981,6 +769,218 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.DeleteResourceReply'
+    /admin/v1/roles:
+        get:
+            tags:
+                - Admin
+            description: |-
+                权限角色模块
+                 列表权限角色
+            operationId: Admin_ListRole
+            parameters:
+                - name: page
+                  in: query
+                  description: 当前页
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  description: 每一页的行数
+                  schema:
+                    type: integer
+                    format: int32
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.protobuf.PagingReply'
+        post:
+            tags:
+                - Admin
+            description: 创建权限角色
+            operationId: Admin_CreateRole
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.v1.CreateRoleReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.CreateRoleReply'
+    /admin/v1/roles/{id}:
+        get:
+            tags:
+                - Admin
+            description: 获取权限角色
+            operationId: Admin_GetRole
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.Role'
+        put:
+            tags:
+                - Admin
+            description: 修改权限角色
+            operationId: Admin_UpdateRole
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.v1.UpdateRoleReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.UpdateRoleReply'
+        delete:
+            tags:
+                - Admin
+            description: 删除权限角色
+            operationId: Admin_DeleteRole
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.DeleteRoleReply'
+    /admin/v1/roles/{id}/menus:
+        get:
+            tags:
+                - Admin
+            description: 获取权限角色菜单
+            operationId: Admin_ListRoleMenu
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.ListRoleMenuReply'
+        post:
+            tags:
+                - Admin
+            description: 处理权限角色菜单
+            operationId: Admin_HandleRoleMenu
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.v1.HandleRoleMenuReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.HandleRoleMenuReply'
+    /admin/v1/roles/{id}/resources:
+        post:
+            tags:
+                - Admin
+            description: 处理权限角色资源
+            operationId: Admin_HandleRoleResource
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.v1.HandleRoleResourceReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.HandleRoleResourceReply'
+    /admin/v1/roles/{id}/state:
+        put:
+            tags:
+                - Admin
+            description: 设置领域状态
+            operationId: Admin_UpdateRoleState
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.v1.UpdateRoleStateReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.UpdateRoleStateReply'
     /admin/v1/users:
         get:
             tags:
@@ -1030,59 +1030,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.CreateUserReply'
-    /admin/v1/users/authorities:
-        get:
-            tags:
-                - Admin
-            description: 当前登录用户拥有角色
-            operationId: Admin_ListUserAuthority
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.ListUserAuthorityReply'
-    /admin/v1/users/authorities/{authorityId}/menus/trees:
-        get:
-            tags:
-                - Admin
-            description: 获取权限角色菜单树形列表
-            operationId: Admin_ListUserAuthorityMenuTree
-            parameters:
-                - name: authorityId
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.ListUserAuthorityMenuTreeReply'
-    /admin/v1/users/authorities/{authorityId}/permissions:
-        get:
-            tags:
-                - Admin
-            description: 获取权限角色权限列表
-            operationId: Admin_ListUserAuthorityPermission
-            parameters:
-                - name: authorityId
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.ListUserAuthorityPermissionReply'
     /admin/v1/users/domains:
         get:
             tags:
@@ -1156,6 +1103,59 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.GetUserProfileReply'
+    /admin/v1/users/roles:
+        get:
+            tags:
+                - Admin
+            description: 当前登录用户拥有角色
+            operationId: Admin_ListUserRole
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.ListUserRoleReply'
+    /admin/v1/users/roles/{roleId}/menus/trees:
+        get:
+            tags:
+                - Admin
+            description: 获取权限角色菜单树形列表
+            operationId: Admin_ListUserRoleMenuTree
+            parameters:
+                - name: roleId
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.ListUserRoleMenuTreeReply'
+    /admin/v1/users/roles/{roleId}/permissions:
+        get:
+            tags:
+                - Admin
+            description: 获取权限角色权限列表
+            operationId: Admin_ListUserRolePermission
+            parameters:
+                - name: roleId
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.ListUserRolePermissionReply'
     /admin/v1/users/{id}:
         get:
             tags:
@@ -1220,12 +1220,12 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.DeleteUserReply'
-    /admin/v1/users/{id}/domainAuthorities:
+    /admin/v1/users/{id}/domainRoles:
         post:
             tags:
                 - Admin
             description: 绑定用户领域权限
-            operationId: Admin_HandleUserDomainAuthority
+            operationId: Admin_HandleUserDomainRole
             parameters:
                 - name: id
                   in: path
@@ -1237,7 +1237,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.admin.v1.HandleUserDomainAuthorityReq_Data'
+                            $ref: '#/components/schemas/api.admin.v1.HandleUserDomainRoleReq_Data'
                 required: true
             responses:
                 "200":
@@ -1245,7 +1245,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.admin.v1.HandleUserDomainAuthorityReply'
+                                $ref: '#/components/schemas/api.admin.v1.HandleUserDomainRoleReply'
     /admin/v1/users/{id}/domains:
         post:
             tags:
@@ -1283,63 +1283,6 @@ components:
                 password:
                     type: string
                     description: 密码
-        api.admin.v1.Authority:
-            type: object
-            properties:
-                createdAt:
-                    type: string
-                    format: date-time
-                updatedAt:
-                    type: string
-                    format: date-time
-                id:
-                    type: integer
-                    format: uint64
-                name:
-                    type: string
-                parentId:
-                    type: integer
-                    format: uint64
-                defaultRouter:
-                    type: string
-                sort:
-                    type: integer
-                    format: int32
-                state:
-                    type: integer
-                    format: enum
-                remarks:
-                    type: string
-            description: 权限角色模块
-        api.admin.v1.CreateAuthorityReply:
-            type: object
-            properties:
-                success:
-                    type: boolean
-                message:
-                    type: string
-                data:
-                    $ref: '#/components/schemas/google.protobuf.Any'
-            description: 回应 - 创建权限角色
-        api.admin.v1.CreateAuthorityReq:
-            type: object
-            properties:
-                name:
-                    type: string
-                parentId:
-                    type: integer
-                    format: uint64
-                defaultRouter:
-                    type: string
-                sort:
-                    type: integer
-                    format: int32
-                state:
-                    type: integer
-                    format: enum
-                remarks:
-                    type: string
-            description: 请求 - 创建权限角色
         api.admin.v1.CreateDepartmentReply:
             type: object
             properties:
@@ -1391,7 +1334,7 @@ components:
                 state:
                     type: integer
                     format: enum
-                defaultAuthorityId:
+                defaultRoleId:
                     type: integer
                     format: uint64
             description: 请求 - 创建领域
@@ -1479,6 +1422,35 @@ components:
                 operation:
                     type: string
             description: 请求 - 创建资源
+        api.admin.v1.CreateRoleReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+                data:
+                    $ref: '#/components/schemas/google.protobuf.Any'
+            description: 回应 - 创建权限角色
+        api.admin.v1.CreateRoleReq:
+            type: object
+            properties:
+                name:
+                    type: string
+                parentId:
+                    type: integer
+                    format: uint64
+                defaultRouter:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                state:
+                    type: integer
+                    format: enum
+                remarks:
+                    type: string
+            description: 请求 - 创建权限角色
         api.admin.v1.CreateUserReply:
             type: object
             properties:
@@ -1515,16 +1487,6 @@ components:
                     type: integer
                     format: enum
             description: 请求 - 创建用户
-        api.admin.v1.DeleteAuthorityReply:
-            type: object
-            properties:
-                success:
-                    type: boolean
-                message:
-                    type: string
-                data:
-                    $ref: '#/components/schemas/google.protobuf.Any'
-            description: 回应 - 删除权限角色
         api.admin.v1.DeleteDepartmentReply:
             type: object
             properties:
@@ -1565,6 +1527,16 @@ components:
                 data:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 删除资源
+        api.admin.v1.DeleteRoleReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+                data:
+                    $ref: '#/components/schemas/google.protobuf.Any'
+            description: 回应 - 删除权限角色
         api.admin.v1.DeleteUserReply:
             type: object
             properties:
@@ -1628,7 +1600,7 @@ components:
                 state:
                     type: integer
                     format: enum
-                defaultAuthorityId:
+                defaultRoleId:
                     type: integer
                     format: uint64
             description: 领域模块
@@ -1660,62 +1632,11 @@ components:
             properties:
                 user:
                     $ref: '#/components/schemas/api.admin.v1.User'
-                authorities:
+                roles:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.admin.v1.Authority'
+                        $ref: '#/components/schemas/api.admin.v1.Role'
             description: 回应 - 用户概况详情
-        api.admin.v1.HandleAuthorityMenuReply:
-            type: object
-            properties:
-                success:
-                    type: boolean
-                message:
-                    type: string
-                data:
-                    $ref: '#/components/schemas/google.protobuf.Any'
-            description: 回应 - 处理权限角色菜单
-        api.admin.v1.HandleAuthorityMenuReq_Data:
-            type: object
-            properties:
-                menus:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.admin.v1.HandleAuthorityMenuReq_Menu'
-        api.admin.v1.HandleAuthorityMenuReq_Menu:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: uint64
-                menuParameterIds:
-                    type: array
-                    items:
-                        type: integer
-                        format: uint64
-                menuButtonIds:
-                    type: array
-                    items:
-                        type: integer
-                        format: uint64
-        api.admin.v1.HandleAuthorityResourceReply:
-            type: object
-            properties:
-                success:
-                    type: boolean
-                message:
-                    type: string
-                data:
-                    $ref: '#/components/schemas/google.protobuf.Any'
-            description: 回应 - 处理权限角色资源
-        api.admin.v1.HandleAuthorityResourceReq_Data:
-            type: object
-            properties:
-                resourceIds:
-                    type: array
-                    items:
-                        type: integer
-                        format: uint64
         api.admin.v1.HandleDomainMenuReply:
             type: object
             properties:
@@ -1749,21 +1670,53 @@ components:
                     items:
                         type: integer
                         format: uint64
-        api.admin.v1.HandleUserDomainAuthorityReply:
+        api.admin.v1.HandleRoleMenuReply:
             type: object
             properties:
                 success:
                     type: boolean
                 message:
                     type: string
-            description: 回应 - 绑定用户领域权限
-        api.admin.v1.HandleUserDomainAuthorityReq_Data:
+                data:
+                    $ref: '#/components/schemas/google.protobuf.Any'
+            description: 回应 - 处理权限角色菜单
+        api.admin.v1.HandleRoleMenuReq_Data:
             type: object
             properties:
-                domainId:
+                menus:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.v1.HandleRoleMenuReq_Menu'
+        api.admin.v1.HandleRoleMenuReq_Menu:
+            type: object
+            properties:
+                id:
                     type: integer
                     format: uint64
-                authorityIds:
+                menuParameterIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
+                menuButtonIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
+        api.admin.v1.HandleRoleResourceReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+                data:
+                    $ref: '#/components/schemas/google.protobuf.Any'
+            description: 回应 - 处理权限角色资源
+        api.admin.v1.HandleRoleResourceReq_Data:
+            type: object
+            properties:
+                resourceIds:
                     type: array
                     items:
                         type: integer
@@ -1784,17 +1737,25 @@ components:
                     items:
                         type: integer
                         format: uint64
-        api.admin.v1.ListAuthorityMenuReply:
+        api.admin.v1.HandleUserDomainRoleReply:
             type: object
             properties:
-                total:
+                success:
+                    type: boolean
+                message:
+                    type: string
+            description: 回应 - 绑定用户领域权限
+        api.admin.v1.HandleUserDomainRoleReq_Data:
+            type: object
+            properties:
+                domainId:
                     type: integer
-                    format: int32
-                items:
+                    format: uint64
+                roleIds:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.admin.v1.Menu'
-            description: 回应 - 获取权限角色菜单
+                        type: integer
+                        format: uint64
         api.admin.v1.ListDepartmentTreeReply:
             type: object
             properties:
@@ -1839,7 +1800,7 @@ components:
                     items:
                         type: string
             description: 回应 - 创建资源
-        api.admin.v1.ListUserAuthorityMenuTreeReply:
+        api.admin.v1.ListRoleMenuReply:
             type: object
             properties:
                 total:
@@ -1848,8 +1809,30 @@ components:
                 items:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.admin.v1.ListUserAuthorityMenuTreeReply_Menu'
-        api.admin.v1.ListUserAuthorityMenuTreeReply_Menu:
+                        $ref: '#/components/schemas/api.admin.v1.Menu'
+            description: 回应 - 获取权限角色菜单
+        api.admin.v1.ListUserDomainReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.v1.Domain'
+                total:
+                    type: integer
+                    format: int32
+            description: 回应 - 用户领域
+        api.admin.v1.ListUserRoleMenuTreeReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int32
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.v1.ListUserRoleMenuTreeReply_Menu'
+        api.admin.v1.ListUserRoleMenuTreeReply_Menu:
             type: object
             properties:
                 name:
@@ -1861,12 +1844,12 @@ components:
                 redirect:
                     type: string
                 meta:
-                    $ref: '#/components/schemas/api.admin.v1.ListUserAuthorityMenuTreeReply_Meta'
+                    $ref: '#/components/schemas/api.admin.v1.ListUserRoleMenuTreeReply_Meta'
                 children:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.admin.v1.ListUserAuthorityMenuTreeReply_Menu'
-        api.admin.v1.ListUserAuthorityMenuTreeReply_Meta:
+                        $ref: '#/components/schemas/api.admin.v1.ListUserRoleMenuTreeReply_Menu'
+        api.admin.v1.ListUserRoleMenuTreeReply_Meta:
             type: object
             properties:
                 title:
@@ -1894,7 +1877,7 @@ components:
                 currentActiveMenu:
                     type: string
                     description: 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
-        api.admin.v1.ListUserAuthorityPermissionReply:
+        api.admin.v1.ListUserRolePermissionReply:
             type: object
             properties:
                 total:
@@ -1905,28 +1888,17 @@ components:
                     items:
                         type: string
             description: 回应 - 获取用户权限角色列表
-        api.admin.v1.ListUserAuthorityReply:
+        api.admin.v1.ListUserRoleReply:
             type: object
             properties:
                 items:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.admin.v1.Authority'
+                        $ref: '#/components/schemas/api.admin.v1.Role'
                 total:
                     type: integer
                     format: int32
             description: 回应 - 用户权限角色
-        api.admin.v1.ListUserDomainReply:
-            type: object
-            properties:
-                items:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.admin.v1.Domain'
-                total:
-                    type: integer
-                    format: int32
-            description: 回应 - 用户领域
         api.admin.v1.LoginReply:
             type: object
             properties:
@@ -2068,26 +2040,18 @@ components:
                 operation:
                     type: string
             description: 资源模块
-        api.admin.v1.SmsLoginReq_SmsField:
+        api.admin.v1.Role:
             type: object
             properties:
-                mobile:
+                createdAt:
                     type: string
-                code:
+                    format: date-time
+                updatedAt:
                     type: string
-        api.admin.v1.UpdateAuthorityReply:
-            type: object
-            properties:
-                success:
-                    type: boolean
-                message:
-                    type: string
-                data:
-                    $ref: '#/components/schemas/google.protobuf.Any'
-            description: 回应 - 创建权限角色
-        api.admin.v1.UpdateAuthorityReq_Data:
-            type: object
-            properties:
+                    format: date-time
+                id:
+                    type: integer
+                    format: uint64
                 name:
                     type: string
                 parentId:
@@ -2103,22 +2067,14 @@ components:
                     format: enum
                 remarks:
                     type: string
-        api.admin.v1.UpdateAuthorityStateReply:
+            description: 权限角色模块
+        api.admin.v1.SmsLoginReq_SmsField:
             type: object
             properties:
-                success:
-                    type: boolean
-                message:
+                mobile:
                     type: string
-                data:
-                    $ref: '#/components/schemas/google.protobuf.Any'
-            description: 回应 - 创建权限角色
-        api.admin.v1.UpdateAuthorityStateReq_Data:
-            type: object
-            properties:
-                state:
-                    type: integer
-                    format: enum
+                code:
+                    type: string
         api.admin.v1.UpdateDepartmentReply:
             type: object
             properties:
@@ -2169,7 +2125,7 @@ components:
                 state:
                     type: integer
                     format: enum
-                defaultAuthorityId:
+                defaultRoleId:
                     type: integer
                     format: uint64
         api.admin.v1.UpdateDomainStateReply:
@@ -2270,6 +2226,50 @@ components:
                     type: string
                 operation:
                     type: string
+        api.admin.v1.UpdateRoleReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+                data:
+                    $ref: '#/components/schemas/google.protobuf.Any'
+            description: 回应 - 创建权限角色
+        api.admin.v1.UpdateRoleReq_Data:
+            type: object
+            properties:
+                name:
+                    type: string
+                parentId:
+                    type: integer
+                    format: uint64
+                defaultRouter:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                state:
+                    type: integer
+                    format: enum
+                remarks:
+                    type: string
+        api.admin.v1.UpdateRoleStateReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+                data:
+                    $ref: '#/components/schemas/google.protobuf.Any'
+            description: 回应 - 创建权限角色
+        api.admin.v1.UpdateRoleStateReq_Data:
+            type: object
+            properties:
+                state:
+                    type: integer
+                    format: enum
         api.admin.v1.UpdateUserReply:
             type: object
             properties:

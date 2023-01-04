@@ -41,10 +41,10 @@ func (s *AdminService) ListDomain(ctx context.Context, in *protobuf.PagingReq) (
 // CreateDomain 创建领域
 func (s *AdminService) CreateDomain(ctx context.Context, in *v1.CreateDomainReq) (*v1.CreateDomainReply, error) {
 	user, err := s.domainCase.Create(ctx, &biz.Domain{
-		Name:               in.GetName(),
-		ParentID:           uint(in.GetParentId()),
-		DefaultAuthorityID: uint(in.GetDefaultAuthorityId()),
-		State:              int32(in.GetState()),
+		Name:          in.GetName(),
+		ParentID:      uint(in.GetParentId()),
+		DefaultRoleID: uint(in.GetDefaultRoleId()),
+		State:         int32(in.GetState()),
 	})
 	if err != nil {
 		return nil, v1.ErrorDomainCreateFail("领域创建失败: %v", err.Error())
@@ -63,12 +63,12 @@ func (s *AdminService) CreateDomain(ctx context.Context, in *v1.CreateDomainReq)
 func (s *AdminService) UpdateDomain(ctx context.Context, in *v1.UpdateDomainReq) (*v1.UpdateDomainReply, error) {
 	v := in.GetData()
 	err := s.domainCase.Update(ctx, &biz.Domain{
-		ID:                 uint(in.GetId()),
-		Name:               v.GetName(),
-		ParentID:           uint(v.GetParentId()),
-		DefaultAuthorityID: uint(v.GetDefaultAuthorityId()),
-		Sort:               v.GetSort(),
-		State:              int32(v.GetState()),
+		ID:            uint(in.GetId()),
+		Name:          v.GetName(),
+		ParentID:      uint(v.GetParentId()),
+		DefaultRoleID: uint(v.GetDefaultRoleId()),
+		Sort:          v.GetSort(),
+		State:         int32(v.GetState()),
 	})
 	if err != nil {
 		return nil, v1.ErrorDomainUpdateFail("领域修改失败: %v", err.Error())

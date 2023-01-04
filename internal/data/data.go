@@ -38,7 +38,7 @@ var ProviderSet = wire.NewSet(
 	NewAuthEnforcer,
 	// 数据操作
 	NewDomainRepo,
-	NewAuthorityRepo,
+	NewRoleRepo,
 	NewMenuRepo,
 	NewResourceRepo,
 	NewUserRepo,

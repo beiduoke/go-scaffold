@@ -56,11 +56,11 @@ type AdminClient interface {
 	// 当前登录用户拥有领域
 	ListUserDomain(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserDomainReply, error)
 	// 当前登录用户拥有角色
-	ListUserAuthority(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserAuthorityReply, error)
+	ListUserRole(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserRoleReply, error)
 	// 获取权限角色菜单树形列表
-	ListUserAuthorityMenuTree(ctx context.Context, in *ListUserAuthorityMenuTreeReq, opts ...grpc.CallOption) (*ListUserAuthorityMenuTreeReply, error)
+	ListUserRoleMenuTree(ctx context.Context, in *ListUserRoleMenuTreeReq, opts ...grpc.CallOption) (*ListUserRoleMenuTreeReply, error)
 	// 获取权限角色权限列表
-	ListUserAuthorityPermission(ctx context.Context, in *ListUserAuthorityPermissionReq, opts ...grpc.CallOption) (*ListUserAuthorityPermissionReply, error)
+	ListUserRolePermission(ctx context.Context, in *ListUserRolePermissionReq, opts ...grpc.CallOption) (*ListUserRolePermissionReply, error)
 	// 列表用户
 	ListUser(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
 	// 创建用户
@@ -76,7 +76,7 @@ type AdminClient interface {
 	// 绑定用户领域
 	HandleUserDomain(ctx context.Context, in *HandleUserDomainReq, opts ...grpc.CallOption) (*HandleUserDomainReply, error)
 	// 绑定用户领域权限
-	HandleUserDomainAuthority(ctx context.Context, in *HandleUserDomainAuthorityReq, opts ...grpc.CallOption) (*HandleUserDomainAuthorityReply, error)
+	HandleUserDomainRole(ctx context.Context, in *HandleUserDomainRoleReq, opts ...grpc.CallOption) (*HandleUserDomainRoleReply, error)
 	// 领域模块
 	// 登陆领域/租户
 	LoginDomain(ctx context.Context, in *LoginDomainReq, opts ...grpc.CallOption) (*LoginReply, error)
@@ -100,23 +100,23 @@ type AdminClient interface {
 	HandleDomainMenu(ctx context.Context, in *HandleDomainMenuReq, opts ...grpc.CallOption) (*HandleDomainMenuReply, error)
 	// 权限角色模块
 	// 列表权限角色
-	ListAuthority(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
+	ListRole(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
 	// 创建权限角色
-	CreateAuthority(ctx context.Context, in *CreateAuthorityReq, opts ...grpc.CallOption) (*CreateAuthorityReply, error)
+	CreateRole(ctx context.Context, in *CreateRoleReq, opts ...grpc.CallOption) (*CreateRoleReply, error)
 	// 获取权限角色
-	GetAuthority(ctx context.Context, in *GetAuthorityReq, opts ...grpc.CallOption) (*Authority, error)
+	GetRole(ctx context.Context, in *GetRoleReq, opts ...grpc.CallOption) (*Role, error)
 	// 修改权限角色
-	UpdateAuthority(ctx context.Context, in *UpdateAuthorityReq, opts ...grpc.CallOption) (*UpdateAuthorityReply, error)
+	UpdateRole(ctx context.Context, in *UpdateRoleReq, opts ...grpc.CallOption) (*UpdateRoleReply, error)
 	// 设置领域状态
-	UpdateAuthorityState(ctx context.Context, in *UpdateAuthorityStateReq, opts ...grpc.CallOption) (*UpdateAuthorityStateReply, error)
+	UpdateRoleState(ctx context.Context, in *UpdateRoleStateReq, opts ...grpc.CallOption) (*UpdateRoleStateReply, error)
 	// 删除权限角色
-	DeleteAuthority(ctx context.Context, in *DeleteAuthorityReq, opts ...grpc.CallOption) (*DeleteAuthorityReply, error)
+	DeleteRole(ctx context.Context, in *DeleteRoleReq, opts ...grpc.CallOption) (*DeleteRoleReply, error)
 	// 获取权限角色菜单
-	ListAuthorityMenu(ctx context.Context, in *ListAuthorityMenuReq, opts ...grpc.CallOption) (*ListAuthorityMenuReply, error)
+	ListRoleMenu(ctx context.Context, in *ListRoleMenuReq, opts ...grpc.CallOption) (*ListRoleMenuReply, error)
 	// 处理权限角色菜单
-	HandleAuthorityMenu(ctx context.Context, in *HandleAuthorityMenuReq, opts ...grpc.CallOption) (*HandleAuthorityMenuReply, error)
+	HandleRoleMenu(ctx context.Context, in *HandleRoleMenuReq, opts ...grpc.CallOption) (*HandleRoleMenuReply, error)
 	// 处理权限角色资源
-	HandleAuthorityResource(ctx context.Context, in *HandleAuthorityResourceReq, opts ...grpc.CallOption) (*HandleAuthorityResourceReply, error)
+	HandleRoleResource(ctx context.Context, in *HandleRoleResourceReq, opts ...grpc.CallOption) (*HandleRoleResourceReply, error)
 	// 资源模块
 	// 列表资源
 	ListResource(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
@@ -246,27 +246,27 @@ func (c *adminClient) ListUserDomain(ctx context.Context, in *emptypb.Empty, opt
 	return out, nil
 }
 
-func (c *adminClient) ListUserAuthority(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserAuthorityReply, error) {
-	out := new(ListUserAuthorityReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListUserAuthority", in, out, opts...)
+func (c *adminClient) ListUserRole(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserRoleReply, error) {
+	out := new(ListUserRoleReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListUserRole", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) ListUserAuthorityMenuTree(ctx context.Context, in *ListUserAuthorityMenuTreeReq, opts ...grpc.CallOption) (*ListUserAuthorityMenuTreeReply, error) {
-	out := new(ListUserAuthorityMenuTreeReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListUserAuthorityMenuTree", in, out, opts...)
+func (c *adminClient) ListUserRoleMenuTree(ctx context.Context, in *ListUserRoleMenuTreeReq, opts ...grpc.CallOption) (*ListUserRoleMenuTreeReply, error) {
+	out := new(ListUserRoleMenuTreeReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListUserRoleMenuTree", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) ListUserAuthorityPermission(ctx context.Context, in *ListUserAuthorityPermissionReq, opts ...grpc.CallOption) (*ListUserAuthorityPermissionReply, error) {
-	out := new(ListUserAuthorityPermissionReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListUserAuthorityPermission", in, out, opts...)
+func (c *adminClient) ListUserRolePermission(ctx context.Context, in *ListUserRolePermissionReq, opts ...grpc.CallOption) (*ListUserRolePermissionReply, error) {
+	out := new(ListUserRolePermissionReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListUserRolePermission", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -336,9 +336,9 @@ func (c *adminClient) HandleUserDomain(ctx context.Context, in *HandleUserDomain
 	return out, nil
 }
 
-func (c *adminClient) HandleUserDomainAuthority(ctx context.Context, in *HandleUserDomainAuthorityReq, opts ...grpc.CallOption) (*HandleUserDomainAuthorityReply, error) {
-	out := new(HandleUserDomainAuthorityReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/HandleUserDomainAuthority", in, out, opts...)
+func (c *adminClient) HandleUserDomainRole(ctx context.Context, in *HandleUserDomainRoleReq, opts ...grpc.CallOption) (*HandleUserDomainRoleReply, error) {
+	out := new(HandleUserDomainRoleReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/HandleUserDomainRole", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -435,81 +435,81 @@ func (c *adminClient) HandleDomainMenu(ctx context.Context, in *HandleDomainMenu
 	return out, nil
 }
 
-func (c *adminClient) ListAuthority(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
+func (c *adminClient) ListRole(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
 	out := new(protobuf.PagingReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListAuthority", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListRole", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) CreateAuthority(ctx context.Context, in *CreateAuthorityReq, opts ...grpc.CallOption) (*CreateAuthorityReply, error) {
-	out := new(CreateAuthorityReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/CreateAuthority", in, out, opts...)
+func (c *adminClient) CreateRole(ctx context.Context, in *CreateRoleReq, opts ...grpc.CallOption) (*CreateRoleReply, error) {
+	out := new(CreateRoleReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/CreateRole", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) GetAuthority(ctx context.Context, in *GetAuthorityReq, opts ...grpc.CallOption) (*Authority, error) {
-	out := new(Authority)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetAuthority", in, out, opts...)
+func (c *adminClient) GetRole(ctx context.Context, in *GetRoleReq, opts ...grpc.CallOption) (*Role, error) {
+	out := new(Role)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetRole", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) UpdateAuthority(ctx context.Context, in *UpdateAuthorityReq, opts ...grpc.CallOption) (*UpdateAuthorityReply, error) {
-	out := new(UpdateAuthorityReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/UpdateAuthority", in, out, opts...)
+func (c *adminClient) UpdateRole(ctx context.Context, in *UpdateRoleReq, opts ...grpc.CallOption) (*UpdateRoleReply, error) {
+	out := new(UpdateRoleReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/UpdateRole", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) UpdateAuthorityState(ctx context.Context, in *UpdateAuthorityStateReq, opts ...grpc.CallOption) (*UpdateAuthorityStateReply, error) {
-	out := new(UpdateAuthorityStateReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/UpdateAuthorityState", in, out, opts...)
+func (c *adminClient) UpdateRoleState(ctx context.Context, in *UpdateRoleStateReq, opts ...grpc.CallOption) (*UpdateRoleStateReply, error) {
+	out := new(UpdateRoleStateReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/UpdateRoleState", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) DeleteAuthority(ctx context.Context, in *DeleteAuthorityReq, opts ...grpc.CallOption) (*DeleteAuthorityReply, error) {
-	out := new(DeleteAuthorityReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/DeleteAuthority", in, out, opts...)
+func (c *adminClient) DeleteRole(ctx context.Context, in *DeleteRoleReq, opts ...grpc.CallOption) (*DeleteRoleReply, error) {
+	out := new(DeleteRoleReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/DeleteRole", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) ListAuthorityMenu(ctx context.Context, in *ListAuthorityMenuReq, opts ...grpc.CallOption) (*ListAuthorityMenuReply, error) {
-	out := new(ListAuthorityMenuReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListAuthorityMenu", in, out, opts...)
+func (c *adminClient) ListRoleMenu(ctx context.Context, in *ListRoleMenuReq, opts ...grpc.CallOption) (*ListRoleMenuReply, error) {
+	out := new(ListRoleMenuReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListRoleMenu", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) HandleAuthorityMenu(ctx context.Context, in *HandleAuthorityMenuReq, opts ...grpc.CallOption) (*HandleAuthorityMenuReply, error) {
-	out := new(HandleAuthorityMenuReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/HandleAuthorityMenu", in, out, opts...)
+func (c *adminClient) HandleRoleMenu(ctx context.Context, in *HandleRoleMenuReq, opts ...grpc.CallOption) (*HandleRoleMenuReply, error) {
+	out := new(HandleRoleMenuReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/HandleRoleMenu", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) HandleAuthorityResource(ctx context.Context, in *HandleAuthorityResourceReq, opts ...grpc.CallOption) (*HandleAuthorityResourceReply, error) {
-	out := new(HandleAuthorityResourceReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/HandleAuthorityResource", in, out, opts...)
+func (c *adminClient) HandleRoleResource(ctx context.Context, in *HandleRoleResourceReq, opts ...grpc.CallOption) (*HandleRoleResourceReply, error) {
+	out := new(HandleRoleResourceReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/HandleRoleResource", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -714,11 +714,11 @@ type AdminServer interface {
 	// 当前登录用户拥有领域
 	ListUserDomain(context.Context, *emptypb.Empty) (*ListUserDomainReply, error)
 	// 当前登录用户拥有角色
-	ListUserAuthority(context.Context, *emptypb.Empty) (*ListUserAuthorityReply, error)
+	ListUserRole(context.Context, *emptypb.Empty) (*ListUserRoleReply, error)
 	// 获取权限角色菜单树形列表
-	ListUserAuthorityMenuTree(context.Context, *ListUserAuthorityMenuTreeReq) (*ListUserAuthorityMenuTreeReply, error)
+	ListUserRoleMenuTree(context.Context, *ListUserRoleMenuTreeReq) (*ListUserRoleMenuTreeReply, error)
 	// 获取权限角色权限列表
-	ListUserAuthorityPermission(context.Context, *ListUserAuthorityPermissionReq) (*ListUserAuthorityPermissionReply, error)
+	ListUserRolePermission(context.Context, *ListUserRolePermissionReq) (*ListUserRolePermissionReply, error)
 	// 列表用户
 	ListUser(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
 	// 创建用户
@@ -734,7 +734,7 @@ type AdminServer interface {
 	// 绑定用户领域
 	HandleUserDomain(context.Context, *HandleUserDomainReq) (*HandleUserDomainReply, error)
 	// 绑定用户领域权限
-	HandleUserDomainAuthority(context.Context, *HandleUserDomainAuthorityReq) (*HandleUserDomainAuthorityReply, error)
+	HandleUserDomainRole(context.Context, *HandleUserDomainRoleReq) (*HandleUserDomainRoleReply, error)
 	// 领域模块
 	// 登陆领域/租户
 	LoginDomain(context.Context, *LoginDomainReq) (*LoginReply, error)
@@ -758,23 +758,23 @@ type AdminServer interface {
 	HandleDomainMenu(context.Context, *HandleDomainMenuReq) (*HandleDomainMenuReply, error)
 	// 权限角色模块
 	// 列表权限角色
-	ListAuthority(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	ListRole(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
 	// 创建权限角色
-	CreateAuthority(context.Context, *CreateAuthorityReq) (*CreateAuthorityReply, error)
+	CreateRole(context.Context, *CreateRoleReq) (*CreateRoleReply, error)
 	// 获取权限角色
-	GetAuthority(context.Context, *GetAuthorityReq) (*Authority, error)
+	GetRole(context.Context, *GetRoleReq) (*Role, error)
 	// 修改权限角色
-	UpdateAuthority(context.Context, *UpdateAuthorityReq) (*UpdateAuthorityReply, error)
+	UpdateRole(context.Context, *UpdateRoleReq) (*UpdateRoleReply, error)
 	// 设置领域状态
-	UpdateAuthorityState(context.Context, *UpdateAuthorityStateReq) (*UpdateAuthorityStateReply, error)
+	UpdateRoleState(context.Context, *UpdateRoleStateReq) (*UpdateRoleStateReply, error)
 	// 删除权限角色
-	DeleteAuthority(context.Context, *DeleteAuthorityReq) (*DeleteAuthorityReply, error)
+	DeleteRole(context.Context, *DeleteRoleReq) (*DeleteRoleReply, error)
 	// 获取权限角色菜单
-	ListAuthorityMenu(context.Context, *ListAuthorityMenuReq) (*ListAuthorityMenuReply, error)
+	ListRoleMenu(context.Context, *ListRoleMenuReq) (*ListRoleMenuReply, error)
 	// 处理权限角色菜单
-	HandleAuthorityMenu(context.Context, *HandleAuthorityMenuReq) (*HandleAuthorityMenuReply, error)
+	HandleRoleMenu(context.Context, *HandleRoleMenuReq) (*HandleRoleMenuReply, error)
 	// 处理权限角色资源
-	HandleAuthorityResource(context.Context, *HandleAuthorityResourceReq) (*HandleAuthorityResourceReply, error)
+	HandleRoleResource(context.Context, *HandleRoleResourceReq) (*HandleRoleResourceReply, error)
 	// 资源模块
 	// 列表资源
 	ListResource(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
@@ -847,14 +847,14 @@ func (UnimplementedAdminServer) GetUserProfile(context.Context, *emptypb.Empty) 
 func (UnimplementedAdminServer) ListUserDomain(context.Context, *emptypb.Empty) (*ListUserDomainReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUserDomain not implemented")
 }
-func (UnimplementedAdminServer) ListUserAuthority(context.Context, *emptypb.Empty) (*ListUserAuthorityReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListUserAuthority not implemented")
+func (UnimplementedAdminServer) ListUserRole(context.Context, *emptypb.Empty) (*ListUserRoleReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUserRole not implemented")
 }
-func (UnimplementedAdminServer) ListUserAuthorityMenuTree(context.Context, *ListUserAuthorityMenuTreeReq) (*ListUserAuthorityMenuTreeReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListUserAuthorityMenuTree not implemented")
+func (UnimplementedAdminServer) ListUserRoleMenuTree(context.Context, *ListUserRoleMenuTreeReq) (*ListUserRoleMenuTreeReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUserRoleMenuTree not implemented")
 }
-func (UnimplementedAdminServer) ListUserAuthorityPermission(context.Context, *ListUserAuthorityPermissionReq) (*ListUserAuthorityPermissionReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListUserAuthorityPermission not implemented")
+func (UnimplementedAdminServer) ListUserRolePermission(context.Context, *ListUserRolePermissionReq) (*ListUserRolePermissionReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUserRolePermission not implemented")
 }
 func (UnimplementedAdminServer) ListUser(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUser not implemented")
@@ -877,8 +877,8 @@ func (UnimplementedAdminServer) ExistUserName(context.Context, *ExistUserNameReq
 func (UnimplementedAdminServer) HandleUserDomain(context.Context, *HandleUserDomainReq) (*HandleUserDomainReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HandleUserDomain not implemented")
 }
-func (UnimplementedAdminServer) HandleUserDomainAuthority(context.Context, *HandleUserDomainAuthorityReq) (*HandleUserDomainAuthorityReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method HandleUserDomainAuthority not implemented")
+func (UnimplementedAdminServer) HandleUserDomainRole(context.Context, *HandleUserDomainRoleReq) (*HandleUserDomainRoleReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HandleUserDomainRole not implemented")
 }
 func (UnimplementedAdminServer) LoginDomain(context.Context, *LoginDomainReq) (*LoginReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoginDomain not implemented")
@@ -910,32 +910,32 @@ func (UnimplementedAdminServer) ListDomainMenu(context.Context, *ListDomainMenuR
 func (UnimplementedAdminServer) HandleDomainMenu(context.Context, *HandleDomainMenuReq) (*HandleDomainMenuReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HandleDomainMenu not implemented")
 }
-func (UnimplementedAdminServer) ListAuthority(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListAuthority not implemented")
+func (UnimplementedAdminServer) ListRole(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListRole not implemented")
 }
-func (UnimplementedAdminServer) CreateAuthority(context.Context, *CreateAuthorityReq) (*CreateAuthorityReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateAuthority not implemented")
+func (UnimplementedAdminServer) CreateRole(context.Context, *CreateRoleReq) (*CreateRoleReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateRole not implemented")
 }
-func (UnimplementedAdminServer) GetAuthority(context.Context, *GetAuthorityReq) (*Authority, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAuthority not implemented")
+func (UnimplementedAdminServer) GetRole(context.Context, *GetRoleReq) (*Role, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRole not implemented")
 }
-func (UnimplementedAdminServer) UpdateAuthority(context.Context, *UpdateAuthorityReq) (*UpdateAuthorityReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateAuthority not implemented")
+func (UnimplementedAdminServer) UpdateRole(context.Context, *UpdateRoleReq) (*UpdateRoleReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateRole not implemented")
 }
-func (UnimplementedAdminServer) UpdateAuthorityState(context.Context, *UpdateAuthorityStateReq) (*UpdateAuthorityStateReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateAuthorityState not implemented")
+func (UnimplementedAdminServer) UpdateRoleState(context.Context, *UpdateRoleStateReq) (*UpdateRoleStateReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateRoleState not implemented")
 }
-func (UnimplementedAdminServer) DeleteAuthority(context.Context, *DeleteAuthorityReq) (*DeleteAuthorityReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteAuthority not implemented")
+func (UnimplementedAdminServer) DeleteRole(context.Context, *DeleteRoleReq) (*DeleteRoleReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteRole not implemented")
 }
-func (UnimplementedAdminServer) ListAuthorityMenu(context.Context, *ListAuthorityMenuReq) (*ListAuthorityMenuReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListAuthorityMenu not implemented")
+func (UnimplementedAdminServer) ListRoleMenu(context.Context, *ListRoleMenuReq) (*ListRoleMenuReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListRoleMenu not implemented")
 }
-func (UnimplementedAdminServer) HandleAuthorityMenu(context.Context, *HandleAuthorityMenuReq) (*HandleAuthorityMenuReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method HandleAuthorityMenu not implemented")
+func (UnimplementedAdminServer) HandleRoleMenu(context.Context, *HandleRoleMenuReq) (*HandleRoleMenuReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HandleRoleMenu not implemented")
 }
-func (UnimplementedAdminServer) HandleAuthorityResource(context.Context, *HandleAuthorityResourceReq) (*HandleAuthorityResourceReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method HandleAuthorityResource not implemented")
+func (UnimplementedAdminServer) HandleRoleResource(context.Context, *HandleRoleResourceReq) (*HandleRoleResourceReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HandleRoleResource not implemented")
 }
 func (UnimplementedAdminServer) ListResource(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListResource not implemented")
@@ -1166,56 +1166,56 @@ func _Admin_ListUserDomain_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_ListUserAuthority_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Admin_ListUserRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).ListUserAuthority(ctx, in)
+		return srv.(AdminServer).ListUserRole(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/ListUserAuthority",
+		FullMethod: "/api.admin.v1.Admin/ListUserRole",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).ListUserAuthority(ctx, req.(*emptypb.Empty))
+		return srv.(AdminServer).ListUserRole(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_ListUserAuthorityMenuTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListUserAuthorityMenuTreeReq)
+func _Admin_ListUserRoleMenuTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUserRoleMenuTreeReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).ListUserAuthorityMenuTree(ctx, in)
+		return srv.(AdminServer).ListUserRoleMenuTree(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/ListUserAuthorityMenuTree",
+		FullMethod: "/api.admin.v1.Admin/ListUserRoleMenuTree",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).ListUserAuthorityMenuTree(ctx, req.(*ListUserAuthorityMenuTreeReq))
+		return srv.(AdminServer).ListUserRoleMenuTree(ctx, req.(*ListUserRoleMenuTreeReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_ListUserAuthorityPermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListUserAuthorityPermissionReq)
+func _Admin_ListUserRolePermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUserRolePermissionReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).ListUserAuthorityPermission(ctx, in)
+		return srv.(AdminServer).ListUserRolePermission(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/ListUserAuthorityPermission",
+		FullMethod: "/api.admin.v1.Admin/ListUserRolePermission",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).ListUserAuthorityPermission(ctx, req.(*ListUserAuthorityPermissionReq))
+		return srv.(AdminServer).ListUserRolePermission(ctx, req.(*ListUserRolePermissionReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1346,20 +1346,20 @@ func _Admin_HandleUserDomain_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_HandleUserDomainAuthority_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HandleUserDomainAuthorityReq)
+func _Admin_HandleUserDomainRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HandleUserDomainRoleReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).HandleUserDomainAuthority(ctx, in)
+		return srv.(AdminServer).HandleUserDomainRole(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/HandleUserDomainAuthority",
+		FullMethod: "/api.admin.v1.Admin/HandleUserDomainRole",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).HandleUserDomainAuthority(ctx, req.(*HandleUserDomainAuthorityReq))
+		return srv.(AdminServer).HandleUserDomainRole(ctx, req.(*HandleUserDomainRoleReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1544,164 +1544,164 @@ func _Admin_HandleDomainMenu_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_ListAuthority_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Admin_ListRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(protobuf.PagingReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).ListAuthority(ctx, in)
+		return srv.(AdminServer).ListRole(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/ListAuthority",
+		FullMethod: "/api.admin.v1.Admin/ListRole",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).ListAuthority(ctx, req.(*protobuf.PagingReq))
+		return srv.(AdminServer).ListRole(ctx, req.(*protobuf.PagingReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_CreateAuthority_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateAuthorityReq)
+func _Admin_CreateRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateRoleReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).CreateAuthority(ctx, in)
+		return srv.(AdminServer).CreateRole(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/CreateAuthority",
+		FullMethod: "/api.admin.v1.Admin/CreateRole",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).CreateAuthority(ctx, req.(*CreateAuthorityReq))
+		return srv.(AdminServer).CreateRole(ctx, req.(*CreateRoleReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_GetAuthority_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAuthorityReq)
+func _Admin_GetRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRoleReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).GetAuthority(ctx, in)
+		return srv.(AdminServer).GetRole(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/GetAuthority",
+		FullMethod: "/api.admin.v1.Admin/GetRole",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).GetAuthority(ctx, req.(*GetAuthorityReq))
+		return srv.(AdminServer).GetRole(ctx, req.(*GetRoleReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_UpdateAuthority_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateAuthorityReq)
+func _Admin_UpdateRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateRoleReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).UpdateAuthority(ctx, in)
+		return srv.(AdminServer).UpdateRole(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/UpdateAuthority",
+		FullMethod: "/api.admin.v1.Admin/UpdateRole",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).UpdateAuthority(ctx, req.(*UpdateAuthorityReq))
+		return srv.(AdminServer).UpdateRole(ctx, req.(*UpdateRoleReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_UpdateAuthorityState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateAuthorityStateReq)
+func _Admin_UpdateRoleState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateRoleStateReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).UpdateAuthorityState(ctx, in)
+		return srv.(AdminServer).UpdateRoleState(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/UpdateAuthorityState",
+		FullMethod: "/api.admin.v1.Admin/UpdateRoleState",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).UpdateAuthorityState(ctx, req.(*UpdateAuthorityStateReq))
+		return srv.(AdminServer).UpdateRoleState(ctx, req.(*UpdateRoleStateReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_DeleteAuthority_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteAuthorityReq)
+func _Admin_DeleteRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteRoleReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).DeleteAuthority(ctx, in)
+		return srv.(AdminServer).DeleteRole(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/DeleteAuthority",
+		FullMethod: "/api.admin.v1.Admin/DeleteRole",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).DeleteAuthority(ctx, req.(*DeleteAuthorityReq))
+		return srv.(AdminServer).DeleteRole(ctx, req.(*DeleteRoleReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_ListAuthorityMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListAuthorityMenuReq)
+func _Admin_ListRoleMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRoleMenuReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).ListAuthorityMenu(ctx, in)
+		return srv.(AdminServer).ListRoleMenu(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/ListAuthorityMenu",
+		FullMethod: "/api.admin.v1.Admin/ListRoleMenu",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).ListAuthorityMenu(ctx, req.(*ListAuthorityMenuReq))
+		return srv.(AdminServer).ListRoleMenu(ctx, req.(*ListRoleMenuReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_HandleAuthorityMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HandleAuthorityMenuReq)
+func _Admin_HandleRoleMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HandleRoleMenuReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).HandleAuthorityMenu(ctx, in)
+		return srv.(AdminServer).HandleRoleMenu(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/HandleAuthorityMenu",
+		FullMethod: "/api.admin.v1.Admin/HandleRoleMenu",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).HandleAuthorityMenu(ctx, req.(*HandleAuthorityMenuReq))
+		return srv.(AdminServer).HandleRoleMenu(ctx, req.(*HandleRoleMenuReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_HandleAuthorityResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HandleAuthorityResourceReq)
+func _Admin_HandleRoleResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HandleRoleResourceReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).HandleAuthorityResource(ctx, in)
+		return srv.(AdminServer).HandleRoleResource(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/HandleAuthorityResource",
+		FullMethod: "/api.admin.v1.Admin/HandleRoleResource",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).HandleAuthorityResource(ctx, req.(*HandleAuthorityResourceReq))
+		return srv.(AdminServer).HandleRoleResource(ctx, req.(*HandleRoleResourceReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2074,16 +2074,16 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Admin_ListUserDomain_Handler,
 		},
 		{
-			MethodName: "ListUserAuthority",
-			Handler:    _Admin_ListUserAuthority_Handler,
+			MethodName: "ListUserRole",
+			Handler:    _Admin_ListUserRole_Handler,
 		},
 		{
-			MethodName: "ListUserAuthorityMenuTree",
-			Handler:    _Admin_ListUserAuthorityMenuTree_Handler,
+			MethodName: "ListUserRoleMenuTree",
+			Handler:    _Admin_ListUserRoleMenuTree_Handler,
 		},
 		{
-			MethodName: "ListUserAuthorityPermission",
-			Handler:    _Admin_ListUserAuthorityPermission_Handler,
+			MethodName: "ListUserRolePermission",
+			Handler:    _Admin_ListUserRolePermission_Handler,
 		},
 		{
 			MethodName: "ListUser",
@@ -2114,8 +2114,8 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Admin_HandleUserDomain_Handler,
 		},
 		{
-			MethodName: "HandleUserDomainAuthority",
-			Handler:    _Admin_HandleUserDomainAuthority_Handler,
+			MethodName: "HandleUserDomainRole",
+			Handler:    _Admin_HandleUserDomainRole_Handler,
 		},
 		{
 			MethodName: "LoginDomain",
@@ -2158,40 +2158,40 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Admin_HandleDomainMenu_Handler,
 		},
 		{
-			MethodName: "ListAuthority",
-			Handler:    _Admin_ListAuthority_Handler,
+			MethodName: "ListRole",
+			Handler:    _Admin_ListRole_Handler,
 		},
 		{
-			MethodName: "CreateAuthority",
-			Handler:    _Admin_CreateAuthority_Handler,
+			MethodName: "CreateRole",
+			Handler:    _Admin_CreateRole_Handler,
 		},
 		{
-			MethodName: "GetAuthority",
-			Handler:    _Admin_GetAuthority_Handler,
+			MethodName: "GetRole",
+			Handler:    _Admin_GetRole_Handler,
 		},
 		{
-			MethodName: "UpdateAuthority",
-			Handler:    _Admin_UpdateAuthority_Handler,
+			MethodName: "UpdateRole",
+			Handler:    _Admin_UpdateRole_Handler,
 		},
 		{
-			MethodName: "UpdateAuthorityState",
-			Handler:    _Admin_UpdateAuthorityState_Handler,
+			MethodName: "UpdateRoleState",
+			Handler:    _Admin_UpdateRoleState_Handler,
 		},
 		{
-			MethodName: "DeleteAuthority",
-			Handler:    _Admin_DeleteAuthority_Handler,
+			MethodName: "DeleteRole",
+			Handler:    _Admin_DeleteRole_Handler,
 		},
 		{
-			MethodName: "ListAuthorityMenu",
-			Handler:    _Admin_ListAuthorityMenu_Handler,
+			MethodName: "ListRoleMenu",
+			Handler:    _Admin_ListRoleMenu_Handler,
 		},
 		{
-			MethodName: "HandleAuthorityMenu",
-			Handler:    _Admin_HandleAuthorityMenu_Handler,
+			MethodName: "HandleRoleMenu",
+			Handler:    _Admin_HandleRoleMenu_Handler,
 		},
 		{
-			MethodName: "HandleAuthorityResource",
-			Handler:    _Admin_HandleAuthorityResource_Handler,
+			MethodName: "HandleRoleResource",
+			Handler:    _Admin_HandleRoleResource_Handler,
 		},
 		{
 			MethodName: "ListResource",

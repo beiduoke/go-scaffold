@@ -131,16 +131,16 @@ func ErrorUserHandleDomainFail(format string, args ...interface{}) *errors.Error
 	return errors.New(400, ErrorReason_USER_HANDLE_DOMAIN_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
-func IsUserHandleDomainAuthorityFail(err error) bool {
+func IsUserHandleDomainRoleFail(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_USER_HANDLE_DOMAIN_AUTHORITY_FAIL.String() && e.Code == 400
+	return e.Reason == ErrorReason_USER_HANDLE_DOMAIN_ROLE_FAIL.String() && e.Code == 400
 }
 
-func ErrorUserHandleDomainAuthorityFail(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_USER_HANDLE_DOMAIN_AUTHORITY_FAIL.String(), fmt.Sprintf(format, args...))
+func ErrorUserHandleDomainRoleFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_USER_HANDLE_DOMAIN_ROLE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
 func IsUserDomainFindFail(err error) bool {
@@ -155,16 +155,16 @@ func ErrorUserDomainFindFail(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_USER_DOMAIN_FIND_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
-func IsUserAuthorityFindFail(err error) bool {
+func IsUserRoleFindFail(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_USER_AUTHORITY_FIND_FAIL.String() && e.Code == 400
+	return e.Reason == ErrorReason_USER_ROLE_FIND_FAIL.String() && e.Code == 400
 }
 
-func ErrorUserAuthorityFindFail(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_USER_AUTHORITY_FIND_FAIL.String(), fmt.Sprintf(format, args...))
+func ErrorUserRoleFindFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_USER_ROLE_FIND_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
 func IsDomainNotFound(err error) bool {
@@ -227,76 +227,76 @@ func ErrorDomainHandleMenuFail(format string, args ...interface{}) *errors.Error
 	return errors.New(400, ErrorReason_DOMAIN_HANDLE_MENU_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
-func IsAuthorityNotFound(err error) bool {
+func IsRoleNotFound(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_AUTHORITY_NOT_FOUND.String() && e.Code == 400
+	return e.Reason == ErrorReason_ROLE_NOT_FOUND.String() && e.Code == 400
 }
 
-func ErrorAuthorityNotFound(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_AUTHORITY_NOT_FOUND.String(), fmt.Sprintf(format, args...))
+func ErrorRoleNotFound(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_ROLE_NOT_FOUND.String(), fmt.Sprintf(format, args...))
 }
 
-func IsAuthorityCreateFail(err error) bool {
+func IsRoleCreateFail(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_AUTHORITY_CREATE_FAIL.String() && e.Code == 400
+	return e.Reason == ErrorReason_ROLE_CREATE_FAIL.String() && e.Code == 400
 }
 
-func ErrorAuthorityCreateFail(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_AUTHORITY_CREATE_FAIL.String(), fmt.Sprintf(format, args...))
+func ErrorRoleCreateFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_ROLE_CREATE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
-func IsAuthorityUpdateFail(err error) bool {
+func IsRoleUpdateFail(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_AUTHORITY_UPDATE_FAIL.String() && e.Code == 400
+	return e.Reason == ErrorReason_ROLE_UPDATE_FAIL.String() && e.Code == 400
 }
 
-func ErrorAuthorityUpdateFail(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_AUTHORITY_UPDATE_FAIL.String(), fmt.Sprintf(format, args...))
+func ErrorRoleUpdateFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_ROLE_UPDATE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
-func IsAuthorityDeleteFail(err error) bool {
+func IsRoleDeleteFail(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_AUTHORITY_DELETE_FAIL.String() && e.Code == 400
+	return e.Reason == ErrorReason_ROLE_DELETE_FAIL.String() && e.Code == 400
 }
 
-func ErrorAuthorityDeleteFail(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_AUTHORITY_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
+func ErrorRoleDeleteFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_ROLE_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
-func IsAuthorityHandleMenuFail(err error) bool {
+func IsRoleHandleMenuFail(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_AUTHORITY_HANDLE_MENU_FAIL.String() && e.Code == 400
+	return e.Reason == ErrorReason_ROLE_HANDLE_MENU_FAIL.String() && e.Code == 400
 }
 
-func ErrorAuthorityHandleMenuFail(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_AUTHORITY_HANDLE_MENU_FAIL.String(), fmt.Sprintf(format, args...))
+func ErrorRoleHandleMenuFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_ROLE_HANDLE_MENU_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
-func IsAuthorityHandleResourceFail(err error) bool {
+func IsRoleHandleResourceFail(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_AUTHORITY_HANDLE_RESOURCE_FAIL.String() && e.Code == 400
+	return e.Reason == ErrorReason_ROLE_HANDLE_RESOURCE_FAIL.String() && e.Code == 400
 }
 
-func ErrorAuthorityHandleResourceFail(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_AUTHORITY_HANDLE_RESOURCE_FAIL.String(), fmt.Sprintf(format, args...))
+func ErrorRoleHandleResourceFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_ROLE_HANDLE_RESOURCE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
 func IsMenuNotFound(err error) bool {

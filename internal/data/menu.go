@@ -113,7 +113,6 @@ func (r *MenuRepo) toBiz(d *SysMenu) *biz.Menu {
 
 func (r *MenuRepo) Save(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 	d := r.toModel(g)
-	d.DomainID = r.data.DomainID(ctx)
 	result := r.data.DB(ctx).Create(d)
 	if result.Error == nil {
 		r.setCache(ctx, d)

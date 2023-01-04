@@ -22,8 +22,8 @@ import (
 )
 
 const (
-	ClaimAuthorityId = "authorityId"
-	Domain           = "domain"
+	ClaimRoleId = "roleId"
+	Domain      = "domain"
 )
 
 const modelConfig = `
@@ -95,11 +95,11 @@ func (tr *Transport) ReplyHeader() transport.Header {
 }
 
 type SecurityUser struct {
-	ID          string
-	Path        string
-	Method      string
-	AuthorityId string
-	Domain      string
+	ID     string
+	Path   string
+	Method string
+	RoleId string
+	Domain string
 }
 
 func NewSecurityUser() authz.SecurityUser {
@@ -108,9 +108,9 @@ func NewSecurityUser() authz.SecurityUser {
 
 func (su *SecurityUser) ParseFromContext(ctx context.Context) error {
 	if claims, ok := jwt.FromContext(ctx); ok {
-		str, ok := claims.(jwtV4.MapClaims)[ClaimAuthorityId]
+		str, ok := claims.(jwtV4.MapClaims)[ClaimRoleId]
 		if ok {
-			su.AuthorityId = str.(string)
+			su.RoleId = str.(string)
 		}
 		str, ok = claims.(jwtV4.MapClaims)[Domain]
 		if ok {
@@ -135,7 +135,7 @@ func (su *SecurityUser) GetUser() string {
 }
 
 func (su *SecurityUser) GetSubject() string {
-	return su.AuthorityId
+	return su.RoleId
 }
 
 func (su *SecurityUser) GetObject() string {
@@ -150,9 +150,9 @@ func (su *SecurityUser) GetDomain() string {
 	return su.Domain
 }
 
-func createToken(authorityId string) jwtV4.Claims {
+func createToken(roleId string) jwtV4.Claims {
 	return jwtV4.MapClaims{
-		ClaimAuthorityId: authorityId,
+		ClaimRoleId: roleId,
 	}
 }
 
@@ -284,28 +284,28 @@ func TestServer(t *testing.T) {
 	a := fileAdapter.NewAdapter("../../examples/authz_policy.csv")
 
 	tests := []struct {
-		name        string
-		authorityId string
-		path        string
-		exceptErr   error
+		name      string
+		roleId    string
+		path      string
+		exceptErr error
 	}{
 		{
-			name:        "admin",
-			authorityId: "admin",
-			path:        "/api/login",
-			exceptErr:   nil,
+			name:      "admin",
+			roleId:    "admin",
+			path:      "/api/login",
+			exceptErr: nil,
 		},
 		{
-			name:        "admin",
-			authorityId: "admin",
-			path:        "/api/logout",
-			exceptErr:   nil,
+			name:      "admin",
+			roleId:    "admin",
+			path:      "/api/logout",
+			exceptErr: nil,
 		},
 		{
-			name:        "bobo",
-			authorityId: "bobo",
-			path:        "/api/login",
-			exceptErr:   nil,
+			name:      "bobo",
+			roleId:    "bobo",
+			path:      "/api/login",
+			exceptErr: nil,
 		},
 	}
 
@@ -316,7 +316,7 @@ func TestServer(t *testing.T) {
 				return "reply", nil
 			}
 
-			token := createToken(test.authorityId)
+			token := createToken(test.roleId)
 			ctx := transport.NewServerContext(context.Background(), &Transport{operation: test.path})
 			ctx = jwt.NewContext(ctx, token)
 
