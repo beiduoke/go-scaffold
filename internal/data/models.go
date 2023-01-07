@@ -65,7 +65,8 @@ type SysUser struct {
 	State         int32       `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:用户状态 0 未指定  1 启用 2 停用;"`
 	LastUseDomain uint        `gorm:"type:bigint(20);column:last_use_domain;not null;default:0;comment:最后使用租户"`
 	LastLoginAt   *time.Time  `gorm:"type:datetime;column:last_login_at;comment:最后登录时间"`
-	LastLoginIP   string      `gorm:"type:varchar(50);column:last_login_ip;not null;default:'';comment:最后登录时间"`
+	LastLoginIP   string      `gorm:"type:varchar(50);column:last_login_ip;not null;default:'';comment:最后登录IP"`
+	Posts         []SysPost   `gorm:"many2many:sys_user_posts;"`
 	Roles         []SysRole   `gorm:"-"`
 	Domains       []SysDomain `gorm:"-"`
 }
@@ -73,29 +74,19 @@ type SysUser struct {
 // Role 角色
 type SysRole struct {
 	DomainModel
-	Name          string        `gorm:"type:varchar(255);column:name;not null;index:idx_domain_id_data;comment:角色名称;"`
-	ParentID      uint          `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
-	DefaultRouter string        `gorm:"type:varchar(255);column:default_router;not null;default:'/dashboard';comment:默认路由;"`
-	Sort          int32         `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
-	State         int32         `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:角色状态 0 未指定  1 启用 2 停用;"`
-	Remarks       string        `gorm:"type:varchar(255);column:remarks;not null;comment:备注;"`
-	Parent        *SysRole      `gorm:"foreignKey:ParentID"`
-	Roles         []SysRole     `gorm:"many2many:sys_role_relations"`
-	Menus         []SysMenu     `gorm:"many2many:sys_role_menus;"`
-	Resources     []SysResource `gorm:"many2many:sys_role_resources;"`
-	Users         []SysUser     `gorm:"-"`
-	Domains       []SysDomain   `gorm:"-"`
-}
-
-// Post 岗位
-type SysPost struct {
-	DomainModel
-	Name    string    `gorm:"type:varchar(255);column:name;not null;comment:岗位名称;"`
-	Code    string    `gorm:"type:varchar(100);column:name;not null;default:'';comment:岗位编码;"`
-	Sort    int32     `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
-	State   int32     `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:岗位状态 0 未指定  1 启用 2 停用;"`
-	Remarks string    `gorm:"type:varchar(255);column:remarks;not null;comment:备注;"`
-	Users   []SysUser `gorm:"-"`
+	Name          string          `gorm:"type:varchar(255);column:name;not null;index:idx_domain_id_data;comment:角色名称;"`
+	ParentID      uint            `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
+	DefaultRouter string          `gorm:"type:varchar(255);column:default_router;not null;default:'/dashboard';comment:默认路由;"`
+	Sort          int32           `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
+	State         int32           `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:角色状态 0 未指定  1 启用 2 停用;"`
+	Remarks       string          `gorm:"type:varchar(255);column:remarks;not null;comment:备注;"`
+	Parent        *SysRole        `gorm:"foreignKey:ParentID"`
+	Roles         []SysRole       `gorm:"many2many:sys_role_relations"`
+	Menus         []SysMenu       `gorm:"many2many:sys_role_menus;"`
+	Resources     []SysResource   `gorm:"many2many:sys_role_resources;"`
+	Departments   []SysDepartment `gorm:"many2many:sys_role_departments;"`
+	Users         []SysUser       `gorm:"-"`
+	Domains       []SysDomain     `gorm:"-"`
 }
 
 // Resource api资源
@@ -137,7 +128,7 @@ type SysMeta struct {
 	KeepAlive int32  `gorm:"type:tinyint(1);column:keep_alive;not null;default:1;comment:是否缓存 0 无指定 1 是 2 否"`
 	BaseMenu  int32  `gorm:"type:tinyint(1);column:base_menu;not null;default:1;comment:基础菜单 0 无指定 1 是 2 否"`
 	CloseTab  int32  `gorm:"type:tinyint(1);column:close_tab;not null;default:1;comment:自动关闭TAB  0 无指定 1 是  2 否"`
-	ExtType   int32  `gorm:"type:tinyint(1);column:ext_type;not null;default:1;comment:外链类型  0 无指定 1 无外链 2 新窗口  3 内框架"`
+	ExtType   int32  `gorm:"type:tinyint(1);column:ext_type;not null;default:1;comment:外链类型  0 无指定 1 无外链 2 新窗口 3 内框架"`
 }
 
 // SysRoleMenu 角色菜单-Many2Many 替换
@@ -185,14 +176,26 @@ type SysMenuParameter struct {
 // SysDepartment 部门
 type SysDepartment struct {
 	DomainModel
-	Name     string  `gorm:"type:varchar(255);column:name;not null;comment:名称;"`
-	ParentID uint    `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
-	Sort     int32   `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
-	Remarks  string  `gorm:"type:varchar(255);column:remarks;not null;comment:备注;"`
-	State    int32   `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
-	UserID   uint    `gorm:"type:bigint(20);column:user_id;not null;default:0;comment:用户id"`
-	User     SysUser `gorm:"foreignKey:UserID;"`
+	Name     string    `gorm:"type:varchar(255);column:name;not null;comment:名称;"`
+	ParentID uint      `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
+	Sort     int32     `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
+	Remarks  string    `gorm:"type:varchar(255);column:remarks;not null;comment:备注;"`
+	State    int32     `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
+	UserID   uint      `gorm:"type:bigint(20);column:user_id;not null;default:0;comment:用户id"`
+	User     SysUser   `gorm:"foreignKey:UserID;"`
+	Roles    []SysRole `gorm:"many2many:sys_role_departments;"`
 	// User     SysUser `gorm:"many2many:sys_dept_users;"`
+}
+
+// Post 职位
+type SysPost struct {
+	DomainModel
+	Name    string    `gorm:"type:varchar(255);column:name;not null;comment:职位名称;"`
+	Code    string    `gorm:"type:varchar(100);column:name;not null;default:'';comment:职位编码;"`
+	Sort    int32     `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
+	State   int32     `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:职位状态 0 未指定  1 启用 2 停用;"`
+	Remarks string    `gorm:"type:varchar(255);column:remarks;not null;comment:备注;"`
+	Users   []SysUser `gorm:"many2many:sys_user_posts;"`
 }
 
 // ApiOperationLog API 请求日志

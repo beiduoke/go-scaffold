@@ -485,6 +485,39 @@ service Admin {
       get: "/admin/v1/departments/{parentId}/trees"
     };
   }
+
+  // 列表职位
+  rpc ListPost (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+    option (google.api.http) = {
+      get: "/admin/v1/posts"
+    };
+  }
+  // 创建职位
+  rpc CreatePost (CreatePostReq) returns (CreatePostReply) {
+    option (google.api.http) = {
+      post: "/admin/v1/posts"
+      body: "*"
+    };
+  }
+  // 获取职位
+  rpc GetPost (GetPostReq) returns (Post) {
+    option (google.api.http) = {
+      get: "/admin/v1/posts/{id}"
+    };
+  }
+  // 修改职位
+  rpc UpdatePost (UpdatePostReq) returns (UpdatePostReply) {
+    option (google.api.http) = {
+      put: "/admin/v1/posts/{id}"
+      body: "data"
+    };
+  }
+  // 删除职位
+  rpc DeletePost (DeletePostReq) returns (DeletePostReply) {
+    option (google.api.http) = {
+      delete: "/admin/v1/posts/{id}"
+    };
+  }
 }
 
 message Auth {
@@ -1339,4 +1372,70 @@ message ListDepartmentTreeReq {
 message ListDepartmentTreeReply {
   int32 total = 1;
   repeated Department items = 2;
+}
+
+
+// 职位模块
+message Post {
+  google.protobuf.Timestamp created_at = 1;
+  google.protobuf.Timestamp updated_at = 2;
+  uint64 id = 3;
+  string name = 4;
+  string code = 5;
+  int32 sort = 6;
+  string remarks = 7;
+  api.protobuf.PostState state = 8;
+}
+
+// 请求 - 创建职位
+message CreatePostReq {
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  string code = 2 [(validate.rules).uint64 = {gte: 0}];
+  int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
+  api.protobuf.PostState state = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  optional string remarks = 5 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+}
+
+// 回应 - 创建职位
+message CreatePostReply {
+  bool success = 1;
+  string message = 2;
+  google.protobuf.Any data = 3;
+}
+
+// 请求 - 修改职位
+message UpdatePostReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    string code = 2 [(validate.rules).uint64 = {gte: 0}];
+    int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
+    api.protobuf.PostState state = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    optional string remarks = 5 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建职位
+message UpdatePostReply {
+  bool success = 1;
+  string message = 2;
+  google.protobuf.Any data = 3;
+}
+
+// 请求 - 获取职位
+message GetPostReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 请求 - 删除职位
+message DeletePostReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 删除职位
+message DeletePostReply {
+  bool success = 1;
+  string message = 2;
+  google.protobuf.Any data = 3;
 }
