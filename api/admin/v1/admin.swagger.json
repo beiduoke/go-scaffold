@@ -1112,6 +1112,225 @@
         ]
       }
     },
+    "/admin/v1/posts": {
+      "get": {
+        "summary": "列表职位",
+        "operationId": "Admin_ListPost",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protobufPagingReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": "当前页.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "description": "每一页的行数.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "nopaging",
+            "description": "是否不分页.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      },
+      "post": {
+        "summary": "创建职位",
+        "operationId": "Admin_CreatePost",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreatePostReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreatePostReq"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/posts/{id}": {
+      "get": {
+        "summary": "获取职位",
+        "operationId": "Admin_GetPost",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Post"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      },
+      "delete": {
+        "summary": "删除职位",
+        "operationId": "Admin_DeletePost",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeletePostReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      },
+      "put": {
+        "summary": "修改职位",
+        "operationId": "Admin_UpdatePost",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdatePostReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1UpdatePostReqData"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/posts/{id}/state": {
+      "put": {
+        "summary": "设置领域状态",
+        "operationId": "Admin_UpdatePostState",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdatePostStateReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1UpdatePostStateReqData"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/admin/v1/resources": {
       "get": {
         "summary": "资源模块\n列表资源",
@@ -2449,6 +2668,16 @@
       },
       "title": "分页通用结果"
     },
+    "protobufPostState": {
+      "type": "string",
+      "enum": [
+        "POST_STATE_UNSPECIFIED",
+        "POST_STATE_ACTIVE",
+        "POST_STATE_INACTIVE",
+        "POST_STATE_BANNED"
+      ],
+      "default": "POST_STATE_UNSPECIFIED"
+    },
     "protobufRoleState": {
       "type": "string",
       "enum": [
@@ -2663,6 +2892,43 @@
       },
       "title": "请求 - 创建菜单"
     },
+    "v1CreatePostReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
+        }
+      },
+      "title": "回应 - 创建职位"
+    },
+    "v1CreatePostReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "state": {
+          "$ref": "#/definitions/protobufPostState"
+        },
+        "remarks": {
+          "type": "string"
+        }
+      },
+      "title": "请求 - 创建职位"
+    },
     "v1CreateResourceReply": {
       "type": "object",
       "properties": {
@@ -2838,6 +3104,21 @@
         }
       },
       "title": "回应 - 删除菜单"
+    },
+    "v1DeletePostReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
+        }
+      },
+      "title": "回应 - 删除职位"
     },
     "v1DeleteResourceReply": {
       "type": "object",
@@ -3401,6 +3682,40 @@
         }
       }
     },
+    "v1Post": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "remarks": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/protobufPostState"
+        }
+      },
+      "title": "职位模块"
+    },
     "v1RegisterReply": {
       "type": "object",
       "properties": {
@@ -3661,6 +3976,65 @@
           "items": {
             "$ref": "#/definitions/v1MenuButton"
           }
+        }
+      }
+    },
+    "v1UpdatePostReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
+        }
+      },
+      "title": "回应 - 创建职位"
+    },
+    "v1UpdatePostReqData": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "state": {
+          "$ref": "#/definitions/protobufPostState"
+        },
+        "remarks": {
+          "type": "string"
+        }
+      }
+    },
+    "v1UpdatePostStateReply": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
+        }
+      },
+      "title": "回应 - 创建职位-状态"
+    },
+    "v1UpdatePostStateReqData": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "#/definitions/protobufPostState"
         }
       }
     },

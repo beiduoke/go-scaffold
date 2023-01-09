@@ -38,6 +38,7 @@ type AdminService struct {
 	menuCase       *biz.MenuUsecase
 	resourceCase   *biz.ResourceUsecase
 	departmentCase *biz.DepartmentUsecase
+	postCase       *biz.PostUsecase
 }
 
 // NewAdminService new a Admin service.
@@ -52,6 +53,7 @@ func NewAdminService(
 	menuCase *biz.MenuUsecase,
 	resourceCase *biz.ResourceUsecase,
 	departmentCase *biz.DepartmentUsecase,
+	postCase *biz.PostUsecase,
 ) *AdminService {
 	l := log.NewHelper(log.With(logger, "module", "service/admin"))
 	return &AdminService{
@@ -65,5 +67,6 @@ func NewAdminService(
 		menuCase:       menuCase,
 		resourceCase:   resourceCase,
 		departmentCase: departmentCase,
+		postCase:       postCase,
 	}
 }

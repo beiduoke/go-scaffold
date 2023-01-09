@@ -442,3 +442,51 @@ func IsDepartmentDeleteFail(err error) bool {
 func ErrorDepartmentDeleteFail(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_DEPARTMENT_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
 }
+
+func IsPostNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_POST_NOT_FOUND.String() && e.Code == 400
+}
+
+func ErrorPostNotFound(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_POST_NOT_FOUND.String(), fmt.Sprintf(format, args...))
+}
+
+func IsPostCreateFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_POST_CREATE_FAIL.String() && e.Code == 400
+}
+
+func ErrorPostCreateFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_POST_CREATE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsPostUpdateFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_POST_UPDATE_FAIL.String() && e.Code == 400
+}
+
+func ErrorPostUpdateFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_POST_UPDATE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsPostDeleteFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_POST_DELETE_FAIL.String() && e.Code == 400
+}
+
+func ErrorPostDeleteFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_POST_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
+}

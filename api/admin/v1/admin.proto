@@ -518,6 +518,13 @@ service Admin {
       delete: "/admin/v1/posts/{id}"
     };
   }
+  // 设置领域状态
+  rpc UpdatePostState (UpdatePostStateReq) returns (UpdatePostStateReply) {
+    option (google.api.http) = {
+      put: "/admin/v1/posts/{id}/state"
+      body: "data"
+    };
+  }
 }
 
 message Auth {
@@ -1390,7 +1397,7 @@ message Post {
 // 请求 - 创建职位
 message CreatePostReq {
   string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
-  string code = 2 [(validate.rules).uint64 = {gte: 0}];
+  optional string code = 2 [(validate.rules).string = {min_len: 1, max_len: 10}];
   int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
   api.protobuf.PostState state = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
   optional string remarks = 5 [(validate.rules).string = {min_len: 1, max_len: 1000}];
@@ -1408,7 +1415,7 @@ message UpdatePostReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
-    string code = 2 [(validate.rules).uint64 = {gte: 0}];
+    optional string code = 2 [(validate.rules).string = {min_len: 1, max_len: 10}];
     int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
     api.protobuf.PostState state = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
     optional string remarks = 5 [(validate.rules).string = {min_len: 1, max_len: 1000}];
@@ -1435,6 +1442,22 @@ message DeletePostReq {
 
 // 回应 - 删除职位
 message DeletePostReply {
+  bool success = 1;
+  string message = 2;
+  google.protobuf.Any data = 3;
+}
+
+// 请求 - 修改职位-状态
+message UpdatePostStateReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    optional api.protobuf.PostState state = 1 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建职位-状态
+message UpdatePostStateReply {
   bool success = 1;
   string message = 2;
   google.protobuf.Any data = 3;

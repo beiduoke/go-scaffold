@@ -155,6 +155,18 @@ type AdminClient interface {
 	DeleteDepartment(ctx context.Context, in *DeleteDepartmentReq, opts ...grpc.CallOption) (*DeleteDepartmentReply, error)
 	// 获取树形部门
 	ListDepartmentTree(ctx context.Context, in *ListDepartmentTreeReq, opts ...grpc.CallOption) (*ListDepartmentTreeReply, error)
+	// 列表职位
+	ListPost(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
+	// 创建职位
+	CreatePost(ctx context.Context, in *CreatePostReq, opts ...grpc.CallOption) (*CreatePostReply, error)
+	// 获取职位
+	GetPost(ctx context.Context, in *GetPostReq, opts ...grpc.CallOption) (*Post, error)
+	// 修改职位
+	UpdatePost(ctx context.Context, in *UpdatePostReq, opts ...grpc.CallOption) (*UpdatePostReply, error)
+	// 删除职位
+	DeletePost(ctx context.Context, in *DeletePostReq, opts ...grpc.CallOption) (*DeletePostReply, error)
+	// 设置领域状态
+	UpdatePostState(ctx context.Context, in *UpdatePostStateReq, opts ...grpc.CallOption) (*UpdatePostStateReply, error)
 }
 
 type adminClient struct {
@@ -678,6 +690,60 @@ func (c *adminClient) ListDepartmentTree(ctx context.Context, in *ListDepartment
 	return out, nil
 }
 
+func (c *adminClient) ListPost(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
+	out := new(protobuf.PagingReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListPost", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) CreatePost(ctx context.Context, in *CreatePostReq, opts ...grpc.CallOption) (*CreatePostReply, error) {
+	out := new(CreatePostReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/CreatePost", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) GetPost(ctx context.Context, in *GetPostReq, opts ...grpc.CallOption) (*Post, error) {
+	out := new(Post)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetPost", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) UpdatePost(ctx context.Context, in *UpdatePostReq, opts ...grpc.CallOption) (*UpdatePostReply, error) {
+	out := new(UpdatePostReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/UpdatePost", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) DeletePost(ctx context.Context, in *DeletePostReq, opts ...grpc.CallOption) (*DeletePostReply, error) {
+	out := new(DeletePostReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/DeletePost", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) UpdatePostState(ctx context.Context, in *UpdatePostStateReq, opts ...grpc.CallOption) (*UpdatePostStateReply, error) {
+	out := new(UpdatePostStateReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/UpdatePostState", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AdminServer is the server API for Admin service.
 // All implementations must embed UnimplementedAdminServer
 // for forward compatibility
@@ -813,6 +879,18 @@ type AdminServer interface {
 	DeleteDepartment(context.Context, *DeleteDepartmentReq) (*DeleteDepartmentReply, error)
 	// 获取树形部门
 	ListDepartmentTree(context.Context, *ListDepartmentTreeReq) (*ListDepartmentTreeReply, error)
+	// 列表职位
+	ListPost(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	// 创建职位
+	CreatePost(context.Context, *CreatePostReq) (*CreatePostReply, error)
+	// 获取职位
+	GetPost(context.Context, *GetPostReq) (*Post, error)
+	// 修改职位
+	UpdatePost(context.Context, *UpdatePostReq) (*UpdatePostReply, error)
+	// 删除职位
+	DeletePost(context.Context, *DeletePostReq) (*DeletePostReply, error)
+	// 设置领域状态
+	UpdatePostState(context.Context, *UpdatePostStateReq) (*UpdatePostStateReply, error)
 	mustEmbedUnimplementedAdminServer()
 }
 
@@ -990,6 +1068,24 @@ func (UnimplementedAdminServer) DeleteDepartment(context.Context, *DeleteDepartm
 }
 func (UnimplementedAdminServer) ListDepartmentTree(context.Context, *ListDepartmentTreeReq) (*ListDepartmentTreeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDepartmentTree not implemented")
+}
+func (UnimplementedAdminServer) ListPost(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListPost not implemented")
+}
+func (UnimplementedAdminServer) CreatePost(context.Context, *CreatePostReq) (*CreatePostReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreatePost not implemented")
+}
+func (UnimplementedAdminServer) GetPost(context.Context, *GetPostReq) (*Post, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPost not implemented")
+}
+func (UnimplementedAdminServer) UpdatePost(context.Context, *UpdatePostReq) (*UpdatePostReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePost not implemented")
+}
+func (UnimplementedAdminServer) DeletePost(context.Context, *DeletePostReq) (*DeletePostReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeletePost not implemented")
+}
+func (UnimplementedAdminServer) UpdatePostState(context.Context, *UpdatePostStateReq) (*UpdatePostStateReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePostState not implemented")
 }
 func (UnimplementedAdminServer) mustEmbedUnimplementedAdminServer() {}
 
@@ -2030,6 +2126,114 @@ func _Admin_ListDepartmentTree_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Admin_ListPost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(protobuf.PagingReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).ListPost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/ListPost",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).ListPost(ctx, req.(*protobuf.PagingReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_CreatePost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreatePostReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).CreatePost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/CreatePost",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).CreatePost(ctx, req.(*CreatePostReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_GetPost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPostReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).GetPost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/GetPost",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).GetPost(ctx, req.(*GetPostReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_UpdatePost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePostReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).UpdatePost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/UpdatePost",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).UpdatePost(ctx, req.(*UpdatePostReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_DeletePost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePostReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).DeletePost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/DeletePost",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).DeletePost(ctx, req.(*DeletePostReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_UpdatePostState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePostStateReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).UpdatePostState(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/UpdatePostState",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).UpdatePostState(ctx, req.(*UpdatePostStateReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Admin_ServiceDesc is the grpc.ServiceDesc for Admin service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -2264,6 +2468,30 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListDepartmentTree",
 			Handler:    _Admin_ListDepartmentTree_Handler,
+		},
+		{
+			MethodName: "ListPost",
+			Handler:    _Admin_ListPost_Handler,
+		},
+		{
+			MethodName: "CreatePost",
+			Handler:    _Admin_CreatePost_Handler,
+		},
+		{
+			MethodName: "GetPost",
+			Handler:    _Admin_GetPost_Handler,
+		},
+		{
+			MethodName: "UpdatePost",
+			Handler:    _Admin_UpdatePost_Handler,
+		},
+		{
+			MethodName: "DeletePost",
+			Handler:    _Admin_DeletePost_Handler,
+		},
+		{
+			MethodName: "UpdatePostState",
+			Handler:    _Admin_UpdatePostState_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
