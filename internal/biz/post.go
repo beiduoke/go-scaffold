@@ -2,12 +2,12 @@ package biz
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	pb "github.com/beiduoke/go-scaffold/api/protobuf"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/imdario/mergo"
 	"github.com/pkg/errors"
 )
 
@@ -71,7 +71,7 @@ func (uc *PostUsecase) Update(ctx context.Context, g *Post) error {
 
 	post, _ := uc.repo.FindByID(ctx, g.ID)
 	if post == nil {
-		return errors.New("职位未注册")
+		return errors.New("职位未创建")
 	}
 
 	if post.Name != g.Name && g.Name != "" {
@@ -85,12 +85,8 @@ func (uc *PostUsecase) Update(ctx context.Context, g *Post) error {
 		g.State = int32(pb.PostState_POST_STATE_ACTIVE)
 	}
 
-	// 新数据合并到源数据
-	if err := mergo.Merge(post, *g, mergo.WithOverride); err != nil {
-		return errors.Errorf("数据合并失败：%v", err)
-	}
-
-	_, err := uc.repo.Update(ctx, post)
+	fmt.Printf("%s", g.Remarks)
+	_, err := uc.repo.Update(ctx, g)
 	return err
 }
 
@@ -125,7 +121,7 @@ func (uc *PostUsecase) ListPage(ctx context.Context, pageNum, pageSize int32, qu
 	for k, v := range query {
 		conditions = append(conditions, pagination.Condition{Query: k, Args: []interface{}{v}})
 	}
-	orders := []pagination.Order{}
+	orders := []pagination.Order{{Column: "sort", Desc: false}}
 	for k, v := range order {
 		orders = append(orders, pagination.Order{Column: k, Desc: v})
 	}

@@ -44,6 +44,7 @@ type SysDomain struct {
 	Sort          int32      `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
 	State         int32      `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
 	DefaultRoleID uint       `gorm:"type:bigint(20);column:default_role_id;not null;index;comment:默认角色;"`
+	Remarks       string     `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
 	Menus         []SysMenu  `gorm:"many2many:sys_domain_menus;"`
 	Parent        *SysDomain `gorm:"foreignKey:ParentID"`
 	Users         []SysUser  `gorm:"-"`
@@ -66,6 +67,7 @@ type SysUser struct {
 	LastUseDomain uint        `gorm:"type:bigint(20);column:last_use_domain;not null;default:0;comment:最后使用租户"`
 	LastLoginAt   *time.Time  `gorm:"type:datetime;column:last_login_at;comment:最后登录时间"`
 	LastLoginIP   string      `gorm:"type:varchar(50);column:last_login_ip;not null;default:'';comment:最后登录IP"`
+	Remarks       string      `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
 	Posts         []SysPost   `gorm:"many2many:sys_user_posts;"`
 	Roles         []SysRole   `gorm:"-"`
 	Domains       []SysDomain `gorm:"-"`
@@ -79,7 +81,7 @@ type SysRole struct {
 	DefaultRouter string          `gorm:"type:varchar(255);column:default_router;not null;default:'/dashboard';comment:默认路由;"`
 	Sort          int32           `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
 	State         int32           `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:角色状态 0 未指定  1 启用 2 停用;"`
-	Remarks       string          `gorm:"type:varchar(255);column:remarks;not null;comment:备注;"`
+	Remarks       string          `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
 	Parent        *SysRole        `gorm:"foreignKey:ParentID"`
 	Roles         []SysRole       `gorm:"many2many:sys_role_relations"`
 	Menus         []SysMenu       `gorm:"many2many:sys_role_menus;"`
@@ -98,6 +100,7 @@ type SysResource struct {
 	Operation   string    `gorm:"type:varchar(255);column:operation;not null;default:'';uniqueIndex:idx_api_path_method;comment:请求动作"`
 	Group       string    `gorm:"type:varchar(255);column:group;not null;comment:api分组"`
 	Description string    `gorm:"type:varchar(255);column:description;not null;default:'';comment:api描述"`
+	Remarks     string    `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
 	Roles       []SysRole `gorm:"many2many:sys_role_resources;"`
 	Menus       []SysMenu `gorm:"many2many:sys_menu_resources;"`
 }
@@ -114,6 +117,7 @@ type SysMenu struct {
 	Permission string             `gorm:"type:varchar(255);column:permission;not null;default:'';comment:权限标识"`
 	Sort       int32              `gorm:"type:int(10);column:sort;not null;default:10;comment:排序标记"`
 	Meta       SysMeta            `gorm:"embedded;comment:附加属性"`
+	Remarks    string             `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
 	Roles      []SysRole          `gorm:"many2many:sys_role_menus;"`
 	Domains    []SysDomain        `gorm:"many2many:sys_domain_menus;"`
 	Resources  []SysResource      `gorm:"many2many:sys_menu_resources;"`
@@ -158,7 +162,7 @@ type SysMenuButton struct {
 	CreatedAt time.Time
 	MenuID    uint    `gorm:"type:bigint(20);column:menu_id;not null;index;comment:菜单ID"`
 	Name      string  `gorm:"type:varchar(255);column:name;not null;comment:按钮关键key;"`
-	Remarks   string  `gorm:"type:varchar(255);column:remarks;not null;comment:按钮备注;"`
+	Remarks   string  `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:按钮备注;"`
 	Menu      SysMenu `gorm:"foreignKey:MenuID;"`
 }
 
@@ -179,7 +183,7 @@ type SysDepartment struct {
 	Name     string    `gorm:"type:varchar(255);column:name;not null;comment:名称;"`
 	ParentID uint      `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
 	Sort     int32     `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
-	Remarks  string    `gorm:"type:varchar(255);column:remarks;not null;comment:备注;"`
+	Remarks  string    `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
 	State    int32     `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
 	UserID   uint      `gorm:"type:bigint(20);column:user_id;not null;default:0;comment:用户id"`
 	User     SysUser   `gorm:"foreignKey:UserID;"`
@@ -191,10 +195,10 @@ type SysDepartment struct {
 type SysPost struct {
 	DomainModel
 	Name    string    `gorm:"type:varchar(255);column:name;not null;comment:职位名称;"`
-	Code    string    `gorm:"type:varchar(100);column:name;not null;default:'';comment:职位编码;"`
+	Code    string    `gorm:"type:varchar(100);column:code;not null;default:'';comment:职位编码;"`
 	Sort    int32     `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
 	State   int32     `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:职位状态 0 未指定  1 启用 2 停用;"`
-	Remarks string    `gorm:"type:varchar(255);column:remarks;not null;comment:备注;"`
+	Remarks string    `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
 	Users   []SysUser `gorm:"many2many:sys_user_posts;"`
 }
 

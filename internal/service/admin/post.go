@@ -25,7 +25,7 @@ func TransformPost(data *biz.Post) *v1.Post {
 	}
 }
 
-// ListPost 列表-领域
+// ListPost 列表-职位
 func (s *AdminService) ListPost(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	results, total := s.postCase.ListPage(ctx, in.GetPage(), in.GetPageSize(), in.GetQuery(), in.GetOrderBy())
 	items := make([]*anypb.Any, 0, len(results))
@@ -39,14 +39,16 @@ func (s *AdminService) ListPost(ctx context.Context, in *protobuf.PagingReq) (*p
 	}, nil
 }
 
-// CreatePost 创建领域
+// CreatePost 创建职位
 func (s *AdminService) CreatePost(ctx context.Context, in *v1.CreatePostReq) (*v1.CreatePostReply, error) {
 	user, err := s.postCase.Create(ctx, &biz.Post{
-		Name:  in.GetName(),
-		State: int32(in.GetState()),
+		Name:    in.GetName(),
+		State:   int32(in.GetState()),
+		Sort:    in.GetSort(),
+		Remarks: in.GetRemarks(),
 	})
 	if err != nil {
-		return nil, v1.ErrorPostCreateFail("领域创建失败: %v", err.Error())
+		return nil, v1.ErrorPostCreateFail("职位创建失败: %v", err.Error())
 	}
 	data, _ := anypb.New(&protobuf.DataProto{
 		Id: uint64(user.ID),
@@ -58,17 +60,18 @@ func (s *AdminService) CreatePost(ctx context.Context, in *v1.CreatePostReq) (*v
 	}, nil
 }
 
-// UpdatePost 修改领域
+// UpdatePost 修改职位
 func (s *AdminService) UpdatePost(ctx context.Context, in *v1.UpdatePostReq) (*v1.UpdatePostReply, error) {
 	v := in.GetData()
 	err := s.postCase.Update(ctx, &biz.Post{
-		ID:    uint(in.GetId()),
-		Name:  v.GetName(),
-		Sort:  v.GetSort(),
-		State: int32(v.GetState()),
+		ID:      uint(in.GetId()),
+		Name:    v.GetName(),
+		Sort:    v.GetSort(),
+		State:   int32(v.GetState()),
+		Remarks: v.GetRemarks(),
 	})
 	if err != nil {
-		return nil, v1.ErrorPostUpdateFail("领域修改失败: %v", err.Error())
+		return nil, v1.ErrorPostUpdateFail("职位修改失败: %v", err.Error())
 	}
 	return &v1.UpdatePostReply{
 		Success: true,
@@ -76,7 +79,7 @@ func (s *AdminService) UpdatePost(ctx context.Context, in *v1.UpdatePostReq) (*v
 	}, nil
 }
 
-// UpdatePostState 修改领域-状态
+// UpdatePostState 修改职位-状态
 func (s *AdminService) UpdatePostState(ctx context.Context, in *v1.UpdatePostStateReq) (*v1.UpdatePostStateReply, error) {
 	v := in.GetData()
 	err := s.postCase.UpdateState(ctx, &biz.Post{
@@ -84,7 +87,7 @@ func (s *AdminService) UpdatePostState(ctx context.Context, in *v1.UpdatePostSta
 		State: int32(v.GetState()),
 	})
 	if err != nil {
-		return nil, v1.ErrorPostUpdateFail("领域状态修改失败: %v", err.Error())
+		return nil, v1.ErrorPostUpdateFail("职位状态修改失败: %v", err.Error())
 	}
 	return &v1.UpdatePostStateReply{
 		Success: true,
@@ -92,19 +95,19 @@ func (s *AdminService) UpdatePostState(ctx context.Context, in *v1.UpdatePostSta
 	}, nil
 }
 
-// GetPost 获取领域
+// GetPost 获取职位
 func (s *AdminService) GetPost(ctx context.Context, in *v1.GetPostReq) (*v1.Post, error) {
 	post, err := s.postCase.GetID(ctx, &biz.Post{ID: uint(in.GetId())})
 	if err != nil {
-		return nil, v1.ErrorPostNotFound("领域未找到")
+		return nil, v1.ErrorPostNotFound("职位未找到")
 	}
 	return TransformPost(post), nil
 }
 
-// DeletePost 删除领域
+// DeletePost 删除职位
 func (s *AdminService) DeletePost(ctx context.Context, in *v1.DeletePostReq) (*v1.DeletePostReply, error) {
 	if err := s.postCase.Delete(ctx, &biz.Post{ID: uint(in.GetId())}); err != nil {
-		return nil, v1.ErrorPostDeleteFail("领域删除失败：%v", err)
+		return nil, v1.ErrorPostDeleteFail("职位删除失败：%v", err)
 	}
 	return &v1.DeletePostReply{
 		Success: true,

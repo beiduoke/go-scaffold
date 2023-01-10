@@ -1400,7 +1400,7 @@ message CreatePostReq {
   optional string code = 2 [(validate.rules).string = {min_len: 1, max_len: 10}];
   int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
   api.protobuf.PostState state = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-  optional string remarks = 5 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+  optional string remarks = 5 [(validate.rules).string = {min_len: 0, max_len: 1000}];
 }
 
 // 回应 - 创建职位
@@ -1418,7 +1418,7 @@ message UpdatePostReq {
     optional string code = 2 [(validate.rules).string = {min_len: 1, max_len: 10}];
     int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
     api.protobuf.PostState state = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-    optional string remarks = 5 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+    string remarks = 5 [(validate.rules).string = {min_len: 0, max_len: 1000}];
   }
   Data data = 2;
 }

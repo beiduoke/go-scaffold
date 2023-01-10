@@ -13698,10 +13698,10 @@ func (m *CreatePostReq) validate(all bool) error {
 
 	if m.Remarks != nil {
 
-		if l := utf8.RuneCountInString(m.GetRemarks()); l < 1 || l > 1000 {
+		if l := utf8.RuneCountInString(m.GetRemarks()); l < 0 || l > 1000 {
 			err := CreatePostReqValidationError{
 				field:  "Remarks",
-				reason: "value length must be between 1 and 1000 runes, inclusive",
+				reason: "value length must be between 0 and 1000 runes, inclusive",
 			}
 			if !all {
 				return err
@@ -18768,27 +18768,23 @@ func (m *UpdatePostReq_Data) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if l := utf8.RuneCountInString(m.GetRemarks()); l < 0 || l > 1000 {
+		err := UpdatePostReq_DataValidationError{
+			field:  "Remarks",
+			reason: "value length must be between 0 and 1000 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if m.Code != nil {
 
 		if l := utf8.RuneCountInString(m.GetCode()); l < 1 || l > 10 {
 			err := UpdatePostReq_DataValidationError{
 				field:  "Code",
 				reason: "value length must be between 1 and 10 runes, inclusive",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.Remarks != nil {
-
-		if l := utf8.RuneCountInString(m.GetRemarks()); l < 1 || l > 1000 {
-			err := UpdatePostReq_DataValidationError{
-				field:  "Remarks",
-				reason: "value length must be between 1 and 1000 runes, inclusive",
 			}
 			if !all {
 				return err
