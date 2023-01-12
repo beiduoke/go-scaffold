@@ -57,9 +57,9 @@ type AdminClient interface {
 	ListUserDomain(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserDomainReply, error)
 	// 当前登录用户拥有角色
 	ListUserRole(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserRoleReply, error)
-	// 获取权限角色菜单树形列表
+	// 获取角色菜单树形列表
 	ListUserRoleMenuTree(ctx context.Context, in *ListUserRoleMenuTreeReq, opts ...grpc.CallOption) (*ListUserRoleMenuTreeReply, error)
-	// 获取权限角色权限列表
+	// 获取角色权限列表
 	ListUserRolePermission(ctx context.Context, in *ListUserRolePermissionReq, opts ...grpc.CallOption) (*ListUserRolePermissionReply, error)
 	// 列表用户
 	ListUser(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
@@ -94,28 +94,28 @@ type AdminClient interface {
 	DeleteDomain(ctx context.Context, in *DeleteDomainReq, opts ...grpc.CallOption) (*DeleteDomainReply, error)
 	// 设置领域状态
 	UpdateDomainState(ctx context.Context, in *UpdateDomainStateReq, opts ...grpc.CallOption) (*UpdateDomainStateReply, error)
-	// 获取权限角色菜单
+	// 获取角色菜单
 	ListDomainMenu(ctx context.Context, in *ListDomainMenuReq, opts ...grpc.CallOption) (*ListDomainMenuReply, error)
-	// 处理权限角色菜单
+	// 处理角色菜单
 	HandleDomainMenu(ctx context.Context, in *HandleDomainMenuReq, opts ...grpc.CallOption) (*HandleDomainMenuReply, error)
-	// 权限角色模块
-	// 列表权限角色
+	// 角色模块
+	// 列表角色
 	ListRole(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
-	// 创建权限角色
+	// 创建角色
 	CreateRole(ctx context.Context, in *CreateRoleReq, opts ...grpc.CallOption) (*CreateRoleReply, error)
-	// 获取权限角色
+	// 获取角色
 	GetRole(ctx context.Context, in *GetRoleReq, opts ...grpc.CallOption) (*Role, error)
-	// 修改权限角色
+	// 修改角色
 	UpdateRole(ctx context.Context, in *UpdateRoleReq, opts ...grpc.CallOption) (*UpdateRoleReply, error)
 	// 设置领域状态
 	UpdateRoleState(ctx context.Context, in *UpdateRoleStateReq, opts ...grpc.CallOption) (*UpdateRoleStateReply, error)
-	// 删除权限角色
+	// 删除角色
 	DeleteRole(ctx context.Context, in *DeleteRoleReq, opts ...grpc.CallOption) (*DeleteRoleReply, error)
-	// 获取权限角色菜单
+	// 获取角色菜单
 	ListRoleMenu(ctx context.Context, in *ListRoleMenuReq, opts ...grpc.CallOption) (*ListRoleMenuReply, error)
-	// 处理权限角色菜单
+	// 处理角色菜单
 	HandleRoleMenu(ctx context.Context, in *HandleRoleMenuReq, opts ...grpc.CallOption) (*HandleRoleMenuReply, error)
-	// 处理权限角色资源
+	// 处理角色资源
 	HandleRoleResource(ctx context.Context, in *HandleRoleResourceReq, opts ...grpc.CallOption) (*HandleRoleResourceReply, error)
 	// 资源模块
 	// 列表资源
@@ -144,17 +144,17 @@ type AdminClient interface {
 	// 删除菜单
 	DeleteMenu(ctx context.Context, in *DeleteMenuReq, opts ...grpc.CallOption) (*DeleteMenuReply, error)
 	// 列表部门
-	ListDepartment(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
+	ListDept(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
 	// 创建部门
-	CreateDepartment(ctx context.Context, in *CreateDepartmentReq, opts ...grpc.CallOption) (*CreateDepartmentReply, error)
+	CreateDept(ctx context.Context, in *CreateDeptReq, opts ...grpc.CallOption) (*CreateDeptReply, error)
 	// 获取部门
-	GetDepartment(ctx context.Context, in *GetDepartmentReq, opts ...grpc.CallOption) (*Department, error)
+	GetDept(ctx context.Context, in *GetDeptReq, opts ...grpc.CallOption) (*Dept, error)
 	// 修改部门
-	UpdateDepartment(ctx context.Context, in *UpdateDepartmentReq, opts ...grpc.CallOption) (*UpdateDepartmentReply, error)
+	UpdateDept(ctx context.Context, in *UpdateDeptReq, opts ...grpc.CallOption) (*UpdateDeptReply, error)
 	// 删除部门
-	DeleteDepartment(ctx context.Context, in *DeleteDepartmentReq, opts ...grpc.CallOption) (*DeleteDepartmentReply, error)
+	DeleteDept(ctx context.Context, in *DeleteDeptReq, opts ...grpc.CallOption) (*DeleteDeptReply, error)
 	// 获取树形部门
-	ListDepartmentTree(ctx context.Context, in *ListDepartmentTreeReq, opts ...grpc.CallOption) (*ListDepartmentTreeReply, error)
+	ListDeptTree(ctx context.Context, in *ListDeptTreeReq, opts ...grpc.CallOption) (*ListDeptTreeReply, error)
 	// 列表职位
 	ListPost(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
 	// 创建职位
@@ -636,54 +636,54 @@ func (c *adminClient) DeleteMenu(ctx context.Context, in *DeleteMenuReq, opts ..
 	return out, nil
 }
 
-func (c *adminClient) ListDepartment(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
+func (c *adminClient) ListDept(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
 	out := new(protobuf.PagingReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListDepartment", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListDept", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) CreateDepartment(ctx context.Context, in *CreateDepartmentReq, opts ...grpc.CallOption) (*CreateDepartmentReply, error) {
-	out := new(CreateDepartmentReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/CreateDepartment", in, out, opts...)
+func (c *adminClient) CreateDept(ctx context.Context, in *CreateDeptReq, opts ...grpc.CallOption) (*CreateDeptReply, error) {
+	out := new(CreateDeptReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/CreateDept", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) GetDepartment(ctx context.Context, in *GetDepartmentReq, opts ...grpc.CallOption) (*Department, error) {
-	out := new(Department)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetDepartment", in, out, opts...)
+func (c *adminClient) GetDept(ctx context.Context, in *GetDeptReq, opts ...grpc.CallOption) (*Dept, error) {
+	out := new(Dept)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/GetDept", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) UpdateDepartment(ctx context.Context, in *UpdateDepartmentReq, opts ...grpc.CallOption) (*UpdateDepartmentReply, error) {
-	out := new(UpdateDepartmentReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/UpdateDepartment", in, out, opts...)
+func (c *adminClient) UpdateDept(ctx context.Context, in *UpdateDeptReq, opts ...grpc.CallOption) (*UpdateDeptReply, error) {
+	out := new(UpdateDeptReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/UpdateDept", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) DeleteDepartment(ctx context.Context, in *DeleteDepartmentReq, opts ...grpc.CallOption) (*DeleteDepartmentReply, error) {
-	out := new(DeleteDepartmentReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/DeleteDepartment", in, out, opts...)
+func (c *adminClient) DeleteDept(ctx context.Context, in *DeleteDeptReq, opts ...grpc.CallOption) (*DeleteDeptReply, error) {
+	out := new(DeleteDeptReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/DeleteDept", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *adminClient) ListDepartmentTree(ctx context.Context, in *ListDepartmentTreeReq, opts ...grpc.CallOption) (*ListDepartmentTreeReply, error) {
-	out := new(ListDepartmentTreeReply)
-	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListDepartmentTree", in, out, opts...)
+func (c *adminClient) ListDeptTree(ctx context.Context, in *ListDeptTreeReq, opts ...grpc.CallOption) (*ListDeptTreeReply, error) {
+	out := new(ListDeptTreeReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListDeptTree", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -781,9 +781,9 @@ type AdminServer interface {
 	ListUserDomain(context.Context, *emptypb.Empty) (*ListUserDomainReply, error)
 	// 当前登录用户拥有角色
 	ListUserRole(context.Context, *emptypb.Empty) (*ListUserRoleReply, error)
-	// 获取权限角色菜单树形列表
+	// 获取角色菜单树形列表
 	ListUserRoleMenuTree(context.Context, *ListUserRoleMenuTreeReq) (*ListUserRoleMenuTreeReply, error)
-	// 获取权限角色权限列表
+	// 获取角色权限列表
 	ListUserRolePermission(context.Context, *ListUserRolePermissionReq) (*ListUserRolePermissionReply, error)
 	// 列表用户
 	ListUser(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
@@ -818,28 +818,28 @@ type AdminServer interface {
 	DeleteDomain(context.Context, *DeleteDomainReq) (*DeleteDomainReply, error)
 	// 设置领域状态
 	UpdateDomainState(context.Context, *UpdateDomainStateReq) (*UpdateDomainStateReply, error)
-	// 获取权限角色菜单
+	// 获取角色菜单
 	ListDomainMenu(context.Context, *ListDomainMenuReq) (*ListDomainMenuReply, error)
-	// 处理权限角色菜单
+	// 处理角色菜单
 	HandleDomainMenu(context.Context, *HandleDomainMenuReq) (*HandleDomainMenuReply, error)
-	// 权限角色模块
-	// 列表权限角色
+	// 角色模块
+	// 列表角色
 	ListRole(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
-	// 创建权限角色
+	// 创建角色
 	CreateRole(context.Context, *CreateRoleReq) (*CreateRoleReply, error)
-	// 获取权限角色
+	// 获取角色
 	GetRole(context.Context, *GetRoleReq) (*Role, error)
-	// 修改权限角色
+	// 修改角色
 	UpdateRole(context.Context, *UpdateRoleReq) (*UpdateRoleReply, error)
 	// 设置领域状态
 	UpdateRoleState(context.Context, *UpdateRoleStateReq) (*UpdateRoleStateReply, error)
-	// 删除权限角色
+	// 删除角色
 	DeleteRole(context.Context, *DeleteRoleReq) (*DeleteRoleReply, error)
-	// 获取权限角色菜单
+	// 获取角色菜单
 	ListRoleMenu(context.Context, *ListRoleMenuReq) (*ListRoleMenuReply, error)
-	// 处理权限角色菜单
+	// 处理角色菜单
 	HandleRoleMenu(context.Context, *HandleRoleMenuReq) (*HandleRoleMenuReply, error)
-	// 处理权限角色资源
+	// 处理角色资源
 	HandleRoleResource(context.Context, *HandleRoleResourceReq) (*HandleRoleResourceReply, error)
 	// 资源模块
 	// 列表资源
@@ -868,17 +868,17 @@ type AdminServer interface {
 	// 删除菜单
 	DeleteMenu(context.Context, *DeleteMenuReq) (*DeleteMenuReply, error)
 	// 列表部门
-	ListDepartment(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	ListDept(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
 	// 创建部门
-	CreateDepartment(context.Context, *CreateDepartmentReq) (*CreateDepartmentReply, error)
+	CreateDept(context.Context, *CreateDeptReq) (*CreateDeptReply, error)
 	// 获取部门
-	GetDepartment(context.Context, *GetDepartmentReq) (*Department, error)
+	GetDept(context.Context, *GetDeptReq) (*Dept, error)
 	// 修改部门
-	UpdateDepartment(context.Context, *UpdateDepartmentReq) (*UpdateDepartmentReply, error)
+	UpdateDept(context.Context, *UpdateDeptReq) (*UpdateDeptReply, error)
 	// 删除部门
-	DeleteDepartment(context.Context, *DeleteDepartmentReq) (*DeleteDepartmentReply, error)
+	DeleteDept(context.Context, *DeleteDeptReq) (*DeleteDeptReply, error)
 	// 获取树形部门
-	ListDepartmentTree(context.Context, *ListDepartmentTreeReq) (*ListDepartmentTreeReply, error)
+	ListDeptTree(context.Context, *ListDeptTreeReq) (*ListDeptTreeReply, error)
 	// 列表职位
 	ListPost(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
 	// 创建职位
@@ -1051,23 +1051,23 @@ func (UnimplementedAdminServer) UpdateMenu(context.Context, *UpdateMenuReq) (*Up
 func (UnimplementedAdminServer) DeleteMenu(context.Context, *DeleteMenuReq) (*DeleteMenuReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteMenu not implemented")
 }
-func (UnimplementedAdminServer) ListDepartment(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListDepartment not implemented")
+func (UnimplementedAdminServer) ListDept(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListDept not implemented")
 }
-func (UnimplementedAdminServer) CreateDepartment(context.Context, *CreateDepartmentReq) (*CreateDepartmentReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateDepartment not implemented")
+func (UnimplementedAdminServer) CreateDept(context.Context, *CreateDeptReq) (*CreateDeptReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateDept not implemented")
 }
-func (UnimplementedAdminServer) GetDepartment(context.Context, *GetDepartmentReq) (*Department, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetDepartment not implemented")
+func (UnimplementedAdminServer) GetDept(context.Context, *GetDeptReq) (*Dept, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDept not implemented")
 }
-func (UnimplementedAdminServer) UpdateDepartment(context.Context, *UpdateDepartmentReq) (*UpdateDepartmentReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateDepartment not implemented")
+func (UnimplementedAdminServer) UpdateDept(context.Context, *UpdateDeptReq) (*UpdateDeptReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateDept not implemented")
 }
-func (UnimplementedAdminServer) DeleteDepartment(context.Context, *DeleteDepartmentReq) (*DeleteDepartmentReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteDepartment not implemented")
+func (UnimplementedAdminServer) DeleteDept(context.Context, *DeleteDeptReq) (*DeleteDeptReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteDept not implemented")
 }
-func (UnimplementedAdminServer) ListDepartmentTree(context.Context, *ListDepartmentTreeReq) (*ListDepartmentTreeReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListDepartmentTree not implemented")
+func (UnimplementedAdminServer) ListDeptTree(context.Context, *ListDeptTreeReq) (*ListDeptTreeReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListDeptTree not implemented")
 }
 func (UnimplementedAdminServer) ListPost(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListPost not implemented")
@@ -2018,110 +2018,110 @@ func _Admin_DeleteMenu_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_ListDepartment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Admin_ListDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(protobuf.PagingReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).ListDepartment(ctx, in)
+		return srv.(AdminServer).ListDept(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/ListDepartment",
+		FullMethod: "/api.admin.v1.Admin/ListDept",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).ListDepartment(ctx, req.(*protobuf.PagingReq))
+		return srv.(AdminServer).ListDept(ctx, req.(*protobuf.PagingReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_CreateDepartment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateDepartmentReq)
+func _Admin_CreateDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateDeptReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).CreateDepartment(ctx, in)
+		return srv.(AdminServer).CreateDept(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/CreateDepartment",
+		FullMethod: "/api.admin.v1.Admin/CreateDept",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).CreateDepartment(ctx, req.(*CreateDepartmentReq))
+		return srv.(AdminServer).CreateDept(ctx, req.(*CreateDeptReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_GetDepartment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetDepartmentReq)
+func _Admin_GetDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDeptReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).GetDepartment(ctx, in)
+		return srv.(AdminServer).GetDept(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/GetDepartment",
+		FullMethod: "/api.admin.v1.Admin/GetDept",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).GetDepartment(ctx, req.(*GetDepartmentReq))
+		return srv.(AdminServer).GetDept(ctx, req.(*GetDeptReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_UpdateDepartment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateDepartmentReq)
+func _Admin_UpdateDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateDeptReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).UpdateDepartment(ctx, in)
+		return srv.(AdminServer).UpdateDept(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/UpdateDepartment",
+		FullMethod: "/api.admin.v1.Admin/UpdateDept",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).UpdateDepartment(ctx, req.(*UpdateDepartmentReq))
+		return srv.(AdminServer).UpdateDept(ctx, req.(*UpdateDeptReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_DeleteDepartment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteDepartmentReq)
+func _Admin_DeleteDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteDeptReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).DeleteDepartment(ctx, in)
+		return srv.(AdminServer).DeleteDept(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/DeleteDepartment",
+		FullMethod: "/api.admin.v1.Admin/DeleteDept",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).DeleteDepartment(ctx, req.(*DeleteDepartmentReq))
+		return srv.(AdminServer).DeleteDept(ctx, req.(*DeleteDeptReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_ListDepartmentTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListDepartmentTreeReq)
+func _Admin_ListDeptTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListDeptTreeReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).ListDepartmentTree(ctx, in)
+		return srv.(AdminServer).ListDeptTree(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.admin.v1.Admin/ListDepartmentTree",
+		FullMethod: "/api.admin.v1.Admin/ListDeptTree",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).ListDepartmentTree(ctx, req.(*ListDepartmentTreeReq))
+		return srv.(AdminServer).ListDeptTree(ctx, req.(*ListDeptTreeReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2446,28 +2446,28 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Admin_DeleteMenu_Handler,
 		},
 		{
-			MethodName: "ListDepartment",
-			Handler:    _Admin_ListDepartment_Handler,
+			MethodName: "ListDept",
+			Handler:    _Admin_ListDept_Handler,
 		},
 		{
-			MethodName: "CreateDepartment",
-			Handler:    _Admin_CreateDepartment_Handler,
+			MethodName: "CreateDept",
+			Handler:    _Admin_CreateDept_Handler,
 		},
 		{
-			MethodName: "GetDepartment",
-			Handler:    _Admin_GetDepartment_Handler,
+			MethodName: "GetDept",
+			Handler:    _Admin_GetDept_Handler,
 		},
 		{
-			MethodName: "UpdateDepartment",
-			Handler:    _Admin_UpdateDepartment_Handler,
+			MethodName: "UpdateDept",
+			Handler:    _Admin_UpdateDept_Handler,
 		},
 		{
-			MethodName: "DeleteDepartment",
-			Handler:    _Admin_DeleteDepartment_Handler,
+			MethodName: "DeleteDept",
+			Handler:    _Admin_DeleteDept_Handler,
 		},
 		{
-			MethodName: "ListDepartmentTree",
-			Handler:    _Admin_ListDepartmentTree_Handler,
+			MethodName: "ListDeptTree",
+			Handler:    _Admin_ListDeptTree_Handler,
 		},
 		{
 			MethodName: "ListPost",

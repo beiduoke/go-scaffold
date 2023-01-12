@@ -119,12 +119,12 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.LoginReply'
-    /admin/v1/departments:
+    /admin/v1/depts:
         get:
             tags:
                 - Admin
             description: 列表部门
-            operationId: Admin_ListDepartment
+            operationId: Admin_ListDept
             parameters:
                 - name: page
                   in: query
@@ -154,12 +154,12 @@ paths:
             tags:
                 - Admin
             description: 创建部门
-            operationId: Admin_CreateDepartment
+            operationId: Admin_CreateDept
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.admin.v1.CreateDepartmentReq'
+                            $ref: '#/components/schemas/api.admin.v1.CreateDeptReq'
                 required: true
             responses:
                 "200":
@@ -167,13 +167,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.admin.v1.CreateDepartmentReply'
-    /admin/v1/departments/{id}:
+                                $ref: '#/components/schemas/api.admin.v1.CreateDeptReply'
+    /admin/v1/depts/{id}:
         get:
             tags:
                 - Admin
             description: 获取部门
-            operationId: Admin_GetDepartment
+            operationId: Admin_GetDept
             parameters:
                 - name: id
                   in: path
@@ -187,12 +187,12 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.admin.v1.Department'
+                                $ref: '#/components/schemas/api.admin.v1.Dept'
         put:
             tags:
                 - Admin
             description: 修改部门
-            operationId: Admin_UpdateDepartment
+            operationId: Admin_UpdateDept
             parameters:
                 - name: id
                   in: path
@@ -204,7 +204,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.admin.v1.UpdateDepartmentReq_Data'
+                            $ref: '#/components/schemas/api.admin.v1.UpdateDeptReq_Data'
                 required: true
             responses:
                 "200":
@@ -212,12 +212,12 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.admin.v1.UpdateDepartmentReply'
+                                $ref: '#/components/schemas/api.admin.v1.UpdateDeptReply'
         delete:
             tags:
                 - Admin
             description: 删除部门
-            operationId: Admin_DeleteDepartment
+            operationId: Admin_DeleteDept
             parameters:
                 - name: id
                   in: path
@@ -231,13 +231,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.admin.v1.DeleteDepartmentReply'
-    /admin/v1/departments/{parentId}/trees:
+                                $ref: '#/components/schemas/api.admin.v1.DeleteDeptReply'
+    /admin/v1/depts/{parentId}/trees:
         get:
             tags:
                 - Admin
             description: 获取树形部门
-            operationId: Admin_ListDepartmentTree
+            operationId: Admin_ListDeptTree
             parameters:
                 - name: parentId
                   in: path
@@ -251,7 +251,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.admin.v1.ListDepartmentTreeReply'
+                                $ref: '#/components/schemas/api.admin.v1.ListDeptTreeReply'
     /admin/v1/domains:
         get:
             tags:
@@ -421,7 +421,7 @@ paths:
         get:
             tags:
                 - Admin
-            description: 获取权限角色菜单
+            description: 获取角色菜单
             operationId: Admin_ListDomainMenu
             parameters:
                 - name: id
@@ -440,7 +440,7 @@ paths:
         post:
             tags:
                 - Admin
-            description: 处理权限角色菜单
+            description: 处理角色菜单
             operationId: Admin_HandleDomainMenu
             parameters:
                 - name: id
@@ -913,8 +913,8 @@ paths:
             tags:
                 - Admin
             description: |-
-                权限角色模块
-                 列表权限角色
+                角色模块
+                 列表角色
             operationId: Admin_ListRole
             parameters:
                 - name: page
@@ -944,7 +944,7 @@ paths:
         post:
             tags:
                 - Admin
-            description: 创建权限角色
+            description: 创建角色
             operationId: Admin_CreateRole
             requestBody:
                 content:
@@ -963,7 +963,7 @@ paths:
         get:
             tags:
                 - Admin
-            description: 获取权限角色
+            description: 获取角色
             operationId: Admin_GetRole
             parameters:
                 - name: id
@@ -982,7 +982,7 @@ paths:
         put:
             tags:
                 - Admin
-            description: 修改权限角色
+            description: 修改角色
             operationId: Admin_UpdateRole
             parameters:
                 - name: id
@@ -1007,7 +1007,7 @@ paths:
         delete:
             tags:
                 - Admin
-            description: 删除权限角色
+            description: 删除角色
             operationId: Admin_DeleteRole
             parameters:
                 - name: id
@@ -1027,7 +1027,7 @@ paths:
         get:
             tags:
                 - Admin
-            description: 获取权限角色菜单
+            description: 获取角色菜单
             operationId: Admin_ListRoleMenu
             parameters:
                 - name: id
@@ -1046,7 +1046,7 @@ paths:
         post:
             tags:
                 - Admin
-            description: 处理权限角色菜单
+            description: 处理角色菜单
             operationId: Admin_HandleRoleMenu
             parameters:
                 - name: id
@@ -1072,7 +1072,7 @@ paths:
         post:
             tags:
                 - Admin
-            description: 处理权限角色资源
+            description: 处理角色资源
             operationId: Admin_HandleRoleResource
             parameters:
                 - name: id
@@ -1259,7 +1259,7 @@ paths:
         get:
             tags:
                 - Admin
-            description: 获取权限角色菜单树形列表
+            description: 获取角色菜单树形列表
             operationId: Admin_ListUserRoleMenuTree
             parameters:
                 - name: roleId
@@ -1279,7 +1279,7 @@ paths:
         get:
             tags:
                 - Admin
-            description: 获取权限角色权限列表
+            description: 获取角色权限列表
             operationId: Admin_ListUserRolePermission
             parameters:
                 - name: roleId
@@ -1422,7 +1422,7 @@ components:
                 password:
                     type: string
                     description: 密码
-        api.admin.v1.CreateDepartmentReply:
+        api.admin.v1.CreateDeptReply:
             type: object
             properties:
                 success:
@@ -1432,7 +1432,7 @@ components:
                 data:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 创建部门
-        api.admin.v1.CreateDepartmentReq:
+        api.admin.v1.CreateDeptReq:
             type: object
             properties:
                 name:
@@ -1596,7 +1596,7 @@ components:
                     type: string
                 data:
                     $ref: '#/components/schemas/google.protobuf.Any'
-            description: 回应 - 创建权限角色
+            description: 回应 - 创建角色
         api.admin.v1.CreateRoleReq:
             type: object
             properties:
@@ -1615,7 +1615,7 @@ components:
                     format: enum
                 remarks:
                     type: string
-            description: 请求 - 创建权限角色
+            description: 请求 - 创建角色
         api.admin.v1.CreateUserReply:
             type: object
             properties:
@@ -1652,7 +1652,7 @@ components:
                     type: integer
                     format: enum
             description: 请求 - 创建用户
-        api.admin.v1.DeleteDepartmentReply:
+        api.admin.v1.DeleteDeptReply:
             type: object
             properties:
                 success:
@@ -1711,7 +1711,7 @@ components:
                     type: string
                 data:
                     $ref: '#/components/schemas/google.protobuf.Any'
-            description: 回应 - 删除权限角色
+            description: 回应 - 删除角色
         api.admin.v1.DeleteUserReply:
             type: object
             properties:
@@ -1722,7 +1722,7 @@ components:
                 data:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 删除用户
-        api.admin.v1.Department:
+        api.admin.v1.Dept:
             type: object
             properties:
                 createdAt:
@@ -1750,7 +1750,7 @@ components:
                 children:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.admin.v1.Department'
+                        $ref: '#/components/schemas/api.admin.v1.Dept'
             description: 部门模块
         api.admin.v1.Domain:
             type: object
@@ -1854,7 +1854,7 @@ components:
                     type: string
                 data:
                     $ref: '#/components/schemas/google.protobuf.Any'
-            description: 回应 - 处理权限角色菜单
+            description: 回应 - 处理角色菜单
         api.admin.v1.HandleRoleMenuReq_Data:
             type: object
             properties:
@@ -1887,7 +1887,7 @@ components:
                     type: string
                 data:
                     $ref: '#/components/schemas/google.protobuf.Any'
-            description: 回应 - 处理权限角色资源
+            description: 回应 - 处理角色资源
         api.admin.v1.HandleRoleResourceReq_Data:
             type: object
             properties:
@@ -1931,7 +1931,7 @@ components:
                     items:
                         type: integer
                         format: uint64
-        api.admin.v1.ListDepartmentTreeReply:
+        api.admin.v1.ListDeptTreeReply:
             type: object
             properties:
                 total:
@@ -1940,7 +1940,7 @@ components:
                 items:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.admin.v1.Department'
+                        $ref: '#/components/schemas/api.admin.v1.Dept'
             description: 回应 - 获取树形部门
         api.admin.v1.ListDomainMenuReply:
             type: object
@@ -1985,7 +1985,7 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.admin.v1.Menu'
-            description: 回应 - 获取权限角色菜单
+            description: 回应 - 获取角色菜单
         api.admin.v1.ListUserDomainReply:
             type: object
             properties:
@@ -2006,52 +2006,8 @@ components:
                 items:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.admin.v1.ListUserRoleMenuTreeReply_Menu'
-        api.admin.v1.ListUserRoleMenuTreeReply_Menu:
-            type: object
-            properties:
-                name:
-                    type: string
-                path:
-                    type: string
-                component:
-                    type: string
-                redirect:
-                    type: string
-                meta:
-                    $ref: '#/components/schemas/api.admin.v1.ListUserRoleMenuTreeReply_Meta'
-                children:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.admin.v1.ListUserRoleMenuTreeReply_Menu'
-        api.admin.v1.ListUserRoleMenuTreeReply_Meta:
-            type: object
-            properties:
-                title:
-                    type: string
-                    description: 路由title  一般必填
-                ignoreKeepAlive:
-                    type: boolean
-                    description: 是否忽略KeepAlive缓存
-                icon:
-                    type: string
-                    description: 图标，也是菜单图标
-                frameSrc:
-                    type: string
-                    description: 内嵌iframe的地址
-                hideBreadcrumb:
-                    type: boolean
-                    description: 隐藏该路由在面包屑上面的显示
-                hideMenu:
-                    type: boolean
-                    description: 当前路由不再菜单显示
-                orderNo:
-                    type: integer
-                    description: 菜单排序，只对第一级有效
-                    format: int32
-                currentActiveMenu:
-                    type: string
-                    description: 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
+                        $ref: '#/components/schemas/api.admin.v1.RouterMenu'
+            description: 回应 - 获取用户角色菜单列表-树形
         api.admin.v1.ListUserRolePermissionReply:
             type: object
             properties:
@@ -2062,7 +2018,7 @@ components:
                     type: array
                     items:
                         type: string
-            description: 回应 - 获取用户权限角色列表
+            description: 回应 - 获取用户角色列表
         api.admin.v1.ListUserRoleReply:
             type: object
             properties:
@@ -2073,7 +2029,7 @@ components:
                 total:
                     type: integer
                     format: int32
-            description: 回应 - 用户权限角色
+            description: 回应 - 用户角色
         api.admin.v1.LoginReply:
             type: object
             properties:
@@ -2267,7 +2223,53 @@ components:
                     format: enum
                 remarks:
                     type: string
-            description: 权限角色模块
+            description: 角色模块
+        api.admin.v1.RouterMenu:
+            type: object
+            properties:
+                name:
+                    type: string
+                path:
+                    type: string
+                component:
+                    type: string
+                redirect:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/api.admin.v1.RouterMenu_Meta'
+                children:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.v1.RouterMenu'
+            description: 路由菜单
+        api.admin.v1.RouterMenu_Meta:
+            type: object
+            properties:
+                title:
+                    type: string
+                    description: 路由title  一般必填
+                ignoreKeepAlive:
+                    type: boolean
+                    description: 是否忽略KeepAlive缓存
+                icon:
+                    type: string
+                    description: 图标，也是菜单图标
+                frameSrc:
+                    type: string
+                    description: 内嵌iframe的地址
+                hideBreadcrumb:
+                    type: boolean
+                    description: 隐藏该路由在面包屑上面的显示
+                hideMenu:
+                    type: boolean
+                    description: 当前路由不再菜单显示
+                orderNo:
+                    type: integer
+                    description: 菜单排序，只对第一级有效
+                    format: int32
+                currentActiveMenu:
+                    type: string
+                    description: 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
         api.admin.v1.SmsLoginReq_SmsField:
             type: object
             properties:
@@ -2275,7 +2277,7 @@ components:
                     type: string
                 code:
                     type: string
-        api.admin.v1.UpdateDepartmentReply:
+        api.admin.v1.UpdateDeptReply:
             type: object
             properties:
                 success:
@@ -2285,7 +2287,7 @@ components:
                 data:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 创建部门
-        api.admin.v1.UpdateDepartmentReq_Data:
+        api.admin.v1.UpdateDeptReq_Data:
             type: object
             properties:
                 name:
@@ -2476,7 +2478,7 @@ components:
                     type: string
                 data:
                     $ref: '#/components/schemas/google.protobuf.Any'
-            description: 回应 - 创建权限角色
+            description: 回应 - 创建角色
         api.admin.v1.UpdateRoleReq_Data:
             type: object
             properties:
@@ -2504,7 +2506,7 @@ components:
                     type: string
                 data:
                     $ref: '#/components/schemas/google.protobuf.Any'
-            description: 回应 - 创建权限角色
+            description: 回应 - 创建角色
         api.admin.v1.UpdateRoleStateReq_Data:
             type: object
             properties:

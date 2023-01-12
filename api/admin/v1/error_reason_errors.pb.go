@@ -395,7 +395,7 @@ func ErrorResourceDeleteFail(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_RESOURCE_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
-func IsDepartmentNotFound(err error) bool {
+func IsDeptNotFound(err error) bool {
 	if err == nil {
 		return false
 	}
@@ -403,11 +403,11 @@ func IsDepartmentNotFound(err error) bool {
 	return e.Reason == ErrorReason_DEPARTMENT_NOT_FOUND.String() && e.Code == 400
 }
 
-func ErrorDepartmentNotFound(format string, args ...interface{}) *errors.Error {
+func ErrorDeptNotFound(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_DEPARTMENT_NOT_FOUND.String(), fmt.Sprintf(format, args...))
 }
 
-func IsDepartmentCreateFail(err error) bool {
+func IsDeptCreateFail(err error) bool {
 	if err == nil {
 		return false
 	}
@@ -415,11 +415,11 @@ func IsDepartmentCreateFail(err error) bool {
 	return e.Reason == ErrorReason_DEPARTMENT_CREATE_FAIL.String() && e.Code == 400
 }
 
-func ErrorDepartmentCreateFail(format string, args ...interface{}) *errors.Error {
+func ErrorDeptCreateFail(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_DEPARTMENT_CREATE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
-func IsDepartmentUpdateFail(err error) bool {
+func IsDeptUpdateFail(err error) bool {
 	if err == nil {
 		return false
 	}
@@ -427,11 +427,11 @@ func IsDepartmentUpdateFail(err error) bool {
 	return e.Reason == ErrorReason_DEPARTMENT_UPDATE_FAIL.String() && e.Code == 400
 }
 
-func ErrorDepartmentUpdateFail(format string, args ...interface{}) *errors.Error {
+func ErrorDeptUpdateFail(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_DEPARTMENT_UPDATE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
-func IsDepartmentDeleteFail(err error) bool {
+func IsDeptDeleteFail(err error) bool {
 	if err == nil {
 		return false
 	}
@@ -439,7 +439,7 @@ func IsDepartmentDeleteFail(err error) bool {
 	return e.Reason == ErrorReason_DEPARTMENT_DELETE_FAIL.String() && e.Code == 400
 }
 
-func ErrorDepartmentDeleteFail(format string, args ...interface{}) *errors.Error {
+func ErrorDeptDeleteFail(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_DEPARTMENT_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 

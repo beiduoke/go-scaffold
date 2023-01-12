@@ -253,13 +253,13 @@ func (s *AdminService) ListUserDomain(ctx context.Context, in *emptypb.Empty) (*
 	}, nil
 }
 
-// ListUserRole 用户权限角色
+// ListUserRole 用户角色
 func (s *AdminService) ListUserRole(ctx context.Context, in *emptypb.Empty) (*v1.ListUserRoleReply, error) {
 	id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
 	domainId := convert.StringToUint(authz.ParseFromContext(ctx).GetDomain())
 	roleModels, err := s.userCase.ListRoleAll(ctx, &biz.User{ID: id, Domains: []*biz.Domain{{ID: domainId}}})
 	if err != nil {
-		return nil, v1.ErrorUserRoleFindFail("用户权限角色失败 %v", err)
+		return nil, v1.ErrorUserRoleFindFail("用户角色失败 %v", err)
 	}
 	roles := make([]*v1.Role, 0, len(roleModels))
 	for _, v := range roleModels {
@@ -287,9 +287,9 @@ func (s *AdminService) ListUserMenuTree(ctx context.Context, in *emptypb.Empty) 
 }
 
 // 将用户菜单转换树形结构
-func (s *AdminService) UserMenuToReplyMenu(menu *biz.Menu) *v1.ListUserRoleMenuTreeReply_Menu {
+func (s *AdminService) UserMenuToReplyMenu(menu *biz.Menu) *v1.RouterMenu {
 
-	meta := &v1.ListUserRoleMenuTreeReply_Meta{
+	meta := &v1.RouterMenu_Meta{
 		// 路由title  一般必填
 		Title: menu.Title,
 		// 图标，也是菜单图标
@@ -309,18 +309,18 @@ func (s *AdminService) UserMenuToReplyMenu(menu *biz.Menu) *v1.ListUserRoleMenuT
 		menu.Path = menu.Name
 	}
 
-	return &v1.ListUserRoleMenuTreeReply_Menu{
+	return &v1.RouterMenu{
 		Name:      menu.Name,
 		Path:      menu.Path,
 		Component: component,
-		Children:  make([]*v1.ListUserRoleMenuTreeReply_Menu, 0),
+		Children:  make([]*v1.RouterMenu, 0),
 		Meta:      meta,
 	}
 }
 
 // 将用户菜单转换树形结构
-func (s *AdminService) UserMenuTransformTree(menus []*biz.Menu, parentID uint) []*v1.ListUserRoleMenuTreeReply_Menu {
-	list := make([]*v1.ListUserRoleMenuTreeReply_Menu, 0)
+func (s *AdminService) UserMenuTransformTree(menus []*biz.Menu, parentID uint) []*v1.RouterMenu {
+	list := make([]*v1.RouterMenu, 0)
 	for _, menu := range menus {
 		if menu.Type == int32(protobuf.MenuType_MENU_TYPE_ABILITY) {
 			continue
@@ -342,7 +342,7 @@ func (s *AdminService) UserMenuTransformTree(menus []*biz.Menu, parentID uint) [
 	return list
 }
 
-// 获取权限角色菜单树形列表
+// 获取角色菜单树形列表
 func (s *AdminService) ListUserRoleMenuTree(ctx context.Context, in *v1.ListUserRoleMenuTreeReq) (*v1.ListUserRoleMenuTreeReply, error) {
 	var roles []*biz.Role
 	if roleId := in.GetRoleId(); roleId > 0 {
@@ -354,7 +354,7 @@ func (s *AdminService) ListUserRoleMenuTree(ctx context.Context, in *v1.ListUser
 	}, nil
 }
 
-// 获取权限角色权限列表
+// 获取角色权限列表
 func (s *AdminService) ListUserRolePermission(ctx context.Context, in *v1.ListUserRolePermissionReq) (*v1.ListUserRolePermissionReply, error) {
 	var roles []*biz.Role
 	if roleId := in.GetRoleId(); roleId > 0 {

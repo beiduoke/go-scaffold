@@ -21,14 +21,14 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationAdminCreateDepartment = "/api.admin.v1.Admin/CreateDepartment"
+const OperationAdminCreateDept = "/api.admin.v1.Admin/CreateDept"
 const OperationAdminCreateDomain = "/api.admin.v1.Admin/CreateDomain"
 const OperationAdminCreateMenu = "/api.admin.v1.Admin/CreateMenu"
 const OperationAdminCreatePost = "/api.admin.v1.Admin/CreatePost"
 const OperationAdminCreateResource = "/api.admin.v1.Admin/CreateResource"
 const OperationAdminCreateRole = "/api.admin.v1.Admin/CreateRole"
 const OperationAdminCreateUser = "/api.admin.v1.Admin/CreateUser"
-const OperationAdminDeleteDepartment = "/api.admin.v1.Admin/DeleteDepartment"
+const OperationAdminDeleteDept = "/api.admin.v1.Admin/DeleteDept"
 const OperationAdminDeleteDomain = "/api.admin.v1.Admin/DeleteDomain"
 const OperationAdminDeleteMenu = "/api.admin.v1.Admin/DeleteMenu"
 const OperationAdminDeletePost = "/api.admin.v1.Admin/DeletePost"
@@ -37,7 +37,7 @@ const OperationAdminDeleteRole = "/api.admin.v1.Admin/DeleteRole"
 const OperationAdminDeleteUser = "/api.admin.v1.Admin/DeleteUser"
 const OperationAdminEmailLogin = "/api.admin.v1.Admin/EmailLogin"
 const OperationAdminExistUserName = "/api.admin.v1.Admin/ExistUserName"
-const OperationAdminGetDepartment = "/api.admin.v1.Admin/GetDepartment"
+const OperationAdminGetDept = "/api.admin.v1.Admin/GetDept"
 const OperationAdminGetDomain = "/api.admin.v1.Admin/GetDomain"
 const OperationAdminGetMenu = "/api.admin.v1.Admin/GetMenu"
 const OperationAdminGetPost = "/api.admin.v1.Admin/GetPost"
@@ -51,8 +51,8 @@ const OperationAdminHandleRoleMenu = "/api.admin.v1.Admin/HandleRoleMenu"
 const OperationAdminHandleRoleResource = "/api.admin.v1.Admin/HandleRoleResource"
 const OperationAdminHandleUserDomain = "/api.admin.v1.Admin/HandleUserDomain"
 const OperationAdminHandleUserDomainRole = "/api.admin.v1.Admin/HandleUserDomainRole"
-const OperationAdminListDepartment = "/api.admin.v1.Admin/ListDepartment"
-const OperationAdminListDepartmentTree = "/api.admin.v1.Admin/ListDepartmentTree"
+const OperationAdminListDept = "/api.admin.v1.Admin/ListDept"
+const OperationAdminListDeptTree = "/api.admin.v1.Admin/ListDeptTree"
 const OperationAdminListDomain = "/api.admin.v1.Admin/ListDomain"
 const OperationAdminListDomainMenu = "/api.admin.v1.Admin/ListDomainMenu"
 const OperationAdminListMenu = "/api.admin.v1.Admin/ListMenu"
@@ -74,7 +74,7 @@ const OperationAdminPassLogin = "/api.admin.v1.Admin/PassLogin"
 const OperationAdminRegister = "/api.admin.v1.Admin/Register"
 const OperationAdminRegisterDomain = "/api.admin.v1.Admin/RegisterDomain"
 const OperationAdminSmsLogin = "/api.admin.v1.Admin/SmsLogin"
-const OperationAdminUpdateDepartment = "/api.admin.v1.Admin/UpdateDepartment"
+const OperationAdminUpdateDept = "/api.admin.v1.Admin/UpdateDept"
 const OperationAdminUpdateDomain = "/api.admin.v1.Admin/UpdateDomain"
 const OperationAdminUpdateDomainState = "/api.admin.v1.Admin/UpdateDomainState"
 const OperationAdminUpdateMenu = "/api.admin.v1.Admin/UpdateMenu"
@@ -86,14 +86,14 @@ const OperationAdminUpdateRoleState = "/api.admin.v1.Admin/UpdateRoleState"
 const OperationAdminUpdateUser = "/api.admin.v1.Admin/UpdateUser"
 
 type AdminHTTPServer interface {
-	CreateDepartment(context.Context, *CreateDepartmentReq) (*CreateDepartmentReply, error)
+	CreateDept(context.Context, *CreateDeptReq) (*CreateDeptReply, error)
 	CreateDomain(context.Context, *CreateDomainReq) (*CreateDomainReply, error)
 	CreateMenu(context.Context, *CreateMenuReq) (*CreateMenuReply, error)
 	CreatePost(context.Context, *CreatePostReq) (*CreatePostReply, error)
 	CreateResource(context.Context, *CreateResourceReq) (*CreateResourceReply, error)
 	CreateRole(context.Context, *CreateRoleReq) (*CreateRoleReply, error)
 	CreateUser(context.Context, *CreateUserReq) (*CreateUserReply, error)
-	DeleteDepartment(context.Context, *DeleteDepartmentReq) (*DeleteDepartmentReply, error)
+	DeleteDept(context.Context, *DeleteDeptReq) (*DeleteDeptReply, error)
 	DeleteDomain(context.Context, *DeleteDomainReq) (*DeleteDomainReply, error)
 	DeleteMenu(context.Context, *DeleteMenuReq) (*DeleteMenuReply, error)
 	DeletePost(context.Context, *DeletePostReq) (*DeletePostReply, error)
@@ -102,7 +102,7 @@ type AdminHTTPServer interface {
 	DeleteUser(context.Context, *DeleteUserReq) (*DeleteUserReply, error)
 	EmailLogin(context.Context, *EmailLoginReq) (*LoginReply, error)
 	ExistUserName(context.Context, *ExistUserNameReq) (*ExistUserNameReply, error)
-	GetDepartment(context.Context, *GetDepartmentReq) (*Department, error)
+	GetDept(context.Context, *GetDeptReq) (*Dept, error)
 	GetDomain(context.Context, *GetDomainReq) (*Domain, error)
 	GetMenu(context.Context, *GetMenuReq) (*Menu, error)
 	GetPost(context.Context, *GetPostReq) (*Post, error)
@@ -116,8 +116,8 @@ type AdminHTTPServer interface {
 	HandleRoleResource(context.Context, *HandleRoleResourceReq) (*HandleRoleResourceReply, error)
 	HandleUserDomain(context.Context, *HandleUserDomainReq) (*HandleUserDomainReply, error)
 	HandleUserDomainRole(context.Context, *HandleUserDomainRoleReq) (*HandleUserDomainRoleReply, error)
-	ListDepartment(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
-	ListDepartmentTree(context.Context, *ListDepartmentTreeReq) (*ListDepartmentTreeReply, error)
+	ListDept(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	ListDeptTree(context.Context, *ListDeptTreeReq) (*ListDeptTreeReply, error)
 	ListDomain(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
 	ListDomainMenu(context.Context, *ListDomainMenuReq) (*ListDomainMenuReply, error)
 	ListMenu(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
@@ -139,7 +139,7 @@ type AdminHTTPServer interface {
 	Register(context.Context, *RegisterReq) (*RegisterReply, error)
 	RegisterDomain(context.Context, *RegisterDomainReq) (*RegisterReply, error)
 	SmsLogin(context.Context, *SmsLoginReq) (*LoginReply, error)
-	UpdateDepartment(context.Context, *UpdateDepartmentReq) (*UpdateDepartmentReply, error)
+	UpdateDept(context.Context, *UpdateDeptReq) (*UpdateDeptReply, error)
 	UpdateDomain(context.Context, *UpdateDomainReq) (*UpdateDomainReply, error)
 	UpdateDomainState(context.Context, *UpdateDomainStateReq) (*UpdateDomainStateReply, error)
 	UpdateMenu(context.Context, *UpdateMenuReq) (*UpdateMenuReply, error)
@@ -208,12 +208,12 @@ func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
 	r.GET("/admin/v1/menus/{id}", _Admin_GetMenu0_HTTP_Handler(srv))
 	r.PUT("/admin/v1/menus/{id}", _Admin_UpdateMenu0_HTTP_Handler(srv))
 	r.DELETE("/admin/v1/menus/{id}", _Admin_DeleteMenu0_HTTP_Handler(srv))
-	r.GET("/admin/v1/departments", _Admin_ListDepartment0_HTTP_Handler(srv))
-	r.POST("/admin/v1/departments", _Admin_CreateDepartment0_HTTP_Handler(srv))
-	r.GET("/admin/v1/departments/{id}", _Admin_GetDepartment0_HTTP_Handler(srv))
-	r.PUT("/admin/v1/departments/{id}", _Admin_UpdateDepartment0_HTTP_Handler(srv))
-	r.DELETE("/admin/v1/departments/{id}", _Admin_DeleteDepartment0_HTTP_Handler(srv))
-	r.GET("/admin/v1/departments/{parentId}/trees", _Admin_ListDepartmentTree0_HTTP_Handler(srv))
+	r.GET("/admin/v1/depts", _Admin_ListDept0_HTTP_Handler(srv))
+	r.POST("/admin/v1/depts", _Admin_CreateDept0_HTTP_Handler(srv))
+	r.GET("/admin/v1/depts/{id}", _Admin_GetDept0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/depts/{id}", _Admin_UpdateDept0_HTTP_Handler(srv))
+	r.DELETE("/admin/v1/depts/{id}", _Admin_DeleteDept0_HTTP_Handler(srv))
+	r.GET("/admin/v1/depts/{parentId}/trees", _Admin_ListDeptTree0_HTTP_Handler(srv))
 	r.GET("/admin/v1/posts", _Admin_ListPost0_HTTP_Handler(srv))
 	r.POST("/admin/v1/posts", _Admin_CreatePost0_HTTP_Handler(srv))
 	r.GET("/admin/v1/posts/{id}", _Admin_GetPost0_HTTP_Handler(srv))
@@ -1411,15 +1411,15 @@ func _Admin_DeleteMenu0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context)
 	}
 }
 
-func _Admin_ListDepartment0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+func _Admin_ListDept0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in protobuf.PagingReq
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAdminListDepartment)
+		http.SetOperation(ctx, OperationAdminListDept)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListDepartment(ctx, req.(*protobuf.PagingReq))
+			return srv.ListDept(ctx, req.(*protobuf.PagingReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -1430,50 +1430,50 @@ func _Admin_ListDepartment0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Cont
 	}
 }
 
-func _Admin_CreateDepartment0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+func _Admin_CreateDept0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in CreateDepartmentReq
+		var in CreateDeptReq
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAdminCreateDepartment)
+		http.SetOperation(ctx, OperationAdminCreateDept)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.CreateDepartment(ctx, req.(*CreateDepartmentReq))
+			return srv.CreateDept(ctx, req.(*CreateDeptReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*CreateDepartmentReply)
+		reply := out.(*CreateDeptReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Admin_GetDepartment0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+func _Admin_GetDept0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in GetDepartmentReq
+		var in GetDeptReq
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAdminGetDepartment)
+		http.SetOperation(ctx, OperationAdminGetDept)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetDepartment(ctx, req.(*GetDepartmentReq))
+			return srv.GetDept(ctx, req.(*GetDeptReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*Department)
+		reply := out.(*Dept)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Admin_UpdateDepartment0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+func _Admin_UpdateDept0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in UpdateDepartmentReq
+		var in UpdateDeptReq
 		if err := ctx.Bind(&in.Data); err != nil {
 			return err
 		}
@@ -1483,59 +1483,59 @@ func _Admin_UpdateDepartment0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Co
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAdminUpdateDepartment)
+		http.SetOperation(ctx, OperationAdminUpdateDept)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdateDepartment(ctx, req.(*UpdateDepartmentReq))
+			return srv.UpdateDept(ctx, req.(*UpdateDeptReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*UpdateDepartmentReply)
+		reply := out.(*UpdateDeptReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Admin_DeleteDepartment0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+func _Admin_DeleteDept0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in DeleteDepartmentReq
+		var in DeleteDeptReq
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAdminDeleteDepartment)
+		http.SetOperation(ctx, OperationAdminDeleteDept)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.DeleteDepartment(ctx, req.(*DeleteDepartmentReq))
+			return srv.DeleteDept(ctx, req.(*DeleteDeptReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*DeleteDepartmentReply)
+		reply := out.(*DeleteDeptReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Admin_ListDepartmentTree0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+func _Admin_ListDeptTree0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in ListDepartmentTreeReq
+		var in ListDeptTreeReq
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAdminListDepartmentTree)
+		http.SetOperation(ctx, OperationAdminListDeptTree)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListDepartmentTree(ctx, req.(*ListDepartmentTreeReq))
+			return srv.ListDeptTree(ctx, req.(*ListDeptTreeReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*ListDepartmentTreeReply)
+		reply := out.(*ListDeptTreeReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -1673,14 +1673,14 @@ func _Admin_UpdatePostState0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Con
 }
 
 type AdminHTTPClient interface {
-	CreateDepartment(ctx context.Context, req *CreateDepartmentReq, opts ...http.CallOption) (rsp *CreateDepartmentReply, err error)
+	CreateDept(ctx context.Context, req *CreateDeptReq, opts ...http.CallOption) (rsp *CreateDeptReply, err error)
 	CreateDomain(ctx context.Context, req *CreateDomainReq, opts ...http.CallOption) (rsp *CreateDomainReply, err error)
 	CreateMenu(ctx context.Context, req *CreateMenuReq, opts ...http.CallOption) (rsp *CreateMenuReply, err error)
 	CreatePost(ctx context.Context, req *CreatePostReq, opts ...http.CallOption) (rsp *CreatePostReply, err error)
 	CreateResource(ctx context.Context, req *CreateResourceReq, opts ...http.CallOption) (rsp *CreateResourceReply, err error)
 	CreateRole(ctx context.Context, req *CreateRoleReq, opts ...http.CallOption) (rsp *CreateRoleReply, err error)
 	CreateUser(ctx context.Context, req *CreateUserReq, opts ...http.CallOption) (rsp *CreateUserReply, err error)
-	DeleteDepartment(ctx context.Context, req *DeleteDepartmentReq, opts ...http.CallOption) (rsp *DeleteDepartmentReply, err error)
+	DeleteDept(ctx context.Context, req *DeleteDeptReq, opts ...http.CallOption) (rsp *DeleteDeptReply, err error)
 	DeleteDomain(ctx context.Context, req *DeleteDomainReq, opts ...http.CallOption) (rsp *DeleteDomainReply, err error)
 	DeleteMenu(ctx context.Context, req *DeleteMenuReq, opts ...http.CallOption) (rsp *DeleteMenuReply, err error)
 	DeletePost(ctx context.Context, req *DeletePostReq, opts ...http.CallOption) (rsp *DeletePostReply, err error)
@@ -1689,7 +1689,7 @@ type AdminHTTPClient interface {
 	DeleteUser(ctx context.Context, req *DeleteUserReq, opts ...http.CallOption) (rsp *DeleteUserReply, err error)
 	EmailLogin(ctx context.Context, req *EmailLoginReq, opts ...http.CallOption) (rsp *LoginReply, err error)
 	ExistUserName(ctx context.Context, req *ExistUserNameReq, opts ...http.CallOption) (rsp *ExistUserNameReply, err error)
-	GetDepartment(ctx context.Context, req *GetDepartmentReq, opts ...http.CallOption) (rsp *Department, err error)
+	GetDept(ctx context.Context, req *GetDeptReq, opts ...http.CallOption) (rsp *Dept, err error)
 	GetDomain(ctx context.Context, req *GetDomainReq, opts ...http.CallOption) (rsp *Domain, err error)
 	GetMenu(ctx context.Context, req *GetMenuReq, opts ...http.CallOption) (rsp *Menu, err error)
 	GetPost(ctx context.Context, req *GetPostReq, opts ...http.CallOption) (rsp *Post, err error)
@@ -1703,8 +1703,8 @@ type AdminHTTPClient interface {
 	HandleRoleResource(ctx context.Context, req *HandleRoleResourceReq, opts ...http.CallOption) (rsp *HandleRoleResourceReply, err error)
 	HandleUserDomain(ctx context.Context, req *HandleUserDomainReq, opts ...http.CallOption) (rsp *HandleUserDomainReply, err error)
 	HandleUserDomainRole(ctx context.Context, req *HandleUserDomainRoleReq, opts ...http.CallOption) (rsp *HandleUserDomainRoleReply, err error)
-	ListDepartment(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
-	ListDepartmentTree(ctx context.Context, req *ListDepartmentTreeReq, opts ...http.CallOption) (rsp *ListDepartmentTreeReply, err error)
+	ListDept(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
+	ListDeptTree(ctx context.Context, req *ListDeptTreeReq, opts ...http.CallOption) (rsp *ListDeptTreeReply, err error)
 	ListDomain(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
 	ListDomainMenu(ctx context.Context, req *ListDomainMenuReq, opts ...http.CallOption) (rsp *ListDomainMenuReply, err error)
 	ListMenu(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
@@ -1726,7 +1726,7 @@ type AdminHTTPClient interface {
 	Register(ctx context.Context, req *RegisterReq, opts ...http.CallOption) (rsp *RegisterReply, err error)
 	RegisterDomain(ctx context.Context, req *RegisterDomainReq, opts ...http.CallOption) (rsp *RegisterReply, err error)
 	SmsLogin(ctx context.Context, req *SmsLoginReq, opts ...http.CallOption) (rsp *LoginReply, err error)
-	UpdateDepartment(ctx context.Context, req *UpdateDepartmentReq, opts ...http.CallOption) (rsp *UpdateDepartmentReply, err error)
+	UpdateDept(ctx context.Context, req *UpdateDeptReq, opts ...http.CallOption) (rsp *UpdateDeptReply, err error)
 	UpdateDomain(ctx context.Context, req *UpdateDomainReq, opts ...http.CallOption) (rsp *UpdateDomainReply, err error)
 	UpdateDomainState(ctx context.Context, req *UpdateDomainStateReq, opts ...http.CallOption) (rsp *UpdateDomainStateReply, err error)
 	UpdateMenu(ctx context.Context, req *UpdateMenuReq, opts ...http.CallOption) (rsp *UpdateMenuReply, err error)
@@ -1746,11 +1746,11 @@ func NewAdminHTTPClient(client *http.Client) AdminHTTPClient {
 	return &AdminHTTPClientImpl{client}
 }
 
-func (c *AdminHTTPClientImpl) CreateDepartment(ctx context.Context, in *CreateDepartmentReq, opts ...http.CallOption) (*CreateDepartmentReply, error) {
-	var out CreateDepartmentReply
-	pattern := "/admin/v1/departments"
+func (c *AdminHTTPClientImpl) CreateDept(ctx context.Context, in *CreateDeptReq, opts ...http.CallOption) (*CreateDeptReply, error) {
+	var out CreateDeptReply
+	pattern := "/admin/v1/depts"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAdminCreateDepartment))
+	opts = append(opts, http.Operation(OperationAdminCreateDept))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -1837,11 +1837,11 @@ func (c *AdminHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUserReq,
 	return &out, err
 }
 
-func (c *AdminHTTPClientImpl) DeleteDepartment(ctx context.Context, in *DeleteDepartmentReq, opts ...http.CallOption) (*DeleteDepartmentReply, error) {
-	var out DeleteDepartmentReply
-	pattern := "/admin/v1/departments/{id}"
+func (c *AdminHTTPClientImpl) DeleteDept(ctx context.Context, in *DeleteDeptReq, opts ...http.CallOption) (*DeleteDeptReply, error) {
+	var out DeleteDeptReply
+	pattern := "/admin/v1/depts/{id}"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAdminDeleteDepartment))
+	opts = append(opts, http.Operation(OperationAdminDeleteDept))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
 	if err != nil {
@@ -1954,11 +1954,11 @@ func (c *AdminHTTPClientImpl) ExistUserName(ctx context.Context, in *ExistUserNa
 	return &out, err
 }
 
-func (c *AdminHTTPClientImpl) GetDepartment(ctx context.Context, in *GetDepartmentReq, opts ...http.CallOption) (*Department, error) {
-	var out Department
-	pattern := "/admin/v1/departments/{id}"
+func (c *AdminHTTPClientImpl) GetDept(ctx context.Context, in *GetDeptReq, opts ...http.CallOption) (*Dept, error) {
+	var out Dept
+	pattern := "/admin/v1/depts/{id}"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAdminGetDepartment))
+	opts = append(opts, http.Operation(OperationAdminGetDept))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -2136,11 +2136,11 @@ func (c *AdminHTTPClientImpl) HandleUserDomainRole(ctx context.Context, in *Hand
 	return &out, err
 }
 
-func (c *AdminHTTPClientImpl) ListDepartment(ctx context.Context, in *protobuf.PagingReq, opts ...http.CallOption) (*protobuf.PagingReply, error) {
+func (c *AdminHTTPClientImpl) ListDept(ctx context.Context, in *protobuf.PagingReq, opts ...http.CallOption) (*protobuf.PagingReply, error) {
 	var out protobuf.PagingReply
-	pattern := "/admin/v1/departments"
+	pattern := "/admin/v1/depts"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAdminListDepartment))
+	opts = append(opts, http.Operation(OperationAdminListDept))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -2149,11 +2149,11 @@ func (c *AdminHTTPClientImpl) ListDepartment(ctx context.Context, in *protobuf.P
 	return &out, err
 }
 
-func (c *AdminHTTPClientImpl) ListDepartmentTree(ctx context.Context, in *ListDepartmentTreeReq, opts ...http.CallOption) (*ListDepartmentTreeReply, error) {
-	var out ListDepartmentTreeReply
-	pattern := "/admin/v1/departments/{parentId}/trees"
+func (c *AdminHTTPClientImpl) ListDeptTree(ctx context.Context, in *ListDeptTreeReq, opts ...http.CallOption) (*ListDeptTreeReply, error) {
+	var out ListDeptTreeReply
+	pattern := "/admin/v1/depts/{parentId}/trees"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAdminListDepartmentTree))
+	opts = append(opts, http.Operation(OperationAdminListDeptTree))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -2435,11 +2435,11 @@ func (c *AdminHTTPClientImpl) SmsLogin(ctx context.Context, in *SmsLoginReq, opt
 	return &out, err
 }
 
-func (c *AdminHTTPClientImpl) UpdateDepartment(ctx context.Context, in *UpdateDepartmentReq, opts ...http.CallOption) (*UpdateDepartmentReply, error) {
-	var out UpdateDepartmentReply
-	pattern := "/admin/v1/departments/{id}"
+func (c *AdminHTTPClientImpl) UpdateDept(ctx context.Context, in *UpdateDeptReq, opts ...http.CallOption) (*UpdateDeptReply, error) {
+	var out UpdateDeptReply
+	pattern := "/admin/v1/depts/{id}"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAdminUpdateDepartment))
+	opts = append(opts, http.Operation(OperationAdminUpdateDept))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in.Data, &out, opts...)
 	if err != nil {

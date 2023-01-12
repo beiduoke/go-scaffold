@@ -26,7 +26,7 @@ func TransformRole(data *biz.Role) *v1.Role {
 	}
 }
 
-// ListRole 列表-权限角色
+// ListRole 列表-角色
 func (s *AdminService) ListRole(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	results, total := s.roleCase.ListPage(ctx, in.GetPage(), in.GetPageSize(), in.GetQuery(), in.GetOrderBy())
 	items := make([]*anypb.Any, 0, len(results))
@@ -40,7 +40,7 @@ func (s *AdminService) ListRole(ctx context.Context, in *protobuf.PagingReq) (*p
 	}, nil
 }
 
-// CreateRole 创建权限角色
+// CreateRole 创建角色
 func (s *AdminService) CreateRole(ctx context.Context, in *v1.CreateRoleReq) (*v1.CreateRoleReply, error) {
 	user, err := s.roleCase.Create(ctx, &biz.Role{
 		Name:          in.GetName(),
@@ -50,7 +50,7 @@ func (s *AdminService) CreateRole(ctx context.Context, in *v1.CreateRoleReq) (*v
 		Remarks:       in.GetRemarks(),
 	})
 	if err != nil {
-		return nil, v1.ErrorRoleCreateFail("权限角色创建失败: %v", err.Error())
+		return nil, v1.ErrorRoleCreateFail("角色创建失败: %v", err.Error())
 	}
 	data, _ := anypb.New(&protobuf.DataProto{
 		Id: uint64(user.ID),
@@ -62,7 +62,7 @@ func (s *AdminService) CreateRole(ctx context.Context, in *v1.CreateRoleReq) (*v
 	}, nil
 }
 
-// UpdateRole 创建权限角色
+// UpdateRole 创建角色
 func (s *AdminService) UpdateRole(ctx context.Context, in *v1.UpdateRoleReq) (*v1.UpdateRoleReply, error) {
 	v := in.GetData()
 
@@ -76,7 +76,7 @@ func (s *AdminService) UpdateRole(ctx context.Context, in *v1.UpdateRoleReq) (*v
 		Remarks:       v.GetRemarks(),
 	})
 	if err != nil {
-		return nil, v1.ErrorRoleUpdateFail("权限角色创建失败: %v", err.Error())
+		return nil, v1.ErrorRoleUpdateFail("角色创建失败: %v", err.Error())
 	}
 	return &v1.UpdateRoleReply{
 		Success: true,
@@ -84,7 +84,7 @@ func (s *AdminService) UpdateRole(ctx context.Context, in *v1.UpdateRoleReq) (*v
 	}, nil
 }
 
-// UpdateRoleState 修改权限角色-状态
+// UpdateRoleState 修改角色-状态
 func (s *AdminService) UpdateRoleState(ctx context.Context, in *v1.UpdateRoleStateReq) (*v1.UpdateRoleStateReply, error) {
 	v := in.GetData()
 	err := s.roleCase.UpdateState(ctx, &biz.Role{
@@ -100,19 +100,19 @@ func (s *AdminService) UpdateRoleState(ctx context.Context, in *v1.UpdateRoleSta
 	}, nil
 }
 
-// GetRole 获取权限角色
+// GetRole 获取角色
 func (s *AdminService) GetRole(ctx context.Context, in *v1.GetRoleReq) (*v1.Role, error) {
 	role, err := s.roleCase.GetID(ctx, &biz.Role{ID: uint(in.GetId())})
 	if err != nil {
-		return nil, v1.ErrorRoleNotFound("权限角色未找到")
+		return nil, v1.ErrorRoleNotFound("角色未找到")
 	}
 	return TransformRole(role), nil
 }
 
-// DeleteRole 删除权限角色
+// DeleteRole 删除角色
 func (s *AdminService) DeleteRole(ctx context.Context, in *v1.DeleteRoleReq) (*v1.DeleteRoleReply, error) {
 	if err := s.roleCase.Delete(ctx, &biz.Role{ID: uint(in.GetId())}); err != nil {
-		return nil, v1.ErrorRoleDeleteFail("权限角色删除失败：%v", err)
+		return nil, v1.ErrorRoleDeleteFail("角色删除失败：%v", err)
 	}
 	return &v1.DeleteRoleReply{
 		Success: true,
@@ -120,7 +120,7 @@ func (s *AdminService) DeleteRole(ctx context.Context, in *v1.DeleteRoleReq) (*v
 	}, nil
 }
 
-// ListRoleMenu 获取权限角色菜单
+// ListRoleMenu 获取角色菜单
 func (s *AdminService) ListRoleMenu(ctx context.Context, in *v1.ListRoleMenuReq) (*v1.ListRoleMenuReply, error) {
 	id := in.GetId()
 	menus, _ := s.roleCase.ListMenuByID(ctx, &biz.Role{ID: uint(id)})
@@ -131,7 +131,7 @@ func (s *AdminService) ListRoleMenu(ctx context.Context, in *v1.ListRoleMenuReq)
 	return &v1.ListRoleMenuReply{Items: items, Total: int32(len(items))}, nil
 }
 
-// HandleRoleMenu 处理权限角色菜单
+// HandleRoleMenu 处理角色菜单
 func (s *AdminService) HandleRoleMenu(ctx context.Context, in *v1.HandleRoleMenuReq) (*v1.HandleRoleMenuReply, error) {
 	var menus []*biz.Menu
 	data := in.GetData()
@@ -150,7 +150,7 @@ func (s *AdminService) HandleRoleMenu(ctx context.Context, in *v1.HandleRoleMenu
 		})
 	}
 	if err := s.roleCase.HandleMenu(ctx, &biz.Role{ID: uint(in.GetId()), Menus: menus}); err != nil {
-		return nil, v1.ErrorRoleHandleMenuFail("权限角色菜单处理失败：%v", err)
+		return nil, v1.ErrorRoleHandleMenuFail("角色菜单处理失败：%v", err)
 	}
 	return &v1.HandleRoleMenuReply{
 		Success: true,
@@ -158,7 +158,7 @@ func (s *AdminService) HandleRoleMenu(ctx context.Context, in *v1.HandleRoleMenu
 	}, nil
 }
 
-// HandleRoleResource 处理权限角色资源
+// HandleRoleResource 处理角色资源
 func (s *AdminService) HandleRoleResource(ctx context.Context, in *v1.HandleRoleResourceReq) (*v1.HandleRoleResourceReply, error) {
 	inResourceIds := in.GetData().GetResourceIds()
 	apiIds := make([]uint, 0, len(inResourceIds))
@@ -167,10 +167,10 @@ func (s *AdminService) HandleRoleResource(ctx context.Context, in *v1.HandleRole
 	}
 	resources, err := s.resourceCase.ListByIDs(ctx, apiIds...)
 	if err != nil {
-		return nil, v1.ErrorRoleHandleResourceFail("权限角色资源查询失败")
+		return nil, v1.ErrorRoleHandleResourceFail("角色资源查询失败")
 	}
 	if err := s.roleCase.HandleResource(ctx, &biz.Role{ID: uint(in.GetId()), Resources: resources}); err != nil {
-		return nil, v1.ErrorRoleHandleResourceFail("权限角色资源处理失败：%v", err)
+		return nil, v1.ErrorRoleHandleResourceFail("角色资源处理失败：%v", err)
 	}
 	return &v1.HandleRoleResourceReply{
 		Success: true,

@@ -278,10 +278,10 @@
         ]
       }
     },
-    "/admin/v1/departments": {
+    "/admin/v1/depts": {
       "get": {
         "summary": "列表部门",
-        "operationId": "Admin_ListDepartment",
+        "operationId": "Admin_ListDept",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -327,12 +327,12 @@
       },
       "post": {
         "summary": "创建部门",
-        "operationId": "Admin_CreateDepartment",
+        "operationId": "Admin_CreateDept",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1CreateDepartmentReply"
+              "$ref": "#/definitions/v1CreateDeptReply"
             }
           },
           "default": {
@@ -348,7 +348,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1CreateDepartmentReq"
+              "$ref": "#/definitions/v1CreateDeptReq"
             }
           }
         ],
@@ -357,15 +357,15 @@
         ]
       }
     },
-    "/admin/v1/departments/{id}": {
+    "/admin/v1/depts/{id}": {
       "get": {
         "summary": "获取部门",
-        "operationId": "Admin_GetDepartment",
+        "operationId": "Admin_GetDept",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Department"
+              "$ref": "#/definitions/v1Dept"
             }
           },
           "default": {
@@ -390,12 +390,12 @@
       },
       "delete": {
         "summary": "删除部门",
-        "operationId": "Admin_DeleteDepartment",
+        "operationId": "Admin_DeleteDept",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1DeleteDepartmentReply"
+              "$ref": "#/definitions/v1DeleteDeptReply"
             }
           },
           "default": {
@@ -420,12 +420,12 @@
       },
       "put": {
         "summary": "修改部门",
-        "operationId": "Admin_UpdateDepartment",
+        "operationId": "Admin_UpdateDept",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1UpdateDepartmentReply"
+              "$ref": "#/definitions/v1UpdateDeptReply"
             }
           },
           "default": {
@@ -448,7 +448,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1UpdateDepartmentReqData"
+              "$ref": "#/definitions/v1UpdateDeptReqData"
             }
           }
         ],
@@ -457,15 +457,15 @@
         ]
       }
     },
-    "/admin/v1/departments/{parentId}/trees": {
+    "/admin/v1/depts/{parentId}/trees": {
       "get": {
         "summary": "获取树形部门",
-        "operationId": "Admin_ListDepartmentTree",
+        "operationId": "Admin_ListDeptTree",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1ListDepartmentTreeReply"
+              "$ref": "#/definitions/v1ListDeptTreeReply"
             }
           },
           "default": {
@@ -793,7 +793,7 @@
     },
     "/admin/v1/domains/{id}/menus": {
       "get": {
-        "summary": "获取权限角色菜单",
+        "summary": "获取角色菜单",
         "operationId": "Admin_ListDomainMenu",
         "responses": {
           "200": {
@@ -823,7 +823,7 @@
         ]
       },
       "post": {
-        "summary": "处理权限角色菜单",
+        "summary": "处理角色菜单",
         "operationId": "Admin_HandleDomainMenu",
         "responses": {
           "200": {
@@ -1560,7 +1560,7 @@
     },
     "/admin/v1/roles": {
       "get": {
-        "summary": "权限角色模块\n列表权限角色",
+        "summary": "角色模块\n列表角色",
         "operationId": "Admin_ListRole",
         "responses": {
           "200": {
@@ -1606,7 +1606,7 @@
         ]
       },
       "post": {
-        "summary": "创建权限角色",
+        "summary": "创建角色",
         "operationId": "Admin_CreateRole",
         "responses": {
           "200": {
@@ -1639,7 +1639,7 @@
     },
     "/admin/v1/roles/{id}": {
       "get": {
-        "summary": "获取权限角色",
+        "summary": "获取角色",
         "operationId": "Admin_GetRole",
         "responses": {
           "200": {
@@ -1669,7 +1669,7 @@
         ]
       },
       "delete": {
-        "summary": "删除权限角色",
+        "summary": "删除角色",
         "operationId": "Admin_DeleteRole",
         "responses": {
           "200": {
@@ -1699,7 +1699,7 @@
         ]
       },
       "put": {
-        "summary": "修改权限角色",
+        "summary": "修改角色",
         "operationId": "Admin_UpdateRole",
         "responses": {
           "200": {
@@ -1739,7 +1739,7 @@
     },
     "/admin/v1/roles/{id}/menus": {
       "get": {
-        "summary": "获取权限角色菜单",
+        "summary": "获取角色菜单",
         "operationId": "Admin_ListRoleMenu",
         "responses": {
           "200": {
@@ -1769,7 +1769,7 @@
         ]
       },
       "post": {
-        "summary": "处理权限角色菜单",
+        "summary": "处理角色菜单",
         "operationId": "Admin_HandleRoleMenu",
         "responses": {
           "200": {
@@ -1809,7 +1809,7 @@
     },
     "/admin/v1/roles/{id}/resources": {
       "post": {
-        "summary": "处理权限角色资源",
+        "summary": "处理角色资源",
         "operationId": "Admin_HandleRoleResource",
         "responses": {
           "200": {
@@ -2047,7 +2047,7 @@
     },
     "/admin/v1/users/menus/trees": {
       "get": {
-        "summary": "获取权限角色菜单树形列表",
+        "summary": "获取角色菜单树形列表",
         "operationId": "Admin_ListUserRoleMenuTree2",
         "responses": {
           "200": {
@@ -2079,7 +2079,7 @@
     },
     "/admin/v1/users/permissions": {
       "get": {
-        "summary": "获取权限角色权限列表",
+        "summary": "获取角色权限列表",
         "operationId": "Admin_ListUserRolePermission2",
         "responses": {
           "200": {
@@ -2157,7 +2157,7 @@
     },
     "/admin/v1/users/roles/{roleId}/menus/trees": {
       "get": {
-        "summary": "获取权限角色菜单树形列表",
+        "summary": "获取角色菜单树形列表",
         "operationId": "Admin_ListUserRoleMenuTree",
         "responses": {
           "200": {
@@ -2189,7 +2189,7 @@
     },
     "/admin/v1/users/roles/{roleId}/permissions": {
       "get": {
-        "summary": "获取权限角色权限列表",
+        "summary": "获取角色权限列表",
         "operationId": "Admin_ListUserRolePermission",
         "responses": {
           "200": {
@@ -2412,7 +2412,18 @@
         }
       }
     },
-    "ListUserRoleMenuTreeReplyMeta": {
+    "PassLoginReqPassField": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "RouterMenuMeta": {
       "type": "object",
       "properties": {
         "title": {
@@ -2447,17 +2458,6 @@
         "currentActiveMenu": {
           "type": "string",
           "title": "当前激活的菜单。用于配置详情页时左侧激活的菜单路径"
-        }
-      }
-    },
-    "PassLoginReqPassField": {
-      "type": "object",
-      "properties": {
-        "account": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
         }
       }
     },
@@ -2567,7 +2567,7 @@
       },
       "description": "`Any` contains an arbitrary serialized protocol buffer message along with a\nURL that describes the type of the serialized message.\n\nProtobuf library provides support to pack/unpack Any values in the form\nof utility functions or additional generated methods of the Any type.\n\nExample 1: Pack and unpack a message in C++.\n\n    Foo foo = ...;\n    Any any;\n    any.PackFrom(foo);\n    ...\n    if (any.UnpackTo(\u0026foo)) {\n      ...\n    }\n\nExample 2: Pack and unpack a message in Java.\n\n    Foo foo = ...;\n    Any any = Any.pack(foo);\n    ...\n    if (any.is(Foo.class)) {\n      foo = any.unpack(Foo.class);\n    }\n\nExample 3: Pack and unpack a message in Python.\n\n    foo = Foo(...)\n    any = Any()\n    any.Pack(foo)\n    ...\n    if any.Is(Foo.DESCRIPTOR):\n      any.Unpack(foo)\n      ...\n\nExample 4: Pack and unpack a message in Go\n\n     foo := \u0026pb.Foo{...}\n     any, err := anypb.New(foo)\n     if err != nil {\n       ...\n     }\n     ...\n     foo := \u0026pb.Foo{}\n     if err := any.UnmarshalTo(foo); err != nil {\n       ...\n     }\n\nThe pack methods provided by protobuf library will by default use\n'type.googleapis.com/full.type.name' as the type URL and the unpack\nmethods only use the fully qualified type name after the last '/'\nin the type URL, for example \"foo.bar.com/x/y.z\" will yield type\nname \"y.z\".\n\n\nJSON\n\nThe JSON representation of an `Any` value uses the regular\nrepresentation of the deserialized, embedded message, with an\nadditional field `@type` which contains the type URL. Example:\n\n    package google.profile;\n    message Person {\n      string first_name = 1;\n      string last_name = 2;\n    }\n\n    {\n      \"@type\": \"type.googleapis.com/google.profile.Person\",\n      \"firstName\": \u003cstring\u003e,\n      \"lastName\": \u003cstring\u003e\n    }\n\nIf the embedded message type is well-known and has a custom JSON\nrepresentation, that representation will be embedded adding a field\n`value` which holds the custom JSON in addition to the `@type`\nfield. Example (for message [google.protobuf.Duration][]):\n\n    {\n      \"@type\": \"type.googleapis.com/google.protobuf.Duration\",\n      \"value\": \"1.212s\"\n    }"
     },
-    "protobufDepartmentState": {
+    "protobufDeptState": {
       "type": "string",
       "enum": [
         "DEPARTMENT_STATE_UNSPECIFIED",
@@ -2738,7 +2738,7 @@
         }
       }
     },
-    "v1CreateDepartmentReply": {
+    "v1CreateDeptReply": {
       "type": "object",
       "properties": {
         "success": {
@@ -2753,7 +2753,7 @@
       },
       "title": "回应 - 创建部门"
     },
-    "v1CreateDepartmentReq": {
+    "v1CreateDeptReq": {
       "type": "object",
       "properties": {
         "name": {
@@ -2768,7 +2768,7 @@
           "format": "int32"
         },
         "state": {
-          "$ref": "#/definitions/protobufDepartmentState"
+          "$ref": "#/definitions/protobufDeptState"
         },
         "remarks": {
           "type": "string"
@@ -2981,7 +2981,7 @@
           "$ref": "#/definitions/protobufAny"
         }
       },
-      "title": "回应 - 创建权限角色"
+      "title": "回应 - 创建角色"
     },
     "v1CreateRoleReq": {
       "type": "object",
@@ -3007,7 +3007,7 @@
           "type": "string"
         }
       },
-      "title": "请求 - 创建权限角色"
+      "title": "请求 - 创建角色"
     },
     "v1CreateUserReply": {
       "type": "object",
@@ -3060,7 +3060,7 @@
       },
       "title": "请求 - 创建用户"
     },
-    "v1DeleteDepartmentReply": {
+    "v1DeleteDeptReply": {
       "type": "object",
       "properties": {
         "success": {
@@ -3148,7 +3148,7 @@
           "$ref": "#/definitions/protobufAny"
         }
       },
-      "title": "回应 - 删除权限角色"
+      "title": "回应 - 删除角色"
     },
     "v1DeleteUserReply": {
       "type": "object",
@@ -3165,7 +3165,7 @@
       },
       "title": "回应 - 删除用户"
     },
-    "v1Department": {
+    "v1Dept": {
       "type": "object",
       "properties": {
         "createdAt": {
@@ -3195,12 +3195,12 @@
           "type": "string"
         },
         "state": {
-          "$ref": "#/definitions/protobufDepartmentState"
+          "$ref": "#/definitions/protobufDeptState"
         },
         "children": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/v1Department"
+            "$ref": "#/definitions/v1Dept"
           }
         }
       },
@@ -3343,7 +3343,7 @@
           "$ref": "#/definitions/protobufAny"
         }
       },
-      "title": "回应 - 处理权限角色菜单"
+      "title": "回应 - 处理角色菜单"
     },
     "v1HandleRoleMenuReqData": {
       "type": "object",
@@ -3392,7 +3392,7 @@
           "$ref": "#/definitions/protobufAny"
         }
       },
-      "title": "回应 - 处理权限角色资源"
+      "title": "回应 - 处理角色资源"
     },
     "v1HandleRoleResourceReqData": {
       "type": "object",
@@ -3458,7 +3458,7 @@
         }
       }
     },
-    "v1ListDepartmentTreeReply": {
+    "v1ListDeptTreeReply": {
       "type": "object",
       "properties": {
         "total": {
@@ -3468,7 +3468,7 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/v1Department"
+            "$ref": "#/definitions/v1Dept"
           }
         }
       },
@@ -3536,7 +3536,7 @@
           }
         }
       },
-      "title": "回应 - 获取权限角色菜单"
+      "title": "回应 - 获取角色菜单"
     },
     "v1ListUserDomainReply": {
       "type": "object",
@@ -3564,36 +3564,11 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/v1ListUserRoleMenuTreeReplyMenu"
+            "$ref": "#/definitions/v1RouterMenu"
           }
         }
-      }
-    },
-    "v1ListUserRoleMenuTreeReplyMenu": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "path": {
-          "type": "string"
-        },
-        "component": {
-          "type": "string"
-        },
-        "redirect": {
-          "type": "string"
-        },
-        "meta": {
-          "$ref": "#/definitions/ListUserRoleMenuTreeReplyMeta"
-        },
-        "children": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1ListUserRoleMenuTreeReplyMenu"
-          }
-        }
-      }
+      },
+      "title": "回应 - 获取用户角色菜单列表-树形"
     },
     "v1ListUserRolePermissionReply": {
       "type": "object",
@@ -3609,7 +3584,7 @@
           }
         }
       },
-      "title": "回应 - 获取用户权限角色列表"
+      "title": "回应 - 获取用户角色列表"
     },
     "v1ListUserRoleReply": {
       "type": "object",
@@ -3625,7 +3600,7 @@
           "format": "int32"
         }
       },
-      "title": "回应 - 用户权限角色"
+      "title": "回应 - 用户角色"
     },
     "v1LoginReply": {
       "type": "object",
@@ -3803,9 +3778,36 @@
           "type": "string"
         }
       },
-      "title": "权限角色模块"
+      "title": "角色模块"
     },
-    "v1UpdateDepartmentReply": {
+    "v1RouterMenu": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "component": {
+          "type": "string"
+        },
+        "redirect": {
+          "type": "string"
+        },
+        "meta": {
+          "$ref": "#/definitions/RouterMenuMeta"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1RouterMenu"
+          }
+        }
+      },
+      "title": "路由菜单"
+    },
+    "v1UpdateDeptReply": {
       "type": "object",
       "properties": {
         "success": {
@@ -3820,7 +3822,7 @@
       },
       "title": "回应 - 创建部门"
     },
-    "v1UpdateDepartmentReqData": {
+    "v1UpdateDeptReqData": {
       "type": "object",
       "properties": {
         "name": {
@@ -3835,7 +3837,7 @@
           "format": "int32"
         },
         "state": {
-          "$ref": "#/definitions/protobufDepartmentState"
+          "$ref": "#/definitions/protobufDeptState"
         },
         "remarks": {
           "type": "string"
@@ -4089,7 +4091,7 @@
           "$ref": "#/definitions/protobufAny"
         }
       },
-      "title": "回应 - 创建权限角色"
+      "title": "回应 - 创建角色"
     },
     "v1UpdateRoleReqData": {
       "type": "object",
@@ -4129,7 +4131,7 @@
           "$ref": "#/definitions/protobufAny"
         }
       },
-      "title": "回应 - 创建权限角色"
+      "title": "回应 - 创建角色"
     },
     "v1UpdateRoleStateReqData": {
       "type": "object",

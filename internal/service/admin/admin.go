@@ -28,17 +28,17 @@ var _ v1.AdminServer = (*AdminService)(nil)
 // AdminService is a Admin service.
 type AdminService struct {
 	v1.UnimplementedAdminServer
-	ac             *conf.Auth
-	log            *log.Helper
-	ws             *websocket.WebsocketService
-	authCase       *biz.AuthUsecase
-	userCase       *biz.UserUsecase
-	domainCase     *biz.DomainUsecase
-	roleCase       *biz.RoleUsecase
-	menuCase       *biz.MenuUsecase
-	resourceCase   *biz.ResourceUsecase
-	departmentCase *biz.DepartmentUsecase
-	postCase       *biz.PostUsecase
+	ac           *conf.Auth
+	log          *log.Helper
+	ws           *websocket.WebsocketService
+	authCase     *biz.AuthUsecase
+	userCase     *biz.UserUsecase
+	domainCase   *biz.DomainUsecase
+	roleCase     *biz.RoleUsecase
+	menuCase     *biz.MenuUsecase
+	resourceCase *biz.ResourceUsecase
+	deptCase     *biz.DeptUsecase
+	postCase     *biz.PostUsecase
 }
 
 // NewAdminService new a Admin service.
@@ -52,21 +52,21 @@ func NewAdminService(
 	roleCase *biz.RoleUsecase,
 	menuCase *biz.MenuUsecase,
 	resourceCase *biz.ResourceUsecase,
-	departmentCase *biz.DepartmentUsecase,
+	deptCase *biz.DeptUsecase,
 	postCase *biz.PostUsecase,
 ) *AdminService {
 	l := log.NewHelper(log.With(logger, "module", "service/admin"))
 	return &AdminService{
-		log:            l,
-		ac:             ac,
-		ws:             ws,
-		authCase:       authCase,
-		userCase:       userCase,
-		domainCase:     domainCase,
-		roleCase:       roleCase,
-		menuCase:       menuCase,
-		resourceCase:   resourceCase,
-		departmentCase: departmentCase,
-		postCase:       postCase,
+		log:          l,
+		ac:           ac,
+		ws:           ws,
+		authCase:     authCase,
+		userCase:     userCase,
+		domainCase:   domainCase,
+		roleCase:     roleCase,
+		menuCase:     menuCase,
+		resourceCase: resourceCase,
+		deptCase:     deptCase,
+		postCase:     postCase,
 	}
 }

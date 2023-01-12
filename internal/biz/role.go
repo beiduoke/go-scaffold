@@ -63,25 +63,25 @@ func (uc *RoleUsecase) Create(ctx context.Context, g *Role) (*Role, error) {
 	return uc.biz.roleRepo.Save(ctx, g)
 }
 
-// ListByIDs 获取指定权限角色ID集合
+// ListByIDs 获取指定角色ID集合
 func (uc *RoleUsecase) ListByIDs(ctx context.Context, id ...uint) (roles []*Role, err error) {
 	roles, _ = uc.biz.roleRepo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
 	return
 }
 
-// Update 修改权限角色
+// Update 修改角色
 func (uc *RoleUsecase) Update(ctx context.Context, g *Role) error {
 	uc.log.WithContext(ctx).Infof("UpdateRole: %v", g)
 
 	role, _ := uc.biz.roleRepo.FindByID(ctx, g.ID)
 	if role == nil {
-		return errors.New("权限角色未注册")
+		return errors.New("角色未注册")
 	}
 
 	if role.Name != g.Name && g.Name != "" {
 		name, _ := uc.biz.roleRepo.FindByName(ctx, g.Name)
 		if name != nil {
-			return errors.New("权限角色名已存在")
+			return errors.New("角色名已存在")
 		}
 	}
 
@@ -96,13 +96,13 @@ func (uc *RoleUsecase) Update(ctx context.Context, g *Role) error {
 	return err
 }
 
-// UpdateState 修改权限角色状态
+// UpdateState 修改角色状态
 func (uc *RoleUsecase) UpdateState(ctx context.Context, g *Role) error {
 	uc.log.WithContext(ctx).Infof("UpdateRoleState: %v", g)
 
 	role, _ := uc.biz.roleRepo.FindByID(ctx, g.ID)
 	if role == nil {
-		return errors.New("权限角色未不存在")
+		return errors.New("角色未不存在")
 	}
 
 	if g.State <= 0 {
@@ -114,13 +114,13 @@ func (uc *RoleUsecase) UpdateState(ctx context.Context, g *Role) error {
 	return err
 }
 
-// List 权限角色列表全部
+// List 角色列表全部
 func (uc *RoleUsecase) ListAll(ctx context.Context) ([]*Role, int64) {
 	uc.log.WithContext(ctx).Infof("RoleList")
 	return uc.biz.roleRepo.ListPage(ctx, pagination.NewPagination())
 }
 
-// List 权限角色列表分页
+// List 角色列表分页
 func (uc *RoleUsecase) ListPage(ctx context.Context, pageNum, pageSize int32, query map[string]string, order map[string]bool) ([]*Role, int64) {
 	uc.log.WithContext(ctx).Infof("RolePage")
 	conditions := []pagination.Condition{}
@@ -141,13 +141,13 @@ func (uc *RoleUsecase) ListPage(ctx context.Context, pageNum, pageSize int32, qu
 	return uc.biz.roleRepo.ListPage(ctx, page)
 }
 
-// GetID 根据角色ID权限角色
+// GetID 根据角色ID角色
 func (uc *RoleUsecase) GetID(ctx context.Context, g *Role) (*Role, error) {
 	uc.log.WithContext(ctx).Infof("GetRoleID: %v", g)
 	return uc.biz.roleRepo.FindByID(ctx, g.ID)
 }
 
-// Delete 根据角色ID删除权限角色
+// Delete 根据角色ID删除角色
 func (uc *RoleUsecase) Delete(ctx context.Context, g *Role) error {
 	uc.log.WithContext(ctx).Infof("DeleteRole: %v", g)
 	return uc.biz.tm.InTx(ctx, func(ctx context.Context) error {
@@ -159,7 +159,7 @@ func (uc *RoleUsecase) Delete(ctx context.Context, g *Role) error {
 	})
 }
 
-// HandleMenu 获取权限角色菜单
+// HandleMenu 获取角色菜单
 func (uc *RoleUsecase) ListMenuByID(ctx context.Context, g *Role) ([]*Menu, error) {
 	uc.log.WithContext(ctx).Infof("ListMenuByIDs: %v", g)
 	return uc.biz.roleRepo.ListMenuByIDs(ctx, g.ID)

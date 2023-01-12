@@ -42,7 +42,7 @@ var ProviderSet = wire.NewSet(
 	NewMenuRepo,
 	NewResourceRepo,
 	NewUserRepo,
-	NewDepartmentRepo,
+	NewDeptRepo,
 	NewPostRepo,
 )
 

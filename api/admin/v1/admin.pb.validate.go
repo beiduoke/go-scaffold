@@ -2118,6 +2118,178 @@ var _ interface {
 	ErrorName() string
 } = ListUserRoleMenuTreeReply_DeprecatedValidationError{}
 
+// Validate checks the field values on RouterMenu with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *RouterMenu) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on RouterMenu with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in RouterMenuMultiError, or
+// nil if none found.
+func (m *RouterMenu) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RouterMenu) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Name
+
+	// no validation rules for Path
+
+	// no validation rules for Component
+
+	if all {
+		switch v := interface{}(m.GetMeta()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, RouterMenuValidationError{
+					field:  "Meta",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, RouterMenuValidationError{
+					field:  "Meta",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetMeta()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return RouterMenuValidationError{
+				field:  "Meta",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	for idx, item := range m.GetChildren() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, RouterMenuValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, RouterMenuValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return RouterMenuValidationError{
+					field:  fmt.Sprintf("Children[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.Redirect != nil {
+		// no validation rules for Redirect
+	}
+
+	if len(errors) > 0 {
+		return RouterMenuMultiError(errors)
+	}
+
+	return nil
+}
+
+// RouterMenuMultiError is an error wrapping multiple validation errors
+// returned by RouterMenu.ValidateAll() if the designated constraints aren't met.
+type RouterMenuMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RouterMenuMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RouterMenuMultiError) AllErrors() []error { return m }
+
+// RouterMenuValidationError is the validation error returned by
+// RouterMenu.Validate if the designated constraints aren't met.
+type RouterMenuValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RouterMenuValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RouterMenuValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RouterMenuValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RouterMenuValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RouterMenuValidationError) ErrorName() string { return "RouterMenuValidationError" }
+
+// Error satisfies the builtin error interface
+func (e RouterMenuValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRouterMenu.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RouterMenuValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RouterMenuValidationError{}
+
 // Validate checks the field values on ListUserRoleMenuTreeReply with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -12046,22 +12218,21 @@ var _ interface {
 	ErrorName() string
 } = ListMenuTreeReplyValidationError{}
 
-// Validate checks the field values on Department with the rules defined in the
-// proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *Department) Validate() error {
+// Validate checks the field values on Dept with the rules defined in the proto
+// definition for this message. If any rules are violated, the first error
+// encountered is returned, or nil if there are no violations.
+func (m *Dept) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on Department with the rules defined in
-// the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in DepartmentMultiError, or
-// nil if none found.
-func (m *Department) ValidateAll() error {
+// ValidateAll checks the field values on Dept with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in DeptMultiError, or nil if none found.
+func (m *Dept) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *Department) validate(all bool) error {
+func (m *Dept) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -12072,7 +12243,7 @@ func (m *Department) validate(all bool) error {
 		switch v := interface{}(m.GetCreatedAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, DepartmentValidationError{
+				errors = append(errors, DeptValidationError{
 					field:  "CreatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -12080,7 +12251,7 @@ func (m *Department) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, DepartmentValidationError{
+				errors = append(errors, DeptValidationError{
 					field:  "CreatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -12089,7 +12260,7 @@ func (m *Department) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetCreatedAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return DepartmentValidationError{
+			return DeptValidationError{
 				field:  "CreatedAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -12101,7 +12272,7 @@ func (m *Department) validate(all bool) error {
 		switch v := interface{}(m.GetUpdatedAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, DepartmentValidationError{
+				errors = append(errors, DeptValidationError{
 					field:  "UpdatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -12109,7 +12280,7 @@ func (m *Department) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, DepartmentValidationError{
+				errors = append(errors, DeptValidationError{
 					field:  "UpdatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -12118,7 +12289,7 @@ func (m *Department) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetUpdatedAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return DepartmentValidationError{
+			return DeptValidationError{
 				field:  "UpdatedAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -12145,7 +12316,7 @@ func (m *Department) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, DepartmentValidationError{
+					errors = append(errors, DeptValidationError{
 						field:  fmt.Sprintf("Children[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -12153,7 +12324,7 @@ func (m *Department) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, DepartmentValidationError{
+					errors = append(errors, DeptValidationError{
 						field:  fmt.Sprintf("Children[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -12162,7 +12333,7 @@ func (m *Department) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return DepartmentValidationError{
+				return DeptValidationError{
 					field:  fmt.Sprintf("Children[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -12173,18 +12344,18 @@ func (m *Department) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return DepartmentMultiError(errors)
+		return DeptMultiError(errors)
 	}
 
 	return nil
 }
 
-// DepartmentMultiError is an error wrapping multiple validation errors
-// returned by Department.ValidateAll() if the designated constraints aren't met.
-type DepartmentMultiError []error
+// DeptMultiError is an error wrapping multiple validation errors returned by
+// Dept.ValidateAll() if the designated constraints aren't met.
+type DeptMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m DepartmentMultiError) Error() string {
+func (m DeptMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -12193,11 +12364,11 @@ func (m DepartmentMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m DepartmentMultiError) AllErrors() []error { return m }
+func (m DeptMultiError) AllErrors() []error { return m }
 
-// DepartmentValidationError is the validation error returned by
-// Department.Validate if the designated constraints aren't met.
-type DepartmentValidationError struct {
+// DeptValidationError is the validation error returned by Dept.Validate if the
+// designated constraints aren't met.
+type DeptValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -12205,22 +12376,22 @@ type DepartmentValidationError struct {
 }
 
 // Field function returns field value.
-func (e DepartmentValidationError) Field() string { return e.field }
+func (e DeptValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e DepartmentValidationError) Reason() string { return e.reason }
+func (e DeptValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e DepartmentValidationError) Cause() error { return e.cause }
+func (e DeptValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e DepartmentValidationError) Key() bool { return e.key }
+func (e DeptValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e DepartmentValidationError) ErrorName() string { return "DepartmentValidationError" }
+func (e DeptValidationError) ErrorName() string { return "DeptValidationError" }
 
 // Error satisfies the builtin error interface
-func (e DepartmentValidationError) Error() string {
+func (e DeptValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -12232,14 +12403,14 @@ func (e DepartmentValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sDepartment.%s: %s%s",
+		"invalid %sDept.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = DepartmentValidationError{}
+var _ error = DeptValidationError{}
 
 var _ interface {
 	Field() string
@@ -12247,24 +12418,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = DepartmentValidationError{}
+} = DeptValidationError{}
 
-// Validate checks the field values on CreateDepartmentReq with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *CreateDepartmentReq) Validate() error {
+// Validate checks the field values on CreateDeptReq with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *CreateDeptReq) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on CreateDepartmentReq with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// CreateDepartmentReqMultiError, or nil if none found.
-func (m *CreateDepartmentReq) ValidateAll() error {
+// ValidateAll checks the field values on CreateDeptReq with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in CreateDeptReqMultiError, or
+// nil if none found.
+func (m *CreateDeptReq) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *CreateDepartmentReq) validate(all bool) error {
+func (m *CreateDeptReq) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -12272,7 +12443,7 @@ func (m *CreateDepartmentReq) validate(all bool) error {
 	var errors []error
 
 	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
-		err := CreateDepartmentReqValidationError{
+		err := CreateDeptReqValidationError{
 			field:  "Name",
 			reason: "value length must be between 1 and 10 runes, inclusive",
 		}
@@ -12283,7 +12454,7 @@ func (m *CreateDepartmentReq) validate(all bool) error {
 	}
 
 	if m.GetParentId() < 0 {
-		err := CreateDepartmentReqValidationError{
+		err := CreateDeptReqValidationError{
 			field:  "ParentId",
 			reason: "value must be greater than or equal to 0",
 		}
@@ -12294,7 +12465,7 @@ func (m *CreateDepartmentReq) validate(all bool) error {
 	}
 
 	if m.GetSort() < 0 {
-		err := CreateDepartmentReqValidationError{
+		err := CreateDeptReqValidationError{
 			field:  "Sort",
 			reason: "value must be greater than or equal to 0",
 		}
@@ -12304,8 +12475,8 @@ func (m *CreateDepartmentReq) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if _, ok := _CreateDepartmentReq_State_NotInLookup[m.GetState()]; ok {
-		err := CreateDepartmentReqValidationError{
+	if _, ok := _CreateDeptReq_State_NotInLookup[m.GetState()]; ok {
+		err := CreateDeptReqValidationError{
 			field:  "State",
 			reason: "value must not be in list [0]",
 		}
@@ -12315,8 +12486,8 @@ func (m *CreateDepartmentReq) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if _, ok := protobuf.DepartmentState_name[int32(m.GetState())]; !ok {
-		err := CreateDepartmentReqValidationError{
+	if _, ok := protobuf.DeptState_name[int32(m.GetState())]; !ok {
+		err := CreateDeptReqValidationError{
 			field:  "State",
 			reason: "value must be one of the defined enum values",
 		}
@@ -12329,7 +12500,7 @@ func (m *CreateDepartmentReq) validate(all bool) error {
 	if m.Remarks != nil {
 
 		if l := utf8.RuneCountInString(m.GetRemarks()); l < 1 || l > 1000 {
-			err := CreateDepartmentReqValidationError{
+			err := CreateDeptReqValidationError{
 				field:  "Remarks",
 				reason: "value length must be between 1 and 1000 runes, inclusive",
 			}
@@ -12342,19 +12513,19 @@ func (m *CreateDepartmentReq) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return CreateDepartmentReqMultiError(errors)
+		return CreateDeptReqMultiError(errors)
 	}
 
 	return nil
 }
 
-// CreateDepartmentReqMultiError is an error wrapping multiple validation
-// errors returned by CreateDepartmentReq.ValidateAll() if the designated
-// constraints aren't met.
-type CreateDepartmentReqMultiError []error
+// CreateDeptReqMultiError is an error wrapping multiple validation errors
+// returned by CreateDeptReq.ValidateAll() if the designated constraints
+// aren't met.
+type CreateDeptReqMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m CreateDepartmentReqMultiError) Error() string {
+func (m CreateDeptReqMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -12363,11 +12534,11 @@ func (m CreateDepartmentReqMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m CreateDepartmentReqMultiError) AllErrors() []error { return m }
+func (m CreateDeptReqMultiError) AllErrors() []error { return m }
 
-// CreateDepartmentReqValidationError is the validation error returned by
-// CreateDepartmentReq.Validate if the designated constraints aren't met.
-type CreateDepartmentReqValidationError struct {
+// CreateDeptReqValidationError is the validation error returned by
+// CreateDeptReq.Validate if the designated constraints aren't met.
+type CreateDeptReqValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -12375,24 +12546,22 @@ type CreateDepartmentReqValidationError struct {
 }
 
 // Field function returns field value.
-func (e CreateDepartmentReqValidationError) Field() string { return e.field }
+func (e CreateDeptReqValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e CreateDepartmentReqValidationError) Reason() string { return e.reason }
+func (e CreateDeptReqValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e CreateDepartmentReqValidationError) Cause() error { return e.cause }
+func (e CreateDeptReqValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e CreateDepartmentReqValidationError) Key() bool { return e.key }
+func (e CreateDeptReqValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e CreateDepartmentReqValidationError) ErrorName() string {
-	return "CreateDepartmentReqValidationError"
-}
+func (e CreateDeptReqValidationError) ErrorName() string { return "CreateDeptReqValidationError" }
 
 // Error satisfies the builtin error interface
-func (e CreateDepartmentReqValidationError) Error() string {
+func (e CreateDeptReqValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -12404,14 +12573,14 @@ func (e CreateDepartmentReqValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sCreateDepartmentReq.%s: %s%s",
+		"invalid %sCreateDeptReq.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = CreateDepartmentReqValidationError{}
+var _ error = CreateDeptReqValidationError{}
 
 var _ interface {
 	Field() string
@@ -12419,664 +12588,28 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = CreateDepartmentReqValidationError{}
+} = CreateDeptReqValidationError{}
 
-var _CreateDepartmentReq_State_NotInLookup = map[protobuf.DepartmentState]struct{}{
+var _CreateDeptReq_State_NotInLookup = map[protobuf.DeptState]struct{}{
 	0: {},
 }
 
-// Validate checks the field values on CreateDepartmentReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *CreateDepartmentReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on CreateDepartmentReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// CreateDepartmentReplyMultiError, or nil if none found.
-func (m *CreateDepartmentReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *CreateDepartmentReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Success
-
-	// no validation rules for Message
-
-	if all {
-		switch v := interface{}(m.GetData()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CreateDepartmentReplyValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, CreateDepartmentReplyValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CreateDepartmentReplyValidationError{
-				field:  "Data",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if len(errors) > 0 {
-		return CreateDepartmentReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// CreateDepartmentReplyMultiError is an error wrapping multiple validation
-// errors returned by CreateDepartmentReply.ValidateAll() if the designated
-// constraints aren't met.
-type CreateDepartmentReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m CreateDepartmentReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m CreateDepartmentReplyMultiError) AllErrors() []error { return m }
-
-// CreateDepartmentReplyValidationError is the validation error returned by
-// CreateDepartmentReply.Validate if the designated constraints aren't met.
-type CreateDepartmentReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e CreateDepartmentReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e CreateDepartmentReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e CreateDepartmentReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e CreateDepartmentReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e CreateDepartmentReplyValidationError) ErrorName() string {
-	return "CreateDepartmentReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e CreateDepartmentReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sCreateDepartmentReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = CreateDepartmentReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = CreateDepartmentReplyValidationError{}
-
-// Validate checks the field values on UpdateDepartmentReq with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *UpdateDepartmentReq) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on UpdateDepartmentReq with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// UpdateDepartmentReqMultiError, or nil if none found.
-func (m *UpdateDepartmentReq) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *UpdateDepartmentReq) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetId() <= 0 {
-		err := UpdateDepartmentReqValidationError{
-			field:  "Id",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if all {
-		switch v := interface{}(m.GetData()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UpdateDepartmentReqValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, UpdateDepartmentReqValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UpdateDepartmentReqValidationError{
-				field:  "Data",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if len(errors) > 0 {
-		return UpdateDepartmentReqMultiError(errors)
-	}
-
-	return nil
-}
-
-// UpdateDepartmentReqMultiError is an error wrapping multiple validation
-// errors returned by UpdateDepartmentReq.ValidateAll() if the designated
-// constraints aren't met.
-type UpdateDepartmentReqMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m UpdateDepartmentReqMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m UpdateDepartmentReqMultiError) AllErrors() []error { return m }
-
-// UpdateDepartmentReqValidationError is the validation error returned by
-// UpdateDepartmentReq.Validate if the designated constraints aren't met.
-type UpdateDepartmentReqValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e UpdateDepartmentReqValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e UpdateDepartmentReqValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e UpdateDepartmentReqValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e UpdateDepartmentReqValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e UpdateDepartmentReqValidationError) ErrorName() string {
-	return "UpdateDepartmentReqValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e UpdateDepartmentReqValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sUpdateDepartmentReq.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = UpdateDepartmentReqValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = UpdateDepartmentReqValidationError{}
-
-// Validate checks the field values on UpdateDepartmentReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *UpdateDepartmentReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on UpdateDepartmentReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// UpdateDepartmentReplyMultiError, or nil if none found.
-func (m *UpdateDepartmentReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *UpdateDepartmentReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Success
-
-	// no validation rules for Message
-
-	if all {
-		switch v := interface{}(m.GetData()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UpdateDepartmentReplyValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, UpdateDepartmentReplyValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UpdateDepartmentReplyValidationError{
-				field:  "Data",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if len(errors) > 0 {
-		return UpdateDepartmentReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// UpdateDepartmentReplyMultiError is an error wrapping multiple validation
-// errors returned by UpdateDepartmentReply.ValidateAll() if the designated
-// constraints aren't met.
-type UpdateDepartmentReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m UpdateDepartmentReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m UpdateDepartmentReplyMultiError) AllErrors() []error { return m }
-
-// UpdateDepartmentReplyValidationError is the validation error returned by
-// UpdateDepartmentReply.Validate if the designated constraints aren't met.
-type UpdateDepartmentReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e UpdateDepartmentReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e UpdateDepartmentReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e UpdateDepartmentReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e UpdateDepartmentReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e UpdateDepartmentReplyValidationError) ErrorName() string {
-	return "UpdateDepartmentReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e UpdateDepartmentReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sUpdateDepartmentReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = UpdateDepartmentReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = UpdateDepartmentReplyValidationError{}
-
-// Validate checks the field values on GetDepartmentReq with the rules defined
+// Validate checks the field values on CreateDeptReply with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
-func (m *GetDepartmentReq) Validate() error {
+func (m *CreateDeptReply) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on GetDepartmentReq with the rules
+// ValidateAll checks the field values on CreateDeptReply with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// GetDepartmentReqMultiError, or nil if none found.
-func (m *GetDepartmentReq) ValidateAll() error {
+// CreateDeptReplyMultiError, or nil if none found.
+func (m *CreateDeptReply) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *GetDepartmentReq) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetId() <= 0 {
-		err := GetDepartmentReqValidationError{
-			field:  "Id",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if len(errors) > 0 {
-		return GetDepartmentReqMultiError(errors)
-	}
-
-	return nil
-}
-
-// GetDepartmentReqMultiError is an error wrapping multiple validation errors
-// returned by GetDepartmentReq.ValidateAll() if the designated constraints
-// aren't met.
-type GetDepartmentReqMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m GetDepartmentReqMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m GetDepartmentReqMultiError) AllErrors() []error { return m }
-
-// GetDepartmentReqValidationError is the validation error returned by
-// GetDepartmentReq.Validate if the designated constraints aren't met.
-type GetDepartmentReqValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e GetDepartmentReqValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e GetDepartmentReqValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e GetDepartmentReqValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e GetDepartmentReqValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e GetDepartmentReqValidationError) ErrorName() string { return "GetDepartmentReqValidationError" }
-
-// Error satisfies the builtin error interface
-func (e GetDepartmentReqValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sGetDepartmentReq.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = GetDepartmentReqValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = GetDepartmentReqValidationError{}
-
-// Validate checks the field values on DeleteDepartmentReq with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *DeleteDepartmentReq) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on DeleteDepartmentReq with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// DeleteDepartmentReqMultiError, or nil if none found.
-func (m *DeleteDepartmentReq) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *DeleteDepartmentReq) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetId() <= 0 {
-		err := DeleteDepartmentReqValidationError{
-			field:  "Id",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if len(errors) > 0 {
-		return DeleteDepartmentReqMultiError(errors)
-	}
-
-	return nil
-}
-
-// DeleteDepartmentReqMultiError is an error wrapping multiple validation
-// errors returned by DeleteDepartmentReq.ValidateAll() if the designated
-// constraints aren't met.
-type DeleteDepartmentReqMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m DeleteDepartmentReqMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m DeleteDepartmentReqMultiError) AllErrors() []error { return m }
-
-// DeleteDepartmentReqValidationError is the validation error returned by
-// DeleteDepartmentReq.Validate if the designated constraints aren't met.
-type DeleteDepartmentReqValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e DeleteDepartmentReqValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e DeleteDepartmentReqValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e DeleteDepartmentReqValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e DeleteDepartmentReqValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e DeleteDepartmentReqValidationError) ErrorName() string {
-	return "DeleteDepartmentReqValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e DeleteDepartmentReqValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sDeleteDepartmentReq.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = DeleteDepartmentReqValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = DeleteDepartmentReqValidationError{}
-
-// Validate checks the field values on DeleteDepartmentReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *DeleteDepartmentReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on DeleteDepartmentReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// DeleteDepartmentReplyMultiError, or nil if none found.
-func (m *DeleteDepartmentReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *DeleteDepartmentReply) validate(all bool) error {
+func (m *CreateDeptReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -13091,7 +12624,7 @@ func (m *DeleteDepartmentReply) validate(all bool) error {
 		switch v := interface{}(m.GetData()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, DeleteDepartmentReplyValidationError{
+				errors = append(errors, CreateDeptReplyValidationError{
 					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -13099,7 +12632,7 @@ func (m *DeleteDepartmentReply) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, DeleteDepartmentReplyValidationError{
+				errors = append(errors, CreateDeptReplyValidationError{
 					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -13108,7 +12641,7 @@ func (m *DeleteDepartmentReply) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return DeleteDepartmentReplyValidationError{
+			return CreateDeptReplyValidationError{
 				field:  "Data",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -13117,19 +12650,19 @@ func (m *DeleteDepartmentReply) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return DeleteDepartmentReplyMultiError(errors)
+		return CreateDeptReplyMultiError(errors)
 	}
 
 	return nil
 }
 
-// DeleteDepartmentReplyMultiError is an error wrapping multiple validation
-// errors returned by DeleteDepartmentReply.ValidateAll() if the designated
-// constraints aren't met.
-type DeleteDepartmentReplyMultiError []error
+// CreateDeptReplyMultiError is an error wrapping multiple validation errors
+// returned by CreateDeptReply.ValidateAll() if the designated constraints
+// aren't met.
+type CreateDeptReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m DeleteDepartmentReplyMultiError) Error() string {
+func (m CreateDeptReplyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -13138,11 +12671,11 @@ func (m DeleteDepartmentReplyMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m DeleteDepartmentReplyMultiError) AllErrors() []error { return m }
+func (m CreateDeptReplyMultiError) AllErrors() []error { return m }
 
-// DeleteDepartmentReplyValidationError is the validation error returned by
-// DeleteDepartmentReply.Validate if the designated constraints aren't met.
-type DeleteDepartmentReplyValidationError struct {
+// CreateDeptReplyValidationError is the validation error returned by
+// CreateDeptReply.Validate if the designated constraints aren't met.
+type CreateDeptReplyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -13150,24 +12683,22 @@ type DeleteDepartmentReplyValidationError struct {
 }
 
 // Field function returns field value.
-func (e DeleteDepartmentReplyValidationError) Field() string { return e.field }
+func (e CreateDeptReplyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e DeleteDepartmentReplyValidationError) Reason() string { return e.reason }
+func (e CreateDeptReplyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e DeleteDepartmentReplyValidationError) Cause() error { return e.cause }
+func (e CreateDeptReplyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e DeleteDepartmentReplyValidationError) Key() bool { return e.key }
+func (e CreateDeptReplyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e DeleteDepartmentReplyValidationError) ErrorName() string {
-	return "DeleteDepartmentReplyValidationError"
-}
+func (e CreateDeptReplyValidationError) ErrorName() string { return "CreateDeptReplyValidationError" }
 
 // Error satisfies the builtin error interface
-func (e DeleteDepartmentReplyValidationError) Error() string {
+func (e CreateDeptReplyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -13179,14 +12710,14 @@ func (e DeleteDepartmentReplyValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sDeleteDepartmentReply.%s: %s%s",
+		"invalid %sCreateDeptReply.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = DeleteDepartmentReplyValidationError{}
+var _ error = CreateDeptReplyValidationError{}
 
 var _ interface {
 	Field() string
@@ -13194,24 +12725,651 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = DeleteDepartmentReplyValidationError{}
+} = CreateDeptReplyValidationError{}
 
-// Validate checks the field values on ListDepartmentTreeReq with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListDepartmentTreeReq) Validate() error {
+// Validate checks the field values on UpdateDeptReq with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *UpdateDeptReq) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ListDepartmentTreeReq with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ListDepartmentTreeReqMultiError, or nil if none found.
-func (m *ListDepartmentTreeReq) ValidateAll() error {
+// ValidateAll checks the field values on UpdateDeptReq with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in UpdateDeptReqMultiError, or
+// nil if none found.
+func (m *UpdateDeptReq) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ListDepartmentTreeReq) validate(all bool) error {
+func (m *UpdateDeptReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := UpdateDeptReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UpdateDeptReqValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UpdateDeptReqValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateDeptReqValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return UpdateDeptReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateDeptReqMultiError is an error wrapping multiple validation errors
+// returned by UpdateDeptReq.ValidateAll() if the designated constraints
+// aren't met.
+type UpdateDeptReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateDeptReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateDeptReqMultiError) AllErrors() []error { return m }
+
+// UpdateDeptReqValidationError is the validation error returned by
+// UpdateDeptReq.Validate if the designated constraints aren't met.
+type UpdateDeptReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateDeptReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateDeptReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateDeptReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateDeptReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateDeptReqValidationError) ErrorName() string { return "UpdateDeptReqValidationError" }
+
+// Error satisfies the builtin error interface
+func (e UpdateDeptReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateDeptReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateDeptReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateDeptReqValidationError{}
+
+// Validate checks the field values on UpdateDeptReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *UpdateDeptReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateDeptReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateDeptReplyMultiError, or nil if none found.
+func (m *UpdateDeptReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateDeptReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Success
+
+	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UpdateDeptReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UpdateDeptReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateDeptReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return UpdateDeptReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateDeptReplyMultiError is an error wrapping multiple validation errors
+// returned by UpdateDeptReply.ValidateAll() if the designated constraints
+// aren't met.
+type UpdateDeptReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateDeptReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateDeptReplyMultiError) AllErrors() []error { return m }
+
+// UpdateDeptReplyValidationError is the validation error returned by
+// UpdateDeptReply.Validate if the designated constraints aren't met.
+type UpdateDeptReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateDeptReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateDeptReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateDeptReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateDeptReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateDeptReplyValidationError) ErrorName() string { return "UpdateDeptReplyValidationError" }
+
+// Error satisfies the builtin error interface
+func (e UpdateDeptReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateDeptReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateDeptReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateDeptReplyValidationError{}
+
+// Validate checks the field values on GetDeptReq with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *GetDeptReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetDeptReq with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in GetDeptReqMultiError, or
+// nil if none found.
+func (m *GetDeptReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetDeptReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := GetDeptReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return GetDeptReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetDeptReqMultiError is an error wrapping multiple validation errors
+// returned by GetDeptReq.ValidateAll() if the designated constraints aren't met.
+type GetDeptReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetDeptReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetDeptReqMultiError) AllErrors() []error { return m }
+
+// GetDeptReqValidationError is the validation error returned by
+// GetDeptReq.Validate if the designated constraints aren't met.
+type GetDeptReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetDeptReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetDeptReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetDeptReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetDeptReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetDeptReqValidationError) ErrorName() string { return "GetDeptReqValidationError" }
+
+// Error satisfies the builtin error interface
+func (e GetDeptReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetDeptReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetDeptReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetDeptReqValidationError{}
+
+// Validate checks the field values on DeleteDeptReq with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *DeleteDeptReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on DeleteDeptReq with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in DeleteDeptReqMultiError, or
+// nil if none found.
+func (m *DeleteDeptReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *DeleteDeptReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := DeleteDeptReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return DeleteDeptReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// DeleteDeptReqMultiError is an error wrapping multiple validation errors
+// returned by DeleteDeptReq.ValidateAll() if the designated constraints
+// aren't met.
+type DeleteDeptReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m DeleteDeptReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m DeleteDeptReqMultiError) AllErrors() []error { return m }
+
+// DeleteDeptReqValidationError is the validation error returned by
+// DeleteDeptReq.Validate if the designated constraints aren't met.
+type DeleteDeptReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DeleteDeptReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DeleteDeptReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DeleteDeptReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DeleteDeptReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DeleteDeptReqValidationError) ErrorName() string { return "DeleteDeptReqValidationError" }
+
+// Error satisfies the builtin error interface
+func (e DeleteDeptReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDeleteDeptReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DeleteDeptReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DeleteDeptReqValidationError{}
+
+// Validate checks the field values on DeleteDeptReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *DeleteDeptReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on DeleteDeptReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// DeleteDeptReplyMultiError, or nil if none found.
+func (m *DeleteDeptReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *DeleteDeptReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Success
+
+	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, DeleteDeptReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, DeleteDeptReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return DeleteDeptReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return DeleteDeptReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// DeleteDeptReplyMultiError is an error wrapping multiple validation errors
+// returned by DeleteDeptReply.ValidateAll() if the designated constraints
+// aren't met.
+type DeleteDeptReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m DeleteDeptReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m DeleteDeptReplyMultiError) AllErrors() []error { return m }
+
+// DeleteDeptReplyValidationError is the validation error returned by
+// DeleteDeptReply.Validate if the designated constraints aren't met.
+type DeleteDeptReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DeleteDeptReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DeleteDeptReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DeleteDeptReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DeleteDeptReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DeleteDeptReplyValidationError) ErrorName() string { return "DeleteDeptReplyValidationError" }
+
+// Error satisfies the builtin error interface
+func (e DeleteDeptReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDeleteDeptReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DeleteDeptReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DeleteDeptReplyValidationError{}
+
+// Validate checks the field values on ListDeptTreeReq with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *ListDeptTreeReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListDeptTreeReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListDeptTreeReqMultiError, or nil if none found.
+func (m *ListDeptTreeReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListDeptTreeReq) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -13219,7 +13377,7 @@ func (m *ListDepartmentTreeReq) validate(all bool) error {
 	var errors []error
 
 	if m.GetParentId() < 0 {
-		err := ListDepartmentTreeReqValidationError{
+		err := ListDeptTreeReqValidationError{
 			field:  "ParentId",
 			reason: "value must be greater than or equal to 0",
 		}
@@ -13230,19 +13388,19 @@ func (m *ListDepartmentTreeReq) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return ListDepartmentTreeReqMultiError(errors)
+		return ListDeptTreeReqMultiError(errors)
 	}
 
 	return nil
 }
 
-// ListDepartmentTreeReqMultiError is an error wrapping multiple validation
-// errors returned by ListDepartmentTreeReq.ValidateAll() if the designated
-// constraints aren't met.
-type ListDepartmentTreeReqMultiError []error
+// ListDeptTreeReqMultiError is an error wrapping multiple validation errors
+// returned by ListDeptTreeReq.ValidateAll() if the designated constraints
+// aren't met.
+type ListDeptTreeReqMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ListDepartmentTreeReqMultiError) Error() string {
+func (m ListDeptTreeReqMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -13251,11 +13409,11 @@ func (m ListDepartmentTreeReqMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ListDepartmentTreeReqMultiError) AllErrors() []error { return m }
+func (m ListDeptTreeReqMultiError) AllErrors() []error { return m }
 
-// ListDepartmentTreeReqValidationError is the validation error returned by
-// ListDepartmentTreeReq.Validate if the designated constraints aren't met.
-type ListDepartmentTreeReqValidationError struct {
+// ListDeptTreeReqValidationError is the validation error returned by
+// ListDeptTreeReq.Validate if the designated constraints aren't met.
+type ListDeptTreeReqValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -13263,24 +13421,22 @@ type ListDepartmentTreeReqValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListDepartmentTreeReqValidationError) Field() string { return e.field }
+func (e ListDeptTreeReqValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ListDepartmentTreeReqValidationError) Reason() string { return e.reason }
+func (e ListDeptTreeReqValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ListDepartmentTreeReqValidationError) Cause() error { return e.cause }
+func (e ListDeptTreeReqValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ListDepartmentTreeReqValidationError) Key() bool { return e.key }
+func (e ListDeptTreeReqValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListDepartmentTreeReqValidationError) ErrorName() string {
-	return "ListDepartmentTreeReqValidationError"
-}
+func (e ListDeptTreeReqValidationError) ErrorName() string { return "ListDeptTreeReqValidationError" }
 
 // Error satisfies the builtin error interface
-func (e ListDepartmentTreeReqValidationError) Error() string {
+func (e ListDeptTreeReqValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -13292,14 +13448,14 @@ func (e ListDepartmentTreeReqValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListDepartmentTreeReq.%s: %s%s",
+		"invalid %sListDeptTreeReq.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListDepartmentTreeReqValidationError{}
+var _ error = ListDeptTreeReqValidationError{}
 
 var _ interface {
 	Field() string
@@ -13307,24 +13463,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListDepartmentTreeReqValidationError{}
+} = ListDeptTreeReqValidationError{}
 
-// Validate checks the field values on ListDepartmentTreeReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListDepartmentTreeReply) Validate() error {
+// Validate checks the field values on ListDeptTreeReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *ListDeptTreeReply) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ListDepartmentTreeReply with the
-// rules defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on ListDeptTreeReply with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// ListDepartmentTreeReplyMultiError, or nil if none found.
-func (m *ListDepartmentTreeReply) ValidateAll() error {
+// ListDeptTreeReplyMultiError, or nil if none found.
+func (m *ListDeptTreeReply) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ListDepartmentTreeReply) validate(all bool) error {
+func (m *ListDeptTreeReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -13340,7 +13496,7 @@ func (m *ListDepartmentTreeReply) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ListDepartmentTreeReplyValidationError{
+					errors = append(errors, ListDeptTreeReplyValidationError{
 						field:  fmt.Sprintf("Items[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -13348,7 +13504,7 @@ func (m *ListDepartmentTreeReply) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, ListDepartmentTreeReplyValidationError{
+					errors = append(errors, ListDeptTreeReplyValidationError{
 						field:  fmt.Sprintf("Items[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -13357,7 +13513,7 @@ func (m *ListDepartmentTreeReply) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return ListDepartmentTreeReplyValidationError{
+				return ListDeptTreeReplyValidationError{
 					field:  fmt.Sprintf("Items[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -13368,19 +13524,19 @@ func (m *ListDepartmentTreeReply) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return ListDepartmentTreeReplyMultiError(errors)
+		return ListDeptTreeReplyMultiError(errors)
 	}
 
 	return nil
 }
 
-// ListDepartmentTreeReplyMultiError is an error wrapping multiple validation
-// errors returned by ListDepartmentTreeReply.ValidateAll() if the designated
-// constraints aren't met.
-type ListDepartmentTreeReplyMultiError []error
+// ListDeptTreeReplyMultiError is an error wrapping multiple validation errors
+// returned by ListDeptTreeReply.ValidateAll() if the designated constraints
+// aren't met.
+type ListDeptTreeReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ListDepartmentTreeReplyMultiError) Error() string {
+func (m ListDeptTreeReplyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -13389,11 +13545,11 @@ func (m ListDepartmentTreeReplyMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ListDepartmentTreeReplyMultiError) AllErrors() []error { return m }
+func (m ListDeptTreeReplyMultiError) AllErrors() []error { return m }
 
-// ListDepartmentTreeReplyValidationError is the validation error returned by
-// ListDepartmentTreeReply.Validate if the designated constraints aren't met.
-type ListDepartmentTreeReplyValidationError struct {
+// ListDeptTreeReplyValidationError is the validation error returned by
+// ListDeptTreeReply.Validate if the designated constraints aren't met.
+type ListDeptTreeReplyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -13401,24 +13557,24 @@ type ListDepartmentTreeReplyValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListDepartmentTreeReplyValidationError) Field() string { return e.field }
+func (e ListDeptTreeReplyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ListDepartmentTreeReplyValidationError) Reason() string { return e.reason }
+func (e ListDeptTreeReplyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ListDepartmentTreeReplyValidationError) Cause() error { return e.cause }
+func (e ListDeptTreeReplyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ListDepartmentTreeReplyValidationError) Key() bool { return e.key }
+func (e ListDeptTreeReplyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListDepartmentTreeReplyValidationError) ErrorName() string {
-	return "ListDepartmentTreeReplyValidationError"
+func (e ListDeptTreeReplyValidationError) ErrorName() string {
+	return "ListDeptTreeReplyValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ListDepartmentTreeReplyValidationError) Error() string {
+func (e ListDeptTreeReplyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -13430,14 +13586,14 @@ func (e ListDepartmentTreeReplyValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListDepartmentTreeReply.%s: %s%s",
+		"invalid %sListDeptTreeReply.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListDepartmentTreeReplyValidationError{}
+var _ error = ListDeptTreeReplyValidationError{}
 
 var _ interface {
 	Field() string
@@ -13445,7 +13601,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListDepartmentTreeReplyValidationError{}
+} = ListDeptTreeReplyValidationError{}
 
 // Validate checks the field values on Post with the rules defined in the proto
 // definition for this message. If any rules are violated, the first error
@@ -15585,22 +15741,22 @@ var _ interface {
 	ErrorName() string
 } = ListUserRoleMenuTreeReply_Deprecated_MenuValidationError{}
 
-// Validate checks the field values on ListUserRoleMenuTreeReply_Meta with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListUserRoleMenuTreeReply_Meta) Validate() error {
+// Validate checks the field values on RouterMenu_Meta with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *RouterMenu_Meta) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ListUserRoleMenuTreeReply_Meta with
-// the rules defined in the proto definition for this message. If any rules
-// are violated, the result is a list of violation errors wrapped in
-// ListUserRoleMenuTreeReply_MetaMultiError, or nil if none found.
-func (m *ListUserRoleMenuTreeReply_Meta) ValidateAll() error {
+// ValidateAll checks the field values on RouterMenu_Meta with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// RouterMenu_MetaMultiError, or nil if none found.
+func (m *RouterMenu_Meta) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ListUserRoleMenuTreeReply_Meta) validate(all bool) error {
+func (m *RouterMenu_Meta) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -15638,19 +15794,19 @@ func (m *ListUserRoleMenuTreeReply_Meta) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return ListUserRoleMenuTreeReply_MetaMultiError(errors)
+		return RouterMenu_MetaMultiError(errors)
 	}
 
 	return nil
 }
 
-// ListUserRoleMenuTreeReply_MetaMultiError is an error wrapping multiple
-// validation errors returned by ListUserRoleMenuTreeReply_Meta.ValidateAll()
-// if the designated constraints aren't met.
-type ListUserRoleMenuTreeReply_MetaMultiError []error
+// RouterMenu_MetaMultiError is an error wrapping multiple validation errors
+// returned by RouterMenu_Meta.ValidateAll() if the designated constraints
+// aren't met.
+type RouterMenu_MetaMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ListUserRoleMenuTreeReply_MetaMultiError) Error() string {
+func (m RouterMenu_MetaMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -15659,12 +15815,11 @@ func (m ListUserRoleMenuTreeReply_MetaMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ListUserRoleMenuTreeReply_MetaMultiError) AllErrors() []error { return m }
+func (m RouterMenu_MetaMultiError) AllErrors() []error { return m }
 
-// ListUserRoleMenuTreeReply_MetaValidationError is the validation error
-// returned by ListUserRoleMenuTreeReply_Meta.Validate if the designated
-// constraints aren't met.
-type ListUserRoleMenuTreeReply_MetaValidationError struct {
+// RouterMenu_MetaValidationError is the validation error returned by
+// RouterMenu_Meta.Validate if the designated constraints aren't met.
+type RouterMenu_MetaValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -15672,24 +15827,22 @@ type ListUserRoleMenuTreeReply_MetaValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListUserRoleMenuTreeReply_MetaValidationError) Field() string { return e.field }
+func (e RouterMenu_MetaValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ListUserRoleMenuTreeReply_MetaValidationError) Reason() string { return e.reason }
+func (e RouterMenu_MetaValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ListUserRoleMenuTreeReply_MetaValidationError) Cause() error { return e.cause }
+func (e RouterMenu_MetaValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ListUserRoleMenuTreeReply_MetaValidationError) Key() bool { return e.key }
+func (e RouterMenu_MetaValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListUserRoleMenuTreeReply_MetaValidationError) ErrorName() string {
-	return "ListUserRoleMenuTreeReply_MetaValidationError"
-}
+func (e RouterMenu_MetaValidationError) ErrorName() string { return "RouterMenu_MetaValidationError" }
 
 // Error satisfies the builtin error interface
-func (e ListUserRoleMenuTreeReply_MetaValidationError) Error() string {
+func (e RouterMenu_MetaValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -15701,14 +15854,14 @@ func (e ListUserRoleMenuTreeReply_MetaValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListUserRoleMenuTreeReply_Meta.%s: %s%s",
+		"invalid %sRouterMenu_Meta.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListUserRoleMenuTreeReply_MetaValidationError{}
+var _ error = RouterMenu_MetaValidationError{}
 
 var _ interface {
 	Field() string
@@ -15716,183 +15869,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListUserRoleMenuTreeReply_MetaValidationError{}
-
-// Validate checks the field values on ListUserRoleMenuTreeReply_Menu with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListUserRoleMenuTreeReply_Menu) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ListUserRoleMenuTreeReply_Menu with
-// the rules defined in the proto definition for this message. If any rules
-// are violated, the result is a list of violation errors wrapped in
-// ListUserRoleMenuTreeReply_MenuMultiError, or nil if none found.
-func (m *ListUserRoleMenuTreeReply_Menu) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ListUserRoleMenuTreeReply_Menu) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Name
-
-	// no validation rules for Path
-
-	// no validation rules for Component
-
-	if all {
-		switch v := interface{}(m.GetMeta()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, ListUserRoleMenuTreeReply_MenuValidationError{
-					field:  "Meta",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, ListUserRoleMenuTreeReply_MenuValidationError{
-					field:  "Meta",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetMeta()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return ListUserRoleMenuTreeReply_MenuValidationError{
-				field:  "Meta",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	for idx, item := range m.GetChildren() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ListUserRoleMenuTreeReply_MenuValidationError{
-						field:  fmt.Sprintf("Children[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ListUserRoleMenuTreeReply_MenuValidationError{
-						field:  fmt.Sprintf("Children[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return ListUserRoleMenuTreeReply_MenuValidationError{
-					field:  fmt.Sprintf("Children[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if m.Redirect != nil {
-		// no validation rules for Redirect
-	}
-
-	if len(errors) > 0 {
-		return ListUserRoleMenuTreeReply_MenuMultiError(errors)
-	}
-
-	return nil
-}
-
-// ListUserRoleMenuTreeReply_MenuMultiError is an error wrapping multiple
-// validation errors returned by ListUserRoleMenuTreeReply_Menu.ValidateAll()
-// if the designated constraints aren't met.
-type ListUserRoleMenuTreeReply_MenuMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ListUserRoleMenuTreeReply_MenuMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ListUserRoleMenuTreeReply_MenuMultiError) AllErrors() []error { return m }
-
-// ListUserRoleMenuTreeReply_MenuValidationError is the validation error
-// returned by ListUserRoleMenuTreeReply_Menu.Validate if the designated
-// constraints aren't met.
-type ListUserRoleMenuTreeReply_MenuValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ListUserRoleMenuTreeReply_MenuValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ListUserRoleMenuTreeReply_MenuValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ListUserRoleMenuTreeReply_MenuValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ListUserRoleMenuTreeReply_MenuValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ListUserRoleMenuTreeReply_MenuValidationError) ErrorName() string {
-	return "ListUserRoleMenuTreeReply_MenuValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ListUserRoleMenuTreeReply_MenuValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sListUserRoleMenuTreeReply_Menu.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ListUserRoleMenuTreeReply_MenuValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ListUserRoleMenuTreeReply_MenuValidationError{}
+} = RouterMenu_MetaValidationError{}
 
 // Validate checks the field values on HandleUserDomainReq_Data with the rules
 // defined in the proto definition for this message. If any rules are
@@ -18526,22 +18503,22 @@ var _UpdateMenuReq_Data_ExtType_NotInLookup = map[protobuf.MenuExtType]struct{}{
 	0: {},
 }
 
-// Validate checks the field values on UpdateDepartmentReq_Data with the rules
+// Validate checks the field values on UpdateDeptReq_Data with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *UpdateDepartmentReq_Data) Validate() error {
+func (m *UpdateDeptReq_Data) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on UpdateDepartmentReq_Data with the
-// rules defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on UpdateDeptReq_Data with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// UpdateDepartmentReq_DataMultiError, or nil if none found.
-func (m *UpdateDepartmentReq_Data) ValidateAll() error {
+// UpdateDeptReq_DataMultiError, or nil if none found.
+func (m *UpdateDeptReq_Data) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *UpdateDepartmentReq_Data) validate(all bool) error {
+func (m *UpdateDeptReq_Data) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -18549,7 +18526,7 @@ func (m *UpdateDepartmentReq_Data) validate(all bool) error {
 	var errors []error
 
 	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
-		err := UpdateDepartmentReq_DataValidationError{
+		err := UpdateDeptReq_DataValidationError{
 			field:  "Name",
 			reason: "value length must be between 1 and 10 runes, inclusive",
 		}
@@ -18560,7 +18537,7 @@ func (m *UpdateDepartmentReq_Data) validate(all bool) error {
 	}
 
 	if m.GetParentId() < 0 {
-		err := UpdateDepartmentReq_DataValidationError{
+		err := UpdateDeptReq_DataValidationError{
 			field:  "ParentId",
 			reason: "value must be greater than or equal to 0",
 		}
@@ -18571,7 +18548,7 @@ func (m *UpdateDepartmentReq_Data) validate(all bool) error {
 	}
 
 	if m.GetSort() < 0 {
-		err := UpdateDepartmentReq_DataValidationError{
+		err := UpdateDeptReq_DataValidationError{
 			field:  "Sort",
 			reason: "value must be greater than or equal to 0",
 		}
@@ -18581,8 +18558,8 @@ func (m *UpdateDepartmentReq_Data) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if _, ok := _UpdateDepartmentReq_Data_State_NotInLookup[m.GetState()]; ok {
-		err := UpdateDepartmentReq_DataValidationError{
+	if _, ok := _UpdateDeptReq_Data_State_NotInLookup[m.GetState()]; ok {
+		err := UpdateDeptReq_DataValidationError{
 			field:  "State",
 			reason: "value must not be in list [0]",
 		}
@@ -18592,8 +18569,8 @@ func (m *UpdateDepartmentReq_Data) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if _, ok := protobuf.DepartmentState_name[int32(m.GetState())]; !ok {
-		err := UpdateDepartmentReq_DataValidationError{
+	if _, ok := protobuf.DeptState_name[int32(m.GetState())]; !ok {
+		err := UpdateDeptReq_DataValidationError{
 			field:  "State",
 			reason: "value must be one of the defined enum values",
 		}
@@ -18606,7 +18583,7 @@ func (m *UpdateDepartmentReq_Data) validate(all bool) error {
 	if m.Remarks != nil {
 
 		if l := utf8.RuneCountInString(m.GetRemarks()); l < 1 || l > 1000 {
-			err := UpdateDepartmentReq_DataValidationError{
+			err := UpdateDeptReq_DataValidationError{
 				field:  "Remarks",
 				reason: "value length must be between 1 and 1000 runes, inclusive",
 			}
@@ -18619,19 +18596,19 @@ func (m *UpdateDepartmentReq_Data) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return UpdateDepartmentReq_DataMultiError(errors)
+		return UpdateDeptReq_DataMultiError(errors)
 	}
 
 	return nil
 }
 
-// UpdateDepartmentReq_DataMultiError is an error wrapping multiple validation
-// errors returned by UpdateDepartmentReq_Data.ValidateAll() if the designated
-// constraints aren't met.
-type UpdateDepartmentReq_DataMultiError []error
+// UpdateDeptReq_DataMultiError is an error wrapping multiple validation errors
+// returned by UpdateDeptReq_Data.ValidateAll() if the designated constraints
+// aren't met.
+type UpdateDeptReq_DataMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m UpdateDepartmentReq_DataMultiError) Error() string {
+func (m UpdateDeptReq_DataMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -18640,11 +18617,11 @@ func (m UpdateDepartmentReq_DataMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m UpdateDepartmentReq_DataMultiError) AllErrors() []error { return m }
+func (m UpdateDeptReq_DataMultiError) AllErrors() []error { return m }
 
-// UpdateDepartmentReq_DataValidationError is the validation error returned by
-// UpdateDepartmentReq_Data.Validate if the designated constraints aren't met.
-type UpdateDepartmentReq_DataValidationError struct {
+// UpdateDeptReq_DataValidationError is the validation error returned by
+// UpdateDeptReq_Data.Validate if the designated constraints aren't met.
+type UpdateDeptReq_DataValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -18652,24 +18629,24 @@ type UpdateDepartmentReq_DataValidationError struct {
 }
 
 // Field function returns field value.
-func (e UpdateDepartmentReq_DataValidationError) Field() string { return e.field }
+func (e UpdateDeptReq_DataValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e UpdateDepartmentReq_DataValidationError) Reason() string { return e.reason }
+func (e UpdateDeptReq_DataValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e UpdateDepartmentReq_DataValidationError) Cause() error { return e.cause }
+func (e UpdateDeptReq_DataValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e UpdateDepartmentReq_DataValidationError) Key() bool { return e.key }
+func (e UpdateDeptReq_DataValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e UpdateDepartmentReq_DataValidationError) ErrorName() string {
-	return "UpdateDepartmentReq_DataValidationError"
+func (e UpdateDeptReq_DataValidationError) ErrorName() string {
+	return "UpdateDeptReq_DataValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e UpdateDepartmentReq_DataValidationError) Error() string {
+func (e UpdateDeptReq_DataValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -18681,14 +18658,14 @@ func (e UpdateDepartmentReq_DataValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sUpdateDepartmentReq_Data.%s: %s%s",
+		"invalid %sUpdateDeptReq_Data.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = UpdateDepartmentReq_DataValidationError{}
+var _ error = UpdateDeptReq_DataValidationError{}
 
 var _ interface {
 	Field() string
@@ -18696,9 +18673,9 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = UpdateDepartmentReq_DataValidationError{}
+} = UpdateDeptReq_DataValidationError{}
 
-var _UpdateDepartmentReq_Data_State_NotInLookup = map[protobuf.DepartmentState]struct{}{
+var _UpdateDeptReq_Data_State_NotInLookup = map[protobuf.DeptState]struct{}{
 	0: {},
 }
 

@@ -275,7 +275,7 @@ func (ac *UserUsecase) ListDomainAll(ctx context.Context, g *User) ([]*Domain, e
 	return ac.biz.domainRepo.ListByIDs(ctx, domainIds...)
 }
 
-// ListRoleID 获取权限角色ID列表
+// ListRoleID 获取角色ID列表
 func (ac *UserUsecase) ListRoleID(ctx context.Context, g *User) (roleIds []uint, err error) {
 	uidStr := convert.UnitToString(g.ID)
 	var rolesIdsStr []string
@@ -298,7 +298,7 @@ func (ac *UserUsecase) ListRoleID(ctx context.Context, g *User) (roleIds []uint,
 	return rolesIds, nil
 }
 
-// ListRoleAll 获取权限角色列表
+// ListRoleAll 获取角色列表
 func (ac *UserUsecase) ListRoleAll(ctx context.Context, g *User) (roles []*Role, err error) {
 	roleIds, err := ac.ListRoleID(ctx, g)
 	if err != nil || len(roleIds) < 1 {
@@ -307,11 +307,11 @@ func (ac *UserUsecase) ListRoleAll(ctx context.Context, g *User) (roles []*Role,
 	return ac.biz.roleRepo.ListByIDs(ctx, roleIds...)
 }
 
-// ListUserRoleMenuAll 用户权限角色菜单列表(包含权限标识)
+// ListUserRoleMenuAll 用户角色菜单列表(包含权限标识)
 func (ac *UserUsecase) ListRoleMenuAll(ctx context.Context, g *User) ([]*Menu, error) {
 	roleIds, err := ac.ListRoleID(ctx, g)
 	if err != nil {
-		return nil, errors.Errorf("用户权限角色查询失败 %v", err)
+		return nil, errors.Errorf("用户角色查询失败 %v", err)
 	}
 
 	if len(g.Roles) < 1 {

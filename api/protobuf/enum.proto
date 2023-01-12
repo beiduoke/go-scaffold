@@ -105,7 +105,7 @@ enum MenuExtType {
   MENU_EXT_TYPE_IFRAME = 3;
 }
 
-enum DepartmentState {
+enum DeptState {
   DEPARTMENT_STATE_UNSPECIFIED = 0;
   DEPARTMENT_STATE_ACTIVE = 1;
   DEPARTMENT_STATE_INACTIVE = 2;

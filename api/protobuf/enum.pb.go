@@ -776,24 +776,24 @@ func (MenuExtType) EnumDescriptor() ([]byte, []int) {
 	return file_protobuf_enum_proto_rawDescGZIP(), []int{14}
 }
 
-type DepartmentState int32
+type DeptState int32
 
 const (
-	DepartmentState_DEPARTMENT_STATE_UNSPECIFIED DepartmentState = 0
-	DepartmentState_DEPARTMENT_STATE_ACTIVE      DepartmentState = 1
-	DepartmentState_DEPARTMENT_STATE_INACTIVE    DepartmentState = 2
-	DepartmentState_DEPARTMENT_STATE_BANNED      DepartmentState = 3
+	DeptState_DEPARTMENT_STATE_UNSPECIFIED DeptState = 0
+	DeptState_DEPARTMENT_STATE_ACTIVE      DeptState = 1
+	DeptState_DEPARTMENT_STATE_INACTIVE    DeptState = 2
+	DeptState_DEPARTMENT_STATE_BANNED      DeptState = 3
 )
 
-// Enum value maps for DepartmentState.
+// Enum value maps for DeptState.
 var (
-	DepartmentState_name = map[int32]string{
+	DeptState_name = map[int32]string{
 		0: "DEPARTMENT_STATE_UNSPECIFIED",
 		1: "DEPARTMENT_STATE_ACTIVE",
 		2: "DEPARTMENT_STATE_INACTIVE",
 		3: "DEPARTMENT_STATE_BANNED",
 	}
-	DepartmentState_value = map[string]int32{
+	DeptState_value = map[string]int32{
 		"DEPARTMENT_STATE_UNSPECIFIED": 0,
 		"DEPARTMENT_STATE_ACTIVE":      1,
 		"DEPARTMENT_STATE_INACTIVE":    2,
@@ -801,30 +801,30 @@ var (
 	}
 )
 
-func (x DepartmentState) Enum() *DepartmentState {
-	p := new(DepartmentState)
+func (x DeptState) Enum() *DeptState {
+	p := new(DeptState)
 	*p = x
 	return p
 }
 
-func (x DepartmentState) String() string {
+func (x DeptState) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (DepartmentState) Descriptor() protoreflect.EnumDescriptor {
+func (DeptState) Descriptor() protoreflect.EnumDescriptor {
 	return file_protobuf_enum_proto_enumTypes[15].Descriptor()
 }
 
-func (DepartmentState) Type() protoreflect.EnumType {
+func (DeptState) Type() protoreflect.EnumType {
 	return &file_protobuf_enum_proto_enumTypes[15]
 }
 
-func (x DepartmentState) Number() protoreflect.EnumNumber {
+func (x DeptState) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use DepartmentState.Descriptor instead.
-func (DepartmentState) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use DeptState.Descriptor instead.
+func (DeptState) EnumDescriptor() ([]byte, []int) {
 	return file_protobuf_enum_proto_rawDescGZIP(), []int{15}
 }
 
@@ -1031,7 +1031,7 @@ var file_protobuf_enum_proto_goTypes = []interface{}{
 	(MenuCloseTab)(0),      // 12: api.protobuf.MenuCloseTab
 	(MenuParameterType)(0), // 13: api.protobuf.MenuParameterType
 	(MenuExtType)(0),       // 14: api.protobuf.MenuExtType
-	(DepartmentState)(0),   // 15: api.protobuf.DepartmentState
+	(DeptState)(0),   // 15: api.protobuf.DeptState
 	(PostState)(0),         // 16: api.protobuf.PostState
 }
 var file_protobuf_enum_proto_depIdxs = []int32{

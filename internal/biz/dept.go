@@ -10,8 +10,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Department is a Department model.
-type Department struct {
+// Dept is a Dept model.
+type Dept struct {
 	ID        uint
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -20,47 +20,47 @@ type Department struct {
 	Sort      int32
 	Remarks   string
 	State     int32
-	Children  []*Department
+	Children  []*Dept
 }
 
-// DepartmentRepo is a Greater repo.
-type DepartmentRepo interface {
-	Save(context.Context, *Department) (*Department, error)
-	Update(context.Context, *Department) (*Department, error)
-	FindByID(context.Context, uint) (*Department, error)
-	FindByName(context.Context, string) (*Department, error)
-	ListByName(context.Context, string) ([]*Department, error)
-	ListAll(context.Context) ([]*Department, error)
-	Delete(context.Context, *Department) error
-	ListPage(context.Context, pagination.PaginationHandler) ([]*Department, int64)
+// DeptRepo is a Greater repo.
+type DeptRepo interface {
+	Save(context.Context, *Dept) (*Dept, error)
+	Update(context.Context, *Dept) (*Dept, error)
+	FindByID(context.Context, uint) (*Dept, error)
+	FindByName(context.Context, string) (*Dept, error)
+	ListByName(context.Context, string) ([]*Dept, error)
+	ListAll(context.Context) ([]*Dept, error)
+	Delete(context.Context, *Dept) error
+	ListPage(context.Context, pagination.PaginationHandler) ([]*Dept, int64)
 }
 
-type DepartmentUsecase struct {
+type DeptUsecase struct {
 	biz  *Biz
 	log  *log.Helper
-	repo DepartmentRepo
+	repo DeptRepo
 }
 
-// NewDepartmentUsecase new a Department usecase.
-func NewDepartmentUsecase(logger log.Logger, biz *Biz, repo DepartmentRepo) *DepartmentUsecase {
-	return &DepartmentUsecase{log: log.NewHelper(logger), repo: repo, biz: biz}
+// NewDeptUsecase new a Dept usecase.
+func NewDeptUsecase(logger log.Logger, biz *Biz, repo DeptRepo) *DeptUsecase {
+	return &DeptUsecase{log: log.NewHelper(logger), repo: repo, biz: biz}
 }
 
-// Create creates a Department, and returns the new Department.
-func (uc *DepartmentUsecase) Create(ctx context.Context, g *Department) (*Department, error) {
+// Create creates a Dept, and returns the new Dept.
+func (uc *DeptUsecase) Create(ctx context.Context, g *Dept) (*Dept, error) {
 	uc.log.WithContext(ctx).Infof("Create: %v", g.Name)
 	return uc.repo.Save(ctx, g)
 }
 
 // ListByIDs 获取指定部门ID集合
-func (uc *DepartmentUsecase) ListByIDs(ctx context.Context, id ...uint) (roles []*Department, err error) {
+func (uc *DeptUsecase) ListByIDs(ctx context.Context, id ...uint) (roles []*Dept, err error) {
 	roles, _ = uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
 	return
 }
 
 // Update 修改部门
-func (uc *DepartmentUsecase) Update(ctx context.Context, g *Department) error {
-	uc.log.WithContext(ctx).Infof("UpdateDepartment: %v", g)
+func (uc *DeptUsecase) Update(ctx context.Context, g *Dept) error {
+	uc.log.WithContext(ctx).Infof("UpdateDept: %v", g)
 
 	menu, _ := uc.repo.FindByID(ctx, g.ID)
 	if menu == nil {
@@ -83,14 +83,14 @@ func (uc *DepartmentUsecase) Update(ctx context.Context, g *Department) error {
 }
 
 // List 部门列表全部
-func (uc *DepartmentUsecase) ListAll(ctx context.Context) ([]*Department, int64) {
-	uc.log.WithContext(ctx).Infof("DepartmentList")
+func (uc *DeptUsecase) ListAll(ctx context.Context) ([]*Dept, int64) {
+	uc.log.WithContext(ctx).Infof("DeptList")
 	return uc.repo.ListPage(ctx, pagination.NewPagination())
 }
 
 // List 部门列表分页
-func (uc *DepartmentUsecase) ListPage(ctx context.Context, pageNum, pageSize int32, query map[string]string, order map[string]bool) ([]*Department, int64) {
-	uc.log.WithContext(ctx).Infof("DepartmentPage")
+func (uc *DeptUsecase) ListPage(ctx context.Context, pageNum, pageSize int32, query map[string]string, order map[string]bool) ([]*Dept, int64) {
+	uc.log.WithContext(ctx).Infof("DeptPage")
 	conditions := []pagination.Condition{}
 	for k, v := range query {
 		conditions = append(conditions, pagination.Condition{Query: k, Args: []interface{}{v}})
@@ -110,20 +110,20 @@ func (uc *DepartmentUsecase) ListPage(ctx context.Context, pageNum, pageSize int
 }
 
 // GetTree 获取部门树形
-func (uc *DepartmentUsecase) GetTree(ctx context.Context, id uint) []*Department {
+func (uc *DeptUsecase) GetTree(ctx context.Context, id uint) []*Dept {
 	uc.log.WithContext(ctx).Infof("GetTree")
 	menus, _ := uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithOrder("sort", false)))
 	return menus
 }
 
 // GetID 根据角色ID部门
-func (uc *DepartmentUsecase) GetID(ctx context.Context, g *Department) (*Department, error) {
-	uc.log.WithContext(ctx).Infof("GetDepartmentID: %v", g)
+func (uc *DeptUsecase) GetID(ctx context.Context, g *Dept) (*Dept, error) {
+	uc.log.WithContext(ctx).Infof("GetDeptID: %v", g)
 	return uc.repo.FindByID(ctx, g.ID)
 }
 
 // Delete 根据角色ID删除部门
-func (uc *DepartmentUsecase) Delete(ctx context.Context, g *Department) error {
-	uc.log.WithContext(ctx).Infof("DeleteDepartment: %v", g)
+func (uc *DeptUsecase) Delete(ctx context.Context, g *Dept) error {
+	uc.log.WithContext(ctx).Infof("DeleteDept: %v", g)
 	return uc.repo.Delete(ctx, g)
 }

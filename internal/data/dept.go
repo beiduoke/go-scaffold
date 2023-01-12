@@ -9,24 +9,24 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-type DepartmentRepo struct {
+type DeptRepo struct {
 	data *Data
 	log  *log.Helper
 }
 
-// NewDepartmentRepo .
-func NewDepartmentRepo(logger log.Logger, data *Data) biz.DepartmentRepo {
-	return &DepartmentRepo{
+// NewDeptRepo .
+func NewDeptRepo(logger log.Logger, data *Data) biz.DeptRepo {
+	return &DeptRepo{
 		data: data,
 		log:  log.NewHelper(logger),
 	}
 }
 
-func (r *DepartmentRepo) toModel(d *biz.Department) *SysDepartment {
+func (r *DeptRepo) toModel(d *biz.Dept) *SysDept {
 	if d == nil {
 		return nil
 	}
-	sysData := &SysDepartment{
+	sysData := &SysDept{
 		Name:     d.Name,
 		ParentID: d.ParentID,
 		Sort:     d.Sort,
@@ -40,11 +40,11 @@ func (r *DepartmentRepo) toModel(d *biz.Department) *SysDepartment {
 	return sysData
 }
 
-func (r *DepartmentRepo) toBiz(d *SysDepartment) *biz.Department {
+func (r *DeptRepo) toBiz(d *SysDept) *biz.Dept {
 	if d == nil {
 		return nil
 	}
-	return &biz.Department{
+	return &biz.Dept{
 		CreatedAt: d.CreatedAt,
 		UpdatedAt: d.UpdatedAt,
 		ID:        d.ID,
@@ -56,20 +56,20 @@ func (r *DepartmentRepo) toBiz(d *SysDepartment) *biz.Department {
 	}
 }
 
-func (r *DepartmentRepo) Save(ctx context.Context, g *biz.Department) (*biz.Department, error) {
+func (r *DeptRepo) Save(ctx context.Context, g *biz.Dept) (*biz.Dept, error) {
 	d := r.toModel(g)
 	result := r.data.DB(ctx).Create(d)
 	return r.toBiz(d), result.Error
 }
 
-func (r *DepartmentRepo) Update(ctx context.Context, g *biz.Department) (*biz.Department, error) {
+func (r *DeptRepo) Update(ctx context.Context, g *biz.Dept) (*biz.Dept, error) {
 	d := r.toModel(g)
 	result := r.data.DB(ctx).Model(d).Updates(d)
 	return r.toBiz(d), result.Error
 }
 
-func (r *DepartmentRepo) FindByID(ctx context.Context, id uint) (*biz.Department, error) {
-	domain := SysDepartment{}
+func (r *DeptRepo) FindByID(ctx context.Context, id uint) (*biz.Dept, error) {
+	domain := SysDept{}
 	result := r.data.DB(ctx).Last(&domain, id)
 	if result.Error != nil {
 		return nil, result.Error
@@ -77,8 +77,8 @@ func (r *DepartmentRepo) FindByID(ctx context.Context, id uint) (*biz.Department
 	return r.toBiz(&domain), nil
 }
 
-func (r *DepartmentRepo) FindByName(ctx context.Context, s string) (*biz.Department, error) {
-	domain := SysDepartment{}
+func (r *DeptRepo) FindByName(ctx context.Context, s string) (*biz.Dept, error) {
+	domain := SysDept{}
 	result := r.data.DB(ctx).Last(&domain, "name = ?", s)
 	if result.Error != nil {
 		return nil, result.Error
@@ -86,43 +86,43 @@ func (r *DepartmentRepo) FindByName(ctx context.Context, s string) (*biz.Departm
 	return r.toBiz(&domain), nil
 }
 
-func (r *DepartmentRepo) ListByIDs(ctx context.Context, id ...uint) (domains []*biz.Department, err error) {
-	db := r.data.DB(ctx).Model(&SysDepartment{})
-	sysDepartments := []*SysDepartment{}
+func (r *DeptRepo) ListByIDs(ctx context.Context, id ...uint) (domains []*biz.Dept, err error) {
+	db := r.data.DB(ctx).Model(&SysDept{})
+	sysDepts := []*SysDept{}
 
-	err = db.Find(&sysDepartments).Error
+	err = db.Find(&sysDepts).Error
 	if err != nil {
 		return domains, err
 	}
-	for _, v := range sysDepartments {
+	for _, v := range sysDepts {
 		domains = append(domains, r.toBiz(v))
 	}
 	return
 }
 
-func (r *DepartmentRepo) ListByName(ctx context.Context, name string) ([]*biz.Department, error) {
-	sysDepartments, bizDepartments := []*SysDepartment{}, []*biz.Department{}
-	result := r.data.DB(ctx).Find(&sysDepartments, "name LIKE ?", "%"+name)
+func (r *DeptRepo) ListByName(ctx context.Context, name string) ([]*biz.Dept, error) {
+	sysDepts, bizDepts := []*SysDept{}, []*biz.Dept{}
+	result := r.data.DB(ctx).Find(&sysDepts, "name LIKE ?", "%"+name)
 	if result.Error != nil {
 		return nil, result.Error
 	}
-	for _, v := range sysDepartments {
-		bizDepartments = append(bizDepartments, r.toBiz(v))
+	for _, v := range sysDepts {
+		bizDepts = append(bizDepts, r.toBiz(v))
 	}
-	return bizDepartments, nil
+	return bizDepts, nil
 }
 
-func (r *DepartmentRepo) Delete(ctx context.Context, g *biz.Department) error {
+func (r *DeptRepo) Delete(ctx context.Context, g *biz.Dept) error {
 	return r.data.DB(ctx).Delete(r.toModel(g)).Error
 }
 
-func (r *DepartmentRepo) ListAll(ctx context.Context) ([]*biz.Department, error) {
+func (r *DeptRepo) ListAll(ctx context.Context) ([]*biz.Dept, error) {
 	return nil, nil
 }
 
-func (r *DepartmentRepo) ListPage(ctx context.Context, handler pagination.PaginationHandler) (domains []*biz.Department, total int64) {
-	db := r.data.DB(ctx).Model(&SysDepartment{})
-	sysDepartments := []*SysDepartment{}
+func (r *DeptRepo) ListPage(ctx context.Context, handler pagination.PaginationHandler) (domains []*biz.Dept, total int64) {
+	db := r.data.DB(ctx).Model(&SysDept{})
+	sysDepts := []*SysDept{}
 	// 查询条件
 	for _, v := range handler.GetConditions() {
 		db = db.Where(v.Query, v.Args...)
@@ -136,12 +136,12 @@ func (r *DepartmentRepo) ListPage(ctx context.Context, handler pagination.Pagina
 		db = db.Count(&total).Offset(handler.GetPageOffset())
 	}
 
-	result := db.Limit(int(handler.GetPageSize())).Find(&sysDepartments)
+	result := db.Limit(int(handler.GetPageSize())).Find(&sysDepts)
 	if result.Error != nil {
 		return nil, 0
 	}
 
-	for _, v := range sysDepartments {
+	for _, v := range sysDepts {
 		domains = append(domains, r.toBiz(v))
 	}
 

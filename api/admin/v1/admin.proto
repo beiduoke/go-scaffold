@@ -160,7 +160,7 @@ service Admin {
       get: "/admin/v1/users/roles"
     };
   }
-  // 获取权限角色菜单树形列表
+  // 获取角色菜单树形列表
   rpc ListUserRoleMenuTree (ListUserRoleMenuTreeReq) returns (ListUserRoleMenuTreeReply) {
     option (google.api.http) = {
       get: "/admin/v1/users/roles/{role_id}/menus/trees"
@@ -170,7 +170,7 @@ service Admin {
     };
   }
   
-  // 获取权限角色权限列表
+  // 获取角色权限列表
   rpc ListUserRolePermission (ListUserRolePermissionReq) returns (ListUserRolePermissionReply) {
     option (google.api.http) = {
       get: "/admin/v1/users/roles/{role_id}/permissions"
@@ -293,13 +293,13 @@ service Admin {
     };
   }
   
-  // 获取权限角色菜单
+  // 获取角色菜单
   rpc ListDomainMenu (ListDomainMenuReq) returns (ListDomainMenuReply) {
     option (google.api.http) = {
       get: "/admin/v1/domains/{id}/menus"
     };
   }
-  // 处理权限角色菜单
+  // 处理角色菜单
   rpc HandleDomainMenu (HandleDomainMenuReq) returns (HandleDomainMenuReply) {
     option (google.api.http) = {
       post: "/admin/v1/domains/{id}/menus"
@@ -307,27 +307,27 @@ service Admin {
     };
   }
 
-  // 权限角色模块
-  // 列表权限角色
+  // 角色模块
+  // 列表角色
   rpc ListRole (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
     option (google.api.http) = {
       get: "/admin/v1/roles"
     };
   }
-  // 创建权限角色
+  // 创建角色
   rpc CreateRole (CreateRoleReq) returns (CreateRoleReply) {
     option (google.api.http) = {
       post: "/admin/v1/roles"
       body: "*"
     };
   }
-  // 获取权限角色
+  // 获取角色
   rpc GetRole (GetRoleReq) returns (Role) {
     option (google.api.http) = {
       get: "/admin/v1/roles/{id}"
     };
   }
-  // 修改权限角色
+  // 修改角色
   rpc UpdateRole (UpdateRoleReq) returns (UpdateRoleReply) {
     option (google.api.http) = {
       put: "/admin/v1/roles/{id}"
@@ -341,26 +341,26 @@ service Admin {
       body: "data"
     };
   }
-  // 删除权限角色
+  // 删除角色
   rpc DeleteRole (DeleteRoleReq) returns (DeleteRoleReply) {
     option (google.api.http) = {
       delete: "/admin/v1/roles/{id}"
     };
   }
-  // 获取权限角色菜单
+  // 获取角色菜单
   rpc ListRoleMenu (ListRoleMenuReq) returns (ListRoleMenuReply) {
     option (google.api.http) = {
       get: "/admin/v1/roles/{id}/menus"
     };
   }
-  // 处理权限角色菜单
+  // 处理角色菜单
   rpc HandleRoleMenu (HandleRoleMenuReq) returns (HandleRoleMenuReply) {
     option (google.api.http) = {
       post: "/admin/v1/roles/{id}/menus"
       body: "data"
     };
   }
-  // 处理权限角色资源
+  // 处理角色资源
   rpc HandleRoleResource (HandleRoleResourceReq) returns (HandleRoleResourceReply) {
     option (google.api.http) = {
       post: "/admin/v1/roles/{id}/resources"
@@ -448,41 +448,41 @@ service Admin {
   }
 
   // 列表部门
-  rpc ListDepartment (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+  rpc ListDept (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
     option (google.api.http) = {
-      get: "/admin/v1/departments"
+      get: "/admin/v1/depts"
     };
   }
   // 创建部门
-  rpc CreateDepartment (CreateDepartmentReq) returns (CreateDepartmentReply) {
+  rpc CreateDept (CreateDeptReq) returns (CreateDeptReply) {
     option (google.api.http) = {
-      post: "/admin/v1/departments"
+      post: "/admin/v1/depts"
       body: "*"
     };
   }
   // 获取部门
-  rpc GetDepartment (GetDepartmentReq) returns (Department) {
+  rpc GetDept (GetDeptReq) returns (Dept) {
     option (google.api.http) = {
-      get: "/admin/v1/departments/{id}"
+      get: "/admin/v1/depts/{id}"
     };
   }
   // 修改部门
-  rpc UpdateDepartment (UpdateDepartmentReq) returns (UpdateDepartmentReply) {
+  rpc UpdateDept (UpdateDeptReq) returns (UpdateDeptReply) {
     option (google.api.http) = {
-      put: "/admin/v1/departments/{id}"
+      put: "/admin/v1/depts/{id}"
       body: "data"
     };
   }
   // 删除部门
-  rpc DeleteDepartment (DeleteDepartmentReq) returns (DeleteDepartmentReply) {
+  rpc DeleteDept (DeleteDeptReq) returns (DeleteDeptReply) {
     option (google.api.http) = {
-      delete: "/admin/v1/departments/{id}"
+      delete: "/admin/v1/depts/{id}"
     };
   }
   // 获取树形部门
-  rpc ListDepartmentTree (ListDepartmentTreeReq) returns (ListDepartmentTreeReply) {
+  rpc ListDeptTree (ListDeptTreeReq) returns (ListDeptTreeReply) {
     option (google.api.http) = {
-      get: "/admin/v1/departments/{parentId}/trees"
+      get: "/admin/v1/depts/{parentId}/trees"
     };
   }
 
@@ -620,7 +620,7 @@ message ListUserDomainReply {
   int32 total = 2;
 }
 
-// 回应 - 用户权限角色
+// 回应 - 用户角色
 message ListUserRoleReply {
   repeated Role items = 1;
   int32 total = 2;
@@ -632,12 +632,12 @@ message ListUserReply {
   int32 total = 2;
 }
 
-// 请求 - 获取用户权限角色菜单树形
+// 请求 - 获取用户角色菜单树形
 message ListUserRoleMenuTreeReq {
   uint64 role_id = 1 [(validate.rules).uint64 = {gte: 0}];
 }
 
-// 回应 - 获取用户权限角色菜单树形 Deprecated
+// 回应 - 获取用户角色菜单树形 Deprecated
 message ListUserRoleMenuTreeReply_Deprecated {
   message MenuMeta {
     // 路由title  一般必填
@@ -690,7 +690,8 @@ message ListUserRoleMenuTreeReply_Deprecated {
   repeated Menu items = 2;
 }
 
-message ListUserRoleMenuTreeReply {
+// 路由菜单
+message RouterMenu {
   message Meta {
     // 路由title  一般必填
     string title = 1;
@@ -709,24 +710,26 @@ message ListUserRoleMenuTreeReply {
     // 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
     optional string currentActiveMenu = 12;
   }
-  message Menu {
-    string name = 1;
-    string path = 2;
-    string component = 3;
-    optional string redirect = 4;
-    Meta meta = 5;
-    repeated Menu children = 6;
-  }
-  int32 total = 1;
-  repeated Menu items = 2;
+  string name = 1;
+  string path = 2;
+  string component = 3;
+  optional string redirect = 4;
+  Meta meta = 5;
+  repeated RouterMenu children = 6;
 }
 
-// 请求 - 获取用户权限角色列表
+// 回应 - 获取用户角色菜单列表-树形
+message ListUserRoleMenuTreeReply {
+  int32 total = 1;
+  repeated RouterMenu items = 2;
+}
+
+// 请求 - 获取用户角色列表
 message ListUserRolePermissionReq {
   uint64 role_id = 1 [(validate.rules).uint64 = {gte: 0}];
 }
 
-// 回应 - 获取用户权限角色列表
+// 回应 - 获取用户角色列表
 message ListUserRolePermissionReply {
   int32 total = 1;
   repeated string items = 2;
@@ -975,7 +978,7 @@ message HandleDomainMenuReply {
   google.protobuf.Any data = 3;
 }
 
-// 权限角色模块
+// 角色模块
 message Role {
   google.protobuf.Timestamp created_at = 1;
   google.protobuf.Timestamp updated_at = 2;
@@ -988,7 +991,7 @@ message Role {
   string remarks = 9;
 }
 
-// 请求 - 创建权限角色
+// 请求 - 创建角色
 message CreateRoleReq {
   string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
   uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
@@ -999,14 +1002,14 @@ message CreateRoleReq {
   // repeated uint64 menus = 7 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
 }
 
-// 回应 - 创建权限角色
+// 回应 - 创建角色
 message CreateRoleReply {
   bool success = 1;
   string message = 2;
   google.protobuf.Any data = 3;
 }
 
-// 请求 - 修改权限角色
+// 请求 - 修改角色
 message UpdateRoleReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
@@ -1021,14 +1024,14 @@ message UpdateRoleReq {
   Data data = 2;
 }
 
-// 回应 - 创建权限角色
+// 回应 - 创建角色
 message UpdateRoleReply {
   bool success = 1;
   string message = 2;
   google.protobuf.Any data = 3;
 }
 
-// 请求 - 修改权限角色
+// 请求 - 修改角色
 message UpdateRoleStateReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
@@ -1037,42 +1040,42 @@ message UpdateRoleStateReq {
   Data data = 2;
 }
 
-// 回应 - 创建权限角色
+// 回应 - 创建角色
 message UpdateRoleStateReply {
   bool success = 1;
   string message = 2;
   google.protobuf.Any data = 3;
 }
 
-// 请求 - 获取权限角色
+// 请求 - 获取角色
 message GetRoleReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
-// 请求 - 删除权限角色
+// 请求 - 删除角色
 message DeleteRoleReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
-// 回应 - 删除权限角色
+// 回应 - 删除角色
 message DeleteRoleReply {
   bool success = 1;
   string message = 2;
   google.protobuf.Any data = 3;
 }
 
-// 请求 - 获取权限角色菜单
+// 请求 - 获取角色菜单
 message ListRoleMenuReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
-// 回应 - 获取权限角色菜单
+// 回应 - 获取角色菜单
 message ListRoleMenuReply {
   int32 total = 1;
   repeated Menu items = 2;
 }
 
-// 请求 - 处理权限角色菜单
+// 请求 - 处理角色菜单
 message HandleRoleMenuReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Menu {
@@ -1086,14 +1089,14 @@ message HandleRoleMenuReq {
   Data data = 2;
 }
 
-// 回应 - 处理权限角色菜单
+// 回应 - 处理角色菜单
 message HandleRoleMenuReply {
   bool success = 1;
   string message = 2;
   google.protobuf.Any data = 3;
 }
 
-// 请求 - 处理权限角色资源
+// 请求 - 处理角色资源
 message HandleRoleResourceReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
@@ -1102,7 +1105,7 @@ message HandleRoleResourceReq {
   Data data = 2;
 }
 
-// 回应 - 处理权限角色资源
+// 回应 - 处理角色资源
 message HandleRoleResourceReply {
   bool success = 1;
   string message = 2;
@@ -1305,7 +1308,7 @@ message ListMenuTreeReply {
 }
 
 // 部门模块
-message Department {
+message Dept {
   google.protobuf.Timestamp created_at = 1;
   google.protobuf.Timestamp updated_at = 2;
   uint64 id = 3;
@@ -1313,72 +1316,72 @@ message Department {
   uint64 parent_id = 5;
   int32 sort = 6;
   string remarks = 7;
-  api.protobuf.DepartmentState state = 8;
-  repeated Department children = 9;
+  api.protobuf.DeptState state = 8;
+  repeated Dept children = 9;
 }
 
 // 请求 - 创建部门
-message CreateDepartmentReq {
+message CreateDeptReq {
   string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
   uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
   int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
-  api.protobuf.DepartmentState state = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  api.protobuf.DeptState state = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
   optional string remarks = 5 [(validate.rules).string = {min_len: 1, max_len: 1000}];
 }
 
 // 回应 - 创建部门
-message CreateDepartmentReply {
+message CreateDeptReply {
   bool success = 1;
   string message = 2;
   google.protobuf.Any data = 3;
 }
 
 // 请求 - 修改部门
-message UpdateDepartmentReq {
+message UpdateDeptReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
     uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
     int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
-    api.protobuf.DepartmentState state = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    api.protobuf.DeptState state = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
     optional string remarks = 5 [(validate.rules).string = {min_len: 1, max_len: 1000}];
   }
   Data data = 2;
 }
 
 // 回应 - 创建部门
-message UpdateDepartmentReply {
+message UpdateDeptReply {
   bool success = 1;
   string message = 2;
   google.protobuf.Any data = 3;
 }
 
 // 请求 - 获取部门
-message GetDepartmentReq {
+message GetDeptReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 请求 - 删除部门
-message DeleteDepartmentReq {
+message DeleteDeptReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 删除部门
-message DeleteDepartmentReply {
+message DeleteDeptReply {
   bool success = 1;
   string message = 2;
   google.protobuf.Any data = 3;
 }
 
 // 请求 - 获取树形部门
-message ListDepartmentTreeReq {
+message ListDeptTreeReq {
   uint64 parentId = 1 [(validate.rules).uint64 = {gte: 0}];
 }
 
 // 回应 - 获取树形部门
-message ListDepartmentTreeReply {
+message ListDeptTreeReply {
   int32 total = 1;
-  repeated Department items = 2;
+  repeated Dept items = 2;
 }
 
 
