@@ -180,14 +180,15 @@ type SysMenuParameter struct {
 // SysDept 部门
 type SysDept struct {
 	DomainModel
-	Name     string    `gorm:"type:varchar(255);column:name;not null;comment:名称;"`
-	ParentID uint      `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
-	Sort     int32     `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
-	Remarks  string    `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
-	State    int32     `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
-	UserID   uint      `gorm:"type:bigint(20);column:user_id;not null;default:0;comment:用户id"`
-	User     SysUser   `gorm:"foreignKey:UserID;"`
-	Roles    []SysRole `gorm:"many2many:sys_role_depts"`
+	Name      string    `gorm:"type:varchar(255);column:name;not null;comment:名称;"`
+	Ancestors string    `gorm:"type:varchar(100);column:ancestors;not null;default:'0';comment:祖级列表;"`
+	ParentID  uint      `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
+	Sort      int32     `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
+	Remarks   string    `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
+	State     int32     `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
+	UserID    uint      `gorm:"type:bigint(20);column:user_id;not null;default:0;comment:用户id"`
+	User      SysUser   `gorm:"foreignKey:UserID;"`
+	Roles     []SysRole `gorm:"many2many:sys_role_depts"`
 	// User     SysUser `gorm:"many2many:sys_dept_users;"`
 }
 

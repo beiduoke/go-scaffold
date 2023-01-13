@@ -2,6 +2,11 @@ GOHOSTOS:=$(shell go env GOHOSTOS)
 GOPATH:=$(shell go env GOPATH)
 VERSION=$(shell git describe --tags --always)
 
+# 指定日期-默认当前日期
+DATE=$(shell date "+%Y%m%d")
+# 指定时间-默认当前时间
+DATETIME=$(shell date "+%Y%m%d%H%M%S")
+
 ifeq ($(GOHOSTOS), windows-old)
 	#the `find.exe` is different from `find` in bash/shell.
 	#to see https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/find.
@@ -14,6 +19,14 @@ else
 	API_PROTO_FILES=$(shell find api -name *.proto)
 endif
 
+
+.PHONY: mysqldump
+mysqldump:
+	@echo '-------------------当前时间备份---------------------'
+	@echo '--创建当前日期目录--'
+	@mkdir -p ./resouces/backup/${DATE}
+	@echo '--执行备份命令--'
+	docker exec -i mysql57 bash -c 'exec mysqldump -uroot -p"123456" --databases go_scaffold' > ./resouces/backup/${DATE}/go_scaffold.sql
 
 .PHONY: run
 # generate internal proto
@@ -120,6 +133,7 @@ all:
 	make api;
 	make config;
 	make generate;
+	make mysqldump;
 
 # show help
 help:

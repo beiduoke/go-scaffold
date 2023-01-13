@@ -26,3 +26,5 @@ auth:
   casbin: 
     model_path: ../../configs/authz/authz_model.conf
     policy_path: ../../configs/authz/authz_policy.csv
+admin:
+  super: admin

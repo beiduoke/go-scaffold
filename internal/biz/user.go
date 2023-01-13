@@ -330,3 +330,27 @@ func (ac *UserUsecase) ListRoleMenuAll(ctx context.Context, g *User) ([]*Menu, e
 
 	return ac.biz.roleRepo.ListMenuAndParentByIDs(ctx, roleIdsReq...)
 }
+
+// ListRoleMenuLastOne 用户角色菜单列表-最后一次使用(包含权限标识)
+func (ac *UserUsecase) ListRoleMenuLastOne(ctx context.Context, g *User) ([]*Menu, error) {
+	roleIds, err := ac.ListRoleID(ctx, g)
+	if err != nil {
+		return nil, errors.Errorf("用户角色查询失败 %v", err)
+	}
+
+	if len(g.Roles) < 1 {
+		return ac.biz.roleRepo.ListMenuAndParentByIDs(ctx, roleIds...)
+	}
+
+	roleIdsReq := []uint{}
+	for _, v := range g.Roles {
+		for _, a := range roleIds {
+			if a == v.ID {
+				roleIdsReq = append(roleIdsReq, v.ID)
+				break
+			}
+		}
+	}
+
+	return ac.biz.roleRepo.ListMenuAndParentByIDs(ctx, roleIdsReq...)
+}
