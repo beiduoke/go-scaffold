@@ -348,7 +348,7 @@ func (s *AdminService) ListUserRoleMenuTree(ctx context.Context, in *v1.ListUser
 	if roleId := in.GetRoleId(); roleId > 0 {
 		roles = append(roles, &biz.Role{ID: uint(roleId)})
 	}
-	menuModels, _ := s.userCase.ListRoleMenuLastOne(ctx, &biz.User{ID: convert.StringToUint(authz.ParseFromContext(ctx).GetUser()), Roles: roles})
+	menuModels, _ := s.userCase.ListRoleMenu(ctx, &biz.User{ID: convert.StringToUint(authz.ParseFromContext(ctx).GetUser()), Roles: roles})
 	return &v1.ListUserRoleMenuTreeReply{
 		Items: s.UserMenuTransformTree(menuModels, 0),
 	}, nil
@@ -360,7 +360,7 @@ func (s *AdminService) ListUserRolePermission(ctx context.Context, in *v1.ListUs
 	if roleId := in.GetRoleId(); roleId > 0 {
 		roles = append(roles, &biz.Role{ID: uint(roleId)})
 	}
-	menuModels, _ := s.userCase.ListRoleMenuLastOne(ctx, &biz.User{ID: convert.StringToUint(authz.ParseFromContext(ctx).GetUser()), Roles: roles})
+	menuModels, _ := s.userCase.ListRoleMenu(ctx, &biz.User{ID: convert.StringToUint(authz.ParseFromContext(ctx).GetUser()), Roles: roles})
 	perms := make([]string, 0)
 	for _, v := range menuModels {
 		perms = append(perms, v.Permission)

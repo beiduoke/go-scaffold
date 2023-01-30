@@ -691,6 +691,38 @@
         ]
       }
     },
+    "/admin/v1/domains/trees": {
+      "get": {
+        "summary": "获取领域树形列表",
+        "operationId": "Admin_ListDomainTree2",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListDomainTreeReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/admin/v1/domains/{id}": {
       "get": {
         "summary": "获取领域",
@@ -894,6 +926,38 @@
             "schema": {
               "$ref": "#/definitions/v1UpdateDomainStateReqData"
             }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/v1/domains/{id}/trees": {
+      "get": {
+        "summary": "获取领域树形列表",
+        "operationId": "Admin_ListDomainTree",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListDomainTreeReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
           }
         ],
         "tags": [
@@ -3238,6 +3302,12 @@
         "defaultRoleId": {
           "type": "string",
           "format": "uint64"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Domain"
+          }
         }
       },
       "title": "领域模块"
@@ -3489,6 +3559,21 @@
         }
       },
       "title": "回应 - 获取领域菜单"
+    },
+    "v1ListDomainTreeReply": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Domain"
+          }
+        }
+      }
     },
     "v1ListMenuTreeReply": {
       "type": "object",

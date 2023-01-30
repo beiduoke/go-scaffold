@@ -488,6 +488,26 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.UpdateDomainStateReply'
+    /admin/v1/domains/{id}/trees:
+        get:
+            tags:
+                - Admin
+            description: 获取领域树形列表
+            operationId: Admin_ListDomainTree
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.ListDomainTreeReply'
     /admin/v1/menus:
         get:
             tags:
@@ -1778,6 +1798,10 @@ components:
                 defaultRoleId:
                     type: integer
                     format: uint64
+                children:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.v1.Domain'
             description: 领域模块
         api.admin.v1.EmailLoginReq_EmailField:
             type: object
@@ -1953,6 +1977,16 @@ components:
                     items:
                         $ref: '#/components/schemas/api.admin.v1.Menu'
             description: 回应 - 获取领域菜单
+        api.admin.v1.ListDomainTreeReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int32
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.v1.Domain'
         api.admin.v1.ListMenuTreeReply:
             type: object
             properties:

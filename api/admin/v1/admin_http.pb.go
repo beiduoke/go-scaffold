@@ -55,6 +55,7 @@ const OperationAdminListDept = "/api.admin.v1.Admin/ListDept"
 const OperationAdminListDeptTree = "/api.admin.v1.Admin/ListDeptTree"
 const OperationAdminListDomain = "/api.admin.v1.Admin/ListDomain"
 const OperationAdminListDomainMenu = "/api.admin.v1.Admin/ListDomainMenu"
+const OperationAdminListDomainTree = "/api.admin.v1.Admin/ListDomainTree"
 const OperationAdminListMenu = "/api.admin.v1.Admin/ListMenu"
 const OperationAdminListMenuTree = "/api.admin.v1.Admin/ListMenuTree"
 const OperationAdminListPost = "/api.admin.v1.Admin/ListPost"
@@ -120,6 +121,7 @@ type AdminHTTPServer interface {
 	ListDeptTree(context.Context, *ListDeptTreeReq) (*ListDeptTreeReply, error)
 	ListDomain(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
 	ListDomainMenu(context.Context, *ListDomainMenuReq) (*ListDomainMenuReply, error)
+	ListDomainTree(context.Context, *ListDomainTreeReq) (*ListDomainTreeReply, error)
 	ListMenu(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
 	ListMenuTree(context.Context, *ListMenuTreeReq) (*ListMenuTreeReply, error)
 	ListPost(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
@@ -180,6 +182,8 @@ func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
 	r.POST("/admin/v1/domains/login", _Admin_LoginDomain1_HTTP_Handler(srv))
 	r.POST("/admin/v1/domains/register", _Admin_RegisterDomain0_HTTP_Handler(srv))
 	r.GET("/admin/v1/domains", _Admin_ListDomain0_HTTP_Handler(srv))
+	r.GET("/admin/v1/domains/trees", _Admin_ListDomainTree0_HTTP_Handler(srv))
+	r.GET("/admin/v1/domains/{id}/trees", _Admin_ListDomainTree1_HTTP_Handler(srv))
 	r.POST("/admin/v1/domains", _Admin_CreateDomain0_HTTP_Handler(srv))
 	r.GET("/admin/v1/domains/{id}", _Admin_GetDomain0_HTTP_Handler(srv))
 	r.PUT("/admin/v1/domains/{id}", _Admin_UpdateDomain0_HTTP_Handler(srv))
@@ -788,6 +792,47 @@ func _Admin_ListDomain0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context)
 			return err
 		}
 		reply := out.(*protobuf.PagingReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_ListDomainTree0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListDomainTreeReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminListDomainTree)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListDomainTree(ctx, req.(*ListDomainTreeReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListDomainTreeReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_ListDomainTree1_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListDomainTreeReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminListDomainTree)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListDomainTree(ctx, req.(*ListDomainTreeReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListDomainTreeReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -1707,6 +1752,7 @@ type AdminHTTPClient interface {
 	ListDeptTree(ctx context.Context, req *ListDeptTreeReq, opts ...http.CallOption) (rsp *ListDeptTreeReply, err error)
 	ListDomain(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
 	ListDomainMenu(ctx context.Context, req *ListDomainMenuReq, opts ...http.CallOption) (rsp *ListDomainMenuReply, err error)
+	ListDomainTree(ctx context.Context, req *ListDomainTreeReq, opts ...http.CallOption) (rsp *ListDomainTreeReply, err error)
 	ListMenu(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
 	ListMenuTree(ctx context.Context, req *ListMenuTreeReq, opts ...http.CallOption) (rsp *ListMenuTreeReply, err error)
 	ListPost(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
@@ -2180,6 +2226,19 @@ func (c *AdminHTTPClientImpl) ListDomainMenu(ctx context.Context, in *ListDomain
 	pattern := "/admin/v1/domains/{id}/menus"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminListDomainMenu))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AdminHTTPClientImpl) ListDomainTree(ctx context.Context, in *ListDomainTreeReq, opts ...http.CallOption) (*ListDomainTreeReply, error) {
+	var out ListDomainTreeReply
+	pattern := "/admin/v1/domains/{id}/trees"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminListDomainTree))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

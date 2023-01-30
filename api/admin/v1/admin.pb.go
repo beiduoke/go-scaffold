@@ -2048,6 +2048,7 @@ type Domain struct {
 	Sort          int32                  `protobuf:"varint,6,opt,name=sort,proto3" json:"sort,omitempty"`
 	State         protobuf.DomainState   `protobuf:"varint,7,opt,name=state,proto3,enum=api.protobuf.DomainState" json:"state,omitempty"`
 	DefaultRoleId uint64                 `protobuf:"varint,8,opt,name=default_role_id,json=defaultRoleId,proto3" json:"default_role_id,omitempty"`
+	Children      []*Domain              `protobuf:"bytes,9,rep,name=children,proto3" json:"children,omitempty"`
 }
 
 func (x *Domain) Reset() {
@@ -2136,6 +2137,13 @@ func (x *Domain) GetDefaultRoleId() uint64 {
 		return x.DefaultRoleId
 	}
 	return 0
+}
+
+func (x *Domain) GetChildren() []*Domain {
+	if x != nil {
+		return x.Children
+	}
+	return nil
 }
 
 // 请求 - 领域登录
@@ -2254,6 +2262,108 @@ func (x *RegisterDomainReq) GetAuth() *Auth {
 	return nil
 }
 
+type ListDomainTreeReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+}
+
+func (x *ListDomainTreeReq) Reset() {
+	*x = ListDomainTreeReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_admin_v1_admin_proto_msgTypes[36]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListDomainTreeReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListDomainTreeReq) ProtoMessage() {}
+
+func (x *ListDomainTreeReq) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_v1_admin_proto_msgTypes[36]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListDomainTreeReq.ProtoReflect.Descriptor instead.
+func (*ListDomainTreeReq) Descriptor() ([]byte, []int) {
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{36}
+}
+
+func (x *ListDomainTreeReq) GetId() uint64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+type ListDomainTreeReply struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Total int32     `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Items []*Domain `protobuf:"bytes,2,rep,name=items,proto3" json:"items,omitempty"`
+}
+
+func (x *ListDomainTreeReply) Reset() {
+	*x = ListDomainTreeReply{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_admin_v1_admin_proto_msgTypes[37]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListDomainTreeReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListDomainTreeReply) ProtoMessage() {}
+
+func (x *ListDomainTreeReply) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_v1_admin_proto_msgTypes[37]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListDomainTreeReply.ProtoReflect.Descriptor instead.
+func (*ListDomainTreeReply) Descriptor() ([]byte, []int) {
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{37}
+}
+
+func (x *ListDomainTreeReply) GetTotal() int32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *ListDomainTreeReply) GetItems() []*Domain {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
 // 请求 - 创建领域
 type CreateDomainReq struct {
 	state         protoimpl.MessageState
@@ -2270,7 +2380,7 @@ type CreateDomainReq struct {
 func (x *CreateDomainReq) Reset() {
 	*x = CreateDomainReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[36]
+		mi := &file_admin_v1_admin_proto_msgTypes[38]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2283,7 +2393,7 @@ func (x *CreateDomainReq) String() string {
 func (*CreateDomainReq) ProtoMessage() {}
 
 func (x *CreateDomainReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[36]
+	mi := &file_admin_v1_admin_proto_msgTypes[38]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2296,7 +2406,7 @@ func (x *CreateDomainReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateDomainReq.ProtoReflect.Descriptor instead.
 func (*CreateDomainReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{36}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *CreateDomainReq) GetName() string {
@@ -2348,7 +2458,7 @@ type CreateDomainReply struct {
 func (x *CreateDomainReply) Reset() {
 	*x = CreateDomainReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[37]
+		mi := &file_admin_v1_admin_proto_msgTypes[39]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2361,7 +2471,7 @@ func (x *CreateDomainReply) String() string {
 func (*CreateDomainReply) ProtoMessage() {}
 
 func (x *CreateDomainReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[37]
+	mi := &file_admin_v1_admin_proto_msgTypes[39]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2374,7 +2484,7 @@ func (x *CreateDomainReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateDomainReply.ProtoReflect.Descriptor instead.
 func (*CreateDomainReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{37}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *CreateDomainReply) GetSuccess() bool {
@@ -2411,7 +2521,7 @@ type UpdateDomainReq struct {
 func (x *UpdateDomainReq) Reset() {
 	*x = UpdateDomainReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[38]
+		mi := &file_admin_v1_admin_proto_msgTypes[40]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2424,7 +2534,7 @@ func (x *UpdateDomainReq) String() string {
 func (*UpdateDomainReq) ProtoMessage() {}
 
 func (x *UpdateDomainReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[38]
+	mi := &file_admin_v1_admin_proto_msgTypes[40]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2437,7 +2547,7 @@ func (x *UpdateDomainReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDomainReq.ProtoReflect.Descriptor instead.
 func (*UpdateDomainReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{38}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *UpdateDomainReq) GetId() uint64 {
@@ -2468,7 +2578,7 @@ type UpdateDomainReply struct {
 func (x *UpdateDomainReply) Reset() {
 	*x = UpdateDomainReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[39]
+		mi := &file_admin_v1_admin_proto_msgTypes[41]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2481,7 +2591,7 @@ func (x *UpdateDomainReply) String() string {
 func (*UpdateDomainReply) ProtoMessage() {}
 
 func (x *UpdateDomainReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[39]
+	mi := &file_admin_v1_admin_proto_msgTypes[41]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2494,7 +2604,7 @@ func (x *UpdateDomainReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDomainReply.ProtoReflect.Descriptor instead.
 func (*UpdateDomainReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{39}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *UpdateDomainReply) GetSuccess() bool {
@@ -2531,7 +2641,7 @@ type UpdateDomainStateReq struct {
 func (x *UpdateDomainStateReq) Reset() {
 	*x = UpdateDomainStateReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[40]
+		mi := &file_admin_v1_admin_proto_msgTypes[42]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2544,7 +2654,7 @@ func (x *UpdateDomainStateReq) String() string {
 func (*UpdateDomainStateReq) ProtoMessage() {}
 
 func (x *UpdateDomainStateReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[40]
+	mi := &file_admin_v1_admin_proto_msgTypes[42]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2557,7 +2667,7 @@ func (x *UpdateDomainStateReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDomainStateReq.ProtoReflect.Descriptor instead.
 func (*UpdateDomainStateReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{40}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *UpdateDomainStateReq) GetId() uint64 {
@@ -2588,7 +2698,7 @@ type UpdateDomainStateReply struct {
 func (x *UpdateDomainStateReply) Reset() {
 	*x = UpdateDomainStateReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[41]
+		mi := &file_admin_v1_admin_proto_msgTypes[43]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2601,7 +2711,7 @@ func (x *UpdateDomainStateReply) String() string {
 func (*UpdateDomainStateReply) ProtoMessage() {}
 
 func (x *UpdateDomainStateReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[41]
+	mi := &file_admin_v1_admin_proto_msgTypes[43]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2614,7 +2724,7 @@ func (x *UpdateDomainStateReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDomainStateReply.ProtoReflect.Descriptor instead.
 func (*UpdateDomainStateReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{41}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *UpdateDomainStateReply) GetSuccess() bool {
@@ -2650,7 +2760,7 @@ type GetDomainReq struct {
 func (x *GetDomainReq) Reset() {
 	*x = GetDomainReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[42]
+		mi := &file_admin_v1_admin_proto_msgTypes[44]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2663,7 +2773,7 @@ func (x *GetDomainReq) String() string {
 func (*GetDomainReq) ProtoMessage() {}
 
 func (x *GetDomainReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[42]
+	mi := &file_admin_v1_admin_proto_msgTypes[44]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2676,7 +2786,7 @@ func (x *GetDomainReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDomainReq.ProtoReflect.Descriptor instead.
 func (*GetDomainReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{42}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *GetDomainReq) GetId() uint64 {
@@ -2698,7 +2808,7 @@ type DeleteDomainReq struct {
 func (x *DeleteDomainReq) Reset() {
 	*x = DeleteDomainReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[43]
+		mi := &file_admin_v1_admin_proto_msgTypes[45]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2711,7 +2821,7 @@ func (x *DeleteDomainReq) String() string {
 func (*DeleteDomainReq) ProtoMessage() {}
 
 func (x *DeleteDomainReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[43]
+	mi := &file_admin_v1_admin_proto_msgTypes[45]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2724,7 +2834,7 @@ func (x *DeleteDomainReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteDomainReq.ProtoReflect.Descriptor instead.
 func (*DeleteDomainReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{43}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *DeleteDomainReq) GetId() uint64 {
@@ -2748,7 +2858,7 @@ type DeleteDomainReply struct {
 func (x *DeleteDomainReply) Reset() {
 	*x = DeleteDomainReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[44]
+		mi := &file_admin_v1_admin_proto_msgTypes[46]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2761,7 +2871,7 @@ func (x *DeleteDomainReply) String() string {
 func (*DeleteDomainReply) ProtoMessage() {}
 
 func (x *DeleteDomainReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[44]
+	mi := &file_admin_v1_admin_proto_msgTypes[46]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2774,7 +2884,7 @@ func (x *DeleteDomainReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteDomainReply.ProtoReflect.Descriptor instead.
 func (*DeleteDomainReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{44}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *DeleteDomainReply) GetSuccess() bool {
@@ -2810,7 +2920,7 @@ type ListDomainMenuReq struct {
 func (x *ListDomainMenuReq) Reset() {
 	*x = ListDomainMenuReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[45]
+		mi := &file_admin_v1_admin_proto_msgTypes[47]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2823,7 +2933,7 @@ func (x *ListDomainMenuReq) String() string {
 func (*ListDomainMenuReq) ProtoMessage() {}
 
 func (x *ListDomainMenuReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[45]
+	mi := &file_admin_v1_admin_proto_msgTypes[47]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2836,7 +2946,7 @@ func (x *ListDomainMenuReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListDomainMenuReq.ProtoReflect.Descriptor instead.
 func (*ListDomainMenuReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{45}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *ListDomainMenuReq) GetId() uint64 {
@@ -2859,7 +2969,7 @@ type ListDomainMenuReply struct {
 func (x *ListDomainMenuReply) Reset() {
 	*x = ListDomainMenuReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[46]
+		mi := &file_admin_v1_admin_proto_msgTypes[48]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2872,7 +2982,7 @@ func (x *ListDomainMenuReply) String() string {
 func (*ListDomainMenuReply) ProtoMessage() {}
 
 func (x *ListDomainMenuReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[46]
+	mi := &file_admin_v1_admin_proto_msgTypes[48]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2885,7 +2995,7 @@ func (x *ListDomainMenuReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListDomainMenuReply.ProtoReflect.Descriptor instead.
 func (*ListDomainMenuReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{46}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *ListDomainMenuReply) GetTotal() int32 {
@@ -2915,7 +3025,7 @@ type HandleDomainMenuReq struct {
 func (x *HandleDomainMenuReq) Reset() {
 	*x = HandleDomainMenuReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[47]
+		mi := &file_admin_v1_admin_proto_msgTypes[49]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2928,7 +3038,7 @@ func (x *HandleDomainMenuReq) String() string {
 func (*HandleDomainMenuReq) ProtoMessage() {}
 
 func (x *HandleDomainMenuReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[47]
+	mi := &file_admin_v1_admin_proto_msgTypes[49]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2941,7 +3051,7 @@ func (x *HandleDomainMenuReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HandleDomainMenuReq.ProtoReflect.Descriptor instead.
 func (*HandleDomainMenuReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{47}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *HandleDomainMenuReq) GetId() uint64 {
@@ -2972,7 +3082,7 @@ type HandleDomainMenuReply struct {
 func (x *HandleDomainMenuReply) Reset() {
 	*x = HandleDomainMenuReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[48]
+		mi := &file_admin_v1_admin_proto_msgTypes[50]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2985,7 +3095,7 @@ func (x *HandleDomainMenuReply) String() string {
 func (*HandleDomainMenuReply) ProtoMessage() {}
 
 func (x *HandleDomainMenuReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[48]
+	mi := &file_admin_v1_admin_proto_msgTypes[50]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2998,7 +3108,7 @@ func (x *HandleDomainMenuReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HandleDomainMenuReply.ProtoReflect.Descriptor instead.
 func (*HandleDomainMenuReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{48}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *HandleDomainMenuReply) GetSuccess() bool {
@@ -3042,7 +3152,7 @@ type Role struct {
 func (x *Role) Reset() {
 	*x = Role{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[49]
+		mi := &file_admin_v1_admin_proto_msgTypes[51]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3055,7 +3165,7 @@ func (x *Role) String() string {
 func (*Role) ProtoMessage() {}
 
 func (x *Role) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[49]
+	mi := &file_admin_v1_admin_proto_msgTypes[51]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3068,7 +3178,7 @@ func (x *Role) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Role.ProtoReflect.Descriptor instead.
 func (*Role) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{49}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *Role) GetCreatedAt() *timestamppb.Timestamp {
@@ -3151,7 +3261,7 @@ type CreateRoleReq struct {
 func (x *CreateRoleReq) Reset() {
 	*x = CreateRoleReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[50]
+		mi := &file_admin_v1_admin_proto_msgTypes[52]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3164,7 +3274,7 @@ func (x *CreateRoleReq) String() string {
 func (*CreateRoleReq) ProtoMessage() {}
 
 func (x *CreateRoleReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[50]
+	mi := &file_admin_v1_admin_proto_msgTypes[52]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3177,7 +3287,7 @@ func (x *CreateRoleReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateRoleReq.ProtoReflect.Descriptor instead.
 func (*CreateRoleReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{50}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *CreateRoleReq) GetName() string {
@@ -3236,7 +3346,7 @@ type CreateRoleReply struct {
 func (x *CreateRoleReply) Reset() {
 	*x = CreateRoleReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[51]
+		mi := &file_admin_v1_admin_proto_msgTypes[53]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3249,7 +3359,7 @@ func (x *CreateRoleReply) String() string {
 func (*CreateRoleReply) ProtoMessage() {}
 
 func (x *CreateRoleReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[51]
+	mi := &file_admin_v1_admin_proto_msgTypes[53]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3262,7 +3372,7 @@ func (x *CreateRoleReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateRoleReply.ProtoReflect.Descriptor instead.
 func (*CreateRoleReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{51}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{53}
 }
 
 func (x *CreateRoleReply) GetSuccess() bool {
@@ -3299,7 +3409,7 @@ type UpdateRoleReq struct {
 func (x *UpdateRoleReq) Reset() {
 	*x = UpdateRoleReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[52]
+		mi := &file_admin_v1_admin_proto_msgTypes[54]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3312,7 +3422,7 @@ func (x *UpdateRoleReq) String() string {
 func (*UpdateRoleReq) ProtoMessage() {}
 
 func (x *UpdateRoleReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[52]
+	mi := &file_admin_v1_admin_proto_msgTypes[54]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3325,7 +3435,7 @@ func (x *UpdateRoleReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateRoleReq.ProtoReflect.Descriptor instead.
 func (*UpdateRoleReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{52}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{54}
 }
 
 func (x *UpdateRoleReq) GetId() uint64 {
@@ -3356,7 +3466,7 @@ type UpdateRoleReply struct {
 func (x *UpdateRoleReply) Reset() {
 	*x = UpdateRoleReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[53]
+		mi := &file_admin_v1_admin_proto_msgTypes[55]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3369,7 +3479,7 @@ func (x *UpdateRoleReply) String() string {
 func (*UpdateRoleReply) ProtoMessage() {}
 
 func (x *UpdateRoleReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[53]
+	mi := &file_admin_v1_admin_proto_msgTypes[55]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3382,7 +3492,7 @@ func (x *UpdateRoleReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateRoleReply.ProtoReflect.Descriptor instead.
 func (*UpdateRoleReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{53}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{55}
 }
 
 func (x *UpdateRoleReply) GetSuccess() bool {
@@ -3419,7 +3529,7 @@ type UpdateRoleStateReq struct {
 func (x *UpdateRoleStateReq) Reset() {
 	*x = UpdateRoleStateReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[54]
+		mi := &file_admin_v1_admin_proto_msgTypes[56]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3432,7 +3542,7 @@ func (x *UpdateRoleStateReq) String() string {
 func (*UpdateRoleStateReq) ProtoMessage() {}
 
 func (x *UpdateRoleStateReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[54]
+	mi := &file_admin_v1_admin_proto_msgTypes[56]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3445,7 +3555,7 @@ func (x *UpdateRoleStateReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateRoleStateReq.ProtoReflect.Descriptor instead.
 func (*UpdateRoleStateReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{54}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *UpdateRoleStateReq) GetId() uint64 {
@@ -3476,7 +3586,7 @@ type UpdateRoleStateReply struct {
 func (x *UpdateRoleStateReply) Reset() {
 	*x = UpdateRoleStateReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[55]
+		mi := &file_admin_v1_admin_proto_msgTypes[57]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3489,7 +3599,7 @@ func (x *UpdateRoleStateReply) String() string {
 func (*UpdateRoleStateReply) ProtoMessage() {}
 
 func (x *UpdateRoleStateReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[55]
+	mi := &file_admin_v1_admin_proto_msgTypes[57]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3502,7 +3612,7 @@ func (x *UpdateRoleStateReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateRoleStateReply.ProtoReflect.Descriptor instead.
 func (*UpdateRoleStateReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{55}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{57}
 }
 
 func (x *UpdateRoleStateReply) GetSuccess() bool {
@@ -3538,7 +3648,7 @@ type GetRoleReq struct {
 func (x *GetRoleReq) Reset() {
 	*x = GetRoleReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[56]
+		mi := &file_admin_v1_admin_proto_msgTypes[58]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3551,7 +3661,7 @@ func (x *GetRoleReq) String() string {
 func (*GetRoleReq) ProtoMessage() {}
 
 func (x *GetRoleReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[56]
+	mi := &file_admin_v1_admin_proto_msgTypes[58]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3564,7 +3674,7 @@ func (x *GetRoleReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetRoleReq.ProtoReflect.Descriptor instead.
 func (*GetRoleReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{56}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{58}
 }
 
 func (x *GetRoleReq) GetId() uint64 {
@@ -3586,7 +3696,7 @@ type DeleteRoleReq struct {
 func (x *DeleteRoleReq) Reset() {
 	*x = DeleteRoleReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[57]
+		mi := &file_admin_v1_admin_proto_msgTypes[59]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3599,7 +3709,7 @@ func (x *DeleteRoleReq) String() string {
 func (*DeleteRoleReq) ProtoMessage() {}
 
 func (x *DeleteRoleReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[57]
+	mi := &file_admin_v1_admin_proto_msgTypes[59]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3612,7 +3722,7 @@ func (x *DeleteRoleReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteRoleReq.ProtoReflect.Descriptor instead.
 func (*DeleteRoleReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{57}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{59}
 }
 
 func (x *DeleteRoleReq) GetId() uint64 {
@@ -3636,7 +3746,7 @@ type DeleteRoleReply struct {
 func (x *DeleteRoleReply) Reset() {
 	*x = DeleteRoleReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[58]
+		mi := &file_admin_v1_admin_proto_msgTypes[60]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3649,7 +3759,7 @@ func (x *DeleteRoleReply) String() string {
 func (*DeleteRoleReply) ProtoMessage() {}
 
 func (x *DeleteRoleReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[58]
+	mi := &file_admin_v1_admin_proto_msgTypes[60]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3662,7 +3772,7 @@ func (x *DeleteRoleReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteRoleReply.ProtoReflect.Descriptor instead.
 func (*DeleteRoleReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{58}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *DeleteRoleReply) GetSuccess() bool {
@@ -3698,7 +3808,7 @@ type ListRoleMenuReq struct {
 func (x *ListRoleMenuReq) Reset() {
 	*x = ListRoleMenuReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[59]
+		mi := &file_admin_v1_admin_proto_msgTypes[61]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3711,7 +3821,7 @@ func (x *ListRoleMenuReq) String() string {
 func (*ListRoleMenuReq) ProtoMessage() {}
 
 func (x *ListRoleMenuReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[59]
+	mi := &file_admin_v1_admin_proto_msgTypes[61]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3724,7 +3834,7 @@ func (x *ListRoleMenuReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListRoleMenuReq.ProtoReflect.Descriptor instead.
 func (*ListRoleMenuReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{59}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{61}
 }
 
 func (x *ListRoleMenuReq) GetId() uint64 {
@@ -3747,7 +3857,7 @@ type ListRoleMenuReply struct {
 func (x *ListRoleMenuReply) Reset() {
 	*x = ListRoleMenuReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[60]
+		mi := &file_admin_v1_admin_proto_msgTypes[62]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3760,7 +3870,7 @@ func (x *ListRoleMenuReply) String() string {
 func (*ListRoleMenuReply) ProtoMessage() {}
 
 func (x *ListRoleMenuReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[60]
+	mi := &file_admin_v1_admin_proto_msgTypes[62]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3773,7 +3883,7 @@ func (x *ListRoleMenuReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListRoleMenuReply.ProtoReflect.Descriptor instead.
 func (*ListRoleMenuReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{60}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{62}
 }
 
 func (x *ListRoleMenuReply) GetTotal() int32 {
@@ -3803,7 +3913,7 @@ type HandleRoleMenuReq struct {
 func (x *HandleRoleMenuReq) Reset() {
 	*x = HandleRoleMenuReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[61]
+		mi := &file_admin_v1_admin_proto_msgTypes[63]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3816,7 +3926,7 @@ func (x *HandleRoleMenuReq) String() string {
 func (*HandleRoleMenuReq) ProtoMessage() {}
 
 func (x *HandleRoleMenuReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[61]
+	mi := &file_admin_v1_admin_proto_msgTypes[63]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3829,7 +3939,7 @@ func (x *HandleRoleMenuReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HandleRoleMenuReq.ProtoReflect.Descriptor instead.
 func (*HandleRoleMenuReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{61}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{63}
 }
 
 func (x *HandleRoleMenuReq) GetId() uint64 {
@@ -3860,7 +3970,7 @@ type HandleRoleMenuReply struct {
 func (x *HandleRoleMenuReply) Reset() {
 	*x = HandleRoleMenuReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[62]
+		mi := &file_admin_v1_admin_proto_msgTypes[64]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3873,7 +3983,7 @@ func (x *HandleRoleMenuReply) String() string {
 func (*HandleRoleMenuReply) ProtoMessage() {}
 
 func (x *HandleRoleMenuReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[62]
+	mi := &file_admin_v1_admin_proto_msgTypes[64]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3886,7 +3996,7 @@ func (x *HandleRoleMenuReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HandleRoleMenuReply.ProtoReflect.Descriptor instead.
 func (*HandleRoleMenuReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{62}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{64}
 }
 
 func (x *HandleRoleMenuReply) GetSuccess() bool {
@@ -3923,7 +4033,7 @@ type HandleRoleResourceReq struct {
 func (x *HandleRoleResourceReq) Reset() {
 	*x = HandleRoleResourceReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[63]
+		mi := &file_admin_v1_admin_proto_msgTypes[65]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3936,7 +4046,7 @@ func (x *HandleRoleResourceReq) String() string {
 func (*HandleRoleResourceReq) ProtoMessage() {}
 
 func (x *HandleRoleResourceReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[63]
+	mi := &file_admin_v1_admin_proto_msgTypes[65]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3949,7 +4059,7 @@ func (x *HandleRoleResourceReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HandleRoleResourceReq.ProtoReflect.Descriptor instead.
 func (*HandleRoleResourceReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{63}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{65}
 }
 
 func (x *HandleRoleResourceReq) GetId() uint64 {
@@ -3980,7 +4090,7 @@ type HandleRoleResourceReply struct {
 func (x *HandleRoleResourceReply) Reset() {
 	*x = HandleRoleResourceReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[64]
+		mi := &file_admin_v1_admin_proto_msgTypes[66]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3993,7 +4103,7 @@ func (x *HandleRoleResourceReply) String() string {
 func (*HandleRoleResourceReply) ProtoMessage() {}
 
 func (x *HandleRoleResourceReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[64]
+	mi := &file_admin_v1_admin_proto_msgTypes[66]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4006,7 +4116,7 @@ func (x *HandleRoleResourceReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HandleRoleResourceReply.ProtoReflect.Descriptor instead.
 func (*HandleRoleResourceReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{64}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{66}
 }
 
 func (x *HandleRoleResourceReply) GetSuccess() bool {
@@ -4050,7 +4160,7 @@ type Resource struct {
 func (x *Resource) Reset() {
 	*x = Resource{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[65]
+		mi := &file_admin_v1_admin_proto_msgTypes[67]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4063,7 +4173,7 @@ func (x *Resource) String() string {
 func (*Resource) ProtoMessage() {}
 
 func (x *Resource) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[65]
+	mi := &file_admin_v1_admin_proto_msgTypes[67]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4076,7 +4186,7 @@ func (x *Resource) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Resource.ProtoReflect.Descriptor instead.
 func (*Resource) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{65}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{67}
 }
 
 func (x *Resource) GetCreatedAt() *timestamppb.Timestamp {
@@ -4155,7 +4265,7 @@ type ListResourceGroupReply struct {
 func (x *ListResourceGroupReply) Reset() {
 	*x = ListResourceGroupReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[66]
+		mi := &file_admin_v1_admin_proto_msgTypes[68]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4168,7 +4278,7 @@ func (x *ListResourceGroupReply) String() string {
 func (*ListResourceGroupReply) ProtoMessage() {}
 
 func (x *ListResourceGroupReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[66]
+	mi := &file_admin_v1_admin_proto_msgTypes[68]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4181,7 +4291,7 @@ func (x *ListResourceGroupReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListResourceGroupReply.ProtoReflect.Descriptor instead.
 func (*ListResourceGroupReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{66}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{68}
 }
 
 func (x *ListResourceGroupReply) GetTotal() int32 {
@@ -4215,7 +4325,7 @@ type CreateResourceReq struct {
 func (x *CreateResourceReq) Reset() {
 	*x = CreateResourceReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[67]
+		mi := &file_admin_v1_admin_proto_msgTypes[69]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4228,7 +4338,7 @@ func (x *CreateResourceReq) String() string {
 func (*CreateResourceReq) ProtoMessage() {}
 
 func (x *CreateResourceReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[67]
+	mi := &file_admin_v1_admin_proto_msgTypes[69]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4241,7 +4351,7 @@ func (x *CreateResourceReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateResourceReq.ProtoReflect.Descriptor instead.
 func (*CreateResourceReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{67}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{69}
 }
 
 func (x *CreateResourceReq) GetName() string {
@@ -4300,7 +4410,7 @@ type CreateResourceReply struct {
 func (x *CreateResourceReply) Reset() {
 	*x = CreateResourceReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[68]
+		mi := &file_admin_v1_admin_proto_msgTypes[70]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4313,7 +4423,7 @@ func (x *CreateResourceReply) String() string {
 func (*CreateResourceReply) ProtoMessage() {}
 
 func (x *CreateResourceReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[68]
+	mi := &file_admin_v1_admin_proto_msgTypes[70]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4326,7 +4436,7 @@ func (x *CreateResourceReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateResourceReply.ProtoReflect.Descriptor instead.
 func (*CreateResourceReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{68}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{70}
 }
 
 func (x *CreateResourceReply) GetSuccess() bool {
@@ -4363,7 +4473,7 @@ type UpdateResourceReq struct {
 func (x *UpdateResourceReq) Reset() {
 	*x = UpdateResourceReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[69]
+		mi := &file_admin_v1_admin_proto_msgTypes[71]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4376,7 +4486,7 @@ func (x *UpdateResourceReq) String() string {
 func (*UpdateResourceReq) ProtoMessage() {}
 
 func (x *UpdateResourceReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[69]
+	mi := &file_admin_v1_admin_proto_msgTypes[71]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4389,7 +4499,7 @@ func (x *UpdateResourceReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateResourceReq.ProtoReflect.Descriptor instead.
 func (*UpdateResourceReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{69}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{71}
 }
 
 func (x *UpdateResourceReq) GetId() uint64 {
@@ -4420,7 +4530,7 @@ type UpdateResourceReply struct {
 func (x *UpdateResourceReply) Reset() {
 	*x = UpdateResourceReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[70]
+		mi := &file_admin_v1_admin_proto_msgTypes[72]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4433,7 +4543,7 @@ func (x *UpdateResourceReply) String() string {
 func (*UpdateResourceReply) ProtoMessage() {}
 
 func (x *UpdateResourceReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[70]
+	mi := &file_admin_v1_admin_proto_msgTypes[72]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4446,7 +4556,7 @@ func (x *UpdateResourceReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateResourceReply.ProtoReflect.Descriptor instead.
 func (*UpdateResourceReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{70}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{72}
 }
 
 func (x *UpdateResourceReply) GetSuccess() bool {
@@ -4482,7 +4592,7 @@ type GetResourceReq struct {
 func (x *GetResourceReq) Reset() {
 	*x = GetResourceReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[71]
+		mi := &file_admin_v1_admin_proto_msgTypes[73]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4495,7 +4605,7 @@ func (x *GetResourceReq) String() string {
 func (*GetResourceReq) ProtoMessage() {}
 
 func (x *GetResourceReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[71]
+	mi := &file_admin_v1_admin_proto_msgTypes[73]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4508,7 +4618,7 @@ func (x *GetResourceReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetResourceReq.ProtoReflect.Descriptor instead.
 func (*GetResourceReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{71}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{73}
 }
 
 func (x *GetResourceReq) GetId() uint64 {
@@ -4530,7 +4640,7 @@ type DeleteResourceReq struct {
 func (x *DeleteResourceReq) Reset() {
 	*x = DeleteResourceReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[72]
+		mi := &file_admin_v1_admin_proto_msgTypes[74]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4543,7 +4653,7 @@ func (x *DeleteResourceReq) String() string {
 func (*DeleteResourceReq) ProtoMessage() {}
 
 func (x *DeleteResourceReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[72]
+	mi := &file_admin_v1_admin_proto_msgTypes[74]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4556,7 +4666,7 @@ func (x *DeleteResourceReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteResourceReq.ProtoReflect.Descriptor instead.
 func (*DeleteResourceReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{72}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{74}
 }
 
 func (x *DeleteResourceReq) GetId() uint64 {
@@ -4580,7 +4690,7 @@ type DeleteResourceReply struct {
 func (x *DeleteResourceReply) Reset() {
 	*x = DeleteResourceReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[73]
+		mi := &file_admin_v1_admin_proto_msgTypes[75]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4593,7 +4703,7 @@ func (x *DeleteResourceReply) String() string {
 func (*DeleteResourceReply) ProtoMessage() {}
 
 func (x *DeleteResourceReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[73]
+	mi := &file_admin_v1_admin_proto_msgTypes[75]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4606,7 +4716,7 @@ func (x *DeleteResourceReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteResourceReply.ProtoReflect.Descriptor instead.
 func (*DeleteResourceReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{73}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{75}
 }
 
 func (x *DeleteResourceReply) GetSuccess() bool {
@@ -4661,7 +4771,7 @@ type Menu struct {
 func (x *Menu) Reset() {
 	*x = Menu{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[74]
+		mi := &file_admin_v1_admin_proto_msgTypes[76]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4674,7 +4784,7 @@ func (x *Menu) String() string {
 func (*Menu) ProtoMessage() {}
 
 func (x *Menu) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[74]
+	mi := &file_admin_v1_admin_proto_msgTypes[76]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4687,7 +4797,7 @@ func (x *Menu) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Menu.ProtoReflect.Descriptor instead.
 func (*Menu) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{74}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{76}
 }
 
 func (x *Menu) GetCreatedAt() *timestamppb.Timestamp {
@@ -4842,7 +4952,7 @@ type MenuButton struct {
 func (x *MenuButton) Reset() {
 	*x = MenuButton{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[75]
+		mi := &file_admin_v1_admin_proto_msgTypes[77]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4855,7 +4965,7 @@ func (x *MenuButton) String() string {
 func (*MenuButton) ProtoMessage() {}
 
 func (x *MenuButton) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[75]
+	mi := &file_admin_v1_admin_proto_msgTypes[77]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4868,7 +4978,7 @@ func (x *MenuButton) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MenuButton.ProtoReflect.Descriptor instead.
 func (*MenuButton) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{75}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{77}
 }
 
 func (x *MenuButton) GetName() string {
@@ -4898,7 +5008,7 @@ type MenuParameter struct {
 func (x *MenuParameter) Reset() {
 	*x = MenuParameter{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[76]
+		mi := &file_admin_v1_admin_proto_msgTypes[78]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4911,7 +5021,7 @@ func (x *MenuParameter) String() string {
 func (*MenuParameter) ProtoMessage() {}
 
 func (x *MenuParameter) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[76]
+	mi := &file_admin_v1_admin_proto_msgTypes[78]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4924,7 +5034,7 @@ func (x *MenuParameter) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MenuParameter.ProtoReflect.Descriptor instead.
 func (*MenuParameter) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{76}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{78}
 }
 
 func (x *MenuParameter) GetType() protobuf.MenuParameterType {
@@ -4975,7 +5085,7 @@ type CreateMenuReq struct {
 func (x *CreateMenuReq) Reset() {
 	*x = CreateMenuReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[77]
+		mi := &file_admin_v1_admin_proto_msgTypes[79]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4988,7 +5098,7 @@ func (x *CreateMenuReq) String() string {
 func (*CreateMenuReq) ProtoMessage() {}
 
 func (x *CreateMenuReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[77]
+	mi := &file_admin_v1_admin_proto_msgTypes[79]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5001,7 +5111,7 @@ func (x *CreateMenuReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateMenuReq.ProtoReflect.Descriptor instead.
 func (*CreateMenuReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{77}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{79}
 }
 
 func (x *CreateMenuReq) GetName() string {
@@ -5130,7 +5240,7 @@ type CreateMenuReply struct {
 func (x *CreateMenuReply) Reset() {
 	*x = CreateMenuReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[78]
+		mi := &file_admin_v1_admin_proto_msgTypes[80]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5143,7 +5253,7 @@ func (x *CreateMenuReply) String() string {
 func (*CreateMenuReply) ProtoMessage() {}
 
 func (x *CreateMenuReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[78]
+	mi := &file_admin_v1_admin_proto_msgTypes[80]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5156,7 +5266,7 @@ func (x *CreateMenuReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateMenuReply.ProtoReflect.Descriptor instead.
 func (*CreateMenuReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{78}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{80}
 }
 
 func (x *CreateMenuReply) GetSuccess() bool {
@@ -5193,7 +5303,7 @@ type UpdateMenuReq struct {
 func (x *UpdateMenuReq) Reset() {
 	*x = UpdateMenuReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[79]
+		mi := &file_admin_v1_admin_proto_msgTypes[81]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5206,7 +5316,7 @@ func (x *UpdateMenuReq) String() string {
 func (*UpdateMenuReq) ProtoMessage() {}
 
 func (x *UpdateMenuReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[79]
+	mi := &file_admin_v1_admin_proto_msgTypes[81]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5219,7 +5329,7 @@ func (x *UpdateMenuReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateMenuReq.ProtoReflect.Descriptor instead.
 func (*UpdateMenuReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{79}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{81}
 }
 
 func (x *UpdateMenuReq) GetId() uint64 {
@@ -5250,7 +5360,7 @@ type UpdateMenuReply struct {
 func (x *UpdateMenuReply) Reset() {
 	*x = UpdateMenuReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[80]
+		mi := &file_admin_v1_admin_proto_msgTypes[82]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5263,7 +5373,7 @@ func (x *UpdateMenuReply) String() string {
 func (*UpdateMenuReply) ProtoMessage() {}
 
 func (x *UpdateMenuReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[80]
+	mi := &file_admin_v1_admin_proto_msgTypes[82]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5276,7 +5386,7 @@ func (x *UpdateMenuReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateMenuReply.ProtoReflect.Descriptor instead.
 func (*UpdateMenuReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{80}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{82}
 }
 
 func (x *UpdateMenuReply) GetSuccess() bool {
@@ -5312,7 +5422,7 @@ type GetMenuReq struct {
 func (x *GetMenuReq) Reset() {
 	*x = GetMenuReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[81]
+		mi := &file_admin_v1_admin_proto_msgTypes[83]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5325,7 +5435,7 @@ func (x *GetMenuReq) String() string {
 func (*GetMenuReq) ProtoMessage() {}
 
 func (x *GetMenuReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[81]
+	mi := &file_admin_v1_admin_proto_msgTypes[83]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5338,7 +5448,7 @@ func (x *GetMenuReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMenuReq.ProtoReflect.Descriptor instead.
 func (*GetMenuReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{81}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{83}
 }
 
 func (x *GetMenuReq) GetId() uint64 {
@@ -5360,7 +5470,7 @@ type DeleteMenuReq struct {
 func (x *DeleteMenuReq) Reset() {
 	*x = DeleteMenuReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[82]
+		mi := &file_admin_v1_admin_proto_msgTypes[84]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5373,7 +5483,7 @@ func (x *DeleteMenuReq) String() string {
 func (*DeleteMenuReq) ProtoMessage() {}
 
 func (x *DeleteMenuReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[82]
+	mi := &file_admin_v1_admin_proto_msgTypes[84]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5386,7 +5496,7 @@ func (x *DeleteMenuReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteMenuReq.ProtoReflect.Descriptor instead.
 func (*DeleteMenuReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{82}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{84}
 }
 
 func (x *DeleteMenuReq) GetId() uint64 {
@@ -5410,7 +5520,7 @@ type DeleteMenuReply struct {
 func (x *DeleteMenuReply) Reset() {
 	*x = DeleteMenuReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[83]
+		mi := &file_admin_v1_admin_proto_msgTypes[85]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5423,7 +5533,7 @@ func (x *DeleteMenuReply) String() string {
 func (*DeleteMenuReply) ProtoMessage() {}
 
 func (x *DeleteMenuReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[83]
+	mi := &file_admin_v1_admin_proto_msgTypes[85]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5436,7 +5546,7 @@ func (x *DeleteMenuReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteMenuReply.ProtoReflect.Descriptor instead.
 func (*DeleteMenuReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{83}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{85}
 }
 
 func (x *DeleteMenuReply) GetSuccess() bool {
@@ -5472,7 +5582,7 @@ type ListMenuTreeReq struct {
 func (x *ListMenuTreeReq) Reset() {
 	*x = ListMenuTreeReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[84]
+		mi := &file_admin_v1_admin_proto_msgTypes[86]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5485,7 +5595,7 @@ func (x *ListMenuTreeReq) String() string {
 func (*ListMenuTreeReq) ProtoMessage() {}
 
 func (x *ListMenuTreeReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[84]
+	mi := &file_admin_v1_admin_proto_msgTypes[86]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5498,7 +5608,7 @@ func (x *ListMenuTreeReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListMenuTreeReq.ProtoReflect.Descriptor instead.
 func (*ListMenuTreeReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{84}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{86}
 }
 
 func (x *ListMenuTreeReq) GetParentId() uint64 {
@@ -5521,7 +5631,7 @@ type ListMenuTreeReply struct {
 func (x *ListMenuTreeReply) Reset() {
 	*x = ListMenuTreeReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[85]
+		mi := &file_admin_v1_admin_proto_msgTypes[87]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5534,7 +5644,7 @@ func (x *ListMenuTreeReply) String() string {
 func (*ListMenuTreeReply) ProtoMessage() {}
 
 func (x *ListMenuTreeReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[85]
+	mi := &file_admin_v1_admin_proto_msgTypes[87]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5547,7 +5657,7 @@ func (x *ListMenuTreeReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListMenuTreeReply.ProtoReflect.Descriptor instead.
 func (*ListMenuTreeReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{85}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{87}
 }
 
 func (x *ListMenuTreeReply) GetTotal() int32 {
@@ -5584,7 +5694,7 @@ type Dept struct {
 func (x *Dept) Reset() {
 	*x = Dept{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[86]
+		mi := &file_admin_v1_admin_proto_msgTypes[88]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5597,7 +5707,7 @@ func (x *Dept) String() string {
 func (*Dept) ProtoMessage() {}
 
 func (x *Dept) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[86]
+	mi := &file_admin_v1_admin_proto_msgTypes[88]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5610,7 +5720,7 @@ func (x *Dept) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Dept.ProtoReflect.Descriptor instead.
 func (*Dept) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{86}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{88}
 }
 
 func (x *Dept) GetCreatedAt() *timestamppb.Timestamp {
@@ -5692,7 +5802,7 @@ type CreateDeptReq struct {
 func (x *CreateDeptReq) Reset() {
 	*x = CreateDeptReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[87]
+		mi := &file_admin_v1_admin_proto_msgTypes[89]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5705,7 +5815,7 @@ func (x *CreateDeptReq) String() string {
 func (*CreateDeptReq) ProtoMessage() {}
 
 func (x *CreateDeptReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[87]
+	mi := &file_admin_v1_admin_proto_msgTypes[89]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5718,7 +5828,7 @@ func (x *CreateDeptReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateDeptReq.ProtoReflect.Descriptor instead.
 func (*CreateDeptReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{87}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{89}
 }
 
 func (x *CreateDeptReq) GetName() string {
@@ -5770,7 +5880,7 @@ type CreateDeptReply struct {
 func (x *CreateDeptReply) Reset() {
 	*x = CreateDeptReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[88]
+		mi := &file_admin_v1_admin_proto_msgTypes[90]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5783,7 +5893,7 @@ func (x *CreateDeptReply) String() string {
 func (*CreateDeptReply) ProtoMessage() {}
 
 func (x *CreateDeptReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[88]
+	mi := &file_admin_v1_admin_proto_msgTypes[90]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5796,7 +5906,7 @@ func (x *CreateDeptReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateDeptReply.ProtoReflect.Descriptor instead.
 func (*CreateDeptReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{88}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{90}
 }
 
 func (x *CreateDeptReply) GetSuccess() bool {
@@ -5833,7 +5943,7 @@ type UpdateDeptReq struct {
 func (x *UpdateDeptReq) Reset() {
 	*x = UpdateDeptReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[89]
+		mi := &file_admin_v1_admin_proto_msgTypes[91]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5846,7 +5956,7 @@ func (x *UpdateDeptReq) String() string {
 func (*UpdateDeptReq) ProtoMessage() {}
 
 func (x *UpdateDeptReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[89]
+	mi := &file_admin_v1_admin_proto_msgTypes[91]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5859,7 +5969,7 @@ func (x *UpdateDeptReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDeptReq.ProtoReflect.Descriptor instead.
 func (*UpdateDeptReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{89}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{91}
 }
 
 func (x *UpdateDeptReq) GetId() uint64 {
@@ -5890,7 +6000,7 @@ type UpdateDeptReply struct {
 func (x *UpdateDeptReply) Reset() {
 	*x = UpdateDeptReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[90]
+		mi := &file_admin_v1_admin_proto_msgTypes[92]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5903,7 +6013,7 @@ func (x *UpdateDeptReply) String() string {
 func (*UpdateDeptReply) ProtoMessage() {}
 
 func (x *UpdateDeptReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[90]
+	mi := &file_admin_v1_admin_proto_msgTypes[92]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5916,7 +6026,7 @@ func (x *UpdateDeptReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDeptReply.ProtoReflect.Descriptor instead.
 func (*UpdateDeptReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{90}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{92}
 }
 
 func (x *UpdateDeptReply) GetSuccess() bool {
@@ -5952,7 +6062,7 @@ type GetDeptReq struct {
 func (x *GetDeptReq) Reset() {
 	*x = GetDeptReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[91]
+		mi := &file_admin_v1_admin_proto_msgTypes[93]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5965,7 +6075,7 @@ func (x *GetDeptReq) String() string {
 func (*GetDeptReq) ProtoMessage() {}
 
 func (x *GetDeptReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[91]
+	mi := &file_admin_v1_admin_proto_msgTypes[93]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5978,7 +6088,7 @@ func (x *GetDeptReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDeptReq.ProtoReflect.Descriptor instead.
 func (*GetDeptReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{91}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{93}
 }
 
 func (x *GetDeptReq) GetId() uint64 {
@@ -6000,7 +6110,7 @@ type DeleteDeptReq struct {
 func (x *DeleteDeptReq) Reset() {
 	*x = DeleteDeptReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[92]
+		mi := &file_admin_v1_admin_proto_msgTypes[94]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6013,7 +6123,7 @@ func (x *DeleteDeptReq) String() string {
 func (*DeleteDeptReq) ProtoMessage() {}
 
 func (x *DeleteDeptReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[92]
+	mi := &file_admin_v1_admin_proto_msgTypes[94]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6026,7 +6136,7 @@ func (x *DeleteDeptReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteDeptReq.ProtoReflect.Descriptor instead.
 func (*DeleteDeptReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{92}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{94}
 }
 
 func (x *DeleteDeptReq) GetId() uint64 {
@@ -6050,7 +6160,7 @@ type DeleteDeptReply struct {
 func (x *DeleteDeptReply) Reset() {
 	*x = DeleteDeptReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[93]
+		mi := &file_admin_v1_admin_proto_msgTypes[95]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6063,7 +6173,7 @@ func (x *DeleteDeptReply) String() string {
 func (*DeleteDeptReply) ProtoMessage() {}
 
 func (x *DeleteDeptReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[93]
+	mi := &file_admin_v1_admin_proto_msgTypes[95]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6076,7 +6186,7 @@ func (x *DeleteDeptReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteDeptReply.ProtoReflect.Descriptor instead.
 func (*DeleteDeptReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{93}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{95}
 }
 
 func (x *DeleteDeptReply) GetSuccess() bool {
@@ -6112,7 +6222,7 @@ type ListDeptTreeReq struct {
 func (x *ListDeptTreeReq) Reset() {
 	*x = ListDeptTreeReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[94]
+		mi := &file_admin_v1_admin_proto_msgTypes[96]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6125,7 +6235,7 @@ func (x *ListDeptTreeReq) String() string {
 func (*ListDeptTreeReq) ProtoMessage() {}
 
 func (x *ListDeptTreeReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[94]
+	mi := &file_admin_v1_admin_proto_msgTypes[96]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6138,7 +6248,7 @@ func (x *ListDeptTreeReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListDeptTreeReq.ProtoReflect.Descriptor instead.
 func (*ListDeptTreeReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{94}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{96}
 }
 
 func (x *ListDeptTreeReq) GetParentId() uint64 {
@@ -6161,7 +6271,7 @@ type ListDeptTreeReply struct {
 func (x *ListDeptTreeReply) Reset() {
 	*x = ListDeptTreeReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[95]
+		mi := &file_admin_v1_admin_proto_msgTypes[97]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6174,7 +6284,7 @@ func (x *ListDeptTreeReply) String() string {
 func (*ListDeptTreeReply) ProtoMessage() {}
 
 func (x *ListDeptTreeReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[95]
+	mi := &file_admin_v1_admin_proto_msgTypes[97]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6187,7 +6297,7 @@ func (x *ListDeptTreeReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListDeptTreeReply.ProtoReflect.Descriptor instead.
 func (*ListDeptTreeReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{95}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{97}
 }
 
 func (x *ListDeptTreeReply) GetTotal() int32 {
@@ -6223,7 +6333,7 @@ type Post struct {
 func (x *Post) Reset() {
 	*x = Post{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[96]
+		mi := &file_admin_v1_admin_proto_msgTypes[98]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6236,7 +6346,7 @@ func (x *Post) String() string {
 func (*Post) ProtoMessage() {}
 
 func (x *Post) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[96]
+	mi := &file_admin_v1_admin_proto_msgTypes[98]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6249,7 +6359,7 @@ func (x *Post) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Post.ProtoReflect.Descriptor instead.
 func (*Post) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{96}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{98}
 }
 
 func (x *Post) GetCreatedAt() *timestamppb.Timestamp {
@@ -6324,7 +6434,7 @@ type CreatePostReq struct {
 func (x *CreatePostReq) Reset() {
 	*x = CreatePostReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[97]
+		mi := &file_admin_v1_admin_proto_msgTypes[99]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6337,7 +6447,7 @@ func (x *CreatePostReq) String() string {
 func (*CreatePostReq) ProtoMessage() {}
 
 func (x *CreatePostReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[97]
+	mi := &file_admin_v1_admin_proto_msgTypes[99]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6350,7 +6460,7 @@ func (x *CreatePostReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePostReq.ProtoReflect.Descriptor instead.
 func (*CreatePostReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{97}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{99}
 }
 
 func (x *CreatePostReq) GetName() string {
@@ -6402,7 +6512,7 @@ type CreatePostReply struct {
 func (x *CreatePostReply) Reset() {
 	*x = CreatePostReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[98]
+		mi := &file_admin_v1_admin_proto_msgTypes[100]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6415,7 +6525,7 @@ func (x *CreatePostReply) String() string {
 func (*CreatePostReply) ProtoMessage() {}
 
 func (x *CreatePostReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[98]
+	mi := &file_admin_v1_admin_proto_msgTypes[100]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6428,7 +6538,7 @@ func (x *CreatePostReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePostReply.ProtoReflect.Descriptor instead.
 func (*CreatePostReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{98}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{100}
 }
 
 func (x *CreatePostReply) GetSuccess() bool {
@@ -6465,7 +6575,7 @@ type UpdatePostReq struct {
 func (x *UpdatePostReq) Reset() {
 	*x = UpdatePostReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[99]
+		mi := &file_admin_v1_admin_proto_msgTypes[101]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6478,7 +6588,7 @@ func (x *UpdatePostReq) String() string {
 func (*UpdatePostReq) ProtoMessage() {}
 
 func (x *UpdatePostReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[99]
+	mi := &file_admin_v1_admin_proto_msgTypes[101]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6491,7 +6601,7 @@ func (x *UpdatePostReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePostReq.ProtoReflect.Descriptor instead.
 func (*UpdatePostReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{99}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{101}
 }
 
 func (x *UpdatePostReq) GetId() uint64 {
@@ -6522,7 +6632,7 @@ type UpdatePostReply struct {
 func (x *UpdatePostReply) Reset() {
 	*x = UpdatePostReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[100]
+		mi := &file_admin_v1_admin_proto_msgTypes[102]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6535,7 +6645,7 @@ func (x *UpdatePostReply) String() string {
 func (*UpdatePostReply) ProtoMessage() {}
 
 func (x *UpdatePostReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[100]
+	mi := &file_admin_v1_admin_proto_msgTypes[102]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6548,7 +6658,7 @@ func (x *UpdatePostReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePostReply.ProtoReflect.Descriptor instead.
 func (*UpdatePostReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{100}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{102}
 }
 
 func (x *UpdatePostReply) GetSuccess() bool {
@@ -6584,7 +6694,7 @@ type GetPostReq struct {
 func (x *GetPostReq) Reset() {
 	*x = GetPostReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[101]
+		mi := &file_admin_v1_admin_proto_msgTypes[103]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6597,7 +6707,7 @@ func (x *GetPostReq) String() string {
 func (*GetPostReq) ProtoMessage() {}
 
 func (x *GetPostReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[101]
+	mi := &file_admin_v1_admin_proto_msgTypes[103]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6610,7 +6720,7 @@ func (x *GetPostReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPostReq.ProtoReflect.Descriptor instead.
 func (*GetPostReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{101}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{103}
 }
 
 func (x *GetPostReq) GetId() uint64 {
@@ -6632,7 +6742,7 @@ type DeletePostReq struct {
 func (x *DeletePostReq) Reset() {
 	*x = DeletePostReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[102]
+		mi := &file_admin_v1_admin_proto_msgTypes[104]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6645,7 +6755,7 @@ func (x *DeletePostReq) String() string {
 func (*DeletePostReq) ProtoMessage() {}
 
 func (x *DeletePostReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[102]
+	mi := &file_admin_v1_admin_proto_msgTypes[104]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6658,7 +6768,7 @@ func (x *DeletePostReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePostReq.ProtoReflect.Descriptor instead.
 func (*DeletePostReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{102}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{104}
 }
 
 func (x *DeletePostReq) GetId() uint64 {
@@ -6682,7 +6792,7 @@ type DeletePostReply struct {
 func (x *DeletePostReply) Reset() {
 	*x = DeletePostReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[103]
+		mi := &file_admin_v1_admin_proto_msgTypes[105]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6695,7 +6805,7 @@ func (x *DeletePostReply) String() string {
 func (*DeletePostReply) ProtoMessage() {}
 
 func (x *DeletePostReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[103]
+	mi := &file_admin_v1_admin_proto_msgTypes[105]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6708,7 +6818,7 @@ func (x *DeletePostReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePostReply.ProtoReflect.Descriptor instead.
 func (*DeletePostReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{103}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{105}
 }
 
 func (x *DeletePostReply) GetSuccess() bool {
@@ -6745,7 +6855,7 @@ type UpdatePostStateReq struct {
 func (x *UpdatePostStateReq) Reset() {
 	*x = UpdatePostStateReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[104]
+		mi := &file_admin_v1_admin_proto_msgTypes[106]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6758,7 +6868,7 @@ func (x *UpdatePostStateReq) String() string {
 func (*UpdatePostStateReq) ProtoMessage() {}
 
 func (x *UpdatePostStateReq) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[104]
+	mi := &file_admin_v1_admin_proto_msgTypes[106]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6771,7 +6881,7 @@ func (x *UpdatePostStateReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePostStateReq.ProtoReflect.Descriptor instead.
 func (*UpdatePostStateReq) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{104}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{106}
 }
 
 func (x *UpdatePostStateReq) GetId() uint64 {
@@ -6802,7 +6912,7 @@ type UpdatePostStateReply struct {
 func (x *UpdatePostStateReply) Reset() {
 	*x = UpdatePostStateReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[105]
+		mi := &file_admin_v1_admin_proto_msgTypes[107]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6815,7 +6925,7 @@ func (x *UpdatePostStateReply) String() string {
 func (*UpdatePostStateReply) ProtoMessage() {}
 
 func (x *UpdatePostStateReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[105]
+	mi := &file_admin_v1_admin_proto_msgTypes[107]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6828,7 +6938,7 @@ func (x *UpdatePostStateReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePostStateReply.ProtoReflect.Descriptor instead.
 func (*UpdatePostStateReply) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{105}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{107}
 }
 
 func (x *UpdatePostStateReply) GetSuccess() bool {
@@ -6864,7 +6974,7 @@ type PassLoginReq_PassField struct {
 func (x *PassLoginReq_PassField) Reset() {
 	*x = PassLoginReq_PassField{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[106]
+		mi := &file_admin_v1_admin_proto_msgTypes[108]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6877,7 +6987,7 @@ func (x *PassLoginReq_PassField) String() string {
 func (*PassLoginReq_PassField) ProtoMessage() {}
 
 func (x *PassLoginReq_PassField) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[106]
+	mi := &file_admin_v1_admin_proto_msgTypes[108]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6919,7 +7029,7 @@ type SmsLoginReq_SmsField struct {
 func (x *SmsLoginReq_SmsField) Reset() {
 	*x = SmsLoginReq_SmsField{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[107]
+		mi := &file_admin_v1_admin_proto_msgTypes[109]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6932,7 +7042,7 @@ func (x *SmsLoginReq_SmsField) String() string {
 func (*SmsLoginReq_SmsField) ProtoMessage() {}
 
 func (x *SmsLoginReq_SmsField) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[107]
+	mi := &file_admin_v1_admin_proto_msgTypes[109]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6974,7 +7084,7 @@ type EmailLoginReq_EmailField struct {
 func (x *EmailLoginReq_EmailField) Reset() {
 	*x = EmailLoginReq_EmailField{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[108]
+		mi := &file_admin_v1_admin_proto_msgTypes[110]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6987,7 +7097,7 @@ func (x *EmailLoginReq_EmailField) String() string {
 func (*EmailLoginReq_EmailField) ProtoMessage() {}
 
 func (x *EmailLoginReq_EmailField) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[108]
+	mi := &file_admin_v1_admin_proto_msgTypes[110]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7061,7 +7171,7 @@ type ListUserRoleMenuTreeReply_Deprecated_MenuMeta struct {
 func (x *ListUserRoleMenuTreeReply_Deprecated_MenuMeta) Reset() {
 	*x = ListUserRoleMenuTreeReply_Deprecated_MenuMeta{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[109]
+		mi := &file_admin_v1_admin_proto_msgTypes[111]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7074,7 +7184,7 @@ func (x *ListUserRoleMenuTreeReply_Deprecated_MenuMeta) String() string {
 func (*ListUserRoleMenuTreeReply_Deprecated_MenuMeta) ProtoMessage() {}
 
 func (x *ListUserRoleMenuTreeReply_Deprecated_MenuMeta) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[109]
+	mi := &file_admin_v1_admin_proto_msgTypes[111]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7228,7 +7338,7 @@ type ListUserRoleMenuTreeReply_Deprecated_Menu struct {
 func (x *ListUserRoleMenuTreeReply_Deprecated_Menu) Reset() {
 	*x = ListUserRoleMenuTreeReply_Deprecated_Menu{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[110]
+		mi := &file_admin_v1_admin_proto_msgTypes[112]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7241,7 +7351,7 @@ func (x *ListUserRoleMenuTreeReply_Deprecated_Menu) String() string {
 func (*ListUserRoleMenuTreeReply_Deprecated_Menu) ProtoMessage() {}
 
 func (x *ListUserRoleMenuTreeReply_Deprecated_Menu) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[110]
+	mi := &file_admin_v1_admin_proto_msgTypes[112]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7346,7 +7456,7 @@ type RouterMenu_Meta struct {
 func (x *RouterMenu_Meta) Reset() {
 	*x = RouterMenu_Meta{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[111]
+		mi := &file_admin_v1_admin_proto_msgTypes[113]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7359,7 +7469,7 @@ func (x *RouterMenu_Meta) String() string {
 func (*RouterMenu_Meta) ProtoMessage() {}
 
 func (x *RouterMenu_Meta) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[111]
+	mi := &file_admin_v1_admin_proto_msgTypes[113]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7442,7 +7552,7 @@ type HandleUserDomainReq_Data struct {
 func (x *HandleUserDomainReq_Data) Reset() {
 	*x = HandleUserDomainReq_Data{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[112]
+		mi := &file_admin_v1_admin_proto_msgTypes[114]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7455,7 +7565,7 @@ func (x *HandleUserDomainReq_Data) String() string {
 func (*HandleUserDomainReq_Data) ProtoMessage() {}
 
 func (x *HandleUserDomainReq_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[112]
+	mi := &file_admin_v1_admin_proto_msgTypes[114]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7490,7 +7600,7 @@ type HandleUserDomainRoleReq_Data struct {
 func (x *HandleUserDomainRoleReq_Data) Reset() {
 	*x = HandleUserDomainRoleReq_Data{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[113]
+		mi := &file_admin_v1_admin_proto_msgTypes[115]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7503,7 +7613,7 @@ func (x *HandleUserDomainRoleReq_Data) String() string {
 func (*HandleUserDomainRoleReq_Data) ProtoMessage() {}
 
 func (x *HandleUserDomainRoleReq_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[113]
+	mi := &file_admin_v1_admin_proto_msgTypes[115]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7554,7 +7664,7 @@ type UpdateUserReq_Data struct {
 func (x *UpdateUserReq_Data) Reset() {
 	*x = UpdateUserReq_Data{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[114]
+		mi := &file_admin_v1_admin_proto_msgTypes[116]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7567,7 +7677,7 @@ func (x *UpdateUserReq_Data) String() string {
 func (*UpdateUserReq_Data) ProtoMessage() {}
 
 func (x *UpdateUserReq_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[114]
+	mi := &file_admin_v1_admin_proto_msgTypes[116]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7668,7 +7778,7 @@ type UpdateDomainReq_Data struct {
 func (x *UpdateDomainReq_Data) Reset() {
 	*x = UpdateDomainReq_Data{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[115]
+		mi := &file_admin_v1_admin_proto_msgTypes[117]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7681,7 +7791,7 @@ func (x *UpdateDomainReq_Data) String() string {
 func (*UpdateDomainReq_Data) ProtoMessage() {}
 
 func (x *UpdateDomainReq_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[115]
+	mi := &file_admin_v1_admin_proto_msgTypes[117]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7694,7 +7804,7 @@ func (x *UpdateDomainReq_Data) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDomainReq_Data.ProtoReflect.Descriptor instead.
 func (*UpdateDomainReq_Data) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{38, 0}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{40, 0}
 }
 
 func (x *UpdateDomainReq_Data) GetName() string {
@@ -7743,7 +7853,7 @@ type UpdateDomainStateReq_Data struct {
 func (x *UpdateDomainStateReq_Data) Reset() {
 	*x = UpdateDomainStateReq_Data{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[116]
+		mi := &file_admin_v1_admin_proto_msgTypes[118]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7756,7 +7866,7 @@ func (x *UpdateDomainStateReq_Data) String() string {
 func (*UpdateDomainStateReq_Data) ProtoMessage() {}
 
 func (x *UpdateDomainStateReq_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[116]
+	mi := &file_admin_v1_admin_proto_msgTypes[118]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7769,7 +7879,7 @@ func (x *UpdateDomainStateReq_Data) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDomainStateReq_Data.ProtoReflect.Descriptor instead.
 func (*UpdateDomainStateReq_Data) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{40, 0}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{42, 0}
 }
 
 func (x *UpdateDomainStateReq_Data) GetState() protobuf.DomainState {
@@ -7792,7 +7902,7 @@ type HandleDomainMenuReq_Menu struct {
 func (x *HandleDomainMenuReq_Menu) Reset() {
 	*x = HandleDomainMenuReq_Menu{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[117]
+		mi := &file_admin_v1_admin_proto_msgTypes[119]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7805,7 +7915,7 @@ func (x *HandleDomainMenuReq_Menu) String() string {
 func (*HandleDomainMenuReq_Menu) ProtoMessage() {}
 
 func (x *HandleDomainMenuReq_Menu) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[117]
+	mi := &file_admin_v1_admin_proto_msgTypes[119]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7818,7 +7928,7 @@ func (x *HandleDomainMenuReq_Menu) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HandleDomainMenuReq_Menu.ProtoReflect.Descriptor instead.
 func (*HandleDomainMenuReq_Menu) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{47, 0}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{49, 0}
 }
 
 func (x *HandleDomainMenuReq_Menu) GetId() uint64 {
@@ -7853,7 +7963,7 @@ type HandleDomainMenuReq_Data struct {
 func (x *HandleDomainMenuReq_Data) Reset() {
 	*x = HandleDomainMenuReq_Data{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[118]
+		mi := &file_admin_v1_admin_proto_msgTypes[120]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7866,7 +7976,7 @@ func (x *HandleDomainMenuReq_Data) String() string {
 func (*HandleDomainMenuReq_Data) ProtoMessage() {}
 
 func (x *HandleDomainMenuReq_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[118]
+	mi := &file_admin_v1_admin_proto_msgTypes[120]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7879,7 +7989,7 @@ func (x *HandleDomainMenuReq_Data) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HandleDomainMenuReq_Data.ProtoReflect.Descriptor instead.
 func (*HandleDomainMenuReq_Data) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{47, 1}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{49, 1}
 }
 
 func (x *HandleDomainMenuReq_Data) GetMenus() []*HandleDomainMenuReq_Menu {
@@ -7905,7 +8015,7 @@ type UpdateRoleReq_Data struct {
 func (x *UpdateRoleReq_Data) Reset() {
 	*x = UpdateRoleReq_Data{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[119]
+		mi := &file_admin_v1_admin_proto_msgTypes[121]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7918,7 +8028,7 @@ func (x *UpdateRoleReq_Data) String() string {
 func (*UpdateRoleReq_Data) ProtoMessage() {}
 
 func (x *UpdateRoleReq_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[119]
+	mi := &file_admin_v1_admin_proto_msgTypes[121]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7931,7 +8041,7 @@ func (x *UpdateRoleReq_Data) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateRoleReq_Data.ProtoReflect.Descriptor instead.
 func (*UpdateRoleReq_Data) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{52, 0}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{54, 0}
 }
 
 func (x *UpdateRoleReq_Data) GetName() string {
@@ -7987,7 +8097,7 @@ type UpdateRoleStateReq_Data struct {
 func (x *UpdateRoleStateReq_Data) Reset() {
 	*x = UpdateRoleStateReq_Data{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[120]
+		mi := &file_admin_v1_admin_proto_msgTypes[122]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8000,7 +8110,7 @@ func (x *UpdateRoleStateReq_Data) String() string {
 func (*UpdateRoleStateReq_Data) ProtoMessage() {}
 
 func (x *UpdateRoleStateReq_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[120]
+	mi := &file_admin_v1_admin_proto_msgTypes[122]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8013,7 +8123,7 @@ func (x *UpdateRoleStateReq_Data) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateRoleStateReq_Data.ProtoReflect.Descriptor instead.
 func (*UpdateRoleStateReq_Data) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{54, 0}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{56, 0}
 }
 
 func (x *UpdateRoleStateReq_Data) GetState() protobuf.RoleState {
@@ -8036,7 +8146,7 @@ type HandleRoleMenuReq_Menu struct {
 func (x *HandleRoleMenuReq_Menu) Reset() {
 	*x = HandleRoleMenuReq_Menu{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[121]
+		mi := &file_admin_v1_admin_proto_msgTypes[123]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8049,7 +8159,7 @@ func (x *HandleRoleMenuReq_Menu) String() string {
 func (*HandleRoleMenuReq_Menu) ProtoMessage() {}
 
 func (x *HandleRoleMenuReq_Menu) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[121]
+	mi := &file_admin_v1_admin_proto_msgTypes[123]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8062,7 +8172,7 @@ func (x *HandleRoleMenuReq_Menu) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HandleRoleMenuReq_Menu.ProtoReflect.Descriptor instead.
 func (*HandleRoleMenuReq_Menu) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{61, 0}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{63, 0}
 }
 
 func (x *HandleRoleMenuReq_Menu) GetId() uint64 {
@@ -8097,7 +8207,7 @@ type HandleRoleMenuReq_Data struct {
 func (x *HandleRoleMenuReq_Data) Reset() {
 	*x = HandleRoleMenuReq_Data{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[122]
+		mi := &file_admin_v1_admin_proto_msgTypes[124]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8110,7 +8220,7 @@ func (x *HandleRoleMenuReq_Data) String() string {
 func (*HandleRoleMenuReq_Data) ProtoMessage() {}
 
 func (x *HandleRoleMenuReq_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[122]
+	mi := &file_admin_v1_admin_proto_msgTypes[124]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8123,7 +8233,7 @@ func (x *HandleRoleMenuReq_Data) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HandleRoleMenuReq_Data.ProtoReflect.Descriptor instead.
 func (*HandleRoleMenuReq_Data) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{61, 1}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{63, 1}
 }
 
 func (x *HandleRoleMenuReq_Data) GetMenus() []*HandleRoleMenuReq_Menu {
@@ -8144,7 +8254,7 @@ type HandleRoleResourceReq_Data struct {
 func (x *HandleRoleResourceReq_Data) Reset() {
 	*x = HandleRoleResourceReq_Data{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[123]
+		mi := &file_admin_v1_admin_proto_msgTypes[125]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8157,7 +8267,7 @@ func (x *HandleRoleResourceReq_Data) String() string {
 func (*HandleRoleResourceReq_Data) ProtoMessage() {}
 
 func (x *HandleRoleResourceReq_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[123]
+	mi := &file_admin_v1_admin_proto_msgTypes[125]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8170,7 +8280,7 @@ func (x *HandleRoleResourceReq_Data) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HandleRoleResourceReq_Data.ProtoReflect.Descriptor instead.
 func (*HandleRoleResourceReq_Data) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{63, 0}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{65, 0}
 }
 
 func (x *HandleRoleResourceReq_Data) GetResourceIds() []uint64 {
@@ -8196,7 +8306,7 @@ type UpdateResourceReq_Data struct {
 func (x *UpdateResourceReq_Data) Reset() {
 	*x = UpdateResourceReq_Data{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[124]
+		mi := &file_admin_v1_admin_proto_msgTypes[126]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8209,7 +8319,7 @@ func (x *UpdateResourceReq_Data) String() string {
 func (*UpdateResourceReq_Data) ProtoMessage() {}
 
 func (x *UpdateResourceReq_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[124]
+	mi := &file_admin_v1_admin_proto_msgTypes[126]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8222,7 +8332,7 @@ func (x *UpdateResourceReq_Data) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateResourceReq_Data.ProtoReflect.Descriptor instead.
 func (*UpdateResourceReq_Data) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{69, 0}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{71, 0}
 }
 
 func (x *UpdateResourceReq_Data) GetName() string {
@@ -8293,7 +8403,7 @@ type UpdateMenuReq_Data struct {
 func (x *UpdateMenuReq_Data) Reset() {
 	*x = UpdateMenuReq_Data{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[125]
+		mi := &file_admin_v1_admin_proto_msgTypes[127]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8306,7 +8416,7 @@ func (x *UpdateMenuReq_Data) String() string {
 func (*UpdateMenuReq_Data) ProtoMessage() {}
 
 func (x *UpdateMenuReq_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[125]
+	mi := &file_admin_v1_admin_proto_msgTypes[127]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8319,7 +8429,7 @@ func (x *UpdateMenuReq_Data) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateMenuReq_Data.ProtoReflect.Descriptor instead.
 func (*UpdateMenuReq_Data) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{79, 0}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{81, 0}
 }
 
 func (x *UpdateMenuReq_Data) GetName() string {
@@ -8449,7 +8559,7 @@ type UpdateDeptReq_Data struct {
 func (x *UpdateDeptReq_Data) Reset() {
 	*x = UpdateDeptReq_Data{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[126]
+		mi := &file_admin_v1_admin_proto_msgTypes[128]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8462,7 +8572,7 @@ func (x *UpdateDeptReq_Data) String() string {
 func (*UpdateDeptReq_Data) ProtoMessage() {}
 
 func (x *UpdateDeptReq_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[126]
+	mi := &file_admin_v1_admin_proto_msgTypes[128]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8475,7 +8585,7 @@ func (x *UpdateDeptReq_Data) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDeptReq_Data.ProtoReflect.Descriptor instead.
 func (*UpdateDeptReq_Data) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{89, 0}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{91, 0}
 }
 
 func (x *UpdateDeptReq_Data) GetName() string {
@@ -8528,7 +8638,7 @@ type UpdatePostReq_Data struct {
 func (x *UpdatePostReq_Data) Reset() {
 	*x = UpdatePostReq_Data{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[127]
+		mi := &file_admin_v1_admin_proto_msgTypes[129]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8541,7 +8651,7 @@ func (x *UpdatePostReq_Data) String() string {
 func (*UpdatePostReq_Data) ProtoMessage() {}
 
 func (x *UpdatePostReq_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[127]
+	mi := &file_admin_v1_admin_proto_msgTypes[129]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8554,7 +8664,7 @@ func (x *UpdatePostReq_Data) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePostReq_Data.ProtoReflect.Descriptor instead.
 func (*UpdatePostReq_Data) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{99, 0}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{101, 0}
 }
 
 func (x *UpdatePostReq_Data) GetName() string {
@@ -8603,7 +8713,7 @@ type UpdatePostStateReq_Data struct {
 func (x *UpdatePostStateReq_Data) Reset() {
 	*x = UpdatePostStateReq_Data{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_admin_v1_admin_proto_msgTypes[128]
+		mi := &file_admin_v1_admin_proto_msgTypes[130]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8616,7 +8726,7 @@ func (x *UpdatePostStateReq_Data) String() string {
 func (*UpdatePostStateReq_Data) ProtoMessage() {}
 
 func (x *UpdatePostStateReq_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_v1_admin_proto_msgTypes[128]
+	mi := &file_admin_v1_admin_proto_msgTypes[130]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8629,7 +8739,7 @@ func (x *UpdatePostStateReq_Data) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePostStateReq_Data.ProtoReflect.Descriptor instead.
 func (*UpdatePostStateReq_Data) Descriptor() ([]byte, []int) {
-	return file_admin_v1_admin_proto_rawDescGZIP(), []int{104, 0}
+	return file_admin_v1_admin_proto_rawDescGZIP(), []int{106, 0}
 }
 
 func (x *UpdatePostStateReq_Data) GetState() protobuf.PostState {
@@ -9050,7 +9160,7 @@ var file_admin_v1_admin_proto_rawDesc = []byte{
 	0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x28, 0x0a,
 	0x04, 0x64, 0x61, 0x74, 0x61, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x14, 0x2e, 0x67, 0x6f,
 	0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x41, 0x6e,
-	0x79, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0xac, 0x02, 0x0a, 0x06, 0x44, 0x6f, 0x6d, 0x61,
+	0x79, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0xde, 0x02, 0x0a, 0x06, 0x44, 0x6f, 0x6d, 0x61,
 	0x69, 0x6e, 0x12, 0x39, 0x0a, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x5f, 0x61, 0x74,
 	0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e,
 	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61,
@@ -9069,20 +9179,31 @@ var file_admin_v1_admin_proto_rawDesc = []byte{
 	0x69, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52, 0x05, 0x73, 0x74, 0x61, 0x74, 0x65, 0x12, 0x26,
 	0x0a, 0x0f, 0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x5f, 0x72, 0x6f, 0x6c, 0x65, 0x5f, 0x69,
 	0x64, 0x18, 0x08, 0x20, 0x01, 0x28, 0x04, 0x52, 0x0d, 0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74,
-	0x52, 0x6f, 0x6c, 0x65, 0x49, 0x64, 0x22, 0x65, 0x0a, 0x0e, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x44,
-	0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x52, 0x65, 0x71, 0x12, 0x21, 0x0a, 0x06, 0x64, 0x6f, 0x6d, 0x61,
-	0x69, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x09, 0xfa, 0x42, 0x06, 0x72, 0x04, 0x10,
-	0x01, 0x18, 0x14, 0x52, 0x06, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x12, 0x30, 0x0a, 0x04, 0x61,
-	0x75, 0x74, 0x68, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x61, 0x70, 0x69, 0x2e,
-	0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x41, 0x75, 0x74, 0x68, 0x42, 0x08, 0xfa,
-	0x42, 0x05, 0x8a, 0x01, 0x02, 0x10, 0x01, 0x52, 0x04, 0x61, 0x75, 0x74, 0x68, 0x22, 0x68, 0x0a,
-	0x11, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x52,
-	0x65, 0x71, 0x12, 0x21, 0x0a, 0x06, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x09, 0x42, 0x09, 0xfa, 0x42, 0x06, 0x72, 0x04, 0x10, 0x01, 0x18, 0x14, 0x52, 0x06, 0x64,
-	0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x12, 0x30, 0x0a, 0x04, 0x61, 0x75, 0x74, 0x68, 0x18, 0x02, 0x20,
-	0x01, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e,
-	0x76, 0x31, 0x2e, 0x41, 0x75, 0x74, 0x68, 0x42, 0x08, 0xfa, 0x42, 0x05, 0x8a, 0x01, 0x02, 0x10,
-	0x01, 0x52, 0x04, 0x61, 0x75, 0x74, 0x68, 0x22, 0xaa, 0x02, 0x0a, 0x0f, 0x43, 0x72, 0x65, 0x61,
+	0x52, 0x6f, 0x6c, 0x65, 0x49, 0x64, 0x12, 0x30, 0x0a, 0x08, 0x63, 0x68, 0x69, 0x6c, 0x64, 0x72,
+	0x65, 0x6e, 0x18, 0x09, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x14, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61,
+	0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x52, 0x08,
+	0x63, 0x68, 0x69, 0x6c, 0x64, 0x72, 0x65, 0x6e, 0x22, 0x65, 0x0a, 0x0e, 0x4c, 0x6f, 0x67, 0x69,
+	0x6e, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x52, 0x65, 0x71, 0x12, 0x21, 0x0a, 0x06, 0x64, 0x6f,
+	0x6d, 0x61, 0x69, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x09, 0xfa, 0x42, 0x06, 0x72,
+	0x04, 0x10, 0x01, 0x18, 0x14, 0x52, 0x06, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x12, 0x30, 0x0a,
+	0x04, 0x61, 0x75, 0x74, 0x68, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x61, 0x70,
+	0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x41, 0x75, 0x74, 0x68, 0x42,
+	0x08, 0xfa, 0x42, 0x05, 0x8a, 0x01, 0x02, 0x10, 0x01, 0x52, 0x04, 0x61, 0x75, 0x74, 0x68, 0x22,
+	0x68, 0x0a, 0x11, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x44, 0x6f, 0x6d, 0x61, 0x69,
+	0x6e, 0x52, 0x65, 0x71, 0x12, 0x21, 0x0a, 0x06, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x42, 0x09, 0xfa, 0x42, 0x06, 0x72, 0x04, 0x10, 0x01, 0x18, 0x14, 0x52,
+	0x06, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x12, 0x30, 0x0a, 0x04, 0x61, 0x75, 0x74, 0x68, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69,
+	0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x41, 0x75, 0x74, 0x68, 0x42, 0x08, 0xfa, 0x42, 0x05, 0x8a, 0x01,
+	0x02, 0x10, 0x01, 0x52, 0x04, 0x61, 0x75, 0x74, 0x68, 0x22, 0x23, 0x0a, 0x11, 0x4c, 0x69, 0x73,
+	0x74, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x54, 0x72, 0x65, 0x65, 0x52, 0x65, 0x71, 0x12, 0x0e,
+	0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x02, 0x69, 0x64, 0x22, 0x57,
+	0x0a, 0x13, 0x4c, 0x69, 0x73, 0x74, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x54, 0x72, 0x65, 0x65,
+	0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x05, 0x52, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x12, 0x2a, 0x0a, 0x05, 0x69,
+	0x74, 0x65, 0x6d, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x14, 0x2e, 0x61, 0x70, 0x69,
+	0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e,
+	0x52, 0x05, 0x69, 0x74, 0x65, 0x6d, 0x73, 0x22, 0xaa, 0x02, 0x0a, 0x0f, 0x43, 0x72, 0x65, 0x61,
 	0x74, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x52, 0x65, 0x71, 0x12, 0x1d, 0x0a, 0x04, 0x6e,
 	0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x09, 0xfa, 0x42, 0x06, 0x72, 0x04,
 	0x10, 0x01, 0x18, 0x0a, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x29, 0x0a, 0x09, 0x70, 0x61,
@@ -9884,7 +10005,7 @@ var file_admin_v1_admin_proto_rawDesc = []byte{
 	0x61, 0x67, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61,
 	0x67, 0x65, 0x12, 0x28, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b,
 	0x32, 0x14, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
-	0x75, 0x66, 0x2e, 0x41, 0x6e, 0x79, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x32, 0xe6, 0x38, 0x0a,
+	0x75, 0x66, 0x2e, 0x41, 0x6e, 0x79, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x32, 0xfe, 0x39, 0x0a,
 	0x05, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x12, 0x83, 0x02, 0x0a, 0x06, 0x4c, 0x6f, 0x67, 0x6f, 0x75,
 	0x74, 0x12, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
 	0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x19, 0x2e, 0x61, 0x70, 0x69, 0x2e,
@@ -10065,305 +10186,315 @@ var file_admin_v1_admin_proto_rawDesc = []byte{
 	0x2e, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x50, 0x61,
 	0x67, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x19, 0x82, 0xd3, 0xe4, 0x93, 0x02,
 	0x13, 0x12, 0x11, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x6f, 0x6d,
-	0x61, 0x69, 0x6e, 0x73, 0x12, 0x6c, 0x0a, 0x0c, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x44, 0x6f,
-	0x6d, 0x61, 0x69, 0x6e, 0x12, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e,
-	0x2e, 0x76, 0x31, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e,
-	0x52, 0x65, 0x71, 0x1a, 0x1f, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e,
-	0x76, 0x31, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x52,
-	0x65, 0x70, 0x6c, 0x79, 0x22, 0x1c, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x16, 0x22, 0x11, 0x2f, 0x61,
-	0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x73, 0x3a,
-	0x01, 0x2a, 0x12, 0x5d, 0x0a, 0x09, 0x47, 0x65, 0x74, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x12,
-	0x1a, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x47,
-	0x65, 0x74, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x52, 0x65, 0x71, 0x1a, 0x14, 0x2e, 0x61, 0x70,
-	0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x6f, 0x6d, 0x61, 0x69,
-	0x6e, 0x22, 0x1e, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x18, 0x12, 0x16, 0x2f, 0x61, 0x64, 0x6d, 0x69,
-	0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x73, 0x2f, 0x7b, 0x69, 0x64,
-	0x7d, 0x12, 0x74, 0x0a, 0x0c, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69,
-	0x6e, 0x12, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31,
-	0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x52, 0x65, 0x71,
-	0x1a, 0x1f, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e,
-	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x52, 0x65, 0x70, 0x6c,
-	0x79, 0x22, 0x24, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1e, 0x1a, 0x16, 0x2f, 0x61, 0x64, 0x6d, 0x69,
-	0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x73, 0x2f, 0x7b, 0x69, 0x64,
-	0x7d, 0x3a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x12, 0x6e, 0x0a, 0x0c, 0x44, 0x65, 0x6c, 0x65, 0x74,
-	0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x12, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64,
-	0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x44, 0x6f, 0x6d,
-	0x61, 0x69, 0x6e, 0x52, 0x65, 0x71, 0x1a, 0x1f, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d,
-	0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x44, 0x6f, 0x6d, 0x61,
-	0x69, 0x6e, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x1e, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x18, 0x2a,
-	0x16, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x6f, 0x6d, 0x61, 0x69,
-	0x6e, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x12, 0x89, 0x01, 0x0a, 0x11, 0x55, 0x70, 0x64, 0x61,
-	0x74, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x22, 0x2e,
-	0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64,
-	0x61, 0x74, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52, 0x65,
-	0x71, 0x1a, 0x24, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31,
-	0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x53, 0x74, 0x61,
-	0x74, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x2a, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x24, 0x1a,
-	0x1c, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x6f, 0x6d, 0x61, 0x69,
-	0x6e, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x2f, 0x73, 0x74, 0x61, 0x74, 0x65, 0x3a, 0x04, 0x64,
-	0x61, 0x74, 0x61, 0x12, 0x7a, 0x0a, 0x0e, 0x4c, 0x69, 0x73, 0x74, 0x44, 0x6f, 0x6d, 0x61, 0x69,
-	0x6e, 0x4d, 0x65, 0x6e, 0x75, 0x12, 0x1f, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69,
-	0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x4d,
-	0x65, 0x6e, 0x75, 0x52, 0x65, 0x71, 0x1a, 0x21, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d,
-	0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e,
-	0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x24, 0x82, 0xd3, 0xe4, 0x93, 0x02,
-	0x1e, 0x12, 0x1c, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x6f, 0x6d,
-	0x61, 0x69, 0x6e, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x2f, 0x6d, 0x65, 0x6e, 0x75, 0x73, 0x12,
-	0x86, 0x01, 0x0a, 0x10, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e,
-	0x4d, 0x65, 0x6e, 0x75, 0x12, 0x21, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e,
-	0x2e, 0x76, 0x31, 0x2e, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e,
-	0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x71, 0x1a, 0x23, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64,
-	0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x44, 0x6f, 0x6d,
-	0x61, 0x69, 0x6e, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x2a, 0x82, 0xd3,
-	0xe4, 0x93, 0x02, 0x24, 0x22, 0x1c, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f,
-	0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x2f, 0x6d, 0x65, 0x6e,
-	0x75, 0x73, 0x3a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x12, 0x57, 0x0a, 0x08, 0x4c, 0x69, 0x73, 0x74,
-	0x52, 0x6f, 0x6c, 0x65, 0x12, 0x17, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x62, 0x75, 0x66, 0x2e, 0x50, 0x61, 0x67, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x71, 0x1a, 0x19, 0x2e,
-	0x61, 0x70, 0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x50, 0x61, 0x67,
-	0x69, 0x6e, 0x67, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x17, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x11,
-	0x12, 0x0f, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x6f, 0x6c, 0x65,
-	0x73, 0x12, 0x64, 0x0a, 0x0a, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x12,
-	0x1b, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x43,
-	0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x1d, 0x2e, 0x61,
+	0x61, 0x69, 0x6e, 0x73, 0x12, 0x95, 0x01, 0x0a, 0x0e, 0x4c, 0x69, 0x73, 0x74, 0x44, 0x6f, 0x6d,
+	0x61, 0x69, 0x6e, 0x54, 0x72, 0x65, 0x65, 0x12, 0x1f, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64,
+	0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x44, 0x6f, 0x6d, 0x61, 0x69,
+	0x6e, 0x54, 0x72, 0x65, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x21, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61,
+	0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x44, 0x6f, 0x6d, 0x61,
+	0x69, 0x6e, 0x54, 0x72, 0x65, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x3f, 0x82, 0xd3, 0xe4,
+	0x93, 0x02, 0x39, 0x12, 0x1c, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x64,
+	0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x2f, 0x74, 0x72, 0x65, 0x65,
+	0x73, 0x5a, 0x19, 0x12, 0x17, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x64,
+	0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x73, 0x2f, 0x74, 0x72, 0x65, 0x65, 0x73, 0x12, 0x6c, 0x0a, 0x0c,
+	0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x12, 0x1d, 0x2e, 0x61,
 	0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x72, 0x65, 0x61,
-	0x74, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x1a, 0x82, 0xd3, 0xe4,
-	0x93, 0x02, 0x14, 0x22, 0x0f, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x72,
-	0x6f, 0x6c, 0x65, 0x73, 0x3a, 0x01, 0x2a, 0x12, 0x55, 0x0a, 0x07, 0x47, 0x65, 0x74, 0x52, 0x6f,
-	0x6c, 0x65, 0x12, 0x18, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76,
-	0x31, 0x2e, 0x47, 0x65, 0x74, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x12, 0x2e, 0x61,
-	0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x6f, 0x6c, 0x65,
-	0x22, 0x1c, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x16, 0x12, 0x14, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e,
-	0x2f, 0x76, 0x31, 0x2f, 0x72, 0x6f, 0x6c, 0x65, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x12, 0x6c,
-	0x0a, 0x0a, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x12, 0x1b, 0x2e, 0x61,
-	0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61,
-	0x74, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e,
-	0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52,
-	0x6f, 0x6c, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x22, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1c,
-	0x1a, 0x14, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x6f, 0x6c, 0x65,
-	0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x3a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x12, 0x81, 0x01, 0x0a,
-	0x0f, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x53, 0x74, 0x61, 0x74, 0x65,
-	0x12, 0x20, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e,
-	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52,
-	0x65, 0x71, 0x1a, 0x22, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76,
-	0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x53, 0x74, 0x61, 0x74,
-	0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x28, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x22, 0x1a, 0x1a,
-	0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x6f, 0x6c, 0x65, 0x73, 0x2f,
-	0x7b, 0x69, 0x64, 0x7d, 0x2f, 0x73, 0x74, 0x61, 0x74, 0x65, 0x3a, 0x04, 0x64, 0x61, 0x74, 0x61,
-	0x12, 0x66, 0x0a, 0x0a, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x12, 0x1b,
+	0x74, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x52, 0x65, 0x71, 0x1a, 0x1f, 0x2e, 0x61, 0x70,
+	0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74,
+	0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x1c, 0x82, 0xd3,
+	0xe4, 0x93, 0x02, 0x16, 0x22, 0x11, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f,
+	0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x73, 0x3a, 0x01, 0x2a, 0x12, 0x5d, 0x0a, 0x09, 0x47, 0x65,
+	0x74, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x12, 0x1a, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64,
+	0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e,
+	0x52, 0x65, 0x71, 0x1a, 0x14, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e,
+	0x76, 0x31, 0x2e, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x22, 0x1e, 0x82, 0xd3, 0xe4, 0x93, 0x02,
+	0x18, 0x12, 0x16, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x6f, 0x6d,
+	0x61, 0x69, 0x6e, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x12, 0x74, 0x0a, 0x0c, 0x55, 0x70, 0x64,
+	0x61, 0x74, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x12, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e,
+	0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44,
+	0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x52, 0x65, 0x71, 0x1a, 0x1f, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61,
+	0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x6f,
+	0x6d, 0x61, 0x69, 0x6e, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x24, 0x82, 0xd3, 0xe4, 0x93, 0x02,
+	0x1e, 0x1a, 0x16, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x6f, 0x6d,
+	0x61, 0x69, 0x6e, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x3a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x12,
+	0x6e, 0x0a, 0x0c, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x12,
+	0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x44,
+	0x65, 0x6c, 0x65, 0x74, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x52, 0x65, 0x71, 0x1a, 0x1f,
 	0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65,
-	0x6c, 0x65, 0x74, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x1d, 0x2e, 0x61, 0x70,
-	0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74,
-	0x65, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x1c, 0x82, 0xd3, 0xe4, 0x93,
-	0x02, 0x16, 0x2a, 0x14, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x6f,
-	0x6c, 0x65, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x12, 0x72, 0x0a, 0x0c, 0x4c, 0x69, 0x73, 0x74,
-	0x52, 0x6f, 0x6c, 0x65, 0x4d, 0x65, 0x6e, 0x75, 0x12, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61,
-	0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x6f, 0x6c, 0x65,
-	0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x71, 0x1a, 0x1f, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64,
-	0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x6f, 0x6c, 0x65, 0x4d,
-	0x65, 0x6e, 0x75, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x22, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1c,
-	0x12, 0x1a, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x6f, 0x6c, 0x65,
-	0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x2f, 0x6d, 0x65, 0x6e, 0x75, 0x73, 0x12, 0x7e, 0x0a, 0x0e,
-	0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x4d, 0x65, 0x6e, 0x75, 0x12, 0x1f,
-	0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x48, 0x61,
-	0x6e, 0x64, 0x6c, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x71, 0x1a,
-	0x21, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x48,
-	0x61, 0x6e, 0x64, 0x6c, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x70,
-	0x6c, 0x79, 0x22, 0x28, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x22, 0x22, 0x1a, 0x2f, 0x61, 0x64, 0x6d,
+	0x6c, 0x65, 0x74, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22,
+	0x1e, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x18, 0x2a, 0x16, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f,
+	0x76, 0x31, 0x2f, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x12,
+	0x89, 0x01, 0x0a, 0x11, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e,
+	0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x22, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69,
+	0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69,
+	0x6e, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x24, 0x2e, 0x61, 0x70, 0x69, 0x2e,
+	0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44,
+	0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22,
+	0x2a, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x24, 0x1a, 0x1c, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f,
+	0x76, 0x31, 0x2f, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x2f,
+	0x73, 0x74, 0x61, 0x74, 0x65, 0x3a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x12, 0x7a, 0x0a, 0x0e, 0x4c,
+	0x69, 0x73, 0x74, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x4d, 0x65, 0x6e, 0x75, 0x12, 0x1f, 0x2e,
+	0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x4c, 0x69, 0x73,
+	0x74, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x71, 0x1a, 0x21,
+	0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x4c, 0x69,
+	0x73, 0x74, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x70, 0x6c,
+	0x79, 0x22, 0x24, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1e, 0x12, 0x1c, 0x2f, 0x61, 0x64, 0x6d, 0x69,
+	0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x73, 0x2f, 0x7b, 0x69, 0x64,
+	0x7d, 0x2f, 0x6d, 0x65, 0x6e, 0x75, 0x73, 0x12, 0x86, 0x01, 0x0a, 0x10, 0x48, 0x61, 0x6e, 0x64,
+	0x6c, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x4d, 0x65, 0x6e, 0x75, 0x12, 0x21, 0x2e, 0x61,
+	0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x48, 0x61, 0x6e, 0x64,
+	0x6c, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x71, 0x1a,
+	0x23, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x48,
+	0x61, 0x6e, 0x64, 0x6c, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x4d, 0x65, 0x6e, 0x75, 0x52,
+	0x65, 0x70, 0x6c, 0x79, 0x22, 0x2a, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x24, 0x22, 0x1c, 0x2f, 0x61,
+	0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x73, 0x2f,
+	0x7b, 0x69, 0x64, 0x7d, 0x2f, 0x6d, 0x65, 0x6e, 0x75, 0x73, 0x3a, 0x04, 0x64, 0x61, 0x74, 0x61,
+	0x12, 0x57, 0x0a, 0x08, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x6f, 0x6c, 0x65, 0x12, 0x17, 0x2e, 0x61,
+	0x70, 0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x50, 0x61, 0x67, 0x69,
+	0x6e, 0x67, 0x52, 0x65, 0x71, 0x1a, 0x19, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x62, 0x75, 0x66, 0x2e, 0x50, 0x61, 0x67, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x70, 0x6c, 0x79,
+	0x22, 0x17, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x11, 0x12, 0x0f, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e,
+	0x2f, 0x76, 0x31, 0x2f, 0x72, 0x6f, 0x6c, 0x65, 0x73, 0x12, 0x64, 0x0a, 0x0a, 0x43, 0x72, 0x65,
+	0x61, 0x74, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x12, 0x1b, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64,
+	0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x6f, 0x6c,
+	0x65, 0x52, 0x65, 0x71, 0x1a, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e,
+	0x2e, 0x76, 0x31, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x65,
+	0x70, 0x6c, 0x79, 0x22, 0x1a, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x14, 0x22, 0x0f, 0x2f, 0x61, 0x64,
+	0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x6f, 0x6c, 0x65, 0x73, 0x3a, 0x01, 0x2a, 0x12,
+	0x55, 0x0a, 0x07, 0x47, 0x65, 0x74, 0x52, 0x6f, 0x6c, 0x65, 0x12, 0x18, 0x2e, 0x61, 0x70, 0x69,
+	0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x52, 0x6f, 0x6c,
+	0x65, 0x52, 0x65, 0x71, 0x1a, 0x12, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e,
+	0x2e, 0x76, 0x31, 0x2e, 0x52, 0x6f, 0x6c, 0x65, 0x22, 0x1c, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x16,
+	0x12, 0x14, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x6f, 0x6c, 0x65,
+	0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x12, 0x6c, 0x0a, 0x0a, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65,
+	0x52, 0x6f, 0x6c, 0x65, 0x12, 0x1b, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e,
+	0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x65,
+	0x71, 0x1a, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31,
+	0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79,
+	0x22, 0x22, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1c, 0x1a, 0x14, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e,
+	0x2f, 0x76, 0x31, 0x2f, 0x72, 0x6f, 0x6c, 0x65, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x3a, 0x04,
+	0x64, 0x61, 0x74, 0x61, 0x12, 0x81, 0x01, 0x0a, 0x0f, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52,
+	0x6f, 0x6c, 0x65, 0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x20, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61,
+	0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x6f,
+	0x6c, 0x65, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x22, 0x2e, 0x61, 0x70, 0x69,
+	0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65,
+	0x52, 0x6f, 0x6c, 0x65, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x28,
+	0x82, 0xd3, 0xe4, 0x93, 0x02, 0x22, 0x1a, 0x1a, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76,
+	0x31, 0x2f, 0x72, 0x6f, 0x6c, 0x65, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x2f, 0x73, 0x74, 0x61,
+	0x74, 0x65, 0x3a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x12, 0x66, 0x0a, 0x0a, 0x44, 0x65, 0x6c, 0x65,
+	0x74, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x12, 0x1b, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d,
+	0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x6f, 0x6c, 0x65,
+	0x52, 0x65, 0x71, 0x1a, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e,
+	0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x65, 0x70,
+	0x6c, 0x79, 0x22, 0x1c, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x16, 0x2a, 0x14, 0x2f, 0x61, 0x64, 0x6d,
 	0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x6f, 0x6c, 0x65, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d,
-	0x2f, 0x6d, 0x65, 0x6e, 0x75, 0x73, 0x3a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x12, 0x8e, 0x01, 0x0a,
-	0x12, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x6f, 0x75,
-	0x72, 0x63, 0x65, 0x12, 0x23, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e,
-	0x76, 0x31, 0x2e, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x65, 0x73,
-	0x6f, 0x75, 0x72, 0x63, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x25, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61,
-	0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x52, 0x6f,
-	0x6c, 0x65, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22,
-	0x2c, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x26, 0x22, 0x1e, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f,
-	0x76, 0x31, 0x2f, 0x72, 0x6f, 0x6c, 0x65, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x2f, 0x72, 0x65,
-	0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x73, 0x3a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x12, 0x5f, 0x0a,
-	0x0c, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x12, 0x17, 0x2e,
+	0x12, 0x72, 0x0a, 0x0c, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x6f, 0x6c, 0x65, 0x4d, 0x65, 0x6e, 0x75,
+	0x12, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e,
+	0x4c, 0x69, 0x73, 0x74, 0x52, 0x6f, 0x6c, 0x65, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x71, 0x1a,
+	0x1f, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x4c,
+	0x69, 0x73, 0x74, 0x52, 0x6f, 0x6c, 0x65, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x70, 0x6c, 0x79,
+	0x22, 0x22, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1c, 0x12, 0x1a, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e,
+	0x2f, 0x76, 0x31, 0x2f, 0x72, 0x6f, 0x6c, 0x65, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x2f, 0x6d,
+	0x65, 0x6e, 0x75, 0x73, 0x12, 0x7e, 0x0a, 0x0e, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x52, 0x6f,
+	0x6c, 0x65, 0x4d, 0x65, 0x6e, 0x75, 0x12, 0x1f, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d,
+	0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x52, 0x6f, 0x6c, 0x65,
+	0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x71, 0x1a, 0x21, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64,
+	0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x52, 0x6f, 0x6c,
+	0x65, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x28, 0x82, 0xd3, 0xe4, 0x93,
+	0x02, 0x22, 0x22, 0x1a, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x6f,
+	0x6c, 0x65, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x2f, 0x6d, 0x65, 0x6e, 0x75, 0x73, 0x3a, 0x04,
+	0x64, 0x61, 0x74, 0x61, 0x12, 0x8e, 0x01, 0x0a, 0x12, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x52,
+	0x6f, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x12, 0x23, 0x2e, 0x61, 0x70,
+	0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x48, 0x61, 0x6e, 0x64, 0x6c,
+	0x65, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x52, 0x65, 0x71,
+	0x1a, 0x25, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e,
+	0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72,
+	0x63, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x2c, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x26, 0x22,
+	0x1e, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x6f, 0x6c, 0x65, 0x73,
+	0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x2f, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x73, 0x3a,
+	0x04, 0x64, 0x61, 0x74, 0x61, 0x12, 0x5f, 0x0a, 0x0c, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73,
+	0x6f, 0x75, 0x72, 0x63, 0x65, 0x12, 0x17, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x62, 0x75, 0x66, 0x2e, 0x50, 0x61, 0x67, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x71, 0x1a, 0x19,
+	0x2e, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x50, 0x61,
+	0x67, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x1b, 0x82, 0xd3, 0xe4, 0x93, 0x02,
+	0x15, 0x12, 0x13, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x65, 0x73,
+	0x6f, 0x75, 0x72, 0x63, 0x65, 0x73, 0x12, 0x76, 0x0a, 0x11, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65,
+	0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x12, 0x17, 0x2e, 0x61, 0x70,
+	0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x50, 0x61, 0x67, 0x69, 0x6e,
+	0x67, 0x52, 0x65, 0x71, 0x1a, 0x24, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e,
+	0x2e, 0x76, 0x31, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65,
+	0x47, 0x72, 0x6f, 0x75, 0x70, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x22, 0x82, 0xd3, 0xe4, 0x93,
+	0x02, 0x1c, 0x12, 0x1a, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x65,
+	0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x73, 0x2f, 0x67, 0x72, 0x6f, 0x75, 0x70, 0x73, 0x12, 0x74,
+	0x0a, 0x0e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65,
+	0x12, 0x1f, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e,
+	0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x52, 0x65,
+	0x71, 0x1a, 0x21, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31,
+	0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x52,
+	0x65, 0x70, 0x6c, 0x79, 0x22, 0x1e, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x18, 0x22, 0x13, 0x2f, 0x61,
+	0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65,
+	0x73, 0x3a, 0x01, 0x2a, 0x12, 0x65, 0x0a, 0x0b, 0x47, 0x65, 0x74, 0x52, 0x65, 0x73, 0x6f, 0x75,
+	0x72, 0x63, 0x65, 0x12, 0x1c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e,
+	0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x52, 0x65,
+	0x71, 0x1a, 0x16, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31,
+	0x2e, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x22, 0x20, 0x82, 0xd3, 0xe4, 0x93, 0x02,
+	0x1a, 0x12, 0x18, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x65, 0x73,
+	0x6f, 0x75, 0x72, 0x63, 0x65, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x12, 0x7c, 0x0a, 0x0e, 0x55,
+	0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x12, 0x1f, 0x2e,
+	0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64,
+	0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x21,
+	0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70,
+	0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x52, 0x65, 0x70, 0x6c,
+	0x79, 0x22, 0x26, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x20, 0x1a, 0x18, 0x2f, 0x61, 0x64, 0x6d, 0x69,
+	0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x73, 0x2f, 0x7b,
+	0x69, 0x64, 0x7d, 0x3a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x12, 0x76, 0x0a, 0x0e, 0x44, 0x65, 0x6c,
+	0x65, 0x74, 0x65, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x12, 0x1f, 0x2e, 0x61, 0x70,
+	0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74,
+	0x65, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x21, 0x2e, 0x61,
+	0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65,
+	0x74, 0x65, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22,
+	0x20, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1a, 0x2a, 0x18, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f,
+	0x76, 0x31, 0x2f, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x73, 0x2f, 0x7b, 0x69, 0x64,
+	0x7d, 0x12, 0x57, 0x0a, 0x08, 0x4c, 0x69, 0x73, 0x74, 0x4d, 0x65, 0x6e, 0x75, 0x12, 0x17, 0x2e,
 	0x61, 0x70, 0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x50, 0x61, 0x67,
 	0x69, 0x6e, 0x67, 0x52, 0x65, 0x71, 0x1a, 0x19, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x72, 0x6f,
 	0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x50, 0x61, 0x67, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x70, 0x6c,
-	0x79, 0x22, 0x1b, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x15, 0x12, 0x13, 0x2f, 0x61, 0x64, 0x6d, 0x69,
-	0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x73, 0x12, 0x76,
-	0x0a, 0x11, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x47, 0x72,
-	0x6f, 0x75, 0x70, 0x12, 0x17, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
-	0x75, 0x66, 0x2e, 0x50, 0x61, 0x67, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x71, 0x1a, 0x24, 0x2e, 0x61,
-	0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x4c, 0x69, 0x73, 0x74,
-	0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x52, 0x65, 0x70,
-	0x6c, 0x79, 0x22, 0x22, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1c, 0x12, 0x1a, 0x2f, 0x61, 0x64, 0x6d,
-	0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x73, 0x2f,
-	0x67, 0x72, 0x6f, 0x75, 0x70, 0x73, 0x12, 0x74, 0x0a, 0x0e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65,
-	0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x12, 0x1f, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61,
-	0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65,
-	0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x21, 0x2e, 0x61, 0x70, 0x69, 0x2e,
-	0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52,
-	0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x1e, 0x82, 0xd3,
-	0xe4, 0x93, 0x02, 0x18, 0x22, 0x13, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f,
-	0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x73, 0x3a, 0x01, 0x2a, 0x12, 0x65, 0x0a, 0x0b,
-	0x47, 0x65, 0x74, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x12, 0x1c, 0x2e, 0x61, 0x70,
-	0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x52, 0x65,
-	0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x16, 0x2e, 0x61, 0x70, 0x69, 0x2e,
-	0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63,
-	0x65, 0x22, 0x20, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1a, 0x12, 0x18, 0x2f, 0x61, 0x64, 0x6d, 0x69,
-	0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x73, 0x2f, 0x7b,
-	0x69, 0x64, 0x7d, 0x12, 0x7c, 0x0a, 0x0e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73,
-	0x6f, 0x75, 0x72, 0x63, 0x65, 0x12, 0x1f, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69,
-	0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x6f, 0x75,
-	0x72, 0x63, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x21, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d,
-	0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x6f,
-	0x75, 0x72, 0x63, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x26, 0x82, 0xd3, 0xe4, 0x93, 0x02,
-	0x20, 0x1a, 0x18, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x65, 0x73,
-	0x6f, 0x75, 0x72, 0x63, 0x65, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x3a, 0x04, 0x64, 0x61, 0x74,
-	0x61, 0x12, 0x76, 0x0a, 0x0e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x73, 0x6f, 0x75,
-	0x72, 0x63, 0x65, 0x12, 0x1f, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e,
-	0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63,
-	0x65, 0x52, 0x65, 0x71, 0x1a, 0x21, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e,
-	0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72,
-	0x63, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x20, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1a, 0x2a,
-	0x18, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x65, 0x73, 0x6f, 0x75,
-	0x72, 0x63, 0x65, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x12, 0x57, 0x0a, 0x08, 0x4c, 0x69, 0x73,
-	0x74, 0x4d, 0x65, 0x6e, 0x75, 0x12, 0x17, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x62, 0x75, 0x66, 0x2e, 0x50, 0x61, 0x67, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x71, 0x1a, 0x19,
-	0x2e, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x50, 0x61,
-	0x67, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x17, 0x82, 0xd3, 0xe4, 0x93, 0x02,
-	0x11, 0x12, 0x0f, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x6d, 0x65, 0x6e,
-	0x75, 0x73, 0x12, 0x64, 0x0a, 0x0a, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x4d, 0x65, 0x6e, 0x75,
-	0x12, 0x1b, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e,
-	0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x71, 0x1a, 0x1d, 0x2e,
-	0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x72, 0x65,
-	0x61, 0x74, 0x65, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x1a, 0x82, 0xd3,
-	0xe4, 0x93, 0x02, 0x14, 0x22, 0x0f, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f,
-	0x6d, 0x65, 0x6e, 0x75, 0x73, 0x3a, 0x01, 0x2a, 0x12, 0x78, 0x0a, 0x0c, 0x4c, 0x69, 0x73, 0x74,
-	0x4d, 0x65, 0x6e, 0x75, 0x54, 0x72, 0x65, 0x65, 0x12, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61,
-	0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x4d, 0x65, 0x6e, 0x75,
-	0x54, 0x72, 0x65, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x1f, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64,
-	0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x4d, 0x65, 0x6e, 0x75, 0x54,
-	0x72, 0x65, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x28, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x22,
-	0x12, 0x20, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x6d, 0x65, 0x6e, 0x75,
-	0x73, 0x2f, 0x7b, 0x70, 0x61, 0x72, 0x65, 0x6e, 0x74, 0x49, 0x64, 0x7d, 0x2f, 0x74, 0x72, 0x65,
-	0x65, 0x73, 0x12, 0x55, 0x0a, 0x07, 0x47, 0x65, 0x74, 0x4d, 0x65, 0x6e, 0x75, 0x12, 0x18, 0x2e,
-	0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74,
-	0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x71, 0x1a, 0x12, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64,
-	0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x65, 0x6e, 0x75, 0x22, 0x1c, 0x82, 0xd3, 0xe4,
-	0x93, 0x02, 0x16, 0x12, 0x14, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x6d,
-	0x65, 0x6e, 0x75, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x12, 0x6c, 0x0a, 0x0a, 0x55, 0x70, 0x64,
-	0x61, 0x74, 0x65, 0x4d, 0x65, 0x6e, 0x75, 0x12, 0x1b, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64,
-	0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4d, 0x65, 0x6e,
-	0x75, 0x52, 0x65, 0x71, 0x1a, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e,
-	0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65,
-	0x70, 0x6c, 0x79, 0x22, 0x22, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1c, 0x1a, 0x14, 0x2f, 0x61, 0x64,
+	0x79, 0x22, 0x17, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x11, 0x12, 0x0f, 0x2f, 0x61, 0x64, 0x6d, 0x69,
+	0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x6d, 0x65, 0x6e, 0x75, 0x73, 0x12, 0x64, 0x0a, 0x0a, 0x43, 0x72,
+	0x65, 0x61, 0x74, 0x65, 0x4d, 0x65, 0x6e, 0x75, 0x12, 0x1b, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61,
+	0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x4d, 0x65,
+	0x6e, 0x75, 0x52, 0x65, 0x71, 0x1a, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69,
+	0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x4d, 0x65, 0x6e, 0x75, 0x52,
+	0x65, 0x70, 0x6c, 0x79, 0x22, 0x1a, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x14, 0x22, 0x0f, 0x2f, 0x61,
+	0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x6d, 0x65, 0x6e, 0x75, 0x73, 0x3a, 0x01, 0x2a,
+	0x12, 0x78, 0x0a, 0x0c, 0x4c, 0x69, 0x73, 0x74, 0x4d, 0x65, 0x6e, 0x75, 0x54, 0x72, 0x65, 0x65,
+	0x12, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e,
+	0x4c, 0x69, 0x73, 0x74, 0x4d, 0x65, 0x6e, 0x75, 0x54, 0x72, 0x65, 0x65, 0x52, 0x65, 0x71, 0x1a,
+	0x1f, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x4c,
+	0x69, 0x73, 0x74, 0x4d, 0x65, 0x6e, 0x75, 0x54, 0x72, 0x65, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79,
+	0x22, 0x28, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x22, 0x12, 0x20, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e,
+	0x2f, 0x76, 0x31, 0x2f, 0x6d, 0x65, 0x6e, 0x75, 0x73, 0x2f, 0x7b, 0x70, 0x61, 0x72, 0x65, 0x6e,
+	0x74, 0x49, 0x64, 0x7d, 0x2f, 0x74, 0x72, 0x65, 0x65, 0x73, 0x12, 0x55, 0x0a, 0x07, 0x47, 0x65,
+	0x74, 0x4d, 0x65, 0x6e, 0x75, 0x12, 0x18, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69,
+	0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x71, 0x1a,
+	0x12, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x4d,
+	0x65, 0x6e, 0x75, 0x22, 0x1c, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x16, 0x12, 0x14, 0x2f, 0x61, 0x64,
 	0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x6d, 0x65, 0x6e, 0x75, 0x73, 0x2f, 0x7b, 0x69, 0x64,
-	0x7d, 0x3a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x12, 0x66, 0x0a, 0x0a, 0x44, 0x65, 0x6c, 0x65, 0x74,
-	0x65, 0x4d, 0x65, 0x6e, 0x75, 0x12, 0x1b, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69,
-	0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x4d, 0x65, 0x6e, 0x75, 0x52,
-	0x65, 0x71, 0x1a, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76,
-	0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x70, 0x6c,
-	0x79, 0x22, 0x1c, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x16, 0x2a, 0x14, 0x2f, 0x61, 0x64, 0x6d, 0x69,
-	0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x6d, 0x65, 0x6e, 0x75, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x12,
-	0x57, 0x0a, 0x08, 0x4c, 0x69, 0x73, 0x74, 0x44, 0x65, 0x70, 0x74, 0x12, 0x17, 0x2e, 0x61, 0x70,
-	0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x50, 0x61, 0x67, 0x69, 0x6e,
-	0x67, 0x52, 0x65, 0x71, 0x1a, 0x19, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x62, 0x75, 0x66, 0x2e, 0x50, 0x61, 0x67, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22,
-	0x17, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x11, 0x12, 0x0f, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f,
-	0x76, 0x31, 0x2f, 0x64, 0x65, 0x70, 0x74, 0x73, 0x12, 0x64, 0x0a, 0x0a, 0x43, 0x72, 0x65, 0x61,
-	0x74, 0x65, 0x44, 0x65, 0x70, 0x74, 0x12, 0x1b, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d,
-	0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x44, 0x65, 0x70, 0x74,
-	0x52, 0x65, 0x71, 0x1a, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e,
-	0x76, 0x31, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x44, 0x65, 0x70, 0x74, 0x52, 0x65, 0x70,
-	0x6c, 0x79, 0x22, 0x1a, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x14, 0x22, 0x0f, 0x2f, 0x61, 0x64, 0x6d,
-	0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x65, 0x70, 0x74, 0x73, 0x3a, 0x01, 0x2a, 0x12, 0x55,
-	0x0a, 0x07, 0x47, 0x65, 0x74, 0x44, 0x65, 0x70, 0x74, 0x12, 0x18, 0x2e, 0x61, 0x70, 0x69, 0x2e,
-	0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x44, 0x65, 0x70, 0x74,
-	0x52, 0x65, 0x71, 0x1a, 0x12, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e,
-	0x76, 0x31, 0x2e, 0x44, 0x65, 0x70, 0x74, 0x22, 0x1c, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x16, 0x12,
+	0x7d, 0x12, 0x6c, 0x0a, 0x0a, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4d, 0x65, 0x6e, 0x75, 0x12,
+	0x1b, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55,
+	0x70, 0x64, 0x61, 0x74, 0x65, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x71, 0x1a, 0x1d, 0x2e, 0x61,
+	0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61,
+	0x74, 0x65, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x22, 0x82, 0xd3, 0xe4,
+	0x93, 0x02, 0x1c, 0x1a, 0x14, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x6d,
+	0x65, 0x6e, 0x75, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x3a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x12,
+	0x66, 0x0a, 0x0a, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x4d, 0x65, 0x6e, 0x75, 0x12, 0x1b, 0x2e,
+	0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c,
+	0x65, 0x74, 0x65, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x71, 0x1a, 0x1d, 0x2e, 0x61, 0x70, 0x69,
+	0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65,
+	0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x1c, 0x82, 0xd3, 0xe4, 0x93, 0x02,
+	0x16, 0x2a, 0x14, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x6d, 0x65, 0x6e,
+	0x75, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x12, 0x57, 0x0a, 0x08, 0x4c, 0x69, 0x73, 0x74, 0x44,
+	0x65, 0x70, 0x74, 0x12, 0x17, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
+	0x75, 0x66, 0x2e, 0x50, 0x61, 0x67, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x71, 0x1a, 0x19, 0x2e, 0x61,
+	0x70, 0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x50, 0x61, 0x67, 0x69,
+	0x6e, 0x67, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x17, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x11, 0x12,
+	0x0f, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x65, 0x70, 0x74, 0x73,
+	0x12, 0x64, 0x0a, 0x0a, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x44, 0x65, 0x70, 0x74, 0x12, 0x1b,
+	0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x72,
+	0x65, 0x61, 0x74, 0x65, 0x44, 0x65, 0x70, 0x74, 0x52, 0x65, 0x71, 0x1a, 0x1d, 0x2e, 0x61, 0x70,
+	0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74,
+	0x65, 0x44, 0x65, 0x70, 0x74, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x1a, 0x82, 0xd3, 0xe4, 0x93,
+	0x02, 0x14, 0x22, 0x0f, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x65,
+	0x70, 0x74, 0x73, 0x3a, 0x01, 0x2a, 0x12, 0x55, 0x0a, 0x07, 0x47, 0x65, 0x74, 0x44, 0x65, 0x70,
+	0x74, 0x12, 0x18, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31,
+	0x2e, 0x47, 0x65, 0x74, 0x44, 0x65, 0x70, 0x74, 0x52, 0x65, 0x71, 0x1a, 0x12, 0x2e, 0x61, 0x70,
+	0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x70, 0x74, 0x22,
+	0x1c, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x16, 0x12, 0x14, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f,
+	0x76, 0x31, 0x2f, 0x64, 0x65, 0x70, 0x74, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x12, 0x6c, 0x0a,
+	0x0a, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x65, 0x70, 0x74, 0x12, 0x1b, 0x2e, 0x61, 0x70,
+	0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74,
+	0x65, 0x44, 0x65, 0x70, 0x74, 0x52, 0x65, 0x71, 0x1a, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61,
+	0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x65,
+	0x70, 0x74, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x22, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1c, 0x1a,
 	0x14, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x65, 0x70, 0x74, 0x73,
-	0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x12, 0x6c, 0x0a, 0x0a, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44,
-	0x65, 0x70, 0x74, 0x12, 0x1b, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e,
-	0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x65, 0x70, 0x74, 0x52, 0x65, 0x71,
-	0x1a, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e,
-	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x65, 0x70, 0x74, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22,
-	0x22, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1c, 0x1a, 0x14, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f,
-	0x76, 0x31, 0x2f, 0x64, 0x65, 0x70, 0x74, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x3a, 0x04, 0x64,
-	0x61, 0x74, 0x61, 0x12, 0x66, 0x0a, 0x0a, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x44, 0x65, 0x70,
-	0x74, 0x12, 0x1b, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31,
-	0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x44, 0x65, 0x70, 0x74, 0x52, 0x65, 0x71, 0x1a, 0x1d,
-	0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65,
-	0x6c, 0x65, 0x74, 0x65, 0x44, 0x65, 0x70, 0x74, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x1c, 0x82,
-	0xd3, 0xe4, 0x93, 0x02, 0x16, 0x2a, 0x14, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31,
-	0x2f, 0x64, 0x65, 0x70, 0x74, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x12, 0x78, 0x0a, 0x0c, 0x4c,
-	0x69, 0x73, 0x74, 0x44, 0x65, 0x70, 0x74, 0x54, 0x72, 0x65, 0x65, 0x12, 0x1d, 0x2e, 0x61, 0x70,
-	0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x44,
-	0x65, 0x70, 0x74, 0x54, 0x72, 0x65, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x1f, 0x2e, 0x61, 0x70, 0x69,
-	0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x44, 0x65,
-	0x70, 0x74, 0x54, 0x72, 0x65, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x28, 0x82, 0xd3, 0xe4,
-	0x93, 0x02, 0x22, 0x12, 0x20, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x64,
-	0x65, 0x70, 0x74, 0x73, 0x2f, 0x7b, 0x70, 0x61, 0x72, 0x65, 0x6e, 0x74, 0x49, 0x64, 0x7d, 0x2f,
-	0x74, 0x72, 0x65, 0x65, 0x73, 0x12, 0x57, 0x0a, 0x08, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x6f, 0x73,
-	0x74, 0x12, 0x17, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66,
-	0x2e, 0x50, 0x61, 0x67, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x71, 0x1a, 0x19, 0x2e, 0x61, 0x70, 0x69,
-	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x50, 0x61, 0x67, 0x69, 0x6e, 0x67,
-	0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x17, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x11, 0x12, 0x0f, 0x2f,
-	0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x70, 0x6f, 0x73, 0x74, 0x73, 0x12, 0x64,
-	0x0a, 0x0a, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x73, 0x74, 0x12, 0x1b, 0x2e, 0x61,
-	0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x72, 0x65, 0x61,
-	0x74, 0x65, 0x50, 0x6f, 0x73, 0x74, 0x52, 0x65, 0x71, 0x1a, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e,
-	0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x50,
-	0x6f, 0x73, 0x74, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x1a, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x14,
-	0x22, 0x0f, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x70, 0x6f, 0x73, 0x74,
-	0x73, 0x3a, 0x01, 0x2a, 0x12, 0x55, 0x0a, 0x07, 0x47, 0x65, 0x74, 0x50, 0x6f, 0x73, 0x74, 0x12,
-	0x18, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x47,
-	0x65, 0x74, 0x50, 0x6f, 0x73, 0x74, 0x52, 0x65, 0x71, 0x1a, 0x12, 0x2e, 0x61, 0x70, 0x69, 0x2e,
-	0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x50, 0x6f, 0x73, 0x74, 0x22, 0x1c, 0x82,
-	0xd3, 0xe4, 0x93, 0x02, 0x16, 0x12, 0x14, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31,
-	0x2f, 0x70, 0x6f, 0x73, 0x74, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x12, 0x6c, 0x0a, 0x0a, 0x55,
-	0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x73, 0x74, 0x12, 0x1b, 0x2e, 0x61, 0x70, 0x69, 0x2e,
-	0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50,
-	0x6f, 0x73, 0x74, 0x52, 0x65, 0x71, 0x1a, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d,
-	0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x73, 0x74,
-	0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x22, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1c, 0x1a, 0x14, 0x2f,
+	0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x3a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x12, 0x66, 0x0a, 0x0a, 0x44,
+	0x65, 0x6c, 0x65, 0x74, 0x65, 0x44, 0x65, 0x70, 0x74, 0x12, 0x1b, 0x2e, 0x61, 0x70, 0x69, 0x2e,
+	0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x44,
+	0x65, 0x70, 0x74, 0x52, 0x65, 0x71, 0x1a, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d,
+	0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x44, 0x65, 0x70, 0x74,
+	0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x1c, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x16, 0x2a, 0x14, 0x2f,
+	0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x65, 0x70, 0x74, 0x73, 0x2f, 0x7b,
+	0x69, 0x64, 0x7d, 0x12, 0x78, 0x0a, 0x0c, 0x4c, 0x69, 0x73, 0x74, 0x44, 0x65, 0x70, 0x74, 0x54,
+	0x72, 0x65, 0x65, 0x12, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e,
+	0x76, 0x31, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x44, 0x65, 0x70, 0x74, 0x54, 0x72, 0x65, 0x65, 0x52,
+	0x65, 0x71, 0x1a, 0x1f, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76,
+	0x31, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x44, 0x65, 0x70, 0x74, 0x54, 0x72, 0x65, 0x65, 0x52, 0x65,
+	0x70, 0x6c, 0x79, 0x22, 0x28, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x22, 0x12, 0x20, 0x2f, 0x61, 0x64,
+	0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x65, 0x70, 0x74, 0x73, 0x2f, 0x7b, 0x70, 0x61,
+	0x72, 0x65, 0x6e, 0x74, 0x49, 0x64, 0x7d, 0x2f, 0x74, 0x72, 0x65, 0x65, 0x73, 0x12, 0x57, 0x0a,
+	0x08, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x6f, 0x73, 0x74, 0x12, 0x17, 0x2e, 0x61, 0x70, 0x69, 0x2e,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x50, 0x61, 0x67, 0x69, 0x6e, 0x67, 0x52,
+	0x65, 0x71, 0x1a, 0x19, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75,
+	0x66, 0x2e, 0x50, 0x61, 0x67, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x17, 0x82,
+	0xd3, 0xe4, 0x93, 0x02, 0x11, 0x12, 0x0f, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31,
+	0x2f, 0x70, 0x6f, 0x73, 0x74, 0x73, 0x12, 0x64, 0x0a, 0x0a, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65,
+	0x50, 0x6f, 0x73, 0x74, 0x12, 0x1b, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e,
+	0x2e, 0x76, 0x31, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x73, 0x74, 0x52, 0x65,
+	0x71, 0x1a, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31,
+	0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x73, 0x74, 0x52, 0x65, 0x70, 0x6c, 0x79,
+	0x22, 0x1a, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x14, 0x22, 0x0f, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e,
+	0x2f, 0x76, 0x31, 0x2f, 0x70, 0x6f, 0x73, 0x74, 0x73, 0x3a, 0x01, 0x2a, 0x12, 0x55, 0x0a, 0x07,
+	0x47, 0x65, 0x74, 0x50, 0x6f, 0x73, 0x74, 0x12, 0x18, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64,
+	0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x50, 0x6f, 0x73, 0x74, 0x52, 0x65,
+	0x71, 0x1a, 0x12, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31,
+	0x2e, 0x50, 0x6f, 0x73, 0x74, 0x22, 0x1c, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x16, 0x12, 0x14, 0x2f,
 	0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x70, 0x6f, 0x73, 0x74, 0x73, 0x2f, 0x7b,
-	0x69, 0x64, 0x7d, 0x3a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x12, 0x66, 0x0a, 0x0a, 0x44, 0x65, 0x6c,
-	0x65, 0x74, 0x65, 0x50, 0x6f, 0x73, 0x74, 0x12, 0x1b, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64,
-	0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x50, 0x6f, 0x73,
-	0x74, 0x52, 0x65, 0x71, 0x1a, 0x1d, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e,
-	0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x50, 0x6f, 0x73, 0x74, 0x52, 0x65,
-	0x70, 0x6c, 0x79, 0x22, 0x1c, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x16, 0x2a, 0x14, 0x2f, 0x61, 0x64,
+	0x69, 0x64, 0x7d, 0x12, 0x6c, 0x0a, 0x0a, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x73,
+	0x74, 0x12, 0x1b, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31,
+	0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x73, 0x74, 0x52, 0x65, 0x71, 0x1a, 0x1d,
+	0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70,
+	0x64, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x73, 0x74, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x22, 0x82,
+	0xd3, 0xe4, 0x93, 0x02, 0x1c, 0x1a, 0x14, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31,
+	0x2f, 0x70, 0x6f, 0x73, 0x74, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x3a, 0x04, 0x64, 0x61, 0x74,
+	0x61, 0x12, 0x66, 0x0a, 0x0a, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x50, 0x6f, 0x73, 0x74, 0x12,
+	0x1b, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x44,
+	0x65, 0x6c, 0x65, 0x74, 0x65, 0x50, 0x6f, 0x73, 0x74, 0x52, 0x65, 0x71, 0x1a, 0x1d, 0x2e, 0x61,
+	0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65,
+	0x74, 0x65, 0x50, 0x6f, 0x73, 0x74, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x1c, 0x82, 0xd3, 0xe4,
+	0x93, 0x02, 0x16, 0x2a, 0x14, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x70,
+	0x6f, 0x73, 0x74, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x12, 0x81, 0x01, 0x0a, 0x0f, 0x55, 0x70,
+	0x64, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x73, 0x74, 0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x20, 0x2e,
+	0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64,
+	0x61, 0x74, 0x65, 0x50, 0x6f, 0x73, 0x74, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x1a,
+	0x22, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55,
+	0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x73, 0x74, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52, 0x65,
+	0x70, 0x6c, 0x79, 0x22, 0x28, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x22, 0x1a, 0x1a, 0x2f, 0x61, 0x64,
 	0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x70, 0x6f, 0x73, 0x74, 0x73, 0x2f, 0x7b, 0x69, 0x64,
-	0x7d, 0x12, 0x81, 0x01, 0x0a, 0x0f, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x73, 0x74,
-	0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x20, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69,
-	0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x73, 0x74, 0x53,
-	0x74, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x22, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64,
-	0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x73,
-	0x74, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x28, 0x82, 0xd3, 0xe4,
-	0x93, 0x02, 0x22, 0x1a, 0x1a, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x2f, 0x70,
-	0x6f, 0x73, 0x74, 0x73, 0x2f, 0x7b, 0x69, 0x64, 0x7d, 0x2f, 0x73, 0x74, 0x61, 0x74, 0x65, 0x3a,
-	0x04, 0x64, 0x61, 0x74, 0x61, 0x42, 0xfa, 0x02, 0x0a, 0x17, 0x64, 0x65, 0x76, 0x2e, 0x6b, 0x72,
-	0x61, 0x74, 0x6f, 0x73, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76,
-	0x31, 0x42, 0x0c, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x56, 0x31, 0x50,
-	0x01, 0x5a, 0x2f, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x62, 0x65,
-	0x69, 0x64, 0x75, 0x6f, 0x6b, 0x65, 0x2f, 0x67, 0x6f, 0x2d, 0x73, 0x63, 0x61, 0x66, 0x66, 0x6f,
-	0x6c, 0x64, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x3b,
-	0x76, 0x31, 0x92, 0x41, 0x9c, 0x02, 0x12, 0xe7, 0x01, 0x0a, 0x0c, 0x53, 0x63, 0x61, 0x66, 0x66,
-	0x6f, 0x6c, 0x64, 0x20, 0x41, 0x50, 0x49, 0x22, 0x50, 0x0a, 0x0c, 0xe5, 0x9f, 0xba, 0xe7, 0xa1,
-	0x80, 0xe6, 0x9e, 0xb6, 0xe6, 0x9e, 0x84, 0x12, 0x2e, 0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f,
-	0x2f, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x67, 0x72, 0x70, 0x63,
-	0x2d, 0x65, 0x63, 0x6f, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2d,
-	0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x1a, 0x10, 0x6e, 0x6f, 0x6e, 0x65, 0x40, 0x65, 0x78,
-	0x61, 0x6d, 0x70, 0x6c, 0x65, 0x2e, 0x63, 0x6f, 0x6d, 0x2a, 0x5e, 0x0a, 0x14, 0x42, 0x53, 0x44,
-	0x20, 0x33, 0x2d, 0x43, 0x6c, 0x61, 0x75, 0x73, 0x65, 0x20, 0x4c, 0x69, 0x63, 0x65, 0x6e, 0x73,
-	0x65, 0x12, 0x46, 0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x67, 0x69, 0x74, 0x68, 0x75,
-	0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2d, 0x65, 0x63, 0x6f, 0x73, 0x79,
-	0x73, 0x74, 0x65, 0x6d, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2d, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61,
-	0x79, 0x2f, 0x62, 0x6c, 0x6f, 0x62, 0x2f, 0x6d, 0x61, 0x73, 0x74, 0x65, 0x72, 0x2f, 0x4c, 0x49,
-	0x43, 0x45, 0x4e, 0x53, 0x45, 0x2e, 0x74, 0x78, 0x74, 0x32, 0x03, 0x31, 0x2e, 0x30, 0x3a, 0x20,
-	0x0a, 0x15, 0x78, 0x2d, 0x73, 0x6f, 0x6d, 0x65, 0x74, 0x68, 0x69, 0x6e, 0x67, 0x2d, 0x73, 0x6f,
-	0x6d, 0x65, 0x74, 0x68, 0x69, 0x6e, 0x67, 0x12, 0x07, 0x1a, 0x05, 0x79, 0x61, 0x64, 0x64, 0x61,
-	0x5a, 0x30, 0x0a, 0x2e, 0x0a, 0x06, 0x61, 0x70, 0x69, 0x4b, 0x65, 0x79, 0x12, 0x24, 0x08, 0x02,
-	0x12, 0x0d, 0x6a, 0x77, 0x74, 0x20, 0xe6, 0x97, 0xa0, 0xe7, 0x8a, 0xb6, 0xe6, 0x80, 0x81, 0x1a,
-	0x0d, 0x41, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x20, 0x02,
-	0x28, 0x02, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x7d, 0x2f, 0x73, 0x74, 0x61, 0x74, 0x65, 0x3a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x42, 0xfa, 0x02,
+	0x0a, 0x17, 0x64, 0x65, 0x76, 0x2e, 0x6b, 0x72, 0x61, 0x74, 0x6f, 0x73, 0x2e, 0x61, 0x70, 0x69,
+	0x2e, 0x61, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x76, 0x31, 0x42, 0x0c, 0x61, 0x64, 0x6d, 0x69, 0x6e,
+	0x50, 0x72, 0x6f, 0x74, 0x6f, 0x56, 0x31, 0x50, 0x01, 0x5a, 0x2f, 0x67, 0x69, 0x74, 0x68, 0x75,
+	0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x62, 0x65, 0x69, 0x64, 0x75, 0x6f, 0x6b, 0x65, 0x2f, 0x67,
+	0x6f, 0x2d, 0x73, 0x63, 0x61, 0x66, 0x66, 0x6f, 0x6c, 0x64, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x61,
+	0x64, 0x6d, 0x69, 0x6e, 0x2f, 0x76, 0x31, 0x3b, 0x76, 0x31, 0x92, 0x41, 0x9c, 0x02, 0x12, 0xe7,
+	0x01, 0x0a, 0x0c, 0x53, 0x63, 0x61, 0x66, 0x66, 0x6f, 0x6c, 0x64, 0x20, 0x41, 0x50, 0x49, 0x22,
+	0x50, 0x0a, 0x0c, 0xe5, 0x9f, 0xba, 0xe7, 0xa1, 0x80, 0xe6, 0x9e, 0xb6, 0xe6, 0x9e, 0x84, 0x12,
+	0x2e, 0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e,
+	0x63, 0x6f, 0x6d, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2d, 0x65, 0x63, 0x6f, 0x73, 0x79, 0x73, 0x74,
+	0x65, 0x6d, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2d, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x1a,
+	0x10, 0x6e, 0x6f, 0x6e, 0x65, 0x40, 0x65, 0x78, 0x61, 0x6d, 0x70, 0x6c, 0x65, 0x2e, 0x63, 0x6f,
+	0x6d, 0x2a, 0x5e, 0x0a, 0x14, 0x42, 0x53, 0x44, 0x20, 0x33, 0x2d, 0x43, 0x6c, 0x61, 0x75, 0x73,
+	0x65, 0x20, 0x4c, 0x69, 0x63, 0x65, 0x6e, 0x73, 0x65, 0x12, 0x46, 0x68, 0x74, 0x74, 0x70, 0x73,
+	0x3a, 0x2f, 0x2f, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x67, 0x72,
+	0x70, 0x63, 0x2d, 0x65, 0x63, 0x6f, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x2f, 0x67, 0x72, 0x70,
+	0x63, 0x2d, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2f, 0x62, 0x6c, 0x6f, 0x62, 0x2f, 0x6d,
+	0x61, 0x73, 0x74, 0x65, 0x72, 0x2f, 0x4c, 0x49, 0x43, 0x45, 0x4e, 0x53, 0x45, 0x2e, 0x74, 0x78,
+	0x74, 0x32, 0x03, 0x31, 0x2e, 0x30, 0x3a, 0x20, 0x0a, 0x15, 0x78, 0x2d, 0x73, 0x6f, 0x6d, 0x65,
+	0x74, 0x68, 0x69, 0x6e, 0x67, 0x2d, 0x73, 0x6f, 0x6d, 0x65, 0x74, 0x68, 0x69, 0x6e, 0x67, 0x12,
+	0x07, 0x1a, 0x05, 0x79, 0x61, 0x64, 0x64, 0x61, 0x5a, 0x30, 0x0a, 0x2e, 0x0a, 0x06, 0x61, 0x70,
+	0x69, 0x4b, 0x65, 0x79, 0x12, 0x24, 0x08, 0x02, 0x12, 0x0d, 0x6a, 0x77, 0x74, 0x20, 0xe6, 0x97,
+	0xa0, 0xe7, 0x8a, 0xb6, 0xe6, 0x80, 0x81, 0x1a, 0x0d, 0x41, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69,
+	0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x20, 0x02, 0x28, 0x02, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x33,
 }
 
 var (
@@ -10378,7 +10509,7 @@ func file_admin_v1_admin_proto_rawDescGZIP() []byte {
 	return file_admin_v1_admin_proto_rawDescData
 }
 
-var file_admin_v1_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 129)
+var file_admin_v1_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 131)
 var file_admin_v1_admin_proto_goTypes = []interface{}{
 	(*Auth)(nil),                                          // 0: api.admin.v1.Auth
 	(*LoginReply)(nil),                                    // 1: api.admin.v1.LoginReply
@@ -10416,382 +10547,388 @@ var file_admin_v1_admin_proto_goTypes = []interface{}{
 	(*Domain)(nil),                                        // 33: api.admin.v1.Domain
 	(*LoginDomainReq)(nil),                                // 34: api.admin.v1.LoginDomainReq
 	(*RegisterDomainReq)(nil),                             // 35: api.admin.v1.RegisterDomainReq
-	(*CreateDomainReq)(nil),                               // 36: api.admin.v1.CreateDomainReq
-	(*CreateDomainReply)(nil),                             // 37: api.admin.v1.CreateDomainReply
-	(*UpdateDomainReq)(nil),                               // 38: api.admin.v1.UpdateDomainReq
-	(*UpdateDomainReply)(nil),                             // 39: api.admin.v1.UpdateDomainReply
-	(*UpdateDomainStateReq)(nil),                          // 40: api.admin.v1.UpdateDomainStateReq
-	(*UpdateDomainStateReply)(nil),                        // 41: api.admin.v1.UpdateDomainStateReply
-	(*GetDomainReq)(nil),                                  // 42: api.admin.v1.GetDomainReq
-	(*DeleteDomainReq)(nil),                               // 43: api.admin.v1.DeleteDomainReq
-	(*DeleteDomainReply)(nil),                             // 44: api.admin.v1.DeleteDomainReply
-	(*ListDomainMenuReq)(nil),                             // 45: api.admin.v1.ListDomainMenuReq
-	(*ListDomainMenuReply)(nil),                           // 46: api.admin.v1.ListDomainMenuReply
-	(*HandleDomainMenuReq)(nil),                           // 47: api.admin.v1.HandleDomainMenuReq
-	(*HandleDomainMenuReply)(nil),                         // 48: api.admin.v1.HandleDomainMenuReply
-	(*Role)(nil),                                          // 49: api.admin.v1.Role
-	(*CreateRoleReq)(nil),                                 // 50: api.admin.v1.CreateRoleReq
-	(*CreateRoleReply)(nil),                               // 51: api.admin.v1.CreateRoleReply
-	(*UpdateRoleReq)(nil),                                 // 52: api.admin.v1.UpdateRoleReq
-	(*UpdateRoleReply)(nil),                               // 53: api.admin.v1.UpdateRoleReply
-	(*UpdateRoleStateReq)(nil),                            // 54: api.admin.v1.UpdateRoleStateReq
-	(*UpdateRoleStateReply)(nil),                          // 55: api.admin.v1.UpdateRoleStateReply
-	(*GetRoleReq)(nil),                                    // 56: api.admin.v1.GetRoleReq
-	(*DeleteRoleReq)(nil),                                 // 57: api.admin.v1.DeleteRoleReq
-	(*DeleteRoleReply)(nil),                               // 58: api.admin.v1.DeleteRoleReply
-	(*ListRoleMenuReq)(nil),                               // 59: api.admin.v1.ListRoleMenuReq
-	(*ListRoleMenuReply)(nil),                             // 60: api.admin.v1.ListRoleMenuReply
-	(*HandleRoleMenuReq)(nil),                             // 61: api.admin.v1.HandleRoleMenuReq
-	(*HandleRoleMenuReply)(nil),                           // 62: api.admin.v1.HandleRoleMenuReply
-	(*HandleRoleResourceReq)(nil),                         // 63: api.admin.v1.HandleRoleResourceReq
-	(*HandleRoleResourceReply)(nil),                       // 64: api.admin.v1.HandleRoleResourceReply
-	(*Resource)(nil),                                      // 65: api.admin.v1.Resource
-	(*ListResourceGroupReply)(nil),                        // 66: api.admin.v1.ListResourceGroupReply
-	(*CreateResourceReq)(nil),                             // 67: api.admin.v1.CreateResourceReq
-	(*CreateResourceReply)(nil),                           // 68: api.admin.v1.CreateResourceReply
-	(*UpdateResourceReq)(nil),                             // 69: api.admin.v1.UpdateResourceReq
-	(*UpdateResourceReply)(nil),                           // 70: api.admin.v1.UpdateResourceReply
-	(*GetResourceReq)(nil),                                // 71: api.admin.v1.GetResourceReq
-	(*DeleteResourceReq)(nil),                             // 72: api.admin.v1.DeleteResourceReq
-	(*DeleteResourceReply)(nil),                           // 73: api.admin.v1.DeleteResourceReply
-	(*Menu)(nil),                                          // 74: api.admin.v1.Menu
-	(*MenuButton)(nil),                                    // 75: api.admin.v1.MenuButton
-	(*MenuParameter)(nil),                                 // 76: api.admin.v1.MenuParameter
-	(*CreateMenuReq)(nil),                                 // 77: api.admin.v1.CreateMenuReq
-	(*CreateMenuReply)(nil),                               // 78: api.admin.v1.CreateMenuReply
-	(*UpdateMenuReq)(nil),                                 // 79: api.admin.v1.UpdateMenuReq
-	(*UpdateMenuReply)(nil),                               // 80: api.admin.v1.UpdateMenuReply
-	(*GetMenuReq)(nil),                                    // 81: api.admin.v1.GetMenuReq
-	(*DeleteMenuReq)(nil),                                 // 82: api.admin.v1.DeleteMenuReq
-	(*DeleteMenuReply)(nil),                               // 83: api.admin.v1.DeleteMenuReply
-	(*ListMenuTreeReq)(nil),                               // 84: api.admin.v1.ListMenuTreeReq
-	(*ListMenuTreeReply)(nil),                             // 85: api.admin.v1.ListMenuTreeReply
-	(*Dept)(nil),                                          // 86: api.admin.v1.Dept
-	(*CreateDeptReq)(nil),                                 // 87: api.admin.v1.CreateDeptReq
-	(*CreateDeptReply)(nil),                               // 88: api.admin.v1.CreateDeptReply
-	(*UpdateDeptReq)(nil),                                 // 89: api.admin.v1.UpdateDeptReq
-	(*UpdateDeptReply)(nil),                               // 90: api.admin.v1.UpdateDeptReply
-	(*GetDeptReq)(nil),                                    // 91: api.admin.v1.GetDeptReq
-	(*DeleteDeptReq)(nil),                                 // 92: api.admin.v1.DeleteDeptReq
-	(*DeleteDeptReply)(nil),                               // 93: api.admin.v1.DeleteDeptReply
-	(*ListDeptTreeReq)(nil),                               // 94: api.admin.v1.ListDeptTreeReq
-	(*ListDeptTreeReply)(nil),                             // 95: api.admin.v1.ListDeptTreeReply
-	(*Post)(nil),                                          // 96: api.admin.v1.Post
-	(*CreatePostReq)(nil),                                 // 97: api.admin.v1.CreatePostReq
-	(*CreatePostReply)(nil),                               // 98: api.admin.v1.CreatePostReply
-	(*UpdatePostReq)(nil),                                 // 99: api.admin.v1.UpdatePostReq
-	(*UpdatePostReply)(nil),                               // 100: api.admin.v1.UpdatePostReply
-	(*GetPostReq)(nil),                                    // 101: api.admin.v1.GetPostReq
-	(*DeletePostReq)(nil),                                 // 102: api.admin.v1.DeletePostReq
-	(*DeletePostReply)(nil),                               // 103: api.admin.v1.DeletePostReply
-	(*UpdatePostStateReq)(nil),                            // 104: api.admin.v1.UpdatePostStateReq
-	(*UpdatePostStateReply)(nil),                          // 105: api.admin.v1.UpdatePostStateReply
-	(*PassLoginReq_PassField)(nil),                        // 106: api.admin.v1.PassLoginReq.PassField
-	(*SmsLoginReq_SmsField)(nil),                          // 107: api.admin.v1.SmsLoginReq.SmsField
-	(*EmailLoginReq_EmailField)(nil),                      // 108: api.admin.v1.EmailLoginReq.EmailField
-	(*ListUserRoleMenuTreeReply_Deprecated_MenuMeta)(nil), // 109: api.admin.v1.ListUserRoleMenuTreeReply_Deprecated.MenuMeta
-	(*ListUserRoleMenuTreeReply_Deprecated_Menu)(nil),     // 110: api.admin.v1.ListUserRoleMenuTreeReply_Deprecated.Menu
-	(*RouterMenu_Meta)(nil),                               // 111: api.admin.v1.RouterMenu.Meta
-	(*HandleUserDomainReq_Data)(nil),                      // 112: api.admin.v1.HandleUserDomainReq.Data
-	(*HandleUserDomainRoleReq_Data)(nil),                  // 113: api.admin.v1.HandleUserDomainRoleReq.Data
-	(*UpdateUserReq_Data)(nil),                            // 114: api.admin.v1.UpdateUserReq.Data
-	(*UpdateDomainReq_Data)(nil),                          // 115: api.admin.v1.UpdateDomainReq.Data
-	(*UpdateDomainStateReq_Data)(nil),                     // 116: api.admin.v1.UpdateDomainStateReq.Data
-	(*HandleDomainMenuReq_Menu)(nil),                      // 117: api.admin.v1.HandleDomainMenuReq.Menu
-	(*HandleDomainMenuReq_Data)(nil),                      // 118: api.admin.v1.HandleDomainMenuReq.Data
-	(*UpdateRoleReq_Data)(nil),                            // 119: api.admin.v1.UpdateRoleReq.Data
-	(*UpdateRoleStateReq_Data)(nil),                       // 120: api.admin.v1.UpdateRoleStateReq.Data
-	(*HandleRoleMenuReq_Menu)(nil),                        // 121: api.admin.v1.HandleRoleMenuReq.Menu
-	(*HandleRoleMenuReq_Data)(nil),                        // 122: api.admin.v1.HandleRoleMenuReq.Data
-	(*HandleRoleResourceReq_Data)(nil),                    // 123: api.admin.v1.HandleRoleResourceReq.Data
-	(*UpdateResourceReq_Data)(nil),                        // 124: api.admin.v1.UpdateResourceReq.Data
-	(*UpdateMenuReq_Data)(nil),                            // 125: api.admin.v1.UpdateMenuReq.Data
-	(*UpdateDeptReq_Data)(nil),                            // 126: api.admin.v1.UpdateDeptReq.Data
-	(*UpdatePostReq_Data)(nil),                            // 127: api.admin.v1.UpdatePostReq.Data
-	(*UpdatePostStateReq_Data)(nil),                       // 128: api.admin.v1.UpdatePostStateReq.Data
-	(*timestamppb.Timestamp)(nil),                         // 129: google.protobuf.Timestamp
-	(*anypb.Any)(nil),                                     // 130: google.protobuf.Any
-	(protobuf.UserGender)(0),                              // 131: api.protobuf.UserGender
-	(protobuf.UserState)(0),                               // 132: api.protobuf.UserState
-	(protobuf.DomainState)(0),                             // 133: api.protobuf.DomainState
-	(protobuf.RoleState)(0),                               // 134: api.protobuf.RoleState
-	(protobuf.MenuType)(0),                                // 135: api.protobuf.MenuType
-	(protobuf.MenuHidden)(0),                              // 136: api.protobuf.MenuHidden
-	(protobuf.MenuKeepAlive)(0),                           // 137: api.protobuf.MenuKeepAlive
-	(protobuf.MenuBaseMenu)(0),                            // 138: api.protobuf.MenuBaseMenu
-	(protobuf.MenuCloseTab)(0),                            // 139: api.protobuf.MenuCloseTab
-	(protobuf.MenuExtType)(0),                             // 140: api.protobuf.MenuExtType
-	(protobuf.MenuParameterType)(0),                       // 141: api.protobuf.MenuParameterType
-	(protobuf.DeptState)(0),                               // 142: api.protobuf.DeptState
-	(protobuf.PostState)(0),                               // 143: api.protobuf.PostState
-	(*emptypb.Empty)(nil),                                 // 144: google.protobuf.Empty
-	(*protobuf.PagingReq)(nil),                            // 145: api.protobuf.PagingReq
-	(*protobuf.PagingReply)(nil),                          // 146: api.protobuf.PagingReply
+	(*ListDomainTreeReq)(nil),                             // 36: api.admin.v1.ListDomainTreeReq
+	(*ListDomainTreeReply)(nil),                           // 37: api.admin.v1.ListDomainTreeReply
+	(*CreateDomainReq)(nil),                               // 38: api.admin.v1.CreateDomainReq
+	(*CreateDomainReply)(nil),                             // 39: api.admin.v1.CreateDomainReply
+	(*UpdateDomainReq)(nil),                               // 40: api.admin.v1.UpdateDomainReq
+	(*UpdateDomainReply)(nil),                             // 41: api.admin.v1.UpdateDomainReply
+	(*UpdateDomainStateReq)(nil),                          // 42: api.admin.v1.UpdateDomainStateReq
+	(*UpdateDomainStateReply)(nil),                        // 43: api.admin.v1.UpdateDomainStateReply
+	(*GetDomainReq)(nil),                                  // 44: api.admin.v1.GetDomainReq
+	(*DeleteDomainReq)(nil),                               // 45: api.admin.v1.DeleteDomainReq
+	(*DeleteDomainReply)(nil),                             // 46: api.admin.v1.DeleteDomainReply
+	(*ListDomainMenuReq)(nil),                             // 47: api.admin.v1.ListDomainMenuReq
+	(*ListDomainMenuReply)(nil),                           // 48: api.admin.v1.ListDomainMenuReply
+	(*HandleDomainMenuReq)(nil),                           // 49: api.admin.v1.HandleDomainMenuReq
+	(*HandleDomainMenuReply)(nil),                         // 50: api.admin.v1.HandleDomainMenuReply
+	(*Role)(nil),                                          // 51: api.admin.v1.Role
+	(*CreateRoleReq)(nil),                                 // 52: api.admin.v1.CreateRoleReq
+	(*CreateRoleReply)(nil),                               // 53: api.admin.v1.CreateRoleReply
+	(*UpdateRoleReq)(nil),                                 // 54: api.admin.v1.UpdateRoleReq
+	(*UpdateRoleReply)(nil),                               // 55: api.admin.v1.UpdateRoleReply
+	(*UpdateRoleStateReq)(nil),                            // 56: api.admin.v1.UpdateRoleStateReq
+	(*UpdateRoleStateReply)(nil),                          // 57: api.admin.v1.UpdateRoleStateReply
+	(*GetRoleReq)(nil),                                    // 58: api.admin.v1.GetRoleReq
+	(*DeleteRoleReq)(nil),                                 // 59: api.admin.v1.DeleteRoleReq
+	(*DeleteRoleReply)(nil),                               // 60: api.admin.v1.DeleteRoleReply
+	(*ListRoleMenuReq)(nil),                               // 61: api.admin.v1.ListRoleMenuReq
+	(*ListRoleMenuReply)(nil),                             // 62: api.admin.v1.ListRoleMenuReply
+	(*HandleRoleMenuReq)(nil),                             // 63: api.admin.v1.HandleRoleMenuReq
+	(*HandleRoleMenuReply)(nil),                           // 64: api.admin.v1.HandleRoleMenuReply
+	(*HandleRoleResourceReq)(nil),                         // 65: api.admin.v1.HandleRoleResourceReq
+	(*HandleRoleResourceReply)(nil),                       // 66: api.admin.v1.HandleRoleResourceReply
+	(*Resource)(nil),                                      // 67: api.admin.v1.Resource
+	(*ListResourceGroupReply)(nil),                        // 68: api.admin.v1.ListResourceGroupReply
+	(*CreateResourceReq)(nil),                             // 69: api.admin.v1.CreateResourceReq
+	(*CreateResourceReply)(nil),                           // 70: api.admin.v1.CreateResourceReply
+	(*UpdateResourceReq)(nil),                             // 71: api.admin.v1.UpdateResourceReq
+	(*UpdateResourceReply)(nil),                           // 72: api.admin.v1.UpdateResourceReply
+	(*GetResourceReq)(nil),                                // 73: api.admin.v1.GetResourceReq
+	(*DeleteResourceReq)(nil),                             // 74: api.admin.v1.DeleteResourceReq
+	(*DeleteResourceReply)(nil),                           // 75: api.admin.v1.DeleteResourceReply
+	(*Menu)(nil),                                          // 76: api.admin.v1.Menu
+	(*MenuButton)(nil),                                    // 77: api.admin.v1.MenuButton
+	(*MenuParameter)(nil),                                 // 78: api.admin.v1.MenuParameter
+	(*CreateMenuReq)(nil),                                 // 79: api.admin.v1.CreateMenuReq
+	(*CreateMenuReply)(nil),                               // 80: api.admin.v1.CreateMenuReply
+	(*UpdateMenuReq)(nil),                                 // 81: api.admin.v1.UpdateMenuReq
+	(*UpdateMenuReply)(nil),                               // 82: api.admin.v1.UpdateMenuReply
+	(*GetMenuReq)(nil),                                    // 83: api.admin.v1.GetMenuReq
+	(*DeleteMenuReq)(nil),                                 // 84: api.admin.v1.DeleteMenuReq
+	(*DeleteMenuReply)(nil),                               // 85: api.admin.v1.DeleteMenuReply
+	(*ListMenuTreeReq)(nil),                               // 86: api.admin.v1.ListMenuTreeReq
+	(*ListMenuTreeReply)(nil),                             // 87: api.admin.v1.ListMenuTreeReply
+	(*Dept)(nil),                                          // 88: api.admin.v1.Dept
+	(*CreateDeptReq)(nil),                                 // 89: api.admin.v1.CreateDeptReq
+	(*CreateDeptReply)(nil),                               // 90: api.admin.v1.CreateDeptReply
+	(*UpdateDeptReq)(nil),                                 // 91: api.admin.v1.UpdateDeptReq
+	(*UpdateDeptReply)(nil),                               // 92: api.admin.v1.UpdateDeptReply
+	(*GetDeptReq)(nil),                                    // 93: api.admin.v1.GetDeptReq
+	(*DeleteDeptReq)(nil),                                 // 94: api.admin.v1.DeleteDeptReq
+	(*DeleteDeptReply)(nil),                               // 95: api.admin.v1.DeleteDeptReply
+	(*ListDeptTreeReq)(nil),                               // 96: api.admin.v1.ListDeptTreeReq
+	(*ListDeptTreeReply)(nil),                             // 97: api.admin.v1.ListDeptTreeReply
+	(*Post)(nil),                                          // 98: api.admin.v1.Post
+	(*CreatePostReq)(nil),                                 // 99: api.admin.v1.CreatePostReq
+	(*CreatePostReply)(nil),                               // 100: api.admin.v1.CreatePostReply
+	(*UpdatePostReq)(nil),                                 // 101: api.admin.v1.UpdatePostReq
+	(*UpdatePostReply)(nil),                               // 102: api.admin.v1.UpdatePostReply
+	(*GetPostReq)(nil),                                    // 103: api.admin.v1.GetPostReq
+	(*DeletePostReq)(nil),                                 // 104: api.admin.v1.DeletePostReq
+	(*DeletePostReply)(nil),                               // 105: api.admin.v1.DeletePostReply
+	(*UpdatePostStateReq)(nil),                            // 106: api.admin.v1.UpdatePostStateReq
+	(*UpdatePostStateReply)(nil),                          // 107: api.admin.v1.UpdatePostStateReply
+	(*PassLoginReq_PassField)(nil),                        // 108: api.admin.v1.PassLoginReq.PassField
+	(*SmsLoginReq_SmsField)(nil),                          // 109: api.admin.v1.SmsLoginReq.SmsField
+	(*EmailLoginReq_EmailField)(nil),                      // 110: api.admin.v1.EmailLoginReq.EmailField
+	(*ListUserRoleMenuTreeReply_Deprecated_MenuMeta)(nil), // 111: api.admin.v1.ListUserRoleMenuTreeReply_Deprecated.MenuMeta
+	(*ListUserRoleMenuTreeReply_Deprecated_Menu)(nil),     // 112: api.admin.v1.ListUserRoleMenuTreeReply_Deprecated.Menu
+	(*RouterMenu_Meta)(nil),                               // 113: api.admin.v1.RouterMenu.Meta
+	(*HandleUserDomainReq_Data)(nil),                      // 114: api.admin.v1.HandleUserDomainReq.Data
+	(*HandleUserDomainRoleReq_Data)(nil),                  // 115: api.admin.v1.HandleUserDomainRoleReq.Data
+	(*UpdateUserReq_Data)(nil),                            // 116: api.admin.v1.UpdateUserReq.Data
+	(*UpdateDomainReq_Data)(nil),                          // 117: api.admin.v1.UpdateDomainReq.Data
+	(*UpdateDomainStateReq_Data)(nil),                     // 118: api.admin.v1.UpdateDomainStateReq.Data
+	(*HandleDomainMenuReq_Menu)(nil),                      // 119: api.admin.v1.HandleDomainMenuReq.Menu
+	(*HandleDomainMenuReq_Data)(nil),                      // 120: api.admin.v1.HandleDomainMenuReq.Data
+	(*UpdateRoleReq_Data)(nil),                            // 121: api.admin.v1.UpdateRoleReq.Data
+	(*UpdateRoleStateReq_Data)(nil),                       // 122: api.admin.v1.UpdateRoleStateReq.Data
+	(*HandleRoleMenuReq_Menu)(nil),                        // 123: api.admin.v1.HandleRoleMenuReq.Menu
+	(*HandleRoleMenuReq_Data)(nil),                        // 124: api.admin.v1.HandleRoleMenuReq.Data
+	(*HandleRoleResourceReq_Data)(nil),                    // 125: api.admin.v1.HandleRoleResourceReq.Data
+	(*UpdateResourceReq_Data)(nil),                        // 126: api.admin.v1.UpdateResourceReq.Data
+	(*UpdateMenuReq_Data)(nil),                            // 127: api.admin.v1.UpdateMenuReq.Data
+	(*UpdateDeptReq_Data)(nil),                            // 128: api.admin.v1.UpdateDeptReq.Data
+	(*UpdatePostReq_Data)(nil),                            // 129: api.admin.v1.UpdatePostReq.Data
+	(*UpdatePostStateReq_Data)(nil),                       // 130: api.admin.v1.UpdatePostStateReq.Data
+	(*timestamppb.Timestamp)(nil),                         // 131: google.protobuf.Timestamp
+	(*anypb.Any)(nil),                                     // 132: google.protobuf.Any
+	(protobuf.UserGender)(0),                              // 133: api.protobuf.UserGender
+	(protobuf.UserState)(0),                               // 134: api.protobuf.UserState
+	(protobuf.DomainState)(0),                             // 135: api.protobuf.DomainState
+	(protobuf.RoleState)(0),                               // 136: api.protobuf.RoleState
+	(protobuf.MenuType)(0),                                // 137: api.protobuf.MenuType
+	(protobuf.MenuHidden)(0),                              // 138: api.protobuf.MenuHidden
+	(protobuf.MenuKeepAlive)(0),                           // 139: api.protobuf.MenuKeepAlive
+	(protobuf.MenuBaseMenu)(0),                            // 140: api.protobuf.MenuBaseMenu
+	(protobuf.MenuCloseTab)(0),                            // 141: api.protobuf.MenuCloseTab
+	(protobuf.MenuExtType)(0),                             // 142: api.protobuf.MenuExtType
+	(protobuf.MenuParameterType)(0),                       // 143: api.protobuf.MenuParameterType
+	(protobuf.DeptState)(0),                               // 144: api.protobuf.DeptState
+	(protobuf.PostState)(0),                               // 145: api.protobuf.PostState
+	(*emptypb.Empty)(nil),                                 // 146: google.protobuf.Empty
+	(*protobuf.PagingReq)(nil),                            // 147: api.protobuf.PagingReq
+	(*protobuf.PagingReply)(nil),                          // 148: api.protobuf.PagingReply
 }
 var file_admin_v1_admin_proto_depIdxs = []int32{
-	129, // 0: api.admin.v1.LoginReply.expire_time:type_name -> google.protobuf.Timestamp
-	130, // 1: api.admin.v1.RegisterReply.data:type_name -> google.protobuf.Any
-	130, // 2: api.admin.v1.LogoutReply.data:type_name -> google.protobuf.Any
-	106, // 3: api.admin.v1.PassLoginReq.auth:type_name -> api.admin.v1.PassLoginReq.PassField
-	107, // 4: api.admin.v1.SmsLoginReq.auth:type_name -> api.admin.v1.SmsLoginReq.SmsField
-	108, // 5: api.admin.v1.EmailLoginReq.auth:type_name -> api.admin.v1.EmailLoginReq.EmailField
+	131, // 0: api.admin.v1.LoginReply.expire_time:type_name -> google.protobuf.Timestamp
+	132, // 1: api.admin.v1.RegisterReply.data:type_name -> google.protobuf.Any
+	132, // 2: api.admin.v1.LogoutReply.data:type_name -> google.protobuf.Any
+	108, // 3: api.admin.v1.PassLoginReq.auth:type_name -> api.admin.v1.PassLoginReq.PassField
+	109, // 4: api.admin.v1.SmsLoginReq.auth:type_name -> api.admin.v1.SmsLoginReq.SmsField
+	110, // 5: api.admin.v1.EmailLoginReq.auth:type_name -> api.admin.v1.EmailLoginReq.EmailField
 	0,   // 6: api.admin.v1.RegisterReq.auth:type_name -> api.admin.v1.Auth
-	131, // 7: api.admin.v1.User.gender:type_name -> api.protobuf.UserGender
-	132, // 8: api.admin.v1.User.state:type_name -> api.protobuf.UserState
-	129, // 9: api.admin.v1.User.created_at:type_name -> google.protobuf.Timestamp
-	129, // 10: api.admin.v1.User.updated_at:type_name -> google.protobuf.Timestamp
+	133, // 7: api.admin.v1.User.gender:type_name -> api.protobuf.UserGender
+	134, // 8: api.admin.v1.User.state:type_name -> api.protobuf.UserState
+	131, // 9: api.admin.v1.User.created_at:type_name -> google.protobuf.Timestamp
+	131, // 10: api.admin.v1.User.updated_at:type_name -> google.protobuf.Timestamp
 	8,   // 11: api.admin.v1.GetUserProfileReply.user:type_name -> api.admin.v1.User
-	49,  // 12: api.admin.v1.GetUserProfileReply.roles:type_name -> api.admin.v1.Role
+	51,  // 12: api.admin.v1.GetUserProfileReply.roles:type_name -> api.admin.v1.Role
 	33,  // 13: api.admin.v1.ListUserDomainReply.items:type_name -> api.admin.v1.Domain
-	49,  // 14: api.admin.v1.ListUserRoleReply.items:type_name -> api.admin.v1.Role
+	51,  // 14: api.admin.v1.ListUserRoleReply.items:type_name -> api.admin.v1.Role
 	8,   // 15: api.admin.v1.ListUserReply.items:type_name -> api.admin.v1.User
-	110, // 16: api.admin.v1.ListUserRoleMenuTreeReply_Deprecated.items:type_name -> api.admin.v1.ListUserRoleMenuTreeReply_Deprecated.Menu
-	111, // 17: api.admin.v1.RouterMenu.meta:type_name -> api.admin.v1.RouterMenu.Meta
+	112, // 16: api.admin.v1.ListUserRoleMenuTreeReply_Deprecated.items:type_name -> api.admin.v1.ListUserRoleMenuTreeReply_Deprecated.Menu
+	113, // 17: api.admin.v1.RouterMenu.meta:type_name -> api.admin.v1.RouterMenu.Meta
 	15,  // 18: api.admin.v1.RouterMenu.children:type_name -> api.admin.v1.RouterMenu
 	15,  // 19: api.admin.v1.ListUserRoleMenuTreeReply.items:type_name -> api.admin.v1.RouterMenu
-	131, // 20: api.admin.v1.CreateUserReq.gender:type_name -> api.protobuf.UserGender
-	132, // 21: api.admin.v1.CreateUserReq.state:type_name -> api.protobuf.UserState
-	130, // 22: api.admin.v1.CreateUserReply.data:type_name -> google.protobuf.Any
-	112, // 23: api.admin.v1.HandleUserDomainReq.data:type_name -> api.admin.v1.HandleUserDomainReq.Data
-	113, // 24: api.admin.v1.HandleUserDomainRoleReq.data:type_name -> api.admin.v1.HandleUserDomainRoleReq.Data
-	130, // 25: api.admin.v1.DeleteUserReply.data:type_name -> google.protobuf.Any
-	114, // 26: api.admin.v1.UpdateUserReq.data:type_name -> api.admin.v1.UpdateUserReq.Data
-	130, // 27: api.admin.v1.UpdateUserReply.data:type_name -> google.protobuf.Any
-	74,  // 28: api.admin.v1.UserMenuTreeReply.items:type_name -> api.admin.v1.Menu
-	130, // 29: api.admin.v1.ExistUserNameReply.data:type_name -> google.protobuf.Any
-	129, // 30: api.admin.v1.Domain.created_at:type_name -> google.protobuf.Timestamp
-	129, // 31: api.admin.v1.Domain.updated_at:type_name -> google.protobuf.Timestamp
-	133, // 32: api.admin.v1.Domain.state:type_name -> api.protobuf.DomainState
-	0,   // 33: api.admin.v1.LoginDomainReq.auth:type_name -> api.admin.v1.Auth
-	0,   // 34: api.admin.v1.RegisterDomainReq.auth:type_name -> api.admin.v1.Auth
-	133, // 35: api.admin.v1.CreateDomainReq.state:type_name -> api.protobuf.DomainState
-	130, // 36: api.admin.v1.CreateDomainReply.data:type_name -> google.protobuf.Any
-	115, // 37: api.admin.v1.UpdateDomainReq.data:type_name -> api.admin.v1.UpdateDomainReq.Data
-	130, // 38: api.admin.v1.UpdateDomainReply.data:type_name -> google.protobuf.Any
-	116, // 39: api.admin.v1.UpdateDomainStateReq.data:type_name -> api.admin.v1.UpdateDomainStateReq.Data
-	130, // 40: api.admin.v1.UpdateDomainStateReply.data:type_name -> google.protobuf.Any
-	130, // 41: api.admin.v1.DeleteDomainReply.data:type_name -> google.protobuf.Any
-	74,  // 42: api.admin.v1.ListDomainMenuReply.items:type_name -> api.admin.v1.Menu
-	118, // 43: api.admin.v1.HandleDomainMenuReq.data:type_name -> api.admin.v1.HandleDomainMenuReq.Data
-	130, // 44: api.admin.v1.HandleDomainMenuReply.data:type_name -> google.protobuf.Any
-	129, // 45: api.admin.v1.Role.created_at:type_name -> google.protobuf.Timestamp
-	129, // 46: api.admin.v1.Role.updated_at:type_name -> google.protobuf.Timestamp
-	134, // 47: api.admin.v1.Role.state:type_name -> api.protobuf.RoleState
-	134, // 48: api.admin.v1.CreateRoleReq.state:type_name -> api.protobuf.RoleState
-	130, // 49: api.admin.v1.CreateRoleReply.data:type_name -> google.protobuf.Any
-	119, // 50: api.admin.v1.UpdateRoleReq.data:type_name -> api.admin.v1.UpdateRoleReq.Data
-	130, // 51: api.admin.v1.UpdateRoleReply.data:type_name -> google.protobuf.Any
-	120, // 52: api.admin.v1.UpdateRoleStateReq.data:type_name -> api.admin.v1.UpdateRoleStateReq.Data
-	130, // 53: api.admin.v1.UpdateRoleStateReply.data:type_name -> google.protobuf.Any
-	130, // 54: api.admin.v1.DeleteRoleReply.data:type_name -> google.protobuf.Any
-	74,  // 55: api.admin.v1.ListRoleMenuReply.items:type_name -> api.admin.v1.Menu
-	122, // 56: api.admin.v1.HandleRoleMenuReq.data:type_name -> api.admin.v1.HandleRoleMenuReq.Data
-	130, // 57: api.admin.v1.HandleRoleMenuReply.data:type_name -> google.protobuf.Any
-	123, // 58: api.admin.v1.HandleRoleResourceReq.data:type_name -> api.admin.v1.HandleRoleResourceReq.Data
-	130, // 59: api.admin.v1.HandleRoleResourceReply.data:type_name -> google.protobuf.Any
-	129, // 60: api.admin.v1.Resource.created_at:type_name -> google.protobuf.Timestamp
-	129, // 61: api.admin.v1.Resource.updated_at:type_name -> google.protobuf.Timestamp
-	130, // 62: api.admin.v1.CreateResourceReply.data:type_name -> google.protobuf.Any
-	124, // 63: api.admin.v1.UpdateResourceReq.data:type_name -> api.admin.v1.UpdateResourceReq.Data
-	130, // 64: api.admin.v1.UpdateResourceReply.data:type_name -> google.protobuf.Any
-	130, // 65: api.admin.v1.DeleteResourceReply.data:type_name -> google.protobuf.Any
-	129, // 66: api.admin.v1.Menu.created_at:type_name -> google.protobuf.Timestamp
-	129, // 67: api.admin.v1.Menu.updated_at:type_name -> google.protobuf.Timestamp
-	135, // 68: api.admin.v1.Menu.type:type_name -> api.protobuf.MenuType
-	136, // 69: api.admin.v1.Menu.hidden:type_name -> api.protobuf.MenuHidden
-	137, // 70: api.admin.v1.Menu.keep_alive:type_name -> api.protobuf.MenuKeepAlive
-	138, // 71: api.admin.v1.Menu.base_menu:type_name -> api.protobuf.MenuBaseMenu
-	139, // 72: api.admin.v1.Menu.close_tab:type_name -> api.protobuf.MenuCloseTab
-	140, // 73: api.admin.v1.Menu.ext_type:type_name -> api.protobuf.MenuExtType
-	74,  // 74: api.admin.v1.Menu.children:type_name -> api.admin.v1.Menu
-	76,  // 75: api.admin.v1.Menu.parameters:type_name -> api.admin.v1.MenuParameter
-	75,  // 76: api.admin.v1.Menu.buttons:type_name -> api.admin.v1.MenuButton
-	141, // 77: api.admin.v1.MenuParameter.type:type_name -> api.protobuf.MenuParameterType
-	135, // 78: api.admin.v1.CreateMenuReq.type:type_name -> api.protobuf.MenuType
-	136, // 79: api.admin.v1.CreateMenuReq.hidden:type_name -> api.protobuf.MenuHidden
-	137, // 80: api.admin.v1.CreateMenuReq.keep_alive:type_name -> api.protobuf.MenuKeepAlive
-	138, // 81: api.admin.v1.CreateMenuReq.base_menu:type_name -> api.protobuf.MenuBaseMenu
-	139, // 82: api.admin.v1.CreateMenuReq.close_tab:type_name -> api.protobuf.MenuCloseTab
-	140, // 83: api.admin.v1.CreateMenuReq.ext_type:type_name -> api.protobuf.MenuExtType
-	76,  // 84: api.admin.v1.CreateMenuReq.parameters:type_name -> api.admin.v1.MenuParameter
-	75,  // 85: api.admin.v1.CreateMenuReq.buttons:type_name -> api.admin.v1.MenuButton
-	130, // 86: api.admin.v1.CreateMenuReply.data:type_name -> google.protobuf.Any
-	125, // 87: api.admin.v1.UpdateMenuReq.data:type_name -> api.admin.v1.UpdateMenuReq.Data
-	130, // 88: api.admin.v1.UpdateMenuReply.data:type_name -> google.protobuf.Any
-	130, // 89: api.admin.v1.DeleteMenuReply.data:type_name -> google.protobuf.Any
-	74,  // 90: api.admin.v1.ListMenuTreeReply.items:type_name -> api.admin.v1.Menu
-	129, // 91: api.admin.v1.Dept.created_at:type_name -> google.protobuf.Timestamp
-	129, // 92: api.admin.v1.Dept.updated_at:type_name -> google.protobuf.Timestamp
-	142, // 93: api.admin.v1.Dept.state:type_name -> api.protobuf.DeptState
-	86,  // 94: api.admin.v1.Dept.children:type_name -> api.admin.v1.Dept
-	142, // 95: api.admin.v1.CreateDeptReq.state:type_name -> api.protobuf.DeptState
-	130, // 96: api.admin.v1.CreateDeptReply.data:type_name -> google.protobuf.Any
-	126, // 97: api.admin.v1.UpdateDeptReq.data:type_name -> api.admin.v1.UpdateDeptReq.Data
-	130, // 98: api.admin.v1.UpdateDeptReply.data:type_name -> google.protobuf.Any
-	130, // 99: api.admin.v1.DeleteDeptReply.data:type_name -> google.protobuf.Any
-	86,  // 100: api.admin.v1.ListDeptTreeReply.items:type_name -> api.admin.v1.Dept
-	129, // 101: api.admin.v1.Post.created_at:type_name -> google.protobuf.Timestamp
-	129, // 102: api.admin.v1.Post.updated_at:type_name -> google.protobuf.Timestamp
-	143, // 103: api.admin.v1.Post.state:type_name -> api.protobuf.PostState
-	143, // 104: api.admin.v1.CreatePostReq.state:type_name -> api.protobuf.PostState
-	130, // 105: api.admin.v1.CreatePostReply.data:type_name -> google.protobuf.Any
-	127, // 106: api.admin.v1.UpdatePostReq.data:type_name -> api.admin.v1.UpdatePostReq.Data
-	130, // 107: api.admin.v1.UpdatePostReply.data:type_name -> google.protobuf.Any
-	130, // 108: api.admin.v1.DeletePostReply.data:type_name -> google.protobuf.Any
-	128, // 109: api.admin.v1.UpdatePostStateReq.data:type_name -> api.admin.v1.UpdatePostStateReq.Data
-	130, // 110: api.admin.v1.UpdatePostStateReply.data:type_name -> google.protobuf.Any
-	109, // 111: api.admin.v1.ListUserRoleMenuTreeReply_Deprecated.Menu.meta:type_name -> api.admin.v1.ListUserRoleMenuTreeReply_Deprecated.MenuMeta
-	110, // 112: api.admin.v1.ListUserRoleMenuTreeReply_Deprecated.Menu.children:type_name -> api.admin.v1.ListUserRoleMenuTreeReply_Deprecated.Menu
-	131, // 113: api.admin.v1.UpdateUserReq.Data.gender:type_name -> api.protobuf.UserGender
-	132, // 114: api.admin.v1.UpdateUserReq.Data.state:type_name -> api.protobuf.UserState
-	133, // 115: api.admin.v1.UpdateDomainReq.Data.state:type_name -> api.protobuf.DomainState
-	133, // 116: api.admin.v1.UpdateDomainStateReq.Data.state:type_name -> api.protobuf.DomainState
-	117, // 117: api.admin.v1.HandleDomainMenuReq.Data.menus:type_name -> api.admin.v1.HandleDomainMenuReq.Menu
-	134, // 118: api.admin.v1.UpdateRoleReq.Data.state:type_name -> api.protobuf.RoleState
-	134, // 119: api.admin.v1.UpdateRoleStateReq.Data.state:type_name -> api.protobuf.RoleState
-	121, // 120: api.admin.v1.HandleRoleMenuReq.Data.menus:type_name -> api.admin.v1.HandleRoleMenuReq.Menu
-	135, // 121: api.admin.v1.UpdateMenuReq.Data.type:type_name -> api.protobuf.MenuType
-	136, // 122: api.admin.v1.UpdateMenuReq.Data.hidden:type_name -> api.protobuf.MenuHidden
-	137, // 123: api.admin.v1.UpdateMenuReq.Data.keep_alive:type_name -> api.protobuf.MenuKeepAlive
-	138, // 124: api.admin.v1.UpdateMenuReq.Data.base_menu:type_name -> api.protobuf.MenuBaseMenu
-	139, // 125: api.admin.v1.UpdateMenuReq.Data.close_tab:type_name -> api.protobuf.MenuCloseTab
-	140, // 126: api.admin.v1.UpdateMenuReq.Data.ext_type:type_name -> api.protobuf.MenuExtType
-	76,  // 127: api.admin.v1.UpdateMenuReq.Data.parameters:type_name -> api.admin.v1.MenuParameter
-	75,  // 128: api.admin.v1.UpdateMenuReq.Data.buttons:type_name -> api.admin.v1.MenuButton
-	142, // 129: api.admin.v1.UpdateDeptReq.Data.state:type_name -> api.protobuf.DeptState
-	143, // 130: api.admin.v1.UpdatePostReq.Data.state:type_name -> api.protobuf.PostState
-	143, // 131: api.admin.v1.UpdatePostStateReq.Data.state:type_name -> api.protobuf.PostState
-	144, // 132: api.admin.v1.Admin.Logout:input_type -> google.protobuf.Empty
-	4,   // 133: api.admin.v1.Admin.MiddlePassLogin:input_type -> api.admin.v1.PassLoginReq
-	4,   // 134: api.admin.v1.Admin.PassLogin:input_type -> api.admin.v1.PassLoginReq
-	5,   // 135: api.admin.v1.Admin.SmsLogin:input_type -> api.admin.v1.SmsLoginReq
-	6,   // 136: api.admin.v1.Admin.EmailLogin:input_type -> api.admin.v1.EmailLoginReq
-	7,   // 137: api.admin.v1.Admin.Register:input_type -> api.admin.v1.RegisterReq
-	144, // 138: api.admin.v1.Admin.GetUserInfo:input_type -> google.protobuf.Empty
-	144, // 139: api.admin.v1.Admin.GetUserProfile:input_type -> google.protobuf.Empty
-	144, // 140: api.admin.v1.Admin.ListUserDomain:input_type -> google.protobuf.Empty
-	144, // 141: api.admin.v1.Admin.ListUserRole:input_type -> google.protobuf.Empty
-	13,  // 142: api.admin.v1.Admin.ListUserRoleMenuTree:input_type -> api.admin.v1.ListUserRoleMenuTreeReq
-	17,  // 143: api.admin.v1.Admin.ListUserRolePermission:input_type -> api.admin.v1.ListUserRolePermissionReq
-	145, // 144: api.admin.v1.Admin.ListUser:input_type -> api.protobuf.PagingReq
-	19,  // 145: api.admin.v1.Admin.CreateUser:input_type -> api.admin.v1.CreateUserReq
-	25,  // 146: api.admin.v1.Admin.GetUser:input_type -> api.admin.v1.GetUserReq
-	28,  // 147: api.admin.v1.Admin.UpdateUser:input_type -> api.admin.v1.UpdateUserReq
-	26,  // 148: api.admin.v1.Admin.DeleteUser:input_type -> api.admin.v1.DeleteUserReq
-	31,  // 149: api.admin.v1.Admin.ExistUserName:input_type -> api.admin.v1.ExistUserNameReq
-	21,  // 150: api.admin.v1.Admin.HandleUserDomain:input_type -> api.admin.v1.HandleUserDomainReq
-	23,  // 151: api.admin.v1.Admin.HandleUserDomainRole:input_type -> api.admin.v1.HandleUserDomainRoleReq
-	34,  // 152: api.admin.v1.Admin.LoginDomain:input_type -> api.admin.v1.LoginDomainReq
-	35,  // 153: api.admin.v1.Admin.RegisterDomain:input_type -> api.admin.v1.RegisterDomainReq
-	145, // 154: api.admin.v1.Admin.ListDomain:input_type -> api.protobuf.PagingReq
-	36,  // 155: api.admin.v1.Admin.CreateDomain:input_type -> api.admin.v1.CreateDomainReq
-	42,  // 156: api.admin.v1.Admin.GetDomain:input_type -> api.admin.v1.GetDomainReq
-	38,  // 157: api.admin.v1.Admin.UpdateDomain:input_type -> api.admin.v1.UpdateDomainReq
-	43,  // 158: api.admin.v1.Admin.DeleteDomain:input_type -> api.admin.v1.DeleteDomainReq
-	40,  // 159: api.admin.v1.Admin.UpdateDomainState:input_type -> api.admin.v1.UpdateDomainStateReq
-	45,  // 160: api.admin.v1.Admin.ListDomainMenu:input_type -> api.admin.v1.ListDomainMenuReq
-	47,  // 161: api.admin.v1.Admin.HandleDomainMenu:input_type -> api.admin.v1.HandleDomainMenuReq
-	145, // 162: api.admin.v1.Admin.ListRole:input_type -> api.protobuf.PagingReq
-	50,  // 163: api.admin.v1.Admin.CreateRole:input_type -> api.admin.v1.CreateRoleReq
-	56,  // 164: api.admin.v1.Admin.GetRole:input_type -> api.admin.v1.GetRoleReq
-	52,  // 165: api.admin.v1.Admin.UpdateRole:input_type -> api.admin.v1.UpdateRoleReq
-	54,  // 166: api.admin.v1.Admin.UpdateRoleState:input_type -> api.admin.v1.UpdateRoleStateReq
-	57,  // 167: api.admin.v1.Admin.DeleteRole:input_type -> api.admin.v1.DeleteRoleReq
-	59,  // 168: api.admin.v1.Admin.ListRoleMenu:input_type -> api.admin.v1.ListRoleMenuReq
-	61,  // 169: api.admin.v1.Admin.HandleRoleMenu:input_type -> api.admin.v1.HandleRoleMenuReq
-	63,  // 170: api.admin.v1.Admin.HandleRoleResource:input_type -> api.admin.v1.HandleRoleResourceReq
-	145, // 171: api.admin.v1.Admin.ListResource:input_type -> api.protobuf.PagingReq
-	145, // 172: api.admin.v1.Admin.ListResourceGroup:input_type -> api.protobuf.PagingReq
-	67,  // 173: api.admin.v1.Admin.CreateResource:input_type -> api.admin.v1.CreateResourceReq
-	71,  // 174: api.admin.v1.Admin.GetResource:input_type -> api.admin.v1.GetResourceReq
-	69,  // 175: api.admin.v1.Admin.UpdateResource:input_type -> api.admin.v1.UpdateResourceReq
-	72,  // 176: api.admin.v1.Admin.DeleteResource:input_type -> api.admin.v1.DeleteResourceReq
-	145, // 177: api.admin.v1.Admin.ListMenu:input_type -> api.protobuf.PagingReq
-	77,  // 178: api.admin.v1.Admin.CreateMenu:input_type -> api.admin.v1.CreateMenuReq
-	84,  // 179: api.admin.v1.Admin.ListMenuTree:input_type -> api.admin.v1.ListMenuTreeReq
-	81,  // 180: api.admin.v1.Admin.GetMenu:input_type -> api.admin.v1.GetMenuReq
-	79,  // 181: api.admin.v1.Admin.UpdateMenu:input_type -> api.admin.v1.UpdateMenuReq
-	82,  // 182: api.admin.v1.Admin.DeleteMenu:input_type -> api.admin.v1.DeleteMenuReq
-	145, // 183: api.admin.v1.Admin.ListDept:input_type -> api.protobuf.PagingReq
-	87,  // 184: api.admin.v1.Admin.CreateDept:input_type -> api.admin.v1.CreateDeptReq
-	91,  // 185: api.admin.v1.Admin.GetDept:input_type -> api.admin.v1.GetDeptReq
-	89,  // 186: api.admin.v1.Admin.UpdateDept:input_type -> api.admin.v1.UpdateDeptReq
-	92,  // 187: api.admin.v1.Admin.DeleteDept:input_type -> api.admin.v1.DeleteDeptReq
-	94,  // 188: api.admin.v1.Admin.ListDeptTree:input_type -> api.admin.v1.ListDeptTreeReq
-	145, // 189: api.admin.v1.Admin.ListPost:input_type -> api.protobuf.PagingReq
-	97,  // 190: api.admin.v1.Admin.CreatePost:input_type -> api.admin.v1.CreatePostReq
-	101, // 191: api.admin.v1.Admin.GetPost:input_type -> api.admin.v1.GetPostReq
-	99,  // 192: api.admin.v1.Admin.UpdatePost:input_type -> api.admin.v1.UpdatePostReq
-	102, // 193: api.admin.v1.Admin.DeletePost:input_type -> api.admin.v1.DeletePostReq
-	104, // 194: api.admin.v1.Admin.UpdatePostState:input_type -> api.admin.v1.UpdatePostStateReq
-	3,   // 195: api.admin.v1.Admin.Logout:output_type -> api.admin.v1.LogoutReply
-	1,   // 196: api.admin.v1.Admin.MiddlePassLogin:output_type -> api.admin.v1.LoginReply
-	1,   // 197: api.admin.v1.Admin.PassLogin:output_type -> api.admin.v1.LoginReply
-	1,   // 198: api.admin.v1.Admin.SmsLogin:output_type -> api.admin.v1.LoginReply
-	1,   // 199: api.admin.v1.Admin.EmailLogin:output_type -> api.admin.v1.LoginReply
-	2,   // 200: api.admin.v1.Admin.Register:output_type -> api.admin.v1.RegisterReply
-	8,   // 201: api.admin.v1.Admin.GetUserInfo:output_type -> api.admin.v1.User
-	9,   // 202: api.admin.v1.Admin.GetUserProfile:output_type -> api.admin.v1.GetUserProfileReply
-	10,  // 203: api.admin.v1.Admin.ListUserDomain:output_type -> api.admin.v1.ListUserDomainReply
-	11,  // 204: api.admin.v1.Admin.ListUserRole:output_type -> api.admin.v1.ListUserRoleReply
-	16,  // 205: api.admin.v1.Admin.ListUserRoleMenuTree:output_type -> api.admin.v1.ListUserRoleMenuTreeReply
-	18,  // 206: api.admin.v1.Admin.ListUserRolePermission:output_type -> api.admin.v1.ListUserRolePermissionReply
-	146, // 207: api.admin.v1.Admin.ListUser:output_type -> api.protobuf.PagingReply
-	20,  // 208: api.admin.v1.Admin.CreateUser:output_type -> api.admin.v1.CreateUserReply
-	8,   // 209: api.admin.v1.Admin.GetUser:output_type -> api.admin.v1.User
-	29,  // 210: api.admin.v1.Admin.UpdateUser:output_type -> api.admin.v1.UpdateUserReply
-	27,  // 211: api.admin.v1.Admin.DeleteUser:output_type -> api.admin.v1.DeleteUserReply
-	32,  // 212: api.admin.v1.Admin.ExistUserName:output_type -> api.admin.v1.ExistUserNameReply
-	22,  // 213: api.admin.v1.Admin.HandleUserDomain:output_type -> api.admin.v1.HandleUserDomainReply
-	24,  // 214: api.admin.v1.Admin.HandleUserDomainRole:output_type -> api.admin.v1.HandleUserDomainRoleReply
-	1,   // 215: api.admin.v1.Admin.LoginDomain:output_type -> api.admin.v1.LoginReply
-	2,   // 216: api.admin.v1.Admin.RegisterDomain:output_type -> api.admin.v1.RegisterReply
-	146, // 217: api.admin.v1.Admin.ListDomain:output_type -> api.protobuf.PagingReply
-	37,  // 218: api.admin.v1.Admin.CreateDomain:output_type -> api.admin.v1.CreateDomainReply
-	33,  // 219: api.admin.v1.Admin.GetDomain:output_type -> api.admin.v1.Domain
-	39,  // 220: api.admin.v1.Admin.UpdateDomain:output_type -> api.admin.v1.UpdateDomainReply
-	44,  // 221: api.admin.v1.Admin.DeleteDomain:output_type -> api.admin.v1.DeleteDomainReply
-	41,  // 222: api.admin.v1.Admin.UpdateDomainState:output_type -> api.admin.v1.UpdateDomainStateReply
-	46,  // 223: api.admin.v1.Admin.ListDomainMenu:output_type -> api.admin.v1.ListDomainMenuReply
-	48,  // 224: api.admin.v1.Admin.HandleDomainMenu:output_type -> api.admin.v1.HandleDomainMenuReply
-	146, // 225: api.admin.v1.Admin.ListRole:output_type -> api.protobuf.PagingReply
-	51,  // 226: api.admin.v1.Admin.CreateRole:output_type -> api.admin.v1.CreateRoleReply
-	49,  // 227: api.admin.v1.Admin.GetRole:output_type -> api.admin.v1.Role
-	53,  // 228: api.admin.v1.Admin.UpdateRole:output_type -> api.admin.v1.UpdateRoleReply
-	55,  // 229: api.admin.v1.Admin.UpdateRoleState:output_type -> api.admin.v1.UpdateRoleStateReply
-	58,  // 230: api.admin.v1.Admin.DeleteRole:output_type -> api.admin.v1.DeleteRoleReply
-	60,  // 231: api.admin.v1.Admin.ListRoleMenu:output_type -> api.admin.v1.ListRoleMenuReply
-	62,  // 232: api.admin.v1.Admin.HandleRoleMenu:output_type -> api.admin.v1.HandleRoleMenuReply
-	64,  // 233: api.admin.v1.Admin.HandleRoleResource:output_type -> api.admin.v1.HandleRoleResourceReply
-	146, // 234: api.admin.v1.Admin.ListResource:output_type -> api.protobuf.PagingReply
-	66,  // 235: api.admin.v1.Admin.ListResourceGroup:output_type -> api.admin.v1.ListResourceGroupReply
-	68,  // 236: api.admin.v1.Admin.CreateResource:output_type -> api.admin.v1.CreateResourceReply
-	65,  // 237: api.admin.v1.Admin.GetResource:output_type -> api.admin.v1.Resource
-	70,  // 238: api.admin.v1.Admin.UpdateResource:output_type -> api.admin.v1.UpdateResourceReply
-	73,  // 239: api.admin.v1.Admin.DeleteResource:output_type -> api.admin.v1.DeleteResourceReply
-	146, // 240: api.admin.v1.Admin.ListMenu:output_type -> api.protobuf.PagingReply
-	78,  // 241: api.admin.v1.Admin.CreateMenu:output_type -> api.admin.v1.CreateMenuReply
-	85,  // 242: api.admin.v1.Admin.ListMenuTree:output_type -> api.admin.v1.ListMenuTreeReply
-	74,  // 243: api.admin.v1.Admin.GetMenu:output_type -> api.admin.v1.Menu
-	80,  // 244: api.admin.v1.Admin.UpdateMenu:output_type -> api.admin.v1.UpdateMenuReply
-	83,  // 245: api.admin.v1.Admin.DeleteMenu:output_type -> api.admin.v1.DeleteMenuReply
-	146, // 246: api.admin.v1.Admin.ListDept:output_type -> api.protobuf.PagingReply
-	88,  // 247: api.admin.v1.Admin.CreateDept:output_type -> api.admin.v1.CreateDeptReply
-	86,  // 248: api.admin.v1.Admin.GetDept:output_type -> api.admin.v1.Dept
-	90,  // 249: api.admin.v1.Admin.UpdateDept:output_type -> api.admin.v1.UpdateDeptReply
-	93,  // 250: api.admin.v1.Admin.DeleteDept:output_type -> api.admin.v1.DeleteDeptReply
-	95,  // 251: api.admin.v1.Admin.ListDeptTree:output_type -> api.admin.v1.ListDeptTreeReply
-	146, // 252: api.admin.v1.Admin.ListPost:output_type -> api.protobuf.PagingReply
-	98,  // 253: api.admin.v1.Admin.CreatePost:output_type -> api.admin.v1.CreatePostReply
-	96,  // 254: api.admin.v1.Admin.GetPost:output_type -> api.admin.v1.Post
-	100, // 255: api.admin.v1.Admin.UpdatePost:output_type -> api.admin.v1.UpdatePostReply
-	103, // 256: api.admin.v1.Admin.DeletePost:output_type -> api.admin.v1.DeletePostReply
-	105, // 257: api.admin.v1.Admin.UpdatePostState:output_type -> api.admin.v1.UpdatePostStateReply
-	195, // [195:258] is the sub-list for method output_type
-	132, // [132:195] is the sub-list for method input_type
-	132, // [132:132] is the sub-list for extension type_name
-	132, // [132:132] is the sub-list for extension extendee
-	0,   // [0:132] is the sub-list for field type_name
+	133, // 20: api.admin.v1.CreateUserReq.gender:type_name -> api.protobuf.UserGender
+	134, // 21: api.admin.v1.CreateUserReq.state:type_name -> api.protobuf.UserState
+	132, // 22: api.admin.v1.CreateUserReply.data:type_name -> google.protobuf.Any
+	114, // 23: api.admin.v1.HandleUserDomainReq.data:type_name -> api.admin.v1.HandleUserDomainReq.Data
+	115, // 24: api.admin.v1.HandleUserDomainRoleReq.data:type_name -> api.admin.v1.HandleUserDomainRoleReq.Data
+	132, // 25: api.admin.v1.DeleteUserReply.data:type_name -> google.protobuf.Any
+	116, // 26: api.admin.v1.UpdateUserReq.data:type_name -> api.admin.v1.UpdateUserReq.Data
+	132, // 27: api.admin.v1.UpdateUserReply.data:type_name -> google.protobuf.Any
+	76,  // 28: api.admin.v1.UserMenuTreeReply.items:type_name -> api.admin.v1.Menu
+	132, // 29: api.admin.v1.ExistUserNameReply.data:type_name -> google.protobuf.Any
+	131, // 30: api.admin.v1.Domain.created_at:type_name -> google.protobuf.Timestamp
+	131, // 31: api.admin.v1.Domain.updated_at:type_name -> google.protobuf.Timestamp
+	135, // 32: api.admin.v1.Domain.state:type_name -> api.protobuf.DomainState
+	33,  // 33: api.admin.v1.Domain.children:type_name -> api.admin.v1.Domain
+	0,   // 34: api.admin.v1.LoginDomainReq.auth:type_name -> api.admin.v1.Auth
+	0,   // 35: api.admin.v1.RegisterDomainReq.auth:type_name -> api.admin.v1.Auth
+	33,  // 36: api.admin.v1.ListDomainTreeReply.items:type_name -> api.admin.v1.Domain
+	135, // 37: api.admin.v1.CreateDomainReq.state:type_name -> api.protobuf.DomainState
+	132, // 38: api.admin.v1.CreateDomainReply.data:type_name -> google.protobuf.Any
+	117, // 39: api.admin.v1.UpdateDomainReq.data:type_name -> api.admin.v1.UpdateDomainReq.Data
+	132, // 40: api.admin.v1.UpdateDomainReply.data:type_name -> google.protobuf.Any
+	118, // 41: api.admin.v1.UpdateDomainStateReq.data:type_name -> api.admin.v1.UpdateDomainStateReq.Data
+	132, // 42: api.admin.v1.UpdateDomainStateReply.data:type_name -> google.protobuf.Any
+	132, // 43: api.admin.v1.DeleteDomainReply.data:type_name -> google.protobuf.Any
+	76,  // 44: api.admin.v1.ListDomainMenuReply.items:type_name -> api.admin.v1.Menu
+	120, // 45: api.admin.v1.HandleDomainMenuReq.data:type_name -> api.admin.v1.HandleDomainMenuReq.Data
+	132, // 46: api.admin.v1.HandleDomainMenuReply.data:type_name -> google.protobuf.Any
+	131, // 47: api.admin.v1.Role.created_at:type_name -> google.protobuf.Timestamp
+	131, // 48: api.admin.v1.Role.updated_at:type_name -> google.protobuf.Timestamp
+	136, // 49: api.admin.v1.Role.state:type_name -> api.protobuf.RoleState
+	136, // 50: api.admin.v1.CreateRoleReq.state:type_name -> api.protobuf.RoleState
+	132, // 51: api.admin.v1.CreateRoleReply.data:type_name -> google.protobuf.Any
+	121, // 52: api.admin.v1.UpdateRoleReq.data:type_name -> api.admin.v1.UpdateRoleReq.Data
+	132, // 53: api.admin.v1.UpdateRoleReply.data:type_name -> google.protobuf.Any
+	122, // 54: api.admin.v1.UpdateRoleStateReq.data:type_name -> api.admin.v1.UpdateRoleStateReq.Data
+	132, // 55: api.admin.v1.UpdateRoleStateReply.data:type_name -> google.protobuf.Any
+	132, // 56: api.admin.v1.DeleteRoleReply.data:type_name -> google.protobuf.Any
+	76,  // 57: api.admin.v1.ListRoleMenuReply.items:type_name -> api.admin.v1.Menu
+	124, // 58: api.admin.v1.HandleRoleMenuReq.data:type_name -> api.admin.v1.HandleRoleMenuReq.Data
+	132, // 59: api.admin.v1.HandleRoleMenuReply.data:type_name -> google.protobuf.Any
+	125, // 60: api.admin.v1.HandleRoleResourceReq.data:type_name -> api.admin.v1.HandleRoleResourceReq.Data
+	132, // 61: api.admin.v1.HandleRoleResourceReply.data:type_name -> google.protobuf.Any
+	131, // 62: api.admin.v1.Resource.created_at:type_name -> google.protobuf.Timestamp
+	131, // 63: api.admin.v1.Resource.updated_at:type_name -> google.protobuf.Timestamp
+	132, // 64: api.admin.v1.CreateResourceReply.data:type_name -> google.protobuf.Any
+	126, // 65: api.admin.v1.UpdateResourceReq.data:type_name -> api.admin.v1.UpdateResourceReq.Data
+	132, // 66: api.admin.v1.UpdateResourceReply.data:type_name -> google.protobuf.Any
+	132, // 67: api.admin.v1.DeleteResourceReply.data:type_name -> google.protobuf.Any
+	131, // 68: api.admin.v1.Menu.created_at:type_name -> google.protobuf.Timestamp
+	131, // 69: api.admin.v1.Menu.updated_at:type_name -> google.protobuf.Timestamp
+	137, // 70: api.admin.v1.Menu.type:type_name -> api.protobuf.MenuType
+	138, // 71: api.admin.v1.Menu.hidden:type_name -> api.protobuf.MenuHidden
+	139, // 72: api.admin.v1.Menu.keep_alive:type_name -> api.protobuf.MenuKeepAlive
+	140, // 73: api.admin.v1.Menu.base_menu:type_name -> api.protobuf.MenuBaseMenu
+	141, // 74: api.admin.v1.Menu.close_tab:type_name -> api.protobuf.MenuCloseTab
+	142, // 75: api.admin.v1.Menu.ext_type:type_name -> api.protobuf.MenuExtType
+	76,  // 76: api.admin.v1.Menu.children:type_name -> api.admin.v1.Menu
+	78,  // 77: api.admin.v1.Menu.parameters:type_name -> api.admin.v1.MenuParameter
+	77,  // 78: api.admin.v1.Menu.buttons:type_name -> api.admin.v1.MenuButton
+	143, // 79: api.admin.v1.MenuParameter.type:type_name -> api.protobuf.MenuParameterType
+	137, // 80: api.admin.v1.CreateMenuReq.type:type_name -> api.protobuf.MenuType
+	138, // 81: api.admin.v1.CreateMenuReq.hidden:type_name -> api.protobuf.MenuHidden
+	139, // 82: api.admin.v1.CreateMenuReq.keep_alive:type_name -> api.protobuf.MenuKeepAlive
+	140, // 83: api.admin.v1.CreateMenuReq.base_menu:type_name -> api.protobuf.MenuBaseMenu
+	141, // 84: api.admin.v1.CreateMenuReq.close_tab:type_name -> api.protobuf.MenuCloseTab
+	142, // 85: api.admin.v1.CreateMenuReq.ext_type:type_name -> api.protobuf.MenuExtType
+	78,  // 86: api.admin.v1.CreateMenuReq.parameters:type_name -> api.admin.v1.MenuParameter
+	77,  // 87: api.admin.v1.CreateMenuReq.buttons:type_name -> api.admin.v1.MenuButton
+	132, // 88: api.admin.v1.CreateMenuReply.data:type_name -> google.protobuf.Any
+	127, // 89: api.admin.v1.UpdateMenuReq.data:type_name -> api.admin.v1.UpdateMenuReq.Data
+	132, // 90: api.admin.v1.UpdateMenuReply.data:type_name -> google.protobuf.Any
+	132, // 91: api.admin.v1.DeleteMenuReply.data:type_name -> google.protobuf.Any
+	76,  // 92: api.admin.v1.ListMenuTreeReply.items:type_name -> api.admin.v1.Menu
+	131, // 93: api.admin.v1.Dept.created_at:type_name -> google.protobuf.Timestamp
+	131, // 94: api.admin.v1.Dept.updated_at:type_name -> google.protobuf.Timestamp
+	144, // 95: api.admin.v1.Dept.state:type_name -> api.protobuf.DeptState
+	88,  // 96: api.admin.v1.Dept.children:type_name -> api.admin.v1.Dept
+	144, // 97: api.admin.v1.CreateDeptReq.state:type_name -> api.protobuf.DeptState
+	132, // 98: api.admin.v1.CreateDeptReply.data:type_name -> google.protobuf.Any
+	128, // 99: api.admin.v1.UpdateDeptReq.data:type_name -> api.admin.v1.UpdateDeptReq.Data
+	132, // 100: api.admin.v1.UpdateDeptReply.data:type_name -> google.protobuf.Any
+	132, // 101: api.admin.v1.DeleteDeptReply.data:type_name -> google.protobuf.Any
+	88,  // 102: api.admin.v1.ListDeptTreeReply.items:type_name -> api.admin.v1.Dept
+	131, // 103: api.admin.v1.Post.created_at:type_name -> google.protobuf.Timestamp
+	131, // 104: api.admin.v1.Post.updated_at:type_name -> google.protobuf.Timestamp
+	145, // 105: api.admin.v1.Post.state:type_name -> api.protobuf.PostState
+	145, // 106: api.admin.v1.CreatePostReq.state:type_name -> api.protobuf.PostState
+	132, // 107: api.admin.v1.CreatePostReply.data:type_name -> google.protobuf.Any
+	129, // 108: api.admin.v1.UpdatePostReq.data:type_name -> api.admin.v1.UpdatePostReq.Data
+	132, // 109: api.admin.v1.UpdatePostReply.data:type_name -> google.protobuf.Any
+	132, // 110: api.admin.v1.DeletePostReply.data:type_name -> google.protobuf.Any
+	130, // 111: api.admin.v1.UpdatePostStateReq.data:type_name -> api.admin.v1.UpdatePostStateReq.Data
+	132, // 112: api.admin.v1.UpdatePostStateReply.data:type_name -> google.protobuf.Any
+	111, // 113: api.admin.v1.ListUserRoleMenuTreeReply_Deprecated.Menu.meta:type_name -> api.admin.v1.ListUserRoleMenuTreeReply_Deprecated.MenuMeta
+	112, // 114: api.admin.v1.ListUserRoleMenuTreeReply_Deprecated.Menu.children:type_name -> api.admin.v1.ListUserRoleMenuTreeReply_Deprecated.Menu
+	133, // 115: api.admin.v1.UpdateUserReq.Data.gender:type_name -> api.protobuf.UserGender
+	134, // 116: api.admin.v1.UpdateUserReq.Data.state:type_name -> api.protobuf.UserState
+	135, // 117: api.admin.v1.UpdateDomainReq.Data.state:type_name -> api.protobuf.DomainState
+	135, // 118: api.admin.v1.UpdateDomainStateReq.Data.state:type_name -> api.protobuf.DomainState
+	119, // 119: api.admin.v1.HandleDomainMenuReq.Data.menus:type_name -> api.admin.v1.HandleDomainMenuReq.Menu
+	136, // 120: api.admin.v1.UpdateRoleReq.Data.state:type_name -> api.protobuf.RoleState
+	136, // 121: api.admin.v1.UpdateRoleStateReq.Data.state:type_name -> api.protobuf.RoleState
+	123, // 122: api.admin.v1.HandleRoleMenuReq.Data.menus:type_name -> api.admin.v1.HandleRoleMenuReq.Menu
+	137, // 123: api.admin.v1.UpdateMenuReq.Data.type:type_name -> api.protobuf.MenuType
+	138, // 124: api.admin.v1.UpdateMenuReq.Data.hidden:type_name -> api.protobuf.MenuHidden
+	139, // 125: api.admin.v1.UpdateMenuReq.Data.keep_alive:type_name -> api.protobuf.MenuKeepAlive
+	140, // 126: api.admin.v1.UpdateMenuReq.Data.base_menu:type_name -> api.protobuf.MenuBaseMenu
+	141, // 127: api.admin.v1.UpdateMenuReq.Data.close_tab:type_name -> api.protobuf.MenuCloseTab
+	142, // 128: api.admin.v1.UpdateMenuReq.Data.ext_type:type_name -> api.protobuf.MenuExtType
+	78,  // 129: api.admin.v1.UpdateMenuReq.Data.parameters:type_name -> api.admin.v1.MenuParameter
+	77,  // 130: api.admin.v1.UpdateMenuReq.Data.buttons:type_name -> api.admin.v1.MenuButton
+	144, // 131: api.admin.v1.UpdateDeptReq.Data.state:type_name -> api.protobuf.DeptState
+	145, // 132: api.admin.v1.UpdatePostReq.Data.state:type_name -> api.protobuf.PostState
+	145, // 133: api.admin.v1.UpdatePostStateReq.Data.state:type_name -> api.protobuf.PostState
+	146, // 134: api.admin.v1.Admin.Logout:input_type -> google.protobuf.Empty
+	4,   // 135: api.admin.v1.Admin.MiddlePassLogin:input_type -> api.admin.v1.PassLoginReq
+	4,   // 136: api.admin.v1.Admin.PassLogin:input_type -> api.admin.v1.PassLoginReq
+	5,   // 137: api.admin.v1.Admin.SmsLogin:input_type -> api.admin.v1.SmsLoginReq
+	6,   // 138: api.admin.v1.Admin.EmailLogin:input_type -> api.admin.v1.EmailLoginReq
+	7,   // 139: api.admin.v1.Admin.Register:input_type -> api.admin.v1.RegisterReq
+	146, // 140: api.admin.v1.Admin.GetUserInfo:input_type -> google.protobuf.Empty
+	146, // 141: api.admin.v1.Admin.GetUserProfile:input_type -> google.protobuf.Empty
+	146, // 142: api.admin.v1.Admin.ListUserDomain:input_type -> google.protobuf.Empty
+	146, // 143: api.admin.v1.Admin.ListUserRole:input_type -> google.protobuf.Empty
+	13,  // 144: api.admin.v1.Admin.ListUserRoleMenuTree:input_type -> api.admin.v1.ListUserRoleMenuTreeReq
+	17,  // 145: api.admin.v1.Admin.ListUserRolePermission:input_type -> api.admin.v1.ListUserRolePermissionReq
+	147, // 146: api.admin.v1.Admin.ListUser:input_type -> api.protobuf.PagingReq
+	19,  // 147: api.admin.v1.Admin.CreateUser:input_type -> api.admin.v1.CreateUserReq
+	25,  // 148: api.admin.v1.Admin.GetUser:input_type -> api.admin.v1.GetUserReq
+	28,  // 149: api.admin.v1.Admin.UpdateUser:input_type -> api.admin.v1.UpdateUserReq
+	26,  // 150: api.admin.v1.Admin.DeleteUser:input_type -> api.admin.v1.DeleteUserReq
+	31,  // 151: api.admin.v1.Admin.ExistUserName:input_type -> api.admin.v1.ExistUserNameReq
+	21,  // 152: api.admin.v1.Admin.HandleUserDomain:input_type -> api.admin.v1.HandleUserDomainReq
+	23,  // 153: api.admin.v1.Admin.HandleUserDomainRole:input_type -> api.admin.v1.HandleUserDomainRoleReq
+	34,  // 154: api.admin.v1.Admin.LoginDomain:input_type -> api.admin.v1.LoginDomainReq
+	35,  // 155: api.admin.v1.Admin.RegisterDomain:input_type -> api.admin.v1.RegisterDomainReq
+	147, // 156: api.admin.v1.Admin.ListDomain:input_type -> api.protobuf.PagingReq
+	36,  // 157: api.admin.v1.Admin.ListDomainTree:input_type -> api.admin.v1.ListDomainTreeReq
+	38,  // 158: api.admin.v1.Admin.CreateDomain:input_type -> api.admin.v1.CreateDomainReq
+	44,  // 159: api.admin.v1.Admin.GetDomain:input_type -> api.admin.v1.GetDomainReq
+	40,  // 160: api.admin.v1.Admin.UpdateDomain:input_type -> api.admin.v1.UpdateDomainReq
+	45,  // 161: api.admin.v1.Admin.DeleteDomain:input_type -> api.admin.v1.DeleteDomainReq
+	42,  // 162: api.admin.v1.Admin.UpdateDomainState:input_type -> api.admin.v1.UpdateDomainStateReq
+	47,  // 163: api.admin.v1.Admin.ListDomainMenu:input_type -> api.admin.v1.ListDomainMenuReq
+	49,  // 164: api.admin.v1.Admin.HandleDomainMenu:input_type -> api.admin.v1.HandleDomainMenuReq
+	147, // 165: api.admin.v1.Admin.ListRole:input_type -> api.protobuf.PagingReq
+	52,  // 166: api.admin.v1.Admin.CreateRole:input_type -> api.admin.v1.CreateRoleReq
+	58,  // 167: api.admin.v1.Admin.GetRole:input_type -> api.admin.v1.GetRoleReq
+	54,  // 168: api.admin.v1.Admin.UpdateRole:input_type -> api.admin.v1.UpdateRoleReq
+	56,  // 169: api.admin.v1.Admin.UpdateRoleState:input_type -> api.admin.v1.UpdateRoleStateReq
+	59,  // 170: api.admin.v1.Admin.DeleteRole:input_type -> api.admin.v1.DeleteRoleReq
+	61,  // 171: api.admin.v1.Admin.ListRoleMenu:input_type -> api.admin.v1.ListRoleMenuReq
+	63,  // 172: api.admin.v1.Admin.HandleRoleMenu:input_type -> api.admin.v1.HandleRoleMenuReq
+	65,  // 173: api.admin.v1.Admin.HandleRoleResource:input_type -> api.admin.v1.HandleRoleResourceReq
+	147, // 174: api.admin.v1.Admin.ListResource:input_type -> api.protobuf.PagingReq
+	147, // 175: api.admin.v1.Admin.ListResourceGroup:input_type -> api.protobuf.PagingReq
+	69,  // 176: api.admin.v1.Admin.CreateResource:input_type -> api.admin.v1.CreateResourceReq
+	73,  // 177: api.admin.v1.Admin.GetResource:input_type -> api.admin.v1.GetResourceReq
+	71,  // 178: api.admin.v1.Admin.UpdateResource:input_type -> api.admin.v1.UpdateResourceReq
+	74,  // 179: api.admin.v1.Admin.DeleteResource:input_type -> api.admin.v1.DeleteResourceReq
+	147, // 180: api.admin.v1.Admin.ListMenu:input_type -> api.protobuf.PagingReq
+	79,  // 181: api.admin.v1.Admin.CreateMenu:input_type -> api.admin.v1.CreateMenuReq
+	86,  // 182: api.admin.v1.Admin.ListMenuTree:input_type -> api.admin.v1.ListMenuTreeReq
+	83,  // 183: api.admin.v1.Admin.GetMenu:input_type -> api.admin.v1.GetMenuReq
+	81,  // 184: api.admin.v1.Admin.UpdateMenu:input_type -> api.admin.v1.UpdateMenuReq
+	84,  // 185: api.admin.v1.Admin.DeleteMenu:input_type -> api.admin.v1.DeleteMenuReq
+	147, // 186: api.admin.v1.Admin.ListDept:input_type -> api.protobuf.PagingReq
+	89,  // 187: api.admin.v1.Admin.CreateDept:input_type -> api.admin.v1.CreateDeptReq
+	93,  // 188: api.admin.v1.Admin.GetDept:input_type -> api.admin.v1.GetDeptReq
+	91,  // 189: api.admin.v1.Admin.UpdateDept:input_type -> api.admin.v1.UpdateDeptReq
+	94,  // 190: api.admin.v1.Admin.DeleteDept:input_type -> api.admin.v1.DeleteDeptReq
+	96,  // 191: api.admin.v1.Admin.ListDeptTree:input_type -> api.admin.v1.ListDeptTreeReq
+	147, // 192: api.admin.v1.Admin.ListPost:input_type -> api.protobuf.PagingReq
+	99,  // 193: api.admin.v1.Admin.CreatePost:input_type -> api.admin.v1.CreatePostReq
+	103, // 194: api.admin.v1.Admin.GetPost:input_type -> api.admin.v1.GetPostReq
+	101, // 195: api.admin.v1.Admin.UpdatePost:input_type -> api.admin.v1.UpdatePostReq
+	104, // 196: api.admin.v1.Admin.DeletePost:input_type -> api.admin.v1.DeletePostReq
+	106, // 197: api.admin.v1.Admin.UpdatePostState:input_type -> api.admin.v1.UpdatePostStateReq
+	3,   // 198: api.admin.v1.Admin.Logout:output_type -> api.admin.v1.LogoutReply
+	1,   // 199: api.admin.v1.Admin.MiddlePassLogin:output_type -> api.admin.v1.LoginReply
+	1,   // 200: api.admin.v1.Admin.PassLogin:output_type -> api.admin.v1.LoginReply
+	1,   // 201: api.admin.v1.Admin.SmsLogin:output_type -> api.admin.v1.LoginReply
+	1,   // 202: api.admin.v1.Admin.EmailLogin:output_type -> api.admin.v1.LoginReply
+	2,   // 203: api.admin.v1.Admin.Register:output_type -> api.admin.v1.RegisterReply
+	8,   // 204: api.admin.v1.Admin.GetUserInfo:output_type -> api.admin.v1.User
+	9,   // 205: api.admin.v1.Admin.GetUserProfile:output_type -> api.admin.v1.GetUserProfileReply
+	10,  // 206: api.admin.v1.Admin.ListUserDomain:output_type -> api.admin.v1.ListUserDomainReply
+	11,  // 207: api.admin.v1.Admin.ListUserRole:output_type -> api.admin.v1.ListUserRoleReply
+	16,  // 208: api.admin.v1.Admin.ListUserRoleMenuTree:output_type -> api.admin.v1.ListUserRoleMenuTreeReply
+	18,  // 209: api.admin.v1.Admin.ListUserRolePermission:output_type -> api.admin.v1.ListUserRolePermissionReply
+	148, // 210: api.admin.v1.Admin.ListUser:output_type -> api.protobuf.PagingReply
+	20,  // 211: api.admin.v1.Admin.CreateUser:output_type -> api.admin.v1.CreateUserReply
+	8,   // 212: api.admin.v1.Admin.GetUser:output_type -> api.admin.v1.User
+	29,  // 213: api.admin.v1.Admin.UpdateUser:output_type -> api.admin.v1.UpdateUserReply
+	27,  // 214: api.admin.v1.Admin.DeleteUser:output_type -> api.admin.v1.DeleteUserReply
+	32,  // 215: api.admin.v1.Admin.ExistUserName:output_type -> api.admin.v1.ExistUserNameReply
+	22,  // 216: api.admin.v1.Admin.HandleUserDomain:output_type -> api.admin.v1.HandleUserDomainReply
+	24,  // 217: api.admin.v1.Admin.HandleUserDomainRole:output_type -> api.admin.v1.HandleUserDomainRoleReply
+	1,   // 218: api.admin.v1.Admin.LoginDomain:output_type -> api.admin.v1.LoginReply
+	2,   // 219: api.admin.v1.Admin.RegisterDomain:output_type -> api.admin.v1.RegisterReply
+	148, // 220: api.admin.v1.Admin.ListDomain:output_type -> api.protobuf.PagingReply
+	37,  // 221: api.admin.v1.Admin.ListDomainTree:output_type -> api.admin.v1.ListDomainTreeReply
+	39,  // 222: api.admin.v1.Admin.CreateDomain:output_type -> api.admin.v1.CreateDomainReply
+	33,  // 223: api.admin.v1.Admin.GetDomain:output_type -> api.admin.v1.Domain
+	41,  // 224: api.admin.v1.Admin.UpdateDomain:output_type -> api.admin.v1.UpdateDomainReply
+	46,  // 225: api.admin.v1.Admin.DeleteDomain:output_type -> api.admin.v1.DeleteDomainReply
+	43,  // 226: api.admin.v1.Admin.UpdateDomainState:output_type -> api.admin.v1.UpdateDomainStateReply
+	48,  // 227: api.admin.v1.Admin.ListDomainMenu:output_type -> api.admin.v1.ListDomainMenuReply
+	50,  // 228: api.admin.v1.Admin.HandleDomainMenu:output_type -> api.admin.v1.HandleDomainMenuReply
+	148, // 229: api.admin.v1.Admin.ListRole:output_type -> api.protobuf.PagingReply
+	53,  // 230: api.admin.v1.Admin.CreateRole:output_type -> api.admin.v1.CreateRoleReply
+	51,  // 231: api.admin.v1.Admin.GetRole:output_type -> api.admin.v1.Role
+	55,  // 232: api.admin.v1.Admin.UpdateRole:output_type -> api.admin.v1.UpdateRoleReply
+	57,  // 233: api.admin.v1.Admin.UpdateRoleState:output_type -> api.admin.v1.UpdateRoleStateReply
+	60,  // 234: api.admin.v1.Admin.DeleteRole:output_type -> api.admin.v1.DeleteRoleReply
+	62,  // 235: api.admin.v1.Admin.ListRoleMenu:output_type -> api.admin.v1.ListRoleMenuReply
+	64,  // 236: api.admin.v1.Admin.HandleRoleMenu:output_type -> api.admin.v1.HandleRoleMenuReply
+	66,  // 237: api.admin.v1.Admin.HandleRoleResource:output_type -> api.admin.v1.HandleRoleResourceReply
+	148, // 238: api.admin.v1.Admin.ListResource:output_type -> api.protobuf.PagingReply
+	68,  // 239: api.admin.v1.Admin.ListResourceGroup:output_type -> api.admin.v1.ListResourceGroupReply
+	70,  // 240: api.admin.v1.Admin.CreateResource:output_type -> api.admin.v1.CreateResourceReply
+	67,  // 241: api.admin.v1.Admin.GetResource:output_type -> api.admin.v1.Resource
+	72,  // 242: api.admin.v1.Admin.UpdateResource:output_type -> api.admin.v1.UpdateResourceReply
+	75,  // 243: api.admin.v1.Admin.DeleteResource:output_type -> api.admin.v1.DeleteResourceReply
+	148, // 244: api.admin.v1.Admin.ListMenu:output_type -> api.protobuf.PagingReply
+	80,  // 245: api.admin.v1.Admin.CreateMenu:output_type -> api.admin.v1.CreateMenuReply
+	87,  // 246: api.admin.v1.Admin.ListMenuTree:output_type -> api.admin.v1.ListMenuTreeReply
+	76,  // 247: api.admin.v1.Admin.GetMenu:output_type -> api.admin.v1.Menu
+	82,  // 248: api.admin.v1.Admin.UpdateMenu:output_type -> api.admin.v1.UpdateMenuReply
+	85,  // 249: api.admin.v1.Admin.DeleteMenu:output_type -> api.admin.v1.DeleteMenuReply
+	148, // 250: api.admin.v1.Admin.ListDept:output_type -> api.protobuf.PagingReply
+	90,  // 251: api.admin.v1.Admin.CreateDept:output_type -> api.admin.v1.CreateDeptReply
+	88,  // 252: api.admin.v1.Admin.GetDept:output_type -> api.admin.v1.Dept
+	92,  // 253: api.admin.v1.Admin.UpdateDept:output_type -> api.admin.v1.UpdateDeptReply
+	95,  // 254: api.admin.v1.Admin.DeleteDept:output_type -> api.admin.v1.DeleteDeptReply
+	97,  // 255: api.admin.v1.Admin.ListDeptTree:output_type -> api.admin.v1.ListDeptTreeReply
+	148, // 256: api.admin.v1.Admin.ListPost:output_type -> api.protobuf.PagingReply
+	100, // 257: api.admin.v1.Admin.CreatePost:output_type -> api.admin.v1.CreatePostReply
+	98,  // 258: api.admin.v1.Admin.GetPost:output_type -> api.admin.v1.Post
+	102, // 259: api.admin.v1.Admin.UpdatePost:output_type -> api.admin.v1.UpdatePostReply
+	105, // 260: api.admin.v1.Admin.DeletePost:output_type -> api.admin.v1.DeletePostReply
+	107, // 261: api.admin.v1.Admin.UpdatePostState:output_type -> api.admin.v1.UpdatePostStateReply
+	198, // [198:262] is the sub-list for method output_type
+	134, // [134:198] is the sub-list for method input_type
+	134, // [134:134] is the sub-list for extension type_name
+	134, // [134:134] is the sub-list for extension extendee
+	0,   // [0:134] is the sub-list for field type_name
 }
 
 func init() { file_admin_v1_admin_proto_init() }
@@ -11233,7 +11370,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[36].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateDomainReq); i {
+			switch v := v.(*ListDomainTreeReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11245,7 +11382,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[37].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateDomainReply); i {
+			switch v := v.(*ListDomainTreeReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11257,7 +11394,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[38].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateDomainReq); i {
+			switch v := v.(*CreateDomainReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11269,7 +11406,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[39].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateDomainReply); i {
+			switch v := v.(*CreateDomainReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11281,7 +11418,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[40].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateDomainStateReq); i {
+			switch v := v.(*UpdateDomainReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11293,7 +11430,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[41].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateDomainStateReply); i {
+			switch v := v.(*UpdateDomainReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11305,7 +11442,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[42].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetDomainReq); i {
+			switch v := v.(*UpdateDomainStateReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11317,7 +11454,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[43].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteDomainReq); i {
+			switch v := v.(*UpdateDomainStateReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11329,7 +11466,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[44].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteDomainReply); i {
+			switch v := v.(*GetDomainReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11341,7 +11478,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[45].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListDomainMenuReq); i {
+			switch v := v.(*DeleteDomainReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11353,7 +11490,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[46].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListDomainMenuReply); i {
+			switch v := v.(*DeleteDomainReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11365,7 +11502,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[47].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*HandleDomainMenuReq); i {
+			switch v := v.(*ListDomainMenuReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11377,7 +11514,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[48].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*HandleDomainMenuReply); i {
+			switch v := v.(*ListDomainMenuReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11389,7 +11526,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[49].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Role); i {
+			switch v := v.(*HandleDomainMenuReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11401,7 +11538,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[50].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateRoleReq); i {
+			switch v := v.(*HandleDomainMenuReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11413,7 +11550,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[51].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateRoleReply); i {
+			switch v := v.(*Role); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11425,7 +11562,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[52].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateRoleReq); i {
+			switch v := v.(*CreateRoleReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11437,7 +11574,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[53].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateRoleReply); i {
+			switch v := v.(*CreateRoleReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11449,7 +11586,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[54].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateRoleStateReq); i {
+			switch v := v.(*UpdateRoleReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11461,7 +11598,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[55].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateRoleStateReply); i {
+			switch v := v.(*UpdateRoleReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11473,7 +11610,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[56].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetRoleReq); i {
+			switch v := v.(*UpdateRoleStateReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11485,7 +11622,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[57].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteRoleReq); i {
+			switch v := v.(*UpdateRoleStateReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11497,7 +11634,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[58].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteRoleReply); i {
+			switch v := v.(*GetRoleReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11509,7 +11646,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[59].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListRoleMenuReq); i {
+			switch v := v.(*DeleteRoleReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11521,7 +11658,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[60].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListRoleMenuReply); i {
+			switch v := v.(*DeleteRoleReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11533,7 +11670,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[61].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*HandleRoleMenuReq); i {
+			switch v := v.(*ListRoleMenuReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11545,7 +11682,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[62].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*HandleRoleMenuReply); i {
+			switch v := v.(*ListRoleMenuReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11557,7 +11694,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[63].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*HandleRoleResourceReq); i {
+			switch v := v.(*HandleRoleMenuReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11569,7 +11706,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[64].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*HandleRoleResourceReply); i {
+			switch v := v.(*HandleRoleMenuReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11581,7 +11718,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[65].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Resource); i {
+			switch v := v.(*HandleRoleResourceReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11593,7 +11730,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[66].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListResourceGroupReply); i {
+			switch v := v.(*HandleRoleResourceReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11605,7 +11742,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[67].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateResourceReq); i {
+			switch v := v.(*Resource); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11617,7 +11754,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[68].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateResourceReply); i {
+			switch v := v.(*ListResourceGroupReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11629,7 +11766,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[69].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateResourceReq); i {
+			switch v := v.(*CreateResourceReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11641,7 +11778,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[70].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateResourceReply); i {
+			switch v := v.(*CreateResourceReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11653,7 +11790,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[71].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetResourceReq); i {
+			switch v := v.(*UpdateResourceReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11665,7 +11802,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[72].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteResourceReq); i {
+			switch v := v.(*UpdateResourceReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11677,7 +11814,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[73].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteResourceReply); i {
+			switch v := v.(*GetResourceReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11689,7 +11826,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[74].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Menu); i {
+			switch v := v.(*DeleteResourceReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11701,7 +11838,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[75].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MenuButton); i {
+			switch v := v.(*DeleteResourceReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11713,7 +11850,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[76].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MenuParameter); i {
+			switch v := v.(*Menu); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11725,7 +11862,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[77].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateMenuReq); i {
+			switch v := v.(*MenuButton); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11737,7 +11874,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[78].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateMenuReply); i {
+			switch v := v.(*MenuParameter); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11749,7 +11886,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[79].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateMenuReq); i {
+			switch v := v.(*CreateMenuReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11761,7 +11898,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[80].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateMenuReply); i {
+			switch v := v.(*CreateMenuReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11773,7 +11910,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[81].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetMenuReq); i {
+			switch v := v.(*UpdateMenuReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11785,7 +11922,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[82].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteMenuReq); i {
+			switch v := v.(*UpdateMenuReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11797,7 +11934,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[83].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteMenuReply); i {
+			switch v := v.(*GetMenuReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11809,7 +11946,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[84].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListMenuTreeReq); i {
+			switch v := v.(*DeleteMenuReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11821,7 +11958,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[85].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListMenuTreeReply); i {
+			switch v := v.(*DeleteMenuReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11833,7 +11970,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[86].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Dept); i {
+			switch v := v.(*ListMenuTreeReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11845,7 +11982,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[87].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateDeptReq); i {
+			switch v := v.(*ListMenuTreeReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11857,7 +11994,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[88].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateDeptReply); i {
+			switch v := v.(*Dept); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11869,7 +12006,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[89].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateDeptReq); i {
+			switch v := v.(*CreateDeptReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11881,7 +12018,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[90].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateDeptReply); i {
+			switch v := v.(*CreateDeptReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11893,7 +12030,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[91].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetDeptReq); i {
+			switch v := v.(*UpdateDeptReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11905,7 +12042,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[92].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteDeptReq); i {
+			switch v := v.(*UpdateDeptReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11917,7 +12054,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[93].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteDeptReply); i {
+			switch v := v.(*GetDeptReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11929,7 +12066,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[94].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListDeptTreeReq); i {
+			switch v := v.(*DeleteDeptReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11941,7 +12078,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[95].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListDeptTreeReply); i {
+			switch v := v.(*DeleteDeptReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11953,7 +12090,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[96].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Post); i {
+			switch v := v.(*ListDeptTreeReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11965,7 +12102,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[97].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreatePostReq); i {
+			switch v := v.(*ListDeptTreeReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11977,7 +12114,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[98].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreatePostReply); i {
+			switch v := v.(*Post); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11989,7 +12126,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[99].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdatePostReq); i {
+			switch v := v.(*CreatePostReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12001,7 +12138,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[100].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdatePostReply); i {
+			switch v := v.(*CreatePostReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12013,7 +12150,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[101].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetPostReq); i {
+			switch v := v.(*UpdatePostReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12025,7 +12162,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[102].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeletePostReq); i {
+			switch v := v.(*UpdatePostReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12037,7 +12174,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[103].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeletePostReply); i {
+			switch v := v.(*GetPostReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12049,7 +12186,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[104].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdatePostStateReq); i {
+			switch v := v.(*DeletePostReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12061,7 +12198,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[105].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdatePostStateReply); i {
+			switch v := v.(*DeletePostReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12073,7 +12210,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[106].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PassLoginReq_PassField); i {
+			switch v := v.(*UpdatePostStateReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12085,7 +12222,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[107].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SmsLoginReq_SmsField); i {
+			switch v := v.(*UpdatePostStateReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12097,7 +12234,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[108].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*EmailLoginReq_EmailField); i {
+			switch v := v.(*PassLoginReq_PassField); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12109,7 +12246,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[109].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListUserRoleMenuTreeReply_Deprecated_MenuMeta); i {
+			switch v := v.(*SmsLoginReq_SmsField); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12121,7 +12258,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[110].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListUserRoleMenuTreeReply_Deprecated_Menu); i {
+			switch v := v.(*EmailLoginReq_EmailField); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12133,7 +12270,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[111].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*RouterMenu_Meta); i {
+			switch v := v.(*ListUserRoleMenuTreeReply_Deprecated_MenuMeta); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12145,7 +12282,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[112].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*HandleUserDomainReq_Data); i {
+			switch v := v.(*ListUserRoleMenuTreeReply_Deprecated_Menu); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12157,7 +12294,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[113].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*HandleUserDomainRoleReq_Data); i {
+			switch v := v.(*RouterMenu_Meta); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12169,7 +12306,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[114].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateUserReq_Data); i {
+			switch v := v.(*HandleUserDomainReq_Data); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12181,7 +12318,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[115].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateDomainReq_Data); i {
+			switch v := v.(*HandleUserDomainRoleReq_Data); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12193,7 +12330,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[116].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateDomainStateReq_Data); i {
+			switch v := v.(*UpdateUserReq_Data); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12205,7 +12342,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[117].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*HandleDomainMenuReq_Menu); i {
+			switch v := v.(*UpdateDomainReq_Data); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12217,7 +12354,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[118].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*HandleDomainMenuReq_Data); i {
+			switch v := v.(*UpdateDomainStateReq_Data); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12229,7 +12366,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[119].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateRoleReq_Data); i {
+			switch v := v.(*HandleDomainMenuReq_Menu); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12241,7 +12378,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[120].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateRoleStateReq_Data); i {
+			switch v := v.(*HandleDomainMenuReq_Data); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12253,7 +12390,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[121].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*HandleRoleMenuReq_Menu); i {
+			switch v := v.(*UpdateRoleReq_Data); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12265,7 +12402,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[122].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*HandleRoleMenuReq_Data); i {
+			switch v := v.(*UpdateRoleStateReq_Data); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12277,7 +12414,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[123].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*HandleRoleResourceReq_Data); i {
+			switch v := v.(*HandleRoleMenuReq_Menu); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12289,7 +12426,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[124].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateResourceReq_Data); i {
+			switch v := v.(*HandleRoleMenuReq_Data); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12301,7 +12438,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[125].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateMenuReq_Data); i {
+			switch v := v.(*HandleRoleResourceReq_Data); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12313,7 +12450,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[126].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateDeptReq_Data); i {
+			switch v := v.(*UpdateResourceReq_Data); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12325,7 +12462,7 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[127].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdatePostReq_Data); i {
+			switch v := v.(*UpdateMenuReq_Data); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -12337,6 +12474,30 @@ func file_admin_v1_admin_proto_init() {
 			}
 		}
 		file_admin_v1_admin_proto_msgTypes[128].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UpdateDeptReq_Data); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_admin_v1_admin_proto_msgTypes[129].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UpdatePostReq_Data); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_admin_v1_admin_proto_msgTypes[130].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*UpdatePostStateReq_Data); i {
 			case 0:
 				return &v.state
@@ -12351,29 +12512,29 @@ func file_admin_v1_admin_proto_init() {
 	}
 	file_admin_v1_admin_proto_msgTypes[15].OneofWrappers = []interface{}{}
 	file_admin_v1_admin_proto_msgTypes[19].OneofWrappers = []interface{}{}
-	file_admin_v1_admin_proto_msgTypes[36].OneofWrappers = []interface{}{}
-	file_admin_v1_admin_proto_msgTypes[50].OneofWrappers = []interface{}{}
-	file_admin_v1_admin_proto_msgTypes[67].OneofWrappers = []interface{}{}
-	file_admin_v1_admin_proto_msgTypes[77].OneofWrappers = []interface{}{}
-	file_admin_v1_admin_proto_msgTypes[87].OneofWrappers = []interface{}{}
-	file_admin_v1_admin_proto_msgTypes[97].OneofWrappers = []interface{}{}
-	file_admin_v1_admin_proto_msgTypes[111].OneofWrappers = []interface{}{}
-	file_admin_v1_admin_proto_msgTypes[114].OneofWrappers = []interface{}{}
-	file_admin_v1_admin_proto_msgTypes[115].OneofWrappers = []interface{}{}
+	file_admin_v1_admin_proto_msgTypes[38].OneofWrappers = []interface{}{}
+	file_admin_v1_admin_proto_msgTypes[52].OneofWrappers = []interface{}{}
+	file_admin_v1_admin_proto_msgTypes[69].OneofWrappers = []interface{}{}
+	file_admin_v1_admin_proto_msgTypes[79].OneofWrappers = []interface{}{}
+	file_admin_v1_admin_proto_msgTypes[89].OneofWrappers = []interface{}{}
+	file_admin_v1_admin_proto_msgTypes[99].OneofWrappers = []interface{}{}
+	file_admin_v1_admin_proto_msgTypes[113].OneofWrappers = []interface{}{}
 	file_admin_v1_admin_proto_msgTypes[116].OneofWrappers = []interface{}{}
-	file_admin_v1_admin_proto_msgTypes[119].OneofWrappers = []interface{}{}
-	file_admin_v1_admin_proto_msgTypes[124].OneofWrappers = []interface{}{}
-	file_admin_v1_admin_proto_msgTypes[125].OneofWrappers = []interface{}{}
+	file_admin_v1_admin_proto_msgTypes[117].OneofWrappers = []interface{}{}
+	file_admin_v1_admin_proto_msgTypes[118].OneofWrappers = []interface{}{}
+	file_admin_v1_admin_proto_msgTypes[121].OneofWrappers = []interface{}{}
 	file_admin_v1_admin_proto_msgTypes[126].OneofWrappers = []interface{}{}
 	file_admin_v1_admin_proto_msgTypes[127].OneofWrappers = []interface{}{}
 	file_admin_v1_admin_proto_msgTypes[128].OneofWrappers = []interface{}{}
+	file_admin_v1_admin_proto_msgTypes[129].OneofWrappers = []interface{}{}
+	file_admin_v1_admin_proto_msgTypes[130].OneofWrappers = []interface{}{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_admin_v1_admin_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   129,
+			NumMessages:   131,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

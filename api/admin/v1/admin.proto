@@ -258,6 +258,15 @@ service Admin {
       get: "/admin/v1/domains"
     };
   }
+  // 获取领域树形列表
+  rpc ListDomainTree (ListDomainTreeReq) returns (ListDomainTreeReply) {
+    option (google.api.http) = {
+      get: "/admin/v1/domains/{id}/trees"
+      additional_bindings {
+        get: "/admin/v1/domains/trees"
+      }
+    };
+  }
   // 创建领域
   rpc CreateDomain (CreateDomainReq) returns (CreateDomainReply) {
     option (google.api.http) = {
@@ -859,6 +868,7 @@ message Domain {
   int32 sort = 6;
   api.protobuf.DomainState state = 7;
   uint64 default_role_id = 8;
+  repeated Domain children = 9;
 }
 
 // 请求 - 领域登录
@@ -875,6 +885,15 @@ message RegisterDomainReq {
   string domain = 1 [(validate.rules).string = {min_len: 1, max_len: 20}];
   // 请求体
   Auth auth = 2 [(validate.rules).message = {required: true}];
+}
+
+
+message ListDomainTreeReq {
+  uint64 id = 1;
+}
+message ListDomainTreeReply {
+  int32 total = 1;
+  repeated Domain items = 2;
 }
 
 // 请求 - 创建领域

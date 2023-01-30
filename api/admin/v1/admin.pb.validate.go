@@ -4680,6 +4680,40 @@ func (m *Domain) validate(all bool) error {
 
 	// no validation rules for DefaultRoleId
 
+	for idx, item := range m.GetChildren() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, DomainValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, DomainValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return DomainValidationError{
+					field:  fmt.Sprintf("Children[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
 	if len(errors) > 0 {
 		return DomainMultiError(errors)
 	}
@@ -5060,6 +5094,248 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = RegisterDomainReqValidationError{}
+
+// Validate checks the field values on ListDomainTreeReq with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *ListDomainTreeReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListDomainTreeReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListDomainTreeReqMultiError, or nil if none found.
+func (m *ListDomainTreeReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListDomainTreeReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	if len(errors) > 0 {
+		return ListDomainTreeReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListDomainTreeReqMultiError is an error wrapping multiple validation errors
+// returned by ListDomainTreeReq.ValidateAll() if the designated constraints
+// aren't met.
+type ListDomainTreeReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListDomainTreeReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListDomainTreeReqMultiError) AllErrors() []error { return m }
+
+// ListDomainTreeReqValidationError is the validation error returned by
+// ListDomainTreeReq.Validate if the designated constraints aren't met.
+type ListDomainTreeReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListDomainTreeReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListDomainTreeReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListDomainTreeReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListDomainTreeReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListDomainTreeReqValidationError) ErrorName() string {
+	return "ListDomainTreeReqValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListDomainTreeReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListDomainTreeReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListDomainTreeReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListDomainTreeReqValidationError{}
+
+// Validate checks the field values on ListDomainTreeReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListDomainTreeReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListDomainTreeReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListDomainTreeReplyMultiError, or nil if none found.
+func (m *ListDomainTreeReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListDomainTreeReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Total
+
+	for idx, item := range m.GetItems() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListDomainTreeReplyValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListDomainTreeReplyValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListDomainTreeReplyValidationError{
+					field:  fmt.Sprintf("Items[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListDomainTreeReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListDomainTreeReplyMultiError is an error wrapping multiple validation
+// errors returned by ListDomainTreeReply.ValidateAll() if the designated
+// constraints aren't met.
+type ListDomainTreeReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListDomainTreeReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListDomainTreeReplyMultiError) AllErrors() []error { return m }
+
+// ListDomainTreeReplyValidationError is the validation error returned by
+// ListDomainTreeReply.Validate if the designated constraints aren't met.
+type ListDomainTreeReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListDomainTreeReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListDomainTreeReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListDomainTreeReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListDomainTreeReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListDomainTreeReplyValidationError) ErrorName() string {
+	return "ListDomainTreeReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListDomainTreeReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListDomainTreeReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListDomainTreeReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListDomainTreeReplyValidationError{}
 
 // Validate checks the field values on CreateDomainReq with the rules defined
 // in the proto definition for this message. If any rules are violated, the

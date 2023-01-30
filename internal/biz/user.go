@@ -307,50 +307,29 @@ func (ac *UserUsecase) ListRoleAll(ctx context.Context, g *User) (roles []*Role,
 	return ac.biz.roleRepo.ListByIDs(ctx, roleIds...)
 }
 
-// ListUserRoleMenuAll 用户角色菜单列表(包含权限标识)
-func (ac *UserUsecase) ListRoleMenuAll(ctx context.Context, g *User) ([]*Menu, error) {
+// ListRoleMenu 用户角色菜单列表(包含权限标识)
+func (ac *UserUsecase) ListRoleMenu(ctx context.Context, g *User) ([]*Menu, error) {
 	roleIds, err := ac.ListRoleID(ctx, g)
 	if err != nil {
 		return nil, errors.Errorf("用户角色查询失败 %v", err)
 	}
 
-	if len(g.Roles) < 1 {
-		return ac.biz.roleRepo.ListMenuAndParentByIDs(ctx, roleIds...)
-	}
-
-	roleIdsReq := []uint{}
-	for _, v := range g.Roles {
-		for _, a := range roleIds {
-			if a == v.ID {
-				roleIdsReq = append(roleIdsReq, v.ID)
-				break
+	roleIdsRes := make([]uint, len(roleIds))
+	if len(g.Roles) > 1 {
+		for _, v := range g.Roles {
+			for _, a := range roleIds {
+				if a == v.ID {
+					roleIdsRes = append(roleIdsRes, v.ID)
+					break
+				}
 			}
 		}
-	}
-
-	return ac.biz.roleRepo.ListMenuAndParentByIDs(ctx, roleIdsReq...)
-}
-
-// ListRoleMenuLastOne 用户角色菜单列表-最后一次使用(包含权限标识)
-func (ac *UserUsecase) ListRoleMenuLastOne(ctx context.Context, g *User) ([]*Menu, error) {
-	roleIds, err := ac.ListRoleID(ctx, g)
-	if err != nil {
-		return nil, errors.Errorf("用户角色查询失败 %v", err)
-	}
-
-	if len(g.Roles) < 1 {
-		return ac.biz.roleRepo.ListMenuAndParentByIDs(ctx, roleIds...)
-	}
-
-	roleIdsReq := []uint{}
-	for _, v := range g.Roles {
-		for _, a := range roleIds {
-			if a == v.ID {
-				roleIdsReq = append(roleIdsReq, v.ID)
-				break
-			}
+		if len(roleIdsRes) < 1 {
+			return nil, nil
 		}
+	} else {
+		roleIdsRes = roleIds
 	}
 
-	return ac.biz.roleRepo.ListMenuAndParentByIDs(ctx, roleIdsReq...)
+	return ac.biz.roleRepo.ListMenuAndParentByIDs(ctx, roleIdsRes...)
 }

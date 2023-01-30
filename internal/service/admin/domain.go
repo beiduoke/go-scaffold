@@ -24,6 +24,27 @@ func TransformDomain(data *biz.Domain) *v1.Domain {
 	}
 }
 
+// TreeMenu 部门树形
+func TreeDomain(domains []*biz.Domain, pid uint) []*v1.Domain {
+	list := make([]*v1.Domain, 0)
+	for _, domain := range domains {
+		if domain.ParentID == pid {
+			m := TransformDomain(domain)
+			m.Children = append(m.Children, TreeDomain(domains, domain.ID)...)
+			list = append(list, m)
+		}
+	}
+	return list
+}
+
+// GetTreeDomain 列表部门-树形
+func (s *AdminService) ListDomainTree(ctx context.Context, in *v1.ListDomainTreeReq) (*v1.ListDomainTreeReply, error) {
+	results := s.domainCase.GetTree(ctx, uint(in.GetId()))
+	return &v1.ListDomainTreeReply{
+		Items: TreeDomain(results, uint(in.GetId())),
+	}, nil
+}
+
 // ListDomain 列表-领域
 func (s *AdminService) ListDomain(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	results, total := s.domainCase.ListPage(ctx, in.GetPage(), in.GetPageSize(), in.GetQuery(), in.GetOrderBy())

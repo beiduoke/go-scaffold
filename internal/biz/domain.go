@@ -206,3 +206,10 @@ func (uc *DomainUsecase) ListMenuByID(ctx context.Context, g *Domain) ([]*Menu, 
 	uc.log.WithContext(ctx).Infof("ListMenuByIDs: %v", g)
 	return uc.biz.domainRepo.ListMenuByIDs(ctx, g.ID)
 }
+
+// GetTree 获取领域树形
+func (uc *DomainUsecase) GetTree(ctx context.Context, id uint) []*Domain {
+	uc.log.WithContext(ctx).Infof("GetTree")
+	menus, _ := uc.biz.domainRepo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithOrder("sort", false)))
+	return menus
+}

@@ -84,6 +84,8 @@ type AdminClient interface {
 	RegisterDomain(ctx context.Context, in *RegisterDomainReq, opts ...grpc.CallOption) (*RegisterReply, error)
 	// 列表领域
 	ListDomain(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
+	// 获取领域树形列表
+	ListDomainTree(ctx context.Context, in *ListDomainTreeReq, opts ...grpc.CallOption) (*ListDomainTreeReply, error)
 	// 创建领域
 	CreateDomain(ctx context.Context, in *CreateDomainReq, opts ...grpc.CallOption) (*CreateDomainReply, error)
 	// 获取领域
@@ -378,6 +380,15 @@ func (c *adminClient) RegisterDomain(ctx context.Context, in *RegisterDomainReq,
 func (c *adminClient) ListDomain(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
 	out := new(protobuf.PagingReply)
 	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListDomain", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) ListDomainTree(ctx context.Context, in *ListDomainTreeReq, opts ...grpc.CallOption) (*ListDomainTreeReply, error) {
+	out := new(ListDomainTreeReply)
+	err := c.cc.Invoke(ctx, "/api.admin.v1.Admin/ListDomainTree", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -808,6 +819,8 @@ type AdminServer interface {
 	RegisterDomain(context.Context, *RegisterDomainReq) (*RegisterReply, error)
 	// 列表领域
 	ListDomain(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	// 获取领域树形列表
+	ListDomainTree(context.Context, *ListDomainTreeReq) (*ListDomainTreeReply, error)
 	// 创建领域
 	CreateDomain(context.Context, *CreateDomainReq) (*CreateDomainReply, error)
 	// 获取领域
@@ -966,6 +979,9 @@ func (UnimplementedAdminServer) RegisterDomain(context.Context, *RegisterDomainR
 }
 func (UnimplementedAdminServer) ListDomain(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDomain not implemented")
+}
+func (UnimplementedAdminServer) ListDomainTree(context.Context, *ListDomainTreeReq) (*ListDomainTreeReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListDomainTree not implemented")
 }
 func (UnimplementedAdminServer) CreateDomain(context.Context, *CreateDomainReq) (*CreateDomainReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateDomain not implemented")
@@ -1510,6 +1526,24 @@ func _Admin_ListDomain_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServer).ListDomain(ctx, req.(*protobuf.PagingReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_ListDomainTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListDomainTreeReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).ListDomainTree(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.admin.v1.Admin/ListDomainTree",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).ListDomainTree(ctx, req.(*ListDomainTreeReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2332,6 +2366,10 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListDomain",
 			Handler:    _Admin_ListDomain_Handler,
+		},
+		{
+			MethodName: "ListDomainTree",
+			Handler:    _Admin_ListDomainTree_Handler,
 		},
 		{
 			MethodName: "CreateDomain",
