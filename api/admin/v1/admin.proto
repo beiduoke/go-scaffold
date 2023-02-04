@@ -99,6 +99,10 @@ service Admin {
     option (google.api.http) = {
       post: "/admin/v1/auth/passLogin"
       body: "auth"
+      additional_bindings {
+        post: "/admin/v1/auth/login"
+        body: "auth"
+      }
     };
   }
   // 短信登陆
@@ -433,7 +437,10 @@ service Admin {
   // 获取树形菜单
   rpc ListMenuTree (ListMenuTreeReq) returns (ListMenuTreeReply) {
     option (google.api.http) = {
-      get: "/admin/v1/menus/{parentId}/trees"
+      get: "/admin/v1/menus/{id}/trees"
+      additional_bindings {
+        get: "/admin/v1/menus/trees"
+      }
     };
   }
   // 获取菜单
@@ -491,7 +498,7 @@ service Admin {
   // 获取树形部门
   rpc ListDeptTree (ListDeptTreeReq) returns (ListDeptTreeReply) {
     option (google.api.http) = {
-      get: "/admin/v1/depts/{parentId}/trees"
+      get: "/admin/v1/depts/{id}/trees"
     };
   }
 
@@ -589,7 +596,7 @@ message SmsLoginReq {
 message EmailLoginReq {
   message EmailField {
     string email = 1 [(validate.rules).string.email = true];
-    string code = 2 [(validate.rules).string.pattern = "^[0-9]{6}$"];
+    string code = 2 [(validate.rules).string.pattern = "^[0-9]{4,6}$"];
   }
   // 请求体
   EmailField auth = 1 [(validate.rules).message = {required: true}];
@@ -1317,7 +1324,7 @@ message DeleteMenuReply {
 
 // 请求 - 获取树形菜单
 message ListMenuTreeReq {
-  uint64 parentId = 1 [(validate.rules).uint64 = {gte: 0}];
+  uint64 id = 1 [(validate.rules).uint64 = {gte: 0}];
 }
 
 // 回应 - 获取树形菜单
@@ -1394,7 +1401,7 @@ message DeleteDeptReply {
 
 // 请求 - 获取树形部门
 message ListDeptTreeReq {
-  uint64 parentId = 1 [(validate.rules).uint64 = {gte: 0}];
+  uint64 id = 1 [(validate.rules).uint64 = {gte: 0}];
 }
 
 // 回应 - 获取树形部门

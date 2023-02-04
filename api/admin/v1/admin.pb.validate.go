@@ -12267,9 +12267,9 @@ func (m *ListMenuTreeReq) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetParentId() < 0 {
+	if m.GetId() < 0 {
 		err := ListMenuTreeReqValidationError{
-			field:  "ParentId",
+			field:  "Id",
 			reason: "value must be greater than or equal to 0",
 		}
 		if !all {
@@ -13652,9 +13652,9 @@ func (m *ListDeptTreeReq) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetParentId() < 0 {
+	if m.GetId() < 0 {
 		err := ListDeptTreeReqValidationError{
-			field:  "ParentId",
+			field:  "Id",
 			reason: "value must be greater than or equal to 0",
 		}
 		if !all {
@@ -15551,7 +15551,7 @@ func (m *EmailLoginReq_EmailField) validate(all bool) error {
 	if !_EmailLoginReq_EmailField_Code_Pattern.MatchString(m.GetCode()) {
 		err := EmailLoginReq_EmailFieldValidationError{
 			field:  "Code",
-			reason: "value does not match regex pattern \"^[0-9]{6}$\"",
+			reason: "value does not match regex pattern \"^[0-9]{4,6}$\"",
 		}
 		if !all {
 			return err
@@ -15689,7 +15689,7 @@ var _ interface {
 	ErrorName() string
 } = EmailLoginReq_EmailFieldValidationError{}
 
-var _EmailLoginReq_EmailField_Code_Pattern = regexp.MustCompile("^[0-9]{6}$")
+var _EmailLoginReq_EmailField_Code_Pattern = regexp.MustCompile("^[0-9]{4,6}$")
 
 // Validate checks the field values on
 // ListUserRoleMenuTreeReply_Deprecated_MenuMeta with the rules defined in the

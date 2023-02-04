@@ -42,17 +42,21 @@ type AdminClient interface {
 	// 当前登录用户概述
 	GetUserProfile(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserProfileReply, error)
 	// // 获取用户菜单 - 弃用
-	// rpc ListUserMenu (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
-	//   option (google.api.http) = {
-	//     get: "/admin/v1/users/menus"
-	//   };
-	// }
+	//
+	//	rpc ListUserMenu (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+	//	  option (google.api.http) = {
+	//	    get: "/admin/v1/users/menus"
+	//	  };
+	//	}
+	//
 	// // 获取用户菜单-树形 - 弃用
-	// rpc ListUserMenuTree (google.protobuf.Empty) returns (UserMenuTreeReply) {
-	//   option (google.api.http) = {
-	//     get: "/admin/v1/users/menus/trees"
-	//   };
-	// }
+	//
+	//	rpc ListUserMenuTree (google.protobuf.Empty) returns (UserMenuTreeReply) {
+	//	  option (google.api.http) = {
+	//	    get: "/admin/v1/users/menus/trees"
+	//	  };
+	//	}
+	//
 	// 当前登录用户拥有领域
 	ListUserDomain(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserDomainReply, error)
 	// 当前登录用户拥有角色
@@ -777,17 +781,21 @@ type AdminServer interface {
 	// 当前登录用户概述
 	GetUserProfile(context.Context, *emptypb.Empty) (*GetUserProfileReply, error)
 	// // 获取用户菜单 - 弃用
-	// rpc ListUserMenu (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
-	//   option (google.api.http) = {
-	//     get: "/admin/v1/users/menus"
-	//   };
-	// }
+	//
+	//	rpc ListUserMenu (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+	//	  option (google.api.http) = {
+	//	    get: "/admin/v1/users/menus"
+	//	  };
+	//	}
+	//
 	// // 获取用户菜单-树形 - 弃用
-	// rpc ListUserMenuTree (google.protobuf.Empty) returns (UserMenuTreeReply) {
-	//   option (google.api.http) = {
-	//     get: "/admin/v1/users/menus/trees"
-	//   };
-	// }
+	//
+	//	rpc ListUserMenuTree (google.protobuf.Empty) returns (UserMenuTreeReply) {
+	//	  option (google.api.http) = {
+	//	    get: "/admin/v1/users/menus/trees"
+	//	  };
+	//	}
+	//
 	// 当前登录用户拥有领域
 	ListUserDomain(context.Context, *emptypb.Empty) (*ListUserDomainReply, error)
 	// 当前登录用户拥有角色

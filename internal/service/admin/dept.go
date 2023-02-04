@@ -40,9 +40,9 @@ func TreeDept(depts []*biz.Dept, pid uint) []*v1.Dept {
 
 // GetTreeDept 列表部门-树形
 func (s *AdminService) ListDeptTree(ctx context.Context, in *v1.ListDeptTreeReq) (*v1.ListDeptTreeReply, error) {
-	results := s.deptCase.GetTree(ctx, uint(in.GetParentId()))
+	results := s.deptCase.GetTree(ctx, uint(in.GetId()))
 	return &v1.ListDeptTreeReply{
-		Items: TreeDept(results, uint(in.GetParentId())),
+		Items: TreeDept(results, uint(in.GetId())),
 	}, nil
 }
 

@@ -52,9 +52,10 @@ func TreeMenu(menus []*biz.Menu, pid uint) []*v1.Menu {
 
 // GetTreeMenu 列表菜单-树形
 func (s *AdminService) ListMenuTree(ctx context.Context, in *v1.ListMenuTreeReq) (*v1.ListMenuTreeReply, error) {
-	results := s.menuCase.GetTree(ctx, uint(in.GetParentId()))
+	items, total := s.menuCase.ListAll(ctx)
 	return &v1.ListMenuTreeReply{
-		Items: TreeMenu(results, uint(in.GetParentId())),
+		Items: TreeMenu(items, uint(in.GetId())),
+		Total: int32(total),
 	}, nil
 }
 

@@ -232,14 +232,14 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.DeleteDeptReply'
-    /admin/v1/depts/{parentId}/trees:
+    /admin/v1/depts/{id}/trees:
         get:
             tags:
                 - Admin
             description: 获取树形部门
             operationId: Admin_ListDeptTree
             parameters:
-                - name: parentId
+                - name: id
                   in: path
                   required: true
                   schema:
@@ -623,14 +623,14 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.DeleteMenuReply'
-    /admin/v1/menus/{parentId}/trees:
+    /admin/v1/menus/{id}/trees:
         get:
             tags:
                 - Admin
             description: 获取树形菜单
             operationId: Admin_ListMenuTree
             parameters:
-                - name: parentId
+                - name: id
                   in: path
                   required: true
                   schema:

@@ -2,7 +2,6 @@ package biz
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
@@ -107,7 +106,6 @@ func (uc *MenuUsecase) Update(ctx context.Context, g *Menu) error {
 	if err := mergo.Merge(menu, *g, mergo.WithOverride); err != nil {
 		return errors.Errorf("数据合并失败：%v", err)
 	}
-	fmt.Println(menu.Component, "384837373737373737337373737")
 	_, err := uc.repo.Update(ctx, menu)
 	return err
 }
@@ -115,7 +113,7 @@ func (uc *MenuUsecase) Update(ctx context.Context, g *Menu) error {
 // List 菜单列表全部
 func (uc *MenuUsecase) ListAll(ctx context.Context) ([]*Menu, int64) {
 	uc.log.WithContext(ctx).Infof("MenuList")
-	return uc.repo.ListPage(ctx, pagination.NewPagination())
+	return uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithOrder("sort", false)))
 }
 
 // List 菜单列表分页
@@ -137,13 +135,6 @@ func (uc *MenuUsecase) ListPage(ctx context.Context, pageNum, pageSize int32, qu
 		pagination.WithOrders(orders...),
 	)
 	return uc.repo.ListPage(ctx, page)
-}
-
-// GetTree 获取菜单树形
-func (uc *MenuUsecase) GetTree(ctx context.Context, id uint) []*Menu {
-	uc.log.WithContext(ctx).Infof("GetTree")
-	menus, _ := uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithOrder("sort", false)))
-	return menus
 }
 
 // GetID 根据角色ID菜单

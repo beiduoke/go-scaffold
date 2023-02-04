@@ -60,6 +60,40 @@
         ]
       }
     },
+    "/admin/v1/auth/login": {
+      "post": {
+        "summary": "密码登陆",
+        "operationId": "Admin_PassLogin2",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1LoginReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "请求体",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PassLoginReqPassField"
+            }
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/admin/v1/auth/logout": {
       "get": {
         "summary": "登出",
@@ -457,7 +491,7 @@
         ]
       }
     },
-    "/admin/v1/depts/{parentId}/trees": {
+    "/admin/v1/depts/{id}/trees": {
       "get": {
         "summary": "获取树形部门",
         "operationId": "Admin_ListDeptTree",
@@ -477,7 +511,7 @@
         },
         "parameters": [
           {
-            "name": "parentId",
+            "name": "id",
             "in": "path",
             "required": true,
             "type": "string",
@@ -1044,6 +1078,38 @@
         ]
       }
     },
+    "/admin/v1/menus/trees": {
+      "get": {
+        "summary": "获取树形菜单",
+        "operationId": "Admin_ListMenuTree2",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListMenuTreeReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/admin/v1/menus/{id}": {
       "get": {
         "summary": "获取菜单",
@@ -1144,7 +1210,7 @@
         ]
       }
     },
-    "/admin/v1/menus/{parentId}/trees": {
+    "/admin/v1/menus/{id}/trees": {
       "get": {
         "summary": "获取树形菜单",
         "operationId": "Admin_ListMenuTree",
@@ -1164,7 +1230,7 @@
         },
         "parameters": [
           {
-            "name": "parentId",
+            "name": "id",
             "in": "path",
             "required": true,
             "type": "string",
