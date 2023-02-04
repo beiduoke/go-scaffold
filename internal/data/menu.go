@@ -201,7 +201,7 @@ func (r *MenuRepo) ListAll(ctx context.Context) (menus []*biz.Menu, err error) {
 }
 
 func (r *MenuRepo) ListPage(ctx context.Context, handler pagination.PaginationHandler) (menus []*biz.Menu, total int64) {
-	db := r.data.DBD(ctx).Model(&SysMenu{}).Debug()
+	db := r.data.DB(ctx).Model(&SysMenu{}).Debug()
 	sysMenus := []*SysMenu{}
 	// 查询条件
 	for _, v := range handler.GetConditions() {
@@ -215,6 +215,10 @@ func (r *MenuRepo) ListPage(ctx context.Context, handler pagination.PaginationHa
 	if !handler.GetNopaging() {
 		db = db.Count(&total).Offset(handler.GetPageOffset())
 	}
+
+	r.data.DomainID(ctx)
+	r.data.db.Model(&SysDomain{})
+	// db.Where()
 
 	result := db.Limit(int(handler.GetPageSize())).Find(&sysMenus)
 	if result.Error != nil {
