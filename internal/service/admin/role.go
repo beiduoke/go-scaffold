@@ -58,7 +58,7 @@ func (s *AdminService) CreateRole(ctx context.Context, in *v1.CreateRoleReq) (*v
 	return &v1.CreateRoleReply{
 		Success: true,
 		Message: "创建成功",
-		Data:    data,
+		Result:  data,
 	}, nil
 }
 

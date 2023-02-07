@@ -68,7 +68,7 @@ func (s *AdminService) CreateResource(ctx context.Context, in *v1.CreateResource
 	return &v1.CreateResourceReply{
 		Success: true,
 		Message: "创建成功",
-		Data:    data,
+		Result:  data,
 	}, nil
 }
 

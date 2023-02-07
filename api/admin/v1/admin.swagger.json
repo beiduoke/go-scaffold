@@ -2877,7 +2877,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -2915,7 +2915,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -2954,7 +2954,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -3031,7 +3031,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -3068,7 +3068,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -3107,7 +3107,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -3148,7 +3148,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -3199,7 +3199,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -3214,7 +3214,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -3229,7 +3229,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -3238,13 +3238,14 @@
     "v1DeletePostReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -3259,7 +3260,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -3274,7 +3275,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -3289,7 +3290,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -3387,7 +3388,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -3426,7 +3427,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -3475,7 +3476,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -3524,7 +3525,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -3777,7 +3778,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -3851,7 +3852,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -3967,7 +3968,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -4004,7 +4005,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -4042,7 +4043,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -4065,7 +4066,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -4141,7 +4142,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -4177,7 +4178,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -4200,7 +4201,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -4238,7 +4239,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -4278,7 +4279,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },
@@ -4301,7 +4302,7 @@
         "message": {
           "type": "string"
         },
-        "data": {
+        "result": {
           "$ref": "#/definitions/protobufAny"
         }
       },

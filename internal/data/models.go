@@ -36,6 +36,7 @@ type DomainModel struct {
 	DomainID  uint           `gorm:"type:bigint(20);column:domain_id;not null;default:0;index:idx_domain_id_data;comment:领域ID;"`
 }
 
+// SysDomain 领域
 type SysDomain struct {
 	Model
 	Code          string     `gorm:"type:varchar(100);column:code;not null;index;comment:领域编码;"`

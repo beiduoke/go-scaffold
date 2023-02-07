@@ -83,7 +83,7 @@ func (s *AdminService) CreateUser(ctx context.Context, in *v1.CreateUserReq) (*v
 	return &v1.CreateUserReply{
 		Success: true,
 		Message: "创建成功",
-		Data:    data,
+		Result:  data,
 	}, nil
 }
 

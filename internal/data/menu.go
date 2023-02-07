@@ -216,9 +216,13 @@ func (r *MenuRepo) ListPage(ctx context.Context, handler pagination.PaginationHa
 		db = db.Count(&total).Offset(handler.GetPageOffset())
 	}
 
-	r.data.DomainID(ctx)
-	r.data.db.Model(&SysDomain{})
-	// db.Where()
+	if domainId := r.data.DomainID(ctx); domainId > 0 {
+		var sysDomainMenus []int64
+		result := r.data.db.Table("sys_domain_menus").Where("sys_domain_id", domainId).Debug().Pluck("sys_menu_id", &sysDomainMenus)
+		if result.RowsAffected > 0 {
+			db = db.Where("id in ?", sysDomainMenus)
+		}
+	}
 
 	result := db.Limit(int(handler.GetPageSize())).Find(&sysMenus)
 	if result.Error != nil {

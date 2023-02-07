@@ -56,7 +56,7 @@ func (s *AdminService) CreatePost(ctx context.Context, in *v1.CreatePostReq) (*v
 	return &v1.CreatePostReply{
 		Success: true,
 		Message: "创建成功",
-		Data:    data,
+		Result:  data,
 	}, nil
 }
 
@@ -110,7 +110,6 @@ func (s *AdminService) DeletePost(ctx context.Context, in *v1.DeletePostReq) (*v
 		return nil, v1.ErrorPostDeleteFail("职位删除失败：%v", err)
 	}
 	return &v1.DeletePostReply{
-		Success: true,
 		Message: "删除成功",
 	}, nil
 }

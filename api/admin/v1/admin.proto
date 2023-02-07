@@ -562,14 +562,14 @@ message LoginReply {
 message RegisterReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 回应 - 退出登录
 message LogoutReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 密码登录
@@ -769,7 +769,7 @@ message CreateUserReq {
 message CreateUserReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 绑定用户领域
@@ -817,7 +817,7 @@ message DeleteUserReq {
 message DeleteUserReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 修改用户
@@ -843,7 +843,7 @@ message UpdateUserReq {
 message UpdateUserReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 回应 - 获取用户菜单
@@ -861,7 +861,7 @@ message ExistUserNameReq {
 message ExistUserNameReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 
@@ -916,7 +916,7 @@ message CreateDomainReq {
 message CreateDomainReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 修改领域
@@ -936,7 +936,7 @@ message UpdateDomainReq {
 message UpdateDomainReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 修改领域-状态
@@ -952,7 +952,7 @@ message UpdateDomainStateReq {
 message UpdateDomainStateReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 获取领域
@@ -969,7 +969,7 @@ message DeleteDomainReq {
 message DeleteDomainReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 获取领域菜单
@@ -1001,7 +1001,7 @@ message HandleDomainMenuReq {
 message HandleDomainMenuReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 角色模块
@@ -1032,7 +1032,7 @@ message CreateRoleReq {
 message CreateRoleReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 修改角色
@@ -1054,7 +1054,7 @@ message UpdateRoleReq {
 message UpdateRoleReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 修改角色
@@ -1070,7 +1070,7 @@ message UpdateRoleStateReq {
 message UpdateRoleStateReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 获取角色
@@ -1087,7 +1087,7 @@ message DeleteRoleReq {
 message DeleteRoleReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 获取角色菜单
@@ -1119,7 +1119,7 @@ message HandleRoleMenuReq {
 message HandleRoleMenuReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 处理角色资源
@@ -1135,7 +1135,7 @@ message HandleRoleResourceReq {
 message HandleRoleResourceReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 资源模块
@@ -1171,7 +1171,7 @@ message CreateResourceReq {
 message CreateResourceReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 修改资源
@@ -1192,7 +1192,7 @@ message UpdateResourceReq {
 message UpdateResourceReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 获取资源
@@ -1209,7 +1209,7 @@ message DeleteResourceReq {
 message DeleteResourceReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 菜单模块
@@ -1271,7 +1271,7 @@ message CreateMenuReq {
 message CreateMenuReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 修改菜单
@@ -1302,7 +1302,7 @@ message UpdateMenuReq {
 message UpdateMenuReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 获取菜单
@@ -1319,7 +1319,7 @@ message DeleteMenuReq {
 message DeleteMenuReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 获取树形菜单
@@ -1359,7 +1359,7 @@ message CreateDeptReq {
 message CreateDeptReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 修改部门
@@ -1379,7 +1379,7 @@ message UpdateDeptReq {
 message UpdateDeptReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 获取部门
@@ -1396,7 +1396,7 @@ message DeleteDeptReq {
 message DeleteDeptReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 获取树形部门
@@ -1436,7 +1436,7 @@ message CreatePostReq {
 message CreatePostReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 修改职位
@@ -1456,7 +1456,7 @@ message UpdatePostReq {
 message UpdatePostReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 获取职位
@@ -1471,9 +1471,9 @@ message DeletePostReq {
 
 // 回应 - 删除职位
 message DeletePostReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }
 
 // 请求 - 修改职位-状态
@@ -1489,5 +1489,5 @@ message UpdatePostStateReq {
 message UpdatePostStateReply {
   bool success = 1;
   string message = 2;
-  google.protobuf.Any data = 3;
+  google.protobuf.Any result = 3;
 }

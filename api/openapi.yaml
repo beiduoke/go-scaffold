@@ -1449,7 +1449,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 创建部门
         api.admin.v1.CreateDeptReq:
@@ -1476,7 +1476,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 创建领域
         api.admin.v1.CreateDomainReq:
@@ -1504,7 +1504,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 创建菜单
         api.admin.v1.CreateMenuReq:
@@ -1562,7 +1562,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 创建职位
         api.admin.v1.CreatePostReq:
@@ -1588,7 +1588,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 创建资源
         api.admin.v1.CreateResourceReq:
@@ -1614,7 +1614,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 创建角色
         api.admin.v1.CreateRoleReq:
@@ -1643,7 +1643,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 创建用户
         api.admin.v1.CreateUserReq:
@@ -1679,7 +1679,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 删除部门
         api.admin.v1.DeleteDomainReply:
@@ -1689,7 +1689,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 删除领域
         api.admin.v1.DeleteMenuReply:
@@ -1699,17 +1699,18 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 删除菜单
         api.admin.v1.DeletePostReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 删除职位
         api.admin.v1.DeleteResourceReply:
@@ -1719,7 +1720,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 删除资源
         api.admin.v1.DeleteRoleReply:
@@ -1729,7 +1730,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 删除角色
         api.admin.v1.DeleteUserReply:
@@ -1739,7 +1740,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 删除用户
         api.admin.v1.Dept:
@@ -1817,7 +1818,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 验证用户是否存在
         api.admin.v1.ExistUserNameReq:
@@ -1843,7 +1844,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 处理领域菜单
         api.admin.v1.HandleDomainMenuReq_Data:
@@ -1876,7 +1877,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 处理角色菜单
         api.admin.v1.HandleRoleMenuReq_Data:
@@ -1909,7 +1910,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 处理角色资源
         api.admin.v1.HandleRoleResourceReq_Data:
@@ -2082,7 +2083,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 退出登录
         api.admin.v1.Menu:
@@ -2202,7 +2203,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 注册
         api.admin.v1.Resource:
@@ -2318,7 +2319,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 创建部门
         api.admin.v1.UpdateDeptReq_Data:
@@ -2344,7 +2345,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 创建领域
         api.admin.v1.UpdateDomainReq_Data:
@@ -2371,7 +2372,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 创建领域-状态
         api.admin.v1.UpdateDomainStateReq_Data:
@@ -2387,7 +2388,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 创建菜单
         api.admin.v1.UpdateMenuReq_Data:
@@ -2444,7 +2445,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 创建职位
         api.admin.v1.UpdatePostReq_Data:
@@ -2469,7 +2470,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 创建职位-状态
         api.admin.v1.UpdatePostStateReq_Data:
@@ -2485,7 +2486,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 创建资源
         api.admin.v1.UpdateResourceReq_Data:
@@ -2510,7 +2511,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 创建角色
         api.admin.v1.UpdateRoleReq_Data:
@@ -2538,7 +2539,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 创建角色
         api.admin.v1.UpdateRoleStateReq_Data:
@@ -2554,7 +2555,7 @@ components:
                     type: boolean
                 message:
                     type: string
-                data:
+                result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 修改用户
         api.admin.v1.UpdateUserReq_Data:

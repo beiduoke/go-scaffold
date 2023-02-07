@@ -50,7 +50,7 @@ func TreeMenu(menus []*biz.Menu, pid uint) []*v1.Menu {
 	return list
 }
 
-// GetTreeMenu 列表菜单-树形
+// ListMenuTree 列表菜单-树形
 func (s *AdminService) ListMenuTree(ctx context.Context, in *v1.ListMenuTreeReq) (*v1.ListMenuTreeReply, error) {
 	items, total := s.menuCase.ListAll(ctx)
 	return &v1.ListMenuTreeReply{
@@ -117,7 +117,7 @@ func (s *AdminService) CreateMenu(ctx context.Context, in *v1.CreateMenuReq) (*v
 	return &v1.CreateMenuReply{
 		Success: true,
 		Message: "创建成功",
-		Data:    data,
+		Result:  data,
 	}, nil
 }
 

@@ -77,7 +77,7 @@ func (s *AdminService) CreateDept(ctx context.Context, in *v1.CreateDeptReq) (*v
 	return &v1.CreateDeptReply{
 		Success: true,
 		Message: "创建成功",
-		Data:    data,
+		Result:  data,
 	}, nil
 }
 

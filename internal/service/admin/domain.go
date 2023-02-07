@@ -76,7 +76,7 @@ func (s *AdminService) CreateDomain(ctx context.Context, in *v1.CreateDomainReq)
 	return &v1.CreateDomainReply{
 		Success: true,
 		Message: "创建成功",
-		Data:    data,
+		Result:  data,
 	}, nil
 }
 
