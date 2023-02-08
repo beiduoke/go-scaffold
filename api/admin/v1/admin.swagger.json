@@ -391,6 +391,38 @@
         ]
       }
     },
+    "/admin/v1/depts/trees": {
+      "get": {
+        "summary": "获取全部部门树形",
+        "operationId": "Admin_ListDeptTree",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListDeptTreeReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/admin/v1/depts/{id}": {
       "get": {
         "summary": "获取部门",
@@ -493,8 +525,8 @@
     },
     "/admin/v1/depts/{id}/trees": {
       "get": {
-        "summary": "获取树形部门",
-        "operationId": "Admin_ListDeptTree",
+        "summary": "获取全部部门树形",
+        "operationId": "Admin_ListDeptTree2",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -728,7 +760,7 @@
     "/admin/v1/domains/trees": {
       "get": {
         "summary": "获取领域树形列表",
-        "operationId": "Admin_ListDomainTree2",
+        "operationId": "Admin_ListDomainTree",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -970,7 +1002,7 @@
     "/admin/v1/domains/{id}/trees": {
       "get": {
         "summary": "获取领域树形列表",
-        "operationId": "Admin_ListDomainTree",
+        "operationId": "Admin_ListDomainTree2",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -1081,7 +1113,7 @@
     "/admin/v1/menus/trees": {
       "get": {
         "summary": "获取树形菜单",
-        "operationId": "Admin_ListMenuTree2",
+        "operationId": "Admin_ListMenuTree",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -1213,7 +1245,7 @@
     "/admin/v1/menus/{id}/trees": {
       "get": {
         "summary": "获取树形菜单",
-        "operationId": "Admin_ListMenuTree",
+        "operationId": "Admin_ListMenuTree2",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -2098,7 +2130,7 @@
     },
     "/admin/v1/users/domains": {
       "get": {
-        "summary": "// 获取用户菜单 - 弃用\nrpc ListUserMenu (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {\n  option (google.api.http) = {\n    get: \"/admin/v1/users/menus\"\n  };\n}\n// 获取用户菜单-树形 - 弃用\nrpc ListUserMenuTree (google.protobuf.Empty) returns (UserMenuTreeReply) {\n  option (google.api.http) = {\n    get: \"/admin/v1/users/menus/trees\"\n  };\n}\n当前登录用户拥有领域",
+        "summary": "当前登录用户拥有领域",
         "operationId": "Admin_ListUserDomain",
         "responses": {
           "200": {
@@ -2178,7 +2210,7 @@
     "/admin/v1/users/menus/trees": {
       "get": {
         "summary": "获取角色菜单树形列表",
-        "operationId": "Admin_ListUserRoleMenuTree2",
+        "operationId": "Admin_ListUserRoleMenuTree",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -2210,7 +2242,7 @@
     "/admin/v1/users/permissions": {
       "get": {
         "summary": "获取角色权限列表",
-        "operationId": "Admin_ListUserRolePermission2",
+        "operationId": "Admin_ListUserRolePermission",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -2288,7 +2320,7 @@
     "/admin/v1/users/roles/{roleId}/menus/trees": {
       "get": {
         "summary": "获取角色菜单树形列表",
-        "operationId": "Admin_ListUserRoleMenuTree",
+        "operationId": "Admin_ListUserRoleMenuTree2",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -2320,7 +2352,7 @@
     "/admin/v1/users/roles/{roleId}/permissions": {
       "get": {
         "summary": "获取角色权限列表",
-        "operationId": "Admin_ListUserRolePermission",
+        "operationId": "Admin_ListUserRolePermission2",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -2594,7 +2626,7 @@
     "SmsLoginReqSmsField": {
       "type": "object",
       "properties": {
-        "mobile": {
+        "phone": {
           "type": "string"
         },
         "code": {
@@ -2786,8 +2818,8 @@
       "type": "object",
       "properties": {
         "total": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string",
+          "format": "int64"
         },
         "items": {
           "type": "array",
@@ -3178,7 +3210,7 @@
         "gender": {
           "$ref": "#/definitions/protobufUserGender"
         },
-        "mobile": {
+        "phone": {
           "type": "string"
         },
         "email": {
@@ -3599,8 +3631,8 @@
       "type": "object",
       "properties": {
         "total": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string",
+          "format": "int64"
         },
         "items": {
           "type": "array",
@@ -3615,8 +3647,8 @@
       "type": "object",
       "properties": {
         "total": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string",
+          "format": "int64"
         },
         "items": {
           "type": "array",
@@ -3631,8 +3663,8 @@
       "type": "object",
       "properties": {
         "total": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string",
+          "format": "int64"
         },
         "items": {
           "type": "array",
@@ -3646,8 +3678,8 @@
       "type": "object",
       "properties": {
         "total": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string",
+          "format": "int64"
         },
         "items": {
           "type": "array",
@@ -3662,8 +3694,8 @@
       "type": "object",
       "properties": {
         "total": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string",
+          "format": "int64"
         },
         "items": {
           "type": "array",
@@ -3678,8 +3710,8 @@
       "type": "object",
       "properties": {
         "total": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string",
+          "format": "int64"
         },
         "items": {
           "type": "array",
@@ -3700,8 +3732,8 @@
           }
         },
         "total": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string",
+          "format": "int64"
         }
       },
       "title": "回应 - 用户领域"
@@ -3710,8 +3742,8 @@
       "type": "object",
       "properties": {
         "total": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string",
+          "format": "int64"
         },
         "items": {
           "type": "array",
@@ -3726,8 +3758,8 @@
       "type": "object",
       "properties": {
         "total": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string",
+          "format": "int64"
         },
         "items": {
           "type": "array",
@@ -3748,8 +3780,8 @@
           }
         },
         "total": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string",
+          "format": "int64"
         }
       },
       "title": "回应 - 用户角色"
@@ -4330,7 +4362,7 @@
         "gender": {
           "$ref": "#/definitions/protobufUserGender"
         },
-        "mobile": {
+        "phone": {
           "type": "string"
         },
         "email": {
@@ -4366,7 +4398,7 @@
         "gender": {
           "$ref": "#/definitions/protobufUserGender"
         },
-        "mobile": {
+        "phone": {
           "type": "string"
         },
         "email": {

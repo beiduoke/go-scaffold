@@ -84,8 +84,8 @@ func (uc *DeptUsecase) Update(ctx context.Context, g *Dept) error {
 
 // List 部门列表全部
 func (uc *DeptUsecase) ListAll(ctx context.Context) ([]*Dept, int64) {
-	uc.log.WithContext(ctx).Infof("DeptList")
-	return uc.repo.ListPage(ctx, pagination.NewPagination())
+	uc.log.WithContext(ctx).Infof("ListAll")
+	return uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithOrder("sort", false)))
 }
 
 // List 部门列表分页
@@ -107,13 +107,6 @@ func (uc *DeptUsecase) ListPage(ctx context.Context, pageNum, pageSize int32, qu
 		pagination.WithOrders(orders...),
 	)
 	return uc.repo.ListPage(ctx, page)
-}
-
-// GetTree 获取部门树形
-func (uc *DeptUsecase) GetTree(ctx context.Context, id uint) []*Dept {
-	uc.log.WithContext(ctx).Infof("GetTree")
-	menus, _ := uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithOrder("sort", false)))
-	return menus
 }
 
 // GetID 根据角色ID部门

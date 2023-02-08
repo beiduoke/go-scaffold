@@ -21,6 +21,7 @@ func TransformDomain(data *biz.Domain) *v1.Domain {
 		State:     protobuf.DomainState(data.State),
 		CreatedAt: timestamppb.New(data.CreatedAt),
 		UpdatedAt: timestamppb.New(data.UpdatedAt),
+		Children:  make([]*v1.Domain, 0, 0),
 	}
 }
 
@@ -39,7 +40,7 @@ func TreeDomain(domains []*biz.Domain, pid uint) []*v1.Domain {
 
 // GetTreeDomain 列表部门-树形
 func (s *AdminService) ListDomainTree(ctx context.Context, in *v1.ListDomainTreeReq) (*v1.ListDomainTreeReply, error) {
-	results := s.domainCase.GetTree(ctx, uint(in.GetId()))
+	results, _ := s.domainCase.ListAll(ctx)
 	return &v1.ListDomainTreeReply{
 		Items: TreeDomain(results, uint(in.GetId())),
 	}, nil
@@ -54,7 +55,7 @@ func (s *AdminService) ListDomain(ctx context.Context, in *protobuf.PagingReq) (
 		items = append(items, item)
 	}
 	return &protobuf.PagingReply{
-		Total: int32(total),
+		Total: total,
 		Items: items,
 	}, nil
 }
@@ -144,7 +145,7 @@ func (s *AdminService) ListDomainMenu(ctx context.Context, in *v1.ListDomainMenu
 	for _, v := range menus {
 		items = append(items, TransformMenu(v))
 	}
-	return &v1.ListDomainMenuReply{Items: items, Total: int32(len(items))}, nil
+	return &v1.ListDomainMenuReply{Items: items, Total: int64(len(items))}, nil
 }
 
 // HandleDomainMenu 处理领域菜单

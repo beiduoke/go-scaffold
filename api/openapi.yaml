@@ -168,6 +168,25 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.CreateDeptReply'
+    /admin/v1/depts/trees:
+        get:
+            tags:
+                - Admin
+            description: 获取全部部门树形
+            operationId: Admin_ListDeptTree
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.ListDeptTreeReply'
     /admin/v1/depts/{id}:
         get:
             tags:
@@ -232,26 +251,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.DeleteDeptReply'
-    /admin/v1/depts/{id}/trees:
-        get:
-            tags:
-                - Admin
-            description: 获取树形部门
-            operationId: Admin_ListDeptTree
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.ListDeptTreeReply'
     /admin/v1/domains:
         get:
             tags:
@@ -353,6 +352,25 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.RegisterReply'
+    /admin/v1/domains/trees:
+        get:
+            tags:
+                - Admin
+            description: 获取领域树形列表
+            operationId: Admin_ListDomainTree
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.ListDomainTreeReply'
     /admin/v1/domains/{id}:
         get:
             tags:
@@ -488,26 +506,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.UpdateDomainStateReply'
-    /admin/v1/domains/{id}/trees:
-        get:
-            tags:
-                - Admin
-            description: 获取领域树形列表
-            operationId: Admin_ListDomainTree
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.ListDomainTreeReply'
     /admin/v1/menus:
         get:
             tags:
@@ -559,6 +557,25 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.CreateMenuReply'
+    /admin/v1/menus/trees:
+        get:
+            tags:
+                - Admin
+            description: 获取树形菜单
+            operationId: Admin_ListMenuTree
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.ListMenuTreeReply'
     /admin/v1/menus/{id}:
         get:
             tags:
@@ -623,26 +640,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.DeleteMenuReply'
-    /admin/v1/menus/{id}/trees:
-        get:
-            tags:
-                - Admin
-            description: 获取树形菜单
-            operationId: Admin_ListMenuTree
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.ListMenuTreeReply'
     /admin/v1/posts:
         get:
             tags:
@@ -1193,20 +1190,7 @@ paths:
         get:
             tags:
                 - Admin
-            description: |-
-                // 获取用户菜单 - 弃用
-                 rpc ListUserMenu (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
-                   option (google.api.http) = {
-                     get: "/admin/v1/users/menus"
-                   };
-                 }
-                 // 获取用户菜单-树形 - 弃用
-                 rpc ListUserMenuTree (google.protobuf.Empty) returns (UserMenuTreeReply) {
-                   option (google.api.http) = {
-                     get: "/admin/v1/users/menus/trees"
-                   };
-                 }
-                 当前登录用户拥有领域
+            description: 当前登录用户拥有领域
             operationId: Admin_ListUserDomain
             responses:
                 "200":
@@ -1249,6 +1233,44 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.User'
+    /admin/v1/users/menus/trees:
+        get:
+            tags:
+                - Admin
+            description: 获取角色菜单树形列表
+            operationId: Admin_ListUserRoleMenuTree
+            parameters:
+                - name: roleId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.ListUserRoleMenuTreeReply'
+    /admin/v1/users/permissions:
+        get:
+            tags:
+                - Admin
+            description: 获取角色权限列表
+            operationId: Admin_ListUserRolePermission
+            parameters:
+                - name: roleId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.ListUserRolePermissionReply'
     /admin/v1/users/profiles:
         get:
             tags:
@@ -1275,46 +1297,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.ListUserRoleReply'
-    /admin/v1/users/roles/{roleId}/menus/trees:
-        get:
-            tags:
-                - Admin
-            description: 获取角色菜单树形列表
-            operationId: Admin_ListUserRoleMenuTree
-            parameters:
-                - name: roleId
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.ListUserRoleMenuTreeReply'
-    /admin/v1/users/roles/{roleId}/permissions:
-        get:
-            tags:
-                - Admin
-            description: 获取角色权限列表
-            operationId: Admin_ListUserRolePermission
-            parameters:
-                - name: roleId
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.ListUserRolePermissionReply'
     /admin/v1/users/{id}:
         get:
             tags:
@@ -1664,7 +1646,7 @@ components:
                 gender:
                     type: integer
                     format: enum
-                mobile:
+                phone:
                     type: string
                 email:
                     type: string
@@ -1961,7 +1943,7 @@ components:
             properties:
                 total:
                     type: integer
-                    format: int32
+                    format: int64
                 items:
                     type: array
                     items:
@@ -1972,7 +1954,7 @@ components:
             properties:
                 total:
                     type: integer
-                    format: int32
+                    format: int64
                 items:
                     type: array
                     items:
@@ -1983,7 +1965,7 @@ components:
             properties:
                 total:
                     type: integer
-                    format: int32
+                    format: int64
                 items:
                     type: array
                     items:
@@ -1993,7 +1975,7 @@ components:
             properties:
                 total:
                     type: integer
-                    format: int32
+                    format: int64
                 items:
                     type: array
                     items:
@@ -2004,7 +1986,7 @@ components:
             properties:
                 total:
                     type: integer
-                    format: int32
+                    format: int64
                 items:
                     type: array
                     items:
@@ -2015,7 +1997,7 @@ components:
             properties:
                 total:
                     type: integer
-                    format: int32
+                    format: int64
                 items:
                     type: array
                     items:
@@ -2030,14 +2012,14 @@ components:
                         $ref: '#/components/schemas/api.admin.v1.Domain'
                 total:
                     type: integer
-                    format: int32
+                    format: int64
             description: 回应 - 用户领域
         api.admin.v1.ListUserRoleMenuTreeReply:
             type: object
             properties:
                 total:
                     type: integer
-                    format: int32
+                    format: int64
                 items:
                     type: array
                     items:
@@ -2048,7 +2030,7 @@ components:
             properties:
                 total:
                     type: integer
-                    format: int32
+                    format: int64
                 items:
                     type: array
                     items:
@@ -2063,7 +2045,7 @@ components:
                         $ref: '#/components/schemas/api.admin.v1.Role'
                 total:
                     type: integer
-                    format: int32
+                    format: int64
             description: 回应 - 用户角色
         api.admin.v1.LoginReply:
             type: object
@@ -2308,7 +2290,7 @@ components:
         api.admin.v1.SmsLoginReq_SmsField:
             type: object
             properties:
-                mobile:
+                phone:
                     type: string
                 code:
                     type: string
@@ -2575,7 +2557,7 @@ components:
                 gender:
                     type: integer
                     format: enum
-                mobile:
+                phone:
                     type: string
                 email:
                     type: string
@@ -2601,7 +2583,7 @@ components:
                 gender:
                     type: integer
                     format: enum
-                mobile:
+                phone:
                     type: string
                 email:
                     type: string
@@ -2622,7 +2604,7 @@ components:
             properties:
                 total:
                     type: integer
-                    format: int32
+                    format: int64
                 items:
                     type: array
                     items:

@@ -41,22 +41,6 @@ type AdminClient interface {
 	GetUserInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*User, error)
 	// 当前登录用户概述
 	GetUserProfile(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserProfileReply, error)
-	// // 获取用户菜单 - 弃用
-	//
-	//	rpc ListUserMenu (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
-	//	  option (google.api.http) = {
-	//	    get: "/admin/v1/users/menus"
-	//	  };
-	//	}
-	//
-	// // 获取用户菜单-树形 - 弃用
-	//
-	//	rpc ListUserMenuTree (google.protobuf.Empty) returns (UserMenuTreeReply) {
-	//	  option (google.api.http) = {
-	//	    get: "/admin/v1/users/menus/trees"
-	//	  };
-	//	}
-	//
 	// 当前登录用户拥有领域
 	ListUserDomain(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserDomainReply, error)
 	// 当前登录用户拥有角色
@@ -159,7 +143,7 @@ type AdminClient interface {
 	UpdateDept(ctx context.Context, in *UpdateDeptReq, opts ...grpc.CallOption) (*UpdateDeptReply, error)
 	// 删除部门
 	DeleteDept(ctx context.Context, in *DeleteDeptReq, opts ...grpc.CallOption) (*DeleteDeptReply, error)
-	// 获取树形部门
+	// 获取全部部门树形
 	ListDeptTree(ctx context.Context, in *ListDeptTreeReq, opts ...grpc.CallOption) (*ListDeptTreeReply, error)
 	// 列表职位
 	ListPost(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
@@ -780,22 +764,6 @@ type AdminServer interface {
 	GetUserInfo(context.Context, *emptypb.Empty) (*User, error)
 	// 当前登录用户概述
 	GetUserProfile(context.Context, *emptypb.Empty) (*GetUserProfileReply, error)
-	// // 获取用户菜单 - 弃用
-	//
-	//	rpc ListUserMenu (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
-	//	  option (google.api.http) = {
-	//	    get: "/admin/v1/users/menus"
-	//	  };
-	//	}
-	//
-	// // 获取用户菜单-树形 - 弃用
-	//
-	//	rpc ListUserMenuTree (google.protobuf.Empty) returns (UserMenuTreeReply) {
-	//	  option (google.api.http) = {
-	//	    get: "/admin/v1/users/menus/trees"
-	//	  };
-	//	}
-	//
 	// 当前登录用户拥有领域
 	ListUserDomain(context.Context, *emptypb.Empty) (*ListUserDomainReply, error)
 	// 当前登录用户拥有角色
@@ -898,7 +866,7 @@ type AdminServer interface {
 	UpdateDept(context.Context, *UpdateDeptReq) (*UpdateDeptReply, error)
 	// 删除部门
 	DeleteDept(context.Context, *DeleteDeptReq) (*DeleteDeptReply, error)
-	// 获取树形部门
+	// 获取全部部门树形
 	ListDeptTree(context.Context, *ListDeptTreeReq) (*ListDeptTreeReply, error)
 	// 列表职位
 	ListPost(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)

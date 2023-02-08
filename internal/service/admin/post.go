@@ -34,7 +34,7 @@ func (s *AdminService) ListPost(ctx context.Context, in *protobuf.PagingReq) (*p
 		items = append(items, item)
 	}
 	return &protobuf.PagingReply{
-		Total: int32(total),
+		Total: total,
 		Items: items,
 	}, nil
 }

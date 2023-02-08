@@ -35,7 +35,7 @@ func (s *AdminService) ListResource(ctx context.Context, in *protobuf.PagingReq)
 		items = append(items, item)
 	}
 	return &protobuf.PagingReply{
-		Total: int32(total),
+		Total: total,
 		Items: items,
 	}, nil
 }
@@ -44,7 +44,7 @@ func (s *AdminService) ListResource(ctx context.Context, in *protobuf.PagingReq)
 func (s *AdminService) ListResourceGroup(ctx context.Context, in *protobuf.PagingReq) (*v1.ListResourceGroupReply, error) {
 	results, total := s.resourceCase.ListAllGroup(ctx)
 	return &v1.ListResourceGroupReply{
-		Total: int32(total),
+		Total: total,
 		Items: results,
 	}, nil
 }

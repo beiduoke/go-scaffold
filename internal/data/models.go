@@ -62,8 +62,8 @@ type SysUser struct {
 	Password      string      `gorm:"type:varchar(255);column:password;not null;default:'';comment:密码;"`
 	Birthday      *time.Time  `gorm:"type:datetime;column:birthday;comment:生日;"`
 	Gender        int32       `gorm:"type:tinyint(1);column:gender;not null;default:1;comment:性别 0 未指定 1 男 2 女;"`
-	Mobile        string      `gorm:"type:varchar(20);column:mobile;not null;default:'';index:idx_users_mobile_email,priority:1;comment:手机号;"`
-	Email         string      `gorm:"type:varchar(50);column:email;not null;default:'';index:idx_users_mobile_email,priority:2;comment:邮箱;"`
+	Phone         string      `gorm:"type:varchar(20);column:phone;not null;default:'';index:idx_users_phone_email,priority:1;comment:手机号;"`
+	Email         string      `gorm:"type:varchar(50);column:email;not null;default:'';index:idx_users_phone_email,priority:2;comment:邮箱;"`
 	State         int32       `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:用户状态 0 未指定  1 启用 2 停用;"`
 	LastUseDomain uint        `gorm:"type:bigint(20);column:last_use_domain;not null;default:0;comment:最后使用租户"`
 	LastLoginAt   *time.Time  `gorm:"type:datetime;column:last_login_at;comment:最后登录时间"`
@@ -77,19 +77,22 @@ type SysUser struct {
 // Role 角色
 type SysRole struct {
 	DomainModel
-	Name          string        `gorm:"type:varchar(255);column:name;not null;index:idx_domain_id_data;comment:角色名称;"`
-	ParentID      uint          `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
-	DefaultRouter string        `gorm:"type:varchar(255);column:default_router;not null;default:'/dashboard';comment:默认路由;"`
-	Sort          int32         `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
-	State         int32         `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:角色状态 0 未指定  1 启用 2 停用;"`
-	Remarks       string        `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
-	Parent        *SysRole      `gorm:"foreignKey:ParentID"`
-	Roles         []SysRole     `gorm:"many2many:sys_role_relations"`
-	Menus         []SysMenu     `gorm:"many2many:sys_role_menus;"`
-	Resources     []SysResource `gorm:"many2many:sys_role_resources;"`
-	Depts         []SysDept     `gorm:"many2many:sys_role_depts;joinForeignKey:SysRoleID"`
-	Users         []SysUser     `gorm:"-"`
-	Domains       []SysDomain   `gorm:"-"`
+	Name              string        `gorm:"type:varchar(255);column:name;not null;index:idx_domain_id_data;comment:角色名称;"`
+	ParentID          uint          `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
+	DefaultRouter     string        `gorm:"type:varchar(255);column:default_router;not null;default:'/dashboard';comment:默认路由;"`
+	Sort              int32         `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
+	DataScope         int32         `gorm:"type:tinyint(2);column:data_scope;not null;default:1;comment:数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限）;"`
+	MenuCheckStrictly int32         `gorm:"type:tinyint(2);column:menu_check_strictly;not null;default:1;comment:菜单树选择项是否关联显示;"`
+	DeptCheckStrictly int32         `gorm:"type:tinyint(2);column:menu_check_strictly;not null;default:1;comment:部门树选择项是否关联显示;"`
+	State             int32         `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:角色状态 0 未指定  1 启用 2 停用;"`
+	Remarks           string        `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
+	Parent            *SysRole      `gorm:"foreignKey:ParentID"`
+	Roles             []SysRole     `gorm:"many2many:sys_role_relations"`
+	Menus             []SysMenu     `gorm:"many2many:sys_role_menus;"`
+	Resources         []SysResource `gorm:"many2many:sys_role_resources;"`
+	Depts             []SysDept     `gorm:"many2many:sys_role_depts;joinForeignKey:SysRoleID"`
+	Users             []SysUser     `gorm:"-"`
+	Domains           []SysDomain   `gorm:"-"`
 }
 
 // Resource api资源

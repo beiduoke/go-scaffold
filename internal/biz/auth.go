@@ -187,10 +187,10 @@ func (ac *AuthUsecase) LoginNamePassword(ctx context.Context, domainCode string,
 	return authClaims, nil
 }
 
-// LoginMobileSms 登录-手机验证码
-func (ac *AuthUsecase) LoginMobileSms(ctx context.Context, domainCode string, g *User) (*User, error) {
-	ac.log.WithContext(ctx).Infof("mobileSmsLogin: %v", g)
-	return ac.biz.userRepo.FindByMobile(ctx, g.Mobile)
+// LoginPhoneSms 登录-手机验证码
+func (ac *AuthUsecase) LoginPhoneSms(ctx context.Context, domainCode string, g *User) (*User, error) {
+	ac.log.WithContext(ctx).Infof("phoneSmsLogin: %v", g)
+	return ac.biz.userRepo.FindByPhone(ctx, g.Phone)
 }
 
 // RegisterNamePassword 注册-用户密码

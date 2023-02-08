@@ -56,6 +56,7 @@ func (r *DomainRepo) toBiz(d *SysDomain) *biz.Domain {
 		Sort:          d.Sort,
 		State:         d.State,
 		DefaultRoleID: d.DefaultRoleID,
+		ParentID:      d.ParentID,
 	}
 }
 

@@ -36,7 +36,7 @@ message PagingReq {
 
 // 分页通用结果
 message PagingReply {
-  int32 total = 1;
+  int64 total = 1;
   repeated google.protobuf.Any items = 2;
 }
 

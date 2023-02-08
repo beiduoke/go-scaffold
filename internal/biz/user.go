@@ -29,7 +29,7 @@ type User struct {
 	Password        string
 	Birthday        *time.Time
 	Gender          int32
-	Mobile          string
+	Phone           string
 	Email           string
 	State           int32
 	Domains         []*Domain
@@ -47,10 +47,10 @@ type UserRepo interface {
 	Delete(context.Context, *User) error
 	// 自定义操作
 	FindByName(context.Context, string) (*User, error)
-	FindByMobile(context.Context, string) (*User, error)
+	FindByPhone(context.Context, string) (*User, error)
 	FindByEmail(context.Context, string) (*User, error)
 	ListByName(context.Context, string) ([]*User, error)
-	ListByMobile(context.Context, string) ([]*User, error)
+	ListByPhone(context.Context, string) ([]*User, error)
 	ListByEmail(context.Context, string) ([]*User, error)
 	ListPage(context.Context, pagination.PaginationHandler) ([]*User, int64)
 
@@ -133,16 +133,16 @@ func (uc *UserUsecase) Update(ctx context.Context, g *User) error {
 		}
 	}
 
-	if user.Mobile != g.Mobile {
-		mobile, _ := uc.biz.userRepo.FindByMobile(ctx, g.Mobile)
-		if mobile != nil {
+	if user.Phone != g.Phone {
+		phone, _ := uc.biz.userRepo.FindByPhone(ctx, g.Phone)
+		if phone != nil {
 			return errors.New("手机号已存在")
 		}
 	}
 
 	if user.Email != g.Email {
-		mobile, _ := uc.biz.userRepo.FindByEmail(ctx, g.Email)
-		if mobile != nil {
+		phone, _ := uc.biz.userRepo.FindByEmail(ctx, g.Email)
+		if phone != nil {
 			return errors.New("邮箱已存在")
 		}
 	}
@@ -203,10 +203,10 @@ func (uc *UserUsecase) GetID(ctx context.Context, g *User) (*User, error) {
 	return user, err
 }
 
-// GetMobile 获取用户手机
-func (uc *UserUsecase) GetMobile(ctx context.Context, g *User) (*User, error) {
-	uc.log.WithContext(ctx).Infof("GetUserMobile: %v", g)
-	return uc.biz.userRepo.FindByMobile(ctx, g.Mobile)
+// GetPhone 获取用户手机
+func (uc *UserUsecase) GetPhone(ctx context.Context, g *User) (*User, error) {
+	uc.log.WithContext(ctx).Infof("GetUserPhone: %v", g)
+	return uc.biz.userRepo.FindByPhone(ctx, g.Phone)
 }
 
 // GetName 获取用户名

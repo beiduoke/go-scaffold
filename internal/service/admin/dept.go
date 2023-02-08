@@ -40,11 +40,20 @@ func TreeDept(depts []*biz.Dept, pid uint) []*v1.Dept {
 
 // GetTreeDept 列表部门-树形
 func (s *AdminService) ListDeptTree(ctx context.Context, in *v1.ListDeptTreeReq) (*v1.ListDeptTreeReply, error) {
-	results := s.deptCase.GetTree(ctx, uint(in.GetId()))
+	results, _ := s.deptCase.ListAll(ctx)
 	return &v1.ListDeptTreeReply{
 		Items: TreeDept(results, uint(in.GetId())),
 	}, nil
 }
+
+// // ListAllDeptTree 列表全部部门-树形
+// func (s *AdminService) ListAllDeptTree(ctx context.Context, in *emptypb.Empty) (*v1.ListDeptTreeReply, error) {
+// 	results, total := s.deptCase.ListAll(ctx)
+// 	return &v1.ListDeptTreeReply{
+// 		Items: TreeDept(results, 0),
+// 		Total: total,
+// 	}, nil
+// }
 
 // ListDept 列表-部门角色
 func (s *AdminService) ListDept(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
@@ -55,7 +64,7 @@ func (s *AdminService) ListDept(ctx context.Context, in *protobuf.PagingReq) (*p
 		items = append(items, item)
 	}
 	return &protobuf.PagingReply{
-		Total: int32(total),
+		Total: total,
 		Items: items,
 	}, nil
 }

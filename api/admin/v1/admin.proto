@@ -87,6 +87,7 @@ service Admin {
       }
     };
   }
+
   // 中台密码登陆
   rpc MiddlePassLogin (PassLoginReq) returns (LoginReply) {
     option (google.api.http) = {
@@ -94,6 +95,7 @@ service Admin {
       body: "auth"
     };
   }
+
   // 密码登陆
   rpc PassLogin (PassLoginReq) returns (LoginReply) {
     option (google.api.http) = {
@@ -105,6 +107,7 @@ service Admin {
       }
     };
   }
+
   // 短信登陆
   rpc SmsLogin (SmsLoginReq) returns (LoginReply) {
     option (google.api.http) = {
@@ -112,6 +115,7 @@ service Admin {
       body: "auth"
     };
   }
+
   // 邮件登陆
   rpc EmailLogin (EmailLoginReq) returns (LoginReply) {
     option (google.api.http) = {
@@ -119,6 +123,7 @@ service Admin {
       body: "auth"
     };
   }
+
   // 注册
   rpc Register (RegisterReq) returns (RegisterReply) {
     option (google.api.http) = {
@@ -134,42 +139,48 @@ service Admin {
       get: "/admin/v1/users/info"
     };
   }
+
   // 当前登录用户概述
   rpc GetUserProfile (google.protobuf.Empty) returns (GetUserProfileReply) {
     option (google.api.http) = {
       get: "/admin/v1/users/profiles"
     };
   }
+
   // // 获取用户菜单 - 弃用
   // rpc ListUserMenu (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
   //   option (google.api.http) = {
   //     get: "/admin/v1/users/menus"
   //   };
   // }
+
   // // 获取用户菜单-树形 - 弃用
   // rpc ListUserMenuTree (google.protobuf.Empty) returns (UserMenuTreeReply) {
   //   option (google.api.http) = {
   //     get: "/admin/v1/users/menus/trees"
   //   };
   // }
+
   // 当前登录用户拥有领域
   rpc ListUserDomain (google.protobuf.Empty) returns (ListUserDomainReply) {
     option (google.api.http) = {
       get: "/admin/v1/users/domains"
     };
   }
+
   // 当前登录用户拥有角色
   rpc ListUserRole (google.protobuf.Empty) returns (ListUserRoleReply) {
     option (google.api.http) = {
       get: "/admin/v1/users/roles"
     };
   }
+
   // 获取角色菜单树形列表
   rpc ListUserRoleMenuTree (ListUserRoleMenuTreeReq) returns (ListUserRoleMenuTreeReply) {
     option (google.api.http) = {
-      get: "/admin/v1/users/roles/{role_id}/menus/trees"
+      get: "/admin/v1/users/menus/trees"
       additional_bindings {
-        get: "/admin/v1/users/menus/trees"
+        get: "/admin/v1/users/roles/{role_id}/menus/trees"
       }
     };
   }
@@ -177,18 +188,20 @@ service Admin {
   // 获取角色权限列表
   rpc ListUserRolePermission (ListUserRolePermissionReq) returns (ListUserRolePermissionReply) {
     option (google.api.http) = {
-      get: "/admin/v1/users/roles/{role_id}/permissions"
+      get: "/admin/v1/users/permissions"
       additional_bindings {
-        get: "/admin/v1/users/permissions"
+        get: "/admin/v1/users/roles/{role_id}/permissions"
       }
     };
   }
+
   // 列表用户
   rpc ListUser (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
     option (google.api.http) = {
       get: "/admin/v1/users"
     };
   }
+
   // 创建用户
   rpc CreateUser (CreateUserReq) returns (CreateUserReply) {
     option (google.api.http) = {
@@ -196,12 +209,14 @@ service Admin {
       body: "*"
     };
   }
+
   // 获取用户
   rpc GetUser (GetUserReq) returns (User) {
     option (google.api.http) = {
       get: "/admin/v1/users/{id}"
     };
   }
+
   // 修改用户
   rpc UpdateUser (UpdateUserReq) returns (UpdateUserReply) {
     option (google.api.http) = {
@@ -209,12 +224,14 @@ service Admin {
       body: "data"
     };
   }
+
   // 删除用户
   rpc DeleteUser (DeleteUserReq) returns (DeleteUserReply) {
     option (google.api.http) = {
       delete: "/admin/v1/users/{id}"
     };
   }
+
   // 验证用户名是否存在
   rpc ExistUserName (ExistUserNameReq) returns (ExistUserNameReply) {
     option (google.api.http) = {
@@ -222,6 +239,7 @@ service Admin {
       body: "*"
     };
   }
+
   // 绑定用户领域
   rpc HandleUserDomain (HandleUserDomainReq) returns (HandleUserDomainReply) {
     option (google.api.http) = {
@@ -229,6 +247,7 @@ service Admin {
       body: "data"
     };
   }
+
   // 绑定用户领域权限
   rpc HandleUserDomainRole (HandleUserDomainRoleReq) returns (HandleUserDomainRoleReply) {
     option (google.api.http) = {
@@ -249,6 +268,7 @@ service Admin {
       }
     };
   }
+
   // 注册领域/租户
   rpc RegisterDomain (RegisterDomainReq) returns (RegisterReply) {
     option (google.api.http) = {
@@ -256,21 +276,24 @@ service Admin {
       body: "auth"
     };
   }
+
   // 列表领域
   rpc ListDomain (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
     option (google.api.http) = {
       get: "/admin/v1/domains"
     };
   }
+
   // 获取领域树形列表
   rpc ListDomainTree (ListDomainTreeReq) returns (ListDomainTreeReply) {
     option (google.api.http) = {
-      get: "/admin/v1/domains/{id}/trees"
+      get: "/admin/v1/domains/trees"
       additional_bindings {
-        get: "/admin/v1/domains/trees"
+        get: "/admin/v1/domains/{id}/trees"
       }
     };
   }
+
   // 创建领域
   rpc CreateDomain (CreateDomainReq) returns (CreateDomainReply) {
     option (google.api.http) = {
@@ -278,12 +301,14 @@ service Admin {
       body: "*"
     };
   }
+
   // 获取领域
   rpc GetDomain (GetDomainReq) returns (Domain) {
     option (google.api.http) = {
       get: "/admin/v1/domains/{id}"
     };
   }
+
   // 修改领域
   rpc UpdateDomain (UpdateDomainReq) returns (UpdateDomainReply) {
     option (google.api.http) = {
@@ -291,6 +316,7 @@ service Admin {
       body: "data"
     };
   }
+
   // 删除领域
   rpc DeleteDomain (DeleteDomainReq) returns (DeleteDomainReply) {
     option (google.api.http) = {
@@ -312,6 +338,7 @@ service Admin {
       get: "/admin/v1/domains/{id}/menus"
     };
   }
+
   // 处理角色菜单
   rpc HandleDomainMenu (HandleDomainMenuReq) returns (HandleDomainMenuReply) {
     option (google.api.http) = {
@@ -327,6 +354,7 @@ service Admin {
       get: "/admin/v1/roles"
     };
   }
+
   // 创建角色
   rpc CreateRole (CreateRoleReq) returns (CreateRoleReply) {
     option (google.api.http) = {
@@ -334,12 +362,14 @@ service Admin {
       body: "*"
     };
   }
+
   // 获取角色
   rpc GetRole (GetRoleReq) returns (Role) {
     option (google.api.http) = {
       get: "/admin/v1/roles/{id}"
     };
   }
+
   // 修改角色
   rpc UpdateRole (UpdateRoleReq) returns (UpdateRoleReply) {
     option (google.api.http) = {
@@ -347,6 +377,7 @@ service Admin {
       body: "data"
     };
   }
+
   // 设置领域状态
   rpc UpdateRoleState (UpdateRoleStateReq) returns (UpdateRoleStateReply) {
     option (google.api.http) = {
@@ -354,18 +385,21 @@ service Admin {
       body: "data"
     };
   }
+
   // 删除角色
   rpc DeleteRole (DeleteRoleReq) returns (DeleteRoleReply) {
     option (google.api.http) = {
       delete: "/admin/v1/roles/{id}"
     };
   }
+
   // 获取角色菜单
   rpc ListRoleMenu (ListRoleMenuReq) returns (ListRoleMenuReply) {
     option (google.api.http) = {
       get: "/admin/v1/roles/{id}/menus"
     };
   }
+
   // 处理角色菜单
   rpc HandleRoleMenu (HandleRoleMenuReq) returns (HandleRoleMenuReply) {
     option (google.api.http) = {
@@ -373,6 +407,7 @@ service Admin {
       body: "data"
     };
   }
+
   // 处理角色资源
   rpc HandleRoleResource (HandleRoleResourceReq) returns (HandleRoleResourceReply) {
     option (google.api.http) = {
@@ -388,12 +423,14 @@ service Admin {
       get: "/admin/v1/resources"
     };
   }
+
   // 列表资源-分组
   rpc ListResourceGroup (api.protobuf.PagingReq) returns (ListResourceGroupReply) {
     option (google.api.http) = {
       get: "/admin/v1/resources/groups"
     };
   }
+
   // 创建资源
   rpc CreateResource (CreateResourceReq) returns (CreateResourceReply) {
     option (google.api.http) = {
@@ -401,12 +438,14 @@ service Admin {
       body: "*"
     };
   }
+
   // 获取资源
   rpc GetResource (GetResourceReq) returns (Resource) {
     option (google.api.http) = {
       get: "/admin/v1/resources/{id}"
     };
   }
+
   // 修改资源
   rpc UpdateResource (UpdateResourceReq) returns (UpdateResourceReply) {
     option (google.api.http) = {
@@ -414,12 +453,14 @@ service Admin {
       body: "data"
     };
   }
+
   // 删除资源
   rpc DeleteResource (DeleteResourceReq) returns (DeleteResourceReply) {
     option (google.api.http) = {
       delete: "/admin/v1/resources/{id}"
     };
   }
+
   // 菜单模块
   // 列表菜单
   rpc ListMenu (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
@@ -427,6 +468,7 @@ service Admin {
       get: "/admin/v1/menus"
     };
   }
+
   // 创建菜单
   rpc CreateMenu (CreateMenuReq) returns (CreateMenuReply) {
     option (google.api.http) = {
@@ -434,21 +476,24 @@ service Admin {
       body: "*"
     };
   }
+
   // 获取树形菜单
   rpc ListMenuTree (ListMenuTreeReq) returns (ListMenuTreeReply) {
     option (google.api.http) = {
-      get: "/admin/v1/menus/{id}/trees"
+      get: "/admin/v1/menus/trees"
       additional_bindings {
-        get: "/admin/v1/menus/trees"
+        get: "/admin/v1/menus/{id}/trees"
       }
     };
   }
+
   // 获取菜单
   rpc GetMenu (GetMenuReq) returns (Menu) {
     option (google.api.http) = {
       get: "/admin/v1/menus/{id}"
     };
   }
+
   // 修改菜单
   rpc UpdateMenu (UpdateMenuReq) returns (UpdateMenuReply) {
     option (google.api.http) = {
@@ -456,6 +501,7 @@ service Admin {
       body: "data"
     };
   }
+
   // 删除菜单
   rpc DeleteMenu (DeleteMenuReq) returns (DeleteMenuReply) {
     option (google.api.http) = {
@@ -469,6 +515,7 @@ service Admin {
       get: "/admin/v1/depts"
     };
   }
+
   // 创建部门
   rpc CreateDept (CreateDeptReq) returns (CreateDeptReply) {
     option (google.api.http) = {
@@ -476,12 +523,14 @@ service Admin {
       body: "*"
     };
   }
+
   // 获取部门
   rpc GetDept (GetDeptReq) returns (Dept) {
     option (google.api.http) = {
       get: "/admin/v1/depts/{id}"
     };
   }
+
   // 修改部门
   rpc UpdateDept (UpdateDeptReq) returns (UpdateDeptReply) {
     option (google.api.http) = {
@@ -489,16 +538,21 @@ service Admin {
       body: "data"
     };
   }
+
   // 删除部门
   rpc DeleteDept (DeleteDeptReq) returns (DeleteDeptReply) {
     option (google.api.http) = {
       delete: "/admin/v1/depts/{id}"
     };
   }
-  // 获取树形部门
+
+  // 获取全部部门树形
   rpc ListDeptTree (ListDeptTreeReq) returns (ListDeptTreeReply) {
     option (google.api.http) = {
-      get: "/admin/v1/depts/{id}/trees"
+      get: "/admin/v1/depts/trees"
+      additional_bindings {
+        get: "/admin/v1/depts/{id}/trees"
+      }
     };
   }
 
@@ -508,6 +562,7 @@ service Admin {
       get: "/admin/v1/posts"
     };
   }
+
   // 创建职位
   rpc CreatePost (CreatePostReq) returns (CreatePostReply) {
     option (google.api.http) = {
@@ -515,12 +570,14 @@ service Admin {
       body: "*"
     };
   }
+
   // 获取职位
   rpc GetPost (GetPostReq) returns (Post) {
     option (google.api.http) = {
       get: "/admin/v1/posts/{id}"
     };
   }
+
   // 修改职位
   rpc UpdatePost (UpdatePostReq) returns (UpdatePostReply) {
     option (google.api.http) = {
@@ -528,12 +585,14 @@ service Admin {
       body: "data"
     };
   }
+
   // 删除职位
   rpc DeletePost (DeletePostReq) returns (DeletePostReply) {
     option (google.api.http) = {
       delete: "/admin/v1/posts/{id}"
     };
   }
+
   // 设置领域状态
   rpc UpdatePostState (UpdatePostStateReq) returns (UpdatePostStateReply) {
     option (google.api.http) = {
@@ -578,6 +637,7 @@ message PassLoginReq {
     string account = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
     string password = 2 [(validate.rules).string = {min_len: 6, max_len: 28}];
   }
+
   // 请求体
   PassField auth = 1 [(validate.rules).message = {required: true}];
 }
@@ -585,9 +645,10 @@ message PassLoginReq {
 // 请求 - 短信登录
 message SmsLoginReq {
   message SmsField {
-    string mobile = 1 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
+    string phone = 1 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
     string code = 2 [(validate.rules).string.pattern = "^[0-9]{6}$"];
   }
+
   // 请求体
   SmsField auth = 1 [(validate.rules).message = {required: true}];
 }
@@ -598,6 +659,7 @@ message EmailLoginReq {
     string email = 1 [(validate.rules).string.email = true];
     string code = 2 [(validate.rules).string.pattern = "^[0-9]{4,6}$"];
   }
+
   // 请求体
   EmailField auth = 1 [(validate.rules).message = {required: true}];
 }
@@ -616,7 +678,7 @@ message User {
   string real_name = 5;
   string birthday = 6;
   api.protobuf.UserGender gender = 7; 
-  string mobile = 8;
+  string phone = 8;
   string email = 9;
   string avatar = 10;
   api.protobuf.UserState state = 11;
@@ -633,24 +695,24 @@ message GetUserProfileReply {
 // 回应 - 用户领域
 message ListUserDomainReply {
   repeated Domain items = 1;
-  int32 total = 2;
+  int64 total = 2;
 }
 
 // 回应 - 用户角色
 message ListUserRoleReply {
   repeated Role items = 1;
-  int32 total = 2;
+  int64 total = 2;
 }
 
 // 回应 - 列表用户 - 未使用
 message ListUserReply {
   repeated User items = 1;
-  int32 total = 2;
+  int64 total = 2;
 }
 
 // 请求 - 获取用户角色菜单树形
 message ListUserRoleMenuTreeReq {
-  uint64 role_id = 1 [(validate.rules).uint64 = {gte: 0}];
+  uint64 role_id = 1;
 }
 
 // 回应 - 获取用户角色菜单树形 Deprecated
@@ -702,7 +764,7 @@ message ListUserRoleMenuTreeReply_Deprecated {
     MenuMeta meta = 8;
     repeated Menu children = 9;
   }
-  int32 total = 1;
+  int64 total = 1;
   repeated Menu items = 2;
 }
 
@@ -736,7 +798,7 @@ message RouterMenu {
 
 // 回应 - 获取用户角色菜单列表-树形
 message ListUserRoleMenuTreeReply {
-  int32 total = 1;
+  int64 total = 1;
   repeated RouterMenu items = 2;
 }
 
@@ -747,7 +809,7 @@ message ListUserRolePermissionReq {
 
 // 回应 - 获取用户角色列表
 message ListUserRolePermissionReply {
-  int32 total = 1;
+  int64 total = 1;
   repeated string items = 2;
 }
 
@@ -760,7 +822,7 @@ message CreateUserReq {
   optional string real_name = 5 [(validate.rules).string = {min_len: 2, max_len: 10}];
   optional string birthday = 6 [(validate.rules).string.pattern = "^[1-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$"];
   optional api.protobuf.UserGender gender = 7 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-  string mobile = 8 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
+  string phone = 8 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
   optional string email = 9 [(validate.rules).string.email = true];
   api.protobuf.UserState state = 10 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
 }
@@ -831,7 +893,7 @@ message UpdateUserReq {
     // x must be less than the Unix Epoch
     optional string birthday = 6 [(validate.rules).string.pattern = "^[1-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$"];
     optional api.protobuf.UserGender gender = 7 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-    string mobile = 8 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
+    string phone = 8 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
     optional string email = 9 [(validate.rules).string.email = true];
     api.protobuf.UserState state = 10 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
     optional string avatar = 11;
@@ -848,7 +910,7 @@ message UpdateUserReply {
 
 // 回应 - 获取用户菜单
 message UserMenuTreeReply {
-  int32 total = 1;
+  int64 total = 1;
   repeated Menu items = 2;
 }
 
@@ -899,7 +961,7 @@ message ListDomainTreeReq {
   uint64 id = 1;
 }
 message ListDomainTreeReply {
-  int32 total = 1;
+  int64 total = 1;
   repeated Domain items = 2;
 }
 
@@ -979,7 +1041,7 @@ message ListDomainMenuReq {
 
 // 回应 - 获取领域菜单
 message ListDomainMenuReply {
-  int32 total = 1;
+  int64 total = 1;
   repeated Menu items = 2;
 }
 
@@ -1097,7 +1159,7 @@ message ListRoleMenuReq {
 
 // 回应 - 获取角色菜单
 message ListRoleMenuReply {
-  int32 total = 1;
+  int64 total = 1;
   repeated Menu items = 2;
 }
 
@@ -1153,7 +1215,7 @@ message Resource {
 
 // 回应 - 创建资源
 message ListResourceGroupReply {
-  int32 total = 1;
+  int64 total = 1;
   repeated string items = 2;
 }
 
@@ -1324,12 +1386,12 @@ message DeleteMenuReply {
 
 // 请求 - 获取树形菜单
 message ListMenuTreeReq {
-  uint64 id = 1 [(validate.rules).uint64 = {gte: 0}];
+  uint64 id = 1;
 }
 
 // 回应 - 获取树形菜单
 message ListMenuTreeReply {
-  int32 total = 1;
+  int64 total = 1;
   repeated Menu items = 2;
 }
 
@@ -1401,15 +1463,14 @@ message DeleteDeptReply {
 
 // 请求 - 获取树形部门
 message ListDeptTreeReq {
-  uint64 id = 1 [(validate.rules).uint64 = {gte: 0}];
+  uint64 id = 1;
 }
 
 // 回应 - 获取树形部门
 message ListDeptTreeReply {
-  int32 total = 1;
+  int64 total = 1;
   repeated Dept items = 2;
 }
-
 
 // 职位模块
 message Post {

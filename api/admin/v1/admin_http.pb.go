@@ -167,10 +167,10 @@ func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
 	r.GET("/admin/v1/users/profiles", _Admin_GetUserProfile0_HTTP_Handler(srv))
 	r.GET("/admin/v1/users/domains", _Admin_ListUserDomain0_HTTP_Handler(srv))
 	r.GET("/admin/v1/users/roles", _Admin_ListUserRole0_HTTP_Handler(srv))
-	r.GET("/admin/v1/users/menus/trees", _Admin_ListUserRoleMenuTree0_HTTP_Handler(srv))
-	r.GET("/admin/v1/users/roles/{role_id}/menus/trees", _Admin_ListUserRoleMenuTree1_HTTP_Handler(srv))
-	r.GET("/admin/v1/users/permissions", _Admin_ListUserRolePermission0_HTTP_Handler(srv))
-	r.GET("/admin/v1/users/roles/{role_id}/permissions", _Admin_ListUserRolePermission1_HTTP_Handler(srv))
+	r.GET("/admin/v1/users/roles/{role_id}/menus/trees", _Admin_ListUserRoleMenuTree0_HTTP_Handler(srv))
+	r.GET("/admin/v1/users/menus/trees", _Admin_ListUserRoleMenuTree1_HTTP_Handler(srv))
+	r.GET("/admin/v1/users/roles/{role_id}/permissions", _Admin_ListUserRolePermission0_HTTP_Handler(srv))
+	r.GET("/admin/v1/users/permissions", _Admin_ListUserRolePermission1_HTTP_Handler(srv))
 	r.GET("/admin/v1/users", _Admin_ListUser0_HTTP_Handler(srv))
 	r.POST("/admin/v1/users", _Admin_CreateUser0_HTTP_Handler(srv))
 	r.GET("/admin/v1/users/{id}", _Admin_GetUser0_HTTP_Handler(srv))
@@ -183,8 +183,8 @@ func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
 	r.POST("/admin/v1/domains/login", _Admin_LoginDomain1_HTTP_Handler(srv))
 	r.POST("/admin/v1/domains/register", _Admin_RegisterDomain0_HTTP_Handler(srv))
 	r.GET("/admin/v1/domains", _Admin_ListDomain0_HTTP_Handler(srv))
-	r.GET("/admin/v1/domains/trees", _Admin_ListDomainTree0_HTTP_Handler(srv))
-	r.GET("/admin/v1/domains/{id}/trees", _Admin_ListDomainTree1_HTTP_Handler(srv))
+	r.GET("/admin/v1/domains/{id}/trees", _Admin_ListDomainTree0_HTTP_Handler(srv))
+	r.GET("/admin/v1/domains/trees", _Admin_ListDomainTree1_HTTP_Handler(srv))
 	r.POST("/admin/v1/domains", _Admin_CreateDomain0_HTTP_Handler(srv))
 	r.GET("/admin/v1/domains/{id}", _Admin_GetDomain0_HTTP_Handler(srv))
 	r.PUT("/admin/v1/domains/{id}", _Admin_UpdateDomain0_HTTP_Handler(srv))
@@ -209,8 +209,8 @@ func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
 	r.DELETE("/admin/v1/resources/{id}", _Admin_DeleteResource0_HTTP_Handler(srv))
 	r.GET("/admin/v1/menus", _Admin_ListMenu0_HTTP_Handler(srv))
 	r.POST("/admin/v1/menus", _Admin_CreateMenu0_HTTP_Handler(srv))
-	r.GET("/admin/v1/menus/trees", _Admin_ListMenuTree0_HTTP_Handler(srv))
-	r.GET("/admin/v1/menus/{id}/trees", _Admin_ListMenuTree1_HTTP_Handler(srv))
+	r.GET("/admin/v1/menus/{id}/trees", _Admin_ListMenuTree0_HTTP_Handler(srv))
+	r.GET("/admin/v1/menus/trees", _Admin_ListMenuTree1_HTTP_Handler(srv))
 	r.GET("/admin/v1/menus/{id}", _Admin_GetMenu0_HTTP_Handler(srv))
 	r.PUT("/admin/v1/menus/{id}", _Admin_UpdateMenu0_HTTP_Handler(srv))
 	r.DELETE("/admin/v1/menus/{id}", _Admin_DeleteMenu0_HTTP_Handler(srv))
@@ -220,6 +220,7 @@ func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
 	r.PUT("/admin/v1/depts/{id}", _Admin_UpdateDept0_HTTP_Handler(srv))
 	r.DELETE("/admin/v1/depts/{id}", _Admin_DeleteDept0_HTTP_Handler(srv))
 	r.GET("/admin/v1/depts/{id}/trees", _Admin_ListDeptTree0_HTTP_Handler(srv))
+	r.GET("/admin/v1/depts/trees", _Admin_ListDeptTree1_HTTP_Handler(srv))
 	r.GET("/admin/v1/posts", _Admin_ListPost0_HTTP_Handler(srv))
 	r.POST("/admin/v1/posts", _Admin_CreatePost0_HTTP_Handler(srv))
 	r.GET("/admin/v1/posts/{id}", _Admin_GetPost0_HTTP_Handler(srv))
@@ -480,6 +481,9 @@ func _Admin_ListUserRoleMenuTree0_HTTP_Handler(srv AdminHTTPServer) func(ctx htt
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
 		http.SetOperation(ctx, OperationAdminListUserRoleMenuTree)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ListUserRoleMenuTree(ctx, req.(*ListUserRoleMenuTreeReq))
@@ -497,9 +501,6 @@ func _Admin_ListUserRoleMenuTree1_HTTP_Handler(srv AdminHTTPServer) func(ctx htt
 	return func(ctx http.Context) error {
 		var in ListUserRoleMenuTreeReq
 		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAdminListUserRoleMenuTree)
@@ -521,6 +522,9 @@ func _Admin_ListUserRolePermission0_HTTP_Handler(srv AdminHTTPServer) func(ctx h
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
 		http.SetOperation(ctx, OperationAdminListUserRolePermission)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ListUserRolePermission(ctx, req.(*ListUserRolePermissionReq))
@@ -538,9 +542,6 @@ func _Admin_ListUserRolePermission1_HTTP_Handler(srv AdminHTTPServer) func(ctx h
 	return func(ctx http.Context) error {
 		var in ListUserRolePermissionReq
 		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAdminListUserRolePermission)
@@ -826,6 +827,9 @@ func _Admin_ListDomainTree0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Cont
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
 		http.SetOperation(ctx, OperationAdminListDomainTree)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ListDomainTree(ctx, req.(*ListDomainTreeReq))
@@ -843,9 +847,6 @@ func _Admin_ListDomainTree1_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Cont
 	return func(ctx http.Context) error {
 		var in ListDomainTreeReq
 		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAdminListDomainTree)
@@ -1395,6 +1396,9 @@ func _Admin_ListMenuTree0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Contex
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
 		http.SetOperation(ctx, OperationAdminListMenuTree)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ListMenuTree(ctx, req.(*ListMenuTreeReq))
@@ -1412,9 +1416,6 @@ func _Admin_ListMenuTree1_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Contex
 	return func(ctx http.Context) error {
 		var in ListMenuTreeReq
 		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAdminListMenuTree)
@@ -1613,6 +1614,25 @@ func _Admin_ListDeptTree0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Contex
 			return err
 		}
 		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminListDeptTree)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListDeptTree(ctx, req.(*ListDeptTreeReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListDeptTreeReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_ListDeptTree1_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListDeptTreeReq
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAdminListDeptTree)
@@ -2240,7 +2260,7 @@ func (c *AdminHTTPClientImpl) ListDept(ctx context.Context, in *protobuf.PagingR
 
 func (c *AdminHTTPClientImpl) ListDeptTree(ctx context.Context, in *ListDeptTreeReq, opts ...http.CallOption) (*ListDeptTreeReply, error) {
 	var out ListDeptTreeReply
-	pattern := "/admin/v1/depts/{id}/trees"
+	pattern := "/admin/v1/depts/trees"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminListDeptTree))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -2279,7 +2299,7 @@ func (c *AdminHTTPClientImpl) ListDomainMenu(ctx context.Context, in *ListDomain
 
 func (c *AdminHTTPClientImpl) ListDomainTree(ctx context.Context, in *ListDomainTreeReq, opts ...http.CallOption) (*ListDomainTreeReply, error) {
 	var out ListDomainTreeReply
-	pattern := "/admin/v1/domains/{id}/trees"
+	pattern := "/admin/v1/domains/trees"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminListDomainTree))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -2305,7 +2325,7 @@ func (c *AdminHTTPClientImpl) ListMenu(ctx context.Context, in *protobuf.PagingR
 
 func (c *AdminHTTPClientImpl) ListMenuTree(ctx context.Context, in *ListMenuTreeReq, opts ...http.CallOption) (*ListMenuTreeReply, error) {
 	var out ListMenuTreeReply
-	pattern := "/admin/v1/menus/{id}/trees"
+	pattern := "/admin/v1/menus/trees"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminListMenuTree))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -2422,7 +2442,7 @@ func (c *AdminHTTPClientImpl) ListUserRole(ctx context.Context, in *emptypb.Empt
 
 func (c *AdminHTTPClientImpl) ListUserRoleMenuTree(ctx context.Context, in *ListUserRoleMenuTreeReq, opts ...http.CallOption) (*ListUserRoleMenuTreeReply, error) {
 	var out ListUserRoleMenuTreeReply
-	pattern := "/admin/v1/users/roles/{role_id}/menus/trees"
+	pattern := "/admin/v1/users/menus/trees"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminListUserRoleMenuTree))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -2435,7 +2455,7 @@ func (c *AdminHTTPClientImpl) ListUserRoleMenuTree(ctx context.Context, in *List
 
 func (c *AdminHTTPClientImpl) ListUserRolePermission(ctx context.Context, in *ListUserRolePermissionReq, opts ...http.CallOption) (*ListUserRolePermissionReply, error) {
 	var out ListUserRolePermissionReply
-	pattern := "/admin/v1/users/roles/{role_id}/permissions"
+	pattern := "/admin/v1/users/permissions"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminListUserRolePermission))
 	opts = append(opts, http.PathTemplate(pattern))

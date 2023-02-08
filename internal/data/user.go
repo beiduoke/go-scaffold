@@ -55,7 +55,7 @@ func (r *UserRepo) toModel(d *biz.User) *SysUser {
 		Password: d.Password,
 		Birthday: d.Birthday,
 		Gender:   d.Gender,
-		Mobile:   d.Mobile,
+		Phone:    d.Phone,
 		Email:    d.Email,
 		State:    d.State,
 		Domains:  domains,
@@ -86,7 +86,7 @@ func (r *UserRepo) toBiz(d *SysUser) *biz.User {
 		Password:  d.Password,
 		Birthday:  d.Birthday,
 		Gender:    d.Gender,
-		Mobile:    d.Mobile,
+		Phone:     d.Phone,
 		Email:     d.Email,
 		State:     d.State,
 		Domains:   domains,
@@ -163,9 +163,9 @@ func (r *UserRepo) FindByName(ctx context.Context, s string) (*biz.User, error) 
 	return r.toBiz(&user), nil
 }
 
-func (r *UserRepo) FindByMobile(ctx context.Context, s string) (*biz.User, error) {
+func (r *UserRepo) FindByPhone(ctx context.Context, s string) (*biz.User, error) {
 	user := SysUser{}
-	result := r.data.DB(ctx).Last(&user, "mobile = ?", s)
+	result := r.data.DB(ctx).Last(&user, "phone = ?", s)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -193,9 +193,9 @@ func (r *UserRepo) ListByName(ctx context.Context, s string) ([]*biz.User, error
 	return bizUsers, nil
 }
 
-func (r *UserRepo) ListByMobile(ctx context.Context, s string) ([]*biz.User, error) {
+func (r *UserRepo) ListByPhone(ctx context.Context, s string) ([]*biz.User, error) {
 	sysUsers, bizUsers := []*SysUser{}, []*biz.User{}
-	result := r.data.DB(ctx).Find(&sysUsers, "mobile LIKE ?", "%"+s)
+	result := r.data.DB(ctx).Find(&sysUsers, "phone LIKE ?", "%"+s)
 	if result.Error != nil {
 		return nil, result.Error
 	}

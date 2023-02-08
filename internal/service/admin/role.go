@@ -35,7 +35,7 @@ func (s *AdminService) ListRole(ctx context.Context, in *protobuf.PagingReq) (*p
 		items = append(items, item)
 	}
 	return &protobuf.PagingReply{
-		Total: int32(total),
+		Total: total,
 		Items: items,
 	}, nil
 }
@@ -128,7 +128,7 @@ func (s *AdminService) ListRoleMenu(ctx context.Context, in *v1.ListRoleMenuReq)
 	for _, v := range menus {
 		items = append(items, TransformMenu(v))
 	}
-	return &v1.ListRoleMenuReply{Items: items, Total: int32(len(items))}, nil
+	return &v1.ListRoleMenuReply{Items: items, Total: int64(len(items))}, nil
 }
 
 // HandleRoleMenu 处理角色菜单

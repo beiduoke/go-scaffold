@@ -1144,7 +1144,7 @@ func (m *User) validate(all bool) error {
 
 	// no validation rules for Gender
 
-	// no validation rules for Mobile
+	// no validation rules for Phone
 
 	// no validation rules for Email
 
@@ -1886,16 +1886,7 @@ func (m *ListUserRoleMenuTreeReq) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetRoleId() < 0 {
-		err := ListUserRoleMenuTreeReqValidationError{
-			field:  "RoleId",
-			reason: "value must be greater than or equal to 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
+	// no validation rules for RoleId
 
 	if len(errors) > 0 {
 		return ListUserRoleMenuTreeReqMultiError(errors)
@@ -2679,9 +2670,9 @@ func (m *CreateUserReq) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if !_CreateUserReq_Mobile_Pattern.MatchString(m.GetMobile()) {
+	if !_CreateUserReq_Phone_Pattern.MatchString(m.GetPhone()) {
 		err := CreateUserReqValidationError{
-			field:  "Mobile",
+			field:  "Phone",
 			reason: "value does not match regex pattern \"^1[0-9]{10}$\"",
 		}
 		if !all {
@@ -2952,7 +2943,7 @@ var _CreateUserReq_Gender_NotInLookup = map[protobuf.UserGender]struct{}{
 	0: {},
 }
 
-var _CreateUserReq_Mobile_Pattern = regexp.MustCompile("^1[0-9]{10}$")
+var _CreateUserReq_Phone_Pattern = regexp.MustCompile("^1[0-9]{10}$")
 
 var _CreateUserReq_State_NotInLookup = map[protobuf.UserState]struct{}{
 	0: {},
@@ -12267,16 +12258,7 @@ func (m *ListMenuTreeReq) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetId() < 0 {
-		err := ListMenuTreeReqValidationError{
-			field:  "Id",
-			reason: "value must be greater than or equal to 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
+	// no validation rules for Id
 
 	if len(errors) > 0 {
 		return ListMenuTreeReqMultiError(errors)
@@ -13652,16 +13634,7 @@ func (m *ListDeptTreeReq) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetId() < 0 {
-		err := ListDeptTreeReqValidationError{
-			field:  "Id",
-			reason: "value must be greater than or equal to 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
+	// no validation rules for Id
 
 	if len(errors) > 0 {
 		return ListDeptTreeReqMultiError(errors)
@@ -15408,9 +15381,9 @@ func (m *SmsLoginReq_SmsField) validate(all bool) error {
 
 	var errors []error
 
-	if !_SmsLoginReq_SmsField_Mobile_Pattern.MatchString(m.GetMobile()) {
+	if !_SmsLoginReq_SmsField_Phone_Pattern.MatchString(m.GetPhone()) {
 		err := SmsLoginReq_SmsFieldValidationError{
-			field:  "Mobile",
+			field:  "Phone",
 			reason: "value does not match regex pattern \"^1[0-9]{10}$\"",
 		}
 		if !all {
@@ -15510,7 +15483,7 @@ var _ interface {
 	ErrorName() string
 } = SmsLoginReq_SmsFieldValidationError{}
 
-var _SmsLoginReq_SmsField_Mobile_Pattern = regexp.MustCompile("^1[0-9]{10}$")
+var _SmsLoginReq_SmsField_Phone_Pattern = regexp.MustCompile("^1[0-9]{10}$")
 
 var _SmsLoginReq_SmsField_Code_Pattern = regexp.MustCompile("^[0-9]{6}$")
 
@@ -16480,9 +16453,9 @@ func (m *UpdateUserReq_Data) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if !_UpdateUserReq_Data_Mobile_Pattern.MatchString(m.GetMobile()) {
+	if !_UpdateUserReq_Data_Phone_Pattern.MatchString(m.GetPhone()) {
 		err := UpdateUserReq_DataValidationError{
-			field:  "Mobile",
+			field:  "Phone",
 			reason: "value does not match regex pattern \"^1[0-9]{10}$\"",
 		}
 		if !all {
@@ -16755,7 +16728,7 @@ var _UpdateUserReq_Data_Gender_NotInLookup = map[protobuf.UserGender]struct{}{
 	0: {},
 }
 
-var _UpdateUserReq_Data_Mobile_Pattern = regexp.MustCompile("^1[0-9]{10}$")
+var _UpdateUserReq_Data_Phone_Pattern = regexp.MustCompile("^1[0-9]{10}$")
 
 var _UpdateUserReq_Data_State_NotInLookup = map[protobuf.UserState]struct{}{
 	0: {},

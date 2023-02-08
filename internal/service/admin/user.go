@@ -32,7 +32,7 @@ func TransformUser(data *biz.User) *v1.User {
 		RealName:  data.RealName,
 		Gender:    protobuf.UserGender(data.Gender),
 		Birthday:  birthday,
-		Mobile:    data.Mobile,
+		Phone:     data.Phone,
 		Email:     data.Email,
 		State:     protobuf.UserState(data.State),
 	}
@@ -47,7 +47,7 @@ func (s *AdminService) ListUser(ctx context.Context, in *protobuf.PagingReq) (*p
 		items = append(items, item)
 	}
 	return &protobuf.PagingReply{
-		Total: int32(total),
+		Total: total,
 		Items: items,
 	}, nil
 }
@@ -70,7 +70,7 @@ func (s *AdminService) CreateUser(ctx context.Context, in *v1.CreateUserReq) (*v
 		NickName: in.GetNickName(),
 		RealName: in.GetRealName(),
 		Birthday: birthday,
-		Mobile:   in.GetMobile(),
+		Phone:    in.GetPhone(),
 		Email:    in.GetEmail(),
 		State:    int32(in.GetState()),
 	})
@@ -111,7 +111,7 @@ func (s *AdminService) UpdateUser(ctx context.Context, in *v1.UpdateUserReq) (*v
 		Password: v.GetPassword(),
 		Birthday: birthday,
 		Gender:   int32(v.GetGender()),
-		Mobile:   v.GetMobile(),
+		Phone:    v.GetPhone(),
 		Email:    v.GetEmail(),
 		State:    int32(v.GetState()),
 	})

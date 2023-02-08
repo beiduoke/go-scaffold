@@ -152,8 +152,8 @@ func (uc *DomainUsecase) UpdateState(ctx context.Context, g *Domain) error {
 
 // List 领域列表全部
 func (uc *DomainUsecase) ListAll(ctx context.Context) ([]*Domain, int64) {
-	uc.log.WithContext(ctx).Infof("DomainList")
-	return uc.biz.domainRepo.ListPage(ctx, pagination.NewPagination())
+	uc.log.WithContext(ctx).Infof("ListAll")
+	return uc.biz.domainRepo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithOrder("sort", false)))
 }
 
 // List 领域列表分页

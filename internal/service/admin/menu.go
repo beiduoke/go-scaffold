@@ -55,7 +55,7 @@ func (s *AdminService) ListMenuTree(ctx context.Context, in *v1.ListMenuTreeReq)
 	items, total := s.menuCase.ListAll(ctx)
 	return &v1.ListMenuTreeReply{
 		Items: TreeMenu(items, uint(in.GetId())),
-		Total: int32(total),
+		Total: total,
 	}, nil
 }
 
@@ -68,7 +68,7 @@ func (s *AdminService) ListMenu(ctx context.Context, in *protobuf.PagingReq) (*p
 		items = append(items, item)
 	}
 	return &protobuf.PagingReply{
-		Total: int32(total),
+		Total: total,
 		Items: items,
 	}, nil
 }
