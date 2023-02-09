@@ -619,16 +619,18 @@ message LoginReply {
 
 // 回应 - 注册
 message RegisterReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 回应 - 退出登录
 message LogoutReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 密码登录
@@ -769,7 +771,7 @@ message ListUserRoleMenuTreeReply_Deprecated {
 }
 
 // 路由菜单
-message RouterMenu {
+message MenuRouter {
   message Meta {
     // 路由title  一般必填
     string title = 1;
@@ -791,15 +793,15 @@ message RouterMenu {
   string name = 1;
   string path = 2;
   string component = 3;
-  optional string redirect = 4;
+  string redirect = 4;
   Meta meta = 5;
-  repeated RouterMenu children = 6;
+  repeated MenuRouter children = 6;
 }
 
 // 回应 - 获取用户角色菜单列表-树形
 message ListUserRoleMenuTreeReply {
   int64 total = 1;
-  repeated RouterMenu items = 2;
+  repeated MenuRouter items = 2;
 }
 
 // 请求 - 获取用户角色列表
@@ -829,9 +831,10 @@ message CreateUserReq {
 
 // 回应 - 创建用户
 message CreateUserReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 绑定用户领域
@@ -845,8 +848,10 @@ message HandleUserDomainReq {
 
 // 回应 - 绑定用户领域
 message HandleUserDomainReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 绑定用户领域权限
@@ -861,8 +866,10 @@ message HandleUserDomainRoleReq {
 
 // 回应 - 绑定用户领域权限
 message HandleUserDomainRoleReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 获取用户
@@ -877,9 +884,10 @@ message DeleteUserReq {
 
 // 回应 - 删除用户
 message DeleteUserReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 修改用户
@@ -903,9 +911,10 @@ message UpdateUserReq {
 
 // 回应 - 修改用户
 message UpdateUserReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 回应 - 获取用户菜单
@@ -921,9 +930,10 @@ message ExistUserNameReq {
 
 // 回应 - 验证用户是否存在
 message ExistUserNameReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 
@@ -976,9 +986,10 @@ message CreateDomainReq {
 
 // 回应 - 创建领域
 message CreateDomainReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 修改领域
@@ -996,9 +1007,10 @@ message UpdateDomainReq {
 
 // 回应 - 创建领域
 message UpdateDomainReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 修改领域-状态
@@ -1012,9 +1024,10 @@ message UpdateDomainStateReq {
 
 // 回应 - 创建领域-状态
 message UpdateDomainStateReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 获取领域
@@ -1029,9 +1042,10 @@ message DeleteDomainReq {
 
 // 回应 - 删除领域
 message DeleteDomainReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 获取领域菜单
@@ -1061,9 +1075,10 @@ message HandleDomainMenuReq {
 
 // 回应 - 处理领域菜单
 message HandleDomainMenuReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 角色模块
@@ -1092,9 +1107,10 @@ message CreateRoleReq {
 
 // 回应 - 创建角色
 message CreateRoleReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 修改角色
@@ -1114,9 +1130,10 @@ message UpdateRoleReq {
 
 // 回应 - 创建角色
 message UpdateRoleReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 修改角色
@@ -1130,9 +1147,10 @@ message UpdateRoleStateReq {
 
 // 回应 - 创建角色
 message UpdateRoleStateReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 获取角色
@@ -1147,9 +1165,10 @@ message DeleteRoleReq {
 
 // 回应 - 删除角色
 message DeleteRoleReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 获取角色菜单
@@ -1179,9 +1198,10 @@ message HandleRoleMenuReq {
 
 // 回应 - 处理角色菜单
 message HandleRoleMenuReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 处理角色资源
@@ -1195,9 +1215,10 @@ message HandleRoleResourceReq {
 
 // 回应 - 处理角色资源
 message HandleRoleResourceReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 资源模块
@@ -1231,9 +1252,10 @@ message CreateResourceReq {
 
 // 回应 - 创建资源
 message CreateResourceReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 修改资源
@@ -1252,9 +1274,10 @@ message UpdateResourceReq {
 
 // 回应 - 创建资源
 message UpdateResourceReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 获取资源
@@ -1269,9 +1292,10 @@ message DeleteResourceReq {
 
 // 回应 - 删除资源
 message DeleteResourceReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 菜单模块
@@ -1283,16 +1307,16 @@ message Menu {
   api.protobuf.MenuType type = 5;
   uint64 parent_id = 6;
   string path = 7;
-  api.protobuf.MenuHidden hidden = 8;
+  api.protobuf.MenuHidden is_hidden = 8;
   string component = 9;
   string permission = 10;
   int32 sort = 11;
   string icon = 12;
   string title = 13;
-  api.protobuf.MenuKeepAlive keep_alive = 14;
-  api.protobuf.MenuBaseMenu base_menu = 15;
-  api.protobuf.MenuCloseTab close_tab = 16;
-  api.protobuf.MenuExtType ext_type = 17;
+  api.protobuf.MenuCache is_cache = 14;
+  api.protobuf.MenuAffix is_affix = 16;
+  api.protobuf.MenuLinkType link_type = 17;
+  string link_url = 15;
   repeated Menu children = 18;
   repeated MenuParameter parameters = 19;
   repeated MenuButton buttons = 20;
@@ -1315,25 +1339,26 @@ message CreateMenuReq {
   api.protobuf.MenuType type = 2 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
   uint64 parent_id = 4 [(validate.rules).uint64 = {gte: 0}];
   optional string path = 5 [(validate.rules).string = {min_len: 1, max_len: 100}];
-  api.protobuf.MenuHidden hidden = 6 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  api.protobuf.MenuHidden is_hidden = 6 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
   optional string component = 7 [(validate.rules).string = {min_len: 1, max_len: 100}];
   optional string permission = 8 [(validate.rules).string = {min_len: 1, max_len: 100}];
   optional int32 sort = 9 [(validate.rules).int32 = {gte: 0}];
   optional string icon = 10 [(validate.rules).string = {min_len: 0, max_len: 100}];
   string title = 11 [(validate.rules).string = {min_len: 1, max_len: 100}];
-  optional api.protobuf.MenuKeepAlive keep_alive = 12 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-  optional api.protobuf.MenuBaseMenu base_menu = 13 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-  optional api.protobuf.MenuCloseTab close_tab = 14 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-  optional api.protobuf.MenuExtType ext_type = 15 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  optional api.protobuf.MenuCache is_cache = 12 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  optional string link_url = 13 [(validate.rules).string = {min_len: 0, max_len: 100}];
+  optional api.protobuf.MenuAffix is_affix = 14 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  optional api.protobuf.MenuLinkType link_type = 15 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
   repeated MenuParameter parameters = 16;
   repeated MenuButton buttons = 17;
 }
 
 // 回应 - 创建菜单
 message CreateMenuReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 修改菜单
@@ -1344,16 +1369,16 @@ message UpdateMenuReq {
     api.protobuf.MenuType type = 2 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
     uint64 parent_id = 4 [(validate.rules).uint64 = {gte: 0}];
     optional string path = 5 [(validate.rules).string = {min_len: 1, max_len: 100}];
-    optional api.protobuf.MenuHidden hidden = 6 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    optional api.protobuf.MenuHidden is_hidden = 6 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
     optional string component = 7 [(validate.rules).string = {min_len: 1, max_len: 100}];
     optional string permission = 8 [(validate.rules).string = {min_len: 1, max_len: 100}];
     optional int32 sort = 9 [(validate.rules).int32 = {gte: 0}];
     optional string icon = 10 [(validate.rules).string = {min_len: 0, max_len: 100}];
     string title = 11 [(validate.rules).string = {min_len: 1, max_len: 100}];
-    optional api.protobuf.MenuKeepAlive keep_alive = 12 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-    optional api.protobuf.MenuBaseMenu base_menu = 13 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-    optional api.protobuf.MenuCloseTab close_tab = 14 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-    optional api.protobuf.MenuExtType ext_type = 15 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    optional api.protobuf.MenuCache is_cache = 12 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    optional string link_url = 13 [(validate.rules).string = {min_len: 0, max_len: 100}];
+    optional api.protobuf.MenuAffix is_affix = 14 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    optional api.protobuf.MenuLinkType link_type = 15 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
     repeated MenuParameter parameters = 16;
     repeated MenuButton buttons = 17;
   }
@@ -1362,9 +1387,10 @@ message UpdateMenuReq {
 
 // 回应 - 创建菜单
 message UpdateMenuReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 获取菜单
@@ -1379,9 +1405,10 @@ message DeleteMenuReq {
 
 // 回应 - 删除菜单
 message DeleteMenuReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 获取树形菜单
@@ -1419,9 +1446,10 @@ message CreateDeptReq {
 
 // 回应 - 创建部门
 message CreateDeptReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 修改部门
@@ -1439,9 +1467,10 @@ message UpdateDeptReq {
 
 // 回应 - 创建部门
 message UpdateDeptReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 获取部门
@@ -1456,9 +1485,10 @@ message DeleteDeptReq {
 
 // 回应 - 删除部门
 message DeleteDeptReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 获取树形部门
@@ -1495,9 +1525,10 @@ message CreatePostReq {
 
 // 回应 - 创建职位
 message CreatePostReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 修改职位
@@ -1515,9 +1546,10 @@ message UpdatePostReq {
 
 // 回应 - 创建职位
 message UpdatePostReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }
 
 // 请求 - 获取职位
@@ -1548,7 +1580,8 @@ message UpdatePostStateReq {
 
 // 回应 - 创建职位-状态
 message UpdatePostStateReply {
-  bool success = 1;
+  int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
+  bool success = 4;
 }

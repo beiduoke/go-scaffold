@@ -36,18 +36,16 @@ func (r *MenuRepo) toModel(d *biz.Menu) *SysMenu {
 		Type:       d.Type,
 		ParentID:   d.ParentID,
 		Path:       d.Path,
-		Hidden:     d.Hidden,
 		Component:  d.Component,
 		Permission: d.Permission,
 		Sort:       d.Sort,
-		Meta: SysMeta{
-			Icon:      d.Icon,
-			Title:     d.Title,
-			KeepAlive: d.KeepAlive,
-			BaseMenu:  d.BaseMenu,
-			CloseTab:  d.CloseTab,
-			ExtType:   d.ExtType,
-		},
+		Icon:       d.Icon,
+		Title:      d.Title,
+		IsHidden:   d.IsHidden,
+		IsCache:    d.IsCache,
+		IsAffix:    d.IsAffix,
+		LinkType:   d.LinkType,
+		LinkUrl:    d.LinkUrl,
 		Parameters: make([]SysMenuParameter, 0, len(d.Parameters)),
 		Buttons:    make([]SysMenuButton, 0, len(d.Buttons)),
 	}
@@ -82,16 +80,16 @@ func (r *MenuRepo) toBiz(d *SysMenu) *biz.Menu {
 		Type:       d.Type,
 		ParentID:   d.ParentID,
 		Path:       d.Path,
-		Hidden:     d.Hidden,
 		Component:  d.Component,
 		Permission: d.Permission,
 		Sort:       d.Sort,
-		Icon:       d.Meta.Icon,
-		Title:      d.Meta.Title,
-		KeepAlive:  d.Meta.KeepAlive,
-		BaseMenu:   d.Meta.BaseMenu,
-		CloseTab:   d.Meta.CloseTab,
-		ExtType:    d.Meta.ExtType,
+		Icon:       d.Icon,
+		Title:      d.Title,
+		IsHidden:   d.IsHidden,
+		IsCache:    d.IsCache,
+		IsAffix:    d.IsAffix,
+		LinkType:   d.LinkType,
+		LinkUrl:    d.LinkUrl,
 		Parameters: make([]*biz.MenuParameter, 0, len(d.Parameters)),
 		Buttons:    make([]*biz.MenuButton, 0, len(d.Buttons)),
 	}
@@ -133,7 +131,7 @@ func (r *MenuRepo) Update(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 		return nil, err
 	}
 
-	result := r.data.DBD(ctx).Model(d).Updates(d)
+	result := r.data.DB(ctx).Model(d).Debug().Select("*").Omit("CreatedAt").Updates(d)
 
 	if result.Error == nil {
 		r.setCache(ctx, d)
@@ -143,7 +141,7 @@ func (r *MenuRepo) Update(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 
 func (r *MenuRepo) FindByName(ctx context.Context, s string) (*biz.Menu, error) {
 	menu := SysMenu{}
-	result := r.data.DBD(ctx).Preload("Parameters").Preload("Buttons").Last(&menu, "name = ?", s)
+	result := r.data.DB(ctx).Preload("Parameters").Preload("Buttons").Last(&menu, "name = ?", s)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -152,7 +150,7 @@ func (r *MenuRepo) FindByName(ctx context.Context, s string) (*biz.Menu, error) 
 
 func (r *MenuRepo) FindByID(ctx context.Context, id uint) (*biz.Menu, error) {
 	menu := SysMenu{}
-	result := r.data.DBD(ctx).Preload("Parameters").Preload("Buttons").Last(&menu, id)
+	result := r.data.DB(ctx).Preload("Parameters").Preload("Buttons").Last(&menu, id)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -160,7 +158,7 @@ func (r *MenuRepo) FindByID(ctx context.Context, id uint) (*biz.Menu, error) {
 }
 
 func (r *MenuRepo) ListByIDs(ctx context.Context, id ...uint) (menus []*biz.Menu, err error) {
-	db := r.data.DBD(ctx).Model(&SysMenu{})
+	db := r.data.DB(ctx).Model(&SysMenu{})
 	sysMenus := []*SysMenu{}
 
 	err = db.Find(&sysMenus).Error
@@ -175,7 +173,7 @@ func (r *MenuRepo) ListByIDs(ctx context.Context, id ...uint) (menus []*biz.Menu
 
 func (r *MenuRepo) ListByName(ctx context.Context, name string) ([]*biz.Menu, error) {
 	sysMenus, bizMenus := []*SysMenu{}, []*biz.Menu{}
-	result := r.data.DBD(ctx).Find(&sysMenus, "name LIKE ?", "%"+name)
+	result := r.data.DB(ctx).Find(&sysMenus, "name LIKE ?", "%"+name)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -186,7 +184,7 @@ func (r *MenuRepo) ListByName(ctx context.Context, name string) ([]*biz.Menu, er
 }
 
 func (r *MenuRepo) Delete(ctx context.Context, g *biz.Menu) error {
-	result := r.data.DBD(ctx).Select("Parameters", "Buttons").Delete(r.toModel(g))
+	result := r.data.DB(ctx).Select("Parameters", "Buttons").Delete(r.toModel(g))
 	if err := result.Error; err != nil {
 		return err
 	}
@@ -216,9 +214,9 @@ func (r *MenuRepo) ListPage(ctx context.Context, handler pagination.PaginationHa
 		db = db.Count(&total).Offset(handler.GetPageOffset())
 	}
 
-	if domainId := r.data.DomainID(ctx); domainId > 0 {
+	if domainId := r.data.DomainID(ctx); domainId > 1 {
 		var sysDomainMenus []int64
-		result := r.data.db.Table("sys_domain_menus").Where("sys_domain_id", domainId).Debug().Pluck("sys_menu_id", &sysDomainMenus)
+		result := r.data.db.Table("sys_domain_menus").Where("sys_domain_id", domainId).Pluck("sys_menu_id", &sysDomainMenus)
 		if result.RowsAffected > 0 {
 			db = db.Where("id in ?", sysDomainMenus)
 		}

@@ -311,7 +311,7 @@ func (m *RegisterReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -343,6 +343,8 @@ func (m *RegisterReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return RegisterReplyMultiError(errors)
@@ -444,7 +446,7 @@ func (m *LogoutReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -476,6 +478,8 @@ func (m *LogoutReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return LogoutReplyMultiError(errors)
@@ -2109,22 +2113,22 @@ var _ interface {
 	ErrorName() string
 } = ListUserRoleMenuTreeReply_DeprecatedValidationError{}
 
-// Validate checks the field values on RouterMenu with the rules defined in the
+// Validate checks the field values on MenuRouter with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *RouterMenu) Validate() error {
+func (m *MenuRouter) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on RouterMenu with the rules defined in
+// ValidateAll checks the field values on MenuRouter with the rules defined in
 // the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in RouterMenuMultiError, or
+// result is a list of violation errors wrapped in MenuRouterMultiError, or
 // nil if none found.
-func (m *RouterMenu) ValidateAll() error {
+func (m *MenuRouter) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *RouterMenu) validate(all bool) error {
+func (m *MenuRouter) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -2137,11 +2141,13 @@ func (m *RouterMenu) validate(all bool) error {
 
 	// no validation rules for Component
 
+	// no validation rules for Redirect
+
 	if all {
 		switch v := interface{}(m.GetMeta()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, RouterMenuValidationError{
+				errors = append(errors, MenuRouterValidationError{
 					field:  "Meta",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -2149,7 +2155,7 @@ func (m *RouterMenu) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, RouterMenuValidationError{
+				errors = append(errors, MenuRouterValidationError{
 					field:  "Meta",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -2158,7 +2164,7 @@ func (m *RouterMenu) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetMeta()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return RouterMenuValidationError{
+			return MenuRouterValidationError{
 				field:  "Meta",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -2173,7 +2179,7 @@ func (m *RouterMenu) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, RouterMenuValidationError{
+					errors = append(errors, MenuRouterValidationError{
 						field:  fmt.Sprintf("Children[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -2181,7 +2187,7 @@ func (m *RouterMenu) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, RouterMenuValidationError{
+					errors = append(errors, MenuRouterValidationError{
 						field:  fmt.Sprintf("Children[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -2190,7 +2196,7 @@ func (m *RouterMenu) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return RouterMenuValidationError{
+				return MenuRouterValidationError{
 					field:  fmt.Sprintf("Children[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -2200,23 +2206,19 @@ func (m *RouterMenu) validate(all bool) error {
 
 	}
 
-	if m.Redirect != nil {
-		// no validation rules for Redirect
-	}
-
 	if len(errors) > 0 {
-		return RouterMenuMultiError(errors)
+		return MenuRouterMultiError(errors)
 	}
 
 	return nil
 }
 
-// RouterMenuMultiError is an error wrapping multiple validation errors
-// returned by RouterMenu.ValidateAll() if the designated constraints aren't met.
-type RouterMenuMultiError []error
+// MenuRouterMultiError is an error wrapping multiple validation errors
+// returned by MenuRouter.ValidateAll() if the designated constraints aren't met.
+type MenuRouterMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m RouterMenuMultiError) Error() string {
+func (m MenuRouterMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -2225,11 +2227,11 @@ func (m RouterMenuMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m RouterMenuMultiError) AllErrors() []error { return m }
+func (m MenuRouterMultiError) AllErrors() []error { return m }
 
-// RouterMenuValidationError is the validation error returned by
-// RouterMenu.Validate if the designated constraints aren't met.
-type RouterMenuValidationError struct {
+// MenuRouterValidationError is the validation error returned by
+// MenuRouter.Validate if the designated constraints aren't met.
+type MenuRouterValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -2237,22 +2239,22 @@ type RouterMenuValidationError struct {
 }
 
 // Field function returns field value.
-func (e RouterMenuValidationError) Field() string { return e.field }
+func (e MenuRouterValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e RouterMenuValidationError) Reason() string { return e.reason }
+func (e MenuRouterValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e RouterMenuValidationError) Cause() error { return e.cause }
+func (e MenuRouterValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e RouterMenuValidationError) Key() bool { return e.key }
+func (e MenuRouterValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e RouterMenuValidationError) ErrorName() string { return "RouterMenuValidationError" }
+func (e MenuRouterValidationError) ErrorName() string { return "MenuRouterValidationError" }
 
 // Error satisfies the builtin error interface
-func (e RouterMenuValidationError) Error() string {
+func (e MenuRouterValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -2264,14 +2266,14 @@ func (e RouterMenuValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sRouterMenu.%s: %s%s",
+		"invalid %sMenuRouter.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = RouterMenuValidationError{}
+var _ error = MenuRouterValidationError{}
 
 var _ interface {
 	Field() string
@@ -2279,7 +2281,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = RouterMenuValidationError{}
+} = MenuRouterValidationError{}
 
 // Validate checks the field values on ListUserRoleMenuTreeReply with the rules
 // defined in the proto definition for this message. If any rules are
@@ -2971,7 +2973,7 @@ func (m *CreateUserReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -3003,6 +3005,8 @@ func (m *CreateUserReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return CreateUserReplyMultiError(errors)
@@ -3246,9 +3250,40 @@ func (m *HandleUserDomainReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetResult()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, HandleUserDomainReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, HandleUserDomainReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return HandleUserDomainReplyValidationError{
+				field:  "Result",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return HandleUserDomainReplyMultiError(errors)
@@ -3494,9 +3529,40 @@ func (m *HandleUserDomainRoleReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetResult()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, HandleUserDomainRoleReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, HandleUserDomainRoleReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return HandleUserDomainRoleReplyValidationError{
+				field:  "Result",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return HandleUserDomainRoleReplyMultiError(errors)
@@ -3821,7 +3887,7 @@ func (m *DeleteUserReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -3853,6 +3919,8 @@ func (m *DeleteUserReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return DeleteUserReplyMultiError(errors)
@@ -4094,7 +4162,7 @@ func (m *UpdateUserReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -4126,6 +4194,8 @@ func (m *UpdateUserReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return UpdateUserReplyMultiError(errors)
@@ -4467,7 +4537,7 @@ func (m *ExistUserNameReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -4499,6 +4569,8 @@ func (m *ExistUserNameReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return ExistUserNameReplyMultiError(errors)
@@ -5536,7 +5608,7 @@ func (m *CreateDomainReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -5568,6 +5640,8 @@ func (m *CreateDomainReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return CreateDomainReplyMultiError(errors)
@@ -5811,7 +5885,7 @@ func (m *UpdateDomainReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -5843,6 +5917,8 @@ func (m *UpdateDomainReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return UpdateDomainReplyMultiError(errors)
@@ -6088,7 +6164,7 @@ func (m *UpdateDomainStateReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -6120,6 +6196,8 @@ func (m *UpdateDomainStateReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return UpdateDomainStateReplyMultiError(errors)
@@ -6444,7 +6522,7 @@ func (m *DeleteDomainReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -6476,6 +6554,8 @@ func (m *DeleteDomainReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return DeleteDomainReplyMultiError(errors)
@@ -6972,7 +7052,7 @@ func (m *HandleDomainMenuReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -7004,6 +7084,8 @@ func (m *HandleDomainMenuReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return HandleDomainMenuReplyMultiError(errors)
@@ -7470,7 +7552,7 @@ func (m *CreateRoleReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -7502,6 +7584,8 @@ func (m *CreateRoleReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return CreateRoleReplyMultiError(errors)
@@ -7743,7 +7827,7 @@ func (m *UpdateRoleReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -7775,6 +7859,8 @@ func (m *UpdateRoleReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return UpdateRoleReplyMultiError(errors)
@@ -8018,7 +8104,7 @@ func (m *UpdateRoleStateReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -8050,6 +8136,8 @@ func (m *UpdateRoleStateReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return UpdateRoleStateReplyMultiError(errors)
@@ -8374,7 +8462,7 @@ func (m *DeleteRoleReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -8406,6 +8494,8 @@ func (m *DeleteRoleReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return DeleteRoleReplyMultiError(errors)
@@ -8898,7 +8988,7 @@ func (m *HandleRoleMenuReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -8930,6 +9020,8 @@ func (m *HandleRoleMenuReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return HandleRoleMenuReplyMultiError(errors)
@@ -9175,7 +9267,7 @@ func (m *HandleRoleResourceReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -9207,6 +9299,8 @@ func (m *HandleRoleResourceReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return HandleRoleResourceReplyMultiError(errors)
@@ -9778,7 +9872,7 @@ func (m *CreateResourceReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -9810,6 +9904,8 @@ func (m *CreateResourceReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return CreateResourceReplyMultiError(errors)
@@ -10055,7 +10151,7 @@ func (m *UpdateResourceReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -10087,6 +10183,8 @@ func (m *UpdateResourceReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return UpdateResourceReplyMultiError(errors)
@@ -10414,7 +10512,7 @@ func (m *DeleteResourceReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -10446,6 +10544,8 @@ func (m *DeleteResourceReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return DeleteResourceReplyMultiError(errors)
@@ -10616,7 +10716,7 @@ func (m *Menu) validate(all bool) error {
 
 	// no validation rules for Path
 
-	// no validation rules for Hidden
+	// no validation rules for IsHidden
 
 	// no validation rules for Component
 
@@ -10628,13 +10728,13 @@ func (m *Menu) validate(all bool) error {
 
 	// no validation rules for Title
 
-	// no validation rules for KeepAlive
+	// no validation rules for IsCache
 
-	// no validation rules for BaseMenu
+	// no validation rules for IsAffix
 
-	// no validation rules for CloseTab
+	// no validation rules for LinkType
 
-	// no validation rules for ExtType
+	// no validation rules for LinkUrl
 
 	for idx, item := range m.GetChildren() {
 		_, _ = idx, item
@@ -11079,9 +11179,9 @@ func (m *CreateMenuReq) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if _, ok := _CreateMenuReq_Hidden_NotInLookup[m.GetHidden()]; ok {
+	if _, ok := _CreateMenuReq_IsHidden_NotInLookup[m.GetIsHidden()]; ok {
 		err := CreateMenuReqValidationError{
-			field:  "Hidden",
+			field:  "IsHidden",
 			reason: "value must not be in list [0]",
 		}
 		if !all {
@@ -11090,9 +11190,9 @@ func (m *CreateMenuReq) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if _, ok := protobuf.MenuHidden_name[int32(m.GetHidden())]; !ok {
+	if _, ok := protobuf.MenuHidden_name[int32(m.GetIsHidden())]; !ok {
 		err := CreateMenuReqValidationError{
-			field:  "Hidden",
+			field:  "IsHidden",
 			reason: "value must be one of the defined enum values",
 		}
 		if !all {
@@ -11270,11 +11370,11 @@ func (m *CreateMenuReq) validate(all bool) error {
 
 	}
 
-	if m.KeepAlive != nil {
+	if m.IsCache != nil {
 
-		if _, ok := _CreateMenuReq_KeepAlive_NotInLookup[m.GetKeepAlive()]; ok {
+		if _, ok := _CreateMenuReq_IsCache_NotInLookup[m.GetIsCache()]; ok {
 			err := CreateMenuReqValidationError{
-				field:  "KeepAlive",
+				field:  "IsCache",
 				reason: "value must not be in list [0]",
 			}
 			if !all {
@@ -11283,9 +11383,9 @@ func (m *CreateMenuReq) validate(all bool) error {
 			errors = append(errors, err)
 		}
 
-		if _, ok := protobuf.MenuKeepAlive_name[int32(m.GetKeepAlive())]; !ok {
+		if _, ok := protobuf.MenuCache_name[int32(m.GetIsCache())]; !ok {
 			err := CreateMenuReqValidationError{
-				field:  "KeepAlive",
+				field:  "IsCache",
 				reason: "value must be one of the defined enum values",
 			}
 			if !all {
@@ -11296,11 +11396,26 @@ func (m *CreateMenuReq) validate(all bool) error {
 
 	}
 
-	if m.BaseMenu != nil {
+	if m.LinkUrl != nil {
 
-		if _, ok := _CreateMenuReq_BaseMenu_NotInLookup[m.GetBaseMenu()]; ok {
+		if l := utf8.RuneCountInString(m.GetLinkUrl()); l < 0 || l > 100 {
 			err := CreateMenuReqValidationError{
-				field:  "BaseMenu",
+				field:  "LinkUrl",
+				reason: "value length must be between 0 and 100 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.IsAffix != nil {
+
+		if _, ok := _CreateMenuReq_IsAffix_NotInLookup[m.GetIsAffix()]; ok {
+			err := CreateMenuReqValidationError{
+				field:  "IsAffix",
 				reason: "value must not be in list [0]",
 			}
 			if !all {
@@ -11309,9 +11424,9 @@ func (m *CreateMenuReq) validate(all bool) error {
 			errors = append(errors, err)
 		}
 
-		if _, ok := protobuf.MenuBaseMenu_name[int32(m.GetBaseMenu())]; !ok {
+		if _, ok := protobuf.MenuAffix_name[int32(m.GetIsAffix())]; !ok {
 			err := CreateMenuReqValidationError{
-				field:  "BaseMenu",
+				field:  "IsAffix",
 				reason: "value must be one of the defined enum values",
 			}
 			if !all {
@@ -11322,11 +11437,11 @@ func (m *CreateMenuReq) validate(all bool) error {
 
 	}
 
-	if m.CloseTab != nil {
+	if m.LinkType != nil {
 
-		if _, ok := _CreateMenuReq_CloseTab_NotInLookup[m.GetCloseTab()]; ok {
+		if _, ok := _CreateMenuReq_LinkType_NotInLookup[m.GetLinkType()]; ok {
 			err := CreateMenuReqValidationError{
-				field:  "CloseTab",
+				field:  "LinkType",
 				reason: "value must not be in list [0]",
 			}
 			if !all {
@@ -11335,35 +11450,9 @@ func (m *CreateMenuReq) validate(all bool) error {
 			errors = append(errors, err)
 		}
 
-		if _, ok := protobuf.MenuCloseTab_name[int32(m.GetCloseTab())]; !ok {
+		if _, ok := protobuf.MenuLinkType_name[int32(m.GetLinkType())]; !ok {
 			err := CreateMenuReqValidationError{
-				field:  "CloseTab",
-				reason: "value must be one of the defined enum values",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.ExtType != nil {
-
-		if _, ok := _CreateMenuReq_ExtType_NotInLookup[m.GetExtType()]; ok {
-			err := CreateMenuReqValidationError{
-				field:  "ExtType",
-				reason: "value must not be in list [0]",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-		if _, ok := protobuf.MenuExtType_name[int32(m.GetExtType())]; !ok {
-			err := CreateMenuReqValidationError{
-				field:  "ExtType",
+				field:  "LinkType",
 				reason: "value must be one of the defined enum values",
 			}
 			if !all {
@@ -11456,23 +11545,19 @@ var _CreateMenuReq_Type_NotInLookup = map[protobuf.MenuType]struct{}{
 	0: {},
 }
 
-var _CreateMenuReq_Hidden_NotInLookup = map[protobuf.MenuHidden]struct{}{
+var _CreateMenuReq_IsHidden_NotInLookup = map[protobuf.MenuHidden]struct{}{
 	0: {},
 }
 
-var _CreateMenuReq_KeepAlive_NotInLookup = map[protobuf.MenuKeepAlive]struct{}{
+var _CreateMenuReq_IsCache_NotInLookup = map[protobuf.MenuCache]struct{}{
 	0: {},
 }
 
-var _CreateMenuReq_BaseMenu_NotInLookup = map[protobuf.MenuBaseMenu]struct{}{
+var _CreateMenuReq_IsAffix_NotInLookup = map[protobuf.MenuAffix]struct{}{
 	0: {},
 }
 
-var _CreateMenuReq_CloseTab_NotInLookup = map[protobuf.MenuCloseTab]struct{}{
-	0: {},
-}
-
-var _CreateMenuReq_ExtType_NotInLookup = map[protobuf.MenuExtType]struct{}{
+var _CreateMenuReq_LinkType_NotInLookup = map[protobuf.MenuLinkType]struct{}{
 	0: {},
 }
 
@@ -11498,7 +11583,7 @@ func (m *CreateMenuReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -11530,6 +11615,8 @@ func (m *CreateMenuReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return CreateMenuReplyMultiError(errors)
@@ -11771,7 +11858,7 @@ func (m *UpdateMenuReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -11803,6 +11890,8 @@ func (m *UpdateMenuReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return UpdateMenuReplyMultiError(errors)
@@ -12125,7 +12214,7 @@ func (m *DeleteMenuReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -12157,6 +12246,8 @@ func (m *DeleteMenuReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return DeleteMenuReplyMultiError(errors)
@@ -12874,7 +12965,7 @@ func (m *CreateDeptReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -12906,6 +12997,8 @@ func (m *CreateDeptReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return CreateDeptReplyMultiError(errors)
@@ -13147,7 +13240,7 @@ func (m *UpdateDeptReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -13179,6 +13272,8 @@ func (m *UpdateDeptReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return UpdateDeptReplyMultiError(errors)
@@ -13501,7 +13596,7 @@ func (m *DeleteDeptReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -13533,6 +13628,8 @@ func (m *DeleteDeptReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return DeleteDeptReplyMultiError(errors)
@@ -14220,7 +14317,7 @@ func (m *CreatePostReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -14252,6 +14349,8 @@ func (m *CreatePostReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return CreatePostReplyMultiError(errors)
@@ -14493,7 +14592,7 @@ func (m *UpdatePostReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -14525,6 +14624,8 @@ func (m *UpdatePostReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return UpdatePostReplyMultiError(errors)
@@ -15122,7 +15223,7 @@ func (m *UpdatePostStateReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Code
 
 	// no validation rules for Message
 
@@ -15154,6 +15255,8 @@ func (m *UpdatePostStateReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Success
 
 	if len(errors) > 0 {
 		return UpdatePostStateReplyMultiError(errors)
@@ -15990,22 +16093,22 @@ var _ interface {
 	ErrorName() string
 } = ListUserRoleMenuTreeReply_Deprecated_MenuValidationError{}
 
-// Validate checks the field values on RouterMenu_Meta with the rules defined
+// Validate checks the field values on MenuRouter_Meta with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
-func (m *RouterMenu_Meta) Validate() error {
+func (m *MenuRouter_Meta) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on RouterMenu_Meta with the rules
+// ValidateAll checks the field values on MenuRouter_Meta with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// RouterMenu_MetaMultiError, or nil if none found.
-func (m *RouterMenu_Meta) ValidateAll() error {
+// MenuRouter_MetaMultiError, or nil if none found.
+func (m *MenuRouter_Meta) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *RouterMenu_Meta) validate(all bool) error {
+func (m *MenuRouter_Meta) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -16043,19 +16146,19 @@ func (m *RouterMenu_Meta) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return RouterMenu_MetaMultiError(errors)
+		return MenuRouter_MetaMultiError(errors)
 	}
 
 	return nil
 }
 
-// RouterMenu_MetaMultiError is an error wrapping multiple validation errors
-// returned by RouterMenu_Meta.ValidateAll() if the designated constraints
+// MenuRouter_MetaMultiError is an error wrapping multiple validation errors
+// returned by MenuRouter_Meta.ValidateAll() if the designated constraints
 // aren't met.
-type RouterMenu_MetaMultiError []error
+type MenuRouter_MetaMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m RouterMenu_MetaMultiError) Error() string {
+func (m MenuRouter_MetaMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -16064,11 +16167,11 @@ func (m RouterMenu_MetaMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m RouterMenu_MetaMultiError) AllErrors() []error { return m }
+func (m MenuRouter_MetaMultiError) AllErrors() []error { return m }
 
-// RouterMenu_MetaValidationError is the validation error returned by
-// RouterMenu_Meta.Validate if the designated constraints aren't met.
-type RouterMenu_MetaValidationError struct {
+// MenuRouter_MetaValidationError is the validation error returned by
+// MenuRouter_Meta.Validate if the designated constraints aren't met.
+type MenuRouter_MetaValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -16076,22 +16179,22 @@ type RouterMenu_MetaValidationError struct {
 }
 
 // Field function returns field value.
-func (e RouterMenu_MetaValidationError) Field() string { return e.field }
+func (e MenuRouter_MetaValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e RouterMenu_MetaValidationError) Reason() string { return e.reason }
+func (e MenuRouter_MetaValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e RouterMenu_MetaValidationError) Cause() error { return e.cause }
+func (e MenuRouter_MetaValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e RouterMenu_MetaValidationError) Key() bool { return e.key }
+func (e MenuRouter_MetaValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e RouterMenu_MetaValidationError) ErrorName() string { return "RouterMenu_MetaValidationError" }
+func (e MenuRouter_MetaValidationError) ErrorName() string { return "MenuRouter_MetaValidationError" }
 
 // Error satisfies the builtin error interface
-func (e RouterMenu_MetaValidationError) Error() string {
+func (e MenuRouter_MetaValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -16103,14 +16206,14 @@ func (e RouterMenu_MetaValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sRouterMenu_Meta.%s: %s%s",
+		"invalid %sMenuRouter_Meta.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = RouterMenu_MetaValidationError{}
+var _ error = MenuRouter_MetaValidationError{}
 
 var _ interface {
 	Field() string
@@ -16118,7 +16221,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = RouterMenu_MetaValidationError{}
+} = MenuRouter_MetaValidationError{}
 
 // Validate checks the field values on HandleUserDomainReq_Data with the rules
 // defined in the proto definition for this message. If any rules are
@@ -18458,11 +18561,11 @@ func (m *UpdateMenuReq_Data) validate(all bool) error {
 
 	}
 
-	if m.Hidden != nil {
+	if m.IsHidden != nil {
 
-		if _, ok := _UpdateMenuReq_Data_Hidden_NotInLookup[m.GetHidden()]; ok {
+		if _, ok := _UpdateMenuReq_Data_IsHidden_NotInLookup[m.GetIsHidden()]; ok {
 			err := UpdateMenuReq_DataValidationError{
-				field:  "Hidden",
+				field:  "IsHidden",
 				reason: "value must not be in list [0]",
 			}
 			if !all {
@@ -18471,9 +18574,9 @@ func (m *UpdateMenuReq_Data) validate(all bool) error {
 			errors = append(errors, err)
 		}
 
-		if _, ok := protobuf.MenuHidden_name[int32(m.GetHidden())]; !ok {
+		if _, ok := protobuf.MenuHidden_name[int32(m.GetIsHidden())]; !ok {
 			err := UpdateMenuReq_DataValidationError{
-				field:  "Hidden",
+				field:  "IsHidden",
 				reason: "value must be one of the defined enum values",
 			}
 			if !all {
@@ -18544,11 +18647,11 @@ func (m *UpdateMenuReq_Data) validate(all bool) error {
 
 	}
 
-	if m.KeepAlive != nil {
+	if m.IsCache != nil {
 
-		if _, ok := _UpdateMenuReq_Data_KeepAlive_NotInLookup[m.GetKeepAlive()]; ok {
+		if _, ok := _UpdateMenuReq_Data_IsCache_NotInLookup[m.GetIsCache()]; ok {
 			err := UpdateMenuReq_DataValidationError{
-				field:  "KeepAlive",
+				field:  "IsCache",
 				reason: "value must not be in list [0]",
 			}
 			if !all {
@@ -18557,9 +18660,9 @@ func (m *UpdateMenuReq_Data) validate(all bool) error {
 			errors = append(errors, err)
 		}
 
-		if _, ok := protobuf.MenuKeepAlive_name[int32(m.GetKeepAlive())]; !ok {
+		if _, ok := protobuf.MenuCache_name[int32(m.GetIsCache())]; !ok {
 			err := UpdateMenuReq_DataValidationError{
-				field:  "KeepAlive",
+				field:  "IsCache",
 				reason: "value must be one of the defined enum values",
 			}
 			if !all {
@@ -18570,11 +18673,26 @@ func (m *UpdateMenuReq_Data) validate(all bool) error {
 
 	}
 
-	if m.BaseMenu != nil {
+	if m.LinkUrl != nil {
 
-		if _, ok := _UpdateMenuReq_Data_BaseMenu_NotInLookup[m.GetBaseMenu()]; ok {
+		if l := utf8.RuneCountInString(m.GetLinkUrl()); l < 0 || l > 100 {
 			err := UpdateMenuReq_DataValidationError{
-				field:  "BaseMenu",
+				field:  "LinkUrl",
+				reason: "value length must be between 0 and 100 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.IsAffix != nil {
+
+		if _, ok := _UpdateMenuReq_Data_IsAffix_NotInLookup[m.GetIsAffix()]; ok {
+			err := UpdateMenuReq_DataValidationError{
+				field:  "IsAffix",
 				reason: "value must not be in list [0]",
 			}
 			if !all {
@@ -18583,9 +18701,9 @@ func (m *UpdateMenuReq_Data) validate(all bool) error {
 			errors = append(errors, err)
 		}
 
-		if _, ok := protobuf.MenuBaseMenu_name[int32(m.GetBaseMenu())]; !ok {
+		if _, ok := protobuf.MenuAffix_name[int32(m.GetIsAffix())]; !ok {
 			err := UpdateMenuReq_DataValidationError{
-				field:  "BaseMenu",
+				field:  "IsAffix",
 				reason: "value must be one of the defined enum values",
 			}
 			if !all {
@@ -18596,11 +18714,11 @@ func (m *UpdateMenuReq_Data) validate(all bool) error {
 
 	}
 
-	if m.CloseTab != nil {
+	if m.LinkType != nil {
 
-		if _, ok := _UpdateMenuReq_Data_CloseTab_NotInLookup[m.GetCloseTab()]; ok {
+		if _, ok := _UpdateMenuReq_Data_LinkType_NotInLookup[m.GetLinkType()]; ok {
 			err := UpdateMenuReq_DataValidationError{
-				field:  "CloseTab",
+				field:  "LinkType",
 				reason: "value must not be in list [0]",
 			}
 			if !all {
@@ -18609,35 +18727,9 @@ func (m *UpdateMenuReq_Data) validate(all bool) error {
 			errors = append(errors, err)
 		}
 
-		if _, ok := protobuf.MenuCloseTab_name[int32(m.GetCloseTab())]; !ok {
+		if _, ok := protobuf.MenuLinkType_name[int32(m.GetLinkType())]; !ok {
 			err := UpdateMenuReq_DataValidationError{
-				field:  "CloseTab",
-				reason: "value must be one of the defined enum values",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.ExtType != nil {
-
-		if _, ok := _UpdateMenuReq_Data_ExtType_NotInLookup[m.GetExtType()]; ok {
-			err := UpdateMenuReq_DataValidationError{
-				field:  "ExtType",
-				reason: "value must not be in list [0]",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-		if _, ok := protobuf.MenuExtType_name[int32(m.GetExtType())]; !ok {
-			err := UpdateMenuReq_DataValidationError{
-				field:  "ExtType",
+				field:  "LinkType",
 				reason: "value must be one of the defined enum values",
 			}
 			if !all {
@@ -18732,23 +18824,19 @@ var _UpdateMenuReq_Data_Type_NotInLookup = map[protobuf.MenuType]struct{}{
 	0: {},
 }
 
-var _UpdateMenuReq_Data_Hidden_NotInLookup = map[protobuf.MenuHidden]struct{}{
+var _UpdateMenuReq_Data_IsHidden_NotInLookup = map[protobuf.MenuHidden]struct{}{
 	0: {},
 }
 
-var _UpdateMenuReq_Data_KeepAlive_NotInLookup = map[protobuf.MenuKeepAlive]struct{}{
+var _UpdateMenuReq_Data_IsCache_NotInLookup = map[protobuf.MenuCache]struct{}{
 	0: {},
 }
 
-var _UpdateMenuReq_Data_BaseMenu_NotInLookup = map[protobuf.MenuBaseMenu]struct{}{
+var _UpdateMenuReq_Data_IsAffix_NotInLookup = map[protobuf.MenuAffix]struct{}{
 	0: {},
 }
 
-var _UpdateMenuReq_Data_CloseTab_NotInLookup = map[protobuf.MenuCloseTab]struct{}{
-	0: {},
-}
-
-var _UpdateMenuReq_Data_ExtType_NotInLookup = map[protobuf.MenuExtType]struct{}{
+var _UpdateMenuReq_Data_LinkType_NotInLookup = map[protobuf.MenuLinkType]struct{}{
 	0: {},
 }
 

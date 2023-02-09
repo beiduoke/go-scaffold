@@ -2574,18 +2574,7 @@
         }
       }
     },
-    "PassLoginReqPassField": {
-      "type": "object",
-      "properties": {
-        "account": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        }
-      }
-    },
-    "RouterMenuMeta": {
+    "MenuRouterMeta": {
       "type": "object",
       "properties": {
         "title": {
@@ -2620,6 +2609,17 @@
         "currentActiveMenu": {
           "type": "string",
           "title": "当前激活的菜单。用于配置详情页时左侧激活的菜单路径"
+        }
+      }
+    },
+    "PassLoginReqPassField": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
         }
       }
     },
@@ -2662,7 +2662,7 @@
         "path": {
           "type": "string"
         },
-        "hidden": {
+        "isHidden": {
           "$ref": "#/definitions/protobufMenuHidden"
         },
         "component": {
@@ -2681,17 +2681,17 @@
         "title": {
           "type": "string"
         },
-        "keepAlive": {
-          "$ref": "#/definitions/protobufMenuKeepAlive"
+        "isCache": {
+          "$ref": "#/definitions/protobufMenuCache"
         },
-        "baseMenu": {
-          "$ref": "#/definitions/protobufMenuBaseMenu"
+        "isAffix": {
+          "$ref": "#/definitions/protobufMenuAffix"
         },
-        "closeTab": {
-          "$ref": "#/definitions/protobufMenuCloseTab"
+        "linkType": {
+          "$ref": "#/definitions/protobufMenuLinkType"
         },
-        "extType": {
-          "$ref": "#/definitions/protobufMenuExtType"
+        "linkUrl": {
+          "type": "string"
         },
         "children": {
           "type": "array",
@@ -2732,12 +2732,12 @@
     "protobufDeptState": {
       "type": "string",
       "enum": [
-        "DEPARTMENT_STATE_UNSPECIFIED",
-        "DEPARTMENT_STATE_ACTIVE",
-        "DEPARTMENT_STATE_INACTIVE",
-        "DEPARTMENT_STATE_BANNED"
+        "DEPT_STATE_UNSPECIFIED",
+        "DEPT_STATE_ACTIVE",
+        "DEPT_STATE_INACTIVE",
+        "DEPT_STATE_BANNED"
       ],
-      "default": "DEPARTMENT_STATE_UNSPECIFIED"
+      "default": "DEPT_STATE_UNSPECIFIED"
     },
     "protobufDomainState": {
       "type": "string",
@@ -2749,33 +2749,23 @@
       ],
       "default": "DOMAIN_STATE_UNSPECIFIED"
     },
-    "protobufMenuBaseMenu": {
+    "protobufMenuAffix": {
       "type": "string",
       "enum": [
-        "MENU_BASE_MENU_UNSPECIFIED",
-        "MENU_BASE_MENU_YES",
-        "MENU_BASE_MENU_NO"
+        "MENU_AFFIX_UNSPECIFIED",
+        "MENU_AFFIX_YES",
+        "MENU_AFFIX_NO"
       ],
-      "default": "MENU_BASE_MENU_UNSPECIFIED"
+      "default": "MENU_AFFIX_UNSPECIFIED"
     },
-    "protobufMenuCloseTab": {
+    "protobufMenuCache": {
       "type": "string",
       "enum": [
-        "MENU_CLOSE_TAB_UNSPECIFIED",
-        "MENU_CLOSE_TAB_YES",
-        "MENU_CLOSE_TAB_NO"
+        "MENU_CACHE_UNSPECIFIED",
+        "MENU_CACHE_YES",
+        "MENU_CACHE_NO"
       ],
-      "default": "MENU_CLOSE_TAB_UNSPECIFIED"
-    },
-    "protobufMenuExtType": {
-      "type": "string",
-      "enum": [
-        "MENU_EXT_TYPE_UNSPECIFIED",
-        "MENU_EXT_TYPE_NO",
-        "MENU_EXT_TYPE_BLANK",
-        "MENU_EXT_TYPE_IFRAME"
-      ],
-      "default": "MENU_EXT_TYPE_UNSPECIFIED"
+      "default": "MENU_CACHE_UNSPECIFIED"
     },
     "protobufMenuHidden": {
       "type": "string",
@@ -2786,14 +2776,15 @@
       ],
       "default": "MENU_HIDDEN_UNSPECIFIED"
     },
-    "protobufMenuKeepAlive": {
+    "protobufMenuLinkType": {
       "type": "string",
       "enum": [
-        "MENU_KEEP_ALIVE_UNSPECIFIED",
-        "MENU_KEEP_ALIVE_YES",
-        "MENU_KEEP_ALIVE_NO"
+        "MENU_Link_TYPE_UNSPECIFIED",
+        "MENU_Link_TYPE_NO",
+        "MENU_Link_TYPE_IFRAME",
+        "MENU_Link_TYPE_BLANK"
       ],
-      "default": "MENU_KEEP_ALIVE_UNSPECIFIED"
+      "default": "MENU_Link_TYPE_UNSPECIFIED"
     },
     "protobufMenuParameterType": {
       "type": "string",
@@ -2903,14 +2894,18 @@
     "v1CreateDeptReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 创建部门"
@@ -2941,14 +2936,18 @@
     "v1CreateDomainReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 创建领域"
@@ -2980,14 +2979,18 @@
     "v1CreateMenuReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 创建菜单"
@@ -3008,7 +3011,7 @@
         "path": {
           "type": "string"
         },
-        "hidden": {
+        "isHidden": {
           "$ref": "#/definitions/protobufMenuHidden"
         },
         "component": {
@@ -3027,17 +3030,17 @@
         "title": {
           "type": "string"
         },
-        "keepAlive": {
-          "$ref": "#/definitions/protobufMenuKeepAlive"
+        "isCache": {
+          "$ref": "#/definitions/protobufMenuCache"
         },
-        "baseMenu": {
-          "$ref": "#/definitions/protobufMenuBaseMenu"
+        "linkUrl": {
+          "type": "string"
         },
-        "closeTab": {
-          "$ref": "#/definitions/protobufMenuCloseTab"
+        "isAffix": {
+          "$ref": "#/definitions/protobufMenuAffix"
         },
-        "extType": {
-          "$ref": "#/definitions/protobufMenuExtType"
+        "linkType": {
+          "$ref": "#/definitions/protobufMenuLinkType"
         },
         "parameters": {
           "type": "array",
@@ -3057,14 +3060,18 @@
     "v1CreatePostReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 创建职位"
@@ -3094,14 +3101,18 @@
     "v1CreateResourceReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 创建资源"
@@ -3133,14 +3144,18 @@
     "v1CreateRoleReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 创建角色"
@@ -3174,14 +3189,18 @@
     "v1CreateUserReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 创建用户"
@@ -3225,14 +3244,18 @@
     "v1DeleteDeptReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 删除部门"
@@ -3240,14 +3263,18 @@
     "v1DeleteDomainReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 删除领域"
@@ -3255,14 +3282,18 @@
     "v1DeleteMenuReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 删除菜单"
@@ -3286,14 +3317,18 @@
     "v1DeleteResourceReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 删除资源"
@@ -3301,14 +3336,18 @@
     "v1DeleteRoleReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 删除角色"
@@ -3316,14 +3355,18 @@
     "v1DeleteUserReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 删除用户"
@@ -3414,14 +3457,18 @@
     "v1ExistUserNameReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 验证用户是否存在"
@@ -3453,14 +3500,18 @@
     "v1HandleDomainMenuReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 处理领域菜单"
@@ -3502,14 +3553,18 @@
     "v1HandleRoleMenuReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 处理角色菜单"
@@ -3551,14 +3606,18 @@
     "v1HandleRoleResourceReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 处理角色资源"
@@ -3578,11 +3637,18 @@
     "v1HandleUserDomainReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 绑定用户领域"
@@ -3602,11 +3668,18 @@
     "v1HandleUserDomainRoleReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 绑定用户领域权限"
@@ -3748,7 +3821,7 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/v1RouterMenu"
+            "$ref": "#/definitions/v1MenuRouter"
           }
         }
       },
@@ -3804,14 +3877,18 @@
     "v1LogoutReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 退出登录"
@@ -3840,6 +3917,33 @@
           "type": "string"
         }
       }
+    },
+    "v1MenuRouter": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "component": {
+          "type": "string"
+        },
+        "redirect": {
+          "type": "string"
+        },
+        "meta": {
+          "$ref": "#/definitions/MenuRouterMeta"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1MenuRouter"
+          }
+        }
+      },
+      "title": "路由菜单"
     },
     "v1Post": {
       "type": "object",
@@ -3878,14 +3982,18 @@
     "v1RegisterReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 注册"
@@ -3964,44 +4072,21 @@
       },
       "title": "角色模块"
     },
-    "v1RouterMenu": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "path": {
-          "type": "string"
-        },
-        "component": {
-          "type": "string"
-        },
-        "redirect": {
-          "type": "string"
-        },
-        "meta": {
-          "$ref": "#/definitions/RouterMenuMeta"
-        },
-        "children": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1RouterMenu"
-          }
-        }
-      },
-      "title": "路由菜单"
-    },
     "v1UpdateDeptReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 创建部门"
@@ -4031,14 +4116,18 @@
     "v1UpdateDomainReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 创建领域"
@@ -4069,14 +4158,18 @@
     "v1UpdateDomainStateReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 创建领域-状态"
@@ -4092,14 +4185,18 @@
     "v1UpdateMenuReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 创建菜单"
@@ -4120,7 +4217,7 @@
         "path": {
           "type": "string"
         },
-        "hidden": {
+        "isHidden": {
           "$ref": "#/definitions/protobufMenuHidden"
         },
         "component": {
@@ -4139,17 +4236,17 @@
         "title": {
           "type": "string"
         },
-        "keepAlive": {
-          "$ref": "#/definitions/protobufMenuKeepAlive"
+        "isCache": {
+          "$ref": "#/definitions/protobufMenuCache"
         },
-        "baseMenu": {
-          "$ref": "#/definitions/protobufMenuBaseMenu"
+        "linkUrl": {
+          "type": "string"
         },
-        "closeTab": {
-          "$ref": "#/definitions/protobufMenuCloseTab"
+        "isAffix": {
+          "$ref": "#/definitions/protobufMenuAffix"
         },
-        "extType": {
-          "$ref": "#/definitions/protobufMenuExtType"
+        "linkType": {
+          "$ref": "#/definitions/protobufMenuLinkType"
         },
         "parameters": {
           "type": "array",
@@ -4168,14 +4265,18 @@
     "v1UpdatePostReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 创建职位"
@@ -4204,14 +4305,18 @@
     "v1UpdatePostStateReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 创建职位-状态"
@@ -4227,14 +4332,18 @@
     "v1UpdateResourceReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 创建资源"
@@ -4265,14 +4374,18 @@
     "v1UpdateRoleReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 创建角色"
@@ -4305,14 +4418,18 @@
     "v1UpdateRoleStateReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 创建角色"
@@ -4328,14 +4445,18 @@
     "v1UpdateUserReply": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "code": {
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string"
         },
         "result": {
           "$ref": "#/definitions/protobufAny"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
       "title": "回应 - 修改用户"

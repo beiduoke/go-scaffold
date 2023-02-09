@@ -280,7 +280,7 @@ func (ac *UserUsecase) ListRoleID(ctx context.Context, g *User) (roleIds []uint,
 	uidStr := convert.UnitToString(g.ID)
 	var rolesIdsStr []string
 	if len(g.Domains) < 1 {
-		rolesIdsStr, err = ac.biz.enforcer.GetRolesForUser(uidStr, "0")
+		rolesIdsStr, err = ac.biz.enforcer.GetRolesForUser(uidStr, "1")
 	} else {
 		domainIdStr := convert.UnitToString(g.Domains[0].ID)
 		rolesIdsStr = ac.biz.enforcer.GetRolesForUserInDomain(uidStr, domainIdStr)
@@ -324,11 +324,12 @@ func (ac *UserUsecase) ListRoleMenu(ctx context.Context, g *User) ([]*Menu, erro
 				}
 			}
 		}
-		if len(roleIdsRes) < 1 {
-			return nil, nil
-		}
 	} else {
 		roleIdsRes = roleIds
+	}
+
+	if len(roleIdsRes) < 1 {
+		return nil, nil
 	}
 
 	return ac.biz.roleRepo.ListMenuAndParentByIDs(ctx, roleIdsRes...)

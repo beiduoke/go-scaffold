@@ -40,7 +40,7 @@ type DomainModel struct {
 type SysDomain struct {
 	Model
 	Code          string     `gorm:"type:varchar(100);column:code;not null;index;comment:领域编码;"`
-	Name          string     `gorm:"type:varchar(255);column:name;not null;comment:名称;"`
+	Name          string     `gorm:"type:varchar(255);column:name;not null;comment:资源名称;"`
 	ParentID      uint       `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
 	Sort          int32      `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
 	State         int32      `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
@@ -56,7 +56,7 @@ type SysDomain struct {
 type SysUser struct {
 	Model
 	Avatar        string      `gorm:"type:varchar(255);column:avatar;not null;default:'';comment:头像;"`
-	Name          string      `gorm:"type:varchar(255);column:name;not null;index:idx_users_name_nick_name_real_name,priority:1;comment:名称;"`
+	Name          string      `gorm:"type:varchar(255);column:name;not null;index:idx_users_name_nick_name_real_name,priority:1;comment:资源名称;"`
 	NickName      string      `gorm:"type:varchar(255);column:nick_name;not null;default:'';index:idx_users_name_nick_name_real_name,priority:3;comment:昵称;"`
 	RealName      string      `gorm:"type:varchar(100);column:real_name;not null;default:'';index:idx_users_name_nick_name_real_name,priority:2;comment:实名;"`
 	Password      string      `gorm:"type:varchar(255);column:password;not null;default:'';comment:密码;"`
@@ -83,7 +83,7 @@ type SysRole struct {
 	Sort              int32         `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
 	DataScope         int32         `gorm:"type:tinyint(2);column:data_scope;not null;default:1;comment:数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限）;"`
 	MenuCheckStrictly int32         `gorm:"type:tinyint(2);column:menu_check_strictly;not null;default:1;comment:菜单树选择项是否关联显示;"`
-	DeptCheckStrictly int32         `gorm:"type:tinyint(2);column:menu_check_strictly;not null;default:1;comment:部门树选择项是否关联显示;"`
+	DeptCheckStrictly int32         `gorm:"type:tinyint(2);column:dept_check_strictly;not null;default:1;comment:部门树选择项是否关联显示;"`
 	State             int32         `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:角色状态 0 未指定  1 启用 2 停用;"`
 	Remarks           string        `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
 	Parent            *SysRole      `gorm:"foreignKey:ParentID"`
@@ -98,7 +98,7 @@ type SysRole struct {
 // Resource api资源
 type SysResource struct {
 	Model
-	Name        string    `gorm:"type:varchar(255);column:name;not null;comment:名称;"`
+	Name        string    `gorm:"type:varchar(255);column:name;not null;comment:资源名称;"`
 	Path        string    `gorm:"type:varchar(255);column:path;not null;uniqueIndex:idx_api_path_method;comment:请求路径"`
 	Method      string    `gorm:"type:varchar(255);column:method;not null;default:POST;uniqueIndex:idx_api_path_method;comment:方法"`
 	Operation   string    `gorm:"type:varchar(255);column:operation;not null;default:'';uniqueIndex:idx_api_path_method;comment:请求动作"`
@@ -109,34 +109,34 @@ type SysResource struct {
 	Menus       []SysMenu `gorm:"many2many:sys_menu_resources;"`
 }
 
+// SysMeta 元数据
+type SysMenuMeta struct {
+}
+
 // SysMenu 菜单
 type SysMenu struct {
 	Model
-	Name       string             `gorm:"type:varchar(255);column:name;not null;default:'';uniqueIndex:idx_menu_type_name;comment:路由名称;"`
-	Type       int32              `gorm:"type:tinyint(1);column:type;not null;default:1;uniqueIndex:idx_menu_type_name;comment:菜单类型 0 无指定 1 目录 2 菜单 3 功能(按钮等);"`
 	ParentID   uint               `gorm:"type:bigint(20);column:parent_id;not null;default:0;index;comment:父菜单ID"`
-	Path       string             `gorm:"type:varchar(255);column:path;not null;default:'';comment:路由path"`
-	Hidden     int32              `gorm:"type:tinyint(1);column:hidden;not null;default:1;comment:隐藏 0 无指定 1 是 2 否"`
-	Component  string             `gorm:"type:varchar(255);column:component;not null;default:'';comment:对应前端文件路径"`
+	Type       int32              `gorm:"type:tinyint(1);column:type;not null;default:1;uniqueIndex:idx_menu_type_name;comment:菜单类型 0 无指定 1 目录 2 菜单 3 功能(按钮等);"`
+	Title      string             `gorm:"type:varchar(255);column:title;not null;comment:菜单标题"`
+	Name       string             `gorm:"type:varchar(255);column:name;not null;default:'';uniqueIndex:idx_menu_type_name;comment:菜单/路由名称;"`
+	Path       string             `gorm:"type:varchar(255);column:path;not null;default:'';comment:路由地址"`
+	Redirect   string             `gorm:"type:varchar(255);column:redirect;not null;default:'';comment:重定向地址"`
+	Component  string             `gorm:"type:varchar(255);column:component;not null;default:'';comment:组件路径"`
 	Permission string             `gorm:"type:varchar(255);column:permission;not null;default:'';comment:权限标识"`
+	Icon       string             `gorm:"type:varchar(255);column:icon;not null;default:'';comment:图标"`
 	Sort       int32              `gorm:"type:int(10);column:sort;not null;default:10;comment:排序标记"`
-	Meta       SysMeta            `gorm:"embedded;comment:附加属性"`
+	IsHidden   int32              `gorm:"type:tinyint(1);column:is_hidden;not null;default:1;comment:是否隐藏 0 无指定 1 是 2 否"`
+	IsCache    int32              `gorm:"type:tinyint(1);column:is_cache;not null;default:1;comment:是否缓存 0 无指定 1 是 2 否"`
+	IsAffix    int32              `gorm:"type:tinyint(1);column:is_affix;not null;default:1;comment:是否固定 0 无指定 1 是 2 否"`
+	LinkType   int32              `gorm:"type:tinyint(1);column:link_type;not null;default:1;comment:外链类型  0 无指定 1 无 2 内嵌 3 跳转"`
+	LinkUrl    string             `gorm:"type:varchar(255);column:link_url;not null;default:'';comment:链接地址"`
 	Remarks    string             `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
 	Roles      []SysRole          `gorm:"many2many:sys_role_menus;"`
 	Domains    []SysDomain        `gorm:"many2many:sys_domain_menus;"`
 	Resources  []SysResource      `gorm:"many2many:sys_menu_resources;"`
 	Parameters []SysMenuParameter `gorm:"foreignKey:MenuID;"`
 	Buttons    []SysMenuButton    `gorm:"foreignKey:MenuID;"`
-}
-
-// SysMeta 元数据
-type SysMeta struct {
-	Icon      string `gorm:"type:varchar(255);column:icon;not null;default:'';comment:图标"`
-	Title     string `gorm:"type:varchar(255);column:title;not null;comment:菜单标题"`
-	KeepAlive int32  `gorm:"type:tinyint(1);column:keep_alive;not null;default:1;comment:是否缓存 0 无指定 1 是 2 否"`
-	BaseMenu  int32  `gorm:"type:tinyint(1);column:base_menu;not null;default:1;comment:基础菜单 0 无指定 1 是 2 否"`
-	CloseTab  int32  `gorm:"type:tinyint(1);column:close_tab;not null;default:1;comment:自动关闭TAB  0 无指定 1 是  2 否"`
-	ExtType   int32  `gorm:"type:tinyint(1);column:ext_type;not null;default:1;comment:外链类型  0 无指定 1 无外链 2 新窗口 3 内框架"`
 }
 
 // SysRoleMenu 角色菜单-Many2Many 替换
@@ -184,14 +184,14 @@ type SysMenuParameter struct {
 // SysDept 部门
 type SysDept struct {
 	DomainModel
-	Name      string    `gorm:"type:varchar(255);column:name;not null;comment:名称;"`
+	Name      string    `gorm:"type:varchar(255);column:name;not null;comment:资源名称;"`
 	Ancestors string    `gorm:"type:varchar(100);column:ancestors;not null;default:'0';comment:祖级列表;"`
 	ParentID  uint      `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
 	Sort      int32     `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
 	Remarks   string    `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
 	State     int32     `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
-	UserID    uint      `gorm:"type:bigint(20);column:user_id;not null;default:0;comment:用户id"`
-	User      SysUser   `gorm:"foreignKey:UserID;"`
+	LeaderID  uint      `gorm:"type:bigint(20);column:leader_id;not null;default:0;comment:负责人id"`
+	Leader    SysUser   `gorm:"foreignKey:LeaderID;"`
 	Roles     []SysRole `gorm:"many2many:sys_role_depts"`
 	// User     SysUser `gorm:"many2many:sys_dept_users;"`
 }

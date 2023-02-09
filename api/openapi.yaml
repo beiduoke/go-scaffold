@@ -1427,12 +1427,15 @@ components:
         api.admin.v1.CreateDeptReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 创建部门
         api.admin.v1.CreateDeptReq:
             type: object
@@ -1454,12 +1457,15 @@ components:
         api.admin.v1.CreateDomainReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 创建领域
         api.admin.v1.CreateDomainReq:
             type: object
@@ -1482,12 +1488,15 @@ components:
         api.admin.v1.CreateMenuReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 创建菜单
         api.admin.v1.CreateMenuReq:
             type: object
@@ -1502,7 +1511,7 @@ components:
                     format: uint64
                 path:
                     type: string
-                hidden:
+                isHidden:
                     type: integer
                     format: enum
                 component:
@@ -1516,16 +1525,15 @@ components:
                     type: string
                 title:
                     type: string
-                keepAlive:
+                isCache:
                     type: integer
                     format: enum
-                baseMenu:
+                linkUrl:
+                    type: string
+                isAffix:
                     type: integer
                     format: enum
-                closeTab:
-                    type: integer
-                    format: enum
-                extType:
+                linkType:
                     type: integer
                     format: enum
                 parameters:
@@ -1540,12 +1548,15 @@ components:
         api.admin.v1.CreatePostReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 创建职位
         api.admin.v1.CreatePostReq:
             type: object
@@ -1566,12 +1577,15 @@ components:
         api.admin.v1.CreateResourceReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 创建资源
         api.admin.v1.CreateResourceReq:
             type: object
@@ -1592,12 +1606,15 @@ components:
         api.admin.v1.CreateRoleReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 创建角色
         api.admin.v1.CreateRoleReq:
             type: object
@@ -1621,12 +1638,15 @@ components:
         api.admin.v1.CreateUserReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 创建用户
         api.admin.v1.CreateUserReq:
             type: object
@@ -1657,32 +1677,41 @@ components:
         api.admin.v1.DeleteDeptReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 删除部门
         api.admin.v1.DeleteDomainReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 删除领域
         api.admin.v1.DeleteMenuReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 删除菜单
         api.admin.v1.DeletePostReply:
             type: object
@@ -1698,32 +1727,41 @@ components:
         api.admin.v1.DeleteResourceReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 删除资源
         api.admin.v1.DeleteRoleReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 删除角色
         api.admin.v1.DeleteUserReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 删除用户
         api.admin.v1.Dept:
             type: object
@@ -1796,12 +1834,15 @@ components:
         api.admin.v1.ExistUserNameReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 验证用户是否存在
         api.admin.v1.ExistUserNameReq:
             type: object
@@ -1822,12 +1863,15 @@ components:
         api.admin.v1.HandleDomainMenuReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 处理领域菜单
         api.admin.v1.HandleDomainMenuReq_Data:
             type: object
@@ -1855,12 +1899,15 @@ components:
         api.admin.v1.HandleRoleMenuReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 处理角色菜单
         api.admin.v1.HandleRoleMenuReq_Data:
             type: object
@@ -1888,12 +1935,15 @@ components:
         api.admin.v1.HandleRoleResourceReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 处理角色资源
         api.admin.v1.HandleRoleResourceReq_Data:
             type: object
@@ -1906,10 +1956,15 @@ components:
         api.admin.v1.HandleUserDomainReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
+                result:
+                    $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 绑定用户领域
         api.admin.v1.HandleUserDomainReq_Data:
             type: object
@@ -1922,10 +1977,15 @@ components:
         api.admin.v1.HandleUserDomainRoleReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
+                result:
+                    $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 绑定用户领域权限
         api.admin.v1.HandleUserDomainRoleReq_Data:
             type: object
@@ -2023,7 +2083,7 @@ components:
                 items:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.admin.v1.RouterMenu'
+                        $ref: '#/components/schemas/api.admin.v1.MenuRouter'
             description: 回应 - 获取用户角色菜单列表-树形
         api.admin.v1.ListUserRolePermissionReply:
             type: object
@@ -2061,12 +2121,15 @@ components:
         api.admin.v1.LogoutReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 退出登录
         api.admin.v1.Menu:
             type: object
@@ -2090,7 +2153,7 @@ components:
                     format: uint64
                 path:
                     type: string
-                hidden:
+                isHidden:
                     type: integer
                     format: enum
                 component:
@@ -2104,18 +2167,17 @@ components:
                     type: string
                 title:
                     type: string
-                keepAlive:
+                isCache:
                     type: integer
                     format: enum
-                baseMenu:
+                isAffix:
                     type: integer
                     format: enum
-                closeTab:
+                linkType:
                     type: integer
                     format: enum
-                extType:
-                    type: integer
-                    format: enum
+                linkUrl:
+                    type: string
                 children:
                     type: array
                     items:
@@ -2146,6 +2208,52 @@ components:
                     type: string
                 value:
                     type: string
+        api.admin.v1.MenuRouter:
+            type: object
+            properties:
+                name:
+                    type: string
+                path:
+                    type: string
+                component:
+                    type: string
+                redirect:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/api.admin.v1.MenuRouter_Meta'
+                children:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.v1.MenuRouter'
+            description: 路由菜单
+        api.admin.v1.MenuRouter_Meta:
+            type: object
+            properties:
+                title:
+                    type: string
+                    description: 路由title  一般必填
+                ignoreKeepAlive:
+                    type: boolean
+                    description: 是否忽略KeepAlive缓存
+                icon:
+                    type: string
+                    description: 图标，也是菜单图标
+                frameSrc:
+                    type: string
+                    description: 内嵌iframe的地址
+                hideBreadcrumb:
+                    type: boolean
+                    description: 隐藏该路由在面包屑上面的显示
+                hideMenu:
+                    type: boolean
+                    description: 当前路由不再菜单显示
+                orderNo:
+                    type: integer
+                    description: 菜单排序，只对第一级有效
+                    format: int32
+                currentActiveMenu:
+                    type: string
+                    description: 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
         api.admin.v1.PassLoginReq_PassField:
             type: object
             properties:
@@ -2181,12 +2289,15 @@ components:
         api.admin.v1.RegisterReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 注册
         api.admin.v1.Resource:
             type: object
@@ -2241,52 +2352,6 @@ components:
                 remarks:
                     type: string
             description: 角色模块
-        api.admin.v1.RouterMenu:
-            type: object
-            properties:
-                name:
-                    type: string
-                path:
-                    type: string
-                component:
-                    type: string
-                redirect:
-                    type: string
-                meta:
-                    $ref: '#/components/schemas/api.admin.v1.RouterMenu_Meta'
-                children:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.admin.v1.RouterMenu'
-            description: 路由菜单
-        api.admin.v1.RouterMenu_Meta:
-            type: object
-            properties:
-                title:
-                    type: string
-                    description: 路由title  一般必填
-                ignoreKeepAlive:
-                    type: boolean
-                    description: 是否忽略KeepAlive缓存
-                icon:
-                    type: string
-                    description: 图标，也是菜单图标
-                frameSrc:
-                    type: string
-                    description: 内嵌iframe的地址
-                hideBreadcrumb:
-                    type: boolean
-                    description: 隐藏该路由在面包屑上面的显示
-                hideMenu:
-                    type: boolean
-                    description: 当前路由不再菜单显示
-                orderNo:
-                    type: integer
-                    description: 菜单排序，只对第一级有效
-                    format: int32
-                currentActiveMenu:
-                    type: string
-                    description: 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
         api.admin.v1.SmsLoginReq_SmsField:
             type: object
             properties:
@@ -2297,12 +2362,15 @@ components:
         api.admin.v1.UpdateDeptReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 创建部门
         api.admin.v1.UpdateDeptReq_Data:
             type: object
@@ -2323,12 +2391,15 @@ components:
         api.admin.v1.UpdateDomainReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 创建领域
         api.admin.v1.UpdateDomainReq_Data:
             type: object
@@ -2350,12 +2421,15 @@ components:
         api.admin.v1.UpdateDomainStateReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 创建领域-状态
         api.admin.v1.UpdateDomainStateReq_Data:
             type: object
@@ -2366,12 +2440,15 @@ components:
         api.admin.v1.UpdateMenuReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 创建菜单
         api.admin.v1.UpdateMenuReq_Data:
             type: object
@@ -2386,7 +2463,7 @@ components:
                     format: uint64
                 path:
                     type: string
-                hidden:
+                isHidden:
                     type: integer
                     format: enum
                 component:
@@ -2400,16 +2477,15 @@ components:
                     type: string
                 title:
                     type: string
-                keepAlive:
+                isCache:
                     type: integer
                     format: enum
-                baseMenu:
+                linkUrl:
+                    type: string
+                isAffix:
                     type: integer
                     format: enum
-                closeTab:
-                    type: integer
-                    format: enum
-                extType:
+                linkType:
                     type: integer
                     format: enum
                 parameters:
@@ -2423,12 +2499,15 @@ components:
         api.admin.v1.UpdatePostReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 创建职位
         api.admin.v1.UpdatePostReq_Data:
             type: object
@@ -2448,12 +2527,15 @@ components:
         api.admin.v1.UpdatePostStateReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 创建职位-状态
         api.admin.v1.UpdatePostStateReq_Data:
             type: object
@@ -2464,12 +2546,15 @@ components:
         api.admin.v1.UpdateResourceReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 创建资源
         api.admin.v1.UpdateResourceReq_Data:
             type: object
@@ -2489,12 +2574,15 @@ components:
         api.admin.v1.UpdateRoleReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 创建角色
         api.admin.v1.UpdateRoleReq_Data:
             type: object
@@ -2517,12 +2605,15 @@ components:
         api.admin.v1.UpdateRoleStateReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 创建角色
         api.admin.v1.UpdateRoleStateReq_Data:
             type: object
@@ -2533,12 +2624,15 @@ components:
         api.admin.v1.UpdateUserReply:
             type: object
             properties:
-                success:
-                    type: boolean
+                code:
+                    type: integer
+                    format: int32
                 message:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                success:
+                    type: boolean
             description: 回应 - 修改用户
         api.admin.v1.UpdateUserReq_Data:
             type: object

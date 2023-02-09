@@ -183,7 +183,7 @@ func (r *DomainRepo) HandleMenu(ctx context.Context, g *biz.Domain) error {
 // 获取指定权限菜单列表
 func (r *DomainRepo) ListMenuByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu, error) {
 	var sysDomains []*SysDomain
-	db := r.data.DBD(ctx).Model(&SysDomain{})
+	db := r.data.DB(ctx).Model(&SysDomain{})
 	result := db.Preload("Menus").Find(&sysDomains, ids)
 	if err := result.Error; err != nil {
 		return nil, err

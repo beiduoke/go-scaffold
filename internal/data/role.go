@@ -241,7 +241,7 @@ func (r *RoleRepo) ListMenuByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu,
 // 获取指定权限菜单列表-返回父级菜单
 func (r *RoleRepo) ListMenuAndParentByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu, error) {
 	var roleMenus []*SysRoleMenu
-	db := r.data.DBD(ctx).Model(&SysRoleMenu{})
+	db := r.data.DB(ctx).Model(&SysRoleMenu{}).Debug()
 	result := db.Find(&roleMenus, "sys_role_id in ?", ids)
 	if err := result.Error; err != nil {
 		return nil, err

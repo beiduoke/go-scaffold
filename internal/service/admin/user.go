@@ -2,7 +2,6 @@ package admin
 
 import (
 	"context"
-	"strings"
 	"time"
 
 	v1 "github.com/beiduoke/go-scaffold/api/admin/v1"
@@ -270,7 +269,7 @@ func (s *AdminService) ListUserRole(ctx context.Context, in *emptypb.Empty) (*v1
 	}, nil
 }
 
-// ProfileUser 概括
+// ListUserMenu 用户菜单列表
 func (s *AdminService) ListUserMenu(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	// id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
 	name := "菜单"
@@ -278,18 +277,10 @@ func (s *AdminService) ListUserMenu(ctx context.Context, in *protobuf.PagingReq)
 	return &protobuf.PagingReply{}, nil
 }
 
-// ProfileUser 概括
-func (s *AdminService) ListUserMenuTree(ctx context.Context, in *emptypb.Empty) (*v1.UserMenuTreeReply, error) {
-	// id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
-	name := "菜单"
-	println(name)
-	return &v1.UserMenuTreeReply{}, nil
-}
-
 // 将用户菜单转换树形结构
-func (s *AdminService) UserMenuToReplyMenu(menu *biz.Menu) *v1.RouterMenu {
+func (s *AdminService) UserMenuToReplyMenu(menu *biz.Menu) *v1.MenuRouter {
 
-	meta := &v1.RouterMenu_Meta{
+	meta := &v1.MenuRouter_Meta{
 		// 路由title  一般必填
 		Title: menu.Title,
 		// 图标，也是菜单图标
@@ -297,30 +288,32 @@ func (s *AdminService) UserMenuToReplyMenu(menu *biz.Menu) *v1.RouterMenu {
 		// 菜单排序，只对第一级有效
 		OrderNo: &menu.Sort,
 	}
-	if keepAlive := menu.KeepAlive == int32(protobuf.MenuKeepAlive_MENU_KEEP_ALIVE_NO); keepAlive {
-		meta.IgnoreKeepAlive = &keepAlive
+
+	// 忽略缓存
+	if cache := menu.IsCache == int32(protobuf.MenuCache_MENU_CACHE_NO); cache {
+		meta.IgnoreKeepAlive = &cache
 	}
-	if hideMenu := (menu.Hidden == int32(protobuf.MenuHidden_MENU_HIDDEN_YES)); hideMenu {
-		meta.HideMenu = &hideMenu
+	if hidden := (menu.IsHidden == int32(protobuf.MenuHidden_MENU_HIDDEN_YES)); hidden {
+		meta.HideMenu = &hidden
 	}
 	component := menu.Component
-	if menu.ExtType == int32(protobuf.MenuExtType_MENU_EXT_TYPE_IFRAME) {
-		meta.FrameSrc = &menu.Path
-		menu.Path = menu.Name
+	if menu.LinkType == int32(protobuf.MenuLinkType_MENU_Link_TYPE_IFRAME) {
+		meta.FrameSrc = &menu.LinkUrl
 	}
 
-	return &v1.RouterMenu{
+	return &v1.MenuRouter{
 		Name:      menu.Name,
 		Path:      menu.Path,
 		Component: component,
-		Children:  make([]*v1.RouterMenu, 0),
+		Children:  make([]*v1.MenuRouter, 0),
 		Meta:      meta,
+		Redirect:  menu.Redirect,
 	}
 }
 
 // 将用户菜单转换树形结构
-func (s *AdminService) UserMenuTransformTree(menus []*biz.Menu, parentID uint) []*v1.RouterMenu {
-	list := make([]*v1.RouterMenu, 0)
+func (s *AdminService) UserMenuTransformTree(menus []*biz.Menu, parentID uint) []*v1.MenuRouter {
+	list := make([]*v1.MenuRouter, 0)
 	for _, menu := range menus {
 		if menu.Type == int32(protobuf.MenuType_MENU_TYPE_ABILITY) {
 			continue
@@ -328,14 +321,6 @@ func (s *AdminService) UserMenuTransformTree(menus []*biz.Menu, parentID uint) [
 		if menu.ParentID == parentID {
 			m := s.UserMenuToReplyMenu(menu)
 			m.Children = append(m.Children, s.UserMenuTransformTree(menus, menu.ID)...)
-			if num := len(m.Children); num > 0 {
-				redirect := m.Path
-				if !strings.HasPrefix(m.Children[0].Path, "/") {
-					redirect += "/"
-				}
-				redirect += m.Children[0].Path
-				m.Redirect = &redirect
-			}
 			list = append(list, m)
 		}
 	}
@@ -348,7 +333,10 @@ func (s *AdminService) ListUserRoleMenuTree(ctx context.Context, in *v1.ListUser
 	if roleId := in.GetRoleId(); roleId > 0 {
 		roles = append(roles, &biz.Role{ID: uint(roleId)})
 	}
-	menuModels, _ := s.userCase.ListRoleMenu(ctx, &biz.User{ID: convert.StringToUint(authz.ParseFromContext(ctx).GetUser()), Roles: roles})
+	menuModels, err := s.userCase.ListRoleMenu(ctx, &biz.User{ID: convert.StringToUint(authz.ParseFromContext(ctx).GetUser()), Roles: roles})
+	if err != nil {
+		s.log.Debugf("用户菜单查询失败 %v", err)
+	}
 	return &v1.ListUserRoleMenuTreeReply{
 		Items: s.UserMenuTransformTree(menuModels, 0),
 	}, nil

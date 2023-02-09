@@ -6,7 +6,6 @@ import (
 
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/imdario/mergo"
 	"github.com/pkg/errors"
 )
 
@@ -19,16 +18,17 @@ type Menu struct {
 	Type       int32
 	ParentID   uint
 	Path       string
-	Hidden     int32
+	Redirect   string
 	Component  string
 	Permission string
 	Sort       int32
 	Icon       string
 	Title      string
-	KeepAlive  int32
-	BaseMenu   int32
-	CloseTab   int32
-	ExtType    int32
+	IsHidden   int32
+	IsCache    int32
+	IsAffix    int32
+	LinkType   int32
+	LinkUrl    string
 	Children   []*Menu
 	Parameters []*MenuParameter
 	Buttons    []*MenuButton
@@ -99,14 +99,14 @@ func (uc *MenuUsecase) Update(ctx context.Context, g *Menu) error {
 	}
 
 	// 清理原始数据
-	menu.Parameters = []*MenuParameter{}
-	menu.Buttons = []*MenuButton{}
-	menu.Component = ""
-	// 新数据合并到源数据
-	if err := mergo.Merge(menu, *g, mergo.WithOverride); err != nil {
-		return errors.Errorf("数据合并失败：%v", err)
-	}
-	_, err := uc.repo.Update(ctx, menu)
+	// menu.Parameters = []*MenuParameter{}
+	// menu.Buttons = []*MenuButton{}
+	// menu.Component = ""
+	// // 新数据合并到源数据
+	// if err := mergo.Merge(menu, *g, mergo.WithOverride); err != nil {
+	// 	return errors.Errorf("数据合并失败：%v", err)
+	// }
+	_, err := uc.repo.Update(ctx, g)
 	return err
 }
 
