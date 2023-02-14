@@ -1340,9 +1340,9 @@ message CreateMenuReq {
   uint64 parent_id = 4 [(validate.rules).uint64 = {gte: 0}];
   optional string path = 5 [(validate.rules).string = {min_len: 1, max_len: 100}];
   api.protobuf.MenuHidden is_hidden = 6 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-  optional string component = 7 [(validate.rules).string = {min_len: 1, max_len: 100}];
-  optional string permission = 8 [(validate.rules).string = {min_len: 1, max_len: 100}];
-  optional int32 sort = 9 [(validate.rules).int32 = {gte: 0}];
+  optional string component = 7 [(validate.rules).string = {max_len: 100}];
+  optional string permission = 8 [(validate.rules).string = {max_len: 100}];
+  optional int32 sort = 9 [(validate.rules).int32 = {lt: 100000}];
   optional string icon = 10 [(validate.rules).string = {min_len: 0, max_len: 100}];
   string title = 11 [(validate.rules).string = {min_len: 1, max_len: 100}];
   optional api.protobuf.MenuCache is_cache = 12 [(validate.rules).enum = {defined_only: true, not_in: [0]}];

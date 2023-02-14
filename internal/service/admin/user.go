@@ -297,7 +297,7 @@ func (s *AdminService) UserMenuToReplyMenu(menu *biz.Menu) *v1.MenuRouter {
 		meta.HideMenu = &hidden
 	}
 	component := menu.Component
-	if menu.LinkType == int32(protobuf.MenuLinkType_MENU_Link_TYPE_IFRAME) {
+	if menu.LinkType == int32(protobuf.MenuLinkType_MENU_LINK_TYPE_IFRAME) {
 		meta.FrameSrc = &menu.LinkUrl
 	}
 

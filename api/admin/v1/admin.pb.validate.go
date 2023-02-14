@@ -11312,10 +11312,10 @@ func (m *CreateMenuReq) validate(all bool) error {
 
 	if m.Component != nil {
 
-		if l := utf8.RuneCountInString(m.GetComponent()); l < 1 || l > 100 {
+		if utf8.RuneCountInString(m.GetComponent()) > 100 {
 			err := CreateMenuReqValidationError{
 				field:  "Component",
-				reason: "value length must be between 1 and 100 runes, inclusive",
+				reason: "value length must be at most 100 runes",
 			}
 			if !all {
 				return err
@@ -11327,10 +11327,10 @@ func (m *CreateMenuReq) validate(all bool) error {
 
 	if m.Permission != nil {
 
-		if l := utf8.RuneCountInString(m.GetPermission()); l < 1 || l > 100 {
+		if utf8.RuneCountInString(m.GetPermission()) > 100 {
 			err := CreateMenuReqValidationError{
 				field:  "Permission",
-				reason: "value length must be between 1 and 100 runes, inclusive",
+				reason: "value length must be at most 100 runes",
 			}
 			if !all {
 				return err
@@ -11342,10 +11342,10 @@ func (m *CreateMenuReq) validate(all bool) error {
 
 	if m.Sort != nil {
 
-		if m.GetSort() < 0 {
+		if m.GetSort() >= 100000 {
 			err := CreateMenuReqValidationError{
 				field:  "Sort",
-				reason: "value must be greater than or equal to 0",
+				reason: "value must be less than 100000",
 			}
 			if !all {
 				return err

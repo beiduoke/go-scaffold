@@ -2779,12 +2779,12 @@
     "protobufMenuLinkType": {
       "type": "string",
       "enum": [
-        "MENU_Link_TYPE_UNSPECIFIED",
-        "MENU_Link_TYPE_NO",
-        "MENU_Link_TYPE_IFRAME",
-        "MENU_Link_TYPE_BLANK"
+        "MENU_LINK_TYPE_UNSPECIFIED",
+        "MENU_LINK_TYPE_NO",
+        "MENU_LINK_TYPE_IFRAME",
+        "MENU_LINK_TYPE_BLANK"
       ],
-      "default": "MENU_Link_TYPE_UNSPECIFIED"
+      "default": "MENU_LINK_TYPE_UNSPECIFIED"
     },
     "protobufMenuParameterType": {
       "type": "string",
