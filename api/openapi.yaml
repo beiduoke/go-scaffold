@@ -168,25 +168,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.CreateDeptReply'
-    /admin/v1/depts/trees:
-        get:
-            tags:
-                - Admin
-            description: 获取全部部门树形
-            operationId: Admin_ListDeptTree
-            parameters:
-                - name: id
-                  in: query
-                  schema:
-                    type: integer
-                    format: uint64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.ListDeptTreeReply'
     /admin/v1/depts/{id}:
         get:
             tags:
@@ -251,6 +232,26 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.DeleteDeptReply'
+    /admin/v1/depts/{id}/trees:
+        get:
+            tags:
+                - Admin
+            description: 获取全部部门树形
+            operationId: Admin_ListDeptTree
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.ListDeptTreeReply'
     /admin/v1/domains:
         get:
             tags:
@@ -352,25 +353,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.RegisterReply'
-    /admin/v1/domains/trees:
-        get:
-            tags:
-                - Admin
-            description: 获取领域树形列表
-            operationId: Admin_ListDomainTree
-            parameters:
-                - name: id
-                  in: query
-                  schema:
-                    type: integer
-                    format: uint64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.ListDomainTreeReply'
     /admin/v1/domains/{id}:
         get:
             tags:
@@ -506,6 +488,26 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.UpdateDomainStateReply'
+    /admin/v1/domains/{id}/trees:
+        get:
+            tags:
+                - Admin
+            description: 获取领域树形列表
+            operationId: Admin_ListDomainTree
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.ListDomainTreeReply'
     /admin/v1/menus:
         get:
             tags:
@@ -557,25 +559,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.CreateMenuReply'
-    /admin/v1/menus/trees:
-        get:
-            tags:
-                - Admin
-            description: 获取树形菜单
-            operationId: Admin_ListMenuTree
-            parameters:
-                - name: id
-                  in: query
-                  schema:
-                    type: integer
-                    format: uint64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.admin.v1.ListMenuTreeReply'
     /admin/v1/menus/{id}:
         get:
             tags:
@@ -640,6 +623,26 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.admin.v1.DeleteMenuReply'
+    /admin/v1/menus/{id}/trees:
+        get:
+            tags:
+                - Admin
+            description: 获取树形菜单
+            operationId: Admin_ListMenuTree
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.v1.ListMenuTreeReply'
     /admin/v1/posts:
         get:
             tags:

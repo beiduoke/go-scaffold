@@ -287,9 +287,9 @@ service Admin {
   // 获取领域树形列表
   rpc ListDomainTree (ListDomainTreeReq) returns (ListDomainTreeReply) {
     option (google.api.http) = {
-      get: "/admin/v1/domains/trees"
+      get: "/admin/v1/domains/{id}/trees"
       additional_bindings {
-        get: "/admin/v1/domains/{id}/trees"
+        get: "/admin/v1/domains/trees"
       }
     };
   }
@@ -480,10 +480,7 @@ service Admin {
   // 获取树形菜单
   rpc ListMenuTree (ListMenuTreeReq) returns (ListMenuTreeReply) {
     option (google.api.http) = {
-      get: "/admin/v1/menus/trees"
-      additional_bindings {
-        get: "/admin/v1/menus/{id}/trees"
-      }
+      get: "/admin/v1/menus/{id}/trees"
     };
   }
 
@@ -549,10 +546,7 @@ service Admin {
   // 获取全部部门树形
   rpc ListDeptTree (ListDeptTreeReq) returns (ListDeptTreeReply) {
     option (google.api.http) = {
-      get: "/admin/v1/depts/trees"
-      additional_bindings {
-        get: "/admin/v1/depts/{id}/trees"
-      }
+      get: "/admin/v1/depts/{id}/trees"
     };
   }
 

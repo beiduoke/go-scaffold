@@ -391,38 +391,6 @@
         ]
       }
     },
-    "/admin/v1/depts/trees": {
-      "get": {
-        "summary": "获取全部部门树形",
-        "operationId": "Admin_ListDeptTree",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1ListDeptTreeReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
     "/admin/v1/depts/{id}": {
       "get": {
         "summary": "获取部门",
@@ -526,7 +494,7 @@
     "/admin/v1/depts/{id}/trees": {
       "get": {
         "summary": "获取全部部门树形",
-        "operationId": "Admin_ListDeptTree2",
+        "operationId": "Admin_ListDeptTree",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -760,7 +728,7 @@
     "/admin/v1/domains/trees": {
       "get": {
         "summary": "获取领域树形列表",
-        "operationId": "Admin_ListDomainTree",
+        "operationId": "Admin_ListDomainTree2",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -1002,7 +970,7 @@
     "/admin/v1/domains/{id}/trees": {
       "get": {
         "summary": "获取领域树形列表",
-        "operationId": "Admin_ListDomainTree2",
+        "operationId": "Admin_ListDomainTree",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -1103,38 +1071,6 @@
             "schema": {
               "$ref": "#/definitions/v1CreateMenuReq"
             }
-          }
-        ],
-        "tags": [
-          "Admin"
-        ]
-      }
-    },
-    "/admin/v1/menus/trees": {
-      "get": {
-        "summary": "获取树形菜单",
-        "operationId": "Admin_ListMenuTree",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1ListMenuTreeReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "uint64"
           }
         ],
         "tags": [
@@ -1245,7 +1181,7 @@
     "/admin/v1/menus/{id}/trees": {
       "get": {
         "summary": "获取树形菜单",
-        "operationId": "Admin_ListMenuTree2",
+        "operationId": "Admin_ListMenuTree",
         "responses": {
           "200": {
             "description": "A successful response.",
