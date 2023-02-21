@@ -2,12 +2,9 @@ package biz
 
 import (
 	"context"
-	"strconv"
 	"time"
 
 	pb "github.com/beiduoke/go-scaffold/api/protobuf"
-	"github.com/beiduoke/go-scaffold/internal/pkg/authz"
-	casbinM "github.com/beiduoke/go-scaffold/pkg/authz/casbin"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
@@ -24,17 +21,22 @@ type DomainRoleUser struct {
 
 // Domain is a Domain model.
 type Domain struct {
-	CreatedAt     time.Time
-	UpdatedAt     time.Time
-	ID            uint
-	Code          string
-	ParentID      uint
-	Name          string
-	Sort          int32
-	State         int32
-	DefaultRoleID uint
-	Role          *Role
-	Menus         []*Menu
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	ID          uint
+	ParentID    uint
+	Name        string
+	Code        string
+	Title       string
+	Keywords    string
+	Logo        string
+	Pic         string
+	Description string
+	Sort        int32
+	State       int32
+	Remarks     string
+	Role        *Role
+	Menus       []*Menu
 }
 
 // DomainRepo is a Greater repo.
@@ -83,14 +85,7 @@ func (uc *DomainUsecase) Create(ctx context.Context, g *Domain) (*Domain, error)
 		if err != nil {
 			return err
 		}
-		authCtx := context.WithValue(ctx, casbinM.SecurityUserContextKey, authz.SecurityUser{Domain: strconv.Itoa(int(domain.ID))})
-		role, err := uc.biz.roleRepo.Save(authCtx, &Role{
-			Name: "default",
-		})
-		if err != nil {
-			return err
-		}
-		domain.DefaultRoleID = role.ID
+
 		g, err = uc.biz.domainRepo.Update(ctx, domain)
 		return err
 	})

@@ -233,17 +233,16 @@ func (ac *UserUsecase) GetLastUseDomain(ctx context.Context, g *User) (*Domain, 
 	if len(domainPolices) < 1 && len(domainPolices[0]) >= 2 {
 		return nil, errors.New("领域查询失败")
 	}
-	lastUseRole, lastUseDomain := domainPolices[0][1], domainPolices[0][2]
+	lastUseDomain := domainPolices[0][2]
 	fmt.Println(domainPolices)
 	for _, policy := range domainPolices {
 		if p := policy[len(policy)-1]; p == "1" {
-			lastUseRole, lastUseDomain = policy[1], policy[2]
+			lastUseDomain = policy[2]
 			break
 		}
 	}
 	return &Domain{
-		ID:            convert.StringToUint(lastUseDomain),
-		DefaultRoleID: convert.StringToUint(lastUseRole),
+		ID: convert.StringToUint(lastUseDomain),
 	}, nil
 	// 暂无用
 	// 获取最近一次登录的领域下所有角色

@@ -34,16 +34,12 @@ func (r *UserRepo) toModel(d *biz.User) *SysUser {
 	if d == nil {
 		return nil
 	}
-	domains := []SysDomain{}
-	for _, v := range d.Domains {
-		domains = append(domains, *r.domain.toModel(v))
-	}
 	roles := []SysRole{}
 	for _, v := range d.Roles {
 		roles = append(roles, *r.role.toModel(v))
 	}
 	return &SysUser{
-		Model: Model{
+		DomainModel: DomainModel{
 			ID:        d.ID,
 			CreatedAt: d.CreatedAt,
 			UpdatedAt: d.UpdatedAt,
@@ -58,7 +54,6 @@ func (r *UserRepo) toModel(d *biz.User) *SysUser {
 		Phone:    d.Phone,
 		Email:    d.Email,
 		State:    d.State,
-		Domains:  domains,
 		Roles:    roles,
 	}
 }
@@ -66,10 +61,6 @@ func (r *UserRepo) toModel(d *biz.User) *SysUser {
 func (r *UserRepo) toBiz(d *SysUser) *biz.User {
 	if d == nil {
 		return nil
-	}
-	domains := []*biz.Domain{}
-	for _, v := range d.Domains {
-		domains = append(domains, r.domain.toBiz(&v))
 	}
 	roles := []*biz.Role{}
 	for _, v := range d.Roles {
@@ -89,7 +80,6 @@ func (r *UserRepo) toBiz(d *SysUser) *biz.User {
 		Phone:     d.Phone,
 		Email:     d.Email,
 		State:     d.State,
-		Domains:   domains,
 		Roles:     roles,
 	}
 }
@@ -233,7 +223,7 @@ func (r *UserRepo) GetTokenCache(ctx context.Context, claims biz.AuthClaims) err
 func (r *UserRepo) HandleDomain(ctx context.Context, g *biz.User) error {
 	rules := make([][]string, 0, len(g.Domains))
 	for _, domain := range g.Domains {
-		rules = append(rules, []string{convert.UnitToString(g.ID), convert.UnitToString(domain.DefaultRoleID), convert.UnitToString(domain.ID), "0"})
+		rules = append(rules, []string{convert.UnitToString(g.ID), "0", convert.UnitToString(domain.ID), "0"})
 		// if _, err := r.data.enforcer.AddRoleForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(domain.DefaultRoleID), convert.UnitToString(domain.ID)); err != nil {
 		// 	r.log.Errorf("领域绑定失败 %v", err)
 		// }

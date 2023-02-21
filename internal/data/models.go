@@ -39,39 +39,42 @@ type DomainModel struct {
 // SysDomain 领域
 type SysDomain struct {
 	Model
-	Code          string     `gorm:"type:varchar(100);column:code;not null;index;comment:领域编码;"`
-	Name          string     `gorm:"type:varchar(255);column:name;not null;comment:资源名称;"`
-	ParentID      uint       `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
-	Sort          int32      `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
-	State         int32      `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
-	DefaultRoleID uint       `gorm:"type:bigint(20);column:default_role_id;not null;index;comment:默认角色;"`
-	Remarks       string     `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
-	Menus         []SysMenu  `gorm:"many2many:sys_domain_menus;"`
-	Parent        *SysDomain `gorm:"foreignKey:ParentID"`
-	Users         []SysUser  `gorm:"-"`
-	Roles         []SysRole  `gorm:"-"`
+	ParentID    uint       `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
+	Name        string     `gorm:"type:varchar(255);column:name;not null;comment:领域名称;"`
+	Code        string     `gorm:"type:varchar(100);column:code;not null;index;comment:领域编码;"`
+	Title       string     `gorm:"type:varchar(255);column:title;not null;default:'';comment:领域标题;"`
+	Keywords    string     `gorm:"type:varchar(255);column:keywords;not null;default:'';comment:领域关键字;"`
+	Logo        string     `gorm:"type:varchar(255);column:logo;not null;default:'';comment:领域LOGO;"`
+	Pic         string     `gorm:"type:varchar(255);column:pic;not null;default:'';comment:领域主图;"`
+	Description string     `gorm:"type:text;column:description;comment:描述"`
+	Sort        int32      `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
+	State       int32      `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
+	Remarks     string     `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
+	Menus       []SysMenu  `gorm:"many2many:sys_domain_menus;"`
+	Parent      *SysDomain `gorm:"foreignKey:ParentID"`
+	Users       []SysUser  `gorm:"-"`
+	Roles       []SysRole  `gorm:"-"`
 }
 
 // User 用户
 type SysUser struct {
-	Model
-	Avatar        string      `gorm:"type:varchar(255);column:avatar;not null;default:'';comment:头像;"`
-	Name          string      `gorm:"type:varchar(255);column:name;not null;index:idx_users_name_nick_name_real_name,priority:1;comment:资源名称;"`
-	NickName      string      `gorm:"type:varchar(255);column:nick_name;not null;default:'';index:idx_users_name_nick_name_real_name,priority:3;comment:昵称;"`
-	RealName      string      `gorm:"type:varchar(100);column:real_name;not null;default:'';index:idx_users_name_nick_name_real_name,priority:2;comment:实名;"`
-	Password      string      `gorm:"type:varchar(255);column:password;not null;default:'';comment:密码;"`
-	Birthday      *time.Time  `gorm:"type:datetime;column:birthday;comment:生日;"`
-	Gender        int32       `gorm:"type:tinyint(1);column:gender;not null;default:1;comment:性别 0 未指定 1 男 2 女;"`
-	Phone         string      `gorm:"type:varchar(20);column:phone;not null;default:'';index:idx_users_phone_email,priority:1;comment:手机号;"`
-	Email         string      `gorm:"type:varchar(50);column:email;not null;default:'';index:idx_users_phone_email,priority:2;comment:邮箱;"`
-	State         int32       `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:用户状态 0 未指定  1 启用 2 停用;"`
-	LastUseDomain uint        `gorm:"type:bigint(20);column:last_use_domain;not null;default:0;comment:最后使用租户"`
-	LastLoginAt   *time.Time  `gorm:"type:datetime;column:last_login_at;comment:最后登录时间"`
-	LastLoginIP   string      `gorm:"type:varchar(50);column:last_login_ip;not null;default:'';comment:最后登录IP"`
-	Remarks       string      `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
-	Posts         []SysPost   `gorm:"many2many:sys_user_posts;"`
-	Roles         []SysRole   `gorm:"-"`
-	Domains       []SysDomain `gorm:"-"`
+	DomainModel
+	Name        string     `gorm:"type:varchar(255);column:name;not null;index:idx_users_name_nick_name_real_name,priority:1;comment:用户名称;"`
+	NickName    string     `gorm:"type:varchar(255);column:nick_name;not null;default:'';index:idx_users_name_nick_name_real_name,priority:3;comment:昵称;"`
+	RealName    string     `gorm:"type:varchar(100);column:real_name;not null;default:'';index:idx_users_name_nick_name_real_name,priority:2;comment:实名;"`
+	Avatar      string     `gorm:"type:varchar(255);column:avatar;not null;default:'';comment:头像;"`
+	Password    string     `gorm:"type:varchar(255);column:password;not null;default:'';comment:密码;"`
+	Birthday    *time.Time `gorm:"type:datetime;column:birthday;comment:生日;"`
+	Gender      int32      `gorm:"type:tinyint(1);column:gender;not null;default:1;comment:性别 0 未指定 1 男 2 女;"`
+	Phone       string     `gorm:"type:varchar(20);column:phone;not null;default:'';index:idx_users_phone_email,priority:1;comment:手机号;"`
+	Email       string     `gorm:"type:varchar(50);column:email;not null;default:'';index:idx_users_phone_email,priority:2;comment:邮箱;"`
+	State       int32      `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:用户状态 0 未指定  1 启用 2 停用;"`
+	LastUseRole uint       `gorm:"type:bigint(20);column:last_use_role;not null;default:0;comment:最后使用角色"`
+	LastLoginAt *time.Time `gorm:"type:datetime;column:last_login_at;comment:最后登录时间"`
+	LastLoginIP string     `gorm:"type:varchar(50);column:last_login_ip;not null;default:'';comment:最后登录IP"`
+	Remarks     string     `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
+	Posts       []SysPost  `gorm:"many2many:sys_user_posts;"`
+	Roles       []SysRole  `gorm:"-"`
 }
 
 // Role 角色
@@ -107,10 +110,6 @@ type SysResource struct {
 	Remarks     string    `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
 	Roles       []SysRole `gorm:"many2many:sys_role_resources;"`
 	Menus       []SysMenu `gorm:"many2many:sys_menu_resources;"`
-}
-
-// SysMeta 元数据
-type SysMenuMeta struct {
 }
 
 // SysMenu 菜单

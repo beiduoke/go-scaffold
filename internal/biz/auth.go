@@ -125,7 +125,6 @@ func (ac *AuthUsecase) PassLogin(ctx context.Context, g *User) (*AuthClaims, err
 		ID:        u.ID,
 		ExpiresAt: &expiresAt,
 		Domain:    domain.ID,
-		Roles:     []uint{domain.DefaultRoleID},
 	}
 
 	if err := ac.GetToken(authClaims); err != nil {

@@ -8,6 +8,8 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	myAuthz "github.com/beiduoke/go-scaffold/internal/pkg/authz"
 	"github.com/beiduoke/go-scaffold/internal/pkg/middleware/localize"
+	"github.com/beiduoke/go-scaffold/internal/pkg/middleware/multipoint"
+	"github.com/beiduoke/go-scaffold/internal/pkg/middleware/signout"
 	"github.com/beiduoke/go-scaffold/internal/service/admin"
 	"github.com/beiduoke/go-scaffold/internal/service/web"
 	casbinM "github.com/beiduoke/go-scaffold/pkg/authz/casbin"
@@ -62,6 +64,11 @@ func NewAuthMiddleware(ac *conf.Auth, m model.Model, policy persist.Adapter, enf
 			},
 			jwt.WithSigningMethod(jwtV4.SigningMethodHS256),
 		),
+		// 多地登录
+		multipoint.Server(),
+		// 下线判断
+		signout.Server(),
+		// 请求权限
 		casbinM.Server(
 			casbinM.WithDomainSupport(),
 			// enforcer 指定则无需传 model 以及 policy
@@ -75,14 +82,14 @@ func NewAuthMiddleware(ac *conf.Auth, m model.Model, policy persist.Adapter, enf
 }
 
 // NewMiddleware 创建中间件
-func NewMiddleware(logger log.Logger, auth middleware.Middleware) http.ServerOption {
+func NewMiddleware(logger log.Logger, authMiddleware middleware.Middleware) http.ServerOption {
 	return http.Middleware(
 		recovery.Recovery(),
 		tracing.Server(),
 		logging.Server(logger),
 		localize.I18N(),
 		validate.Validator(),
-		auth,
+		authMiddleware,
 	)
 }
 
