@@ -1,0 +1,1607 @@
+syntax = "proto3";
+
+package api.server.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "validate/validate.proto";
+import "protobuf/enum.proto";
+import "protobuf/struct.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/beiduoke/go-scaffold/api/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.server.v1";
+option java_outer_classname = "serverProtoV1";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  security_definitions: {
+    security: {
+      key: "apiKey";
+      value: {
+        name: "Authorization";
+        description: "jwt 无状态";
+        type: 2;
+        in: 2;
+        flow: 2;
+      }
+    }
+  };
+	info: {
+		title: "Scaffold API";
+		version: "1.0";
+		contact: {
+			name: "基础架构";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway";
+			email: "none@example.com";
+		};
+		license: {
+			name: "BSD 3-Clause License";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt";
+		};
+		extensions: {
+			key: "x-something-something";
+			value: {
+				string_value: "yadda";
+			}
+		};
+  };
+};
+
+// The greeting service definition.
+service Api {
+  // 登出
+  rpc Logout (google.protobuf.Empty) returns (LogoutReply) {
+    option (google.api.http) = {
+      post: "/v1/auth/logout"
+      body: "*"
+      additional_bindings {
+        get: "/v1/auth/logout"
+      }
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      external_docs: {
+        url: "https://github.com/grpc-ecosystem/grpc-gateway";
+        description: "SayHello Query";
+      }
+      security: {
+          security_requirement: {
+              key: "ResourceKeyAuth";
+              value: {}
+          }
+          security_requirement: {
+              key: "OAuth2";
+              value: {
+                  scope: "read";
+                  scope: "write";
+              }
+          }
+      }
+      extensions: {
+          key: "x-irreversible";
+          value: {
+              bool_value: true;
+          }
+      }
+    };
+  }
+
+  // 中台密码登陆
+  rpc MiddlePassLogin (PassLoginReq) returns (LoginReply) {
+    option (google.api.http) = {
+      post: "/v1/auth/middlePassLogin"
+      body: "auth"
+    };
+  }
+
+  // 密码登陆
+  rpc PassLogin (PassLoginReq) returns (LoginReply) {
+    option (google.api.http) = {
+      post: "/v1/auth/passLogin"
+      body: "auth"
+      additional_bindings {
+        post: "/v1/auth/login"
+        body: "auth"
+      }
+    };
+  }
+
+  // 短信登陆
+  rpc SmsLogin (SmsLoginReq) returns (LoginReply) {
+    option (google.api.http) = {
+      post: "/v1/auth/smsLogin"
+      body: "auth"
+    };
+  }
+
+  // 邮件登陆
+  rpc EmailLogin (EmailLoginReq) returns (LoginReply) {
+    option (google.api.http) = {
+      post: "/v1/auth/emailLogin"
+      body: "auth"
+    };
+  }
+
+  // 注册
+  rpc Register (RegisterReq) returns (RegisterReply) {
+    option (google.api.http) = {
+      post: "/v1/auth/register"
+      body: "auth"
+    };
+  }
+
+  // User 用户模块
+  // 当前登录用户概述
+  rpc GetUserInfo (google.protobuf.Empty) returns (User) {
+    option (google.api.http) = {
+      get: "/v1/users/info"
+    };
+  }
+
+  // 当前登录用户概述
+  rpc GetUserProfile (google.protobuf.Empty) returns (GetUserProfileReply) {
+    option (google.api.http) = {
+      get: "/v1/users/profiles"
+    };
+  }
+
+  // // 获取用户菜单 - 弃用
+  // rpc ListUserMenu (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+  //   option (google.api.http) = {
+  //     get: "/v1/users/menus"
+  //   };
+  // }
+
+  // // 获取用户菜单-树形 - 弃用
+  // rpc ListUserMenuTree (google.protobuf.Empty) returns (UserMenuTreeReply) {
+  //   option (google.api.http) = {
+  //     get: "/v1/users/menus/trees"
+  //   };
+  // }
+
+  // 当前登录用户拥有领域
+  rpc ListUserDomain (google.protobuf.Empty) returns (ListUserDomainReply) {
+    option (google.api.http) = {
+      get: "/v1/users/domains"
+    };
+  }
+
+  // 当前登录用户拥有角色
+  rpc ListUserRole (google.protobuf.Empty) returns (ListUserRoleReply) {
+    option (google.api.http) = {
+      get: "/v1/users/roles"
+    };
+  }
+
+  // 获取角色菜单路由树形列表
+  rpc ListUserRoleMenuRouterTree (ListUserRoleMenuRouterTreeReq) returns (ListUserRoleMenuRouterTreeReply) {
+    option (google.api.http) = {
+      get: "/v1/users/routers/trees"
+      additional_bindings {
+        get: "/v1/users/roles/{role_id}/routers/trees"
+      }
+    };
+  }
+  
+  // 获取角色权限列表
+  rpc ListUserRolePermission (ListUserRolePermissionReq) returns (ListUserRolePermissionReply) {
+    option (google.api.http) = {
+      get: "/v1/users/permissions"
+      additional_bindings {
+        get: "/v1/users/roles/{role_id}/permissions"
+      }
+    };
+  }
+
+  // 列表用户
+  rpc ListUser (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+    option (google.api.http) = {
+      get: "/v1/users"
+    };
+  }
+
+  // 创建用户
+  rpc CreateUser (CreateUserReq) returns (CreateUserReply) {
+    option (google.api.http) = {
+      post: "/v1/users"
+      body: "*"
+    };
+  }
+
+  // 获取用户
+  rpc GetUser (GetUserReq) returns (User) {
+    option (google.api.http) = {
+      get: "/v1/users/{id}"
+    };
+  }
+
+  // 修改用户
+  rpc UpdateUser (UpdateUserReq) returns (UpdateUserReply) {
+    option (google.api.http) = {
+      put: "/v1/users/{id}"
+      body: "data"
+    };
+  }
+
+  // 删除用户
+  rpc DeleteUser (DeleteUserReq) returns (DeleteUserReply) {
+    option (google.api.http) = {
+      delete: "/v1/users/{id}"
+    };
+  }
+
+  // 验证用户名是否存在
+  rpc ExistUserName (ExistUserNameReq) returns (ExistUserNameReply) {
+    option (google.api.http) = {
+      post: "/v1/users/existName"
+      body: "*"
+    };
+  }
+
+  // 绑定用户领域
+  rpc HandleUserDomain (HandleUserDomainReq) returns (HandleUserDomainReply) {
+    option (google.api.http) = {
+      post: "/v1/users/{id}/domains"
+      body: "data"
+    };
+  }
+
+  // 绑定用户领域权限
+  rpc HandleUserDomainRole (HandleUserDomainRoleReq) returns (HandleUserDomainRoleReply) {
+    option (google.api.http) = {
+      post: "/v1/users/{id}/domainRoles"
+      body: "data"
+    };
+  }
+
+  // 领域模块
+  // 登陆领域/租户
+  rpc LoginDomain (LoginDomainReq) returns (LoginReply) {
+    option (google.api.http) = {
+      post: "/v1/domains/login"
+      body: "auth"
+      additional_bindings {
+        patch: "/v1/domains/login/{domain}"
+        body: "auth"
+      }
+    };
+  }
+
+  // 注册领域/租户
+  rpc RegisterDomain (RegisterDomainReq) returns (RegisterReply) {
+    option (google.api.http) = {
+      post: "/v1/domains/register"
+      body: "auth"
+    };
+  }
+
+  // 列表领域
+  rpc ListDomain (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+    option (google.api.http) = {
+      get: "/v1/domains"
+    };
+  }
+
+  // 获取领域树形列表
+  rpc ListDomainTree (ListDomainTreeReq) returns (ListDomainTreeReply) {
+    option (google.api.http) = {
+      get: "/v1/domains/{id}/trees"
+      additional_bindings {
+        get: "/v1/domains/trees"
+      }
+    };
+  }
+
+  // 创建领域
+  rpc CreateDomain (CreateDomainReq) returns (CreateDomainReply) {
+    option (google.api.http) = {
+      post: "/v1/domains"
+      body: "*"
+    };
+  }
+
+  // 获取领域
+  rpc GetDomain (GetDomainReq) returns (Domain) {
+    option (google.api.http) = {
+      get: "/v1/domains/{id}"
+    };
+  }
+
+  // 修改领域
+  rpc UpdateDomain (UpdateDomainReq) returns (UpdateDomainReply) {
+    option (google.api.http) = {
+      put: "/v1/domains/{id}"
+      body: "data"
+    };
+  }
+
+  // 删除领域
+  rpc DeleteDomain (DeleteDomainReq) returns (DeleteDomainReply) {
+    option (google.api.http) = {
+      delete: "/v1/domains/{id}"
+    };
+  }
+  
+  // 设置领域状态
+  rpc UpdateDomainState (UpdateDomainStateReq) returns (UpdateDomainStateReply) {
+    option (google.api.http) = {
+      put: "/v1/domains/{id}/state"
+      body: "data"
+    };
+  }
+  
+  // 获取角色菜单
+  rpc ListDomainMenu (ListDomainMenuReq) returns (ListDomainMenuReply) {
+    option (google.api.http) = {
+      get: "/v1/domains/{id}/menus"
+    };
+  }
+
+  // 处理角色菜单
+  rpc HandleDomainMenu (HandleDomainMenuReq) returns (HandleDomainMenuReply) {
+    option (google.api.http) = {
+      post: "/v1/domains/{id}/menus"
+      body: "data"
+    };
+  }
+
+  // 角色模块
+  // 列表角色
+  rpc ListRole (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+    option (google.api.http) = {
+      get: "/v1/roles"
+    };
+  }
+
+  // 创建角色
+  rpc CreateRole (CreateRoleReq) returns (CreateRoleReply) {
+    option (google.api.http) = {
+      post: "/v1/roles"
+      body: "*"
+    };
+  }
+
+  // 获取角色
+  rpc GetRole (GetRoleReq) returns (Role) {
+    option (google.api.http) = {
+      get: "/v1/roles/{id}"
+    };
+  }
+
+  // 修改角色
+  rpc UpdateRole (UpdateRoleReq) returns (UpdateRoleReply) {
+    option (google.api.http) = {
+      put: "/v1/roles/{id}"
+      body: "data"
+    };
+  }
+
+  // 设置领域状态
+  rpc UpdateRoleState (UpdateRoleStateReq) returns (UpdateRoleStateReply) {
+    option (google.api.http) = {
+      put: "/v1/roles/{id}/state"
+      body: "data"
+    };
+  }
+
+  // 删除角色
+  rpc DeleteRole (DeleteRoleReq) returns (DeleteRoleReply) {
+    option (google.api.http) = {
+      delete: "/v1/roles/{id}"
+    };
+  }
+
+  // 获取角色菜单
+  rpc ListRoleMenu (ListRoleMenuReq) returns (ListRoleMenuReply) {
+    option (google.api.http) = {
+      get: "/v1/roles/{id}/menus"
+    };
+  }
+
+  // 处理角色菜单
+  rpc HandleRoleMenu (HandleRoleMenuReq) returns (HandleRoleMenuReply) {
+    option (google.api.http) = {
+      post: "/v1/roles/{id}/menus"
+      body: "data"
+    };
+  }
+
+  // 处理角色资源
+  rpc HandleRoleResource (HandleRoleResourceReq) returns (HandleRoleResourceReply) {
+    option (google.api.http) = {
+      post: "/v1/roles/{id}/resources"
+      body: "data"
+    };
+  }
+
+  // 资源模块
+  // 列表资源
+  rpc ListResource (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+    option (google.api.http) = {
+      get: "/v1/resources"
+    };
+  }
+
+  // 列表资源-分组
+  rpc ListResourceGroup (api.protobuf.PagingReq) returns (ListResourceGroupReply) {
+    option (google.api.http) = {
+      get: "/v1/resources/groups"
+    };
+  }
+
+  // 创建资源
+  rpc CreateResource (CreateResourceReq) returns (CreateResourceReply) {
+    option (google.api.http) = {
+      post: "/v1/resources"
+      body: "*"
+    };
+  }
+
+  // 获取资源
+  rpc GetResource (GetResourceReq) returns (Resource) {
+    option (google.api.http) = {
+      get: "/v1/resources/{id}"
+    };
+  }
+
+  // 修改资源
+  rpc UpdateResource (UpdateResourceReq) returns (UpdateResourceReply) {
+    option (google.api.http) = {
+      put: "/v1/resources/{id}"
+      body: "data"
+    };
+  }
+
+  // 删除资源
+  rpc DeleteResource (DeleteResourceReq) returns (DeleteResourceReply) {
+    option (google.api.http) = {
+      delete: "/v1/resources/{id}"
+    };
+  }
+
+  // 菜单模块
+  // 列表菜单
+  rpc ListMenu (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+    option (google.api.http) = {
+      get: "/v1/menus"
+    };
+  }
+
+  // 创建菜单
+  rpc CreateMenu (CreateMenuReq) returns (CreateMenuReply) {
+    option (google.api.http) = {
+      post: "/v1/menus"
+      body: "*"
+    };
+  }
+
+  // 获取树形菜单
+  rpc ListMenuTree (ListMenuTreeReq) returns (ListMenuTreeReply) {
+    option (google.api.http) = {
+      get: "/v1/menus/{id}/trees"
+    };
+  }
+
+  // 获取菜单
+  rpc GetMenu (GetMenuReq) returns (Menu) {
+    option (google.api.http) = {
+      get: "/v1/menus/{id}"
+    };
+  }
+
+  // 修改菜单
+  rpc UpdateMenu (UpdateMenuReq) returns (UpdateMenuReply) {
+    option (google.api.http) = {
+      put: "/v1/menus/{id}"
+      body: "data"
+    };
+  }
+
+  // 删除菜单
+  rpc DeleteMenu (DeleteMenuReq) returns (DeleteMenuReply) {
+    option (google.api.http) = {
+      delete: "/v1/menus/{id}"
+    };
+  }
+
+  // 列表部门
+  rpc ListDept (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+    option (google.api.http) = {
+      get: "/v1/depts"
+    };
+  }
+
+  // 创建部门
+  rpc CreateDept (CreateDeptReq) returns (CreateDeptReply) {
+    option (google.api.http) = {
+      post: "/v1/depts"
+      body: "*"
+    };
+  }
+
+  // 获取部门
+  rpc GetDept (GetDeptReq) returns (Dept) {
+    option (google.api.http) = {
+      get: "/v1/depts/{id}"
+    };
+  }
+
+  // 修改部门
+  rpc UpdateDept (UpdateDeptReq) returns (UpdateDeptReply) {
+    option (google.api.http) = {
+      put: "/v1/depts/{id}"
+      body: "data"
+    };
+  }
+
+  // 删除部门
+  rpc DeleteDept (DeleteDeptReq) returns (DeleteDeptReply) {
+    option (google.api.http) = {
+      delete: "/v1/depts/{id}"
+    };
+  }
+
+  // 获取全部部门树形
+  rpc ListDeptTree (ListDeptTreeReq) returns (ListDeptTreeReply) {
+    option (google.api.http) = {
+      get: "/v1/depts/{id}/trees"
+    };
+  }
+
+  // 列表职位
+  rpc ListPost (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+    option (google.api.http) = {
+      get: "/v1/posts"
+    };
+  }
+
+  // 创建职位
+  rpc CreatePost (CreatePostReq) returns (CreatePostReply) {
+    option (google.api.http) = {
+      post: "/v1/posts"
+      body: "*"
+    };
+  }
+
+  // 获取职位
+  rpc GetPost (GetPostReq) returns (Post) {
+    option (google.api.http) = {
+      get: "/v1/posts/{id}"
+    };
+  }
+
+  // 修改职位
+  rpc UpdatePost (UpdatePostReq) returns (UpdatePostReply) {
+    option (google.api.http) = {
+      put: "/v1/posts/{id}"
+      body: "data"
+    };
+  }
+
+  // 删除职位
+  rpc DeletePost (DeletePostReq) returns (DeletePostReply) {
+    option (google.api.http) = {
+      delete: "/v1/posts/{id}"
+    };
+  }
+
+  // 设置领域状态
+  rpc UpdatePostState (UpdatePostStateReq) returns (UpdatePostStateReply) {
+    option (google.api.http) = {
+      put: "/v1/posts/{id}/state"
+      body: "data"
+    };
+  }
+}
+
+message Auth {
+  // 用户名
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  // 密码
+  string password = 2 [(validate.rules).string = {min_len: 6, max_len: 25}];
+}
+
+// 回应 - 登录
+message LoginReply {
+  // 登录token
+  string token = 1;
+  // 过期时间
+  google.protobuf.Timestamp expire_time = 2;
+}
+
+// 回应 - 注册
+message RegisterReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 回应 - 退出登录
+message LogoutReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 密码登录
+message PassLoginReq {
+  message PassField {
+    string account = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    string password = 2 [(validate.rules).string = {min_len: 6, max_len: 28}];
+  }
+
+  // 请求体
+  PassField auth = 1 [(validate.rules).message = {required: true}];
+}
+
+// 请求 - 短信登录
+message SmsLoginReq {
+  message SmsField {
+    string phone = 1 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
+    string code = 2 [(validate.rules).string.pattern = "^[0-9]{6}$"];
+  }
+
+  // 请求体
+  SmsField auth = 1 [(validate.rules).message = {required: true}];
+}
+
+// 请求 - 邮件登录
+message EmailLoginReq {
+  message EmailField {
+    string email = 1 [(validate.rules).string.email = true];
+    string code = 2 [(validate.rules).string.pattern = "^[0-9]{4,6}$"];
+  }
+
+  // 请求体
+  EmailField auth = 1 [(validate.rules).message = {required: true}];
+}
+
+// 请求 - 注册
+message RegisterReq {
+  // 请求体
+  Auth auth = 1 [(validate.rules).message = {required: true}];
+}
+
+// 用户模块
+message User {
+  uint64 id = 1;
+  string name = 2;
+  string nick_name = 4;
+  string real_name = 5;
+  string birthday = 6;
+  api.protobuf.UserGender gender = 7; 
+  string phone = 8;
+  string email = 9;
+  string avatar = 10;
+  api.protobuf.UserState state = 11;
+  google.protobuf.Timestamp created_at = 12;
+  google.protobuf.Timestamp updated_at = 13;
+}
+
+// 回应 - 用户概况详情
+message GetUserProfileReply {
+  User user = 1;
+  repeated Role roles = 2;
+}
+
+// 回应 - 用户领域
+message ListUserDomainReply {
+  repeated Domain items = 1;
+  int64 total = 2;
+}
+
+// 回应 - 用户角色
+message ListUserRoleReply {
+  repeated Role items = 1;
+  int64 total = 2;
+}
+
+// 回应 - 列表用户 - 未使用
+message ListUserReply {
+  repeated User items = 1;
+  int64 total = 2;
+}
+
+// 请求 - 获取用户角色菜单树形
+message ListUserRoleMenuRouterTreeReq {
+  uint64 role_id = 1;
+}
+
+// 回应 - 获取用户角色菜单树形 Deprecated
+message ListUserRoleMenuTreeReply_Deprecated {
+  message MenuMeta {
+    // 路由title  一般必填
+    string title = 1;
+    // 动态路由可打开Tab页数
+    int32 dynamicLevel = 2;
+    // 动态路由的实际Path, 即去除路由的动态部分;
+    string realPath = 3;;
+    // 是否忽略KeepAlive缓存
+    bool ignoreKeepAlive = 4;
+    // 是否固定标签
+    bool affix = 5;
+    // 图标，也是菜单图标
+    string icon = 6;
+    // 内嵌iframe的地址
+    string frameSrc = 7;
+    // 指定该路由切换的动画名
+    string transitionName = 8;
+    // 隐藏该路由在面包屑上面的显示
+    bool hideBreadcrumb = 9;
+    // 如果该路由会携带参数，且需要在tab页上面显示。则需要设置为true
+    bool carryParam = 10;
+    // 隐藏所有子菜单
+    bool hideChildrenInMenu = 11;
+    // 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
+    string currentActiveMenu = 12;
+    // 当前路由不再标签页显示
+    bool hideTab = 13;
+    // 当前路由不再菜单显示
+    bool hideMenu = 14;
+    // 菜单排序，只对第一级有效
+    int32 orderNo = 15;
+    // 忽略路由。用于在ROUTE_MAPPING以及BACK权限模式下，生成对应的菜单而忽略路由。2.5.3以上版本有效
+    bool ignoreRoute = 16;
+    // 是否在子级菜单的完整path中忽略本级path。2.5.3以上版本有效
+    bool hidePathForChildren = 17;
+  }
+  message Menu {
+    string name = 1;
+    string path = 2;
+    string component = 3;
+    string redirect = 4;
+    string fullPath = 5;
+    string alias = 6;
+    bool caseSensitive = 7;
+    MenuMeta meta = 8;
+    repeated Menu children = 9;
+  }
+  int64 total = 1;
+  repeated Menu items = 2;
+}
+
+// 路由菜单
+message MenuRouter {
+  message Meta {
+    // 路由title  一般必填
+    string title = 1;
+    // 是否忽略KeepAlive缓存
+    optional bool ignoreKeepAlive = 4;
+    // 图标，也是菜单图标
+    optional string icon = 6;
+    // 内嵌iframe的地址
+    optional string frameSrc = 7;
+    // 隐藏该路由在面包屑上面的显示
+    optional bool hideBreadcrumb = 9;
+    // 当前路由不再菜单显示
+    optional bool hideMenu = 14;
+    // 菜单排序，只对第一级有效
+    optional int32 orderNo = 15;
+    // 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
+    optional string currentActiveMenu = 12;
+  }
+  string name = 1;
+  string path = 2;
+  string component = 3;
+  string redirect = 4;
+  Meta meta = 5;
+  repeated MenuRouter children = 6;
+  optional uint64 id = 7;
+  optional uint64 parent_id = 8;
+}
+
+// 回应 - 获取用户角色菜单列表-树形
+message ListUserRoleMenuRouterTreeReply {
+  int64 total = 1;
+  repeated MenuRouter items = 2;
+}
+
+// 请求 - 获取用户角色列表
+message ListUserRolePermissionReq {
+  uint64 role_id = 1 [(validate.rules).uint64 = {gte: 0}];
+}
+
+// 回应 - 获取用户角色列表
+message ListUserRolePermissionReply {
+  int64 total = 1;
+  repeated string items = 2;
+}
+
+// 请求 - 创建用户
+message CreateUserReq {
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  optional string avatar = 2;
+  optional string password = 3 [(validate.rules).string = {min_len: 6, max_len: 28}];
+  optional string nick_name = 4 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  optional string real_name = 5 [(validate.rules).string = {min_len: 2, max_len: 10}];
+  optional string birthday = 6 [(validate.rules).string.pattern = "^[1-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$"];
+  optional api.protobuf.UserGender gender = 7 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  string phone = 8 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
+  optional string email = 9 [(validate.rules).string.email = true];
+  api.protobuf.UserState state = 10 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+}
+
+// 回应 - 创建用户
+message CreateUserReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 绑定用户领域
+message HandleUserDomainReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    repeated uint64 domain_ids = 11 [(validate.rules).repeated = {min_items: 1, unique: true, items: {uint64: {gt: 0}}}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 绑定用户领域
+message HandleUserDomainReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 绑定用户领域权限
+message HandleUserDomainRoleReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    uint64 domain_id = 2 [(validate.rules).uint64 = {gt: 0}]; 
+    repeated uint64 role_ids = 11 [(validate.rules).repeated = {min_items: 1, unique: true, items: {uint64: {gt: 0}}}];
+  }
+  Data data = 3;
+}
+
+// 回应 - 绑定用户领域权限
+message HandleUserDomainRoleReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 获取用户
+message GetUserReq {
+  uint64 id = 1  [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 请求 - 删除用户
+message DeleteUserReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 删除用户
+message DeleteUserReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 修改用户
+message UpdateUserReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    string name = 2 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    optional string password = 3 [(validate.rules).string = {min_len: 6, max_len: 28}];
+    optional string nick_name = 4 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    optional string real_name = 5 [(validate.rules).string = {min_len: 2, max_len: 10}];
+    // x must be less than the Unix Epoch
+    optional string birthday = 6 [(validate.rules).string.pattern = "^[1-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$"];
+    optional api.protobuf.UserGender gender = 7 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    string phone = 8 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
+    optional string email = 9 [(validate.rules).string.email = true];
+    api.protobuf.UserState state = 10 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    optional string avatar = 11;
+  }
+  Data data = 2;
+}
+
+// 回应 - 修改用户
+message UpdateUserReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 回应 - 获取用户菜单
+message UserMenuTreeReply {
+  int64 total = 1;
+  repeated MenuTree items = 2;
+}
+
+// 请求 - 验证用户是否存在
+message ExistUserNameReq {
+  string name = 1;
+}
+
+// 回应 - 验证用户是否存在
+message ExistUserNameReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+
+// 领域模块
+message Domain {
+  google.protobuf.Timestamp created_at = 1;
+  google.protobuf.Timestamp updated_at = 2;
+  uint64 id = 3;
+  string name = 4;
+  uint64 parent_id = 5;
+  string code = 6;
+  int32 sort = 7;
+  string title = 8;
+  string logo = 9;
+  string pic = 10;
+  string keywords = 11;
+  string description = 12;
+  api.protobuf.DomainState state = 13;
+  string remarks = 14;
+  repeated Domain children = 15;
+}
+
+// 请求 - 领域登录
+message LoginDomainReq {
+  // 领域
+  string domain = 1 [(validate.rules).string = {min_len: 1, max_len: 20}];
+  // 请求体
+  Auth auth = 2 [(validate.rules).message = {required: true}];
+}
+
+// 请求 - 领域注册
+message RegisterDomainReq {
+  // 领域
+  string domain = 1 [(validate.rules).string = {min_len: 1, max_len: 20}];
+  // 请求体
+  Auth auth = 2 [(validate.rules).message = {required: true}];
+}
+
+
+message ListDomainTreeReq {
+  uint64 id = 1;
+}
+message ListDomainTreeReply {
+  int64 total = 1;
+  repeated Domain items = 2;
+}
+
+// 请求 - 创建领域
+message CreateDomainReq {
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  optional uint64 parent_id = 2;
+  optional int32 sort = 3;
+  optional string title = 4 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  optional string logo = 5;
+  optional string pic = 6;
+  optional string keywords = 7;
+  optional string description = 8;
+  optional api.protobuf.DomainState state = 9 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  optional string remarks = 10;
+}
+
+// 回应 - 创建领域
+message CreateDomainReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 修改领域
+message UpdateDomainReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    optional uint64 parent_id = 2;
+    optional int32 sort = 3;
+    optional string title = 4 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    optional string logo = 5;
+    optional string pic = 6;
+    optional string keywords = 7;
+    optional string description = 8;
+    optional api.protobuf.DomainState state = 9 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    optional string remarks = 10;
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建领域
+message UpdateDomainReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 修改领域-状态
+message UpdateDomainStateReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    optional api.protobuf.DomainState state = 1 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建领域-状态
+message UpdateDomainStateReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 获取领域
+message GetDomainReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 请求 - 删除领域
+message DeleteDomainReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 删除领域
+message DeleteDomainReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 获取领域菜单
+message ListDomainMenuReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 获取领域菜单
+message ListDomainMenuReply {
+  int64 total = 1;
+  repeated google.protobuf.Any items = 2;
+}
+
+// 请求 - 处理领域菜单
+message HandleDomainMenuReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Menu {
+    uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+    repeated uint64 menu_parameter_ids = 2 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+    repeated uint64 menu_button_ids = 3 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+  }
+  message Data {
+    repeated Menu menus = 1;
+  }
+  Data data = 2;
+}
+
+// 回应 - 处理领域菜单
+message HandleDomainMenuReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 角色模块
+message Role {
+  google.protobuf.Timestamp created_at = 1;
+  google.protobuf.Timestamp updated_at = 2;
+  uint64 id = 3;
+  string name = 4;
+  uint64 parent_id = 5;
+  string default_router = 6;
+  int32 sort = 7;
+  api.protobuf.RoleState state = 8;
+  string remarks = 9;
+}
+
+// 请求 - 创建角色
+message CreateRoleReq {
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
+  optional string default_router = 3 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  optional int32 sort = 4 [(validate.rules).int32 = {gte: 0}];
+  api.protobuf.RoleState state = 5 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  optional string remarks = 6 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+  // repeated uint64 menus = 7 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+}
+
+// 回应 - 创建角色
+message CreateRoleReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 修改角色
+message UpdateRoleReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
+    optional string default_router = 3 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    optional int32 sort = 4 [(validate.rules).int32 = {gte: 0}];
+    api.protobuf.RoleState state = 5 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    optional string remarks = 6 [(validate.rules).string = {min_len: 0, max_len: 1000}];
+    // repeated uint64 menus = 7 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建角色
+message UpdateRoleReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 修改角色
+message UpdateRoleStateReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    api.protobuf.RoleState state = 1 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建角色
+message UpdateRoleStateReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 获取角色
+message GetRoleReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 请求 - 删除角色
+message DeleteRoleReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 删除角色
+message DeleteRoleReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 获取角色菜单
+message ListRoleMenuReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 获取角色菜单
+message ListRoleMenuReply {
+  int64 total = 1;
+  repeated google.protobuf.Any items = 2;
+}
+
+// 请求 - 处理角色菜单
+message HandleRoleMenuReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Menu {
+    uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+    repeated uint64 menu_parameter_ids = 2 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+    repeated uint64 menu_button_ids = 3 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+  }
+  message Data {
+    repeated Menu menus = 1;
+  }
+  Data data = 2;
+}
+
+// 回应 - 处理角色菜单
+message HandleRoleMenuReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 处理角色资源
+message HandleRoleResourceReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    repeated uint64 resource_ids = 1;
+  }
+  Data data = 2;
+}
+
+// 回应 - 处理角色资源
+message HandleRoleResourceReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 资源模块
+message Resource {
+  google.protobuf.Timestamp created_at = 1;
+  google.protobuf.Timestamp updated_at = 2;
+  uint64 id = 3;
+  string name = 4;
+  string path = 5;
+  string method = 6;
+  string group = 7;
+  string description = 8;
+  string operation = 9;
+}
+
+// 回应 - 创建资源
+message ListResourceGroupReply {
+  int64 total = 1;
+  repeated string items = 2;
+}
+
+// 请求 - 创建资源
+message CreateResourceReq {
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  string path = 2 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  string method = 3 [(validate.rules).string = {in: ["*", "GET", "POST", "HEAD", "PUT", "PATCH", "DELETE", "OPTIONS", "CONNECT", "TRACE"]}];
+  optional string group = 4 [(validate.rules).string = {min_len: 0, max_len: 100}];
+  optional string description = 5 [(validate.rules).string = {min_len: 0, max_len: 1000}];
+  optional string operation = 6 [(validate.rules).string = {min_len: 0, max_len: 100}];
+}
+
+// 回应 - 创建资源
+message CreateResourceReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 修改资源
+message UpdateResourceReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    string path = 2 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    string method = 3 [(validate.rules).string = {in: ["*", "GET", "POST", "HEAD", "PUT", "PATCH", "DELETE", "OPTIONS", "CONNECT", "TRACE"]}];
+    optional string group = 4 [(validate.rules).string = {min_len: 0, max_len: 100}];
+    optional string description = 5 [(validate.rules).string = {min_len: 0, max_len: 1000}];
+    optional string operation = 6 [(validate.rules).string = {min_len: 0, max_len: 100}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建资源
+message UpdateResourceReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 获取资源
+message GetResourceReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 请求 - 删除资源
+message DeleteResourceReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 删除资源
+message DeleteResourceReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 菜单模块
+message Menu {
+  google.protobuf.Timestamp created_at = 1;
+  google.protobuf.Timestamp updated_at = 2;
+  uint64 id = 3;
+  string name = 4;
+  api.protobuf.MenuType type = 5;
+  uint64 parent_id = 6;
+  string path = 7;
+  api.protobuf.MenuHidden is_hidden = 8;
+  string component = 9;
+  string permission = 10;
+  int32 sort = 11;
+  string icon = 12;
+  string title = 13;
+  api.protobuf.MenuCache is_cache = 14;
+  api.protobuf.MenuAffix is_affix = 16;
+  api.protobuf.MenuLinkType link_type = 17;
+  string link_url = 15;
+  repeated Menu children = 18;
+  repeated MenuParameter parameters = 19;
+  repeated MenuButton buttons = 20;
+}
+
+message MenuButton {
+  string name = 1;
+  string remarks = 2;
+}
+
+message MenuParameter {
+  api.protobuf.MenuParameterType type = 1;
+  string name = 2;
+  string value = 3;
+}
+
+// 请求 - 创建菜单
+message CreateMenuReq {
+  optional string name = 1 [(validate.rules).string = {min_len: 1, max_len: 50}];
+  api.protobuf.MenuType type = 2 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  uint64 parent_id = 4 [(validate.rules).uint64 = {gte: 0}];
+  optional string path = 5 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  api.protobuf.MenuHidden is_hidden = 6 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  optional string component = 7 [(validate.rules).string = {max_len: 100}];
+  optional string permission = 8 [(validate.rules).string = {max_len: 100}];
+  optional int32 sort = 9 [(validate.rules).int32 = {lt: 100000}];
+  optional string icon = 10 [(validate.rules).string = {min_len: 0, max_len: 100}];
+  string title = 11 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  optional api.protobuf.MenuCache is_cache = 12 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  optional string link_url = 13 [(validate.rules).string = {min_len: 0, max_len: 100}];
+  optional api.protobuf.MenuAffix is_affix = 14 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  optional api.protobuf.MenuLinkType link_type = 15 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  repeated MenuParameter parameters = 16;
+  repeated MenuButton buttons = 17;
+}
+
+// 回应 - 创建菜单
+message CreateMenuReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 修改菜单
+message UpdateMenuReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    optional string name = 1 [(validate.rules).string = {min_len: 1, max_len: 50}];
+    api.protobuf.MenuType type = 2 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    uint64 parent_id = 4 [(validate.rules).uint64 = {gte: 0}];
+    optional string path = 5 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    optional api.protobuf.MenuHidden is_hidden = 6 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    optional string component = 7 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    optional string permission = 8 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    optional int32 sort = 9 [(validate.rules).int32 = {gte: 0}];
+    optional string icon = 10 [(validate.rules).string = {min_len: 0, max_len: 100}];
+    string title = 11 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    optional api.protobuf.MenuCache is_cache = 12 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    optional string link_url = 13 [(validate.rules).string = {min_len: 0, max_len: 100}];
+    optional api.protobuf.MenuAffix is_affix = 14 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    optional api.protobuf.MenuLinkType link_type = 15 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    repeated MenuParameter parameters = 16;
+    repeated MenuButton buttons = 17;
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建菜单
+message UpdateMenuReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 获取菜单
+message GetMenuReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 请求 - 删除菜单
+message DeleteMenuReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 删除菜单
+message DeleteMenuReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+message MenuTree {
+  uint64 id = 1;
+  string name = 2;
+  string title = 3;
+  uint64 parent_id = 4;
+  repeated MenuTree children = 5;
+}
+
+// 请求 - 获取树形菜单
+message ListMenuTreeReq {
+  uint64 id = 1;
+}
+
+// 回应 - 获取树形菜单
+message ListMenuTreeReply {
+  int64 total = 1;
+  repeated Menu items = 2;
+}
+
+// 部门模块
+message Dept {
+  google.protobuf.Timestamp created_at = 1;
+  google.protobuf.Timestamp updated_at = 2;
+  uint64 id = 3;
+  string name = 4;
+  uint64 parent_id = 5;
+  int32 sort = 6;
+  string remarks = 7;
+  api.protobuf.DeptState state = 8;
+  repeated Dept children = 9;
+}
+
+// 请求 - 创建部门
+message CreateDeptReq {
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
+  int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
+  api.protobuf.DeptState state = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  optional string remarks = 5 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+}
+
+// 回应 - 创建部门
+message CreateDeptReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 修改部门
+message UpdateDeptReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
+    int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
+    api.protobuf.DeptState state = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    optional string remarks = 5 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建部门
+message UpdateDeptReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 获取部门
+message GetDeptReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 请求 - 删除部门
+message DeleteDeptReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 删除部门
+message DeleteDeptReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 获取树形部门
+message ListDeptTreeReq {
+  uint64 id = 1;
+}
+
+// 回应 - 获取树形部门
+message ListDeptTreeReply {
+  int64 total = 1;
+  repeated Dept items = 2;
+}
+
+// 职位模块
+message Post {
+  google.protobuf.Timestamp created_at = 1;
+  google.protobuf.Timestamp updated_at = 2;
+  uint64 id = 3;
+  string name = 4;
+  string code = 5;
+  int32 sort = 6;
+  string remarks = 7;
+  api.protobuf.PostState state = 8;
+}
+
+// 请求 - 创建职位
+message CreatePostReq {
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  optional string code = 2 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
+  api.protobuf.PostState state = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  optional string remarks = 5 [(validate.rules).string = {min_len: 0, max_len: 1000}];
+}
+
+// 回应 - 创建职位
+message CreatePostReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 修改职位
+message UpdatePostReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    optional string code = 2 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
+    api.protobuf.PostState state = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    string remarks = 5 [(validate.rules).string = {min_len: 0, max_len: 1000}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建职位
+message UpdatePostReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 获取职位
+message GetPostReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 请求 - 删除职位
+message DeletePostReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 删除职位
+message DeletePostReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+}
+
+// 请求 - 修改职位-状态
+message UpdatePostStateReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    optional api.protobuf.PostState state = 1 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建职位-状态
+message UpdatePostStateReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}

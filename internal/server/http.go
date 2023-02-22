@@ -3,15 +3,13 @@ package server
 import (
 	"context"
 
-	adminv1 "github.com/beiduoke/go-scaffold/api/admin/v1"
-	webv1 "github.com/beiduoke/go-scaffold/api/web/v1"
+	serverv1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	myAuthz "github.com/beiduoke/go-scaffold/internal/pkg/authz"
 	"github.com/beiduoke/go-scaffold/internal/pkg/middleware/localize"
 	"github.com/beiduoke/go-scaffold/internal/pkg/middleware/multipoint"
 	"github.com/beiduoke/go-scaffold/internal/pkg/middleware/signout"
-	"github.com/beiduoke/go-scaffold/internal/service/admin"
-	"github.com/beiduoke/go-scaffold/internal/service/web"
+	"github.com/beiduoke/go-scaffold/internal/service/api"
 	casbinM "github.com/beiduoke/go-scaffold/pkg/authz/casbin"
 	stdcasbin "github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
@@ -94,7 +92,7 @@ func NewMiddleware(logger log.Logger, authMiddleware middleware.Middleware) http
 }
 
 // NewHTTPServer new a HTTP server.
-func NewHTTPServer(c *conf.Server, as *admin.AdminService, bs *web.WebService, middleware http.ServerOption) *http.Server {
+func NewHTTPServer(c *conf.Server, as *api.ApiService, middleware http.ServerOption) *http.Server {
 	var opts = []http.ServerOption{
 		middleware,
 		http.Filter(handlers.CORS(
@@ -117,7 +115,6 @@ func NewHTTPServer(c *conf.Server, as *admin.AdminService, bs *web.WebService, m
 	openAPIhandler := openapiv2.NewHandler(openapiv2.WithGeneratorOptions(generator.UseJSONNamesForFields(true), generator.EnumsAsInts(false)))
 	srv.HandlePrefix("/q/", openAPIhandler)
 
-	adminv1.RegisterAdminHTTPServer(srv, as)
-	webv1.RegisterWebHTTPServer(srv, bs)
+	serverv1.RegisterApiHTTPServer(srv, as)
 	return srv
 }

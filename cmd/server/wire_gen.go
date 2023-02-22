@@ -12,8 +12,7 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/data"
 	"github.com/beiduoke/go-scaffold/internal/pkg/websocket"
 	"github.com/beiduoke/go-scaffold/internal/server"
-	"github.com/beiduoke/go-scaffold/internal/service/admin"
-	"github.com/beiduoke/go-scaffold/internal/service/web"
+	"github.com/beiduoke/go-scaffold/internal/service/api"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 )
@@ -52,12 +51,11 @@ func wireApp(confServer *conf.Server, auth *conf.Auth, confData *conf.Data, logg
 	deptUsecase := biz.NewDeptUsecase(logger, bizBiz, deptRepo)
 	postRepo := data.NewPostRepo(logger, dataData)
 	postUsecase := biz.NewPostUsecase(logger, bizBiz, postRepo)
-	adminService := admin.NewAdminService(logger, auth, websocketService, authUsecase, userUsecase, domainUsecase, roleUsecase, menuUsecase, resourceUsecase, deptUsecase, postUsecase)
-	webService := web.NewWebService(logger, userUsecase, authUsecase)
-	grpcServer := server.NewGRPCServer(confServer, auth, adminService, webService, logger)
+	apiService := api.NewApiService(logger, auth, websocketService, authUsecase, userUsecase, domainUsecase, roleUsecase, menuUsecase, resourceUsecase, deptUsecase, postUsecase)
+	grpcServer := server.NewGRPCServer(confServer, auth, apiService, logger)
 	middleware := server.NewAuthMiddleware(auth, model, adapter, iEnforcer)
 	serverOption := server.NewMiddleware(logger, middleware)
-	httpServer := server.NewHTTPServer(confServer, adminService, webService, serverOption)
+	httpServer := server.NewHTTPServer(confServer, apiService, serverOption)
 	websocketServer := server.NewWebsocketServer(confServer, logger, websocketService)
 	app := newApp(logger, grpcServer, httpServer, websocketServer)
 	return app, func() {
