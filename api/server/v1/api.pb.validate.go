@@ -1512,7 +1512,9 @@ func (m *ListUserDomainReply) validate(all bool) error {
 
 	}
 
-	// no validation rules for Total
+	if m.Total != nil {
+		// no validation rules for Total
+	}
 
 	if len(errors) > 0 {
 		return ListUserDomainReplyMultiError(errors)
@@ -1650,7 +1652,9 @@ func (m *ListUserRoleReply) validate(all bool) error {
 
 	}
 
-	// no validation rules for Total
+	if m.Total != nil {
+		// no validation rules for Total
+	}
 
 	if len(errors) > 0 {
 		return ListUserRoleReplyMultiError(errors)
@@ -1788,7 +1792,9 @@ func (m *ListUserReply) validate(all bool) error {
 
 	}
 
-	// no validation rules for Total
+	if m.Total != nil {
+		// no validation rules for Total
+	}
 
 	if len(errors) > 0 {
 		return ListUserReplyMultiError(errors)
@@ -1996,8 +2002,6 @@ func (m *ListUserRoleMenuTreeReply_Deprecated) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Total
-
 	for idx, item := range m.GetItems() {
 		_, _ = idx, item
 
@@ -2030,6 +2034,10 @@ func (m *ListUserRoleMenuTreeReply_Deprecated) validate(all bool) error {
 			}
 		}
 
+	}
+
+	if m.Total != nil {
+		// no validation rules for Total
 	}
 
 	if len(errors) > 0 {
@@ -2314,8 +2322,6 @@ func (m *ListUserRoleMenuRouterTreeReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Total
-
 	for idx, item := range m.GetItems() {
 		_, _ = idx, item
 
@@ -2348,6 +2354,10 @@ func (m *ListUserRoleMenuRouterTreeReply) validate(all bool) error {
 			}
 		}
 
+	}
+
+	if m.Total != nil {
+		// no validation rules for Total
 	}
 
 	if len(errors) > 0 {
@@ -2566,7 +2576,9 @@ func (m *ListUserRolePermissionReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Total
+	if m.Total != nil {
+		// no validation rules for Total
+	}
 
 	if len(errors) > 0 {
 		return ListUserRolePermissionReplyMultiError(errors)
@@ -4307,8 +4319,6 @@ func (m *UserMenuTreeReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Total
-
 	for idx, item := range m.GetItems() {
 		_, _ = idx, item
 
@@ -4341,6 +4351,10 @@ func (m *UserMenuTreeReply) validate(all bool) error {
 			}
 		}
 
+	}
+
+	if m.Total != nil {
+		// no validation rules for Total
 	}
 
 	if len(errors) > 0 {
@@ -5306,8 +5320,6 @@ func (m *ListDomainTreeReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Total
-
 	for idx, item := range m.GetItems() {
 		_, _ = idx, item
 
@@ -5340,6 +5352,10 @@ func (m *ListDomainTreeReply) validate(all bool) error {
 			}
 		}
 
+	}
+
+	if m.Total != nil {
+		// no validation rules for Total
 	}
 
 	if len(errors) > 0 {
@@ -6792,8 +6808,6 @@ func (m *ListDomainMenuReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Total
-
 	for idx, item := range m.GetItems() {
 		_, _ = idx, item
 
@@ -6826,6 +6840,10 @@ func (m *ListDomainMenuReply) validate(all bool) error {
 			}
 		}
 
+	}
+
+	if m.Total != nil {
+		// no validation rules for Total
 	}
 
 	if len(errors) > 0 {
@@ -8728,8 +8746,6 @@ func (m *ListRoleMenuReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Total
-
 	for idx, item := range m.GetItems() {
 		_, _ = idx, item
 
@@ -8762,6 +8778,10 @@ func (m *ListRoleMenuReply) validate(all bool) error {
 			}
 		}
 
+	}
+
+	if m.Total != nil {
+		// no validation rules for Total
 	}
 
 	if len(errors) > 0 {
@@ -9595,7 +9615,9 @@ func (m *ListResourceGroupReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Total
+	if m.Total != nil {
+		// no validation rules for Total
+	}
 
 	if len(errors) > 0 {
 		return ListResourceGroupReplyMultiError(errors)
@@ -12612,8 +12634,6 @@ func (m *ListMenuTreeReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Total
-
 	for idx, item := range m.GetItems() {
 		_, _ = idx, item
 
@@ -12646,6 +12666,10 @@ func (m *ListMenuTreeReply) validate(all bool) error {
 			}
 		}
 
+	}
+
+	if m.Total != nil {
+		// no validation rules for Total
 	}
 
 	if len(errors) > 0 {
@@ -13994,8 +14018,6 @@ func (m *ListDeptTreeReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Total
-
 	for idx, item := range m.GetItems() {
 		_, _ = idx, item
 
@@ -14028,6 +14050,10 @@ func (m *ListDeptTreeReply) validate(all bool) error {
 			}
 		}
 
+	}
+
+	if m.Total != nil {
+		// no validation rules for Total
 	}
 
 	if len(errors) > 0 {

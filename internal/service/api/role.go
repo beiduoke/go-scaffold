@@ -126,9 +126,10 @@ func (s *ApiService) DeleteRole(ctx context.Context, in *v1.DeleteRoleReq) (*v1.
 func (s *ApiService) ListRoleMenu(ctx context.Context, in *v1.ListRoleMenuReq) (*v1.ListRoleMenuReply, error) {
 	id := in.GetId()
 	menus, _ := s.roleCase.ListMenuByID(ctx, &biz.Role{ID: uint(id)})
+	total := int64(len(menus))
 	return &v1.ListRoleMenuReply{Items: proto.ToAny(menus, func(t *biz.Menu) protoreflect.ProtoMessage {
 		return TransformMenu(t)
-	}), Total: int64(len(menus))}, nil
+	}), Total: &total}, nil
 }
 
 // HandleRoleMenu 处理角色菜单

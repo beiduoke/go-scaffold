@@ -25,7 +25,7 @@ var _ v1.ApiServer = (*ApiService)(nil)
 // 	return nil, err
 // }
 
-// ApiService is a Admin service.
+// ApiService is a Api service.
 type ApiService struct {
 	v1.UnimplementedApiServer
 	ac           *conf.Auth
@@ -41,7 +41,7 @@ type ApiService struct {
 	postCase     *biz.PostUsecase
 }
 
-// NewApiService new a Admin service.
+// NewApiService new a Api service.
 func NewApiService(
 	logger log.Logger,
 	ac *conf.Auth,
@@ -55,7 +55,7 @@ func NewApiService(
 	deptCase *biz.DeptUsecase,
 	postCase *biz.PostUsecase,
 ) *ApiService {
-	l := log.NewHelper(log.With(logger, "module", "service/admin"))
+	l := log.NewHelper(log.With(logger, "module", "service/api"))
 	return &ApiService{
 		log:          l,
 		ac:           ac,

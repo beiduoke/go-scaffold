@@ -271,7 +271,7 @@ func file_server_v1_error_reason_proto_rawDescGZIP() []byte {
 
 var file_server_v1_error_reason_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_server_v1_error_reason_proto_goTypes = []interface{}{
-	(ErrorReason)(0), // 0: admin.v1.ErrorReason
+	(ErrorReason)(0), // 0: api.v1.ErrorReason
 }
 var file_server_v1_error_reason_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type

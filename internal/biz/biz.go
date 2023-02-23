@@ -15,11 +15,14 @@ var ProviderSet = wire.NewSet(
 	NewRoleUsecase,
 	NewResourceUsecase,
 	NewMenuUsecase,
-	NewAuthUsecase,
 	NewUserUsecase,
 	NewDeptUsecase,
 	NewPostUsecase,
 )
+
+type BizType interface {
+	GetID() string
+}
 
 type Transaction interface {
 	InTx(context.Context, func(ctx context.Context) error) error

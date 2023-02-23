@@ -2,15 +2,11 @@ package data
 
 import (
 	"context"
-	"encoding/json"
-	"errors"
 	"sort"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
-	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
-	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -113,7 +109,7 @@ func (r *MenuRepo) Save(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 	d := r.toModel(g)
 	result := r.data.DB(ctx).Create(d)
 	if result.Error == nil {
-		r.setCache(ctx, d)
+		result.Error = r.SetCache(ctx, d)
 	}
 	return r.toBiz(d), result.Error
 }
@@ -134,7 +130,7 @@ func (r *MenuRepo) Update(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 	result := r.data.DB(ctx).Model(d).Debug().Select("*").Omit("CreatedAt").Updates(d)
 
 	if result.Error == nil {
-		r.setCache(ctx, d)
+		result.Error = r.SetCache(ctx, d)
 	}
 	return r.toBiz(d), result.Error
 }
@@ -161,7 +157,7 @@ func (r *MenuRepo) ListByIDs(ctx context.Context, id ...uint) (menus []*biz.Menu
 	db := r.data.DB(ctx).Model(&SysMenu{})
 	sysMenus := []*SysMenu{}
 
-	err = db.Find(&sysMenus).Error
+	err = db.Find(&sysMenus, id).Error
 	if err != nil {
 		return menus, err
 	}
@@ -188,11 +184,11 @@ func (r *MenuRepo) Delete(ctx context.Context, g *biz.Menu) error {
 	if err := result.Error; err != nil {
 		return err
 	}
-	return r.data.rdb.HDel(ctx, cacheMenuKey, convert.UnitToString(g.ID)).Err()
+	return r.DeleteCache(ctx, g.ID)
 }
 
 func (r *MenuRepo) ListAll(ctx context.Context) (menus []*biz.Menu, err error) {
-	for _, v := range r.allCache(ctx) {
+	for _, v := range r.ListAllCache(ctx) {
 		menus = append(menus, r.toBiz(v))
 	}
 	return
@@ -238,70 +234,16 @@ func (r *MenuRepo) ListPage(ctx context.Context, handler pagination.PaginationHa
 	return menus, total
 }
 
-// setCache 设置菜单缓存
-func (r *MenuRepo) setCache(ctx context.Context, g *SysMenu) error {
-	dataStr, err := json.Marshal(g)
-	if err != nil {
-		r.log.Errorf("菜单缓存失败 %v", err)
-		return err
-	}
-	return r.data.rdb.HSet(ctx, cacheMenuKey, convert.UnitToString(g.ID), dataStr).Err()
-}
-
-// getCache 获取菜单缓存
-func (r *MenuRepo) getCache(ctx context.Context, key string) (sysMenu *SysMenu) {
-	dataStr, err := r.data.rdb.HGet(ctx, cacheMenuKey, key).Result()
-	if err != nil {
-		return nil
-	}
-	if err := json.Unmarshal([]byte(dataStr), &sysMenu); err != nil {
-		r.log.Errorf("缓存反序列化失败 %v", err)
-	}
-	return sysMenu
-}
-
-func (r *MenuRepo) allCache(ctx context.Context) (menus []*SysMenu) {
-	if l, _ := r.data.rdb.HLen(ctx, cacheMenuKey).Result(); l > 0 {
-		menuMap, _ := r.data.rdb.HGetAll(ctx, cacheMenuKey).Result()
-		for _, v := range menuMap {
-			sysMenu := SysMenu{}
-			err := json.Unmarshal([]byte(v), &sysMenu)
-			if err != nil {
-				r.log.Errorf("菜单缓存反序列失败 %v", err)
-				continue
-			}
-			menus = append(menus, &sysMenu)
-		}
-	} else {
-		result := r.data.DB(ctx).Find(&menus)
-		if result.Error != nil && !errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			r.log.Errorf("菜单查询失败 %v", result.Error)
-			return nil
-		}
-		menuMap := make(map[string]interface{})
-		for _, v := range menus {
-			menuStr, err := json.Marshal(v)
-			if err != nil {
-				r.log.Errorf("菜单缓存序列化失败 %v", err)
-				continue
-			}
-			menuMap[convert.UnitToString(v.ID)] = string(menuStr)
-		}
-		if err := r.data.rdb.HSet(ctx, cacheMenuKey, menuMap).Err(); err != nil {
-			r.log.Errorf("菜单缓存失败 %v", err)
-		}
-	}
-	// 根据序号进行排序
-	sort.SliceStable(menus, func(i, j int) bool {
-		return menus[i].Sort < menus[j].Sort
-	})
-	return menus
-}
-
 // 根据ID递归查询父级菜单
 func menuRecursiveParent(menus []*biz.Menu, ids ...uint) []*biz.Menu {
 	result, mid := []*biz.Menu{}, map[uint]uint{}
 	for _, v := range menus {
+		for _, p := range menus {
+			if v.ParentID == p.ID {
+				v.Parent = p
+				break
+			}
+		}
 		for _, id := range ids {
 			if _, o := mid[v.ID]; v.ID == id && !o {
 				mid[v.ID] = v.ID

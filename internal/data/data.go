@@ -18,10 +18,6 @@ import (
 	"gorm.io/gorm/schema"
 )
 
-const (
-	cacheMenuKey = "hashSysMenu"
-)
-
 // ProviderSet is data providers.
 var ProviderSet = wire.NewSet(
 	// 基础配置

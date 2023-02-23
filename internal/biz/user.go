@@ -37,6 +37,10 @@ type User struct {
 	DomainRoleUsers []*DomainRoleUser
 }
 
+func (g User) GetID() string {
+	return convert.UnitToString(g.ID)
+}
+
 // UserRepo is a Greater repo.
 type UserRepo interface {
 	// 基准操作
@@ -222,14 +226,15 @@ func (uc *UserUsecase) Delete(ctx context.Context, g *User) error {
 		if err := uc.biz.userRepo.Delete(ctx, g); err != nil {
 			return err
 		}
-		_, err := uc.biz.enforcer.DeleteUser(convert.UnitToString(g.ID))
+
+		_, err := uc.biz.enforcer.DeleteUser(g.GetID())
 		return err
 	})
 }
 
 // GetLastDomain 获取最后切换使用领域
 func (ac *UserUsecase) GetLastUseDomain(ctx context.Context, g *User) (*Domain, error) {
-	domainPolices := ac.biz.enforcer.GetFilteredGroupingPolicy(0, convert.UnitToString(g.ID))
+	domainPolices := ac.biz.enforcer.GetFilteredGroupingPolicy(0, g.GetID())
 	if len(domainPolices) < 1 && len(domainPolices[0]) >= 2 {
 		return nil, errors.New("领域查询失败")
 	}
@@ -246,7 +251,7 @@ func (ac *UserUsecase) GetLastUseDomain(ctx context.Context, g *User) (*Domain, 
 	}, nil
 	// 暂无用
 	// 获取最近一次登录的领域下所有角色
-	roles, err := ac.biz.enforcer.(*stdcasbin.SyncedEnforcer).GetNamedRoleManager("g").GetRoles(convert.UnitToString(g.ID), lastUseDomain)
+	roles, err := ac.biz.enforcer.(*stdcasbin.SyncedEnforcer).GetNamedRoleManager("g").GetRoles(g.GetID(), lastUseDomain)
 	roleIds := make([]uint, 0, len(roles))
 	for _, v := range roles {
 		roleIds = append(roleIds, convert.StringToUint(v))
@@ -257,11 +262,11 @@ func (ac *UserUsecase) GetLastUseDomain(ctx context.Context, g *User) (*Domain, 
 
 // GetLastDomain 获取最后切换使用领域
 func (ac *UserUsecase) ListDomainAll(ctx context.Context, g *User) ([]*Domain, error) {
-	domainPolices := ac.biz.enforcer.GetFilteredGroupingPolicy(0, convert.UnitToString(g.ID))
+	domainPolices := ac.biz.enforcer.GetFilteredGroupingPolicy(0, g.GetID())
 	if len(domainPolices) < 1 && len(domainPolices[0]) >= 2 {
 		return nil, errors.New("领域查询失败")
 	}
-	userDomainIds, err := ac.biz.enforcer.(*stdcasbin.SyncedEnforcer).GetDomainsForUser(convert.UnitToString(g.ID))
+	userDomainIds, err := ac.biz.enforcer.(*stdcasbin.SyncedEnforcer).GetDomainsForUser(g.GetID())
 	if err != nil {
 		return nil, err
 	}
@@ -276,7 +281,7 @@ func (ac *UserUsecase) ListDomainAll(ctx context.Context, g *User) ([]*Domain, e
 
 // ListRoleID 获取角色ID列表
 func (ac *UserUsecase) ListRoleID(ctx context.Context, g *User) (roleIds []uint, err error) {
-	uidStr := convert.UnitToString(g.ID)
+	uidStr := g.GetID()
 	var rolesIdsStr []string
 	if len(g.Domains) < 1 {
 		rolesIdsStr, err = ac.biz.enforcer.GetRolesForUser(uidStr, "1")

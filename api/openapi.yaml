@@ -2035,67 +2035,67 @@ components:
         api.server.v1.ListDeptTreeReply:
             type: object
             properties:
-                total:
-                    type: integer
-                    format: int64
                 items:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.server.v1.Dept'
+                total:
+                    type: integer
+                    format: int64
             description: 回应 - 获取树形部门
         api.server.v1.ListDomainMenuReply:
             type: object
             properties:
-                total:
-                    type: integer
-                    format: int64
                 items:
                     type: array
                     items:
                         $ref: '#/components/schemas/google.protobuf.Any'
+                total:
+                    type: integer
+                    format: int64
             description: 回应 - 获取领域菜单
         api.server.v1.ListDomainTreeReply:
             type: object
             properties:
-                total:
-                    type: integer
-                    format: int64
                 items:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.server.v1.Domain'
-        api.server.v1.ListMenuTreeReply:
-            type: object
-            properties:
                 total:
                     type: integer
                     format: int64
+        api.server.v1.ListMenuTreeReply:
+            type: object
+            properties:
                 items:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.server.v1.Menu'
+                total:
+                    type: integer
+                    format: int64
             description: 回应 - 获取树形菜单
         api.server.v1.ListResourceGroupReply:
             type: object
             properties:
-                total:
-                    type: integer
-                    format: int64
                 items:
                     type: array
                     items:
                         type: string
+                total:
+                    type: integer
+                    format: int64
             description: 回应 - 创建资源
         api.server.v1.ListRoleMenuReply:
             type: object
             properties:
-                total:
-                    type: integer
-                    format: int64
                 items:
                     type: array
                     items:
                         $ref: '#/components/schemas/google.protobuf.Any'
+                total:
+                    type: integer
+                    format: int64
             description: 回应 - 获取角色菜单
         api.server.v1.ListUserDomainReply:
             type: object
@@ -2111,24 +2111,24 @@ components:
         api.server.v1.ListUserRoleMenuRouterTreeReply:
             type: object
             properties:
-                total:
-                    type: integer
-                    format: int64
                 items:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.server.v1.MenuRouter'
+                total:
+                    type: integer
+                    format: int64
             description: 回应 - 获取用户角色菜单列表-树形
         api.server.v1.ListUserRolePermissionReply:
             type: object
             properties:
-                total:
-                    type: integer
-                    format: int64
                 items:
                     type: array
                     items:
                         type: string
+                total:
+                    type: integer
+                    format: int64
             description: 回应 - 获取用户角色列表
         api.server.v1.ListUserRoleReply:
             type: object

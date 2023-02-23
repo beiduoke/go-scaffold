@@ -5,8 +5,8 @@ import "errors/errors.proto";
 
 option go_package = "github.com/beiduoke/go-scaffold/api/server/v1;v1";
 option java_multiple_files = true;
-option java_package = "admin.v1";
-option objc_class_prefix = "RESOURCEadminV1";
+option java_package = "api.v1";
+option objc_class_prefix = "RESOURCEapiV1";
 
 enum ErrorReason {
   // 设置缺省错误码

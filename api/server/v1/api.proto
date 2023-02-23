@@ -691,19 +691,19 @@ message GetUserProfileReply {
 // 回应 - 用户领域
 message ListUserDomainReply {
   repeated Domain items = 1;
-  int64 total = 2;
+  optional int64 total = 2;
 }
 
 // 回应 - 用户角色
 message ListUserRoleReply {
   repeated Role items = 1;
-  int64 total = 2;
+  optional int64 total = 2;
 }
 
 // 回应 - 列表用户 - 未使用
 message ListUserReply {
   repeated User items = 1;
-  int64 total = 2;
+  optional int64 total = 2;
 }
 
 // 请求 - 获取用户角色菜单树形
@@ -760,8 +760,8 @@ message ListUserRoleMenuTreeReply_Deprecated {
     MenuMeta meta = 8;
     repeated Menu children = 9;
   }
-  int64 total = 1;
-  repeated Menu items = 2;
+  repeated Menu items = 1;
+  optional int64 total = 2;
 }
 
 // 路由菜单
@@ -796,8 +796,8 @@ message MenuRouter {
 
 // 回应 - 获取用户角色菜单列表-树形
 message ListUserRoleMenuRouterTreeReply {
-  int64 total = 1;
-  repeated MenuRouter items = 2;
+  repeated MenuRouter items = 1;
+  optional int64 total = 2;
 }
 
 // 请求 - 获取用户角色列表
@@ -807,8 +807,8 @@ message ListUserRolePermissionReq {
 
 // 回应 - 获取用户角色列表
 message ListUserRolePermissionReply {
-  int64 total = 1;
-  repeated string items = 2;
+  repeated string items = 1;
+  optional int64 total = 2;
 }
 
 // 请求 - 创建用户
@@ -915,8 +915,8 @@ message UpdateUserReply {
 
 // 回应 - 获取用户菜单
 message UserMenuTreeReply {
-  int64 total = 1;
-  repeated MenuTree items = 2;
+  repeated MenuTree items = 1;
+  optional int64 total = 2;
 }
 
 // 请求 - 验证用户是否存在
@@ -973,8 +973,8 @@ message ListDomainTreeReq {
   uint64 id = 1;
 }
 message ListDomainTreeReply {
-  int64 total = 1;
-  repeated Domain items = 2;
+  repeated Domain items = 1;
+  optional int64 total = 2;
 }
 
 // 请求 - 创建领域
@@ -1067,8 +1067,8 @@ message ListDomainMenuReq {
 
 // 回应 - 获取领域菜单
 message ListDomainMenuReply {
-  int64 total = 1;
-  repeated google.protobuf.Any items = 2;
+  repeated google.protobuf.Any items = 1;
+  optional int64 total = 2;
 }
 
 // 请求 - 处理领域菜单
@@ -1190,8 +1190,8 @@ message ListRoleMenuReq {
 
 // 回应 - 获取角色菜单
 message ListRoleMenuReply {
-  int64 total = 1;
-  repeated google.protobuf.Any items = 2;
+  repeated google.protobuf.Any items = 1;
+  optional int64 total = 2;
 }
 
 // 请求 - 处理角色菜单
@@ -1248,8 +1248,8 @@ message Resource {
 
 // 回应 - 创建资源
 message ListResourceGroupReply {
-  int64 total = 1;
-  repeated string items = 2;
+  repeated string items = 1;
+  optional int64 total = 2;
 }
 
 // 请求 - 创建资源
@@ -1438,8 +1438,8 @@ message ListMenuTreeReq {
 
 // 回应 - 获取树形菜单
 message ListMenuTreeReply {
-  int64 total = 1;
-  repeated Menu items = 2;
+  repeated Menu items = 1;
+  optional int64 total = 2;
 }
 
 // 部门模块
@@ -1518,8 +1518,8 @@ message ListDeptTreeReq {
 
 // 回应 - 获取树形部门
 message ListDeptTreeReply {
-  int64 total = 1;
-  repeated Dept items = 2;
+  repeated Dept items = 1;
+  optional int64 total = 2;
 }
 
 // 职位模块

@@ -148,9 +148,10 @@ func (s *ApiService) DeleteDomain(ctx context.Context, in *v1.DeleteDomainReq) (
 func (s *ApiService) ListDomainMenu(ctx context.Context, in *v1.ListDomainMenuReq) (*v1.ListDomainMenuReply, error) {
 	id := in.GetId()
 	menus, _ := s.domainCase.ListMenuByID(ctx, &biz.Domain{ID: uint(id)})
+	total := int64(len(menus))
 	return &v1.ListDomainMenuReply{Items: proto.ToAny(menus, func(t *biz.Menu) protoreflect.ProtoMessage {
 		return TransformMenu(t)
-	}), Total: int64(len(menus))}, nil
+	}), Total: &total}, nil
 }
 
 // HandleDomainMenu 处理领域菜单

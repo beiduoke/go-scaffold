@@ -24,6 +24,11 @@ func TransformMenuRouter(menu *biz.Menu) *v1.MenuRouter {
 		// 菜单排序，只对第一级有效
 		OrderNo: &menu.Sort,
 	}
+
+	// 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
+	if parent := menu.Parent; parent != nil {
+		meta.CurrentActiveMenu = &parent.Path
+	}
 	// 忽略缓存
 	if cache := menu.IsCache == int32(protobuf.MenuCache_MENU_CACHE_NO); cache {
 		meta.IgnoreKeepAlive = &cache
@@ -50,6 +55,7 @@ func TransformMenuRouter(menu *biz.Menu) *v1.MenuRouter {
 		ParentId:  &parentId,
 	}
 }
+
 func TransformMenu(data *biz.Menu) *v1.Menu {
 	return &v1.Menu{
 		CreatedAt:  timestamppb.New(data.CreatedAt),
@@ -100,7 +106,7 @@ func (s *ApiService) ListMenuTree(ctx context.Context, in *v1.ListMenuTreeReq) (
 			t.Children = append(t.Children, ts...)
 			return nil
 		}),
-		Total: total,
+		Total: &total,
 	}, nil
 }
 

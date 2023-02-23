@@ -278,22 +278,6 @@ func (s *ApiService) ListUserMenu(ctx context.Context, in *protobuf.PagingReq) (
 	return &protobuf.PagingReply{}, nil
 }
 
-// 将用户菜单转换树形结构
-func (s *ApiService) UserMenuRouterTransformTree(menus []*biz.Menu, parentID uint) []*v1.MenuRouter {
-	list := make([]*v1.MenuRouter, 0)
-	for _, menu := range menus {
-		if menu.Type == int32(protobuf.MenuType_MENU_TYPE_ABILITY) {
-			continue
-		}
-		if menu.ParentID == parentID {
-			m := TransformMenuRouter(menu)
-			m.Children = append(m.Children, s.UserMenuRouterTransformTree(menus, menu.ID)...)
-			list = append(list, m)
-		}
-	}
-	return list
-}
-
 // 获取角色菜单树形列表
 func (s *ApiService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.ListUserRoleMenuRouterTreeReq) (*v1.ListUserRoleMenuRouterTreeReply, error) {
 	var roles []*biz.Role
@@ -312,7 +296,6 @@ func (s *ApiService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.List
 		treeData = append(treeData, TransformMenuRouter(v))
 	}
 	return &v1.ListUserRoleMenuRouterTreeReply{
-		// Items: s.UserMenuRouterTransformTree(menuModels, 0),
 		Items: proto.ToTree(treeData, 0, func(t *v1.MenuRouter, ts ...*v1.MenuRouter) error {
 			t.Children = append(t.Children, ts...)
 			return nil

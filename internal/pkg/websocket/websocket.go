@@ -22,13 +22,13 @@ func WithSocket(w *websocket.Server) Option {
 	}
 }
 
-// WebsocketService is a Admin service.
+// WebsocketService is a Api service.
 type WebsocketService struct {
 	log *log.Helper
 	ws  *websocket.Server
 }
 
-// NewWebsocketService new a Admin service.
+// NewWebsocketService new a Api service.
 func NewWebsocketService(logger log.Logger) *WebsocketService {
 	l := log.NewHelper(log.With(logger, "module", "websocket"))
 	return &WebsocketService{log: l}

@@ -3668,15 +3668,15 @@
     "v1ListDeptTreeReply": {
       "type": "object",
       "properties": {
-        "total": {
-          "type": "string",
-          "format": "int64"
-        },
         "items": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/v1Dept"
           }
+        },
+        "total": {
+          "type": "string",
+          "format": "int64"
         }
       },
       "title": "回应 - 获取树形部门"
@@ -3684,15 +3684,15 @@
     "v1ListDomainMenuReply": {
       "type": "object",
       "properties": {
-        "total": {
-          "type": "string",
-          "format": "int64"
-        },
         "items": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/protobufAny"
           }
+        },
+        "total": {
+          "type": "string",
+          "format": "int64"
         }
       },
       "title": "回应 - 获取领域菜单"
@@ -3700,30 +3700,30 @@
     "v1ListDomainTreeReply": {
       "type": "object",
       "properties": {
-        "total": {
-          "type": "string",
-          "format": "int64"
-        },
         "items": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/v1Domain"
           }
+        },
+        "total": {
+          "type": "string",
+          "format": "int64"
         }
       }
     },
     "v1ListMenuTreeReply": {
       "type": "object",
       "properties": {
-        "total": {
-          "type": "string",
-          "format": "int64"
-        },
         "items": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/serverv1Menu"
           }
+        },
+        "total": {
+          "type": "string",
+          "format": "int64"
         }
       },
       "title": "回应 - 获取树形菜单"
@@ -3731,15 +3731,15 @@
     "v1ListResourceGroupReply": {
       "type": "object",
       "properties": {
-        "total": {
-          "type": "string",
-          "format": "int64"
-        },
         "items": {
           "type": "array",
           "items": {
             "type": "string"
           }
+        },
+        "total": {
+          "type": "string",
+          "format": "int64"
         }
       },
       "title": "回应 - 创建资源"
@@ -3747,15 +3747,15 @@
     "v1ListRoleMenuReply": {
       "type": "object",
       "properties": {
-        "total": {
-          "type": "string",
-          "format": "int64"
-        },
         "items": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/protobufAny"
           }
+        },
+        "total": {
+          "type": "string",
+          "format": "int64"
         }
       },
       "title": "回应 - 获取角色菜单"
@@ -3779,15 +3779,15 @@
     "v1ListUserRoleMenuRouterTreeReply": {
       "type": "object",
       "properties": {
-        "total": {
-          "type": "string",
-          "format": "int64"
-        },
         "items": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/v1MenuRouter"
           }
+        },
+        "total": {
+          "type": "string",
+          "format": "int64"
         }
       },
       "title": "回应 - 获取用户角色菜单列表-树形"
@@ -3795,15 +3795,15 @@
     "v1ListUserRolePermissionReply": {
       "type": "object",
       "properties": {
-        "total": {
-          "type": "string",
-          "format": "int64"
-        },
         "items": {
           "type": "array",
           "items": {
             "type": "string"
           }
+        },
+        "total": {
+          "type": "string",
+          "format": "int64"
         }
       },
       "title": "回应 - 获取用户角色列表"

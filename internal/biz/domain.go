@@ -39,6 +39,10 @@ type Domain struct {
 	Menus       []*Menu
 }
 
+func (g Domain) GetID() string {
+	return convert.UnitToString(g.ID)
+}
+
 // DomainRepo is a Greater repo.
 type DomainRepo interface {
 	Save(context.Context, *Domain) (*Domain, error)
@@ -185,7 +189,7 @@ func (uc *DomainUsecase) Delete(ctx context.Context, g *Domain) error {
 		if err := uc.biz.domainRepo.Delete(ctx, g); err != nil {
 			return err
 		}
-		_, err := uc.biz.enforcer.DeleteRole(convert.UnitToString(g.ID))
+		_, err := uc.biz.enforcer.DeleteRole(g.GetID())
 		return err
 	})
 }

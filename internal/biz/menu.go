@@ -29,6 +29,7 @@ type Menu struct {
 	IsAffix    int32
 	LinkType   int32
 	LinkUrl    string
+	Parent     *Menu
 	Children   []*Menu
 	Parameters []*MenuParameter
 	Buttons    []*MenuButton

@@ -44,7 +44,7 @@ func (s *ApiService) ListResource(ctx context.Context, in *protobuf.PagingReq) (
 func (s *ApiService) ListResourceGroup(ctx context.Context, in *protobuf.PagingReq) (*v1.ListResourceGroupReply, error) {
 	results, total := s.resourceCase.ListAllGroup(ctx)
 	return &v1.ListResourceGroupReply{
-		Total: total,
+		Total: &total,
 		Items: results,
 	}, nil
 }

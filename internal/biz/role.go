@@ -29,6 +29,10 @@ type Role struct {
 	Resources     []*Resource
 }
 
+func (g Role) GetID() string {
+	return convert.UnitToString(g.ID)
+}
+
 // RoleRepo is a Greater repo.
 type RoleRepo interface {
 	Save(context.Context, *Role) (*Role, error)
@@ -154,7 +158,7 @@ func (uc *RoleUsecase) Delete(ctx context.Context, g *Role) error {
 		if err := uc.biz.roleRepo.Delete(ctx, g); err != nil {
 			return err
 		}
-		_, err := uc.biz.enforcer.DeleteRole(convert.UnitToString(g.ID))
+		_, err := uc.biz.enforcer.DeleteRole(g.GetID())
 		return err
 	})
 }
