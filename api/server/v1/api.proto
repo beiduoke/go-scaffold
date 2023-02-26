@@ -88,38 +88,10 @@ service Api {
     };
   }
 
-  // 中台密码登陆
-  rpc MiddlePassLogin (PassLoginReq) returns (LoginReply) {
-    option (google.api.http) = {
-      post: "/v1/auth/middlePassLogin"
-      body: "auth"
-    };
-  }
-
   // 密码登陆
-  rpc PassLogin (PassLoginReq) returns (LoginReply) {
+  rpc Login (LoginReq) returns (LoginReply) {
     option (google.api.http) = {
-      post: "/v1/auth/passLogin"
-      body: "auth"
-      additional_bindings {
-        post: "/v1/auth/login"
-        body: "auth"
-      }
-    };
-  }
-
-  // 短信登陆
-  rpc SmsLogin (SmsLoginReq) returns (LoginReply) {
-    option (google.api.http) = {
-      post: "/v1/auth/smsLogin"
-      body: "auth"
-    };
-  }
-
-  // 邮件登陆
-  rpc EmailLogin (EmailLoginReq) returns (LoginReply) {
-    option (google.api.http) = {
-      post: "/v1/auth/emailLogin"
+      post: "/v1/auth/login/{domain}"
       body: "auth"
     };
   }
@@ -127,7 +99,23 @@ service Api {
   // 注册
   rpc Register (RegisterReq) returns (RegisterReply) {
     option (google.api.http) = {
-      post: "/v1/auth/register"
+      post: "/v1/auth/register/{domain}"
+      body: "auth"
+    };
+  }
+
+  // 短信登陆
+  rpc SmsLogin (SmsLoginReq) returns (LoginReply) {
+    option (google.api.http) = {
+      post: "/v1/auth/smsLogin/{domain}"
+      body: "auth"
+    };
+  }
+
+  // 邮件登陆
+  rpc EmailLogin (EmailLoginReq) returns (LoginReply) {
+    option (google.api.http) = {
+      post: "/v1/auth/emailLogin/{domain}"
       body: "auth"
     };
   }
@@ -144,27 +132,6 @@ service Api {
   rpc GetUserProfile (google.protobuf.Empty) returns (GetUserProfileReply) {
     option (google.api.http) = {
       get: "/v1/users/profiles"
-    };
-  }
-
-  // // 获取用户菜单 - 弃用
-  // rpc ListUserMenu (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
-  //   option (google.api.http) = {
-  //     get: "/v1/users/menus"
-  //   };
-  // }
-
-  // // 获取用户菜单-树形 - 弃用
-  // rpc ListUserMenuTree (google.protobuf.Empty) returns (UserMenuTreeReply) {
-  //   option (google.api.http) = {
-  //     get: "/v1/users/menus/trees"
-  //   };
-  // }
-
-  // 当前登录用户拥有领域
-  rpc ListUserDomain (google.protobuf.Empty) returns (ListUserDomainReply) {
-    option (google.api.http) = {
-      get: "/v1/users/domains"
     };
   }
 
@@ -240,40 +207,11 @@ service Api {
     };
   }
 
-  // 绑定用户领域
-  rpc HandleUserDomain (HandleUserDomainReq) returns (HandleUserDomainReply) {
-    option (google.api.http) = {
-      post: "/v1/users/{id}/domains"
-      body: "data"
-    };
-  }
-
   // 绑定用户领域权限
-  rpc HandleUserDomainRole (HandleUserDomainRoleReq) returns (HandleUserDomainRoleReply) {
+  rpc HandleUserRole (HandleUserRoleReq) returns (HandleUserRoleReply) {
     option (google.api.http) = {
-      post: "/v1/users/{id}/domainRoles"
+      post: "/v1/users/{id}/roles"
       body: "data"
-    };
-  }
-
-  // 领域模块
-  // 登陆领域/租户
-  rpc LoginDomain (LoginDomainReq) returns (LoginReply) {
-    option (google.api.http) = {
-      post: "/v1/domains/login"
-      body: "auth"
-      additional_bindings {
-        patch: "/v1/domains/login/{domain}"
-        body: "auth"
-      }
-    };
-  }
-
-  // 注册领域/租户
-  rpc RegisterDomain (RegisterDomainReq) returns (RegisterReply) {
-    option (google.api.http) = {
-      post: "/v1/domains/register"
-      body: "auth"
     };
   }
 
@@ -596,13 +534,6 @@ service Api {
   }
 }
 
-message Auth {
-  // 用户名
-  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
-  // 密码
-  string password = 2 [(validate.rules).string = {min_len: 6, max_len: 25}];
-}
-
 // 回应 - 登录
 message LoginReply {
   // 登录token
@@ -628,42 +559,53 @@ message LogoutReply {
 }
 
 // 请求 - 密码登录
-message PassLoginReq {
-  message PassField {
+message LoginReq {
+  message Auth {
     string account = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
     string password = 2 [(validate.rules).string = {min_len: 6, max_len: 28}];
   }
-
   // 请求体
-  PassField auth = 1 [(validate.rules).message = {required: true}];
+  Auth auth = 1 [(validate.rules).message = {required: true}];
+  string domain = 2 [(validate.rules).string = {min_len: 1, max_len: 20}];
 }
 
 // 请求 - 短信登录
 message SmsLoginReq {
-  message SmsField {
+  message Auth {
     string phone = 1 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
     string code = 2 [(validate.rules).string.pattern = "^[0-9]{6}$"];
   }
 
   // 请求体
-  SmsField auth = 1 [(validate.rules).message = {required: true}];
+  Auth auth = 1 [(validate.rules).message = {required: true}];
+  string domain = 2 [(validate.rules).string = {min_len: 1, max_len: 20}];
 }
 
 // 请求 - 邮件登录
 message EmailLoginReq {
-  message EmailField {
+  message Auth {
     string email = 1 [(validate.rules).string.email = true];
     string code = 2 [(validate.rules).string.pattern = "^[0-9]{4,6}$"];
   }
 
   // 请求体
-  EmailField auth = 1 [(validate.rules).message = {required: true}];
+  Auth auth = 1 [(validate.rules).message = {required: true}];
+  string domain = 2 [(validate.rules).string = {min_len: 1, max_len: 20}];
 }
 
 // 请求 - 注册
 message RegisterReq {
+  message Auth {
+    // 用户名
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    // 密码
+    string password = 2 [(validate.rules).string = {min_len: 6, max_len: 25}];
+    // 电话
+    string phone = 3 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
+  }
   // 请求体
   Auth auth = 1 [(validate.rules).message = {required: true}];
+  string domain = 2 [(validate.rules).string = {min_len: 1, max_len: 20}];
 }
 
 // 用户模块
@@ -686,12 +628,6 @@ message User {
 message GetUserProfileReply {
   User user = 1;
   repeated Role roles = 2;
-}
-
-// 回应 - 用户领域
-message ListUserDomainReply {
-  repeated Domain items = 1;
-  optional int64 total = 2;
 }
 
 // 回应 - 用户角色
@@ -833,25 +769,8 @@ message CreateUserReply {
   bool success = 4;
 }
 
-// 请求 - 绑定用户领域
-message HandleUserDomainReq {
-  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
-  message Data {
-    repeated uint64 domain_ids = 11 [(validate.rules).repeated = {min_items: 1, unique: true, items: {uint64: {gt: 0}}}];
-  }
-  Data data = 2;
-}
-
-// 回应 - 绑定用户领域
-message HandleUserDomainReply {
-  int32 code = 1;
-  string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
-}
-
 // 请求 - 绑定用户领域权限
-message HandleUserDomainRoleReq {
+message HandleUserRoleReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     uint64 domain_id = 2 [(validate.rules).uint64 = {gt: 0}]; 
@@ -861,7 +780,7 @@ message HandleUserDomainRoleReq {
 }
 
 // 回应 - 绑定用户领域权限
-message HandleUserDomainRoleReply {
+message HandleUserRoleReply {
   int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
@@ -951,23 +870,6 @@ message Domain {
   string remarks = 14;
   repeated Domain children = 15;
 }
-
-// 请求 - 领域登录
-message LoginDomainReq {
-  // 领域
-  string domain = 1 [(validate.rules).string = {min_len: 1, max_len: 20}];
-  // 请求体
-  Auth auth = 2 [(validate.rules).message = {required: true}];
-}
-
-// 请求 - 领域注册
-message RegisterDomainReq {
-  // 领域
-  string domain = 1 [(validate.rules).string = {min_len: 1, max_len: 20}];
-  // 请求体
-  Auth auth = 2 [(validate.rules).message = {required: true}];
-}
-
 
 message ListDomainTreeReq {
   uint64 id = 1;

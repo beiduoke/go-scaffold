@@ -41,11 +41,10 @@ var ProviderHttp = wire.NewSet(NewMiddleware, NewAuthMiddleware)
 // NewWhiteListMatcher 创建jwt白名单
 func NewWhiteListMatcher() selector.MatchFunc {
 	whiteList := make(map[string]struct{})
-	whiteList["/api.server.v1.Api/PassLogin"] = struct{}{}
+	whiteList["/api.server.v1.Api/Register"] = struct{}{}
+	whiteList["/api.server.v1.Api/Login"] = struct{}{}
 	whiteList["/api.server.v1.Api/SmsLogin"] = struct{}{}
 	whiteList["/api.server.v1.Api/EmailLogin"] = struct{}{}
-	whiteList["/api.server.v1.Api/LoginDomain"] = struct{}{}
-	whiteList["/api.server.v1.Api/RegisterDomain"] = struct{}{}
 	return func(ctx context.Context, operation string) bool {
 		if _, ok := whiteList[operation]; ok {
 			return false

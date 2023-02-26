@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/beiduoke/go-scaffold/api/protobuf"
@@ -159,34 +160,8 @@ func (s *ApiService) ExistUserName(ctx context.Context, in *v1.ExistUserNameReq)
 	}, nil
 }
 
-// HandleUserDomain 绑定用户领域
-func (s *ApiService) HandleUserDomain(ctx context.Context, in *v1.HandleUserDomainReq) (*v1.HandleUserDomainReply, error) {
-	v := in.GetData()
-	_, err := s.userCase.GetID(ctx, &biz.User{ID: uint(in.GetId())})
-	if err != nil {
-		return nil, v1.ErrorUserNotFound("用户查询失败 %v", err)
-	}
-	domainIds := make([]uint, 0, len(v.GetDomainIds()))
-	for _, domainId := range v.GetDomainIds() {
-		domainIds = append(domainIds, uint(domainId))
-	}
-
-	domains, _ := s.domainCase.ListByIDs(ctx, domainIds...)
-	err = s.userCase.HandleDomain(ctx, &biz.User{
-		ID:      uint(in.GetId()),
-		Domains: domains,
-	})
-	if err != nil {
-		return nil, v1.ErrorUserHandleDomainFail("绑定用户领域失败: %v", err.Error())
-	}
-	return &v1.HandleUserDomainReply{
-		Success: true,
-		Message: "处理成功",
-	}, nil
-}
-
 // HandleUserRole 绑定用户权限
-func (s *ApiService) HandleUserDomainRole(ctx context.Context, in *v1.HandleUserDomainRoleReq) (*v1.HandleUserDomainRoleReply, error) {
+func (s *ApiService) HandleUserRole(ctx context.Context, in *v1.HandleUserRoleReq) (*v1.HandleUserRoleReply, error) {
 	v := in.GetData()
 	_, err := s.userCase.GetID(ctx, &biz.User{ID: uint(in.GetId())})
 	if err != nil {
@@ -197,14 +172,14 @@ func (s *ApiService) HandleUserDomainRole(ctx context.Context, in *v1.HandleUser
 		roleIds = append(roleIds, uint(roleId))
 	}
 	roles, _ := s.roleCase.ListByIDs(ctx, roleIds...)
-	err = s.userCase.HandleDomainRole(ctx, &biz.User{
+	err = s.userCase.HandleRole(ctx, &biz.User{
 		ID:    uint(in.GetId()),
 		Roles: roles,
-	}, uint(v.GetDomainId()))
+	})
 	if err != nil {
-		return nil, v1.ErrorUserHandleDomainRoleFail("绑定用户权限失败: %v", err.Error())
+		return nil, v1.ErrorUserHandleRoleFail("绑定用户权限失败: %v", err.Error())
 	}
-	return &v1.HandleUserDomainRoleReply{
+	return &v1.HandleUserRoleReply{
 		Success: true,
 		Message: "处理成功",
 	}, nil
@@ -237,27 +212,11 @@ func (s *ApiService) GetUserProfile(ctx context.Context, in *emptypb.Empty) (*v1
 	}, nil
 }
 
-// ListUserDomain 用户领域
-func (s *ApiService) ListUserDomain(ctx context.Context, in *emptypb.Empty) (*v1.ListUserDomainReply, error) {
-	id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
-	domainModels, err := s.userCase.ListDomainAll(ctx, &biz.User{ID: id})
-	if err != nil {
-		return nil, v1.ErrorUserDomainFindFail("用户领域失败 %v", err)
-	}
-	domains := make([]*v1.Domain, 0, len(domainModels))
-	for _, v := range domainModels {
-		domains = append(domains, TransformDomain(v))
-	}
-	return &v1.ListUserDomainReply{
-		Items: domains,
-	}, nil
-}
-
 // ListUserRole 用户角色
 func (s *ApiService) ListUserRole(ctx context.Context, in *emptypb.Empty) (*v1.ListUserRoleReply, error) {
 	id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
 	domainId := convert.StringToUint(authz.ParseFromContext(ctx).GetDomain())
-	roleModels, err := s.userCase.ListRoleAll(ctx, &biz.User{ID: id, Domains: []*biz.Domain{{ID: domainId}}})
+	roleModels, err := s.userCase.ListRoleAll(ctx, &biz.User{ID: id, Domain: &biz.Domain{ID: domainId}})
 	if err != nil {
 		return nil, v1.ErrorUserRoleFindFail("用户角色失败 %v", err)
 	}
@@ -298,6 +257,13 @@ func (s *ApiService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.List
 	return &v1.ListUserRoleMenuRouterTreeReply{
 		Items: proto.ToTree(treeData, 0, func(t *v1.MenuRouter, ts ...*v1.MenuRouter) error {
 			t.Children = append(t.Children, ts...)
+			if len(ts) > 0 && !ts[0].GetMeta().GetHideMenu() {
+				path, child := t.Path, ts[0]
+				if !strings.HasPrefix(path, "/") {
+					path = "/" + path
+				}
+				t.Redirect = path + "/" + child.Path
+			}
 			return nil
 		}),
 	}, nil

@@ -26,23 +26,19 @@ const _ = grpc.SupportPackageIsVersion7
 type ApiClient interface {
 	// 登出
 	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*LogoutReply, error)
-	// 中台密码登陆
-	MiddlePassLogin(ctx context.Context, in *PassLoginReq, opts ...grpc.CallOption) (*LoginReply, error)
 	// 密码登陆
-	PassLogin(ctx context.Context, in *PassLoginReq, opts ...grpc.CallOption) (*LoginReply, error)
+	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginReply, error)
+	// 注册
+	Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterReply, error)
 	// 短信登陆
 	SmsLogin(ctx context.Context, in *SmsLoginReq, opts ...grpc.CallOption) (*LoginReply, error)
 	// 邮件登陆
 	EmailLogin(ctx context.Context, in *EmailLoginReq, opts ...grpc.CallOption) (*LoginReply, error)
-	// 注册
-	Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterReply, error)
 	// User 用户模块
 	// 当前登录用户概述
 	GetUserInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*User, error)
 	// 当前登录用户概述
 	GetUserProfile(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserProfileReply, error)
-	// 当前登录用户拥有领域
-	ListUserDomain(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserDomainReply, error)
 	// 当前登录用户拥有角色
 	ListUserRole(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserRoleReply, error)
 	// 获取角色菜单路由树形列表
@@ -61,15 +57,8 @@ type ApiClient interface {
 	DeleteUser(ctx context.Context, in *DeleteUserReq, opts ...grpc.CallOption) (*DeleteUserReply, error)
 	// 验证用户名是否存在
 	ExistUserName(ctx context.Context, in *ExistUserNameReq, opts ...grpc.CallOption) (*ExistUserNameReply, error)
-	// 绑定用户领域
-	HandleUserDomain(ctx context.Context, in *HandleUserDomainReq, opts ...grpc.CallOption) (*HandleUserDomainReply, error)
 	// 绑定用户领域权限
-	HandleUserDomainRole(ctx context.Context, in *HandleUserDomainRoleReq, opts ...grpc.CallOption) (*HandleUserDomainRoleReply, error)
-	// 领域模块
-	// 登陆领域/租户
-	LoginDomain(ctx context.Context, in *LoginDomainReq, opts ...grpc.CallOption) (*LoginReply, error)
-	// 注册领域/租户
-	RegisterDomain(ctx context.Context, in *RegisterDomainReq, opts ...grpc.CallOption) (*RegisterReply, error)
+	HandleUserRole(ctx context.Context, in *HandleUserRoleReq, opts ...grpc.CallOption) (*HandleUserRoleReply, error)
 	// 列表领域
 	ListDomain(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
 	// 获取领域树形列表
@@ -176,18 +165,18 @@ func (c *apiClient) Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.
 	return out, nil
 }
 
-func (c *apiClient) MiddlePassLogin(ctx context.Context, in *PassLoginReq, opts ...grpc.CallOption) (*LoginReply, error) {
+func (c *apiClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginReply, error) {
 	out := new(LoginReply)
-	err := c.cc.Invoke(ctx, "/api.server.v1.Api/MiddlePassLogin", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.server.v1.Api/Login", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *apiClient) PassLogin(ctx context.Context, in *PassLoginReq, opts ...grpc.CallOption) (*LoginReply, error) {
-	out := new(LoginReply)
-	err := c.cc.Invoke(ctx, "/api.server.v1.Api/PassLogin", in, out, opts...)
+func (c *apiClient) Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterReply, error) {
+	out := new(RegisterReply)
+	err := c.cc.Invoke(ctx, "/api.server.v1.Api/Register", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -212,15 +201,6 @@ func (c *apiClient) EmailLogin(ctx context.Context, in *EmailLoginReq, opts ...g
 	return out, nil
 }
 
-func (c *apiClient) Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterReply, error) {
-	out := new(RegisterReply)
-	err := c.cc.Invoke(ctx, "/api.server.v1.Api/Register", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *apiClient) GetUserInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*User, error) {
 	out := new(User)
 	err := c.cc.Invoke(ctx, "/api.server.v1.Api/GetUserInfo", in, out, opts...)
@@ -233,15 +213,6 @@ func (c *apiClient) GetUserInfo(ctx context.Context, in *emptypb.Empty, opts ...
 func (c *apiClient) GetUserProfile(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserProfileReply, error) {
 	out := new(GetUserProfileReply)
 	err := c.cc.Invoke(ctx, "/api.server.v1.Api/GetUserProfile", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *apiClient) ListUserDomain(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserDomainReply, error) {
-	out := new(ListUserDomainReply)
-	err := c.cc.Invoke(ctx, "/api.server.v1.Api/ListUserDomain", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -329,36 +300,9 @@ func (c *apiClient) ExistUserName(ctx context.Context, in *ExistUserNameReq, opt
 	return out, nil
 }
 
-func (c *apiClient) HandleUserDomain(ctx context.Context, in *HandleUserDomainReq, opts ...grpc.CallOption) (*HandleUserDomainReply, error) {
-	out := new(HandleUserDomainReply)
-	err := c.cc.Invoke(ctx, "/api.server.v1.Api/HandleUserDomain", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *apiClient) HandleUserDomainRole(ctx context.Context, in *HandleUserDomainRoleReq, opts ...grpc.CallOption) (*HandleUserDomainRoleReply, error) {
-	out := new(HandleUserDomainRoleReply)
-	err := c.cc.Invoke(ctx, "/api.server.v1.Api/HandleUserDomainRole", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *apiClient) LoginDomain(ctx context.Context, in *LoginDomainReq, opts ...grpc.CallOption) (*LoginReply, error) {
-	out := new(LoginReply)
-	err := c.cc.Invoke(ctx, "/api.server.v1.Api/LoginDomain", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *apiClient) RegisterDomain(ctx context.Context, in *RegisterDomainReq, opts ...grpc.CallOption) (*RegisterReply, error) {
-	out := new(RegisterReply)
-	err := c.cc.Invoke(ctx, "/api.server.v1.Api/RegisterDomain", in, out, opts...)
+func (c *apiClient) HandleUserRole(ctx context.Context, in *HandleUserRoleReq, opts ...grpc.CallOption) (*HandleUserRoleReply, error) {
+	out := new(HandleUserRoleReply)
+	err := c.cc.Invoke(ctx, "/api.server.v1.Api/HandleUserRole", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -749,23 +693,19 @@ func (c *apiClient) UpdatePostState(ctx context.Context, in *UpdatePostStateReq,
 type ApiServer interface {
 	// 登出
 	Logout(context.Context, *emptypb.Empty) (*LogoutReply, error)
-	// 中台密码登陆
-	MiddlePassLogin(context.Context, *PassLoginReq) (*LoginReply, error)
 	// 密码登陆
-	PassLogin(context.Context, *PassLoginReq) (*LoginReply, error)
+	Login(context.Context, *LoginReq) (*LoginReply, error)
+	// 注册
+	Register(context.Context, *RegisterReq) (*RegisterReply, error)
 	// 短信登陆
 	SmsLogin(context.Context, *SmsLoginReq) (*LoginReply, error)
 	// 邮件登陆
 	EmailLogin(context.Context, *EmailLoginReq) (*LoginReply, error)
-	// 注册
-	Register(context.Context, *RegisterReq) (*RegisterReply, error)
 	// User 用户模块
 	// 当前登录用户概述
 	GetUserInfo(context.Context, *emptypb.Empty) (*User, error)
 	// 当前登录用户概述
 	GetUserProfile(context.Context, *emptypb.Empty) (*GetUserProfileReply, error)
-	// 当前登录用户拥有领域
-	ListUserDomain(context.Context, *emptypb.Empty) (*ListUserDomainReply, error)
 	// 当前登录用户拥有角色
 	ListUserRole(context.Context, *emptypb.Empty) (*ListUserRoleReply, error)
 	// 获取角色菜单路由树形列表
@@ -784,15 +724,8 @@ type ApiServer interface {
 	DeleteUser(context.Context, *DeleteUserReq) (*DeleteUserReply, error)
 	// 验证用户名是否存在
 	ExistUserName(context.Context, *ExistUserNameReq) (*ExistUserNameReply, error)
-	// 绑定用户领域
-	HandleUserDomain(context.Context, *HandleUserDomainReq) (*HandleUserDomainReply, error)
 	// 绑定用户领域权限
-	HandleUserDomainRole(context.Context, *HandleUserDomainRoleReq) (*HandleUserDomainRoleReply, error)
-	// 领域模块
-	// 登陆领域/租户
-	LoginDomain(context.Context, *LoginDomainReq) (*LoginReply, error)
-	// 注册领域/租户
-	RegisterDomain(context.Context, *RegisterDomainReq) (*RegisterReply, error)
+	HandleUserRole(context.Context, *HandleUserRoleReq) (*HandleUserRoleReply, error)
 	// 列表领域
 	ListDomain(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
 	// 获取领域树形列表
@@ -890,11 +823,11 @@ type UnimplementedApiServer struct {
 func (UnimplementedApiServer) Logout(context.Context, *emptypb.Empty) (*LogoutReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
 }
-func (UnimplementedApiServer) MiddlePassLogin(context.Context, *PassLoginReq) (*LoginReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method MiddlePassLogin not implemented")
+func (UnimplementedApiServer) Login(context.Context, *LoginReq) (*LoginReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedApiServer) PassLogin(context.Context, *PassLoginReq) (*LoginReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PassLogin not implemented")
+func (UnimplementedApiServer) Register(context.Context, *RegisterReq) (*RegisterReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
 func (UnimplementedApiServer) SmsLogin(context.Context, *SmsLoginReq) (*LoginReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SmsLogin not implemented")
@@ -902,17 +835,11 @@ func (UnimplementedApiServer) SmsLogin(context.Context, *SmsLoginReq) (*LoginRep
 func (UnimplementedApiServer) EmailLogin(context.Context, *EmailLoginReq) (*LoginReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EmailLogin not implemented")
 }
-func (UnimplementedApiServer) Register(context.Context, *RegisterReq) (*RegisterReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
-}
 func (UnimplementedApiServer) GetUserInfo(context.Context, *emptypb.Empty) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfo not implemented")
 }
 func (UnimplementedApiServer) GetUserProfile(context.Context, *emptypb.Empty) (*GetUserProfileReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserProfile not implemented")
-}
-func (UnimplementedApiServer) ListUserDomain(context.Context, *emptypb.Empty) (*ListUserDomainReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListUserDomain not implemented")
 }
 func (UnimplementedApiServer) ListUserRole(context.Context, *emptypb.Empty) (*ListUserRoleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUserRole not implemented")
@@ -941,17 +868,8 @@ func (UnimplementedApiServer) DeleteUser(context.Context, *DeleteUserReq) (*Dele
 func (UnimplementedApiServer) ExistUserName(context.Context, *ExistUserNameReq) (*ExistUserNameReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ExistUserName not implemented")
 }
-func (UnimplementedApiServer) HandleUserDomain(context.Context, *HandleUserDomainReq) (*HandleUserDomainReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method HandleUserDomain not implemented")
-}
-func (UnimplementedApiServer) HandleUserDomainRole(context.Context, *HandleUserDomainRoleReq) (*HandleUserDomainRoleReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method HandleUserDomainRole not implemented")
-}
-func (UnimplementedApiServer) LoginDomain(context.Context, *LoginDomainReq) (*LoginReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method LoginDomain not implemented")
-}
-func (UnimplementedApiServer) RegisterDomain(context.Context, *RegisterDomainReq) (*RegisterReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RegisterDomain not implemented")
+func (UnimplementedApiServer) HandleUserRole(context.Context, *HandleUserRoleReq) (*HandleUserRoleReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HandleUserRole not implemented")
 }
 func (UnimplementedApiServer) ListDomain(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDomain not implemented")
@@ -1110,38 +1028,38 @@ func _Api_Logout_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Api_MiddlePassLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PassLoginReq)
+func _Api_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ApiServer).MiddlePassLogin(ctx, in)
+		return srv.(ApiServer).Login(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.server.v1.Api/MiddlePassLogin",
+		FullMethod: "/api.server.v1.Api/Login",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).MiddlePassLogin(ctx, req.(*PassLoginReq))
+		return srv.(ApiServer).Login(ctx, req.(*LoginReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Api_PassLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PassLoginReq)
+func _Api_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ApiServer).PassLogin(ctx, in)
+		return srv.(ApiServer).Register(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.server.v1.Api/PassLogin",
+		FullMethod: "/api.server.v1.Api/Register",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).PassLogin(ctx, req.(*PassLoginReq))
+		return srv.(ApiServer).Register(ctx, req.(*RegisterReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1182,24 +1100,6 @@ func _Api_EmailLogin_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Api_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegisterReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ApiServer).Register(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.server.v1.Api/Register",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).Register(ctx, req.(*RegisterReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Api_GetUserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
@@ -1232,24 +1132,6 @@ func _Api_GetUserProfile_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ApiServer).GetUserProfile(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Api_ListUserDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ApiServer).ListUserDomain(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.server.v1.Api/ListUserDomain",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).ListUserDomain(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1416,74 +1298,20 @@ func _Api_ExistUserName_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Api_HandleUserDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HandleUserDomainReq)
+func _Api_HandleUserRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HandleUserRoleReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ApiServer).HandleUserDomain(ctx, in)
+		return srv.(ApiServer).HandleUserRole(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.server.v1.Api/HandleUserDomain",
+		FullMethod: "/api.server.v1.Api/HandleUserRole",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).HandleUserDomain(ctx, req.(*HandleUserDomainReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Api_HandleUserDomainRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HandleUserDomainRoleReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ApiServer).HandleUserDomainRole(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.server.v1.Api/HandleUserDomainRole",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).HandleUserDomainRole(ctx, req.(*HandleUserDomainRoleReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Api_LoginDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoginDomainReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ApiServer).LoginDomain(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.server.v1.Api/LoginDomain",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).LoginDomain(ctx, req.(*LoginDomainReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Api_RegisterDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegisterDomainReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ApiServer).RegisterDomain(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.server.v1.Api/RegisterDomain",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).RegisterDomain(ctx, req.(*RegisterDomainReq))
+		return srv.(ApiServer).HandleUserRole(ctx, req.(*HandleUserRoleReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2256,12 +2084,12 @@ var Api_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Api_Logout_Handler,
 		},
 		{
-			MethodName: "MiddlePassLogin",
-			Handler:    _Api_MiddlePassLogin_Handler,
+			MethodName: "Login",
+			Handler:    _Api_Login_Handler,
 		},
 		{
-			MethodName: "PassLogin",
-			Handler:    _Api_PassLogin_Handler,
+			MethodName: "Register",
+			Handler:    _Api_Register_Handler,
 		},
 		{
 			MethodName: "SmsLogin",
@@ -2272,20 +2100,12 @@ var Api_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Api_EmailLogin_Handler,
 		},
 		{
-			MethodName: "Register",
-			Handler:    _Api_Register_Handler,
-		},
-		{
 			MethodName: "GetUserInfo",
 			Handler:    _Api_GetUserInfo_Handler,
 		},
 		{
 			MethodName: "GetUserProfile",
 			Handler:    _Api_GetUserProfile_Handler,
-		},
-		{
-			MethodName: "ListUserDomain",
-			Handler:    _Api_ListUserDomain_Handler,
 		},
 		{
 			MethodName: "ListUserRole",
@@ -2324,20 +2144,8 @@ var Api_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Api_ExistUserName_Handler,
 		},
 		{
-			MethodName: "HandleUserDomain",
-			Handler:    _Api_HandleUserDomain_Handler,
-		},
-		{
-			MethodName: "HandleUserDomainRole",
-			Handler:    _Api_HandleUserDomainRole_Handler,
-		},
-		{
-			MethodName: "LoginDomain",
-			Handler:    _Api_LoginDomain_Handler,
-		},
-		{
-			MethodName: "RegisterDomain",
-			Handler:    _Api_RegisterDomain_Handler,
+			MethodName: "HandleUserRole",
+			Handler:    _Api_HandleUserRole_Handler,
 		},
 		{
 			MethodName: "ListDomain",

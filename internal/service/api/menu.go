@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"strings"
 
 	"github.com/beiduoke/go-scaffold/api/protobuf"
 	v1 "github.com/beiduoke/go-scaffold/api/server/v1"
@@ -25,17 +26,30 @@ func TransformMenuRouter(menu *biz.Menu) *v1.MenuRouter {
 		OrderNo: &menu.Sort,
 	}
 
+	// 是否隐藏
+	hidden := (menu.IsHidden == int32(protobuf.MenuHidden_MENU_HIDDEN_YES))
+	if hidden {
+		meta.HideMenu = &hidden
+	}
+
 	// 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
-	if parent := menu.Parent; parent != nil {
-		meta.CurrentActiveMenu = &parent.Path
+	if parent := menu.Parent; parent != nil && hidden {
+		currentActiveMenu := parent.Path
+		for {
+			if !strings.HasPrefix(currentActiveMenu, "/") {
+				currentActiveMenu = "/" + currentActiveMenu
+			}
+			parent = parent.Parent
+			if parent == nil {
+				break
+			}
+			currentActiveMenu = parent.Path + currentActiveMenu
+		}
+		meta.CurrentActiveMenu = &currentActiveMenu
 	}
 	// 忽略缓存
 	if cache := menu.IsCache == int32(protobuf.MenuCache_MENU_CACHE_NO); cache {
 		meta.IgnoreKeepAlive = &cache
-	}
-	// 是否隐藏
-	if hidden := (menu.IsHidden == int32(protobuf.MenuHidden_MENU_HIDDEN_YES)); hidden {
-		meta.HideMenu = &hidden
 	}
 	// 实体组件路径
 	component := menu.Component

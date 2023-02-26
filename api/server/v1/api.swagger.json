@@ -26,7 +26,7 @@
     "application/json"
   ],
   "paths": {
-    "/v1/auth/emailLogin": {
+    "/v1/auth/emailLogin/{domain}": {
       "post": {
         "summary": "邮件登陆",
         "operationId": "Api_EmailLogin",
@@ -46,12 +46,18 @@
         },
         "parameters": [
           {
+            "name": "domain",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
             "name": "auth",
             "description": "请求体",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/EmailLoginReqEmailField"
+              "$ref": "#/definitions/v1EmailLoginReqAuth"
             }
           }
         ],
@@ -60,10 +66,10 @@
         ]
       }
     },
-    "/v1/auth/login": {
+    "/v1/auth/login/{domain}": {
       "post": {
         "summary": "密码登陆",
-        "operationId": "Api_PassLogin2",
+        "operationId": "Api_Login",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -80,12 +86,18 @@
         },
         "parameters": [
           {
+            "name": "domain",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
             "name": "auth",
             "description": "请求体",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/PassLoginReqPassField"
+              "$ref": "#/definitions/v1LoginReqAuth"
             }
           }
         ],
@@ -177,75 +189,7 @@
         "x-irreversible": true
       }
     },
-    "/v1/auth/middlePassLogin": {
-      "post": {
-        "summary": "中台密码登陆",
-        "operationId": "Api_MiddlePassLogin",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1LoginReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "auth",
-            "description": "请求体",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/PassLoginReqPassField"
-            }
-          }
-        ],
-        "tags": [
-          "Api"
-        ]
-      }
-    },
-    "/v1/auth/passLogin": {
-      "post": {
-        "summary": "密码登陆",
-        "operationId": "Api_PassLogin",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1LoginReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "auth",
-            "description": "请求体",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/PassLoginReqPassField"
-            }
-          }
-        ],
-        "tags": [
-          "Api"
-        ]
-      }
-    },
-    "/v1/auth/register": {
+    "/v1/auth/register/{domain}": {
       "post": {
         "summary": "注册",
         "operationId": "Api_Register",
@@ -265,12 +209,18 @@
         },
         "parameters": [
           {
+            "name": "domain",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
             "name": "auth",
             "description": "请求体",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1Auth"
+              "$ref": "#/definitions/v1RegisterReqAuth"
             }
           }
         ],
@@ -279,7 +229,7 @@
         ]
       }
     },
-    "/v1/auth/smsLogin": {
+    "/v1/auth/smsLogin/{domain}": {
       "post": {
         "summary": "短信登陆",
         "operationId": "Api_SmsLogin",
@@ -299,12 +249,18 @@
         },
         "parameters": [
           {
+            "name": "domain",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
             "name": "auth",
             "description": "请求体",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/SmsLoginReqSmsField"
+              "$ref": "#/definitions/v1SmsLoginReqAuth"
             }
           }
         ],
@@ -596,129 +552,6 @@
             "schema": {
               "$ref": "#/definitions/v1CreateDomainReq"
             }
-          }
-        ],
-        "tags": [
-          "Api"
-        ]
-      }
-    },
-    "/v1/domains/login": {
-      "post": {
-        "summary": "领域模块\n登陆领域/租户",
-        "operationId": "Api_LoginDomain",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1LoginReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "auth",
-            "description": "请求体",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1Auth"
-            }
-          },
-          {
-            "name": "domain",
-            "description": "领域",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Api"
-        ]
-      }
-    },
-    "/v1/domains/login/{domain}": {
-      "patch": {
-        "summary": "领域模块\n登陆领域/租户",
-        "operationId": "Api_LoginDomain2",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1LoginReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "domain",
-            "description": "领域",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "auth",
-            "description": "请求体",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1Auth"
-            }
-          }
-        ],
-        "tags": [
-          "Api"
-        ]
-      }
-    },
-    "/v1/domains/register": {
-      "post": {
-        "summary": "注册领域/租户",
-        "operationId": "Api_RegisterDomain",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1RegisterReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "auth",
-            "description": "请求体",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1Auth"
-            }
-          },
-          {
-            "name": "domain",
-            "description": "领域",
-            "in": "query",
-            "required": false,
-            "type": "string"
           }
         ],
         "tags": [
@@ -2065,29 +1898,6 @@
         ]
       }
     },
-    "/v1/users/domains": {
-      "get": {
-        "summary": "当前登录用户拥有领域",
-        "operationId": "Api_ListUserDomain",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1ListUserDomainReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "Api"
-        ]
-      }
-    },
     "/v1/users/existName": {
       "post": {
         "summary": "验证用户名是否存在",
@@ -2418,15 +2228,15 @@
         ]
       }
     },
-    "/v1/users/{id}/domainRoles": {
+    "/v1/users/{id}/roles": {
       "post": {
         "summary": "绑定用户领域权限",
-        "operationId": "Api_HandleUserDomainRole",
+        "operationId": "Api_HandleUserRole",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1HandleUserDomainRoleReply"
+              "$ref": "#/definitions/v1HandleUserRoleReply"
             }
           },
           "default": {
@@ -2449,47 +2259,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1HandleUserDomainRoleReqData"
-            }
-          }
-        ],
-        "tags": [
-          "Api"
-        ]
-      }
-    },
-    "/v1/users/{id}/domains": {
-      "post": {
-        "summary": "绑定用户领域",
-        "operationId": "Api_HandleUserDomain",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1HandleUserDomainReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          },
-          {
-            "name": "data",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1HandleUserDomainReqData"
+              "$ref": "#/definitions/v1HandleUserRoleReqData"
             }
           }
         ],
@@ -2500,17 +2270,6 @@
     }
   },
   "definitions": {
-    "EmailLoginReqEmailField": {
-      "type": "object",
-      "properties": {
-        "email": {
-          "type": "string"
-        },
-        "code": {
-          "type": "string"
-        }
-      }
-    },
     "MenuRouterMeta": {
       "type": "object",
       "properties": {
@@ -2546,28 +2305,6 @@
         "currentActiveMenu": {
           "type": "string",
           "title": "当前激活的菜单。用于配置详情页时左侧激活的菜单路径"
-        }
-      }
-    },
-    "PassLoginReqPassField": {
-      "type": "object",
-      "properties": {
-        "account": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        }
-      }
-    },
-    "SmsLoginReqSmsField": {
-      "type": "object",
-      "properties": {
-        "phone": {
-          "type": "string"
-        },
-        "code": {
-          "type": "string"
         }
       }
     },
@@ -2810,19 +2547,6 @@
         }
       },
       "title": "菜单模块"
-    },
-    "v1Auth": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "title": "用户名"
-        },
-        "password": {
-          "type": "string",
-          "title": "密码"
-        }
-      }
     },
     "v1CreateDeptReply": {
       "type": "object",
@@ -3419,6 +3143,17 @@
       },
       "title": "领域模块"
     },
+    "v1EmailLoginReqAuth": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        }
+      }
+    },
     "v1ExistUserNameReply": {
       "type": "object",
       "properties": {
@@ -3599,38 +3334,7 @@
         }
       }
     },
-    "v1HandleUserDomainReply": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "message": {
-          "type": "string"
-        },
-        "result": {
-          "$ref": "#/definitions/protobufAny"
-        },
-        "success": {
-          "type": "boolean"
-        }
-      },
-      "title": "回应 - 绑定用户领域"
-    },
-    "v1HandleUserDomainReqData": {
-      "type": "object",
-      "properties": {
-        "domainIds": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "format": "uint64"
-          }
-        }
-      }
-    },
-    "v1HandleUserDomainRoleReply": {
+    "v1HandleUserRoleReply": {
       "type": "object",
       "properties": {
         "code": {
@@ -3649,7 +3353,7 @@
       },
       "title": "回应 - 绑定用户领域权限"
     },
-    "v1HandleUserDomainRoleReqData": {
+    "v1HandleUserRoleReqData": {
       "type": "object",
       "properties": {
         "domainId": {
@@ -3760,22 +3464,6 @@
       },
       "title": "回应 - 获取角色菜单"
     },
-    "v1ListUserDomainReply": {
-      "type": "object",
-      "properties": {
-        "items": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1Domain"
-          }
-        },
-        "total": {
-          "type": "string",
-          "format": "int64"
-        }
-      },
-      "title": "回应 - 用户领域"
-    },
     "v1ListUserRoleMenuRouterTreeReply": {
       "type": "object",
       "properties": {
@@ -3838,6 +3526,17 @@
         }
       },
       "title": "回应 - 登录"
+    },
+    "v1LoginReqAuth": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
     },
     "v1LogoutReply": {
       "type": "object",
@@ -3971,6 +3670,23 @@
       },
       "title": "回应 - 注册"
     },
+    "v1RegisterReqAuth": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "用户名"
+        },
+        "password": {
+          "type": "string",
+          "title": "密码"
+        },
+        "phone": {
+          "type": "string",
+          "title": "电话"
+        }
+      }
+    },
     "v1Resource": {
       "type": "object",
       "properties": {
@@ -4044,6 +3760,17 @@
         }
       },
       "title": "角色模块"
+    },
+    "v1SmsLoginReqAuth": {
+      "type": "object",
+      "properties": {
+        "phone": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        }
+      }
     },
     "v1UpdateDeptReply": {
       "type": "object",

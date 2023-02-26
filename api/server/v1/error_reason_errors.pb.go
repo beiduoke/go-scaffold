@@ -119,28 +119,28 @@ func ErrorUserDeleteFail(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_USER_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
-func IsUserHandleDomainFail(err error) bool {
+func IsUserHandleFail(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_USER_HANDLE_DOMAIN_FAIL.String() && e.Code == 400
+	return e.Reason == ErrorReason_USER_HANDLE_FAIL.String() && e.Code == 400
 }
 
-func ErrorUserHandleDomainFail(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_USER_HANDLE_DOMAIN_FAIL.String(), fmt.Sprintf(format, args...))
+func ErrorUserHandleFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_USER_HANDLE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
-func IsUserHandleDomainRoleFail(err error) bool {
+func IsUserHandleRoleFail(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_USER_HANDLE_DOMAIN_ROLE_FAIL.String() && e.Code == 400
+	return e.Reason == ErrorReason_USER_HANDLE_ROLE_FAIL.String() && e.Code == 400
 }
 
-func ErrorUserHandleDomainRoleFail(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_USER_HANDLE_DOMAIN_ROLE_FAIL.String(), fmt.Sprintf(format, args...))
+func ErrorUserHandleRoleFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_USER_HANDLE_ROLE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
 func IsUserDomainFindFail(err error) bool {

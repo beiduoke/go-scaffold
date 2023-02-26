@@ -10,6 +10,7 @@ import (
 	"github.com/pkg/errors"
 
 	pb "github.com/beiduoke/go-scaffold/api/protobuf"
+	"github.com/beiduoke/go-scaffold/internal/biz/auth"
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
@@ -32,7 +33,7 @@ type User struct {
 	Phone           string
 	Email           string
 	State           int32
-	Domains         []*Domain
+	Domain          *Domain
 	Roles           []*Role
 	DomainRoleUsers []*DomainRoleUser
 }
@@ -59,11 +60,11 @@ type UserRepo interface {
 	ListPage(context.Context, pagination.PaginationHandler) ([]*User, int64)
 
 	// 缓存操作
-	SetTokenCache(context.Context, AuthClaims) error
-	GetTokenCache(context.Context, AuthClaims) error
+	SetTokenCache(context.Context, *AuthClaims) error
+	GetTokenCache(context.Context, *AuthClaims) error
+	SetLoginCache(context.Context, auth.AuthClaims, *User) error
 	// 用户领域权限操作
-	HandleDomain(context.Context, *User) error
-	HandleDomainRole(context.Context, *User) error
+	HandleRole(context.Context, *User) error
 }
 
 // UserUsecase is a User usecase.
@@ -100,25 +101,15 @@ func (uc *UserUsecase) Create(ctx context.Context, g *User) (*User, error) {
 	return uc.biz.userRepo.Save(ctx, g)
 }
 
-// HandleDomain 绑定领域
-func (uc *UserUsecase) HandleDomain(ctx context.Context, g *User) error {
-	uc.log.WithContext(ctx).Infof("HandleDomain: %v", g)
-	domains := g.Domains
-	if len(domains) <= 0 {
-		return errors.New("领域未指定")
-	}
-	return uc.biz.userRepo.HandleDomain(ctx, g)
-}
-
-// HandleDomainRole 绑定领域权限
-func (uc *UserUsecase) HandleDomainRole(ctx context.Context, g *User, domainId uint) error {
-	uc.log.WithContext(ctx).Infof("HandleDomainRole: %v", g)
+// HandleRole 绑定领域权限
+func (uc *UserUsecase) HandleRole(ctx context.Context, g *User) error {
+	uc.log.WithContext(ctx).Infof("HandleRole: %v", g)
 	roles := g.Roles
 	if len(roles) <= 0 {
 		return errors.New("权限未指定")
 	}
 
-	return uc.biz.userRepo.HandleDomainRole(ctx, g)
+	return uc.biz.userRepo.HandleRole(ctx, g)
 }
 
 // Update 修改用户
@@ -282,13 +273,11 @@ func (ac *UserUsecase) ListDomainAll(ctx context.Context, g *User) ([]*Domain, e
 // ListRoleID 获取角色ID列表
 func (ac *UserUsecase) ListRoleID(ctx context.Context, g *User) (roleIds []uint, err error) {
 	uidStr := g.GetID()
-	var rolesIdsStr []string
-	if len(g.Domains) < 1 {
-		rolesIdsStr, err = ac.biz.enforcer.GetRolesForUser(uidStr, "1")
-	} else {
-		domainIdStr := convert.UnitToString(g.Domains[0].ID)
-		rolesIdsStr = ac.biz.enforcer.GetRolesForUserInDomain(uidStr, domainIdStr)
+	if g.Domain == nil {
+		return nil, errors.New("领域不能为空")
 	}
+
+	rolesIdsStr := ac.biz.enforcer.GetRolesForUserInDomain(uidStr, g.Domain.GetID())
 
 	if err != nil {
 		return nil, err

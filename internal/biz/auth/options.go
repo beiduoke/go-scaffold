@@ -10,13 +10,18 @@ type Option func(*Options)
 
 // AuthUsecase is a User usecase.
 type Options struct {
+	Claims AuthClaims
+	Repo   AuthUserRepo
 	Name   string
 	Config *conf.Auth
 	Log    *log.Helper
 }
 
-func newOptions(opt ...Option) Options {
-	opts := Options{}
+func NewOptions(opt ...Option) Options {
+	opts := Options{
+		Name:   "Auth",
+		Claims: NewAuthClaims(),
+	}
 
 	for _, o := range opt {
 		o(&opts)
@@ -31,12 +36,19 @@ func Name(n string) Option {
 	}
 }
 
-// Biz 业务聚合
-// func Biz(b biz.Biz) Option {
-// 	return func(o *Options) {
-// 		o.Biz = b
-// 	}
-// }
+// Repo 外部依赖聚合
+func Repo(r AuthUserRepo) Option {
+	return func(o *Options) {
+		o.Repo = r
+	}
+}
+
+// Repo 外部依赖聚合
+func Claims(a AuthClaims) Option {
+	return func(o *Options) {
+		o.Claims = a
+	}
+}
 
 // Config 配置
 func Config(c *conf.Auth) Option {

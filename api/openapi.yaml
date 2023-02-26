@@ -7,17 +7,48 @@ info:
     description: The greeting service definition.
     version: 0.0.1
 paths:
-    /v1/auth/emailLogin:
+    /v1/auth/emailLogin/{domain}:
         post:
             tags:
                 - Api
             description: 邮件登陆
             operationId: Api_EmailLogin
+            parameters:
+                - name: domain
+                  in: path
+                  required: true
+                  schema:
+                    type: string
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.server.v1.EmailLoginReq_EmailField'
+                            $ref: '#/components/schemas/api.server.v1.EmailLoginReq_Auth'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.server.v1.LoginReply'
+    /v1/auth/login/{domain}:
+        post:
+            tags:
+                - Api
+            description: 密码登陆
+            operationId: Api_Login
+            parameters:
+                - name: domain
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.server.v1.LoginReq_Auth'
                 required: true
             responses:
                 "200":
@@ -43,55 +74,23 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.server.v1.LogoutReply'
-    /v1/auth/middlePassLogin:
-        post:
-            tags:
-                - Api
-            description: 中台密码登陆
-            operationId: Api_MiddlePassLogin
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.server.v1.PassLoginReq_PassField'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.server.v1.LoginReply'
-    /v1/auth/passLogin:
-        post:
-            tags:
-                - Api
-            description: 密码登陆
-            operationId: Api_PassLogin
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.server.v1.PassLoginReq_PassField'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.server.v1.LoginReply'
-    /v1/auth/register:
+    /v1/auth/register/{domain}:
         post:
             tags:
                 - Api
             description: 注册
             operationId: Api_Register
+            parameters:
+                - name: domain
+                  in: path
+                  required: true
+                  schema:
+                    type: string
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.server.v1.Auth'
+                            $ref: '#/components/schemas/api.server.v1.RegisterReq_Auth'
                 required: true
             responses:
                 "200":
@@ -100,17 +99,23 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.server.v1.RegisterReply'
-    /v1/auth/smsLogin:
+    /v1/auth/smsLogin/{domain}:
         post:
             tags:
                 - Api
             description: 短信登陆
             operationId: Api_SmsLogin
+            parameters:
+                - name: domain
+                  in: path
+                  required: true
+                  schema:
+                    type: string
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.server.v1.SmsLoginReq_SmsField'
+                            $ref: '#/components/schemas/api.server.v1.SmsLoginReq_Auth'
                 required: true
             responses:
                 "200":
@@ -301,58 +306,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.server.v1.CreateDomainReply'
-    /v1/domains/login:
-        post:
-            tags:
-                - Api
-            description: |-
-                领域模块
-                 登陆领域/租户
-            operationId: Api_LoginDomain
-            parameters:
-                - name: domain
-                  in: query
-                  description: 领域
-                  schema:
-                    type: string
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.server.v1.Auth'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.server.v1.LoginReply'
-    /v1/domains/register:
-        post:
-            tags:
-                - Api
-            description: 注册领域/租户
-            operationId: Api_RegisterDomain
-            parameters:
-                - name: domain
-                  in: query
-                  description: 领域
-                  schema:
-                    type: string
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.server.v1.Auth'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.server.v1.RegisterReply'
     /v1/domains/{id}:
         get:
             tags:
@@ -1189,19 +1142,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.server.v1.CreateUserReply'
-    /v1/users/domains:
-        get:
-            tags:
-                - Api
-            description: 当前登录用户拥有领域
-            operationId: Api_ListUserDomain
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.server.v1.ListUserDomainReply'
     /v1/users/existName:
         post:
             tags:
@@ -1364,12 +1304,12 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.server.v1.DeleteUserReply'
-    /v1/users/{id}/domainRoles:
+    /v1/users/{id}/roles:
         post:
             tags:
                 - Api
             description: 绑定用户领域权限
-            operationId: Api_HandleUserDomainRole
+            operationId: Api_HandleUserRole
             parameters:
                 - name: id
                   in: path
@@ -1381,7 +1321,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.server.v1.HandleUserDomainRoleReq_Data'
+                            $ref: '#/components/schemas/api.server.v1.HandleUserRoleReq_Data'
                 required: true
             responses:
                 "200":
@@ -1389,33 +1329,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.server.v1.HandleUserDomainRoleReply'
-    /v1/users/{id}/domains:
-        post:
-            tags:
-                - Api
-            description: 绑定用户领域
-            operationId: Api_HandleUserDomain
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.server.v1.HandleUserDomainReq_Data'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.server.v1.HandleUserDomainReply'
+                                $ref: '#/components/schemas/api.server.v1.HandleUserRoleReply'
 components:
     schemas:
         api.protobuf.PagingReply:
@@ -1429,15 +1343,6 @@ components:
                     items:
                         $ref: '#/components/schemas/google.protobuf.Any'
             description: 分页通用结果
-        api.server.v1.Auth:
-            type: object
-            properties:
-                name:
-                    type: string
-                    description: 用户名
-                password:
-                    type: string
-                    description: 密码
         api.server.v1.CreateDeptReply:
             type: object
             properties:
@@ -1858,7 +1763,7 @@ components:
                     items:
                         $ref: '#/components/schemas/api.server.v1.Domain'
             description: 领域模块
-        api.server.v1.EmailLoginReq_EmailField:
+        api.server.v1.EmailLoginReq_Auth:
             type: object
             properties:
                 email:
@@ -1987,28 +1892,7 @@ components:
                     items:
                         type: integer
                         format: uint64
-        api.server.v1.HandleUserDomainReply:
-            type: object
-            properties:
-                code:
-                    type: integer
-                    format: int32
-                message:
-                    type: string
-                result:
-                    $ref: '#/components/schemas/google.protobuf.Any'
-                success:
-                    type: boolean
-            description: 回应 - 绑定用户领域
-        api.server.v1.HandleUserDomainReq_Data:
-            type: object
-            properties:
-                domainIds:
-                    type: array
-                    items:
-                        type: integer
-                        format: uint64
-        api.server.v1.HandleUserDomainRoleReply:
+        api.server.v1.HandleUserRoleReply:
             type: object
             properties:
                 code:
@@ -2021,7 +1905,7 @@ components:
                 success:
                     type: boolean
             description: 回应 - 绑定用户领域权限
-        api.server.v1.HandleUserDomainRoleReq_Data:
+        api.server.v1.HandleUserRoleReq_Data:
             type: object
             properties:
                 domainId:
@@ -2097,17 +1981,6 @@ components:
                     type: integer
                     format: int64
             description: 回应 - 获取角色菜单
-        api.server.v1.ListUserDomainReply:
-            type: object
-            properties:
-                items:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.server.v1.Domain'
-                total:
-                    type: integer
-                    format: int64
-            description: 回应 - 用户领域
         api.server.v1.ListUserRoleMenuRouterTreeReply:
             type: object
             properties:
@@ -2152,6 +2025,13 @@ components:
                     description: 过期时间
                     format: date-time
             description: 回应 - 登录
+        api.server.v1.LoginReq_Auth:
+            type: object
+            properties:
+                account:
+                    type: string
+                password:
+                    type: string
         api.server.v1.LogoutReply:
             type: object
             properties:
@@ -2294,13 +2174,6 @@ components:
                 currentActiveMenu:
                     type: string
                     description: 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
-        api.server.v1.PassLoginReq_PassField:
-            type: object
-            properties:
-                account:
-                    type: string
-                password:
-                    type: string
         api.server.v1.Post:
             type: object
             properties:
@@ -2339,6 +2212,18 @@ components:
                 success:
                     type: boolean
             description: 回应 - 注册
+        api.server.v1.RegisterReq_Auth:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: 用户名
+                password:
+                    type: string
+                    description: 密码
+                phone:
+                    type: string
+                    description: 电话
         api.server.v1.Resource:
             type: object
             properties:
@@ -2392,7 +2277,7 @@ components:
                 remarks:
                     type: string
             description: 角色模块
-        api.server.v1.SmsLoginReq_SmsField:
+        api.server.v1.SmsLoginReq_Auth:
             type: object
             properties:
                 phone:

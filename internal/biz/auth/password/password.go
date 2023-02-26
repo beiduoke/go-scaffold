@@ -1,6 +1,13 @@
-package pass
+package password
 
-import "github.com/beiduoke/go-scaffold/internal/biz/auth"
+import (
+	"context"
+
+	"github.com/beiduoke/go-scaffold/internal/biz/auth"
+	passwordutil "github.com/zzsds/go-tools/pkg/password"
+)
+
+var _ auth.Auth[*Data] = (*password)(nil)
 
 type password struct {
 	options auth.Options
@@ -11,7 +18,7 @@ type Data struct {
 	Password string
 }
 
-func NewPassword(opts ...auth.Option) auth.Auth[*Data] {
+func NewServer(opts ...auth.Option) auth.Auth[*Data] {
 	p := &password{}
 
 	for _, o := range opts {
@@ -35,6 +42,16 @@ func (p *password) String() string {
 }
 
 func (p *password) Login(d *Data) (auth.AuthClaims, error) {
+	o := p.options
+	u, err := o.Repo.FindUserByName(context.Background(), d.Account)
+	if err != nil {
+		return nil, err
+	}
+
+	if err = passwordutil.Verify(d.Password, u.Password); err != nil {
+		return nil, err
+	}
+
 	return nil, nil
 }
 

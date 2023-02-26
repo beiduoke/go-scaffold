@@ -6,6 +6,7 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	"github.com/beiduoke/go-scaffold/internal/pkg/websocket"
 	"github.com/go-kratos/kratos/v2/log"
+	"go.uber.org/dig"
 )
 
 var _ v1.ApiServer = (*ApiService)(nil)
@@ -31,6 +32,7 @@ type ApiService struct {
 	ac           *conf.Auth
 	log          *log.Helper
 	ws           *websocket.WebsocketService
+	dig          *dig.Container
 	authCase     *biz.AuthUsecase
 	userCase     *biz.UserUsecase
 	domainCase   *biz.DomainUsecase

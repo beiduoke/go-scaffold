@@ -39,126 +39,6 @@ var (
 	_ = protobuf.PostState(0)
 )
 
-// Validate checks the field values on Auth with the rules defined in the proto
-// definition for this message. If any rules are violated, the first error
-// encountered is returned, or nil if there are no violations.
-func (m *Auth) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on Auth with the rules defined in the
-// proto definition for this message. If any rules are violated, the result is
-// a list of violation errors wrapped in AuthMultiError, or nil if none found.
-func (m *Auth) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *Auth) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
-		err := AuthValidationError{
-			field:  "Name",
-			reason: "value length must be between 1 and 10 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if l := utf8.RuneCountInString(m.GetPassword()); l < 6 || l > 25 {
-		err := AuthValidationError{
-			field:  "Password",
-			reason: "value length must be between 6 and 25 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if len(errors) > 0 {
-		return AuthMultiError(errors)
-	}
-
-	return nil
-}
-
-// AuthMultiError is an error wrapping multiple validation errors returned by
-// Auth.ValidateAll() if the designated constraints aren't met.
-type AuthMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m AuthMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m AuthMultiError) AllErrors() []error { return m }
-
-// AuthValidationError is the validation error returned by Auth.Validate if the
-// designated constraints aren't met.
-type AuthValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e AuthValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e AuthValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e AuthValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e AuthValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e AuthValidationError) ErrorName() string { return "AuthValidationError" }
-
-// Error satisfies the builtin error interface
-func (e AuthValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sAuth.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = AuthValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = AuthValidationError{}
-
 // Validate checks the field values on LoginReply with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -558,22 +438,22 @@ var _ interface {
 	ErrorName() string
 } = LogoutReplyValidationError{}
 
-// Validate checks the field values on PassLoginReq with the rules defined in
-// the proto definition for this message. If any rules are violated, the first
+// Validate checks the field values on LoginReq with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *PassLoginReq) Validate() error {
+func (m *LoginReq) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on PassLoginReq with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in PassLoginReqMultiError, or
-// nil if none found.
-func (m *PassLoginReq) ValidateAll() error {
+// ValidateAll checks the field values on LoginReq with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in LoginReqMultiError, or nil
+// if none found.
+func (m *LoginReq) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *PassLoginReq) validate(all bool) error {
+func (m *LoginReq) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -581,7 +461,7 @@ func (m *PassLoginReq) validate(all bool) error {
 	var errors []error
 
 	if m.GetAuth() == nil {
-		err := PassLoginReqValidationError{
+		err := LoginReqValidationError{
 			field:  "Auth",
 			reason: "value is required",
 		}
@@ -595,7 +475,7 @@ func (m *PassLoginReq) validate(all bool) error {
 		switch v := interface{}(m.GetAuth()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, PassLoginReqValidationError{
+				errors = append(errors, LoginReqValidationError{
 					field:  "Auth",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -603,7 +483,7 @@ func (m *PassLoginReq) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, PassLoginReqValidationError{
+				errors = append(errors, LoginReqValidationError{
 					field:  "Auth",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -612,7 +492,7 @@ func (m *PassLoginReq) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetAuth()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return PassLoginReqValidationError{
+			return LoginReqValidationError{
 				field:  "Auth",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -620,19 +500,30 @@ func (m *PassLoginReq) validate(all bool) error {
 		}
 	}
 
+	if l := utf8.RuneCountInString(m.GetDomain()); l < 1 || l > 20 {
+		err := LoginReqValidationError{
+			field:  "Domain",
+			reason: "value length must be between 1 and 20 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if len(errors) > 0 {
-		return PassLoginReqMultiError(errors)
+		return LoginReqMultiError(errors)
 	}
 
 	return nil
 }
 
-// PassLoginReqMultiError is an error wrapping multiple validation errors
-// returned by PassLoginReq.ValidateAll() if the designated constraints aren't met.
-type PassLoginReqMultiError []error
+// LoginReqMultiError is an error wrapping multiple validation errors returned
+// by LoginReq.ValidateAll() if the designated constraints aren't met.
+type LoginReqMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m PassLoginReqMultiError) Error() string {
+func (m LoginReqMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -641,11 +532,11 @@ func (m PassLoginReqMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m PassLoginReqMultiError) AllErrors() []error { return m }
+func (m LoginReqMultiError) AllErrors() []error { return m }
 
-// PassLoginReqValidationError is the validation error returned by
-// PassLoginReq.Validate if the designated constraints aren't met.
-type PassLoginReqValidationError struct {
+// LoginReqValidationError is the validation error returned by
+// LoginReq.Validate if the designated constraints aren't met.
+type LoginReqValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -653,22 +544,22 @@ type PassLoginReqValidationError struct {
 }
 
 // Field function returns field value.
-func (e PassLoginReqValidationError) Field() string { return e.field }
+func (e LoginReqValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e PassLoginReqValidationError) Reason() string { return e.reason }
+func (e LoginReqValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e PassLoginReqValidationError) Cause() error { return e.cause }
+func (e LoginReqValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e PassLoginReqValidationError) Key() bool { return e.key }
+func (e LoginReqValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e PassLoginReqValidationError) ErrorName() string { return "PassLoginReqValidationError" }
+func (e LoginReqValidationError) ErrorName() string { return "LoginReqValidationError" }
 
 // Error satisfies the builtin error interface
-func (e PassLoginReqValidationError) Error() string {
+func (e LoginReqValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -680,14 +571,14 @@ func (e PassLoginReqValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sPassLoginReq.%s: %s%s",
+		"invalid %sLoginReq.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = PassLoginReqValidationError{}
+var _ error = LoginReqValidationError{}
 
 var _ interface {
 	Field() string
@@ -695,7 +586,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = PassLoginReqValidationError{}
+} = LoginReqValidationError{}
 
 // Validate checks the field values on SmsLoginReq with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
@@ -757,6 +648,17 @@ func (m *SmsLoginReq) validate(all bool) error {
 				cause:  err,
 			}
 		}
+	}
+
+	if l := utf8.RuneCountInString(m.GetDomain()); l < 1 || l > 20 {
+		err := SmsLoginReqValidationError{
+			field:  "Domain",
+			reason: "value length must be between 1 and 20 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
 	}
 
 	if len(errors) > 0 {
@@ -898,6 +800,17 @@ func (m *EmailLoginReq) validate(all bool) error {
 		}
 	}
 
+	if l := utf8.RuneCountInString(m.GetDomain()); l < 1 || l > 20 {
+		err := EmailLoginReqValidationError{
+			field:  "Domain",
+			reason: "value length must be between 1 and 20 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if len(errors) > 0 {
 		return EmailLoginReqMultiError(errors)
 	}
@@ -1036,6 +949,17 @@ func (m *RegisterReq) validate(all bool) error {
 				cause:  err,
 			}
 		}
+	}
+
+	if l := utf8.RuneCountInString(m.GetDomain()); l < 1 || l > 20 {
+		err := RegisterReqValidationError{
+			field:  "Domain",
+			reason: "value length must be between 1 and 20 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
 	}
 
 	if len(errors) > 0 {
@@ -1455,146 +1379,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetUserProfileReplyValidationError{}
-
-// Validate checks the field values on ListUserDomainReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListUserDomainReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ListUserDomainReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ListUserDomainReplyMultiError, or nil if none found.
-func (m *ListUserDomainReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ListUserDomainReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	for idx, item := range m.GetItems() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ListUserDomainReplyValidationError{
-						field:  fmt.Sprintf("Items[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ListUserDomainReplyValidationError{
-						field:  fmt.Sprintf("Items[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return ListUserDomainReplyValidationError{
-					field:  fmt.Sprintf("Items[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if m.Total != nil {
-		// no validation rules for Total
-	}
-
-	if len(errors) > 0 {
-		return ListUserDomainReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// ListUserDomainReplyMultiError is an error wrapping multiple validation
-// errors returned by ListUserDomainReply.ValidateAll() if the designated
-// constraints aren't met.
-type ListUserDomainReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ListUserDomainReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ListUserDomainReplyMultiError) AllErrors() []error { return m }
-
-// ListUserDomainReplyValidationError is the validation error returned by
-// ListUserDomainReply.Validate if the designated constraints aren't met.
-type ListUserDomainReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ListUserDomainReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ListUserDomainReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ListUserDomainReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ListUserDomainReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ListUserDomainReplyValidationError) ErrorName() string {
-	return "ListUserDomainReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ListUserDomainReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sListUserDomainReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ListUserDomainReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ListUserDomainReplyValidationError{}
 
 // Validate checks the field values on ListUserRoleReply with the rules defined
 // in the proto definition for this message. If any rules are violated, the
@@ -3108,22 +2892,22 @@ var _ interface {
 	ErrorName() string
 } = CreateUserReplyValidationError{}
 
-// Validate checks the field values on HandleUserDomainReq with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *HandleUserDomainReq) Validate() error {
+// Validate checks the field values on HandleUserRoleReq with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *HandleUserRoleReq) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on HandleUserDomainReq with the rules
+// ValidateAll checks the field values on HandleUserRoleReq with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// HandleUserDomainReqMultiError, or nil if none found.
-func (m *HandleUserDomainReq) ValidateAll() error {
+// HandleUserRoleReqMultiError, or nil if none found.
+func (m *HandleUserRoleReq) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *HandleUserDomainReq) validate(all bool) error {
+func (m *HandleUserRoleReq) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -3131,7 +2915,7 @@ func (m *HandleUserDomainReq) validate(all bool) error {
 	var errors []error
 
 	if m.GetId() <= 0 {
-		err := HandleUserDomainReqValidationError{
+		err := HandleUserRoleReqValidationError{
 			field:  "Id",
 			reason: "value must be greater than 0",
 		}
@@ -3145,7 +2929,7 @@ func (m *HandleUserDomainReq) validate(all bool) error {
 		switch v := interface{}(m.GetData()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, HandleUserDomainReqValidationError{
+				errors = append(errors, HandleUserRoleReqValidationError{
 					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -3153,7 +2937,7 @@ func (m *HandleUserDomainReq) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, HandleUserDomainReqValidationError{
+				errors = append(errors, HandleUserRoleReqValidationError{
 					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -3162,7 +2946,7 @@ func (m *HandleUserDomainReq) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return HandleUserDomainReqValidationError{
+			return HandleUserRoleReqValidationError{
 				field:  "Data",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -3171,19 +2955,19 @@ func (m *HandleUserDomainReq) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return HandleUserDomainReqMultiError(errors)
+		return HandleUserRoleReqMultiError(errors)
 	}
 
 	return nil
 }
 
-// HandleUserDomainReqMultiError is an error wrapping multiple validation
-// errors returned by HandleUserDomainReq.ValidateAll() if the designated
-// constraints aren't met.
-type HandleUserDomainReqMultiError []error
+// HandleUserRoleReqMultiError is an error wrapping multiple validation errors
+// returned by HandleUserRoleReq.ValidateAll() if the designated constraints
+// aren't met.
+type HandleUserRoleReqMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m HandleUserDomainReqMultiError) Error() string {
+func (m HandleUserRoleReqMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -3192,11 +2976,11 @@ func (m HandleUserDomainReqMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m HandleUserDomainReqMultiError) AllErrors() []error { return m }
+func (m HandleUserRoleReqMultiError) AllErrors() []error { return m }
 
-// HandleUserDomainReqValidationError is the validation error returned by
-// HandleUserDomainReq.Validate if the designated constraints aren't met.
-type HandleUserDomainReqValidationError struct {
+// HandleUserRoleReqValidationError is the validation error returned by
+// HandleUserRoleReq.Validate if the designated constraints aren't met.
+type HandleUserRoleReqValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -3204,24 +2988,24 @@ type HandleUserDomainReqValidationError struct {
 }
 
 // Field function returns field value.
-func (e HandleUserDomainReqValidationError) Field() string { return e.field }
+func (e HandleUserRoleReqValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e HandleUserDomainReqValidationError) Reason() string { return e.reason }
+func (e HandleUserRoleReqValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e HandleUserDomainReqValidationError) Cause() error { return e.cause }
+func (e HandleUserRoleReqValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e HandleUserDomainReqValidationError) Key() bool { return e.key }
+func (e HandleUserRoleReqValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e HandleUserDomainReqValidationError) ErrorName() string {
-	return "HandleUserDomainReqValidationError"
+func (e HandleUserRoleReqValidationError) ErrorName() string {
+	return "HandleUserRoleReqValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e HandleUserDomainReqValidationError) Error() string {
+func (e HandleUserRoleReqValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -3233,14 +3017,14 @@ func (e HandleUserDomainReqValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sHandleUserDomainReq.%s: %s%s",
+		"invalid %sHandleUserRoleReq.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = HandleUserDomainReqValidationError{}
+var _ error = HandleUserRoleReqValidationError{}
 
 var _ interface {
 	Field() string
@@ -3248,24 +3032,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = HandleUserDomainReqValidationError{}
+} = HandleUserRoleReqValidationError{}
 
-// Validate checks the field values on HandleUserDomainReply with the rules
+// Validate checks the field values on HandleUserRoleReply with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *HandleUserDomainReply) Validate() error {
+func (m *HandleUserRoleReply) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on HandleUserDomainReply with the rules
+// ValidateAll checks the field values on HandleUserRoleReply with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// HandleUserDomainReplyMultiError, or nil if none found.
-func (m *HandleUserDomainReply) ValidateAll() error {
+// HandleUserRoleReplyMultiError, or nil if none found.
+func (m *HandleUserRoleReply) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *HandleUserDomainReply) validate(all bool) error {
+func (m *HandleUserRoleReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -3280,7 +3064,7 @@ func (m *HandleUserDomainReply) validate(all bool) error {
 		switch v := interface{}(m.GetResult()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, HandleUserDomainReplyValidationError{
+				errors = append(errors, HandleUserRoleReplyValidationError{
 					field:  "Result",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -3288,7 +3072,7 @@ func (m *HandleUserDomainReply) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, HandleUserDomainReplyValidationError{
+				errors = append(errors, HandleUserRoleReplyValidationError{
 					field:  "Result",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -3297,7 +3081,7 @@ func (m *HandleUserDomainReply) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return HandleUserDomainReplyValidationError{
+			return HandleUserRoleReplyValidationError{
 				field:  "Result",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -3308,19 +3092,19 @@ func (m *HandleUserDomainReply) validate(all bool) error {
 	// no validation rules for Success
 
 	if len(errors) > 0 {
-		return HandleUserDomainReplyMultiError(errors)
+		return HandleUserRoleReplyMultiError(errors)
 	}
 
 	return nil
 }
 
-// HandleUserDomainReplyMultiError is an error wrapping multiple validation
-// errors returned by HandleUserDomainReply.ValidateAll() if the designated
+// HandleUserRoleReplyMultiError is an error wrapping multiple validation
+// errors returned by HandleUserRoleReply.ValidateAll() if the designated
 // constraints aren't met.
-type HandleUserDomainReplyMultiError []error
+type HandleUserRoleReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m HandleUserDomainReplyMultiError) Error() string {
+func (m HandleUserRoleReplyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -3329,11 +3113,11 @@ func (m HandleUserDomainReplyMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m HandleUserDomainReplyMultiError) AllErrors() []error { return m }
+func (m HandleUserRoleReplyMultiError) AllErrors() []error { return m }
 
-// HandleUserDomainReplyValidationError is the validation error returned by
-// HandleUserDomainReply.Validate if the designated constraints aren't met.
-type HandleUserDomainReplyValidationError struct {
+// HandleUserRoleReplyValidationError is the validation error returned by
+// HandleUserRoleReply.Validate if the designated constraints aren't met.
+type HandleUserRoleReplyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -3341,24 +3125,24 @@ type HandleUserDomainReplyValidationError struct {
 }
 
 // Field function returns field value.
-func (e HandleUserDomainReplyValidationError) Field() string { return e.field }
+func (e HandleUserRoleReplyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e HandleUserDomainReplyValidationError) Reason() string { return e.reason }
+func (e HandleUserRoleReplyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e HandleUserDomainReplyValidationError) Cause() error { return e.cause }
+func (e HandleUserRoleReplyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e HandleUserDomainReplyValidationError) Key() bool { return e.key }
+func (e HandleUserRoleReplyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e HandleUserDomainReplyValidationError) ErrorName() string {
-	return "HandleUserDomainReplyValidationError"
+func (e HandleUserRoleReplyValidationError) ErrorName() string {
+	return "HandleUserRoleReplyValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e HandleUserDomainReplyValidationError) Error() string {
+func (e HandleUserRoleReplyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -3370,14 +3154,14 @@ func (e HandleUserDomainReplyValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sHandleUserDomainReply.%s: %s%s",
+		"invalid %sHandleUserRoleReply.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = HandleUserDomainReplyValidationError{}
+var _ error = HandleUserRoleReplyValidationError{}
 
 var _ interface {
 	Field() string
@@ -3385,286 +3169,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = HandleUserDomainReplyValidationError{}
-
-// Validate checks the field values on HandleUserDomainRoleReq with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *HandleUserDomainRoleReq) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on HandleUserDomainRoleReq with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// HandleUserDomainRoleReqMultiError, or nil if none found.
-func (m *HandleUserDomainRoleReq) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *HandleUserDomainRoleReq) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetId() <= 0 {
-		err := HandleUserDomainRoleReqValidationError{
-			field:  "Id",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if all {
-		switch v := interface{}(m.GetData()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, HandleUserDomainRoleReqValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, HandleUserDomainRoleReqValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return HandleUserDomainRoleReqValidationError{
-				field:  "Data",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if len(errors) > 0 {
-		return HandleUserDomainRoleReqMultiError(errors)
-	}
-
-	return nil
-}
-
-// HandleUserDomainRoleReqMultiError is an error wrapping multiple validation
-// errors returned by HandleUserDomainRoleReq.ValidateAll() if the designated
-// constraints aren't met.
-type HandleUserDomainRoleReqMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m HandleUserDomainRoleReqMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m HandleUserDomainRoleReqMultiError) AllErrors() []error { return m }
-
-// HandleUserDomainRoleReqValidationError is the validation error returned by
-// HandleUserDomainRoleReq.Validate if the designated constraints aren't met.
-type HandleUserDomainRoleReqValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e HandleUserDomainRoleReqValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e HandleUserDomainRoleReqValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e HandleUserDomainRoleReqValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e HandleUserDomainRoleReqValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e HandleUserDomainRoleReqValidationError) ErrorName() string {
-	return "HandleUserDomainRoleReqValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e HandleUserDomainRoleReqValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sHandleUserDomainRoleReq.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = HandleUserDomainRoleReqValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = HandleUserDomainRoleReqValidationError{}
-
-// Validate checks the field values on HandleUserDomainRoleReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *HandleUserDomainRoleReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on HandleUserDomainRoleReply with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// HandleUserDomainRoleReplyMultiError, or nil if none found.
-func (m *HandleUserDomainRoleReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *HandleUserDomainRoleReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Code
-
-	// no validation rules for Message
-
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, HandleUserDomainRoleReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, HandleUserDomainRoleReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return HandleUserDomainRoleReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	// no validation rules for Success
-
-	if len(errors) > 0 {
-		return HandleUserDomainRoleReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// HandleUserDomainRoleReplyMultiError is an error wrapping multiple validation
-// errors returned by HandleUserDomainRoleReply.ValidateAll() if the
-// designated constraints aren't met.
-type HandleUserDomainRoleReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m HandleUserDomainRoleReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m HandleUserDomainRoleReplyMultiError) AllErrors() []error { return m }
-
-// HandleUserDomainRoleReplyValidationError is the validation error returned by
-// HandleUserDomainRoleReply.Validate if the designated constraints aren't met.
-type HandleUserDomainRoleReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e HandleUserDomainRoleReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e HandleUserDomainRoleReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e HandleUserDomainRoleReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e HandleUserDomainRoleReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e HandleUserDomainRoleReplyValidationError) ErrorName() string {
-	return "HandleUserDomainRoleReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e HandleUserDomainRoleReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sHandleUserDomainRoleReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = HandleUserDomainRoleReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = HandleUserDomainRoleReplyValidationError{}
+} = HandleUserRoleReplyValidationError{}
 
 // Validate checks the field values on GetUserReq with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
@@ -4889,310 +4394,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = DomainValidationError{}
-
-// Validate checks the field values on LoginDomainReq with the rules defined in
-// the proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *LoginDomainReq) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on LoginDomainReq with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in LoginDomainReqMultiError,
-// or nil if none found.
-func (m *LoginDomainReq) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *LoginDomainReq) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if l := utf8.RuneCountInString(m.GetDomain()); l < 1 || l > 20 {
-		err := LoginDomainReqValidationError{
-			field:  "Domain",
-			reason: "value length must be between 1 and 20 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if m.GetAuth() == nil {
-		err := LoginDomainReqValidationError{
-			field:  "Auth",
-			reason: "value is required",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if all {
-		switch v := interface{}(m.GetAuth()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, LoginDomainReqValidationError{
-					field:  "Auth",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, LoginDomainReqValidationError{
-					field:  "Auth",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetAuth()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return LoginDomainReqValidationError{
-				field:  "Auth",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if len(errors) > 0 {
-		return LoginDomainReqMultiError(errors)
-	}
-
-	return nil
-}
-
-// LoginDomainReqMultiError is an error wrapping multiple validation errors
-// returned by LoginDomainReq.ValidateAll() if the designated constraints
-// aren't met.
-type LoginDomainReqMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m LoginDomainReqMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m LoginDomainReqMultiError) AllErrors() []error { return m }
-
-// LoginDomainReqValidationError is the validation error returned by
-// LoginDomainReq.Validate if the designated constraints aren't met.
-type LoginDomainReqValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e LoginDomainReqValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e LoginDomainReqValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e LoginDomainReqValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e LoginDomainReqValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e LoginDomainReqValidationError) ErrorName() string { return "LoginDomainReqValidationError" }
-
-// Error satisfies the builtin error interface
-func (e LoginDomainReqValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sLoginDomainReq.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = LoginDomainReqValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = LoginDomainReqValidationError{}
-
-// Validate checks the field values on RegisterDomainReq with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *RegisterDomainReq) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on RegisterDomainReq with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// RegisterDomainReqMultiError, or nil if none found.
-func (m *RegisterDomainReq) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *RegisterDomainReq) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if l := utf8.RuneCountInString(m.GetDomain()); l < 1 || l > 20 {
-		err := RegisterDomainReqValidationError{
-			field:  "Domain",
-			reason: "value length must be between 1 and 20 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if m.GetAuth() == nil {
-		err := RegisterDomainReqValidationError{
-			field:  "Auth",
-			reason: "value is required",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if all {
-		switch v := interface{}(m.GetAuth()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, RegisterDomainReqValidationError{
-					field:  "Auth",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, RegisterDomainReqValidationError{
-					field:  "Auth",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetAuth()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return RegisterDomainReqValidationError{
-				field:  "Auth",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if len(errors) > 0 {
-		return RegisterDomainReqMultiError(errors)
-	}
-
-	return nil
-}
-
-// RegisterDomainReqMultiError is an error wrapping multiple validation errors
-// returned by RegisterDomainReq.ValidateAll() if the designated constraints
-// aren't met.
-type RegisterDomainReqMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m RegisterDomainReqMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m RegisterDomainReqMultiError) AllErrors() []error { return m }
-
-// RegisterDomainReqValidationError is the validation error returned by
-// RegisterDomainReq.Validate if the designated constraints aren't met.
-type RegisterDomainReqValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e RegisterDomainReqValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e RegisterDomainReqValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e RegisterDomainReqValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e RegisterDomainReqValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e RegisterDomainReqValidationError) ErrorName() string {
-	return "RegisterDomainReqValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e RegisterDomainReqValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sRegisterDomainReq.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = RegisterDomainReqValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = RegisterDomainReqValidationError{}
 
 // Validate checks the field values on ListDomainTreeReq with the rules defined
 // in the proto definition for this message. If any rules are violated, the
@@ -15525,22 +14726,22 @@ var _ interface {
 	ErrorName() string
 } = UpdatePostStateReplyValidationError{}
 
-// Validate checks the field values on PassLoginReq_PassField with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *PassLoginReq_PassField) Validate() error {
+// Validate checks the field values on LoginReq_Auth with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *LoginReq_Auth) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on PassLoginReq_PassField with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// PassLoginReq_PassFieldMultiError, or nil if none found.
-func (m *PassLoginReq_PassField) ValidateAll() error {
+// ValidateAll checks the field values on LoginReq_Auth with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in LoginReq_AuthMultiError, or
+// nil if none found.
+func (m *LoginReq_Auth) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *PassLoginReq_PassField) validate(all bool) error {
+func (m *LoginReq_Auth) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -15548,7 +14749,7 @@ func (m *PassLoginReq_PassField) validate(all bool) error {
 	var errors []error
 
 	if l := utf8.RuneCountInString(m.GetAccount()); l < 1 || l > 10 {
-		err := PassLoginReq_PassFieldValidationError{
+		err := LoginReq_AuthValidationError{
 			field:  "Account",
 			reason: "value length must be between 1 and 10 runes, inclusive",
 		}
@@ -15559,7 +14760,7 @@ func (m *PassLoginReq_PassField) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetPassword()); l < 6 || l > 28 {
-		err := PassLoginReq_PassFieldValidationError{
+		err := LoginReq_AuthValidationError{
 			field:  "Password",
 			reason: "value length must be between 6 and 28 runes, inclusive",
 		}
@@ -15570,19 +14771,19 @@ func (m *PassLoginReq_PassField) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return PassLoginReq_PassFieldMultiError(errors)
+		return LoginReq_AuthMultiError(errors)
 	}
 
 	return nil
 }
 
-// PassLoginReq_PassFieldMultiError is an error wrapping multiple validation
-// errors returned by PassLoginReq_PassField.ValidateAll() if the designated
-// constraints aren't met.
-type PassLoginReq_PassFieldMultiError []error
+// LoginReq_AuthMultiError is an error wrapping multiple validation errors
+// returned by LoginReq_Auth.ValidateAll() if the designated constraints
+// aren't met.
+type LoginReq_AuthMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m PassLoginReq_PassFieldMultiError) Error() string {
+func (m LoginReq_AuthMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -15591,11 +14792,11 @@ func (m PassLoginReq_PassFieldMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m PassLoginReq_PassFieldMultiError) AllErrors() []error { return m }
+func (m LoginReq_AuthMultiError) AllErrors() []error { return m }
 
-// PassLoginReq_PassFieldValidationError is the validation error returned by
-// PassLoginReq_PassField.Validate if the designated constraints aren't met.
-type PassLoginReq_PassFieldValidationError struct {
+// LoginReq_AuthValidationError is the validation error returned by
+// LoginReq_Auth.Validate if the designated constraints aren't met.
+type LoginReq_AuthValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -15603,24 +14804,22 @@ type PassLoginReq_PassFieldValidationError struct {
 }
 
 // Field function returns field value.
-func (e PassLoginReq_PassFieldValidationError) Field() string { return e.field }
+func (e LoginReq_AuthValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e PassLoginReq_PassFieldValidationError) Reason() string { return e.reason }
+func (e LoginReq_AuthValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e PassLoginReq_PassFieldValidationError) Cause() error { return e.cause }
+func (e LoginReq_AuthValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e PassLoginReq_PassFieldValidationError) Key() bool { return e.key }
+func (e LoginReq_AuthValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e PassLoginReq_PassFieldValidationError) ErrorName() string {
-	return "PassLoginReq_PassFieldValidationError"
-}
+func (e LoginReq_AuthValidationError) ErrorName() string { return "LoginReq_AuthValidationError" }
 
 // Error satisfies the builtin error interface
-func (e PassLoginReq_PassFieldValidationError) Error() string {
+func (e LoginReq_AuthValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -15632,14 +14831,14 @@ func (e PassLoginReq_PassFieldValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sPassLoginReq_PassField.%s: %s%s",
+		"invalid %sLoginReq_Auth.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = PassLoginReq_PassFieldValidationError{}
+var _ error = LoginReq_AuthValidationError{}
 
 var _ interface {
 	Field() string
@@ -15647,32 +14846,32 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = PassLoginReq_PassFieldValidationError{}
+} = LoginReq_AuthValidationError{}
 
-// Validate checks the field values on SmsLoginReq_SmsField with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *SmsLoginReq_SmsField) Validate() error {
+// Validate checks the field values on SmsLoginReq_Auth with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *SmsLoginReq_Auth) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on SmsLoginReq_SmsField with the rules
+// ValidateAll checks the field values on SmsLoginReq_Auth with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// SmsLoginReq_SmsFieldMultiError, or nil if none found.
-func (m *SmsLoginReq_SmsField) ValidateAll() error {
+// SmsLoginReq_AuthMultiError, or nil if none found.
+func (m *SmsLoginReq_Auth) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *SmsLoginReq_SmsField) validate(all bool) error {
+func (m *SmsLoginReq_Auth) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	if !_SmsLoginReq_SmsField_Phone_Pattern.MatchString(m.GetPhone()) {
-		err := SmsLoginReq_SmsFieldValidationError{
+	if !_SmsLoginReq_Auth_Phone_Pattern.MatchString(m.GetPhone()) {
+		err := SmsLoginReq_AuthValidationError{
 			field:  "Phone",
 			reason: "value does not match regex pattern \"^1[0-9]{10}$\"",
 		}
@@ -15682,8 +14881,8 @@ func (m *SmsLoginReq_SmsField) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if !_SmsLoginReq_SmsField_Code_Pattern.MatchString(m.GetCode()) {
-		err := SmsLoginReq_SmsFieldValidationError{
+	if !_SmsLoginReq_Auth_Code_Pattern.MatchString(m.GetCode()) {
+		err := SmsLoginReq_AuthValidationError{
 			field:  "Code",
 			reason: "value does not match regex pattern \"^[0-9]{6}$\"",
 		}
@@ -15694,19 +14893,19 @@ func (m *SmsLoginReq_SmsField) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return SmsLoginReq_SmsFieldMultiError(errors)
+		return SmsLoginReq_AuthMultiError(errors)
 	}
 
 	return nil
 }
 
-// SmsLoginReq_SmsFieldMultiError is an error wrapping multiple validation
-// errors returned by SmsLoginReq_SmsField.ValidateAll() if the designated
-// constraints aren't met.
-type SmsLoginReq_SmsFieldMultiError []error
+// SmsLoginReq_AuthMultiError is an error wrapping multiple validation errors
+// returned by SmsLoginReq_Auth.ValidateAll() if the designated constraints
+// aren't met.
+type SmsLoginReq_AuthMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m SmsLoginReq_SmsFieldMultiError) Error() string {
+func (m SmsLoginReq_AuthMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -15715,11 +14914,11 @@ func (m SmsLoginReq_SmsFieldMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m SmsLoginReq_SmsFieldMultiError) AllErrors() []error { return m }
+func (m SmsLoginReq_AuthMultiError) AllErrors() []error { return m }
 
-// SmsLoginReq_SmsFieldValidationError is the validation error returned by
-// SmsLoginReq_SmsField.Validate if the designated constraints aren't met.
-type SmsLoginReq_SmsFieldValidationError struct {
+// SmsLoginReq_AuthValidationError is the validation error returned by
+// SmsLoginReq_Auth.Validate if the designated constraints aren't met.
+type SmsLoginReq_AuthValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -15727,24 +14926,22 @@ type SmsLoginReq_SmsFieldValidationError struct {
 }
 
 // Field function returns field value.
-func (e SmsLoginReq_SmsFieldValidationError) Field() string { return e.field }
+func (e SmsLoginReq_AuthValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e SmsLoginReq_SmsFieldValidationError) Reason() string { return e.reason }
+func (e SmsLoginReq_AuthValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e SmsLoginReq_SmsFieldValidationError) Cause() error { return e.cause }
+func (e SmsLoginReq_AuthValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e SmsLoginReq_SmsFieldValidationError) Key() bool { return e.key }
+func (e SmsLoginReq_AuthValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e SmsLoginReq_SmsFieldValidationError) ErrorName() string {
-	return "SmsLoginReq_SmsFieldValidationError"
-}
+func (e SmsLoginReq_AuthValidationError) ErrorName() string { return "SmsLoginReq_AuthValidationError" }
 
 // Error satisfies the builtin error interface
-func (e SmsLoginReq_SmsFieldValidationError) Error() string {
+func (e SmsLoginReq_AuthValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -15756,14 +14953,14 @@ func (e SmsLoginReq_SmsFieldValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sSmsLoginReq_SmsField.%s: %s%s",
+		"invalid %sSmsLoginReq_Auth.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = SmsLoginReq_SmsFieldValidationError{}
+var _ error = SmsLoginReq_AuthValidationError{}
 
 var _ interface {
 	Field() string
@@ -15771,28 +14968,28 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = SmsLoginReq_SmsFieldValidationError{}
+} = SmsLoginReq_AuthValidationError{}
 
-var _SmsLoginReq_SmsField_Phone_Pattern = regexp.MustCompile("^1[0-9]{10}$")
+var _SmsLoginReq_Auth_Phone_Pattern = regexp.MustCompile("^1[0-9]{10}$")
 
-var _SmsLoginReq_SmsField_Code_Pattern = regexp.MustCompile("^[0-9]{6}$")
+var _SmsLoginReq_Auth_Code_Pattern = regexp.MustCompile("^[0-9]{6}$")
 
-// Validate checks the field values on EmailLoginReq_EmailField with the rules
+// Validate checks the field values on EmailLoginReq_Auth with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *EmailLoginReq_EmailField) Validate() error {
+func (m *EmailLoginReq_Auth) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on EmailLoginReq_EmailField with the
-// rules defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on EmailLoginReq_Auth with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// EmailLoginReq_EmailFieldMultiError, or nil if none found.
-func (m *EmailLoginReq_EmailField) ValidateAll() error {
+// EmailLoginReq_AuthMultiError, or nil if none found.
+func (m *EmailLoginReq_Auth) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *EmailLoginReq_EmailField) validate(all bool) error {
+func (m *EmailLoginReq_Auth) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -15800,7 +14997,7 @@ func (m *EmailLoginReq_EmailField) validate(all bool) error {
 	var errors []error
 
 	if err := m._validateEmail(m.GetEmail()); err != nil {
-		err = EmailLoginReq_EmailFieldValidationError{
+		err = EmailLoginReq_AuthValidationError{
 			field:  "Email",
 			reason: "value must be a valid email address",
 			cause:  err,
@@ -15811,8 +15008,8 @@ func (m *EmailLoginReq_EmailField) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if !_EmailLoginReq_EmailField_Code_Pattern.MatchString(m.GetCode()) {
-		err := EmailLoginReq_EmailFieldValidationError{
+	if !_EmailLoginReq_Auth_Code_Pattern.MatchString(m.GetCode()) {
+		err := EmailLoginReq_AuthValidationError{
 			field:  "Code",
 			reason: "value does not match regex pattern \"^[0-9]{4,6}$\"",
 		}
@@ -15823,13 +15020,13 @@ func (m *EmailLoginReq_EmailField) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return EmailLoginReq_EmailFieldMultiError(errors)
+		return EmailLoginReq_AuthMultiError(errors)
 	}
 
 	return nil
 }
 
-func (m *EmailLoginReq_EmailField) _validateHostname(host string) error {
+func (m *EmailLoginReq_Auth) _validateHostname(host string) error {
 	s := strings.ToLower(strings.TrimSuffix(host, "."))
 
 	if len(host) > 253 {
@@ -15859,7 +15056,7 @@ func (m *EmailLoginReq_EmailField) _validateHostname(host string) error {
 	return nil
 }
 
-func (m *EmailLoginReq_EmailField) _validateEmail(addr string) error {
+func (m *EmailLoginReq_Auth) _validateEmail(addr string) error {
 	a, err := mail.ParseAddress(addr)
 	if err != nil {
 		return err
@@ -15879,13 +15076,13 @@ func (m *EmailLoginReq_EmailField) _validateEmail(addr string) error {
 	return m._validateHostname(parts[1])
 }
 
-// EmailLoginReq_EmailFieldMultiError is an error wrapping multiple validation
-// errors returned by EmailLoginReq_EmailField.ValidateAll() if the designated
-// constraints aren't met.
-type EmailLoginReq_EmailFieldMultiError []error
+// EmailLoginReq_AuthMultiError is an error wrapping multiple validation errors
+// returned by EmailLoginReq_Auth.ValidateAll() if the designated constraints
+// aren't met.
+type EmailLoginReq_AuthMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m EmailLoginReq_EmailFieldMultiError) Error() string {
+func (m EmailLoginReq_AuthMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -15894,11 +15091,11 @@ func (m EmailLoginReq_EmailFieldMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m EmailLoginReq_EmailFieldMultiError) AllErrors() []error { return m }
+func (m EmailLoginReq_AuthMultiError) AllErrors() []error { return m }
 
-// EmailLoginReq_EmailFieldValidationError is the validation error returned by
-// EmailLoginReq_EmailField.Validate if the designated constraints aren't met.
-type EmailLoginReq_EmailFieldValidationError struct {
+// EmailLoginReq_AuthValidationError is the validation error returned by
+// EmailLoginReq_Auth.Validate if the designated constraints aren't met.
+type EmailLoginReq_AuthValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -15906,24 +15103,24 @@ type EmailLoginReq_EmailFieldValidationError struct {
 }
 
 // Field function returns field value.
-func (e EmailLoginReq_EmailFieldValidationError) Field() string { return e.field }
+func (e EmailLoginReq_AuthValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e EmailLoginReq_EmailFieldValidationError) Reason() string { return e.reason }
+func (e EmailLoginReq_AuthValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e EmailLoginReq_EmailFieldValidationError) Cause() error { return e.cause }
+func (e EmailLoginReq_AuthValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e EmailLoginReq_EmailFieldValidationError) Key() bool { return e.key }
+func (e EmailLoginReq_AuthValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e EmailLoginReq_EmailFieldValidationError) ErrorName() string {
-	return "EmailLoginReq_EmailFieldValidationError"
+func (e EmailLoginReq_AuthValidationError) ErrorName() string {
+	return "EmailLoginReq_AuthValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e EmailLoginReq_EmailFieldValidationError) Error() string {
+func (e EmailLoginReq_AuthValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -15935,14 +15132,14 @@ func (e EmailLoginReq_EmailFieldValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sEmailLoginReq_EmailField.%s: %s%s",
+		"invalid %sEmailLoginReq_Auth.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = EmailLoginReq_EmailFieldValidationError{}
+var _ error = EmailLoginReq_AuthValidationError{}
 
 var _ interface {
 	Field() string
@@ -15950,9 +15147,144 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = EmailLoginReq_EmailFieldValidationError{}
+} = EmailLoginReq_AuthValidationError{}
 
-var _EmailLoginReq_EmailField_Code_Pattern = regexp.MustCompile("^[0-9]{4,6}$")
+var _EmailLoginReq_Auth_Code_Pattern = regexp.MustCompile("^[0-9]{4,6}$")
+
+// Validate checks the field values on RegisterReq_Auth with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *RegisterReq_Auth) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on RegisterReq_Auth with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// RegisterReq_AuthMultiError, or nil if none found.
+func (m *RegisterReq_Auth) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RegisterReq_Auth) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
+		err := RegisterReq_AuthValidationError{
+			field:  "Name",
+			reason: "value length must be between 1 and 10 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetPassword()); l < 6 || l > 25 {
+		err := RegisterReq_AuthValidationError{
+			field:  "Password",
+			reason: "value length must be between 6 and 25 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if !_RegisterReq_Auth_Phone_Pattern.MatchString(m.GetPhone()) {
+		err := RegisterReq_AuthValidationError{
+			field:  "Phone",
+			reason: "value does not match regex pattern \"^1[0-9]{10}$\"",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return RegisterReq_AuthMultiError(errors)
+	}
+
+	return nil
+}
+
+// RegisterReq_AuthMultiError is an error wrapping multiple validation errors
+// returned by RegisterReq_Auth.ValidateAll() if the designated constraints
+// aren't met.
+type RegisterReq_AuthMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RegisterReq_AuthMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RegisterReq_AuthMultiError) AllErrors() []error { return m }
+
+// RegisterReq_AuthValidationError is the validation error returned by
+// RegisterReq_Auth.Validate if the designated constraints aren't met.
+type RegisterReq_AuthValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RegisterReq_AuthValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RegisterReq_AuthValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RegisterReq_AuthValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RegisterReq_AuthValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RegisterReq_AuthValidationError) ErrorName() string { return "RegisterReq_AuthValidationError" }
+
+// Error satisfies the builtin error interface
+func (e RegisterReq_AuthValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRegisterReq_Auth.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RegisterReq_AuthValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RegisterReq_AuthValidationError{}
+
+var _RegisterReq_Auth_Phone_Pattern = regexp.MustCompile("^1[0-9]{10}$")
 
 // Validate checks the field values on
 // ListUserRoleMenuTreeReply_Deprecated_MenuMeta with the rules defined in the
@@ -16410,166 +15742,22 @@ var _ interface {
 	ErrorName() string
 } = MenuRouter_MetaValidationError{}
 
-// Validate checks the field values on HandleUserDomainReq_Data with the rules
+// Validate checks the field values on HandleUserRoleReq_Data with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *HandleUserDomainReq_Data) Validate() error {
+func (m *HandleUserRoleReq_Data) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on HandleUserDomainReq_Data with the
-// rules defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on HandleUserRoleReq_Data with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// HandleUserDomainReq_DataMultiError, or nil if none found.
-func (m *HandleUserDomainReq_Data) ValidateAll() error {
+// HandleUserRoleReq_DataMultiError, or nil if none found.
+func (m *HandleUserRoleReq_Data) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *HandleUserDomainReq_Data) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if len(m.GetDomainIds()) < 1 {
-		err := HandleUserDomainReq_DataValidationError{
-			field:  "DomainIds",
-			reason: "value must contain at least 1 item(s)",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	_HandleUserDomainReq_Data_DomainIds_Unique := make(map[uint64]struct{}, len(m.GetDomainIds()))
-
-	for idx, item := range m.GetDomainIds() {
-		_, _ = idx, item
-
-		if _, exists := _HandleUserDomainReq_Data_DomainIds_Unique[item]; exists {
-			err := HandleUserDomainReq_DataValidationError{
-				field:  fmt.Sprintf("DomainIds[%v]", idx),
-				reason: "repeated value must contain unique items",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		} else {
-			_HandleUserDomainReq_Data_DomainIds_Unique[item] = struct{}{}
-		}
-
-		if item <= 0 {
-			err := HandleUserDomainReq_DataValidationError{
-				field:  fmt.Sprintf("DomainIds[%v]", idx),
-				reason: "value must be greater than 0",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return HandleUserDomainReq_DataMultiError(errors)
-	}
-
-	return nil
-}
-
-// HandleUserDomainReq_DataMultiError is an error wrapping multiple validation
-// errors returned by HandleUserDomainReq_Data.ValidateAll() if the designated
-// constraints aren't met.
-type HandleUserDomainReq_DataMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m HandleUserDomainReq_DataMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m HandleUserDomainReq_DataMultiError) AllErrors() []error { return m }
-
-// HandleUserDomainReq_DataValidationError is the validation error returned by
-// HandleUserDomainReq_Data.Validate if the designated constraints aren't met.
-type HandleUserDomainReq_DataValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e HandleUserDomainReq_DataValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e HandleUserDomainReq_DataValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e HandleUserDomainReq_DataValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e HandleUserDomainReq_DataValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e HandleUserDomainReq_DataValidationError) ErrorName() string {
-	return "HandleUserDomainReq_DataValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e HandleUserDomainReq_DataValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sHandleUserDomainReq_Data.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = HandleUserDomainReq_DataValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = HandleUserDomainReq_DataValidationError{}
-
-// Validate checks the field values on HandleUserDomainRoleReq_Data with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *HandleUserDomainRoleReq_Data) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on HandleUserDomainRoleReq_Data with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// HandleUserDomainRoleReq_DataMultiError, or nil if none found.
-func (m *HandleUserDomainRoleReq_Data) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *HandleUserDomainRoleReq_Data) validate(all bool) error {
+func (m *HandleUserRoleReq_Data) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -16577,7 +15765,7 @@ func (m *HandleUserDomainRoleReq_Data) validate(all bool) error {
 	var errors []error
 
 	if m.GetDomainId() <= 0 {
-		err := HandleUserDomainRoleReq_DataValidationError{
+		err := HandleUserRoleReq_DataValidationError{
 			field:  "DomainId",
 			reason: "value must be greater than 0",
 		}
@@ -16588,7 +15776,7 @@ func (m *HandleUserDomainRoleReq_Data) validate(all bool) error {
 	}
 
 	if len(m.GetRoleIds()) < 1 {
-		err := HandleUserDomainRoleReq_DataValidationError{
+		err := HandleUserRoleReq_DataValidationError{
 			field:  "RoleIds",
 			reason: "value must contain at least 1 item(s)",
 		}
@@ -16598,13 +15786,13 @@ func (m *HandleUserDomainRoleReq_Data) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	_HandleUserDomainRoleReq_Data_RoleIds_Unique := make(map[uint64]struct{}, len(m.GetRoleIds()))
+	_HandleUserRoleReq_Data_RoleIds_Unique := make(map[uint64]struct{}, len(m.GetRoleIds()))
 
 	for idx, item := range m.GetRoleIds() {
 		_, _ = idx, item
 
-		if _, exists := _HandleUserDomainRoleReq_Data_RoleIds_Unique[item]; exists {
-			err := HandleUserDomainRoleReq_DataValidationError{
+		if _, exists := _HandleUserRoleReq_Data_RoleIds_Unique[item]; exists {
+			err := HandleUserRoleReq_DataValidationError{
 				field:  fmt.Sprintf("RoleIds[%v]", idx),
 				reason: "repeated value must contain unique items",
 			}
@@ -16613,11 +15801,11 @@ func (m *HandleUserDomainRoleReq_Data) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		} else {
-			_HandleUserDomainRoleReq_Data_RoleIds_Unique[item] = struct{}{}
+			_HandleUserRoleReq_Data_RoleIds_Unique[item] = struct{}{}
 		}
 
 		if item <= 0 {
-			err := HandleUserDomainRoleReq_DataValidationError{
+			err := HandleUserRoleReq_DataValidationError{
 				field:  fmt.Sprintf("RoleIds[%v]", idx),
 				reason: "value must be greater than 0",
 			}
@@ -16630,19 +15818,19 @@ func (m *HandleUserDomainRoleReq_Data) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return HandleUserDomainRoleReq_DataMultiError(errors)
+		return HandleUserRoleReq_DataMultiError(errors)
 	}
 
 	return nil
 }
 
-// HandleUserDomainRoleReq_DataMultiError is an error wrapping multiple
-// validation errors returned by HandleUserDomainRoleReq_Data.ValidateAll() if
-// the designated constraints aren't met.
-type HandleUserDomainRoleReq_DataMultiError []error
+// HandleUserRoleReq_DataMultiError is an error wrapping multiple validation
+// errors returned by HandleUserRoleReq_Data.ValidateAll() if the designated
+// constraints aren't met.
+type HandleUserRoleReq_DataMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m HandleUserDomainRoleReq_DataMultiError) Error() string {
+func (m HandleUserRoleReq_DataMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -16651,12 +15839,11 @@ func (m HandleUserDomainRoleReq_DataMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m HandleUserDomainRoleReq_DataMultiError) AllErrors() []error { return m }
+func (m HandleUserRoleReq_DataMultiError) AllErrors() []error { return m }
 
-// HandleUserDomainRoleReq_DataValidationError is the validation error returned
-// by HandleUserDomainRoleReq_Data.Validate if the designated constraints
-// aren't met.
-type HandleUserDomainRoleReq_DataValidationError struct {
+// HandleUserRoleReq_DataValidationError is the validation error returned by
+// HandleUserRoleReq_Data.Validate if the designated constraints aren't met.
+type HandleUserRoleReq_DataValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -16664,24 +15851,24 @@ type HandleUserDomainRoleReq_DataValidationError struct {
 }
 
 // Field function returns field value.
-func (e HandleUserDomainRoleReq_DataValidationError) Field() string { return e.field }
+func (e HandleUserRoleReq_DataValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e HandleUserDomainRoleReq_DataValidationError) Reason() string { return e.reason }
+func (e HandleUserRoleReq_DataValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e HandleUserDomainRoleReq_DataValidationError) Cause() error { return e.cause }
+func (e HandleUserRoleReq_DataValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e HandleUserDomainRoleReq_DataValidationError) Key() bool { return e.key }
+func (e HandleUserRoleReq_DataValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e HandleUserDomainRoleReq_DataValidationError) ErrorName() string {
-	return "HandleUserDomainRoleReq_DataValidationError"
+func (e HandleUserRoleReq_DataValidationError) ErrorName() string {
+	return "HandleUserRoleReq_DataValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e HandleUserDomainRoleReq_DataValidationError) Error() string {
+func (e HandleUserRoleReq_DataValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -16693,14 +15880,14 @@ func (e HandleUserDomainRoleReq_DataValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sHandleUserDomainRoleReq_Data.%s: %s%s",
+		"invalid %sHandleUserRoleReq_Data.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = HandleUserDomainRoleReq_DataValidationError{}
+var _ error = HandleUserRoleReq_DataValidationError{}
 
 var _ interface {
 	Field() string
@@ -16708,7 +15895,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = HandleUserDomainRoleReq_DataValidationError{}
+} = HandleUserRoleReq_DataValidationError{}
 
 // Validate checks the field values on UpdateUserReq_Data with the rules
 // defined in the proto definition for this message. If any rules are

@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	cacheMenuHashKey = "hashSysMenu"
+	cacheHashKeyMenu = "hashSysMenu"
 )
 
 type Cache[T any] interface {
@@ -27,12 +27,12 @@ func (r *MenuRepo) SetCache(ctx context.Context, g *SysMenu) error {
 		r.log.Errorf("菜单缓存失败 %v", err)
 		return err
 	}
-	return r.data.rdb.HSet(ctx, cacheMenuHashKey, convert.UnitToString(g.ID), dataStr).Err()
+	return r.data.rdb.HSet(ctx, cacheHashKeyMenu, convert.UnitToString(g.ID), dataStr).Err()
 }
 
 // GetCache 获取菜单缓存
 func (r *MenuRepo) GetCache(ctx context.Context, id uint) (sysMenu *SysMenu) {
-	dataStr, err := r.data.rdb.HGet(ctx, cacheMenuHashKey, convert.UnitToString(id)).Result()
+	dataStr, err := r.data.rdb.HGet(ctx, cacheHashKeyMenu, convert.UnitToString(id)).Result()
 	if err != nil {
 		return nil
 	}
@@ -44,13 +44,13 @@ func (r *MenuRepo) GetCache(ctx context.Context, id uint) (sysMenu *SysMenu) {
 
 // DeleteCache 获取菜单缓存
 func (r *MenuRepo) DeleteCache(ctx context.Context, id uint) error {
-	return r.data.rdb.HDel(ctx, cacheMenuHashKey, convert.UnitToString(id)).Err()
+	return r.data.rdb.HDel(ctx, cacheHashKeyMenu, convert.UnitToString(id)).Err()
 }
 
 // ListAllCache 获取全部缓存数据
 func (r *MenuRepo) ListAllCache(ctx context.Context) (menus []*SysMenu) {
-	if l, _ := r.data.rdb.HLen(ctx, cacheMenuHashKey).Result(); l > 0 {
-		menuMap, _ := r.data.rdb.HGetAll(ctx, cacheMenuHashKey).Result()
+	if l, _ := r.data.rdb.HLen(ctx, cacheHashKeyMenu).Result(); l > 0 {
+		menuMap, _ := r.data.rdb.HGetAll(ctx, cacheHashKeyMenu).Result()
 		for _, v := range menuMap {
 			sysMenu := SysMenu{}
 			err := json.Unmarshal([]byte(v), &sysMenu)
@@ -77,7 +77,7 @@ func (r *MenuRepo) ListAllCache(ctx context.Context) (menus []*SysMenu) {
 		}
 		menuMap[convert.UnitToString(v.ID)] = string(menuStr)
 	}
-	if err := r.data.rdb.HSet(ctx, cacheMenuHashKey, menuMap).Err(); err != nil {
+	if err := r.data.rdb.HSet(ctx, cacheHashKeyMenu, menuMap).Err(); err != nil {
 		r.log.Errorf("菜单缓存失败 %v", err)
 	}
 	return menus

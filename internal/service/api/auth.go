@@ -18,14 +18,14 @@ var (
 	loginMessage = &i18n.Message{
 		Description: "login",
 		ID:          "Login",
-		One:         "Login {{.Name}} {{.Password}}",
-		Other:       "Login {{.Name}} {{.Password}}",
+		One:         "Login {{.Account}} {{.Password}}",
+		Other:       "Login {{.Account}} {{.Password}}",
 	}
 	registerMessage = &i18n.Message{
 		Description: "register",
 		ID:          "Register",
-		One:         "Register {{.Name}} {{.Password}}",
-		Other:       "Register {{.Name}} {{.Password}}",
+		One:         "Register {{.Account}} {{.Password}}",
+		Other:       "Register {{.Account}} {{.Password}}",
 	}
 )
 
@@ -41,80 +41,60 @@ func (s *ApiService) Logout(ctx context.Context, in *emptypb.Empty) (*v1.LogoutR
 	}, nil
 }
 
-// MiddlePassLogin 中台密码登录
-func (s *ApiService) MiddlePassLogin(ctx context.Context, in *v1.PassLoginReq) (*v1.LoginReply, error) {
-	auth := in.GetAuth()
-	res, err := s.authCase.MiddlePassLogin(ctx, &biz.User{Name: auth.GetAccount(), Password: auth.GetPassword()})
+// Login 密码登录
+func (s *ApiService) Login(ctx context.Context, in *v1.LoginReq) (*v1.LoginReply, error) {
+	req := in.GetAuth()
+	if in.GetDomain() == "" {
+		return nil, v1.ErrorUserRegisterFail("租户不能为空")
+	}
+	// server := password.NewServer(auth.Claims(auth.NewAuthClaims(auth.WidthAuthSecurityKey(s.ac.GetApiKey()))))
+	// claims, err := server.Login(&password.Data{
+	// 	Account:  req.GetAccount(),
+	// 	Password: req.GetPassword(),
+	// })
+	claims, err := s.authCase.Login(ctx, &biz.User{Name: req.GetAccount(), Phone: req.GetAccount(), Password: req.GetAccount(), Domain: &biz.Domain{Code: in.GetDomain()}})
 	if err != nil {
-		return nil, v1.ErrorUserLoginFail("账号 %s 登录失败：%v", auth.GetAccount(), err)
+		return nil, v1.ErrorUserLoginFail("账号 %s 登录失败：%v", req.GetAccount(), err)
 	}
-	var expireTime *timestamppb.Timestamp
-	if res.ExpiresAt != nil {
-		expireTime = timestamppb.New(*res.ExpiresAt)
-	}
+
 	return &v1.LoginReply{
-		Token:      res.Token,
-		ExpireTime: expireTime,
+		Token:      claims.Token(),
+		ExpireTime: timestamppb.New(claims.ExpiresAt()),
 	}, nil
+
+	// res, err := s.authCase.Login(ctx, &biz.User{Name: req.GetAccount(), Password: req.GetPassword()})
+	// if err != nil {
+	// 	return nil, v1.ErrorUserLoginFail("账号 %s 登录失败：%v", req.GetAccount(), err)
+	// }
+
+	// localizer := localize.FromContext(ctx)
+	// _, err = localizer.Localize(&i18n.LocalizeConfig{
+	// 	DefaultMessage: loginMessage,
+	// 	TemplateData: map[string]interface{}{
+	// 		"Account":  req.GetAccount(),
+	// 		"Password": req.GetPassword(),
+	// 	},
+	// })
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// var expireTime *timestamppb.Timestamp
+	// if res.ExpiresAt != nil {
+	// 	expireTime = timestamppb.New(*res.ExpiresAt)
+	// }
+	// return &v1.LoginReply{
+	// 	Token:      res.Token,
+	// 	ExpireTime: expireTime,
+	// }, nil
 }
 
-// PassLogin 密码登录
-func (s *ApiService) PassLogin(ctx context.Context, in *v1.PassLoginReq) (*v1.LoginReply, error) {
-	auth := in.GetAuth()
-	res, err := s.authCase.PassLogin(ctx, &biz.User{Name: auth.GetAccount(), Password: auth.GetPassword()})
-	if err != nil {
-		return nil, v1.ErrorUserLoginFail("账号 %s 登录失败：%v", auth.GetAccount(), err)
-	}
-	var expireTime *timestamppb.Timestamp
-	if res.ExpiresAt != nil {
-		expireTime = timestamppb.New(*res.ExpiresAt)
-	}
-	return &v1.LoginReply{
-		Token:      res.Token,
-		ExpireTime: expireTime,
-	}, nil
-}
-
-// Login 领域登录
-func (s *ApiService) LoginDomain(ctx context.Context, in *v1.LoginDomainReq) (*v1.LoginReply, error) {
+// Register 租户注册
+func (s *ApiService) Register(ctx context.Context, in *v1.RegisterReq) (*v1.RegisterReply, error) {
 	auth := in.GetAuth()
 	if in.GetDomain() == "" {
-		return nil, v1.ErrorUserRegisterFail("领域不能为空")
+		return nil, v1.ErrorUserRegisterFail("租户不能为空")
 	}
-	res, err := s.authCase.LoginNamePassword(ctx, in.GetDomain(), &biz.User{Name: auth.GetName(), Password: auth.GetPassword()})
-	if err != nil {
-		return nil, v1.ErrorUserLoginFail("用户 %s 登录失败：%v", auth.GetName(), err)
-	}
-
-	localizer := localize.FromContext(ctx)
-	_, err = localizer.Localize(&i18n.LocalizeConfig{
-		DefaultMessage: loginMessage,
-		TemplateData: map[string]interface{}{
-			"Name":     auth.GetName(),
-			"Password": auth.GetPassword(),
-		},
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	var expireTime *timestamppb.Timestamp
-	if res.ExpiresAt != nil {
-		expireTime = timestamppb.New(*res.ExpiresAt)
-	}
-	return &v1.LoginReply{
-		Token:      res.Token,
-		ExpireTime: expireTime,
-	}, nil
-}
-
-// Register 领域注册
-func (s *ApiService) RegisterDomain(ctx context.Context, in *v1.RegisterDomainReq) (*v1.RegisterReply, error) {
-	auth := in.GetAuth()
-	if in.GetDomain() == "" {
-		return nil, v1.ErrorUserRegisterFail("领域不能为空")
-	}
-	_, err := s.authCase.RegisterNamePassword(ctx, in.GetDomain(), &biz.User{Name: auth.GetName(), Password: auth.GetPassword()})
+	err := s.authCase.Register(ctx, &biz.User{Name: auth.GetName(), Password: auth.GetPassword(), Domain: &biz.Domain{Code: in.GetDomain()}})
 	if err != nil {
 		return nil, v1.ErrorUserRegisterFail("用户 %s 注册失败: %v", auth.GetName(), err.Error())
 	}

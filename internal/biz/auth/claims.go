@@ -7,49 +7,68 @@ import (
 	"github.com/pkg/errors"
 )
 
-type ClaimsOptions func(*Claims)
+type ClaimsOption func(*ClaimsOptions)
 
-type Claims struct {
-	User      string
-	Domain    string
-	ExpiresAt time.Time
-	token     string
+type ClaimsOptions struct {
+	securityKey string
+	expiresAt   time.Time
 }
 
-func (ac Claims) Token() string {
+func newClaimsOptions(opts ...ClaimsOption) *ClaimsOptions {
+	co := &ClaimsOptions{
+		expiresAt: time.Now().Add(time.Hour * 24),
+	}
+	for _, o := range opts {
+		o(co)
+	}
+	return co
+}
+
+func WidthAuthExpiresAt(d time.Duration) ClaimsOption {
+	return func(ac *ClaimsOptions) {
+		ac.expiresAt = time.Now().Add(d)
+	}
+}
+
+func WidthAuthSecurityKey(s string) ClaimsOption {
+	return func(ac *ClaimsOptions) {
+		ac.securityKey = s
+	}
+}
+
+var _ AuthClaims = (*claims)(nil)
+
+type claims struct {
+	options *ClaimsOptions
+	token   string
+}
+
+func NewAuthClaims(opts ...ClaimsOption) AuthClaims {
+	c := &claims{
+		options: newClaimsOptions(),
+	}
+	for _, opt := range opts {
+		opt(c.options)
+	}
+
+	return c
+}
+
+func (ac claims) Token() string {
 	return ac.token
 }
 
-func WidthAuthExpiresAt(d time.Duration) ClaimsOptions {
-	return func(ac *Claims) {
-		ac.ExpiresAt = time.Now().Add(d)
-	}
+func (ac claims) ExpiresAt() time.Time {
+	return ac.options.expiresAt
 }
 
-func WidthAuthUser(u string) ClaimsOptions {
-	return func(ac *Claims) {
-		ac.User = u
-	}
-}
-
-func NewAuthClaims(opts ...ClaimsOptions) *Claims {
-	claims := &Claims{
-		ExpiresAt: time.Now().Add(time.Hour * 24),
-	}
-	for _, opt := range opts {
-		opt(claims)
-	}
-
-	return claims
-}
-
-func (c *Claims) CreateToken(key string) error {
+func (c *claims) CreateToken(user string) error {
+	options := c.options
 	securityUser := myAuthz.NewSecurityUserData(
-		myAuthz.WithUser(c.User),
-		myAuthz.WithDomain(c.Domain),
-		myAuthz.WithExpires(c.ExpiresAt),
+		myAuthz.WithUser(user),
+		myAuthz.WithExpires(options.expiresAt),
 	)
-	if c.token = securityUser.CreateAccessJwtToken([]byte(key)); c.token == "" {
+	if c.token = securityUser.CreateAccessJwtToken([]byte(options.securityKey)); c.token == "" {
 		return errors.New("token生成失败")
 	}
 	return nil

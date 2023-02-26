@@ -2,8 +2,6 @@ package data
 
 import (
 	"context"
-	"fmt"
-	"time"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
@@ -11,8 +9,6 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"gorm.io/gorm/clause"
 )
-
-const cacheKeyToken string = "%d-%d"
 
 type UserRepo struct {
 	data   *Data
@@ -86,19 +82,20 @@ func (r *UserRepo) toBiz(d *SysUser) *biz.User {
 
 func (r *UserRepo) Save(ctx context.Context, g *biz.User) (*biz.User, error) {
 	d := r.toModel(g)
+	d.DomainID = r.data.DomainID(ctx)
 	result := r.data.DB(ctx).Omit(clause.Associations).Create(d).Error
 	return r.toBiz(d), result
 }
 
 func (r *UserRepo) Update(ctx context.Context, g *biz.User) (*biz.User, error) {
 	d := r.toModel(g)
-	result := r.data.DB(ctx).Model(d).Updates(d)
+	result := r.data.DBD(ctx).Model(d).Select("*").Omit("CreatedAt").Updates(d)
 	return r.toBiz(d), result.Error
 }
 
 func (r *UserRepo) FindByID(ctx context.Context, id uint) (*biz.User, error) {
 	user := SysUser{}
-	result := r.data.DB(ctx).Last(&user, id)
+	result := r.data.DBD(ctx).Last(&user, id)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -111,11 +108,11 @@ func (r *UserRepo) ListAll(ctx context.Context) ([]*biz.User, error) {
 }
 
 func (r *UserRepo) Delete(ctx context.Context, g *biz.User) error {
-	return r.data.DB(ctx).Delete(r.toModel(g)).Error
+	return r.data.DBD(ctx).Delete(r.toModel(g)).Error
 }
 
 func (r *UserRepo) ListPage(ctx context.Context, handler pagination.PaginationHandler) (users []*biz.User, total int64) {
-	db := r.data.DB(ctx).Model(&SysUser{})
+	db := r.data.DBD(ctx).Model(&SysUser{})
 	sysUsers := []*SysUser{}
 	// 查询条件
 	for _, v := range handler.GetConditions() {
@@ -146,7 +143,7 @@ func (r *UserRepo) ListPage(ctx context.Context, handler pagination.PaginationHa
 
 func (r *UserRepo) FindByName(ctx context.Context, s string) (*biz.User, error) {
 	user := SysUser{}
-	result := r.data.DB(ctx).Last(&user, "name = ?", s)
+	result := r.data.DBD(ctx).Debug().Last(&user, "name = ?", s)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -155,7 +152,7 @@ func (r *UserRepo) FindByName(ctx context.Context, s string) (*biz.User, error) 
 
 func (r *UserRepo) FindByPhone(ctx context.Context, s string) (*biz.User, error) {
 	user := SysUser{}
-	result := r.data.DB(ctx).Last(&user, "phone = ?", s)
+	result := r.data.DBD(ctx).Last(&user, "phone = ?", s)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -164,7 +161,7 @@ func (r *UserRepo) FindByPhone(ctx context.Context, s string) (*biz.User, error)
 
 func (r *UserRepo) FindByEmail(ctx context.Context, s string) (*biz.User, error) {
 	user := SysUser{}
-	result := r.data.DB(ctx).Last(&user, "email = ?", s)
+	result := r.data.DBD(ctx).Last(&user, "email = ?", s)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -173,7 +170,7 @@ func (r *UserRepo) FindByEmail(ctx context.Context, s string) (*biz.User, error)
 
 func (r *UserRepo) ListByName(ctx context.Context, s string) ([]*biz.User, error) {
 	sysUsers, bizUsers := []*SysUser{}, []*biz.User{}
-	result := r.data.DB(ctx).Find(&sysUsers, "name LIKE ?", "%"+s)
+	result := r.data.DBD(ctx).Find(&sysUsers, "name LIKE ?", "%"+s)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -185,7 +182,7 @@ func (r *UserRepo) ListByName(ctx context.Context, s string) ([]*biz.User, error
 
 func (r *UserRepo) ListByPhone(ctx context.Context, s string) ([]*biz.User, error) {
 	sysUsers, bizUsers := []*SysUser{}, []*biz.User{}
-	result := r.data.DB(ctx).Find(&sysUsers, "phone LIKE ?", "%"+s)
+	result := r.data.DBD(ctx).Find(&sysUsers, "phone LIKE ?", "%"+s)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -197,7 +194,7 @@ func (r *UserRepo) ListByPhone(ctx context.Context, s string) ([]*biz.User, erro
 
 func (r *UserRepo) ListByEmail(ctx context.Context, s string) ([]*biz.User, error) {
 	sysUsers, bizUsers := []*SysUser{}, []*biz.User{}
-	result := r.data.DB(ctx).Find(&sysUsers, "email LIKE ?", "%"+s)
+	result := r.data.DBD(ctx).Find(&sysUsers, "email LIKE ?", "%"+s)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -207,34 +204,8 @@ func (r *UserRepo) ListByEmail(ctx context.Context, s string) ([]*biz.User, erro
 	return bizUsers, nil
 }
 
-func (r *UserRepo) SetTokenCache(ctx context.Context, claims biz.AuthClaims) error {
-	key := fmt.Sprintf(cacheKeyToken, claims.ID, claims.Domain)
-	result := r.data.rdb.Set(ctx, key, claims.Token, time.Until(*claims.ExpiresAt))
-	return result.Err()
-}
-
-func (r *UserRepo) GetTokenCache(ctx context.Context, claims biz.AuthClaims) error {
-	key := fmt.Sprintf(cacheKeyToken, claims.ID, claims.Domain)
-	result := r.data.rdb.Get(ctx, key)
-	return result.Err()
-}
-
-// HandleDomain 绑定领域
-func (r *UserRepo) HandleDomain(ctx context.Context, g *biz.User) error {
-	rules := make([][]string, 0, len(g.Domains))
-	for _, domain := range g.Domains {
-		rules = append(rules, []string{convert.UnitToString(g.ID), "0", convert.UnitToString(domain.ID), "0"})
-		// if _, err := r.data.enforcer.AddRoleForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(domain.DefaultRoleID), convert.UnitToString(domain.ID)); err != nil {
-		// 	r.log.Errorf("领域绑定失败 %v", err)
-		// }
-	}
-	_, err := r.data.enforcer.AddGroupingPolicies(rules)
-	// r.log.Debugf("策略添加 %t %v", success, err)
-	return err
-}
-
-// HandleDomainRole 绑定领域权限
-func (r *UserRepo) HandleDomainRole(ctx context.Context, g *biz.User) error {
+// HandleDomainRole 绑定权限
+func (r *UserRepo) HandleRole(ctx context.Context, g *biz.User) error {
 	domainId := r.data.Domain(ctx)
 	rules := make([][]string, 0, len(g.Roles))
 	for _, v := range g.Roles {

@@ -49,8 +49,7 @@ const OperationApiGetUserProfile = "/api.server.v1.Api/GetUserProfile"
 const OperationApiHandleDomainMenu = "/api.server.v1.Api/HandleDomainMenu"
 const OperationApiHandleRoleMenu = "/api.server.v1.Api/HandleRoleMenu"
 const OperationApiHandleRoleResource = "/api.server.v1.Api/HandleRoleResource"
-const OperationApiHandleUserDomain = "/api.server.v1.Api/HandleUserDomain"
-const OperationApiHandleUserDomainRole = "/api.server.v1.Api/HandleUserDomainRole"
+const OperationApiHandleUserRole = "/api.server.v1.Api/HandleUserRole"
 const OperationApiListDept = "/api.server.v1.Api/ListDept"
 const OperationApiListDeptTree = "/api.server.v1.Api/ListDeptTree"
 const OperationApiListDomain = "/api.server.v1.Api/ListDomain"
@@ -64,16 +63,12 @@ const OperationApiListResourceGroup = "/api.server.v1.Api/ListResourceGroup"
 const OperationApiListRole = "/api.server.v1.Api/ListRole"
 const OperationApiListRoleMenu = "/api.server.v1.Api/ListRoleMenu"
 const OperationApiListUser = "/api.server.v1.Api/ListUser"
-const OperationApiListUserDomain = "/api.server.v1.Api/ListUserDomain"
 const OperationApiListUserRole = "/api.server.v1.Api/ListUserRole"
 const OperationApiListUserRoleMenuRouterTree = "/api.server.v1.Api/ListUserRoleMenuRouterTree"
 const OperationApiListUserRolePermission = "/api.server.v1.Api/ListUserRolePermission"
-const OperationApiLoginDomain = "/api.server.v1.Api/LoginDomain"
+const OperationApiLogin = "/api.server.v1.Api/Login"
 const OperationApiLogout = "/api.server.v1.Api/Logout"
-const OperationApiMiddlePassLogin = "/api.server.v1.Api/MiddlePassLogin"
-const OperationApiPassLogin = "/api.server.v1.Api/PassLogin"
 const OperationApiRegister = "/api.server.v1.Api/Register"
-const OperationApiRegisterDomain = "/api.server.v1.Api/RegisterDomain"
 const OperationApiSmsLogin = "/api.server.v1.Api/SmsLogin"
 const OperationApiUpdateDept = "/api.server.v1.Api/UpdateDept"
 const OperationApiUpdateDomain = "/api.server.v1.Api/UpdateDomain"
@@ -144,10 +139,8 @@ type ApiHTTPServer interface {
 	HandleRoleMenu(context.Context, *HandleRoleMenuReq) (*HandleRoleMenuReply, error)
 	// HandleRoleResource 处理角色资源
 	HandleRoleResource(context.Context, *HandleRoleResourceReq) (*HandleRoleResourceReply, error)
-	// HandleUserDomain 绑定用户领域
-	HandleUserDomain(context.Context, *HandleUserDomainReq) (*HandleUserDomainReply, error)
-	// HandleUserDomainRole 绑定用户领域权限
-	HandleUserDomainRole(context.Context, *HandleUserDomainRoleReq) (*HandleUserDomainRoleReply, error)
+	// HandleUserRole 绑定用户领域权限
+	HandleUserRole(context.Context, *HandleUserRoleReq) (*HandleUserRoleReply, error)
 	// ListDept 列表部门
 	ListDept(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
 	// ListDeptTree 获取全部部门树形
@@ -177,27 +170,18 @@ type ApiHTTPServer interface {
 	ListRoleMenu(context.Context, *ListRoleMenuReq) (*ListRoleMenuReply, error)
 	// ListUser 列表用户
 	ListUser(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
-	// ListUserDomain 当前登录用户拥有领域
-	ListUserDomain(context.Context, *emptypb.Empty) (*ListUserDomainReply, error)
 	// ListUserRole 当前登录用户拥有角色
 	ListUserRole(context.Context, *emptypb.Empty) (*ListUserRoleReply, error)
 	// ListUserRoleMenuRouterTree 获取角色菜单路由树形列表
 	ListUserRoleMenuRouterTree(context.Context, *ListUserRoleMenuRouterTreeReq) (*ListUserRoleMenuRouterTreeReply, error)
 	// ListUserRolePermission 获取角色权限列表
 	ListUserRolePermission(context.Context, *ListUserRolePermissionReq) (*ListUserRolePermissionReply, error)
-	// LoginDomain 领域模块
-	// 登陆领域/租户
-	LoginDomain(context.Context, *LoginDomainReq) (*LoginReply, error)
+	// Login 密码登陆
+	Login(context.Context, *LoginReq) (*LoginReply, error)
 	// Logout 登出
 	Logout(context.Context, *emptypb.Empty) (*LogoutReply, error)
-	// MiddlePassLogin 中台密码登陆
-	MiddlePassLogin(context.Context, *PassLoginReq) (*LoginReply, error)
-	// PassLogin 密码登陆
-	PassLogin(context.Context, *PassLoginReq) (*LoginReply, error)
 	// Register 注册
 	Register(context.Context, *RegisterReq) (*RegisterReply, error)
-	// RegisterDomain 注册领域/租户
-	RegisterDomain(context.Context, *RegisterDomainReq) (*RegisterReply, error)
 	// SmsLogin 短信登陆
 	SmsLogin(context.Context, *SmsLoginReq) (*LoginReply, error)
 	// UpdateDept 修改部门
@@ -226,15 +210,12 @@ func RegisterApiHTTPServer(s *http.Server, srv ApiHTTPServer) {
 	r := s.Route("/")
 	r.GET("/v1/auth/logout", _Api_Logout0_HTTP_Handler(srv))
 	r.POST("/v1/auth/logout", _Api_Logout1_HTTP_Handler(srv))
-	r.POST("/v1/auth/middlePassLogin", _Api_MiddlePassLogin0_HTTP_Handler(srv))
-	r.POST("/v1/auth/login", _Api_PassLogin0_HTTP_Handler(srv))
-	r.POST("/v1/auth/passLogin", _Api_PassLogin1_HTTP_Handler(srv))
-	r.POST("/v1/auth/smsLogin", _Api_SmsLogin0_HTTP_Handler(srv))
-	r.POST("/v1/auth/emailLogin", _Api_EmailLogin0_HTTP_Handler(srv))
-	r.POST("/v1/auth/register", _Api_Register0_HTTP_Handler(srv))
+	r.POST("/v1/auth/login/{domain}", _Api_Login0_HTTP_Handler(srv))
+	r.POST("/v1/auth/register/{domain}", _Api_Register0_HTTP_Handler(srv))
+	r.POST("/v1/auth/smsLogin/{domain}", _Api_SmsLogin0_HTTP_Handler(srv))
+	r.POST("/v1/auth/emailLogin/{domain}", _Api_EmailLogin0_HTTP_Handler(srv))
 	r.GET("/v1/users/info", _Api_GetUserInfo0_HTTP_Handler(srv))
 	r.GET("/v1/users/profiles", _Api_GetUserProfile0_HTTP_Handler(srv))
-	r.GET("/v1/users/domains", _Api_ListUserDomain0_HTTP_Handler(srv))
 	r.GET("/v1/users/roles", _Api_ListUserRole0_HTTP_Handler(srv))
 	r.GET("/v1/users/roles/{role_id}/routers/trees", _Api_ListUserRoleMenuRouterTree0_HTTP_Handler(srv))
 	r.GET("/v1/users/routers/trees", _Api_ListUserRoleMenuRouterTree1_HTTP_Handler(srv))
@@ -246,11 +227,7 @@ func RegisterApiHTTPServer(s *http.Server, srv ApiHTTPServer) {
 	r.PUT("/v1/users/{id}", _Api_UpdateUser0_HTTP_Handler(srv))
 	r.DELETE("/v1/users/{id}", _Api_DeleteUser0_HTTP_Handler(srv))
 	r.POST("/v1/users/existName", _Api_ExistUserName0_HTTP_Handler(srv))
-	r.POST("/v1/users/{id}/domains", _Api_HandleUserDomain0_HTTP_Handler(srv))
-	r.POST("/v1/users/{id}/domainRoles", _Api_HandleUserDomainRole0_HTTP_Handler(srv))
-	r.PATCH("/v1/domains/login/{domain}", _Api_LoginDomain0_HTTP_Handler(srv))
-	r.POST("/v1/domains/login", _Api_LoginDomain1_HTTP_Handler(srv))
-	r.POST("/v1/domains/register", _Api_RegisterDomain0_HTTP_Handler(srv))
+	r.POST("/v1/users/{id}/roles", _Api_HandleUserRole0_HTTP_Handler(srv))
 	r.GET("/v1/domains", _Api_ListDomain0_HTTP_Handler(srv))
 	r.GET("/v1/domains/trees", _Api_ListDomainTree0_HTTP_Handler(srv))
 	r.GET("/v1/domains/{id}/trees", _Api_ListDomainTree1_HTTP_Handler(srv))
@@ -334,18 +311,21 @@ func _Api_Logout1_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
 	}
 }
 
-func _Api_MiddlePassLogin0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
+func _Api_Login0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in PassLoginReq
+		var in LoginReq
 		if err := ctx.Bind(&in.Auth); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationApiMiddlePassLogin)
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationApiLogin)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.MiddlePassLogin(ctx, req.(*PassLoginReq))
+			return srv.Login(ctx, req.(*LoginReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -356,46 +336,27 @@ func _Api_MiddlePassLogin0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context
 	}
 }
 
-func _Api_PassLogin0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
+func _Api_Register0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in PassLoginReq
+		var in RegisterReq
 		if err := ctx.Bind(&in.Auth); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationApiPassLogin)
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationApiRegister)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.PassLogin(ctx, req.(*PassLoginReq))
+			return srv.Register(ctx, req.(*RegisterReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*LoginReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Api_PassLogin1_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in PassLoginReq
-		if err := ctx.Bind(&in.Auth); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationApiPassLogin)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.PassLogin(ctx, req.(*PassLoginReq))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*LoginReply)
+		reply := out.(*RegisterReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -407,6 +368,9 @@ func _Api_SmsLogin0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationApiSmsLogin)
@@ -431,6 +395,9 @@ func _Api_EmailLogin0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) err
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
 		http.SetOperation(ctx, OperationApiEmailLogin)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.EmailLogin(ctx, req.(*EmailLoginReq))
@@ -440,28 +407,6 @@ func _Api_EmailLogin0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) err
 			return err
 		}
 		reply := out.(*LoginReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Api_Register0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in RegisterReq
-		if err := ctx.Bind(&in.Auth); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationApiRegister)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.Register(ctx, req.(*RegisterReq))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*RegisterReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -500,25 +445,6 @@ func _Api_GetUserProfile0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context)
 			return err
 		}
 		reply := out.(*GetUserProfileReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Api_ListUserDomain0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in emptypb.Empty
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationApiListUserDomain)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListUserDomain(ctx, req.(*emptypb.Empty))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListUserDomainReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -750,9 +676,9 @@ func _Api_ExistUserName0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) 
 	}
 }
 
-func _Api_HandleUserDomain0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
+func _Api_HandleUserRole0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in HandleUserDomainReq
+		var in HandleUserRoleReq
 		if err := ctx.Bind(&in.Data); err != nil {
 			return err
 		}
@@ -762,109 +688,15 @@ func _Api_HandleUserDomain0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Contex
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationApiHandleUserDomain)
+		http.SetOperation(ctx, OperationApiHandleUserRole)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.HandleUserDomain(ctx, req.(*HandleUserDomainReq))
+			return srv.HandleUserRole(ctx, req.(*HandleUserRoleReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*HandleUserDomainReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Api_HandleUserDomainRole0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in HandleUserDomainRoleReq
-		if err := ctx.Bind(&in.Data); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationApiHandleUserDomainRole)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.HandleUserDomainRole(ctx, req.(*HandleUserDomainRoleReq))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*HandleUserDomainRoleReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Api_LoginDomain0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in LoginDomainReq
-		if err := ctx.Bind(&in.Auth); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationApiLoginDomain)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.LoginDomain(ctx, req.(*LoginDomainReq))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*LoginReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Api_LoginDomain1_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in LoginDomainReq
-		if err := ctx.Bind(&in.Auth); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationApiLoginDomain)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.LoginDomain(ctx, req.(*LoginDomainReq))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*LoginReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Api_RegisterDomain0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in RegisterDomainReq
-		if err := ctx.Bind(&in.Auth); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationApiRegisterDomain)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.RegisterDomain(ctx, req.(*RegisterDomainReq))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*RegisterReply)
+		reply := out.(*HandleUserRoleReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -1838,8 +1670,7 @@ type ApiHTTPClient interface {
 	HandleDomainMenu(ctx context.Context, req *HandleDomainMenuReq, opts ...http.CallOption) (rsp *HandleDomainMenuReply, err error)
 	HandleRoleMenu(ctx context.Context, req *HandleRoleMenuReq, opts ...http.CallOption) (rsp *HandleRoleMenuReply, err error)
 	HandleRoleResource(ctx context.Context, req *HandleRoleResourceReq, opts ...http.CallOption) (rsp *HandleRoleResourceReply, err error)
-	HandleUserDomain(ctx context.Context, req *HandleUserDomainReq, opts ...http.CallOption) (rsp *HandleUserDomainReply, err error)
-	HandleUserDomainRole(ctx context.Context, req *HandleUserDomainRoleReq, opts ...http.CallOption) (rsp *HandleUserDomainRoleReply, err error)
+	HandleUserRole(ctx context.Context, req *HandleUserRoleReq, opts ...http.CallOption) (rsp *HandleUserRoleReply, err error)
 	ListDept(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
 	ListDeptTree(ctx context.Context, req *ListDeptTreeReq, opts ...http.CallOption) (rsp *ListDeptTreeReply, err error)
 	ListDomain(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
@@ -1853,16 +1684,12 @@ type ApiHTTPClient interface {
 	ListRole(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
 	ListRoleMenu(ctx context.Context, req *ListRoleMenuReq, opts ...http.CallOption) (rsp *ListRoleMenuReply, err error)
 	ListUser(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
-	ListUserDomain(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *ListUserDomainReply, err error)
 	ListUserRole(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *ListUserRoleReply, err error)
 	ListUserRoleMenuRouterTree(ctx context.Context, req *ListUserRoleMenuRouterTreeReq, opts ...http.CallOption) (rsp *ListUserRoleMenuRouterTreeReply, err error)
 	ListUserRolePermission(ctx context.Context, req *ListUserRolePermissionReq, opts ...http.CallOption) (rsp *ListUserRolePermissionReply, err error)
-	LoginDomain(ctx context.Context, req *LoginDomainReq, opts ...http.CallOption) (rsp *LoginReply, err error)
+	Login(ctx context.Context, req *LoginReq, opts ...http.CallOption) (rsp *LoginReply, err error)
 	Logout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *LogoutReply, err error)
-	MiddlePassLogin(ctx context.Context, req *PassLoginReq, opts ...http.CallOption) (rsp *LoginReply, err error)
-	PassLogin(ctx context.Context, req *PassLoginReq, opts ...http.CallOption) (rsp *LoginReply, err error)
 	Register(ctx context.Context, req *RegisterReq, opts ...http.CallOption) (rsp *RegisterReply, err error)
-	RegisterDomain(ctx context.Context, req *RegisterDomainReq, opts ...http.CallOption) (rsp *RegisterReply, err error)
 	SmsLogin(ctx context.Context, req *SmsLoginReq, opts ...http.CallOption) (rsp *LoginReply, err error)
 	UpdateDept(ctx context.Context, req *UpdateDeptReq, opts ...http.CallOption) (rsp *UpdateDeptReply, err error)
 	UpdateDomain(ctx context.Context, req *UpdateDomainReq, opts ...http.CallOption) (rsp *UpdateDomainReply, err error)
@@ -2068,7 +1895,7 @@ func (c *ApiHTTPClientImpl) DeleteUser(ctx context.Context, in *DeleteUserReq, o
 
 func (c *ApiHTTPClientImpl) EmailLogin(ctx context.Context, in *EmailLoginReq, opts ...http.CallOption) (*LoginReply, error) {
 	var out LoginReply
-	pattern := "/v1/auth/emailLogin"
+	pattern := "/v1/auth/emailLogin/{domain}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationApiEmailLogin))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -2248,24 +2075,11 @@ func (c *ApiHTTPClientImpl) HandleRoleResource(ctx context.Context, in *HandleRo
 	return &out, err
 }
 
-func (c *ApiHTTPClientImpl) HandleUserDomain(ctx context.Context, in *HandleUserDomainReq, opts ...http.CallOption) (*HandleUserDomainReply, error) {
-	var out HandleUserDomainReply
-	pattern := "/v1/users/{id}/domains"
+func (c *ApiHTTPClientImpl) HandleUserRole(ctx context.Context, in *HandleUserRoleReq, opts ...http.CallOption) (*HandleUserRoleReply, error) {
+	var out HandleUserRoleReply
+	pattern := "/v1/users/{id}/roles"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationApiHandleUserDomain))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *ApiHTTPClientImpl) HandleUserDomainRole(ctx context.Context, in *HandleUserDomainRoleReq, opts ...http.CallOption) (*HandleUserDomainRoleReply, error) {
-	var out HandleUserDomainRoleReply
-	pattern := "/v1/users/{id}/domainRoles"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationApiHandleUserDomainRole))
+	opts = append(opts, http.Operation(OperationApiHandleUserRole))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
 	if err != nil {
@@ -2443,19 +2257,6 @@ func (c *ApiHTTPClientImpl) ListUser(ctx context.Context, in *protobuf.PagingReq
 	return &out, err
 }
 
-func (c *ApiHTTPClientImpl) ListUserDomain(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*ListUserDomainReply, error) {
-	var out ListUserDomainReply
-	pattern := "/v1/users/domains"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationApiListUserDomain))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
 func (c *ApiHTTPClientImpl) ListUserRole(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*ListUserRoleReply, error) {
 	var out ListUserRoleReply
 	pattern := "/v1/users/roles"
@@ -2495,11 +2296,11 @@ func (c *ApiHTTPClientImpl) ListUserRolePermission(ctx context.Context, in *List
 	return &out, err
 }
 
-func (c *ApiHTTPClientImpl) LoginDomain(ctx context.Context, in *LoginDomainReq, opts ...http.CallOption) (*LoginReply, error) {
+func (c *ApiHTTPClientImpl) Login(ctx context.Context, in *LoginReq, opts ...http.CallOption) (*LoginReply, error) {
 	var out LoginReply
-	pattern := "/v1/domains/login"
+	pattern := "/v1/auth/login/{domain}"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationApiLoginDomain))
+	opts = append(opts, http.Operation(OperationApiLogin))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.Auth, &out, opts...)
 	if err != nil {
@@ -2521,35 +2322,9 @@ func (c *ApiHTTPClientImpl) Logout(ctx context.Context, in *emptypb.Empty, opts 
 	return &out, err
 }
 
-func (c *ApiHTTPClientImpl) MiddlePassLogin(ctx context.Context, in *PassLoginReq, opts ...http.CallOption) (*LoginReply, error) {
-	var out LoginReply
-	pattern := "/v1/auth/middlePassLogin"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationApiMiddlePassLogin))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Auth, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *ApiHTTPClientImpl) PassLogin(ctx context.Context, in *PassLoginReq, opts ...http.CallOption) (*LoginReply, error) {
-	var out LoginReply
-	pattern := "/v1/auth/passLogin"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationApiPassLogin))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Auth, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
 func (c *ApiHTTPClientImpl) Register(ctx context.Context, in *RegisterReq, opts ...http.CallOption) (*RegisterReply, error) {
 	var out RegisterReply
-	pattern := "/v1/auth/register"
+	pattern := "/v1/auth/register/{domain}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationApiRegister))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -2560,22 +2335,9 @@ func (c *ApiHTTPClientImpl) Register(ctx context.Context, in *RegisterReq, opts 
 	return &out, err
 }
 
-func (c *ApiHTTPClientImpl) RegisterDomain(ctx context.Context, in *RegisterDomainReq, opts ...http.CallOption) (*RegisterReply, error) {
-	var out RegisterReply
-	pattern := "/v1/domains/register"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationApiRegisterDomain))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Auth, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
 func (c *ApiHTTPClientImpl) SmsLogin(ctx context.Context, in *SmsLoginReq, opts ...http.CallOption) (*LoginReply, error) {
 	var out LoginReply
-	pattern := "/v1/auth/smsLogin"
+	pattern := "/v1/auth/smsLogin/{domain}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationApiSmsLogin))
 	opts = append(opts, http.PathTemplate(pattern))
