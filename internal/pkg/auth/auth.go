@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"context"
 	"time"
 )
 
@@ -21,14 +20,6 @@ type AuthClaims interface {
 	CreateToken(string) error
 	Token() string
 	ExpiresAt() time.Time
-}
-
-// AuthUserRepo 外部资源关联
-type AuthUserRepo interface {
-	ExistUserByName(context.Context, string) bool
-	ExistUserByPhone(context.Context, string) bool
-	FindUserByName(context.Context, string) (AuthUser, error)
-	FindUserByPhone(context.Context, string) (AuthUser, error)
 }
 
 // AuthUser 认证用户

@@ -10,8 +10,8 @@ import (
 	"github.com/pkg/errors"
 
 	pb "github.com/beiduoke/go-scaffold/api/protobuf"
-	"github.com/beiduoke/go-scaffold/internal/biz/auth"
 	"github.com/beiduoke/go-scaffold/internal/conf"
+	"github.com/beiduoke/go-scaffold/internal/pkg/auth"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/imdario/mergo"

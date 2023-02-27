@@ -6,14 +6,13 @@ import (
 	"time"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
-	"github.com/beiduoke/go-scaffold/internal/biz/auth"
+	"github.com/beiduoke/go-scaffold/internal/pkg/auth"
 )
 
 const cacheKeyToken string = "%d-%d"
 
 func (r *UserRepo) SetLoginCache(ctx context.Context, claims auth.AuthClaims, g *biz.User) error {
-	key := fmt.Sprintf(cacheKeyToken, claims.Token())
-	result := r.data.rdb.Set(ctx, key, claims.Token, time.Until(claims.ExpiresAt()))
+	result := r.data.rdb.Set(ctx, claims.Token(), claims.Token, time.Until(claims.ExpiresAt()))
 	return result.Err()
 }
 

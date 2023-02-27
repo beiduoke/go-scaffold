@@ -7,78 +7,15 @@ import (
 	"github.com/google/uuid"
 	"github.com/zzsds/go-tools/pkg/password"
 
-	"github.com/beiduoke/go-scaffold/internal/biz/auth"
 	"github.com/beiduoke/go-scaffold/internal/conf"
+	"github.com/beiduoke/go-scaffold/internal/pkg/auth"
 )
-
-var _ auth.AuthUserRepo = (*AuthUsecase)(nil)
 
 // AuthUsecase is a User usecase.
 type AuthUsecase struct {
 	biz *Biz
 	ac  *conf.Auth
 	log *log.Helper
-}
-
-// NewAuthUsecase new a User usecase.
-func NewAuthUsecase(logger log.Logger, biz *Biz, ac *conf.Auth) *AuthUsecase {
-	return &AuthUsecase{log: log.NewHelper(logger), ac: ac, biz: biz}
-}
-
-func (ac *AuthUsecase) ExistUserByName(ctx context.Context, name string) bool {
-	u, err := ac.biz.userRepo.FindByName(ctx, name)
-	if err == nil && u != nil {
-		return true
-	}
-	return false
-}
-
-func (ac *AuthUsecase) ExistUserByPhone(ctx context.Context, phone string) bool {
-	u, err := ac.biz.userRepo.FindByPhone(ctx, phone)
-	if err == nil && u != nil {
-		return true
-	}
-	return false
-}
-
-func (ac *AuthUsecase) FindUserByName(ctx context.Context, name string) (user auth.AuthUser, err error) {
-	u, err := ac.biz.userRepo.FindByName(ctx, name)
-	if err == nil {
-		return user, err
-	}
-	return auth.AuthUser{
-		ID:       u.ID,
-		Name:     u.Name,
-		Avatar:   u.Avatar,
-		NickName: u.NickName,
-		RealName: u.RealName,
-		Password: u.Password,
-		Birthday: u.Birthday,
-		Gender:   u.Gender,
-		Phone:    u.Phone,
-		Email:    u.Email,
-		State:    u.State,
-	}, nil
-}
-
-func (ac *AuthUsecase) FindUserByPhone(ctx context.Context, phone string) (user auth.AuthUser, err error) {
-	u, err := ac.biz.userRepo.FindByPhone(ctx, phone)
-	if err == nil {
-		return user, err
-	}
-	return auth.AuthUser{
-		ID:       u.ID,
-		Name:     u.Name,
-		Avatar:   u.Avatar,
-		NickName: u.NickName,
-		RealName: u.RealName,
-		Password: u.Password,
-		Birthday: u.Birthday,
-		Gender:   u.Gender,
-		Phone:    u.Phone,
-		Email:    u.Email,
-		State:    u.State,
-	}, nil
 }
 
 // Login 登录-密码登录

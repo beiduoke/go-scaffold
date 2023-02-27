@@ -11,7 +11,6 @@ type Option func(*Options)
 // AuthUsecase is a User usecase.
 type Options struct {
 	Claims AuthClaims
-	Repo   AuthUserRepo
 	Name   string
 	Config *conf.Auth
 	Log    *log.Helper
@@ -33,13 +32,6 @@ func NewOptions(opt ...Option) Options {
 func Name(n string) Option {
 	return func(o *Options) {
 		o.Name = n
-	}
-}
-
-// Repo 外部依赖聚合
-func Repo(r AuthUserRepo) Option {
-	return func(o *Options) {
-		o.Repo = r
 	}
 }
 
