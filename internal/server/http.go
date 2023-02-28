@@ -54,6 +54,7 @@ func NewWhiteListMatcher() selector.MatchFunc {
 }
 
 func NewAuthMiddleware(ac *conf.Auth, m model.Model, policy persist.Adapter, enforcer stdcasbin.IEnforcer) middleware.Middleware {
+	// jwtV4.NewWithClaims(jwtV4.SigningMethodHS256, jwtV4.RegisteredClaims{})
 	return selector.Server(
 		jwt.Server(
 			func(token *jwtV4.Token) (interface{}, error) {
@@ -65,7 +66,7 @@ func NewAuthMiddleware(ac *conf.Auth, m model.Model, policy persist.Adapter, enf
 		multipoint.Server(),
 		// 下线判断
 		signout.Server(),
-		// 请求权限
+		// 请求权限反对
 		casbinM.Server(
 			casbinM.WithDomainSupport(),
 			// enforcer 指定则无需传 model 以及 policy

@@ -1,10 +1,7 @@
 package password
 
 import (
-	"context"
-
-	"github.com/beiduoke/go-scaffold/internal/biz/auth"
-	passwordutil "github.com/zzsds/go-tools/pkg/password"
+	"github.com/beiduoke/go-scaffold/internal/pkg/auth"
 )
 
 var _ auth.Auth[*Data] = (*password)(nil)
@@ -42,15 +39,11 @@ func (p *password) String() string {
 }
 
 func (p *password) Login(d *Data) (auth.AuthClaims, error) {
-	o := p.options
-	u, err := o.Repo.FindUserByName(context.Background(), d.Account)
-	if err != nil {
-		return nil, err
-	}
+	// o := p.options
 
-	if err = passwordutil.Verify(d.Password, u.Password); err != nil {
-		return nil, err
-	}
+	// if err = passwordutil.Verify(d.Password, u.Password); err != nil {
+	// 	return nil, err
+	// }
 
 	return nil, nil
 }

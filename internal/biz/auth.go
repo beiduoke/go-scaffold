@@ -18,6 +18,11 @@ type AuthUsecase struct {
 	log *log.Helper
 }
 
+// NewAuthUsecase new a User usecase.
+func NewAuthUsecase(logger log.Logger, biz *Biz, ac *conf.Auth) *AuthUsecase {
+	return &AuthUsecase{log: log.NewHelper(logger), ac: ac, biz: biz}
+}
+
 // Login 登录-密码登录
 func (ac *AuthUsecase) Login(ctx context.Context, g *User) (auth.AuthClaims, error) {
 	u, err := ac.biz.userRepo.FindByName(ctx, g.Name)
