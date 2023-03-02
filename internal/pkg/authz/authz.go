@@ -19,7 +19,7 @@ var _ authz.SecurityUser = (*SecurityUser)(nil)
 const (
 	User         = "user"
 	Expires      = "exp"
-	ClaimSubject = "subject"
+	ClaimSubject = "sub"
 	ClaimDomain  = "domain"
 	// custom header const
 	HeaderDomainIDKey   = "X-Domain-ID"
@@ -146,6 +146,7 @@ func (su *SecurityUser) CreateAccessJwtToken(secretKey []byte) string {
 			ClaimSubject: su.Subject,
 			ClaimDomain:  su.Domain,
 		})
+	// jwtV4.RegisteredClaims{}
 
 	signedToken, err := claims.SignedString(secretKey)
 	if err != nil {

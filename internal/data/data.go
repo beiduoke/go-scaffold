@@ -28,6 +28,7 @@ var ProviderSet = wire.NewSet(
 	NewData,
 	NewTransaction,
 	// 权限认证配置
+	NewAuthenticator,
 	NewAuthModel,
 	NewAuthAdapter,
 	NewWatcher,

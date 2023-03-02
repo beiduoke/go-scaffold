@@ -51,7 +51,7 @@ func (ac *AuthUsecaseOld) GetToken(claims *AuthClaims) error {
 		myAuthz.WithSubject(strings.Join(roles, ",")),
 		myAuthz.WithExpires(expiresAt),
 	)
-	claims.Token = securityUser.CreateAccessJwtToken([]byte(ac.ac.ApiKey))
+	claims.Token = securityUser.CreateAccessJwtToken([]byte(ac.ac.Jwt.GetSecretKey()))
 	if claims.Token == "" {
 		return errors.New("token生成失败")
 	}
@@ -77,8 +77,8 @@ func (ac *AuthUsecaseOld) Login(ctx context.Context, g *User) (*AuthClaims, erro
 	// 默认过期时间 24小时
 	var expiresAt = time.Now().Add(time.Hour * 24)
 	// 配置过期时间
-	if ac.ac.GetExpiresTime() != nil {
-		expiresAt = time.Now().Add(ac.ac.ExpiresTime.AsDuration())
+	if ac.ac.Jwt.GetExpiresTime() != nil {
+		expiresAt = time.Now().Add(ac.ac.Jwt.ExpiresTime.AsDuration())
 	}
 	// 生成token
 	authClaims := &AuthClaims{
@@ -121,8 +121,8 @@ func (ac *AuthUsecaseOld) LoginNamePassword(ctx context.Context, domainCode stri
 	// 默认过期时间 24小时
 	var expiresAt = time.Now().Add(time.Hour * 24)
 	// 配置过期时间
-	if ac.ac.GetExpiresTime() != nil {
-		expiresAt = time.Now().Add(ac.ac.ExpiresTime.AsDuration())
+	if ac.ac.Jwt.GetExpiresTime() != nil {
+		expiresAt = time.Now().Add(ac.ac.Jwt.ExpiresTime.AsDuration())
 	}
 	// 生成token
 	authClaims := &AuthClaims{

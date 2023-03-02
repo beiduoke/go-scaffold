@@ -55,10 +55,14 @@ message Auth {
     string model_path = 1;
     string policy_path = 2;
   }
-  string service_key = 1;
-  string api_key = 2;
-  google.protobuf.Duration expires_time = 3;
-  Casbin casbin = 4;
+  message Jwt {
+    string secret_key = 1;
+    google.protobuf.Duration expires_time = 2;
+    string header = 3;
+    string scheme = 4;
+  }
+  Jwt jwt = 1;
+  Casbin casbin = 2;
 }
 
 message Localize {

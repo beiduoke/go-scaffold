@@ -1,4 +1,4 @@
-package authn
+package auth
 
 import (
 	"bytes"
@@ -11,7 +11,7 @@ import (
 type ctxKey string
 
 var (
-	authClaimsContextKey = ctxKey("authn-claims")
+	authClaimsContextKey = ctxKey("auth-claims")
 )
 
 type ScopeSet map[string]bool

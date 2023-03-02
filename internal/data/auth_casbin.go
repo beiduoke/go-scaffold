@@ -13,7 +13,7 @@ import (
 )
 
 func NewAuthModel(ac *conf.Auth, logger log.Logger) model.Model {
-	log := log.NewHelper(log.With(logger, "module", "data/authModel"))
+	log := log.NewHelper(log.With(logger, "module", "data/authCasbinModel"))
 	m, err := model.NewModelFromFile(ac.Casbin.ModelPath)
 	if err != nil {
 		log.Fatalf("failed casbin model connection %v", err)
@@ -22,7 +22,7 @@ func NewAuthModel(ac *conf.Auth, logger log.Logger) model.Model {
 }
 
 func NewAuthAdapter(db *gorm.DB, ac *conf.Auth, logger log.Logger) (adapter persist.Adapter) {
-	log := log.NewHelper(log.With(logger, "module", "data/authAdapter"))
+	log := log.NewHelper(log.With(logger, "module", "data/authCasbinAdapter"))
 	// gormadapter "github.com/casbin/gorm-adapter/v3"
 	adapter, err := gormadapter.NewAdapterByDBUseTableName(db, "sys", "casbin_rules")
 	log.Info("initialization gorm adapter ")
@@ -38,7 +38,7 @@ func NewAuthAdapter(db *gorm.DB, ac *conf.Auth, logger log.Logger) (adapter pers
 }
 
 func NewWatcher(conf *conf.Data, logger log.Logger) persist.Watcher {
-	log := log.NewHelper(log.With(logger, "module", "data/authWatcher"))
+	log := log.NewHelper(log.With(logger, "module", "data/authCasbinWatcher"))
 	// rediswatcher "github.com/casbin/redis-watcher/v2"
 	w, err := rediswatcher.NewWatcher(conf.GetRedis().GetAddr(), rediswatcher.WatcherOptions{
 		Options: redis.Options{
@@ -61,7 +61,7 @@ func NewWatcher(conf *conf.Data, logger log.Logger) persist.Watcher {
 }
 
 func NewAuthEnforcer(model model.Model, adapter persist.Adapter, watcher persist.Watcher, logger log.Logger) stdcasbin.IEnforcer {
-	log := log.NewHelper(log.With(logger, "module", "data/authEnforcer"))
+	log := log.NewHelper(log.With(logger, "module", "data/authCasbinEnforcer"))
 	// enforcer, err := stdcasbin.NewEnforcer(model, adapter)
 	// enforcer, err := stdcasbin.NewCachedEnforcer(model, adapter)
 	enforcer, err := stdcasbin.NewSyncedEnforcer(model, adapter)

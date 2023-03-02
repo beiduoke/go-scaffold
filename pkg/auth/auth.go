@@ -1,6 +1,10 @@
-package authn
+package auth
 
-import "context"
+import (
+	"context"
+
+	"github.com/beiduoke/go-scaffold/pkg/authz"
+)
 
 type Authenticator interface {
 	// Authenticate returns a nil error and the AuthClaims info (if available).
@@ -9,4 +13,7 @@ type Authenticator interface {
 
 	// CreateIdentity inject user claims into context.
 	CreateIdentity(requestContext context.Context, claims AuthClaims) (string, error)
+
+	// Authentication
+	Security() authz.SecurityUser
 }

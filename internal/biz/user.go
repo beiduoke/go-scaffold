@@ -11,7 +11,7 @@ import (
 
 	pb "github.com/beiduoke/go-scaffold/api/protobuf"
 	"github.com/beiduoke/go-scaffold/internal/conf"
-	"github.com/beiduoke/go-scaffold/internal/pkg/auth"
+	"github.com/beiduoke/go-scaffold/pkg/auth"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/imdario/mergo"
@@ -60,9 +60,9 @@ type UserRepo interface {
 	ListPage(context.Context, pagination.PaginationHandler) ([]*User, int64)
 
 	// 缓存操作
-	SetTokenCache(context.Context, *AuthClaims) error
-	GetTokenCache(context.Context, *AuthClaims) error
-	SetLoginCache(context.Context, auth.AuthClaims, *User) error
+	SetTokenCache(context.Context, string, string, time.Duration) error
+	SetLoginCache(context.Context, *auth.AuthClaims, *User) error
+	// GetTokenCache(context.Context, *AuthClaims) error
 	// 用户领域权限操作
 	HandleRole(context.Context, *User) error
 }

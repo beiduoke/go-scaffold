@@ -1,4 +1,4 @@
-package authn
+package auth
 
 import (
 	"google.golang.org/grpc/codes"

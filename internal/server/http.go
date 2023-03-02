@@ -6,11 +6,13 @@ import (
 	serverv1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	myAuthz "github.com/beiduoke/go-scaffold/internal/pkg/authz"
+	authM "github.com/beiduoke/go-scaffold/internal/pkg/middleware/auth"
+	casbinM "github.com/beiduoke/go-scaffold/internal/pkg/middleware/casbin"
 	"github.com/beiduoke/go-scaffold/internal/pkg/middleware/localize"
 	"github.com/beiduoke/go-scaffold/internal/pkg/middleware/multipoint"
 	"github.com/beiduoke/go-scaffold/internal/pkg/middleware/signout"
 	"github.com/beiduoke/go-scaffold/internal/service/api"
-	casbinM "github.com/beiduoke/go-scaffold/pkg/authz/casbin"
+	"github.com/beiduoke/go-scaffold/pkg/auth"
 	stdcasbin "github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
@@ -53,15 +55,16 @@ func NewWhiteListMatcher() selector.MatchFunc {
 	}
 }
 
-func NewAuthMiddleware(ac *conf.Auth, m model.Model, policy persist.Adapter, enforcer stdcasbin.IEnforcer) middleware.Middleware {
+func NewAuthMiddleware(ac *conf.Auth, m model.Model, policy persist.Adapter, enforcer stdcasbin.IEnforcer, authenticator auth.Authenticator) middleware.Middleware {
 	// jwtV4.NewWithClaims(jwtV4.SigningMethodHS256, jwtV4.RegisteredClaims{})
 	return selector.Server(
 		jwt.Server(
 			func(token *jwtV4.Token) (interface{}, error) {
-				return []byte(ac.ApiKey), nil
+				return []byte(ac.Jwt.GetSecretKey()), nil
 			},
 			jwt.WithSigningMethod(jwtV4.SigningMethodHS256),
 		),
+		authM.Server(authenticator),
 		// 多地登录
 		multipoint.Server(),
 		// 下线判断
@@ -73,7 +76,7 @@ func NewAuthMiddleware(ac *conf.Auth, m model.Model, policy persist.Adapter, enf
 			// casbinM.WithCasbinModel(m),
 			// casbinM.WithCasbinPolicy(policy),
 			casbinM.WithCasbinEnforcer(enforcer),
-			casbinM.WithSecurityUserCreator(myAuthz.NewSecurityUser),
+			casbinM.WithSecurityUserCreator(authenticator),
 		),
 	).
 		Match(NewWhiteListMatcher()).Build()

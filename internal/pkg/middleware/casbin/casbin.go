@@ -4,7 +4,8 @@ import (
 	"context"
 	"log"
 
-	"github.com/beiduoke/go-scaffold/pkg/authz"
+	"github.com/beiduoke/go-scaffold/internal/pkg/authz"
+	"github.com/beiduoke/go-scaffold/pkg/auth"
 	stdcasbin "github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
@@ -51,11 +52,11 @@ var (
 type Option func(*options)
 
 type options struct {
-	enableDomain        bool
-	securityUserCreator authz.SecurityUserCreator
-	model               model.Model
-	policy              persist.Adapter
-	enforcer            stdcasbin.IEnforcer
+	enableDomain  bool
+	authenticator auth.Authenticator
+	model         model.Model
+	policy        persist.Adapter
+	enforcer      stdcasbin.IEnforcer
 }
 
 // WithDomainSupport  enable domain support
@@ -65,9 +66,9 @@ func WithDomainSupport() Option {
 	}
 }
 
-func WithSecurityUserCreator(securityUserCreator authz.SecurityUserCreator) Option {
+func WithSecurityUserCreator(authenticator auth.Authenticator) Option {
 	return func(o *options) {
-		o.securityUserCreator = securityUserCreator
+		o.authenticator = authenticator
 	}
 }
 
@@ -96,8 +97,8 @@ func loadRbacModel() (model.Model, error) {
 
 func Server(opts ...Option) middleware.Middleware {
 	o := &options{
-		enableDomain:        false,
-		securityUserCreator: nil,
+		enableDomain:  false,
+		authenticator: nil,
 	}
 	for _, opt := range opts {
 		opt(o)
@@ -127,11 +128,11 @@ func Server(opts ...Option) middleware.Middleware {
 			if o.enforcer == nil {
 				return nil, ErrEnforcerMissing
 			}
-			if o.securityUserCreator == nil {
+			if o.authenticator == nil && o.authenticator.Security() == nil {
 				return nil, ErrSecurityUserCreatorMissing
 			}
 
-			securityUser := o.securityUserCreator()
+			securityUser := o.authenticator.Security()
 			if err := securityUser.ParseFromContext(ctx); err != nil {
 				return nil, ErrSecurityParseFailed
 			}
@@ -161,8 +162,8 @@ func Server(opts ...Option) middleware.Middleware {
 
 func Client(opts ...Option) middleware.Middleware {
 	o := &options{
-		enableDomain:        false,
-		securityUserCreator: nil,
+		enableDomain:  false,
+		authenticator: nil,
 	}
 	for _, opt := range opts {
 		opt(o)

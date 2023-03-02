@@ -20,11 +20,13 @@ data:
     read_timeout: 0.2s
     write_timeout: 0.2s
 auth:
-  service_key: some_jwt_sign_key
-  api_key: go-scaffold-dev
-  expires_time: 864000s
+  jwt:
+    secret_key: some_jwt_sign_key
+    expires_time: 864000s
+    header: Authorization
+    scheme: Bearer
   casbin: 
-    model_path: ../../configs/authz/authz_model.conf
-    policy_path: ../../configs/authz/authz_policy.csv
+    model_path: ../../configs/casbin/model.conf
+    policy_path: ../../configs/casbin/policy.csv
 admin:
   super: admin
