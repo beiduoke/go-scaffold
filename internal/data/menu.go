@@ -184,7 +184,7 @@ func (r *MenuRepo) Delete(ctx context.Context, g *biz.Menu) error {
 	if err := result.Error; err != nil {
 		return err
 	}
-	return r.DeleteCache(ctx, g.ID)
+	return r.DeleteCache(ctx, g.GetID())
 }
 
 func (r *MenuRepo) ListAll(ctx context.Context) (menus []*biz.Menu, err error) {

@@ -11,7 +11,6 @@ import (
 
 	pb "github.com/beiduoke/go-scaffold/api/protobuf"
 	"github.com/beiduoke/go-scaffold/internal/conf"
-	"github.com/beiduoke/go-scaffold/pkg/auth"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/imdario/mergo"
@@ -33,6 +32,7 @@ type User struct {
 	Phone           string
 	Email           string
 	State           int32
+	DomainID        uint
 	Domain          *Domain
 	Roles           []*Role
 	DomainRoleUsers []*DomainRoleUser
@@ -44,6 +44,9 @@ func (g User) GetID() string {
 
 // UserRepo is a Greater repo.
 type UserRepo interface {
+	// 用户认证
+	Login(context.Context, *User) (*LoginResult, error)
+	Register(context.Context, *User) error
 	// 基准操作
 	Save(context.Context, *User) (*User, error)
 	Update(context.Context, *User) (*User, error)
@@ -58,11 +61,6 @@ type UserRepo interface {
 	ListByPhone(context.Context, string) ([]*User, error)
 	ListByEmail(context.Context, string) ([]*User, error)
 	ListPage(context.Context, pagination.PaginationHandler) ([]*User, int64)
-
-	// 缓存操作
-	SetTokenCache(context.Context, string, string, time.Duration) error
-	SetLoginCache(context.Context, *auth.AuthClaims, *User) error
-	// GetTokenCache(context.Context, *AuthClaims) error
 	// 用户领域权限操作
 	HandleRole(context.Context, *User) error
 }

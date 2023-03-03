@@ -34,6 +34,7 @@ type DomainModel struct {
 	UpdatedAt time.Time      `gorm:"comment:修改时间;"`
 	DeletedAt gorm.DeletedAt `gorm:"index;comment:删除时间;"`
 	DomainID  uint           `gorm:"type:bigint(20);column:domain_id;not null;default:0;index:idx_domain_id_data;comment:领域ID;"`
+	Domain    SysDomain      `gorm:"-"`
 }
 
 // SysDomain 领域
@@ -59,22 +60,23 @@ type SysDomain struct {
 // User 用户
 type SysUser struct {
 	DomainModel
-	Name        string     `gorm:"type:varchar(255);column:name;not null;index:idx_users_name_nick_name_real_name,priority:1;comment:用户名称;"`
-	NickName    string     `gorm:"type:varchar(255);column:nick_name;not null;default:'';index:idx_users_name_nick_name_real_name,priority:3;comment:昵称;"`
-	RealName    string     `gorm:"type:varchar(100);column:real_name;not null;default:'';index:idx_users_name_nick_name_real_name,priority:2;comment:实名;"`
-	Avatar      string     `gorm:"type:varchar(255);column:avatar;not null;default:'';comment:头像;"`
-	Password    string     `gorm:"type:varchar(255);column:password;not null;default:'';comment:密码;"`
-	Birthday    *time.Time `gorm:"type:datetime;column:birthday;comment:生日;"`
-	Gender      int32      `gorm:"type:tinyint(1);column:gender;not null;default:1;comment:性别 0 未指定 1 男 2 女;"`
-	Phone       string     `gorm:"type:varchar(20);column:phone;not null;default:'';index:idx_users_phone_email,priority:1;comment:手机号;"`
-	Email       string     `gorm:"type:varchar(50);column:email;not null;default:'';index:idx_users_phone_email,priority:2;comment:邮箱;"`
-	State       int32      `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:用户状态 0 未指定  1 启用 2 停用;"`
-	LastUseRole uint       `gorm:"type:bigint(20);column:last_use_role;not null;default:0;comment:最后使用角色"`
-	LastLoginAt *time.Time `gorm:"type:datetime;column:last_login_at;comment:最后登录时间"`
-	LastLoginIP string     `gorm:"type:varchar(50);column:last_login_ip;not null;default:'';comment:最后登录IP"`
-	Remarks     string     `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
-	Posts       []SysPost  `gorm:"many2many:sys_user_posts;"`
-	Roles       []SysRole  `gorm:"-"`
+	Name          string     `gorm:"type:varchar(255);column:name;not null;index:idx_users_name_nick_name_real_name,priority:1;comment:用户名称;"`
+	NickName      string     `gorm:"type:varchar(255);column:nick_name;not null;default:'';index:idx_users_name_nick_name_real_name,priority:3;comment:昵称;"`
+	RealName      string     `gorm:"type:varchar(100);column:real_name;not null;default:'';index:idx_users_name_nick_name_real_name,priority:2;comment:实名;"`
+	Avatar        string     `gorm:"type:varchar(255);column:avatar;not null;default:'';comment:头像;"`
+	Password      string     `gorm:"type:varchar(255);column:password;not null;default:'';comment:密码;"`
+	Birthday      *time.Time `gorm:"type:datetime;column:birthday;comment:生日;"`
+	Gender        int32      `gorm:"type:tinyint(1);column:gender;not null;default:1;comment:性别 0 未指定 1 男 2 女;"`
+	Phone         string     `gorm:"type:varchar(20);column:phone;not null;default:'';index:idx_users_phone_email,priority:1;comment:手机号;"`
+	Email         string     `gorm:"type:varchar(50);column:email;not null;default:'';index:idx_users_phone_email,priority:2;comment:邮箱;"`
+	State         int32      `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:用户状态 0 未指定  1 启用 2 停用;"`
+	LastUseRoleId uint       `gorm:"type:bigint(20);column:last_use_role;not null;default:0;comment:最后使用角色"`
+	LastLoginAt   *time.Time `gorm:"type:datetime;column:last_login_at;comment:最后登录时间"`
+	LastLoginIP   string     `gorm:"type:varchar(50);column:last_login_ip;not null;default:'';comment:最后登录IP"`
+	Remarks       string     `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
+	Posts         []SysPost  `gorm:"many2many:sys_user_posts;"`
+	LastUseRole   SysRole    `gorm:"-"`
+	Roles         []SysRole  `gorm:"-"`
 }
 
 // Role 角色

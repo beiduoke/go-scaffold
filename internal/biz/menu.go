@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/pkg/errors"
@@ -33,6 +34,10 @@ type Menu struct {
 	Children   []*Menu
 	Parameters []*MenuParameter
 	Buttons    []*MenuButton
+}
+
+func (g Menu) GetID() string {
+	return convert.UnitToString(g.ID)
 }
 
 type MenuParameter struct {

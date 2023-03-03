@@ -10,15 +10,10 @@ import (
 )
 
 const (
-	cacheHashKeyMenu = "hashSysMenu"
+	cacheHashKeyMenu = "sys_menu"
 )
 
-type Cache[T any] interface {
-	ListAllCache(context.Context) []T
-	SetCache(context.Context, T) error
-	GetCache(context.Context, string) T
-	DeleteCache(context.Context, string) error
-}
+var _ Cache[*SysMenu] = (*MenuRepo)(nil)
 
 // SetCache 设置菜单缓存
 func (r *MenuRepo) SetCache(ctx context.Context, g *SysMenu) error {
@@ -31,8 +26,8 @@ func (r *MenuRepo) SetCache(ctx context.Context, g *SysMenu) error {
 }
 
 // GetCache 获取菜单缓存
-func (r *MenuRepo) GetCache(ctx context.Context, id uint) (sysMenu *SysMenu) {
-	dataStr, err := r.data.rdb.HGet(ctx, cacheHashKeyMenu, convert.UnitToString(id)).Result()
+func (r *MenuRepo) GetCache(ctx context.Context, key string) (sysMenu *SysMenu) {
+	dataStr, err := r.data.rdb.HGet(ctx, cacheHashKeyMenu, key).Result()
 	if err != nil {
 		return nil
 	}
@@ -43,8 +38,8 @@ func (r *MenuRepo) GetCache(ctx context.Context, id uint) (sysMenu *SysMenu) {
 }
 
 // DeleteCache 获取菜单缓存
-func (r *MenuRepo) DeleteCache(ctx context.Context, id uint) error {
-	return r.data.rdb.HDel(ctx, cacheHashKeyMenu, convert.UnitToString(id)).Err()
+func (r *MenuRepo) DeleteCache(ctx context.Context, key string) error {
+	return r.data.rdb.HDel(ctx, cacheHashKeyMenu, key).Err()
 }
 
 // ListAllCache 获取全部缓存数据

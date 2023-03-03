@@ -2,12 +2,14 @@ package api
 
 import (
 	"context"
+	"time"
 
 	v1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/pkg/middleware/localize"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 var _ v1.ApiServer = (*ApiService)(nil)
@@ -46,12 +48,17 @@ func (s *ApiService) Login(ctx context.Context, in *v1.LoginReq) (*v1.LoginReply
 	if in.GetDomain() == "" {
 		return nil, v1.ErrorUserRegisterFail("租户不能为空")
 	}
-	token, err := s.authCase.Login(ctx, &biz.User{Name: req.GetAccount(), Phone: req.GetAccount(), Password: req.GetPassword(), Domain: &biz.Domain{Code: in.GetDomain()}})
+	result, err := s.authCase.Login(ctx, &biz.User{Name: req.GetAccount(), Phone: req.GetAccount(), Password: req.GetPassword(), Domain: &biz.Domain{Code: in.GetDomain()}})
 	if err != nil {
 		return nil, v1.ErrorUserLoginFail("账号 %s 登录失败：%v", req.GetAccount(), err)
 	}
+	var expiresAt time.Time
+	if result.ExpiresAt != nil {
+		expiresAt = *result.ExpiresAt
+	}
 	return &v1.LoginReply{
-		Token: token,
+		Token:      result.Token,
+		ExpireTime: timestamppb.New(expiresAt),
 	}, nil
 }
 

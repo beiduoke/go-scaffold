@@ -2,27 +2,35 @@ package data
 
 import (
 	"context"
+	"time"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/internal/conf"
+	"github.com/beiduoke/go-scaffold/pkg/auth"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/google/uuid"
 	"gorm.io/gorm/clause"
 )
 
 type UserRepo struct {
-	data   *Data
-	log    *log.Helper
-	domain DomainRepo
-	role   RoleRepo
+	ac            *conf.Auth
+	data          *Data
+	log           *log.Helper
+	domain        DomainRepo
+	role          RoleRepo
+	authenticator auth.Authenticator
 }
 
 // NewUserRepo .
-func NewUserRepo(logger log.Logger, data *Data) biz.UserRepo {
+func NewUserRepo(logger log.Logger, data *Data, ac *conf.Auth, authenticator auth.Authenticator) biz.UserRepo {
 	return &UserRepo{
-		data: data,
-		log:  log.NewHelper(logger),
-		role: RoleRepo{},
+		ac:            ac,
+		data:          data,
+		log:           log.NewHelper(logger),
+		role:          RoleRepo{},
+		authenticator: authenticator,
 	}
 }
 
@@ -143,7 +151,7 @@ func (r *UserRepo) ListPage(ctx context.Context, handler pagination.PaginationHa
 
 func (r *UserRepo) FindByName(ctx context.Context, s string) (*biz.User, error) {
 	user := SysUser{}
-	result := r.data.DBD(ctx).Debug().Last(&user, "name = ?", s)
+	result := r.data.DBD(ctx).Last(&user, "name = ?", s)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -217,4 +225,58 @@ func (r *UserRepo) HandleRole(ctx context.Context, g *biz.User) error {
 	_, err := r.data.enforcer.AddGroupingPolicies(rules)
 	// r.log.Debugf("策略添加 %t %v", success, err)
 	return err
+}
+
+// Login 登录
+func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, error) {
+	sysDomain := SysDomain{}
+	if err := r.data.DB(ctx).Last(&sysDomain, "code = ?", g.Domain.Code).Error; err != nil {
+		return nil, err
+	}
+	user := SysUser{}
+	result := r.data.DB(ctx).Where("domain_id = ?", sysDomain.ID).Last(&user, "name = ?", g.Name)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	user.Domain = sysDomain
+
+	authClaims := auth.AuthClaims{
+		Subject: uuid.NewString(),
+		Scopes: auth.ScopeSet{
+			sysDomain.Code: true,
+		},
+	}
+
+	token, err := r.authenticator.CreateIdentity(ctx, authClaims)
+	if err != nil {
+		return nil, err
+	}
+
+	if !r.ac.Jwt.GetMultipoint() && r.ExistLoginCache(ctx, user.ID) {
+		err := r.DeleteLoginCache(ctx, user.ID)
+		if err != nil {
+			r.log.Errorf("用户登录缓存删除失败 %v", err)
+		}
+	}
+
+	if err := r.SetLoginTokenCache(ctx, user.ID, token, r.ac.Jwt.ExpiresTime.AsDuration()); err != nil {
+		r.log.Errorf("用户Token缓存设置失败 %v", err)
+	}
+
+	if err := r.SetLoginCache(ctx, authClaims.Subject, user); err != nil {
+		return nil, err
+	}
+
+	expires := time.Now().Add(r.ac.Jwt.ExpiresTime.AsDuration())
+	return &biz.LoginResult{
+		Token:     token,
+		ExpiresAt: &expires,
+	}, nil
+}
+
+// Register 注册
+func (r *UserRepo) Register(ctx context.Context, g *biz.User) error {
+
+	return nil
 }

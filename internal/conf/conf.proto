@@ -60,6 +60,7 @@ message Auth {
     google.protobuf.Duration expires_time = 2;
     string header = 3;
     string scheme = 4;
+    bool multipoint = 5;
   }
   Jwt jwt = 1;
   Casbin casbin = 2;
