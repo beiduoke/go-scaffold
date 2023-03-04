@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
@@ -11,6 +12,7 @@ import (
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
+	"github.com/zzsds/go-tools/pkg/password"
 	"gorm.io/gorm/clause"
 )
 
@@ -239,7 +241,11 @@ func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, er
 		return nil, result.Error
 	}
 
-	user.Domain = sysDomain
+	if err := password.Verify(user.Password, g.Password); err != nil {
+		return nil, errors.New("密码校验失败")
+	}
+
+	user.Domain = &sysDomain
 
 	authClaims := auth.AuthClaims{
 		Subject: uuid.NewString(),
@@ -252,23 +258,26 @@ func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, er
 	if err != nil {
 		return nil, err
 	}
-
+	// 判断多点登录
+	// 如果已有用户登录设备则踢出反之
 	if !r.ac.Jwt.GetMultipoint() && r.ExistLoginCache(ctx, user.ID) {
-		err := r.DeleteLoginCache(ctx, user.ID)
-		if err != nil {
+		if err := r.DeleteLoginCache(ctx, user.ID); err != nil {
 			r.log.Errorf("用户登录缓存删除失败 %v", err)
 		}
 	}
 
-	if err := r.SetLoginTokenCache(ctx, user.ID, token, r.ac.Jwt.ExpiresTime.AsDuration()); err != nil {
-		r.log.Errorf("用户Token缓存设置失败 %v", err)
+	loginInfo := UserLoginInfo{
+		UUID:       authClaims.Subject,
+		Token:      token,
+		User:       user,
+		Expiration: r.ac.Jwt.ExpiresTime.AsDuration(),
 	}
 
-	if err := r.SetLoginCache(ctx, authClaims.Subject, user); err != nil {
+	if err := r.SetLoginCache(ctx, loginInfo); err != nil {
 		return nil, err
 	}
 
-	expires := time.Now().Add(r.ac.Jwt.ExpiresTime.AsDuration())
+	expires := time.Now().Add(loginInfo.Expiration)
 	return &biz.LoginResult{
 		Token:     token,
 		ExpiresAt: &expires,

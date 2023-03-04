@@ -12,12 +12,21 @@ import (
 )
 
 const (
-	cacheHashKeyUser          string = "sys_user"
-	cacheStringLoginUser      string = "login_user:%s"
-	cacheStringLoginUserToken string = "login_user_token:%d"
+	cacheHashKeyUser     string = "sys_user"
+	cacheStringLoginID   string = "login_uuid:%s"
+	cacheHashLoginToken  string = "login_token:%d"
+	cacheStringLoginUser string = "login_user:%d"
 )
 
 var _ Cache[*SysUser] = (*UserRepo)(nil)
+
+type UserLoginInfo struct {
+	UUID       string
+	Token      string
+	Expiration time.Duration
+	User       SysUser
+	Info       map[string]interface{}
+}
 
 // SetCache 设置用户缓存
 func (r *UserRepo) SetCache(ctx context.Context, g *SysUser) error {
@@ -82,17 +91,68 @@ func (r *UserRepo) ListAllCache(ctx context.Context) (sysUsers []*SysUser) {
 	return sysUsers
 }
 
-func (r *UserRepo) SetLoginCache(ctx context.Context, uuid string, g SysUser) error {
-	dataStr, err := json.Marshal(g)
+// // GetLoginTokenCache 获取登录Token
+// func (r *UserRepo) GetLoginTokenCache(ctx context.Context, token string, field string) (*UserLoginInfo, error) {
+// 	result := r.data.rdb.HGet(ctx, fmt.Sprintf(cacheHashLoginToken, token), field)
+// 	if err := result.Err(); err != nil {
+// 		return nil, err
+// 	}
+
+// 	return nil, result.Err()
+// }
+
+// // SetLoginTokenCache 设置登录Token
+// func (r *UserRepo) SetLoginTokenCache(ctx context.Context, token string, value UserLoginInfo) error {
+// 	return r.data.rdb.HSet(ctx, fmt.Sprintf(cacheHashLoginToken, token), token).Err()
+// }
+
+// // ExistLoginTokenCache 登录Token是否存在
+// func (r *UserRepo) ExistLoginTokenCache(ctx context.Context, uid uint) bool {
+// 	result := r.data.rdb.Exists(ctx, fmt.Sprintf(cacheHashLoginToken, uid))
+// 	if result.Err() != nil {
+// 		return false
+// 	}
+
+// 	return result.Val() != 0
+// }
+
+// // DeleteLoginTokenCache 删除登录Token
+// func (r *UserRepo) DeleteLoginTokenCache(ctx context.Context, uid uint) error {
+// 	return r.data.rdb.Del(ctx, fmt.Sprintf(cacheHashLoginToken, uid)).Err()
+// }
+
+// SetLoginCache 设置登录信息
+func (r *UserRepo) SetLoginCache(ctx context.Context, info UserLoginInfo) error {
+
+	// 设置登录用户UUID 用于判断用户是否登录
+	err := r.data.rdb.Set(ctx, fmt.Sprintf(cacheStringLoginID, info.UUID), info.Token, info.Expiration).Err()
+	if err != nil {
+		r.log.Errorf("用户登录UUID缓存失败 %v", err)
+		return err
+	}
+
+	// 设置登录用户Token 用于记录用户登录记录
+	err = r.data.rdb.HSet(ctx, fmt.Sprintf(cacheHashLoginToken, info.User.ID), map[string]interface{}{
+		"UUID":     info.UUID,
+		"UID":      info.User.ID,
+		"DomainID": info.User.Domain.ID,
+	}).Err()
+	if err != nil {
+		r.log.Errorf("用户token缓存失败 %v", err)
+		return err
+	}
+	// 设置登录用户信息
+	dataStr, err := json.Marshal(info.User)
 	if err != nil {
 		r.log.Errorf("用户缓存失败 %v", err)
 		return err
 	}
-	return r.data.rdb.Set(ctx, fmt.Sprintf(cacheStringLoginUser, uuid), dataStr, 0).Err()
+	return r.data.rdb.Set(ctx, fmt.Sprintf(cacheStringLoginUser, info.User.ID), dataStr, info.Expiration).Err()
 }
 
-func (r *UserRepo) GetLoginCache(ctx context.Context, uuid string) (*SysUser, error) {
-	result := r.data.rdb.Get(ctx, fmt.Sprintf(cacheStringLoginUser, uuid))
+// GetLoginCache 获取登录信息
+func (r *UserRepo) GetLoginCache(ctx context.Context, uid uint) (*SysUser, error) {
+	result := r.data.rdb.Get(ctx, fmt.Sprintf(cacheStringLoginUser, uid))
 	if err := result.Err(); err != nil {
 		return nil, err
 	}
@@ -104,31 +164,16 @@ func (r *UserRepo) GetLoginCache(ctx context.Context, uuid string) (*SysUser, er
 	return &sysUser, result.Err()
 }
 
-func (r *UserRepo) SetLoginTokenCache(ctx context.Context, uid uint, token string, exp time.Duration) error {
-	return r.data.rdb.Set(ctx, fmt.Sprintf(cacheStringLoginUserToken, uid), token, exp).Err()
-}
-
-func (r *UserRepo) ExistLoginTokenCache(ctx context.Context, uid uint) bool {
-	result := r.data.rdb.Exists(ctx, fmt.Sprintf(cacheStringLoginUserToken, uid))
-	if result.Err() != nil {
-		return false
-	}
-
-	return result.Val() != 0
-}
-
+// ExistLoginCache 登录信息是否存在
 func (r *UserRepo) ExistLoginCache(ctx context.Context, uid uint) bool {
-	result := r.data.rdb.Exists(ctx, convert.UnitToString(uid))
+	result := r.data.rdb.Exists(ctx, fmt.Sprintf(cacheStringLoginUser, uid))
 	if err := result.Err(); err != nil {
 		return false
 	}
-
-	fmt.Println(result.Val())
-
-	return false
+	return result.Val() == 1
 }
 
+// DeleteLoginCache 删除登录信息
 func (r *UserRepo) DeleteLoginCache(ctx context.Context, uid uint) error {
-	key := fmt.Sprintf("login_user_token:%d", uid)
-	return r.data.rdb.Del(ctx, key).Err()
+	return r.data.rdb.Del(ctx, fmt.Sprintf(cacheStringLoginUser, uid)).Err()
 }
