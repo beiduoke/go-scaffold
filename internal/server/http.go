@@ -76,7 +76,6 @@ func NewAuthMiddleware(ac *conf.Auth, m model.Model, policy persist.Adapter, enf
 			// casbinM.WithCasbinModel(m),
 			// casbinM.WithCasbinPolicy(policy),
 			casbinM.WithCasbinEnforcer(enforcer),
-			casbinM.WithSecurityUserCreator(authenticator),
 		),
 	).
 		Match(NewWhiteListMatcher()).Build()

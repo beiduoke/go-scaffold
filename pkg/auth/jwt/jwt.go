@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/beiduoke/go-scaffold/pkg/auth"
-	"github.com/beiduoke/go-scaffold/pkg/authz"
 	"github.com/golang-jwt/jwt/v4"
 )
 
@@ -21,7 +20,6 @@ type Authenticator struct {
 	keyFunc               jwt.Keyfunc
 	parseContextTokenFunc ParseContextToken
 	expiresAt             time.Duration
-	security              authz.SecurityUser
 }
 
 var _ auth.Authenticator = (*Authenticator)(nil)
@@ -57,12 +55,6 @@ func WithParseContext(p ParseContextToken) Option {
 func WithExpiresAt(d time.Duration) Option {
 	return func(a *Authenticator) {
 		a.expiresAt = d
-	}
-}
-
-func WithSecurity(s authz.SecurityUser) Option {
-	return func(a *Authenticator) {
-		a.security = s
 	}
 }
 
@@ -169,8 +161,4 @@ func (a *Authenticator) generateToken(token *jwt.Token) (string, error) {
 	}
 
 	return tokenStr, nil
-}
-
-func (a Authenticator) Security() authz.SecurityUser {
-	return a.security
 }

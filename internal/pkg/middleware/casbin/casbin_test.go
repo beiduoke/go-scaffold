@@ -7,11 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	authJwt "github.com/beiduoke/go-scaffold/pkg/auth/jwt"
 	"github.com/beiduoke/go-scaffold/pkg/authz"
 	"github.com/pkg/errors"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
@@ -329,36 +326,12 @@ func TestServer(t *testing.T) {
 			ctx := transport.NewServerContext(context.Background(), &Transport{operation: test.path})
 			ctx = jwt.NewContext(ctx, token)
 
-			authenticator, err := authJwt.NewAuthenticator(authJwt.WithParseContext(func(ctx context.Context) (string, error) {
-				scheme, headerAuthorize := "Bearer", "Authorization"
-				if header, ok := transport.FromServerContext(ctx); ok {
-					authorize := header.RequestHeader().Get(headerAuthorize)
-					if authorize == "" {
-						return "", status.Errorf(codes.Unauthenticated, "Request unauthenticated with "+scheme)
-					}
-					splits := strings.SplitN(authorize, " ", 2)
-					if len(splits) < 2 {
-						return "", status.Errorf(codes.Unauthenticated, "Bad authorization string")
-					}
-
-					if !strings.EqualFold(splits[0], scheme) {
-						return "", status.Errorf(codes.Unauthenticated, "Request unauthenticated with "+scheme)
-					}
-					return splits[1], nil
-				}
-				return "", nil
-			}))
-			if err != nil {
-				t.Errorf("new authenticator error %v, but got %v", test.exceptErr, err)
-			}
-
 			var server middleware.Handler
 			server = Server(
 				WithCasbinModel(m),
 				WithCasbinPolicy(a),
-				WithSecurityUserCreator(authenticator),
 			)(next)
-			_, err = server(ctx, "request")
+			_, err := server(ctx, "request")
 			if !errors.Is(test.exceptErr, err) {
 				t.Errorf("except error %v, but got %v", test.exceptErr, err)
 			}

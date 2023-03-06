@@ -2,8 +2,6 @@ package auth
 
 import (
 	"context"
-
-	"github.com/beiduoke/go-scaffold/pkg/authz"
 )
 
 type Authenticator interface {
@@ -13,7 +11,4 @@ type Authenticator interface {
 
 	// CreateIdentity inject user claims into context.
 	CreateIdentity(requestContext context.Context, claims AuthClaims) (string, error)
-
-	// Authentication
-	Security() authz.SecurityUser
 }

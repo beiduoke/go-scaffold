@@ -9,6 +9,7 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	"github.com/beiduoke/go-scaffold/pkg/auth"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
+	"github.com/beiduoke/go-scaffold/pkg/util/ip"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
@@ -258,6 +259,12 @@ func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, er
 	if err != nil {
 		return nil, err
 	}
+	now := time.Now()
+	r.data.DB(ctx).Model(user).Debug().Select("LastLoginAt", "LastLoginIP").Updates(SysUser{
+		LastLoginAt: &now,
+		LastLoginIP: ip.FormContext(ctx),
+	})
+
 	// 判断多点登录
 	// 如果已有用户登录设备则踢出反之
 	if !r.ac.Jwt.GetMultipoint() && r.ExistLoginCache(ctx, user.ID) {
@@ -277,7 +284,7 @@ func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, er
 		return nil, err
 	}
 
-	expires := time.Now().Add(loginInfo.Expiration)
+	expires := now.Add(loginInfo.Expiration)
 	return &biz.LoginResult{
 		Token:     token,
 		ExpiresAt: &expires,

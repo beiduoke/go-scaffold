@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/beiduoke/go-scaffold/internal/conf"
-	"github.com/beiduoke/go-scaffold/internal/pkg/authz"
 	"github.com/beiduoke/go-scaffold/pkg/auth"
 	"github.com/beiduoke/go-scaffold/pkg/auth/jwt"
 	"github.com/go-kratos/kratos/v2/log"
@@ -40,7 +39,6 @@ func NewAuthenticator(ac *conf.Auth, logger log.Logger) auth.Authenticator {
 		jwt.WithSecretKey(conf.GetSecretKey()),
 		jwt.WithParseContext(parseContextToken),
 		jwt.WithExpiresAt(conf.GetExpiresTime().AsDuration()),
-		jwt.WithSecurity(authz.NewSecurityUser()),
 	)
 	if err != nil {
 		log.Fatalf("failed authenticator init fail: %v", err)

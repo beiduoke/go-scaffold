@@ -55,6 +55,7 @@ require (
 	github.com/go-errors/errors v1.0.1 // indirect
 	github.com/go-gl/gl v0.0.0-20211210172815-726fda9656d6 // indirect
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20221017161538-93cebf72946b // indirect
+	github.com/go-redis/redis/v8 v8.11.5 // indirect
 	github.com/go-text/typesetting v0.0.0-20221212183139-1eb938670a1f // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
@@ -127,7 +128,6 @@ require (
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-playground/form/v4 v4.2.0 // indirect
-	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/golang/glog v1.0.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
@@ -141,6 +141,7 @@ require (
 	github.com/nicksnyder/go-i18n/v2 v2.2.0
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rakyll/statik v0.1.7 // indirect
+	github.com/redis/go-redis/v9 v9.0.2
 	go.opentelemetry.io/otel v1.12.0
 	go.opentelemetry.io/otel/trace v1.12.0 // indirect
 	golang.org/x/net v0.7.0 // indirect

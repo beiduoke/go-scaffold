@@ -32,8 +32,7 @@ func (ac *AuthUsecase) Login(ctx context.Context, g *User) (*LoginResult, error)
 
 // Login 登录-密码登录
 func (ac *AuthUsecase) Register(ctx context.Context, g *User) error {
-
-	return nil
+	return ac.biz.userRepo.Register(ctx, g)
 }
 
 // Login 登录-密码登录

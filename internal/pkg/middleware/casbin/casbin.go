@@ -2,10 +2,11 @@ package casbin
 
 import (
 	"context"
+	"fmt"
 	"log"
 
-	"github.com/beiduoke/go-scaffold/internal/pkg/authz"
 	"github.com/beiduoke/go-scaffold/pkg/auth"
+	"github.com/beiduoke/go-scaffold/pkg/authz"
 	stdcasbin "github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
@@ -52,11 +53,11 @@ var (
 type Option func(*options)
 
 type options struct {
-	enableDomain  bool
-	authenticator auth.Authenticator
-	model         model.Model
-	policy        persist.Adapter
-	enforcer      stdcasbin.IEnforcer
+	enableDomain bool
+	security     authz.SecurityUserCreator
+	model        model.Model
+	policy       persist.Adapter
+	enforcer     stdcasbin.IEnforcer
 }
 
 // WithDomainSupport  enable domain support
@@ -66,9 +67,9 @@ func WithDomainSupport() Option {
 	}
 }
 
-func WithSecurityUserCreator(authenticator auth.Authenticator) Option {
+func WithSecurityUserCreator(security authz.SecurityUserCreator) Option {
 	return func(o *options) {
-		o.authenticator = authenticator
+		o.security = security
 	}
 }
 
@@ -97,8 +98,7 @@ func loadRbacModel() (model.Model, error) {
 
 func Server(opts ...Option) middleware.Middleware {
 	o := &options{
-		enableDomain:  false,
-		authenticator: nil,
+		enableDomain: false,
 	}
 	for _, opt := range opts {
 		opt(o)
@@ -109,7 +109,7 @@ func Server(opts ...Option) middleware.Middleware {
 			o.model, _ = loadRbacModel()
 		}
 		if o.policy == nil {
-			o.policy = fileadapter.NewAdapter("configs/authz/authz_policy.csv")
+			o.policy = fileadapter.NewAdapter("configs/casbin/policy.csv")
 		}
 		enforcer, err := stdcasbin.NewEnforcer(o.model, o.policy)
 		if err != nil {
@@ -128,11 +128,18 @@ func Server(opts ...Option) middleware.Middleware {
 			if o.enforcer == nil {
 				return nil, ErrEnforcerMissing
 			}
-			if o.authenticator == nil && o.authenticator.Security() == nil {
+			claims, success := auth.AuthClaimsFromContext(ctx)
+			if !success {
+				return nil, ErrSecurityUserCreatorMissing
+			}
+			fmt.Println(claims)
+			return handler(ctx, req)
+
+			if o.security == nil {
 				return nil, ErrSecurityUserCreatorMissing
 			}
 
-			securityUser := o.authenticator.Security()
+			securityUser := o.security()
 			if err := securityUser.ParseFromContext(ctx); err != nil {
 				return nil, ErrSecurityParseFailed
 			}
@@ -162,8 +169,8 @@ func Server(opts ...Option) middleware.Middleware {
 
 func Client(opts ...Option) middleware.Middleware {
 	o := &options{
-		enableDomain:  false,
-		authenticator: nil,
+		enableDomain: false,
+		security:     nil,
 	}
 	for _, opt := range opts {
 		opt(o)
@@ -174,7 +181,7 @@ func Client(opts ...Option) middleware.Middleware {
 			o.model, _ = loadRbacModel()
 		}
 		if o.policy == nil {
-			o.policy = fileadapter.NewAdapter("configs/authz/authz_policy.csv")
+			o.policy = fileadapter.NewAdapter("configs/casbin/policy.csv")
 		}
 		enforcer, err := stdcasbin.NewEnforcer(o.model, o.policy)
 		if err != nil {
