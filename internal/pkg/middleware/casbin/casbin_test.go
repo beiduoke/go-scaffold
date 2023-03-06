@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/beiduoke/go-scaffold/pkg/authz"
+	"github.com/beiduoke/go-scaffold/pkg/auth"
 	"github.com/pkg/errors"
 
 	"github.com/casbin/casbin/v2"
@@ -102,7 +102,7 @@ type SecurityUser struct {
 	Domain string
 }
 
-func NewSecurityUser() authz.SecurityUser {
+func NewSecurityUser() auth.SecurityUser {
 	return &SecurityUser{
 		ID:     "1",
 		Path:   "",

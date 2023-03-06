@@ -5,7 +5,6 @@ import (
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/conf"
-	"github.com/beiduoke/go-scaffold/internal/pkg/authz"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/bwmarrin/snowflake"
 	"github.com/casbin/casbin/v2"
@@ -33,6 +32,8 @@ var ProviderSet = wire.NewSet(
 	NewAuthAdapter,
 	NewWatcher,
 	NewAuthEnforcer,
+	// 鉴权
+	NewSecurityUserCreator,
 	// 数据操作
 	NewDomainRepo,
 	NewRoleRepo,
@@ -139,7 +140,7 @@ func (d *Data) DomainID(ctx context.Context) uint {
 }
 
 func (d *Data) Domain(ctx context.Context) string {
-	return authz.ParseFromContext(ctx).GetDomain()
+	return ParseFromContext(ctx).GetDomain()
 }
 
 // NewDB gorm Connecting to a Database

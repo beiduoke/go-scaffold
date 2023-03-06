@@ -8,7 +8,6 @@ import (
 	"github.com/beiduoke/go-scaffold/api/protobuf"
 	v1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
-	"github.com/beiduoke/go-scaffold/internal/pkg/authz"
 	"github.com/beiduoke/go-scaffold/internal/pkg/proto"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"google.golang.org/protobuf/types/known/anypb"
@@ -185,10 +184,10 @@ func (s *ApiService) HandleUserRole(ctx context.Context, in *v1.HandleUserRoleRe
 	}, nil
 }
 
-// GetUserInfo 用户	详情
+// GetUserInfo 用户详情
 func (s *ApiService) GetUserInfo(ctx context.Context, in *emptypb.Empty) (*v1.User, error) {
-	id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
-	user, err := s.userCase.GetID(ctx, &biz.User{ID: id})
+	// id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
+	user, err := s.userCase.GetID(ctx, &biz.User{ID: 0})
 	if err != nil {
 		return nil, v1.ErrorUserNotFound("用户查询失败 %v", err)
 	}
@@ -197,8 +196,8 @@ func (s *ApiService) GetUserInfo(ctx context.Context, in *emptypb.Empty) (*v1.Us
 
 // GetUserProfile 用户概括
 func (s *ApiService) GetUserProfile(ctx context.Context, in *emptypb.Empty) (*v1.GetUserProfileReply, error) {
-	id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
-	user, err := s.userCase.GetID(ctx, &biz.User{ID: id})
+	// id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
+	user, err := s.userCase.GetID(ctx, &biz.User{ID: 0})
 	if err != nil {
 		return nil, v1.ErrorUserNotFound("用户查询失败 %v", err)
 	}
@@ -214,9 +213,9 @@ func (s *ApiService) GetUserProfile(ctx context.Context, in *emptypb.Empty) (*v1
 
 // ListUserRole 用户角色
 func (s *ApiService) ListUserRole(ctx context.Context, in *emptypb.Empty) (*v1.ListUserRoleReply, error) {
-	id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
-	domainId := convert.StringToUint(authz.ParseFromContext(ctx).GetDomain())
-	roleModels, err := s.userCase.ListRoleAll(ctx, &biz.User{ID: id, Domain: &biz.Domain{ID: domainId}})
+	// id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
+	// domainId := convert.StringToUint(authz.ParseFromContext(ctx).GetDomain())
+	roleModels, err := s.userCase.ListRoleAll(ctx, &biz.User{})
 	if err != nil {
 		return nil, v1.ErrorUserRoleFindFail("用户角色失败 %v", err)
 	}
@@ -243,7 +242,7 @@ func (s *ApiService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.List
 	if roleId := in.GetRoleId(); roleId > 0 {
 		roles = append(roles, &biz.Role{ID: uint(roleId)})
 	}
-	results, err := s.userCase.ListRoleMenu(ctx, &biz.User{ID: convert.StringToUint(authz.ParseFromContext(ctx).GetUser()), Roles: roles})
+	results, err := s.userCase.ListRoleMenu(ctx, &biz.User{Roles: roles})
 	if err != nil {
 		s.log.Debugf("用户菜单查询失败 %v", err)
 	}
@@ -275,7 +274,7 @@ func (s *ApiService) ListUserRolePermission(ctx context.Context, in *v1.ListUser
 	if roleId := in.GetRoleId(); roleId > 0 {
 		roles = append(roles, &biz.Role{ID: uint(roleId)})
 	}
-	menuModels, _ := s.userCase.ListRoleMenu(ctx, &biz.User{ID: convert.StringToUint(authz.ParseFromContext(ctx).GetUser()), Roles: roles})
+	menuModels, _ := s.userCase.ListRoleMenu(ctx, &biz.User{Roles: roles})
 	perms := make([]string, 0)
 	for _, v := range menuModels {
 		perms = append(perms, v.Permission)

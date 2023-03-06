@@ -5,7 +5,6 @@ import (
 
 	serverv1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/conf"
-	myAuthz "github.com/beiduoke/go-scaffold/internal/pkg/authz"
 	authM "github.com/beiduoke/go-scaffold/internal/pkg/middleware/auth"
 	casbinM "github.com/beiduoke/go-scaffold/internal/pkg/middleware/casbin"
 	"github.com/beiduoke/go-scaffold/internal/pkg/middleware/localize"
@@ -55,7 +54,7 @@ func NewWhiteListMatcher() selector.MatchFunc {
 	}
 }
 
-func NewAuthMiddleware(ac *conf.Auth, m model.Model, policy persist.Adapter, enforcer stdcasbin.IEnforcer, authenticator auth.Authenticator) middleware.Middleware {
+func NewAuthMiddleware(ac *conf.Auth, m model.Model, policy persist.Adapter, enforcer stdcasbin.IEnforcer, authenticator auth.Authenticator, securityUserCreator auth.SecurityUserCreator) middleware.Middleware {
 	// jwtV4.NewWithClaims(jwtV4.SigningMethodHS256, jwtV4.RegisteredClaims{})
 	return selector.Server(
 		jwt.Server(
@@ -76,6 +75,7 @@ func NewAuthMiddleware(ac *conf.Auth, m model.Model, policy persist.Adapter, enf
 			// casbinM.WithCasbinModel(m),
 			// casbinM.WithCasbinPolicy(policy),
 			casbinM.WithCasbinEnforcer(enforcer),
+			casbinM.WithSecurityUserCreator(securityUserCreator),
 		),
 	).
 		Match(NewWhiteListMatcher()).Build()
@@ -98,7 +98,7 @@ func NewHTTPServer(c *conf.Server, as *api.ApiService, middleware http.ServerOpt
 	var opts = []http.ServerOption{
 		middleware,
 		http.Filter(handlers.CORS(
-			handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization", myAuthz.HeaderDomainIDKey, myAuthz.HeaderDomainCodeKey}),
+			handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization", "X-Domain-Code"}),
 			handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"}),
 			handlers.AllowedOrigins([]string{"*"}),
 		)),

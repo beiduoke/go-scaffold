@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/beiduoke/go-scaffold/pkg/auth"
-	"github.com/beiduoke/go-scaffold/pkg/authz"
 	stdcasbin "github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
@@ -53,11 +53,14 @@ var (
 type Option func(*options)
 
 type options struct {
-	enableDomain bool
-	security     authz.SecurityUserCreator
-	model        model.Model
-	policy       persist.Adapter
-	enforcer     stdcasbin.IEnforcer
+	enableDomain           bool
+	autoLoadPolicy         bool
+	autoLoadPolicyInterval time.Duration
+	securityUserCreator    auth.SecurityUserCreator
+	model                  model.Model
+	policy                 persist.Adapter
+	watcher                persist.Watcher
+	enforcer               stdcasbin.IEnforcer
 }
 
 // WithDomainSupport  enable domain support
@@ -67,9 +70,24 @@ func WithDomainSupport() Option {
 	}
 }
 
-func WithSecurityUserCreator(security authz.SecurityUserCreator) Option {
+// WithWatcher Set Watcher for Casbin
+func WithWatcher(watcher persist.Watcher) Option {
 	return func(o *options) {
-		o.security = security
+		o.watcher = watcher
+	}
+}
+
+// WithAutoLoadPolicy enable policy auto load option
+func WithAutoLoadPolicy(auto bool, per time.Duration) Option {
+	return func(o *options) {
+		o.autoLoadPolicy = auto
+		o.autoLoadPolicyInterval = per
+	}
+}
+
+func WithSecurityUserCreator(securityUserCreator auth.SecurityUserCreator) Option {
+	return func(o *options) {
+		o.securityUserCreator = securityUserCreator
 	}
 }
 
@@ -111,11 +129,20 @@ func Server(opts ...Option) middleware.Middleware {
 		if o.policy == nil {
 			o.policy = fileadapter.NewAdapter("configs/casbin/policy.csv")
 		}
-		enforcer, err := stdcasbin.NewEnforcer(o.model, o.policy)
-		if err != nil {
-			log.Fatalf("failed casbin enforcer %v", err)
+
+		o.enforcer, _ = stdcasbin.NewSyncedEnforcer(o.model, o.policy)
+		if o.enforcer != nil && o.watcher != nil {
+			o.watcher.SetUpdateCallback(func(s string) {
+				o.enforcer.LoadPolicy()
+			})
+			_ = o.enforcer.SetWatcher(o.watcher)
 		}
-		o.enforcer = enforcer
+		// set autoload policy
+		// if o.enforcer != nil && o.autoLoadPolicy && o.autoLoadPolicyInterval > time.Duration(0) {
+		// 	if !o.enforcer.IsAutoLoadingRunning() {
+		// 		o.enforcer.StartAutoLoadPolicy(o.autoLoadPolicyInterval)
+		// 	}
+		// }
 	}
 
 	return func(handler middleware.Handler) middleware.Handler {
@@ -133,13 +160,13 @@ func Server(opts ...Option) middleware.Middleware {
 				return nil, ErrSecurityUserCreatorMissing
 			}
 			fmt.Println(claims)
-			return handler(ctx, req)
+			// return handler(ctx, req)
 
-			if o.security == nil {
+			if o.securityUserCreator == nil {
 				return nil, ErrSecurityUserCreatorMissing
 			}
 
-			securityUser := o.security()
+			securityUser := o.securityUserCreator()
 			if err := securityUser.ParseFromContext(ctx); err != nil {
 				return nil, ErrSecurityParseFailed
 			}
@@ -169,8 +196,8 @@ func Server(opts ...Option) middleware.Middleware {
 
 func Client(opts ...Option) middleware.Middleware {
 	o := &options{
-		enableDomain: false,
-		security:     nil,
+		enableDomain:        false,
+		securityUserCreator: nil,
 	}
 	for _, opt := range opts {
 		opt(o)
@@ -198,7 +225,7 @@ func Client(opts ...Option) middleware.Middleware {
 }
 
 // SecurityUserFromContext extract SecurityUser from context
-func SecurityUserFromContext(ctx context.Context) (authz.SecurityUser, bool) {
-	user, ok := ctx.Value(SecurityUserContextKey).(authz.SecurityUser)
+func SecurityUserFromContext(ctx context.Context) (auth.SecurityUser, bool) {
+	user, ok := ctx.Value(SecurityUserContextKey).(auth.SecurityUser)
 	return user, ok
 }

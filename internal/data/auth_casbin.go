@@ -5,7 +5,7 @@ import (
 	"errors"
 
 	"github.com/beiduoke/go-scaffold/internal/conf"
-	"github.com/beiduoke/go-scaffold/pkg/authz"
+	"github.com/beiduoke/go-scaffold/pkg/auth"
 	stdcasbin "github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
@@ -110,9 +110,10 @@ func NewAuthCasbin(logger log.Logger, model model.Model, adapter persist.Adapter
 	}
 }
 
-var _ authz.SecurityUser = (*securityUser)(nil)
+var _ auth.SecurityUser = (*securityUser)(nil)
 
 type securityUser struct {
+	options auth.Options
 	// 用户
 	user string
 	// 域/租户
@@ -125,11 +126,19 @@ type securityUser struct {
 	action string
 }
 
-func NewSecurityUser() authz.SecurityUser {
+type Option func(*auth.Options)
+
+func NewSecurityUserCreator() auth.SecurityUserCreator {
+	return func() auth.SecurityUser {
+		return &securityUser{}
+	}
+}
+
+func NewSecurityUser() auth.SecurityUser {
 	return &securityUser{}
 }
 
-func ParseFromContext(ctx context.Context) authz.SecurityUser {
+func ParseFromContext(ctx context.Context) auth.SecurityUser {
 	newSecurityUser := NewSecurityUser()
 	if newSecurityUser.ParseFromContext(ctx) != nil {
 		return &securityUser{}
