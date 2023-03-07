@@ -1,16 +1,26 @@
-package auth
+package authz
 
 import (
 	"context"
 )
 
-type Authenticator interface {
-	// Authenticate returns a nil error and the AuthClaims info (if available).
-	// if the subject is authenticated or a non-nil error with an appropriate error cause otherwise.
-	Authenticate(requestContext context.Context) (*AuthClaims, error)
+type Authorized interface {
+	Authorizer
+	Writer
+}
 
-	// CreateIdentity inject user claims into context.
-	CreateIdentity(requestContext context.Context, claims AuthClaims) (string, error)
+type Authorizer interface {
+	ProjectsAuthorized(context.Context, Subjects, Action, Resource, Projects) (Projects, error)
+
+	FilterAuthorizedPairs(context.Context, Subjects, Pairs) (Pairs, error)
+
+	FilterAuthorizedProjects(context.Context, Subjects) (Projects, error)
+
+	IsAuthorized(context.Context, Subject, Action, Resource, Project) (bool, error)
+}
+
+type Writer interface {
+	SetPolicies(context.Context, PolicyMap, RoleMap) error
 }
 
 type SecurityUser interface {

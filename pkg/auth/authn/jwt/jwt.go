@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/beiduoke/go-scaffold/pkg/auth"
+	"github.com/beiduoke/go-scaffold/pkg/auth/authn"
 	"github.com/golang-jwt/jwt/v4"
 )
 
@@ -22,7 +22,7 @@ type Authenticator struct {
 	expiresAt             time.Duration
 }
 
-var _ auth.Authenticator = (*Authenticator)(nil)
+var _ authn.Authenticator = (*Authenticator)(nil)
 
 type Option func(*Authenticator)
 
@@ -58,7 +58,7 @@ func WithExpiresAt(d time.Duration) Option {
 	}
 }
 
-func NewAuthenticator(opts ...Option) (auth.Authenticator, error) {
+func NewAuthenticator(opts ...Option) (authn.Authenticator, error) {
 	a := &Authenticator{
 		signingMethod: jwt.SigningMethodHS256,
 		keyFunc: func(token *jwt.Token) (interface{}, error) {
@@ -72,54 +72,54 @@ func NewAuthenticator(opts ...Option) (auth.Authenticator, error) {
 
 	var err error
 	if a.parseContextTokenFunc == nil {
-		err = auth.ErrInvalidInitJwt
+		err = authn.ErrInvalidInitJwt
 		log.Println(err.Error())
 	}
 
 	return a, err
 }
 
-func (a *Authenticator) Authenticate(ctx context.Context) (*auth.AuthClaims, error) {
+func (a *Authenticator) Authenticate(ctx context.Context) (*authn.AuthClaims, error) {
 	if a.parseContextTokenFunc == nil {
-		return nil, auth.ErrInvalidParseContextFunc
+		return nil, authn.ErrInvalidParseContextFunc
 	}
 
 	tokenString, err := a.parseContextTokenFunc(ctx)
 	if err != nil {
-		return nil, auth.ErrMissingBearerToken
+		return nil, authn.ErrMissingBearerToken
 	}
 
 	token, err := a.parseToken(tokenString)
 	if err != nil {
 		ve, ok := err.(*jwt.ValidationError)
 		if !ok {
-			return nil, auth.ErrUnauthenticated
+			return nil, authn.ErrUnauthenticated
 		}
 		if ve.Errors&jwt.ValidationErrorMalformed != 0 {
-			return nil, auth.ErrInvalidToken
+			return nil, authn.ErrInvalidToken
 		}
 		if ve.Errors&(jwt.ValidationErrorExpired|jwt.ValidationErrorNotValidYet) != 0 {
-			return nil, auth.ErrTokenExpired
+			return nil, authn.ErrTokenExpired
 		}
-		return nil, auth.ErrInvalidToken
+		return nil, authn.ErrInvalidToken
 	}
 
 	if !token.Valid {
-		return nil, auth.ErrInvalidToken
+		return nil, authn.ErrInvalidToken
 	}
 	if token.Method != a.signingMethod {
-		return nil, auth.ErrUnsupportedSigningMethod
+		return nil, authn.ErrUnsupportedSigningMethod
 	}
 	if token.Claims == nil {
-		return nil, auth.ErrInvalidClaims
+		return nil, authn.ErrInvalidClaims
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return nil, auth.ErrInvalidClaims
+		return nil, authn.ErrInvalidClaims
 	}
 
-	authClaims, err := auth.MapClaimsToAuthClaims(claims)
+	authClaims, err := authn.MapClaimsToAuthClaims(claims)
 	if err != nil {
 		return nil, err
 	}
@@ -127,8 +127,8 @@ func (a *Authenticator) Authenticate(ctx context.Context) (*auth.AuthClaims, err
 	return authClaims, nil
 }
 
-func (a *Authenticator) CreateIdentity(ctx context.Context, claims auth.AuthClaims) (string, error) {
-	token := jwt.NewWithClaims(a.signingMethod, auth.AuthClaimsToJwtClaims(claims))
+func (a *Authenticator) CreateIdentity(ctx context.Context, claims authn.AuthClaims) (string, error) {
+	token := jwt.NewWithClaims(a.signingMethod, authn.AuthClaimsToJwtClaims(claims))
 
 	tokenStr, err := a.generateToken(token)
 	if err != nil {
@@ -140,7 +140,7 @@ func (a *Authenticator) CreateIdentity(ctx context.Context, claims auth.AuthClai
 
 func (a *Authenticator) parseToken(token string) (*jwt.Token, error) {
 	if a.keyFunc == nil {
-		return nil, auth.ErrMissingKeyFunc
+		return nil, authn.ErrMissingKeyFunc
 	}
 
 	return jwt.Parse(token, a.keyFunc)
@@ -148,16 +148,16 @@ func (a *Authenticator) parseToken(token string) (*jwt.Token, error) {
 
 func (a *Authenticator) generateToken(token *jwt.Token) (string, error) {
 	if a.keyFunc == nil {
-		return "", auth.ErrMissingKeyFunc
+		return "", authn.ErrMissingKeyFunc
 	}
 
 	key, err := a.keyFunc(token)
 	if err != nil {
-		return "", auth.ErrGetKeyFailed
+		return "", authn.ErrGetKeyFailed
 	}
 	tokenStr, err := token.SignedString(key)
 	if err != nil {
-		return "", auth.ErrSignTokenFailed
+		return "", authn.ErrSignTokenFailed
 	}
 
 	return tokenStr, nil

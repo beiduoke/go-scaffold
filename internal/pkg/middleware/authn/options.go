@@ -1,9 +1,9 @@
-package auth
+package authn
 
 import (
 	"context"
 
-	"github.com/beiduoke/go-scaffold/pkg/auth"
+	auth "github.com/beiduoke/go-scaffold/pkg/auth/authn"
 )
 
 type ContextWithToken func(context.Context, string) context.Context

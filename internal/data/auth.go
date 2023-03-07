@@ -1,8 +1,7 @@
 package data
 
 import (
-	"github.com/beiduoke/go-scaffold/internal/pkg/auth"
-	author "github.com/beiduoke/go-scaffold/pkg/auth"
+	author "github.com/beiduoke/go-scaffold/pkg/auth/authn"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
@@ -13,7 +12,7 @@ type AuthRepo struct {
 }
 
 // NewAuthRepo .
-func NewAuthRepo(logger log.Logger, data *Data, authenticator author.Authenticator) auth.AuthRepo {
+func NewAuthRepo(logger log.Logger, data *Data, authenticator author.Authenticator) *AuthRepo {
 	return &AuthRepo{
 		data:          data,
 		log:           log.NewHelper(logger),

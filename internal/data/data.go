@@ -26,14 +26,14 @@ var ProviderSet = wire.NewSet(
 	NewModelMigrate,
 	NewData,
 	NewTransaction,
-	// 权限认证配置
+	// 认证
 	NewAuthenticator,
+	// 鉴权
 	NewAuthModel,
 	NewAuthAdapter,
 	NewWatcher,
-	NewAuthEnforcer,
-	// 鉴权
-	NewSecurityUserCreator,
+	// NewAuthEnforcer,
+	NewAuthCasbin,
 	// 数据操作
 	NewDomainRepo,
 	NewRoleRepo,

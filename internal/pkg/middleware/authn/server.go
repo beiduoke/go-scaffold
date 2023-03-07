@@ -1,9 +1,9 @@
-package auth
+package authn
 
 import (
 	"context"
 
-	"github.com/beiduoke/go-scaffold/pkg/auth"
+	auth "github.com/beiduoke/go-scaffold/pkg/auth/authn"
 	"github.com/go-kratos/kratos/v2/middleware"
 )
 

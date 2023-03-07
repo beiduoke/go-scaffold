@@ -1,15 +1,15 @@
-package auth
+package authn
 
 import (
 	"context"
 
-	"github.com/beiduoke/go-scaffold/pkg/auth"
+	"github.com/beiduoke/go-scaffold/pkg/auth/authn"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware"
 )
 
 // Client is a client authenticator middleware.
-func Client(authenticator auth.Authenticator, opts ...Option) middleware.Middleware {
+func Client(authenticator authn.Authenticator, opts ...Option) middleware.Middleware {
 	o := &options{}
 	for _, opt := range opts {
 		opt(o)

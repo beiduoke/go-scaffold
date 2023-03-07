@@ -5,16 +5,14 @@ import (
 
 	serverv1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/conf"
-	authM "github.com/beiduoke/go-scaffold/internal/pkg/middleware/auth"
-	casbinM "github.com/beiduoke/go-scaffold/internal/pkg/middleware/casbin"
+	authnM "github.com/beiduoke/go-scaffold/internal/pkg/middleware/authn"
+	authzM "github.com/beiduoke/go-scaffold/internal/pkg/middleware/authz"
 	"github.com/beiduoke/go-scaffold/internal/pkg/middleware/localize"
 	"github.com/beiduoke/go-scaffold/internal/pkg/middleware/multipoint"
 	"github.com/beiduoke/go-scaffold/internal/pkg/middleware/signout"
 	"github.com/beiduoke/go-scaffold/internal/service/api"
-	"github.com/beiduoke/go-scaffold/pkg/auth"
-	stdcasbin "github.com/casbin/casbin/v2"
-	"github.com/casbin/casbin/v2/model"
-	"github.com/casbin/casbin/v2/persist"
+	authn "github.com/beiduoke/go-scaffold/pkg/auth/authn"
+	"github.com/beiduoke/go-scaffold/pkg/auth/authz"
 
 	// gormadapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/google/wire"
@@ -24,7 +22,6 @@ import (
 	"github.com/go-kratos/grpc-gateway/v2/protoc-gen-openapiv2/generator"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware"
-	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
 	"github.com/go-kratos/kratos/v2/middleware/logging"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/middleware/selector"
@@ -32,7 +29,6 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/validate"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/go-kratos/swagger-api/openapiv2"
-	jwtV4 "github.com/golang-jwt/jwt/v4"
 	"github.com/gorilla/handlers"
 )
 
@@ -54,29 +50,17 @@ func NewWhiteListMatcher() selector.MatchFunc {
 	}
 }
 
-func NewAuthMiddleware(ac *conf.Auth, m model.Model, policy persist.Adapter, enforcer stdcasbin.IEnforcer, authenticator auth.Authenticator, securityUserCreator auth.SecurityUserCreator) middleware.Middleware {
+func NewAuthMiddleware(ac *conf.Auth, authenticator authn.Authenticator, authorized authz.Authorized) middleware.Middleware {
 	// jwtV4.NewWithClaims(jwtV4.SigningMethodHS256, jwtV4.RegisteredClaims{})
 	return selector.Server(
-		jwt.Server(
-			func(token *jwtV4.Token) (interface{}, error) {
-				return []byte(ac.Jwt.GetSecretKey()), nil
-			},
-			jwt.WithSigningMethod(jwtV4.SigningMethodHS256),
-		),
-		authM.Server(authenticator),
+		// 认证
+		authnM.Server(authenticator),
+		// 鉴权
+		authzM.Server(authorized),
 		// 多地登录
 		multipoint.Server(),
 		// 下线判断
 		signout.Server(),
-		// 请求权限反对
-		casbinM.Server(
-			casbinM.WithDomainSupport(),
-			// enforcer 指定则无需传 model 以及 policy
-			// casbinM.WithCasbinModel(m),
-			// casbinM.WithCasbinPolicy(policy),
-			casbinM.WithCasbinEnforcer(enforcer),
-			casbinM.WithSecurityUserCreator(securityUserCreator),
-		),
 	).
 		Match(NewWhiteListMatcher()).Build()
 }

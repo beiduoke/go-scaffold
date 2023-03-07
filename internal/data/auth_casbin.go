@@ -5,7 +5,9 @@ import (
 	"errors"
 
 	"github.com/beiduoke/go-scaffold/internal/conf"
-	"github.com/beiduoke/go-scaffold/pkg/auth"
+	auth "github.com/beiduoke/go-scaffold/pkg/auth/authn"
+	"github.com/beiduoke/go-scaffold/pkg/auth/authz"
+	authzCasbin "github.com/beiduoke/go-scaffold/pkg/auth/authz/casbin"
 	stdcasbin "github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
@@ -17,15 +19,17 @@ import (
 	"gorm.io/gorm"
 )
 
+// NewAuthModel 模型
 func NewAuthModel(ac *conf.Auth, logger log.Logger) model.Model {
 	log := log.NewHelper(log.With(logger, "module", "data/authCasbinModel"))
-	m, err := model.NewModelFromFile(ac.Casbin.ModelPath)
+	m, err := model.NewModelFromFile(ac.Casbin.GetModelPath())
 	if err != nil {
 		log.Fatalf("failed casbin model connection %v", err)
 	}
 	return m
 }
 
+// NewAuthAdapter 适配器
 func NewAuthAdapter(db *gorm.DB, ac *conf.Auth, logger log.Logger) (adapter persist.Adapter) {
 	log := log.NewHelper(log.With(logger, "module", "data/authCasbinAdapter"))
 	// gormadapter "github.com/casbin/gorm-adapter/v3"
@@ -42,6 +46,7 @@ func NewAuthAdapter(db *gorm.DB, ac *conf.Auth, logger log.Logger) (adapter pers
 	return adapter
 }
 
+// NewWatcher 监视器
 func NewWatcher(conf *conf.Data, logger log.Logger) persist.Watcher {
 	log := log.NewHelper(log.With(logger, "module", "data/authCasbinWatcher"))
 	// rediswatcher "github.com/casbin/redis-watcher/v2"
@@ -65,6 +70,7 @@ func NewWatcher(conf *conf.Data, logger log.Logger) persist.Watcher {
 	return w
 }
 
+// NewAuthEnforcer 执行器
 func NewAuthEnforcer(model model.Model, adapter persist.Adapter, watcher persist.Watcher, logger log.Logger) stdcasbin.IEnforcer {
 	log := log.NewHelper(log.With(logger, "module", "data/authCasbinEnforcer"))
 	// enforcer, err := stdcasbin.NewEnforcer(model, adapter)
@@ -89,28 +95,16 @@ type authCasbin struct {
 	iEnforcer stdcasbin.IEnforcer
 }
 
-func NewAuthCasbin(logger log.Logger, model model.Model, adapter persist.Adapter, watcher persist.Watcher) *authCasbin {
+func NewAuthCasbin(logger log.Logger, model model.Model, adapter persist.Adapter, watcher persist.Watcher) authz.Authorized {
 	log := log.NewHelper(log.With(logger, "module", "data/authCasbin"))
-	// enforcer, err := stdcasbin.NewEnforcer(model, adapter)
-	// enforcer, err := stdcasbin.NewCachedEnforcer(model, adapter)
-	enforcer, err := stdcasbin.NewSyncedEnforcer(model, adapter)
+	authorized, err := authzCasbin.NewAuthorized(context.Background(), authzCasbin.WithModel(model), authzCasbin.WithPolicyAdapter(adapter))
 	if err != nil {
-		log.Fatalf("failed casbin enforcer %v", err)
+		log.Fatalf("failed casbin authorized %v", err)
 	}
-	err = enforcer.SetWatcher(watcher)
-	if err != nil {
-		log.Fatalf("failed casbin watcher %v", err)
-	}
-	return &authCasbin{
-		logger:    log,
-		model:     model,
-		adapter:   adapter,
-		watcher:   watcher,
-		iEnforcer: enforcer,
-	}
+	return authorized
 }
 
-var _ auth.SecurityUser = (*securityUser)(nil)
+var _ authz.SecurityUser = (*securityUser)(nil)
 
 type securityUser struct {
 	options auth.Options
@@ -128,17 +122,17 @@ type securityUser struct {
 
 type Option func(*auth.Options)
 
-func NewSecurityUserCreator() auth.SecurityUserCreator {
-	return func() auth.SecurityUser {
+func NewSecurityUserCreator() authz.SecurityUserCreator {
+	return func() authz.SecurityUser {
 		return &securityUser{}
 	}
 }
 
-func NewSecurityUser() auth.SecurityUser {
+func NewSecurityUser() authz.SecurityUser {
 	return &securityUser{}
 }
 
-func ParseFromContext(ctx context.Context) auth.SecurityUser {
+func ParseFromContext(ctx context.Context) authz.SecurityUser {
 	newSecurityUser := NewSecurityUser()
 	if newSecurityUser.ParseFromContext(ctx) != nil {
 		return &securityUser{}

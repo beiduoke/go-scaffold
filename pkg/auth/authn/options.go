@@ -1,4 +1,4 @@
-package auth
+package authn
 
 type Options struct {
 	auth AuthClaims

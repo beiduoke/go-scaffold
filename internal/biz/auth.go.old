@@ -11,7 +11,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/beiduoke/go-scaffold/internal/conf"
-	myAuthz "github.com/beiduoke/go-scaffold/internal/pkg/authz"
+	myAuthz "github.com/beiduoke/go-scaffold/internal/pkg/auth/authnnz"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/zzsds/go-tools/pkg/password"
 )

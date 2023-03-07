@@ -4,9 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/beiduoke/go-scaffold/pkg/auth/authn"
 	"github.com/go-kratos/kratos/v2/log"
-
-	"github.com/beiduoke/go-scaffold/pkg/auth"
 )
 
 type LoginResult struct {
@@ -21,7 +20,7 @@ type AuthUsecase struct {
 }
 
 // NewAuthUsecase new a User usecase.
-func NewAuthUsecase(logger log.Logger, biz *Biz, authenticator auth.Authenticator) *AuthUsecase {
+func NewAuthUsecase(logger log.Logger, biz *Biz, authenticator authn.Authenticator) *AuthUsecase {
 	return &AuthUsecase{log: log.NewHelper(logger), biz: biz}
 }
 

@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/beiduoke/go-scaffold/internal/conf"
-	"github.com/beiduoke/go-scaffold/pkg/auth"
-	"github.com/beiduoke/go-scaffold/pkg/auth/jwt"
+	auth "github.com/beiduoke/go-scaffold/pkg/auth/authn"
+	"github.com/beiduoke/go-scaffold/pkg/auth/authn/jwt"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/transport"
 	"google.golang.org/grpc/codes"

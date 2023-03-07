@@ -1,4 +1,4 @@
-package casbin
+package authz
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/beiduoke/go-scaffold/pkg/auth"
+	"github.com/beiduoke/go-scaffold/pkg/auth/authz"
 	"github.com/pkg/errors"
 
 	"github.com/casbin/casbin/v2"
@@ -102,7 +102,7 @@ type SecurityUser struct {
 	Domain string
 }
 
-func NewSecurityUser() auth.SecurityUser {
+func NewSecurityUser() authz.SecurityUser {
 	return &SecurityUser{
 		ID:     "1",
 		Path:   "",

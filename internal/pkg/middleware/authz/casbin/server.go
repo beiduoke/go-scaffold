@@ -1,4 +1,4 @@
-package casbin
+package authz
 
 import (
 	"context"
@@ -6,7 +6,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/beiduoke/go-scaffold/pkg/auth"
+	"github.com/beiduoke/go-scaffold/pkg/auth/authn"
+	"github.com/beiduoke/go-scaffold/pkg/auth/authz"
 	stdcasbin "github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
@@ -14,6 +15,17 @@ import (
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/middleware"
 )
+
+// 请求权限
+// authzM.Server(
+// authzM.WithDomainSupport(),
+// enforcer 指定则无需传 model 以及 policy
+// casbinM.WithCasbinModel(m),
+// casbinM.WithCasbinPolicy(policy),
+// authzM.WithCasbinEnforcer(enforcer),
+// authzM.WithSecurityUserCreator(securityUserCreator),
+// 	authorizer,
+// ),
 
 type contextKey string
 
@@ -56,7 +68,7 @@ type options struct {
 	enableDomain           bool
 	autoLoadPolicy         bool
 	autoLoadPolicyInterval time.Duration
-	securityUserCreator    auth.SecurityUserCreator
+	securityUserCreator    authz.SecurityUserCreator
 	model                  model.Model
 	policy                 persist.Adapter
 	watcher                persist.Watcher
@@ -85,7 +97,7 @@ func WithAutoLoadPolicy(auto bool, per time.Duration) Option {
 	}
 }
 
-func WithSecurityUserCreator(securityUserCreator auth.SecurityUserCreator) Option {
+func WithSecurityUserCreator(securityUserCreator authz.SecurityUserCreator) Option {
 	return func(o *options) {
 		o.securityUserCreator = securityUserCreator
 	}
@@ -155,7 +167,7 @@ func Server(opts ...Option) middleware.Middleware {
 			if o.enforcer == nil {
 				return nil, ErrEnforcerMissing
 			}
-			claims, success := auth.AuthClaimsFromContext(ctx)
+			claims, success := authn.AuthClaimsFromContext(ctx)
 			if !success {
 				return nil, ErrSecurityUserCreatorMissing
 			}
@@ -225,7 +237,7 @@ func Client(opts ...Option) middleware.Middleware {
 }
 
 // SecurityUserFromContext extract SecurityUser from context
-func SecurityUserFromContext(ctx context.Context) (auth.SecurityUser, bool) {
-	user, ok := ctx.Value(SecurityUserContextKey).(auth.SecurityUser)
+func SecurityUserFromContext(ctx context.Context) (authz.SecurityUser, bool) {
+	user, ok := ctx.Value(SecurityUserContextKey).(authz.SecurityUser)
 	return user, ok
 }
