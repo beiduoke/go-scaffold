@@ -47,3 +47,12 @@ func parseContextTokenCall(headerField string, scheme string) func(context.Conte
 		return "", nil
 	}
 }
+
+// func AuthClaimsFromUser(ctx context.Context) (*SysUser, error) {
+// 	claims, success := authn.AuthClaimsFromContext(ctx)
+// 	if success {
+// 		return nil, errors.New("Auth Claims from fail")
+// 	}
+
+// 	return nil, nil
+// }

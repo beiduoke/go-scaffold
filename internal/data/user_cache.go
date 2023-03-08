@@ -153,3 +153,14 @@ func (r *UserRepo) DeleteLoginCache(ctx context.Context, uid uint) error {
 	}
 	return err
 }
+
+// GetLoginIDCache 获取登录信息
+func (r *UserRepo) GetLoginIDCache(ctx context.Context, uuid string) (*SysUser, error) {
+	result := r.data.rdb.Get(ctx, fmt.Sprintf(cacheStringLoginID, uuid))
+	sysUser := SysUser{}
+	if err := result.Scan(&sysUser); err != nil {
+		return nil, err
+	}
+
+	return &sysUser, result.Err()
+}

@@ -32,7 +32,7 @@ var ProviderSet = wire.NewSet(
 	NewAuthModel,
 	NewAuthAdapter,
 	NewWatcher,
-	// NewAuthEnforcer,
+	NewAuthEnforcer,
 	NewAuthCasbin,
 	// 数据操作
 	NewDomainRepo,
@@ -140,7 +140,8 @@ func (d *Data) DomainID(ctx context.Context) uint {
 }
 
 func (d *Data) Domain(ctx context.Context) string {
-	return ParseFromContext(ctx).GetDomain()
+	// return ParseFromContext(ctx).GetDomain()
+	return ""
 }
 
 // NewDB gorm Connecting to a Database

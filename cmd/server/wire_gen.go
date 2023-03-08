@@ -54,7 +54,7 @@ func wireApp(confServer *conf.Server, auth *conf.Auth, confData *conf.Data, logg
 	postUsecase := biz.NewPostUsecase(logger, bizBiz, postRepo)
 	apiService := api.NewApiService(logger, auth, websocketService, authUsecase, userUsecase, domainUsecase, roleUsecase, menuUsecase, resourceUsecase, deptUsecase, postUsecase)
 	grpcServer := server.NewGRPCServer(confServer, auth, apiService, logger)
-	authorized := data.NewAuthCasbin(logger, model, adapter, watcher)
+	authorized := data.NewAuthCasbin(logger, iEnforcer)
 	middleware := server.NewAuthMiddleware(auth, authenticator, authorized)
 	serverOption := server.NewMiddleware(logger, middleware)
 	httpServer := server.NewHTTPServer(confServer, apiService, serverOption)

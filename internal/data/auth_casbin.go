@@ -2,10 +2,8 @@ package data
 
 import (
 	"context"
-	"errors"
 
 	"github.com/beiduoke/go-scaffold/internal/conf"
-	auth "github.com/beiduoke/go-scaffold/pkg/auth/authn"
 	"github.com/beiduoke/go-scaffold/pkg/auth/authz"
 	authzCasbin "github.com/beiduoke/go-scaffold/pkg/auth/authz/casbin"
 	stdcasbin "github.com/casbin/casbin/v2"
@@ -14,7 +12,6 @@ import (
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 	rediswatcher "github.com/casbin/redis-watcher/v2"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/go-redis/redis/v8"
 	"gorm.io/gorm"
 )
@@ -87,104 +84,12 @@ func NewAuthEnforcer(model model.Model, adapter persist.Adapter, watcher persist
 	return enforcer
 }
 
-type authCasbin struct {
-	logger    *log.Helper
-	model     model.Model
-	adapter   persist.Adapter
-	watcher   persist.Watcher
-	iEnforcer stdcasbin.IEnforcer
-}
-
-func NewAuthCasbin(logger log.Logger, model model.Model, adapter persist.Adapter, watcher persist.Watcher) authz.Authorized {
+// NewAuthCasbin casbin认证
+func NewAuthCasbin(logger log.Logger, enforcer stdcasbin.IEnforcer) authz.Authorized {
 	log := log.NewHelper(log.With(logger, "module", "data/authCasbin"))
-	authorized, err := authzCasbin.NewAuthorized(context.Background(), authzCasbin.WithModel(model), authzCasbin.WithPolicyAdapter(adapter))
+	authorized, err := authzCasbin.NewAuthorized(context.Background(), authzCasbin.WithEnforcer(enforcer))
 	if err != nil {
 		log.Fatalf("failed casbin authorized %v", err)
 	}
 	return authorized
-}
-
-var _ authz.SecurityUser = (*securityUser)(nil)
-
-type securityUser struct {
-	options auth.Options
-	// 用户
-	user string
-	// 域/租户
-	domain string
-	// 角色
-	subject string
-	// 资源
-	object string
-	// 方法
-	action string
-}
-
-type Option func(*auth.Options)
-
-func NewSecurityUserCreator() authz.SecurityUserCreator {
-	return func() authz.SecurityUser {
-		return &securityUser{}
-	}
-}
-
-func NewSecurityUser() authz.SecurityUser {
-	return &securityUser{}
-}
-
-func ParseFromContext(ctx context.Context) authz.SecurityUser {
-	newSecurityUser := NewSecurityUser()
-	if newSecurityUser.ParseFromContext(ctx) != nil {
-		return &securityUser{}
-	}
-	return newSecurityUser
-}
-
-const (
-	HeaderDomainCodeKey = "X-Domain-Code"
-)
-
-// ParseFromContext parses the user from the context.
-func (su *securityUser) ParseFromContext(ctx context.Context) error {
-	if header, ok := transport.FromServerContext(ctx); ok {
-		su.object = header.Operation()
-		su.action = "*"
-		if domainCode := header.RequestHeader().Get(HeaderDomainCodeKey); domainCode != "" {
-			su.domain = domainCode
-		}
-		// if header.Kind() == transport.KindHTTP {
-		// 	if ht, ok := header.(http.Transporter); ok {
-		// 		su.Object = ht.Request().URL.Object
-		// 		su.Action = ht.Request().Action
-		// 	}
-		// }
-	} else {
-		return errors.New("jwt claim missing")
-	}
-	return nil
-}
-
-// GetSubject returns the subject of the token.
-func (su *securityUser) GetSubject() string {
-	return su.subject
-}
-
-// GetObject returns the object of the token.
-func (su *securityUser) GetObject() string {
-	return su.object
-}
-
-// GetAction returns the action of the token.
-func (su *securityUser) GetAction() string {
-	return su.action
-}
-
-// GetDomain returns the domain of the token.
-func (su *securityUser) GetDomain() string {
-	return su.domain
-}
-
-// GetID returns the user of the token.
-func (su *securityUser) GetUser() string {
-	return su.user
 }
