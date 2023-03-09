@@ -185,37 +185,43 @@ func (s *ApiService) HandleUserRole(ctx context.Context, in *v1.HandleUserRoleRe
 }
 
 // GetUserInfo 用户详情
-func (s *ApiService) GetUserInfo(ctx context.Context, in *emptypb.Empty) (*v1.User, error) {
-	// id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
-	user, err := s.userCase.GetID(ctx, &biz.User{ID: 0})
+func (s *ApiService) GetUserInfo(ctx context.Context, in *emptypb.Empty) (*v1.GetUserInfoReply, error) {
+	user, err := s.userCase.Info(ctx)
 	if err != nil {
 		return nil, v1.ErrorUserNotFound("用户查询失败 %v", err)
 	}
-	return TransformUser(user), nil
-}
-
-// GetUserProfile 用户概括
-func (s *ApiService) GetUserProfile(ctx context.Context, in *emptypb.Empty) (*v1.GetUserProfileReply, error) {
-	// id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
-	user, err := s.userCase.GetID(ctx, &biz.User{ID: 0})
-	if err != nil {
-		return nil, v1.ErrorUserNotFound("用户查询失败 %v", err)
-	}
-	roleResult, err := s.ListUserRole(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return &v1.GetUserProfileReply{
-		User:  TransformUser(user),
-		Roles: roleResult.GetItems(),
+	return &v1.GetUserInfoReply{
+		Name:     user.Name,
+		NickName: user.NickName,
+		RealName: user.RealName,
+		Birthday: func() string {
+			if user.Birthday != nil {
+				return user.Birthday.Format(time.DateOnly)
+			}
+			return ""
+		}(),
+		Gender: protobuf.UserGender(user.Gender),
+		Phone:  user.Phone,
+		Email:  user.Email,
+		Avatar: user.Avatar,
+		State:  protobuf.UserState(user.State),
+		Roles: func(roles []*biz.Role) (userRoles []*v1.GetUserInfoReply_UserRole) {
+			for _, v := range roles {
+				userRoles = append(userRoles, &v1.GetUserInfoReply_UserRole{
+					Id:            uint64(v.ID),
+					Name:          v.Name,
+					DefaultRouter: v.DefaultRouter,
+					Sort:          v.Sort,
+				})
+			}
+			return userRoles
+		}(user.Roles),
 	}, nil
 }
 
 // ListUserRole 用户角色
 func (s *ApiService) ListUserRole(ctx context.Context, in *emptypb.Empty) (*v1.ListUserRoleReply, error) {
-	// id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
-	// domainId := convert.StringToUint(authz.ParseFromContext(ctx).GetDomain())
-	roleModels, err := s.userCase.ListRoleAll(ctx, &biz.User{})
+	roleModels, err := s.userCase.Roles(ctx)
 	if err != nil {
 		return nil, v1.ErrorUserRoleFindFail("用户角色失败 %v", err)
 	}
@@ -228,21 +234,9 @@ func (s *ApiService) ListUserRole(ctx context.Context, in *emptypb.Empty) (*v1.L
 	}, nil
 }
 
-// ListUserMenu 用户菜单列表
-func (s *ApiService) ListUserMenu(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
-	// id := convert.StringToUint(authz.ParseFromContext(ctx).GetUser())
-	name := "菜单"
-	println(name)
-	return &protobuf.PagingReply{}, nil
-}
-
 // 获取角色菜单树形列表
 func (s *ApiService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.ListUserRoleMenuRouterTreeReq) (*v1.ListUserRoleMenuRouterTreeReply, error) {
-	var roles []*biz.Role
-	if roleId := in.GetRoleId(); roleId > 0 {
-		roles = append(roles, &biz.Role{ID: uint(roleId)})
-	}
-	results, err := s.userCase.ListRoleMenu(ctx, &biz.User{Roles: roles})
+	results, err := s.userCase.RoleMenus(ctx)
 	if err != nil {
 		s.log.Debugf("用户菜单查询失败 %v", err)
 	}
@@ -270,17 +264,8 @@ func (s *ApiService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.List
 
 // 获取角色权限列表
 func (s *ApiService) ListUserRolePermission(ctx context.Context, in *v1.ListUserRolePermissionReq) (*v1.ListUserRolePermissionReply, error) {
-	var roles []*biz.Role
-	if roleId := in.GetRoleId(); roleId > 0 {
-		roles = append(roles, &biz.Role{ID: uint(roleId)})
-	}
-	menuModels, _ := s.userCase.ListRoleMenu(ctx, &biz.User{Roles: roles})
-	perms := make([]string, 0)
-	for _, v := range menuModels {
-		perms = append(perms, v.Permission)
-	}
-	perms = convert.ArrayStrUnique(perms)
+	menuModels, _ := s.userCase.RolePermissions(ctx)
 	return &v1.ListUserRolePermissionReply{
-		Items: perms,
+		Items: convert.ArrayStrUnique(menuModels),
 	}, nil
 }

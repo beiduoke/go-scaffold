@@ -36,7 +36,7 @@ type ApiClient interface {
 	EmailLogin(ctx context.Context, in *EmailLoginReq, opts ...grpc.CallOption) (*LoginReply, error)
 	// User 用户模块
 	// 当前登录用户概述
-	GetUserInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*User, error)
+	GetUserInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserInfoReply, error)
 	// 当前登录用户概述
 	GetUserProfile(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserProfileReply, error)
 	// 当前登录用户拥有角色
@@ -201,8 +201,8 @@ func (c *apiClient) EmailLogin(ctx context.Context, in *EmailLoginReq, opts ...g
 	return out, nil
 }
 
-func (c *apiClient) GetUserInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*User, error) {
-	out := new(User)
+func (c *apiClient) GetUserInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserInfoReply, error) {
+	out := new(GetUserInfoReply)
 	err := c.cc.Invoke(ctx, "/api.server.v1.Api/GetUserInfo", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -703,7 +703,7 @@ type ApiServer interface {
 	EmailLogin(context.Context, *EmailLoginReq) (*LoginReply, error)
 	// User 用户模块
 	// 当前登录用户概述
-	GetUserInfo(context.Context, *emptypb.Empty) (*User, error)
+	GetUserInfo(context.Context, *emptypb.Empty) (*GetUserInfoReply, error)
 	// 当前登录用户概述
 	GetUserProfile(context.Context, *emptypb.Empty) (*GetUserProfileReply, error)
 	// 当前登录用户拥有角色
@@ -835,7 +835,7 @@ func (UnimplementedApiServer) SmsLogin(context.Context, *SmsLoginReq) (*LoginRep
 func (UnimplementedApiServer) EmailLogin(context.Context, *EmailLoginReq) (*LoginReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EmailLogin not implemented")
 }
-func (UnimplementedApiServer) GetUserInfo(context.Context, *emptypb.Empty) (*User, error) {
+func (UnimplementedApiServer) GetUserInfo(context.Context, *emptypb.Empty) (*GetUserInfoReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfo not implemented")
 }
 func (UnimplementedApiServer) GetUserProfile(context.Context, *emptypb.Empty) (*GetUserProfileReply, error) {

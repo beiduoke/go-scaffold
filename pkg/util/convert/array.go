@@ -2,6 +2,7 @@ package convert
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -86,4 +87,13 @@ func ArrayStringToUnique(array []string) []string {
 		arr = append(arr, v)
 	}
 	return arr
+}
+
+func ArrayStringToUint(array []string) []uint {
+	arrUint := make([]uint, 0, len(array))
+	for _, v := range array {
+		idStr, _ := strconv.Atoi(v)
+		arrUint = append(arrUint, uint(idStr))
+	}
+	return arrUint
 }

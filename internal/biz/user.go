@@ -2,10 +2,8 @@ package biz
 
 import (
 	"context"
-	"fmt"
 	"time"
 
-	stdcasbin "github.com/casbin/casbin/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/pkg/errors"
 
@@ -47,7 +45,13 @@ type UserRepo interface {
 	// 用户认证
 	Login(context.Context, *User) (*LoginResult, error)
 	Register(context.Context, *User) error
-	// 基准操作
+	Logout(context.Context) error
+	// 当前用户相关
+	Info(context.Context) (*User, error)
+	Roles(context.Context) ([]*Role, error)
+	RoleMenus(context.Context) ([]*Menu, error)
+	RolePermissions(context.Context) ([]string, error)
+	// 基础操作
 	Save(context.Context, *User) (*User, error)
 	Update(context.Context, *User) (*User, error)
 	FindByID(context.Context, uint) (*User, error)
@@ -61,6 +65,8 @@ type UserRepo interface {
 	ListByPhone(context.Context, string) ([]*User, error)
 	ListByEmail(context.Context, string) ([]*User, error)
 	ListPage(context.Context, pagination.PaginationHandler) ([]*User, int64)
+	// 用户关联
+	ListRoles(context.Context, *User) ([]*Role, error)
 	// 用户领域权限操作
 	HandleRole(context.Context, *User) error
 }
@@ -221,51 +227,24 @@ func (uc *UserUsecase) Delete(ctx context.Context, g *User) error {
 	})
 }
 
-// GetLastDomain 获取最后切换使用领域
-func (ac *UserUsecase) GetLastUseDomain(ctx context.Context, g *User) (*Domain, error) {
-	domainPolices := ac.biz.enforcer.GetFilteredGroupingPolicy(0, g.GetID())
-	if len(domainPolices) < 1 && len(domainPolices[0]) >= 2 {
-		return nil, errors.New("领域查询失败")
-	}
-	lastUseDomain := domainPolices[0][2]
-	fmt.Println(domainPolices)
-	for _, policy := range domainPolices {
-		if p := policy[len(policy)-1]; p == "1" {
-			lastUseDomain = policy[2]
-			break
-		}
-	}
-	return &Domain{
-		ID: convert.StringToUint(lastUseDomain),
-	}, nil
-	// 暂无用
-	// 获取最近一次登录的领域下所有角色
-	roles, err := ac.biz.enforcer.(*stdcasbin.SyncedEnforcer).GetNamedRoleManager("g").GetRoles(g.GetID(), lastUseDomain)
-	roleIds := make([]uint, 0, len(roles))
-	for _, v := range roles {
-		roleIds = append(roleIds, convert.StringToUint(v))
-	}
-	ac.log.Infof("打印角色列表 %v", roles)
-	return nil, err
+// GetInfo 用户信息
+func (ac *UserUsecase) Info(ctx context.Context) (*User, error) {
+	return ac.biz.userRepo.Info(ctx)
 }
 
-// GetLastDomain 获取最后切换使用领域
-func (ac *UserUsecase) ListDomainAll(ctx context.Context, g *User) ([]*Domain, error) {
-	domainPolices := ac.biz.enforcer.GetFilteredGroupingPolicy(0, g.GetID())
-	if len(domainPolices) < 1 && len(domainPolices[0]) >= 2 {
-		return nil, errors.New("领域查询失败")
-	}
-	userDomainIds, err := ac.biz.enforcer.(*stdcasbin.SyncedEnforcer).GetDomainsForUser(g.GetID())
-	if err != nil {
-		return nil, err
-	}
+// GetRoles 用户角色
+func (ac *UserUsecase) Roles(ctx context.Context) ([]*Role, error) {
+	return ac.biz.userRepo.Roles(ctx)
+}
 
-	domainIds := make([]uint, 0, len(userDomainIds))
-	for _, v := range userDomainIds {
-		domainIds = append(domainIds, convert.StringToUint(v))
-	}
+// GetRoles 用户角色菜单
+func (ac *UserUsecase) RoleMenus(ctx context.Context) ([]*Menu, error) {
+	return ac.biz.userRepo.RoleMenus(ctx)
+}
 
-	return ac.biz.domainRepo.ListByIDs(ctx, domainIds...)
+// GetRoles 用户角色权限
+func (ac *UserUsecase) RolePermissions(ctx context.Context) ([]string, error) {
+	return ac.biz.userRepo.RolePermissions(ctx)
 }
 
 // ListRoleID 获取角色ID列表

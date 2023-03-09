@@ -52,7 +52,6 @@ func Server(authorizer authz.Authorizer, opts ...Option) middleware.Middleware {
 			} else {
 				project = *claims.Project
 			}
-
 			allowed, err = authorizer.IsAuthorized(ctx, *claims.Subject, *claims.Action, *claims.Resource, project)
 			if err != nil {
 				return nil, err

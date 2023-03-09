@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/beiduoke/go-scaffold/internal/conf"
-	auth "github.com/beiduoke/go-scaffold/pkg/auth/authn"
+	"github.com/beiduoke/go-scaffold/pkg/auth/authn"
 	"github.com/beiduoke/go-scaffold/pkg/auth/authn/jwt"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/transport"
@@ -13,8 +13,8 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func NewAuthenticator(ac *conf.Auth, logger log.Logger) auth.Authenticator {
-	log := log.NewHelper(log.With(logger, "module", "data/authenticatorModel"))
+func NewAuthenticator(ac *conf.Auth, logger log.Logger) authn.Authenticator {
+	log := log.NewHelper(log.With(logger, "module", "data/authenticator"))
 	conf := ac.GetJwt()
 	authenticator, err := jwt.NewAuthenticator(
 		jwt.WithSecretKey(conf.GetSecretKey()),
@@ -47,12 +47,3 @@ func parseContextTokenCall(headerField string, scheme string) func(context.Conte
 		return "", nil
 	}
 }
-
-// func AuthClaimsFromUser(ctx context.Context) (*SysUser, error) {
-// 	claims, success := authn.AuthClaimsFromContext(ctx)
-// 	if success {
-// 		return nil, errors.New("Auth Claims from fail")
-// 	}
-
-// 	return nil, nil
-// }

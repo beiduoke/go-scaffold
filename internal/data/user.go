@@ -17,6 +17,8 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+var _ biz.UserRepo = (*UserRepo)(nil)
+
 type UserRepo struct {
 	ac            *conf.Auth
 	data          *Data
@@ -27,12 +29,13 @@ type UserRepo struct {
 }
 
 // NewUserRepo .
-func NewUserRepo(logger log.Logger, data *Data, ac *conf.Auth, authenticator auth.Authenticator) biz.UserRepo {
+func NewUserRepo(logger log.Logger, data *Data, ac *conf.Auth, authenticator auth.Authenticator, menu biz.MenuRepo) biz.UserRepo {
 	return &UserRepo{
 		ac:            ac,
 		data:          data,
 		log:           log.NewHelper(logger),
-		role:          RoleRepo{},
+		role:          RoleRepo{log: log.NewHelper(logger), data: data, menu: menu},
+		domain:        DomainRepo{log: log.NewHelper(logger), data: data, menu: menu},
 		authenticator: authenticator,
 	}
 }
@@ -230,24 +233,45 @@ func (r *UserRepo) HandleRole(ctx context.Context, g *biz.User) error {
 	return err
 }
 
+func (r *UserRepo) ListRoles(ctx context.Context, g *biz.User) ([]*biz.Role, error) {
+	rolesIdsStr := r.data.enforcer.GetRolesForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(g.DomainID))
+	rolesIds, sysRoles := make([]uint, 0, len(rolesIdsStr)), make([]SysRole, 0, len(rolesIdsStr))
+	for _, v := range rolesIdsStr {
+		rolesIds = append(rolesIds, convert.StringToUint(v))
+	}
+	if len(rolesIds) < 1 {
+		return nil, errors.New("未指定角色权限")
+	}
+
+	err := r.data.DB(ctx).Where("domain_id = ?", g.DomainID).Find(&sysRoles, rolesIds).Error
+	if err != nil {
+		return nil, errors.New("角色权限查询失败")
+	}
+	bizRoles := make([]*biz.Role, 0, len(sysRoles))
+	for _, v := range sysRoles {
+		bizRoles = append(bizRoles, r.role.toBiz(&v))
+	}
+
+	return bizRoles, err
+}
+
 // Login 登录
 func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, error) {
 	sysDomain := SysDomain{}
 	if err := r.data.DB(ctx).Last(&sysDomain, "code = ?", g.Domain.Code).Error; err != nil {
 		return nil, err
 	}
-	user := SysUser{}
-	result := r.data.DB(ctx).Where("domain_id = ?", sysDomain.ID).Last(&user, "name = ?", g.Name)
+	sysUser := SysUser{}
+	result := r.data.DB(ctx).Where("domain_id = ?", sysDomain.ID).Last(&sysUser, "name = ?", g.Name)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 
-	if err := password.Verify(user.Password, g.Password); err != nil {
+	if err := password.Verify(sysUser.Password, g.Password); err != nil {
 		return nil, errors.New("密码校验失败")
 	}
 
-	user.Domain = &sysDomain
-
+	sysUser.Domain = &sysDomain
 	authClaims := auth.AuthClaims{
 		Subject: uuid.NewString(),
 		Scopes: auth.ScopeSet{
@@ -260,23 +284,43 @@ func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, er
 		return nil, err
 	}
 	now := time.Now()
-	r.data.DB(ctx).Model(user).Debug().Select("LastLoginAt", "LastLoginIP").Updates(SysUser{
+	r.data.DB(ctx).Model(sysUser).Select("LastLoginAt", "LastLoginIP").Updates(SysUser{
 		LastLoginAt: &now,
 		LastLoginIP: ip.FormContext(ctx),
 	})
 
 	// 判断多点登录
-	// 如果已有用户登录设备则踢出反之
-	if !r.ac.Jwt.GetMultipoint() && r.ExistLoginCache(ctx, user.ID) {
-		if err := r.DeleteLoginCache(ctx, user.ID); err != nil {
+	// 如果已有用户登录设备则踢出，反之
+	if !r.ac.Jwt.GetMultipoint() && r.ExistLoginCache(ctx, sysUser.ID) {
+		if err := r.DeleteLoginCache(ctx, sysUser.ID); err != nil {
 			r.log.Errorf("用户登录缓存删除失败 %v", err)
 		}
 	}
 
+	bizRoles, err := r.ListRoles(ctx, &biz.User{ID: sysUser.ID, DomainID: sysDomain.ID})
+	if err != nil {
+		return nil, err
+	}
+	if len(bizRoles) < 1 {
+		return nil, errors.New("未指定角色权限")
+	}
+	authRoles := make([]AuthRole, 0, len(bizRoles))
+	for _, v := range bizRoles {
+		authRoles = append(authRoles, AuthRole{
+			ID:            v.ID,
+			Name:          v.Name,
+			DefaultRouter: v.DefaultRouter,
+			Sort:          v.Sort,
+		})
+	}
+
 	loginInfo := UserLoginInfo{
-		UUID:       authClaims.Subject,
-		Token:      token,
-		User:       user,
+		UUID:  authClaims.Subject,
+		Token: token,
+		AuthUser: AuthUser{ID: sysUser.ID, DomainID: sysUser.DomainID,
+			Name: sysUser.Name, NickName: sysUser.NickName, RealName: sysUser.RealName,
+			Avatar: sysUser.Avatar, Birthday: sysUser.Birthday, Gender: sysUser.Gender,
+			Phone: sysUser.Phone, Email: sysUser.Email, State: sysUser.State, Remarks: sysUser.Remarks, RoleID: sysUser.LastUseRoleID, Roles: authRoles},
 		Expiration: r.ac.Jwt.ExpiresTime.AsDuration(),
 	}
 
@@ -293,6 +337,59 @@ func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, er
 
 // Register 注册
 func (r *UserRepo) Register(ctx context.Context, g *biz.User) error {
-
 	return nil
+}
+
+// Register 注册
+func (r *UserRepo) Logout(ctx context.Context) error {
+	return r.DeleteLoginCache(ctx, r.data.UserID(ctx))
+}
+
+func (r *UserRepo) Info(ctx context.Context) (*biz.User, error) {
+	authUser, err := r.GetLoginCache(ctx, r.data.UserID(ctx))
+	if err != nil {
+		return nil, err
+	}
+	return &biz.User{
+		ID: authUser.ID, Name: authUser.Name,
+		Avatar: authUser.Avatar, NickName: authUser.NickName,
+		RealName: authUser.RealName, Birthday: authUser.Birthday,
+		Gender: authUser.Gender, Phone: authUser.Phone,
+		Email: authUser.Email, State: authUser.State,
+		DomainID: authUser.DomainID,
+		Roles: func(authRoles []AuthRole) (bizRoles []*biz.Role) {
+			for _, v := range authRoles {
+				bizRoles = append(bizRoles, &biz.Role{
+					ID:            v.ID,
+					Name:          v.Name,
+					Sort:          v.Sort,
+					DefaultRouter: v.DefaultRouter,
+				})
+			}
+			return bizRoles
+		}(authUser.Roles),
+	}, nil
+}
+
+func (r *UserRepo) Roles(ctx context.Context) ([]*biz.Role, error) {
+	return r.ListRoles(ctx, &biz.User{ID: r.data.UserID(ctx), DomainID: r.data.DomainID(ctx)})
+}
+
+func (r *UserRepo) RoleMenus(ctx context.Context) ([]*biz.Menu, error) {
+	rolesIdsStr := r.data.enforcer.GetRolesForUserInDomain(r.data.User(ctx), r.data.Domain(ctx))
+	return r.role.ListMenuByIDs(ctx, convert.ArrayStringToUint(rolesIdsStr)...)
+}
+
+func (r *UserRepo) RolePermissions(ctx context.Context) ([]string, error) {
+	bizMenus, err := r.RoleMenus(ctx)
+	if err != nil {
+		return nil, err
+	}
+	permissions := make([]string, 0)
+	for _, v := range bizMenus {
+		if v.Permission != "" {
+			permissions = append(permissions, v.Permission)
+		}
+	}
+	return permissions, nil
 }

@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"encoding/json"
+	"sort"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
@@ -220,7 +221,7 @@ func (r *RoleRepo) HandleResource(ctx context.Context, g *biz.Role) error {
 // 获取指定权限菜单列表
 func (r *RoleRepo) ListMenuByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu, error) {
 	var roleMenus []*SysRoleMenu
-	db := r.data.DBD(ctx).Model(&SysRoleMenu{})
+	db := r.data.DB(ctx).Model(&SysRoleMenu{})
 	result := db.Find(&roleMenus, "sys_role_id in ?", ids)
 	if err := result.Error; err != nil {
 		return nil, err
@@ -235,6 +236,9 @@ func (r *RoleRepo) ListMenuByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu,
 			}
 		}
 	}
+	sort.SliceStable(bizMenus, func(i, j int) bool {
+		return int32(bizMenus[i].ID) < int32(bizMenus[j].ID)
+	})
 	return bizMenus, err
 }
 

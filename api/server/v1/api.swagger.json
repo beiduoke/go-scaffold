@@ -1939,7 +1939,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1User"
+              "$ref": "#/definitions/v1GetUserInfoReply"
             }
           },
           "default": {
@@ -2270,6 +2270,25 @@
     }
   },
   "definitions": {
+    "GetUserInfoReplyUserRole": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "defaultRouter": {
+          "type": "string"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "MenuRouterMeta": {
       "type": "object",
       "properties": {
@@ -3181,6 +3200,45 @@
         }
       },
       "title": "请求 - 验证用户是否存在"
+    },
+    "v1GetUserInfoReply": {
+      "type": "object",
+      "properties": {
+        "roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GetUserInfoReplyUserRole"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "nickName": {
+          "type": "string"
+        },
+        "realName": {
+          "type": "string"
+        },
+        "birthday": {
+          "type": "string"
+        },
+        "gender": {
+          "$ref": "#/definitions/protobufUserGender"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/protobufUserState"
+        }
+      },
+      "title": "回应 - 用户概况详情"
     },
     "v1GetUserProfileReply": {
       "type": "object",

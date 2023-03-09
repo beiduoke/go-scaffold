@@ -12,6 +12,7 @@ type ctxKey string
 
 var (
 	authClaimsContextKey = ctxKey("authn-claims")
+	authUserContextKey   = ctxKey("authn-user")
 )
 
 type ScopeSet map[string]bool
@@ -33,6 +34,21 @@ func ContextWithAuthClaims(parent context.Context, claims *AuthClaims) context.C
 // AuthClaimsFromContext extracts the AuthClaims from the provided ctx (if any).
 func AuthClaimsFromContext(ctx context.Context) (*AuthClaims, bool) {
 	claims, ok := ctx.Value(authClaimsContextKey).(*AuthClaims)
+	if !ok {
+		return nil, false
+	}
+
+	return claims, true
+}
+
+// ContextWithAuthClaims injects the provided AuthClaims into the parent context.
+func ContextWithAuthUser(parent context.Context, user SecurityUser) context.Context {
+	return context.WithValue(parent, authUserContextKey, user)
+}
+
+// AuthUserFromContext extracts the AuthUser from the provided ctx (if any).
+func AuthUserFromContext(ctx context.Context) (SecurityUser, bool) {
+	claims, ok := ctx.Value(authUserContextKey).(SecurityUser)
 	if !ok {
 		return nil, false
 	}

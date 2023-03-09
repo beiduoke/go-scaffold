@@ -1175,7 +1175,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.server.v1.User'
+                                $ref: '#/components/schemas/api.server.v1.GetUserInfoReply'
     /v1/users/permissions:
         get:
             tags:
@@ -1789,6 +1789,47 @@ components:
                 name:
                     type: string
             description: 请求 - 验证用户是否存在
+        api.server.v1.GetUserInfoReply:
+            type: object
+            properties:
+                roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.server.v1.GetUserInfoReply_UserRole'
+                name:
+                    type: string
+                nickName:
+                    type: string
+                realName:
+                    type: string
+                birthday:
+                    type: string
+                gender:
+                    type: integer
+                    format: enum
+                phone:
+                    type: string
+                email:
+                    type: string
+                avatar:
+                    type: string
+                state:
+                    type: integer
+                    format: enum
+            description: 回应 - 用户概况详情
+        api.server.v1.GetUserInfoReply_UserRole:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint64
+                name:
+                    type: string
+                defaultRouter:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
         api.server.v1.GetUserProfileReply:
             type: object
             properties:

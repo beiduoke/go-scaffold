@@ -50,11 +50,11 @@ func NewWhiteListMatcher() selector.MatchFunc {
 	}
 }
 
-func NewAuthMiddleware(ac *conf.Auth, authenticator authn.Authenticator, authorized authz.Authorized) middleware.Middleware {
+func NewAuthMiddleware(ac *conf.Auth, authenticator authn.Authenticator, authorized authz.Authorized, creator authn.SecurityUserCreator) middleware.Middleware {
 	// jwtV4.NewWithClaims(jwtV4.SigningMethodHS256, jwtV4.RegisteredClaims{})
 	return selector.Server(
 		// 认证
-		authnM.Server(authenticator),
+		authnM.Server(authenticator, creator),
 		// 鉴权
 		authzM.Server(authorized),
 		// 多地登录

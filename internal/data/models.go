@@ -70,7 +70,7 @@ type SysUser struct {
 	Phone         string     `gorm:"type:varchar(20);column:phone;not null;default:'';index:idx_users_phone_email,priority:1;comment:手机号;"`
 	Email         string     `gorm:"type:varchar(50);column:email;not null;default:'';index:idx_users_phone_email,priority:2;comment:邮箱;"`
 	State         int32      `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:用户状态 0 未指定  1 启用 2 停用;"`
-	LastUseRoleId uint       `gorm:"type:bigint(20);column:last_use_role;not null;default:0;comment:最后使用角色"`
+	LastUseRoleID uint       `gorm:"type:bigint(20);column:last_use_role;not null;default:0;comment:最后使用角色"`
 	LastLoginAt   *time.Time `gorm:"type:datetime;column:last_login_at;comment:最后登录时间"`
 	LastLoginIP   string     `gorm:"type:varchar(50);column:last_login_ip;not null;default:'';comment:最后登录IP"`
 	Remarks       string     `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`

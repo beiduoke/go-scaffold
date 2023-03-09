@@ -130,7 +130,7 @@ type ApiHTTPServer interface {
 	GetUser(context.Context, *GetUserReq) (*User, error)
 	// GetUserInfo User 用户模块
 	// 当前登录用户概述
-	GetUserInfo(context.Context, *emptypb.Empty) (*User, error)
+	GetUserInfo(context.Context, *emptypb.Empty) (*GetUserInfoReply, error)
 	// GetUserProfile 当前登录用户概述
 	GetUserProfile(context.Context, *emptypb.Empty) (*GetUserProfileReply, error)
 	// HandleDomainMenu 处理角色菜单
@@ -425,7 +425,7 @@ func _Api_GetUserInfo0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) er
 		if err != nil {
 			return err
 		}
-		reply := out.(*User)
+		reply := out.(*GetUserInfoReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -1665,7 +1665,7 @@ type ApiHTTPClient interface {
 	GetResource(ctx context.Context, req *GetResourceReq, opts ...http.CallOption) (rsp *Resource, err error)
 	GetRole(ctx context.Context, req *GetRoleReq, opts ...http.CallOption) (rsp *Role, err error)
 	GetUser(ctx context.Context, req *GetUserReq, opts ...http.CallOption) (rsp *User, err error)
-	GetUserInfo(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *User, err error)
+	GetUserInfo(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserInfoReply, err error)
 	GetUserProfile(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserProfileReply, err error)
 	HandleDomainMenu(ctx context.Context, req *HandleDomainMenuReq, opts ...http.CallOption) (rsp *HandleDomainMenuReply, err error)
 	HandleRoleMenu(ctx context.Context, req *HandleRoleMenuReq, opts ...http.CallOption) (rsp *HandleRoleMenuReply, err error)
@@ -2010,8 +2010,8 @@ func (c *ApiHTTPClientImpl) GetUser(ctx context.Context, in *GetUserReq, opts ..
 	return &out, err
 }
 
-func (c *ApiHTTPClientImpl) GetUserInfo(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*User, error) {
-	var out User
+func (c *ApiHTTPClientImpl) GetUserInfo(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetUserInfoReply, error) {
+	var out GetUserInfoReply
 	pattern := "/v1/users/info"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationApiGetUserInfo))

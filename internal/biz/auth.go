@@ -36,6 +36,5 @@ func (ac *AuthUsecase) Register(ctx context.Context, g *User) error {
 
 // Login 登录-密码登录
 func (ac *AuthUsecase) Logout(ctx context.Context) error {
-
-	return nil
+	return ac.biz.userRepo.Logout(ctx)
 }

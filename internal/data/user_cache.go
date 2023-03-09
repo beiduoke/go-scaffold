@@ -24,7 +24,7 @@ type UserLoginInfo struct {
 	UUID       string
 	Token      string
 	Expiration time.Duration
-	User       SysUser
+	AuthUser   AuthUser
 	Info       map[string]interface{}
 }
 
@@ -94,7 +94,7 @@ func (r *UserRepo) ListAllCache(ctx context.Context) (sysUsers []*SysUser) {
 // SetLoginCache 设置登录信息
 func (r *UserRepo) SetLoginCache(ctx context.Context, info UserLoginInfo) error {
 	// 设置登录用户信息
-	dataStr, err := json.Marshal(info.User)
+	dataStr, err := json.Marshal(info.AuthUser)
 	if err != nil {
 		r.log.Errorf("用户缓存序列化失败 %v", err)
 		return err
@@ -105,23 +105,24 @@ func (r *UserRepo) SetLoginCache(ctx context.Context, info UserLoginInfo) error 
 		return err
 	}
 
-	return r.data.rdb.Set(ctx, fmt.Sprintf(cacheStringLoginUser, info.User.ID), info.UUID, info.Expiration).Err()
+	return r.data.rdb.Set(ctx, fmt.Sprintf(cacheStringLoginUser, info.AuthUser.ID), info.UUID, info.Expiration).Err()
 }
 
 // GetLoginCache 获取登录信息
-func (r *UserRepo) GetLoginCache(ctx context.Context, uid uint) (*SysUser, error) {
+func (r *UserRepo) GetLoginCache(ctx context.Context, uid uint) (*AuthUser, error) {
 	result := r.data.rdb.Get(ctx, fmt.Sprintf(cacheStringLoginUser, uid))
 	if err := result.Err(); err != nil {
 		return nil, err
 	}
 
 	result = r.data.rdb.Get(ctx, fmt.Sprintf(cacheStringLoginID, result.Val()))
-	sysUser := SysUser{}
-	if err := result.Scan(&sysUser); err != nil {
+	authUser := AuthUser{}
+	if err := json.Unmarshal([]byte(result.Val()), &authUser); err != nil {
+		r.log.Errorf("unmarshal login auth user", err)
 		return nil, err
 	}
 
-	return &sysUser, result.Err()
+	return &authUser, result.Err()
 }
 
 // ExistLoginCache 登录信息是否存在
@@ -155,12 +156,13 @@ func (r *UserRepo) DeleteLoginCache(ctx context.Context, uid uint) error {
 }
 
 // GetLoginIDCache 获取登录信息
-func (r *UserRepo) GetLoginIDCache(ctx context.Context, uuid string) (*SysUser, error) {
+func (r *UserRepo) GetLoginIDCache(ctx context.Context, uuid string) (*AuthUser, error) {
 	result := r.data.rdb.Get(ctx, fmt.Sprintf(cacheStringLoginID, uuid))
-	sysUser := SysUser{}
-	if err := result.Scan(&sysUser); err != nil {
+	authUser := AuthUser{}
+	if err := json.Unmarshal([]byte(result.Val()), &authUser); err != nil {
+		r.log.Errorf("unmarshal login auth user", err)
 		return nil, err
 	}
 
-	return &sysUser, result.Err()
+	return &authUser, result.Err()
 }
