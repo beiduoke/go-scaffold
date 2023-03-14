@@ -3,17 +3,19 @@ package data
 import (
 	"context"
 	"errors"
+	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	auth "github.com/beiduoke/go-scaffold/pkg/auth/authn"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
+	"github.com/beiduoke/go-scaffold/pkg/util/crypto"
 	"github.com/beiduoke/go-scaffold/pkg/util/ip"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
-	"github.com/zzsds/go-tools/pkg/password"
 	"gorm.io/gorm/clause"
 )
 
@@ -125,21 +127,39 @@ func (r *UserRepo) Delete(ctx context.Context, g *biz.User) error {
 	return r.data.DBD(ctx).Delete(r.toModel(g)).Error
 }
 
-func (r *UserRepo) ListPage(ctx context.Context, handler pagination.PaginationHandler) (users []*biz.User, total int64) {
-	db := r.data.DBD(ctx).Model(&SysUser{})
+func (r *UserRepo) ListPage(ctx context.Context, paging *pagination.Pagination) (users []*biz.User, total int64) {
+	db := r.data.DBD(ctx).Model(&SysUser{}).Debug()
 	sysUsers := []*SysUser{}
+	paging.QueryFormat()
+	fmt.Println(paging.Query)
 	// 查询条件
-	for _, v := range handler.GetConditions() {
-		db = db.Where(v.Query, v.Args...)
+	if name, ok := paging.Query["name"]; ok {
+		if name != "" {
+			db = db.Where("name LIKE ?", name+"%")
+		}
+
+		if dept, ok := paging.Query["deptId"]; ok && dept != "" {
+			var roleId []string
+			deptId, _ := strconv.Atoi(dept)
+			r.data.DBD(ctx).Table("sys_role_depts").Where("sys_dept_id", deptId).Pluck("sys_role_id", &roleId)
+			fmt.Println(roleId)
+		}
 	}
+
 	// 排序
-	for _, v := range handler.GetOrders() {
-		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: v.Column}, Desc: v.Desc})
+	if createdBy, ok := paging.OrderBy["createdAt"]; ok {
+		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: "created_at"}, Desc: createdBy})
 	}
-	if !handler.GetNopaging() {
-		db = db.Count(&total).Offset(handler.GetPageOffset())
+
+	if idBy, ok := paging.OrderBy["id"]; ok {
+		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: "id"}, Desc: idBy})
 	}
-	result := db.Limit(int(handler.GetPageSize())).Find(&sysUsers)
+
+	if !paging.Nopaging {
+		db = db.Count(&total).Offset(pagination.GetPageOffset(paging.Page, paging.PageSize))
+	}
+
+	result := db.Limit(int(paging.Page)).Find(&sysUsers)
 	if result.Error != nil {
 		return nil, 0
 	}
@@ -148,7 +168,7 @@ func (r *UserRepo) ListPage(ctx context.Context, handler pagination.PaginationHa
 		users = append(users, r.toBiz(v))
 	}
 
-	if handler.GetNopaging() {
+	if paging.Nopaging {
 		total = int64(len(users))
 	}
 
@@ -267,7 +287,7 @@ func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, er
 		return nil, result.Error
 	}
 
-	if err := password.Verify(sysUser.Password, g.Password); err != nil {
+	if crypto.CheckPasswordHash(g.Password, sysUser.Password) {
 		return nil, errors.New("密码校验失败")
 	}
 

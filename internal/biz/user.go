@@ -64,7 +64,7 @@ type UserRepo interface {
 	ListByName(context.Context, string) ([]*User, error)
 	ListByPhone(context.Context, string) ([]*User, error)
 	ListByEmail(context.Context, string) ([]*User, error)
-	ListPage(context.Context, pagination.PaginationHandler) ([]*User, int64)
+	ListPage(context.Context, *pagination.Pagination) ([]*User, int64)
 	// 用户关联
 	ListRoles(context.Context, *User) ([]*Role, error)
 	// 用户领域权限操作
@@ -85,7 +85,7 @@ func NewUserUsecase(logger log.Logger, biz *Biz, ac *conf.Auth) *UserUsecase {
 
 // Create 创建用户
 func (uc *UserUsecase) Create(ctx context.Context, g *User) (*User, error) {
-	uc.log.WithContext(ctx).Infof("CreateUser: %v", g)
+	uc.log.WithContext(ctx).Debugf("CreateUser: %v", g)
 	user, _ := uc.biz.userRepo.FindByName(ctx, g.Name)
 	if user != nil && user.Name != "" {
 		return nil, errors.New("用户名已存在")
@@ -107,7 +107,7 @@ func (uc *UserUsecase) Create(ctx context.Context, g *User) (*User, error) {
 
 // HandleRole 绑定领域权限
 func (uc *UserUsecase) HandleRole(ctx context.Context, g *User) error {
-	uc.log.WithContext(ctx).Infof("HandleRole: %v", g)
+	uc.log.WithContext(ctx).Debugf("HandleRole: %v", g)
 	roles := g.Roles
 	if len(roles) <= 0 {
 		return errors.New("权限未指定")
@@ -118,7 +118,7 @@ func (uc *UserUsecase) HandleRole(ctx context.Context, g *User) error {
 
 // Update 修改用户
 func (uc *UserUsecase) Update(ctx context.Context, g *User) error {
-	uc.log.WithContext(ctx).Infof("UpdateUser: %v", g)
+	uc.log.WithContext(ctx).Debugf("UpdateUser: %v", g)
 
 	user, _ := uc.biz.userRepo.FindByID(ctx, g.ID)
 	if user == nil {
@@ -167,34 +167,19 @@ func (uc *UserUsecase) Update(ctx context.Context, g *User) error {
 
 // List 用户列表全部
 func (uc *UserUsecase) ListAll(ctx context.Context) ([]*User, int64) {
-	uc.log.WithContext(ctx).Infof("UserList")
-	return uc.biz.userRepo.ListPage(ctx, pagination.NewPagination())
+	uc.log.WithContext(ctx).Debugf("UserList")
+	return uc.biz.userRepo.ListPage(ctx, &pagination.Pagination{Nopaging: true, OrderBy: map[string]bool{"sort": true}})
 }
 
 // List 用户列表分页
-func (uc *UserUsecase) ListPage(ctx context.Context, pageNum, pageSize int32, query map[string]string, order map[string]bool) ([]*User, int64) {
-	uc.log.WithContext(ctx).Infof("UserPage")
-	conditions := []pagination.Condition{}
-	for k, v := range query {
-		conditions = append(conditions, pagination.Condition{Query: k, Args: []interface{}{v}})
-	}
-	orders := []pagination.Order{}
-	for k, v := range order {
-		orders = append(orders, pagination.Order{Column: k, Desc: v})
-	}
-
-	page := pagination.NewPagination(
-		pagination.WithPageNum(pageNum),
-		pagination.WithPageSize(pageSize),
-		pagination.WithConditions(conditions...),
-		pagination.WithOrders(orders...),
-	)
-	return uc.biz.userRepo.ListPage(ctx, page)
+func (uc *UserUsecase) ListPage(ctx context.Context, paging *pagination.Pagination) ([]*User, int64) {
+	uc.log.WithContext(ctx).Debugf("UserPage")
+	return uc.biz.userRepo.ListPage(ctx, paging)
 }
 
 // GetID 获取用户ID
 func (uc *UserUsecase) GetID(ctx context.Context, g *User) (*User, error) {
-	uc.log.WithContext(ctx).Infof("GetUserID: %v", g)
+	uc.log.WithContext(ctx).Debugf("GetUserID: %v", g)
 	user, err := uc.biz.userRepo.FindByID(ctx, g.ID)
 	if err != nil {
 		return nil, err
@@ -204,19 +189,19 @@ func (uc *UserUsecase) GetID(ctx context.Context, g *User) (*User, error) {
 
 // GetPhone 获取用户手机
 func (uc *UserUsecase) GetPhone(ctx context.Context, g *User) (*User, error) {
-	uc.log.WithContext(ctx).Infof("GetUserPhone: %v", g)
+	uc.log.WithContext(ctx).Debugf("GetUserPhone: %v", g)
 	return uc.biz.userRepo.FindByPhone(ctx, g.Phone)
 }
 
 // GetName 获取用户名
 func (uc *UserUsecase) GetName(ctx context.Context, g *User) (*User, error) {
-	uc.log.WithContext(ctx).Infof("GetUserName: %v", g)
+	uc.log.WithContext(ctx).Debugf("GetUserName: %v", g)
 	return uc.biz.userRepo.FindByName(ctx, g.Name)
 }
 
 // Delete 删除用户
 func (uc *UserUsecase) Delete(ctx context.Context, g *User) error {
-	uc.log.WithContext(ctx).Infof("DeleteUser: %v", g)
+	uc.log.WithContext(ctx).Debugf("DeleteUser: %v", g)
 	return uc.biz.tm.InTx(ctx, func(ctx context.Context) error {
 		if err := uc.biz.userRepo.Delete(ctx, g); err != nil {
 			return err

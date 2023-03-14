@@ -32,7 +32,7 @@ type DeptRepo interface {
 	ListByName(context.Context, string) ([]*Dept, error)
 	ListAll(context.Context) ([]*Dept, error)
 	Delete(context.Context, *Dept) error
-	ListPage(context.Context, pagination.PaginationHandler) ([]*Dept, int64)
+	ListPage(context.Context, *pagination.Pagination) ([]*Dept, int64)
 }
 
 type DeptUsecase struct {
@@ -48,19 +48,19 @@ func NewDeptUsecase(logger log.Logger, biz *Biz, repo DeptRepo) *DeptUsecase {
 
 // Create creates a Dept, and returns the new Dept.
 func (uc *DeptUsecase) Create(ctx context.Context, g *Dept) (*Dept, error) {
-	uc.log.WithContext(ctx).Infof("Create: %v", g.Name)
+	uc.log.WithContext(ctx).Debugf("Create: %v", g.Name)
 	return uc.repo.Save(ctx, g)
 }
 
 // ListByIDs 获取指定部门ID集合
 func (uc *DeptUsecase) ListByIDs(ctx context.Context, id ...uint) (roles []*Dept, err error) {
-	roles, _ = uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
+	// roles, _ = uc.repo.ListPage(ctx, &pagination.Pagination{Nopaging: true, Query: map[string]string{"id": true}})
 	return
 }
 
 // Update 修改部门
 func (uc *DeptUsecase) Update(ctx context.Context, g *Dept) error {
-	uc.log.WithContext(ctx).Infof("UpdateDept: %v", g)
+	uc.log.WithContext(ctx).Debugf("UpdateDept: %v", g)
 
 	menu, _ := uc.repo.FindByID(ctx, g.ID)
 	if menu == nil {
@@ -84,39 +84,24 @@ func (uc *DeptUsecase) Update(ctx context.Context, g *Dept) error {
 
 // List 部门列表全部
 func (uc *DeptUsecase) ListAll(ctx context.Context) ([]*Dept, int64) {
-	uc.log.WithContext(ctx).Infof("ListAll")
-	return uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithOrder("sort", false)))
+	uc.log.WithContext(ctx).Debugf("ListAll")
+	return uc.repo.ListPage(ctx, &pagination.Pagination{Nopaging: true, OrderBy: map[string]bool{"id": true, "sort": true}})
 }
 
 // List 部门列表分页
-func (uc *DeptUsecase) ListPage(ctx context.Context, pageNum, pageSize int32, query map[string]string, order map[string]bool) ([]*Dept, int64) {
-	uc.log.WithContext(ctx).Infof("DeptPage")
-	conditions := []pagination.Condition{}
-	for k, v := range query {
-		conditions = append(conditions, pagination.Condition{Query: k, Args: []interface{}{v}})
-	}
-	orders := []pagination.Order{}
-	for k, v := range order {
-		orders = append(orders, pagination.Order{Column: k, Desc: v})
-	}
-
-	page := pagination.NewPagination(
-		pagination.WithPageNum(pageNum),
-		pagination.WithPageSize(pageSize),
-		pagination.WithConditions(conditions...),
-		pagination.WithOrders(orders...),
-	)
-	return uc.repo.ListPage(ctx, page)
+func (uc *DeptUsecase) ListPage(ctx context.Context, paging *pagination.Pagination) ([]*Dept, int64) {
+	uc.log.WithContext(ctx).Debugf("DeptPage")
+	return uc.repo.ListPage(ctx, paging)
 }
 
 // GetID 根据角色ID部门
 func (uc *DeptUsecase) GetID(ctx context.Context, g *Dept) (*Dept, error) {
-	uc.log.WithContext(ctx).Infof("GetDeptID: %v", g)
+	uc.log.WithContext(ctx).Debugf("GetDeptID: %v", g)
 	return uc.repo.FindByID(ctx, g.ID)
 }
 
 // Delete 根据角色ID删除部门
 func (uc *DeptUsecase) Delete(ctx context.Context, g *Dept) error {
-	uc.log.WithContext(ctx).Infof("DeleteDept: %v", g)
+	uc.log.WithContext(ctx).Debugf("DeleteDept: %v", g)
 	return uc.repo.Delete(ctx, g)
 }

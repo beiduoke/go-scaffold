@@ -34,7 +34,7 @@ type PostRepo interface {
 	ListByName(context.Context, string) ([]*Post, error)
 	Delete(context.Context, *Post) error
 	ListAll(context.Context) ([]*Post, error)
-	ListPage(context.Context, pagination.PaginationHandler) ([]*Post, int64)
+	ListPage(context.Context, *pagination.Pagination) ([]*Post, int64)
 }
 
 // PostUsecase is a Post usecase.
@@ -51,7 +51,7 @@ func NewPostUsecase(logger log.Logger, biz *Biz, repo PostRepo) *PostUsecase {
 
 // Create creates a Post, and returns the new Post.
 func (uc *PostUsecase) Create(ctx context.Context, g *Post) (*Post, error) {
-	uc.log.WithContext(ctx).Infof("Create: %v", g.Name)
+	uc.log.WithContext(ctx).Debugf("Create: %v", g.Name)
 	err := uc.biz.tm.InTx(ctx, func(ctx context.Context) error {
 		_, err := uc.repo.Save(ctx, g)
 		return err
@@ -61,13 +61,13 @@ func (uc *PostUsecase) Create(ctx context.Context, g *Post) (*Post, error) {
 
 // ListByIDs 获取指定职位ID集合
 func (uc *PostUsecase) ListByIDs(ctx context.Context, id ...uint) (roles []*Post, err error) {
-	roles, _ = uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
+	// roles, _ = uc.repo.ListPage(ctx, noop.NewPagination(noop.WithNopaging(), noop.WithCondition("id in ?", id)))
 	return
 }
 
 // Update 修改职位
 func (uc *PostUsecase) Update(ctx context.Context, g *Post) error {
-	uc.log.WithContext(ctx).Infof("UpdatePost: %v", g)
+	uc.log.WithContext(ctx).Debugf("UpdatePost: %v", g)
 
 	post, _ := uc.repo.FindByID(ctx, g.ID)
 	if post == nil {
@@ -92,7 +92,7 @@ func (uc *PostUsecase) Update(ctx context.Context, g *Post) error {
 
 // UpdateState 修改职位状态
 func (uc *PostUsecase) UpdateState(ctx context.Context, g *Post) error {
-	uc.log.WithContext(ctx).Infof("UpdatePostState: %v", g)
+	uc.log.WithContext(ctx).Debugf("UpdatePostState: %v", g)
 
 	post, _ := uc.repo.FindByID(ctx, g.ID)
 	if post == nil {
@@ -110,40 +110,25 @@ func (uc *PostUsecase) UpdateState(ctx context.Context, g *Post) error {
 
 // List 职位列表全部
 func (uc *PostUsecase) ListAll(ctx context.Context) ([]*Post, int64) {
-	uc.log.WithContext(ctx).Infof("PostList")
-	return uc.repo.ListPage(ctx, pagination.NewPagination())
+	uc.log.WithContext(ctx).Debugf("PostList")
+	return uc.repo.ListPage(ctx, &pagination.Pagination{Nopaging: true, OrderBy: map[string]bool{"sort": true}})
 }
 
 // List 职位列表分页
-func (uc *PostUsecase) ListPage(ctx context.Context, pageNum, pageSize int32, query map[string]string, order map[string]bool) ([]*Post, int64) {
-	uc.log.WithContext(ctx).Infof("PostPage")
-	conditions := []pagination.Condition{{Query: "id > 0"}}
-	for k, v := range query {
-		conditions = append(conditions, pagination.Condition{Query: k, Args: []interface{}{v}})
-	}
-	orders := []pagination.Order{{Column: "sort", Desc: false}}
-	for k, v := range order {
-		orders = append(orders, pagination.Order{Column: k, Desc: v})
-	}
-
-	page := pagination.NewPagination(
-		pagination.WithPageNum(pageNum),
-		pagination.WithPageSize(pageSize),
-		pagination.WithConditions(conditions...),
-		pagination.WithOrders(orders...),
-	)
-	return uc.repo.ListPage(ctx, page)
+func (uc *PostUsecase) ListPage(ctx context.Context, paging *pagination.Pagination) ([]*Post, int64) {
+	uc.log.WithContext(ctx).Debugf("PostPage")
+	return uc.repo.ListPage(ctx, paging)
 }
 
 // GetID 根据角色ID职位
 func (uc *PostUsecase) GetID(ctx context.Context, g *Post) (*Post, error) {
-	uc.log.WithContext(ctx).Infof("GetPostID: %v", g)
+	uc.log.WithContext(ctx).Debugf("GetPostID: %v", g)
 	return uc.repo.FindByID(ctx, g.ID)
 }
 
 // Delete 根据角色ID删除职位
 func (uc *PostUsecase) Delete(ctx context.Context, g *Post) error {
-	uc.log.WithContext(ctx).Infof("DeletePost: %v", g)
+	uc.log.WithContext(ctx).Debugf("DeletePost: %v", g)
 	return uc.biz.tm.InTx(ctx, func(ctx context.Context) error {
 		return uc.repo.Delete(ctx, g)
 	})

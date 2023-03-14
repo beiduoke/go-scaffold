@@ -54,7 +54,7 @@ type DomainRepo interface {
 	ListByName(context.Context, string) ([]*Domain, error)
 	Delete(context.Context, *Domain) error
 	ListAll(context.Context) ([]*Domain, error)
-	ListPage(context.Context, pagination.PaginationHandler) ([]*Domain, int64)
+	ListPage(context.Context, *pagination.Pagination) ([]*Domain, int64)
 	ListMenuByIDs(context.Context, ...uint) ([]*Menu, error)
 	HandleMenu(context.Context, *Domain) error
 
@@ -83,7 +83,7 @@ func NewDomainUsecase(logger log.Logger, biz *Biz) *DomainUsecase {
 
 // Create creates a Domain, and returns the new Domain.
 func (uc *DomainUsecase) Create(ctx context.Context, g *Domain) (*Domain, error) {
-	uc.log.WithContext(ctx).Infof("Create: %v", g.Name)
+	uc.log.WithContext(ctx).Debugf("Create: %v", g.Name)
 	err := uc.biz.tm.InTx(ctx, func(ctx context.Context) error {
 		domain, err := uc.biz.domainRepo.Save(ctx, g)
 		if err != nil {
@@ -98,13 +98,13 @@ func (uc *DomainUsecase) Create(ctx context.Context, g *Domain) (*Domain, error)
 
 // ListByIDs 获取指定领域ID集合
 func (uc *DomainUsecase) ListByIDs(ctx context.Context, id ...uint) (roles []*Domain, err error) {
-	roles, _ = uc.biz.domainRepo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
+	// roles, _ = uc.biz.domainRepo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
 	return
 }
 
 // Update 修改领域
 func (uc *DomainUsecase) Update(ctx context.Context, g *Domain) error {
-	uc.log.WithContext(ctx).Infof("UpdateDomain: %v", g)
+	uc.log.WithContext(ctx).Debugf("UpdateDomain: %v", g)
 
 	domain, _ := uc.biz.domainRepo.FindByID(ctx, g.ID)
 	if domain == nil {
@@ -133,7 +133,7 @@ func (uc *DomainUsecase) Update(ctx context.Context, g *Domain) error {
 
 // UpdateState 修改领域状态
 func (uc *DomainUsecase) UpdateState(ctx context.Context, g *Domain) error {
-	uc.log.WithContext(ctx).Infof("UpdateDomainState: %v", g)
+	uc.log.WithContext(ctx).Debugf("UpdateDomainState: %v", g)
 
 	domain, _ := uc.biz.domainRepo.FindByID(ctx, g.ID)
 	if domain == nil {
@@ -151,40 +151,25 @@ func (uc *DomainUsecase) UpdateState(ctx context.Context, g *Domain) error {
 
 // List 领域列表全部
 func (uc *DomainUsecase) ListAll(ctx context.Context) ([]*Domain, int64) {
-	uc.log.WithContext(ctx).Infof("ListAll")
-	return uc.biz.domainRepo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithOrder("sort", false)))
+	uc.log.WithContext(ctx).Debugf("ListAll")
+	return uc.biz.domainRepo.ListPage(ctx, &pagination.Pagination{Nopaging: true, OrderBy: map[string]bool{"sort": true}})
 }
 
 // List 领域列表分页
-func (uc *DomainUsecase) ListPage(ctx context.Context, pageNum, pageSize int32, query map[string]string, order map[string]bool) ([]*Domain, int64) {
-	uc.log.WithContext(ctx).Infof("DomainPage")
-	conditions := []pagination.Condition{{Query: "id > 0"}}
-	for k, v := range query {
-		conditions = append(conditions, pagination.Condition{Query: k, Args: []interface{}{v}})
-	}
-	orders := []pagination.Order{}
-	for k, v := range order {
-		orders = append(orders, pagination.Order{Column: k, Desc: v})
-	}
-
-	page := pagination.NewPagination(
-		pagination.WithPageNum(pageNum),
-		pagination.WithPageSize(pageSize),
-		pagination.WithConditions(conditions...),
-		pagination.WithOrders(orders...),
-	)
-	return uc.biz.domainRepo.ListPage(ctx, page)
+func (uc *DomainUsecase) ListPage(ctx context.Context, paging *pagination.Pagination) ([]*Domain, int64) {
+	uc.log.WithContext(ctx).Debugf("DomainPage")
+	return uc.biz.domainRepo.ListPage(ctx, paging)
 }
 
 // GetID 根据角色ID领域
 func (uc *DomainUsecase) GetID(ctx context.Context, g *Domain) (*Domain, error) {
-	uc.log.WithContext(ctx).Infof("GetDomainID: %v", g)
+	uc.log.WithContext(ctx).Debugf("GetDomainID: %v", g)
 	return uc.biz.domainRepo.FindByID(ctx, g.ID)
 }
 
 // Delete 根据角色ID删除领域
 func (uc *DomainUsecase) Delete(ctx context.Context, g *Domain) error {
-	uc.log.WithContext(ctx).Infof("DeleteDomain: %v", g)
+	uc.log.WithContext(ctx).Debugf("DeleteDomain: %v", g)
 	return uc.biz.tm.InTx(ctx, func(ctx context.Context) error {
 		if err := uc.biz.domainRepo.Delete(ctx, g); err != nil {
 			return err
@@ -196,19 +181,19 @@ func (uc *DomainUsecase) Delete(ctx context.Context, g *Domain) error {
 
 // HandleMenu 绑定菜单
 func (uc *DomainUsecase) HandleMenu(ctx context.Context, g *Domain) error {
-	uc.log.WithContext(ctx).Infof("HandleMenu: %v", g)
+	uc.log.WithContext(ctx).Debugf("HandleMenu: %v", g)
 	return uc.biz.domainRepo.HandleMenu(ctx, g)
 }
 
 // HandleMenu 获取领域菜单
 func (uc *DomainUsecase) ListMenuByID(ctx context.Context, g *Domain) ([]*Menu, error) {
-	uc.log.WithContext(ctx).Infof("ListMenuByIDs: %v", g)
+	uc.log.WithContext(ctx).Debugf("ListMenuByIDs: %v", g)
 	return uc.biz.domainRepo.ListMenuByIDs(ctx, g.ID)
 }
 
 // GetTree 获取领域树形
 func (uc *DomainUsecase) GetTree(ctx context.Context, id uint) []*Domain {
-	uc.log.WithContext(ctx).Infof("GetTree")
-	menus, _ := uc.biz.domainRepo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithOrder("sort", false)))
+	uc.log.WithContext(ctx).Debugf("GetTree")
+	menus, _ := uc.biz.domainRepo.ListPage(ctx, &pagination.Pagination{Nopaging: true, OrderBy: map[string]bool{"sort": true}})
 	return menus
 }

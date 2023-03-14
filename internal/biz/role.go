@@ -43,7 +43,7 @@ type RoleRepo interface {
 	ListByIDs(context.Context, ...uint) ([]*Role, error)
 	ListAll(context.Context) ([]*Role, error)
 	Delete(context.Context, *Role) error
-	ListPage(context.Context, pagination.PaginationHandler) ([]*Role, int64)
+	ListPage(context.Context, *pagination.Pagination) ([]*Role, int64)
 	HandleMenu(context.Context, *Role) error
 	HandleResource(context.Context, *Role) error
 	ListMenuByIDs(context.Context, ...uint) ([]*Menu, error)
@@ -63,19 +63,19 @@ func NewRoleUsecase(logger log.Logger, biz *Biz) *RoleUsecase {
 
 // Create creates a Role, and returns the new Role.
 func (uc *RoleUsecase) Create(ctx context.Context, g *Role) (*Role, error) {
-	uc.log.WithContext(ctx).Infof("Create: %v", g.Name)
+	uc.log.WithContext(ctx).Debugf("Create: %v", g.Name)
 	return uc.biz.roleRepo.Save(ctx, g)
 }
 
 // ListByIDs 获取指定角色ID集合
 func (uc *RoleUsecase) ListByIDs(ctx context.Context, id ...uint) (roles []*Role, err error) {
-	roles, _ = uc.biz.roleRepo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
+	roles, _ = uc.biz.roleRepo.ListPage(ctx, &pagination.Pagination{Nopaging: true, OrderBy: map[string]bool{"sort": true}})
 	return
 }
 
 // Update 修改角色
 func (uc *RoleUsecase) Update(ctx context.Context, g *Role) error {
-	uc.log.WithContext(ctx).Infof("UpdateRole: %v", g)
+	uc.log.WithContext(ctx).Debugf("UpdateRole: %v", g)
 
 	role, _ := uc.biz.roleRepo.FindByID(ctx, g.ID)
 	if role == nil {
@@ -102,7 +102,7 @@ func (uc *RoleUsecase) Update(ctx context.Context, g *Role) error {
 
 // UpdateState 修改角色状态
 func (uc *RoleUsecase) UpdateState(ctx context.Context, g *Role) error {
-	uc.log.WithContext(ctx).Infof("UpdateRoleState: %v", g)
+	uc.log.WithContext(ctx).Debugf("UpdateRoleState: %v", g)
 
 	role, _ := uc.biz.roleRepo.FindByID(ctx, g.ID)
 	if role == nil {
@@ -120,40 +120,25 @@ func (uc *RoleUsecase) UpdateState(ctx context.Context, g *Role) error {
 
 // List 角色列表全部
 func (uc *RoleUsecase) ListAll(ctx context.Context) ([]*Role, int64) {
-	uc.log.WithContext(ctx).Infof("RoleList")
-	return uc.biz.roleRepo.ListPage(ctx, pagination.NewPagination())
+	uc.log.WithContext(ctx).Debugf("RoleList")
+	return uc.biz.roleRepo.ListPage(ctx, &pagination.Pagination{Nopaging: true, OrderBy: map[string]bool{"sort": true}})
 }
 
 // List 角色列表分页
-func (uc *RoleUsecase) ListPage(ctx context.Context, pageNum, pageSize int32, query map[string]string, order map[string]bool) ([]*Role, int64) {
-	uc.log.WithContext(ctx).Infof("RolePage")
-	conditions := []pagination.Condition{}
-	for k, v := range query {
-		conditions = append(conditions, pagination.Condition{Query: k, Args: []interface{}{v}})
-	}
-	orders := []pagination.Order{}
-	for k, v := range order {
-		orders = append(orders, pagination.Order{Column: k, Desc: v})
-	}
-
-	page := pagination.NewPagination(
-		pagination.WithPageNum(pageNum),
-		pagination.WithPageSize(pageSize),
-		pagination.WithConditions(conditions...),
-		pagination.WithOrders(orders...),
-	)
-	return uc.biz.roleRepo.ListPage(ctx, page)
+func (uc *RoleUsecase) ListPage(ctx context.Context, paging *pagination.Pagination) ([]*Role, int64) {
+	uc.log.WithContext(ctx).Debugf("RolePage")
+	return uc.biz.roleRepo.ListPage(ctx, paging)
 }
 
 // GetID 根据角色ID角色
 func (uc *RoleUsecase) GetID(ctx context.Context, g *Role) (*Role, error) {
-	uc.log.WithContext(ctx).Infof("GetRoleID: %v", g)
+	uc.log.WithContext(ctx).Debugf("GetRoleID: %v", g)
 	return uc.biz.roleRepo.FindByID(ctx, g.ID)
 }
 
 // Delete 根据角色ID删除角色
 func (uc *RoleUsecase) Delete(ctx context.Context, g *Role) error {
-	uc.log.WithContext(ctx).Infof("DeleteRole: %v", g)
+	uc.log.WithContext(ctx).Debugf("DeleteRole: %v", g)
 	return uc.biz.tm.InTx(ctx, func(ctx context.Context) error {
 		if err := uc.biz.roleRepo.Delete(ctx, g); err != nil {
 			return err
@@ -165,18 +150,18 @@ func (uc *RoleUsecase) Delete(ctx context.Context, g *Role) error {
 
 // HandleMenu 获取角色菜单
 func (uc *RoleUsecase) ListMenuByID(ctx context.Context, g *Role) ([]*Menu, error) {
-	uc.log.WithContext(ctx).Infof("ListMenuByIDs: %v", g)
+	uc.log.WithContext(ctx).Debugf("ListMenuByIDs: %v", g)
 	return uc.biz.roleRepo.ListMenuByIDs(ctx, g.ID)
 }
 
 // HandleMenu 绑定菜单
 func (uc *RoleUsecase) HandleMenu(ctx context.Context, g *Role) error {
-	uc.log.WithContext(ctx).Infof("HandleMenu: %v", g)
+	uc.log.WithContext(ctx).Debugf("HandleMenu: %v", g)
 	return uc.biz.roleRepo.HandleMenu(ctx, g)
 }
 
 // HandleResource 绑定资源
 func (uc *RoleUsecase) HandleResource(ctx context.Context, g *Role) error {
-	uc.log.WithContext(ctx).Infof("HandleResource: %v", g)
+	uc.log.WithContext(ctx).Debugf("HandleResource: %v", g)
 	return uc.biz.roleRepo.HandleResource(ctx, g)
 }

@@ -143,23 +143,23 @@ func (r *DomainRepo) ListAll(ctx context.Context) ([]*biz.Domain, error) {
 	return nil, nil
 }
 
-func (r *DomainRepo) ListPage(ctx context.Context, handler pagination.PaginationHandler) (domains []*biz.Domain, total int64) {
+func (r *DomainRepo) ListPage(ctx context.Context, paging *pagination.Pagination) (domains []*biz.Domain, total int64) {
 	db := r.data.DB(ctx).Model(&SysDomain{})
 	sysDomains := []*SysDomain{}
 	// 查询条件
-	for _, v := range handler.GetConditions() {
-		db = db.Where(v.Query, v.Args...)
+	for k, v := range paging.Query {
+		db = db.Where(k, v)
 	}
 	// 排序
-	for _, v := range handler.GetOrders() {
-		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: v.Column}, Desc: v.Desc})
+	for k, v := range paging.OrderBy {
+		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: k}, Desc: v})
 	}
 
-	if !handler.GetNopaging() {
-		db = db.Count(&total).Offset(handler.GetPageOffset())
+	if !paging.Nopaging {
+		db = db.Count(&total).Offset(pagination.GetPageOffset(paging.Page, paging.PageSize))
 	}
 
-	result := db.Limit(int(handler.GetPageSize())).Find(&sysDomains)
+	result := db.Limit(int(paging.Page)).Find(&sysDomains)
 	if result.Error != nil {
 		return nil, 0
 	}
@@ -168,7 +168,7 @@ func (r *DomainRepo) ListPage(ctx context.Context, handler pagination.Pagination
 		domains = append(domains, r.toBiz(v))
 	}
 
-	if handler.GetNopaging() {
+	if paging.Nopaging {
 		total = int64(len(domains))
 	}
 

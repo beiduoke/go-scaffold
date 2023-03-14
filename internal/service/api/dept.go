@@ -7,6 +7,7 @@ import (
 	v1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/pkg/proto"
+	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -58,7 +59,8 @@ func (s *ApiService) ListDeptTree(ctx context.Context, in *v1.ListDeptTreeReq) (
 
 // ListDept 列表-部门角色
 func (s *ApiService) ListDept(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
-	results, total := s.deptCase.ListPage(ctx, in.GetPage(), in.GetPageSize(), in.GetQuery(), in.GetOrderBy())
+	// pagination.NewPagination()
+	results, total := s.deptCase.ListPage(ctx, &pagination.Pagination{Page: in.GetPage(), PageSize: in.GetPageSize(), Nopaging: in.GetNopaging(), Query: in.GetQuery(), OrderBy: in.GetOrderBy()})
 	return &protobuf.PagingReply{
 		Total: total,
 		Items: proto.ToAny(results, func(t *biz.Dept) protoreflect.ProtoMessage {

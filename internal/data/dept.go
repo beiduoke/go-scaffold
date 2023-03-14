@@ -153,23 +153,33 @@ func (r *DeptRepo) ListAll(ctx context.Context) ([]*biz.Dept, error) {
 	return bizDepts, err
 }
 
-func (r *DeptRepo) ListPage(ctx context.Context, handler pagination.PaginationHandler) (depts []*biz.Dept, total int64) {
-	db := r.data.DBD(ctx).Model(&SysDept{})
+func (r *DeptRepo) ListPage(ctx context.Context, paging *pagination.Pagination) (depts []*biz.Dept, total int64) {
+	db := r.data.DBD(ctx).Model(&SysDept{}).Debug()
 	sysDepts := []*SysDept{}
+
 	// 查询条件
-	for _, v := range handler.GetConditions() {
-		db = db.Where(v.Query, v.Args...)
+	if paging.Query != nil {
+		if name, ok := paging.Query["name"]; ok {
+			db = db.Where("name LIKE ?", name+"%")
+		}
 	}
+
 	// 排序
-	for _, v := range handler.GetOrders() {
-		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: v.Column}, Desc: v.Desc})
+	if paging.OrderBy != nil {
+		if orderBy, ok := paging.OrderBy["createdAt"]; ok {
+			db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: "created_at"}, Desc: orderBy})
+		}
+
+		if idBy, ok := paging.OrderBy["id"]; ok {
+			db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: "id"}, Desc: idBy})
+		}
 	}
 
-	if !handler.GetNopaging() {
-		db = db.Count(&total).Offset(handler.GetPageOffset())
+	if !paging.Nopaging {
+		db = db.Count(&total).Offset(pagination.GetPageOffset(paging.Page, paging.PageSize))
 	}
 
-	result := db.Limit(int(handler.GetPageSize())).Find(&sysDepts)
+	result := db.Limit(int(paging.Page)).Find(&sysDepts)
 	if result.Error != nil {
 		return nil, 0
 	}
@@ -178,7 +188,7 @@ func (r *DeptRepo) ListPage(ctx context.Context, handler pagination.PaginationHa
 		depts = append(depts, r.toBiz(v))
 	}
 
-	if handler.GetNopaging() {
+	if paging.Nopaging {
 		total = int64(len(depts))
 	}
 

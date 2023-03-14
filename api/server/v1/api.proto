@@ -199,19 +199,19 @@ service Api {
     };
   }
 
-  // 验证用户名是否存在
-  rpc ExistUserName (ExistUserNameReq) returns (ExistUserNameReply) {
-    option (google.api.http) = {
-      post: "/v1/users/existName"
-      body: "*"
-    };
-  }
-
   // 绑定用户领域权限
   rpc HandleUserRole (HandleUserRoleReq) returns (HandleUserRoleReply) {
     option (google.api.http) = {
       post: "/v1/users/{id}/roles"
       body: "data"
+    };
+  }
+
+  // 验证用户名是否存在
+  rpc ExistUserName (ExistUserNameReq) returns (ExistUserNameReply) {
+    option (google.api.http) = {
+      post: "/v1/users/existName"
+      body: "*"
     };
   }
 

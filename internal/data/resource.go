@@ -125,23 +125,23 @@ func (r *ResourceRepo) ListAll(ctx context.Context) ([]*biz.Resource, error) {
 	return nil, nil
 }
 
-func (r *ResourceRepo) ListPage(ctx context.Context, handler pagination.PaginationHandler) (resources []*biz.Resource, total int64) {
+func (r *ResourceRepo) ListPage(ctx context.Context, paging *pagination.Pagination) (resources []*biz.Resource, total int64) {
 	db := r.data.DB(ctx).Model(&SysResource{}).Debug()
 	sysResources := []*SysResource{}
 	// 查询条件
-	for _, v := range handler.GetConditions() {
-		db = db.Where(v.Query, v.Args...)
+	for k, v := range paging.Query {
+		db = db.Where(k, v)
 	}
 	// 排序
-	for _, v := range handler.GetOrders() {
-		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: v.Column}, Desc: v.Desc})
+	for k, v := range paging.OrderBy {
+		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: k}, Desc: v})
 	}
 
-	if !handler.GetNopaging() {
-		db = db.Count(&total).Offset(handler.GetPageOffset())
+	if !paging.Nopaging {
+		db = db.Count(&total).Offset(pagination.GetPageOffset(paging.Page, paging.PageSize))
 	}
 
-	result := db.Limit(int(handler.GetPageSize())).Find(&sysResources)
+	result := db.Limit(int(paging.Page)).Find(&sysResources)
 	if result.Error != nil {
 		return nil, 0
 	}
@@ -150,7 +150,7 @@ func (r *ResourceRepo) ListPage(ctx context.Context, handler pagination.Paginati
 		resources = append(resources, r.toBiz(v))
 	}
 
-	if handler.GetNopaging() {
+	if paging.Nopaging {
 		total = int64(len(resources))
 	}
 

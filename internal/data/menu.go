@@ -194,31 +194,23 @@ func (r *MenuRepo) ListAll(ctx context.Context) (menus []*biz.Menu, err error) {
 	return
 }
 
-func (r *MenuRepo) ListPage(ctx context.Context, handler pagination.PaginationHandler) (menus []*biz.Menu, total int64) {
+func (r *MenuRepo) ListPage(ctx context.Context, paging *pagination.Pagination) (menus []*biz.Menu, total int64) {
 	db := r.data.DB(ctx).Model(&SysMenu{}).Debug()
 	sysMenus := []*SysMenu{}
 	// 查询条件
-	for _, v := range handler.GetConditions() {
-		db = db.Where(v.Query, v.Args...)
+	for k, v := range paging.Query {
+		db = db.Where(k, v)
 	}
 	// 排序
-	for _, v := range handler.GetOrders() {
-		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: v.Column}, Desc: v.Desc})
+	for k, v := range paging.OrderBy {
+		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: k}, Desc: v})
 	}
 
-	if !handler.GetNopaging() {
-		db = db.Count(&total).Offset(handler.GetPageOffset())
+	if !paging.Nopaging {
+		db = db.Count(&total).Offset(pagination.GetPageOffset(paging.Page, paging.PageSize))
 	}
 
-	if domainId := r.data.DomainID(ctx); domainId > 1 {
-		var sysDomainMenus []int64
-		result := r.data.db.Table("sys_domain_menus").Where("sys_domain_id", domainId).Pluck("sys_menu_id", &sysDomainMenus)
-		if result.RowsAffected > 0 {
-			db = db.Where("id in ?", sysDomainMenus)
-		}
-	}
-
-	result := db.Limit(int(handler.GetPageSize())).Find(&sysMenus)
+	result := db.Limit(int(paging.Page)).Find(&sysMenus)
 	if result.Error != nil {
 		return nil, 0
 	}
@@ -227,7 +219,7 @@ func (r *MenuRepo) ListPage(ctx context.Context, handler pagination.PaginationHa
 		menus = append(menus, r.toBiz(v))
 	}
 
-	if handler.GetNopaging() {
+	if paging.Nopaging {
 		total = int64(len(menus))
 	}
 

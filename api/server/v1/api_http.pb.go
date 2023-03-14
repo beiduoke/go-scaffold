@@ -226,8 +226,8 @@ func RegisterApiHTTPServer(s *http.Server, srv ApiHTTPServer) {
 	r.GET("/v1/users/{id}", _Api_GetUser0_HTTP_Handler(srv))
 	r.PUT("/v1/users/{id}", _Api_UpdateUser0_HTTP_Handler(srv))
 	r.DELETE("/v1/users/{id}", _Api_DeleteUser0_HTTP_Handler(srv))
-	r.POST("/v1/users/existName", _Api_ExistUserName0_HTTP_Handler(srv))
 	r.POST("/v1/users/{id}/roles", _Api_HandleUserRole0_HTTP_Handler(srv))
+	r.POST("/v1/users/existName", _Api_ExistUserName0_HTTP_Handler(srv))
 	r.GET("/v1/domains", _Api_ListDomain0_HTTP_Handler(srv))
 	r.GET("/v1/domains/trees", _Api_ListDomainTree0_HTTP_Handler(srv))
 	r.GET("/v1/domains/{id}/trees", _Api_ListDomainTree1_HTTP_Handler(srv))
@@ -657,25 +657,6 @@ func _Api_DeleteUser0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) err
 	}
 }
 
-func _Api_ExistUserName0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ExistUserNameReq
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationApiExistUserName)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ExistUserName(ctx, req.(*ExistUserNameReq))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ExistUserNameReply)
-		return ctx.Result(200, reply)
-	}
-}
-
 func _Api_HandleUserRole0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in HandleUserRoleReq
@@ -697,6 +678,25 @@ func _Api_HandleUserRole0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context)
 			return err
 		}
 		reply := out.(*HandleUserRoleReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Api_ExistUserName0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ExistUserNameReq
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationApiExistUserName)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ExistUserName(ctx, req.(*ExistUserNameReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ExistUserNameReply)
 		return ctx.Result(200, reply)
 	}
 }

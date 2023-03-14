@@ -62,7 +62,7 @@ type MenuRepo interface {
 	ListByName(context.Context, string) ([]*Menu, error)
 	ListAll(context.Context) ([]*Menu, error)
 	Delete(context.Context, *Menu) error
-	ListPage(context.Context, pagination.PaginationHandler) ([]*Menu, int64)
+	ListPage(context.Context, *pagination.Pagination) ([]*Menu, int64)
 }
 
 type MenuUsecase struct {
@@ -78,19 +78,19 @@ func NewMenuUsecase(logger log.Logger, biz *Biz, repo MenuRepo) *MenuUsecase {
 
 // Create creates a Menu, and returns the new Menu.
 func (uc *MenuUsecase) Create(ctx context.Context, g *Menu) (*Menu, error) {
-	uc.log.WithContext(ctx).Infof("Create: %v", g.Name)
+	uc.log.WithContext(ctx).Debugf("Create: %v", g.Name)
 	return uc.repo.Save(ctx, g)
 }
 
 // ListByIDs 获取指定菜单ID集合
 func (uc *MenuUsecase) ListByIDs(ctx context.Context, id ...uint) (roles []*Menu, err error) {
-	roles, _ = uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
+	// roles, _ = uc.repo.ListPage(ctx, noop.NewPagination(noop.WithNopaging(), noop.WithCondition("id in ?", id)))
 	return
 }
 
 // Update 修改菜单
 func (uc *MenuUsecase) Update(ctx context.Context, g *Menu) error {
-	uc.log.WithContext(ctx).Infof("UpdateMenu: %v", g)
+	uc.log.WithContext(ctx).Debugf("UpdateMenu: %v", g)
 
 	menu, _ := uc.repo.FindByID(ctx, g.ID)
 	if menu == nil {
@@ -118,39 +118,24 @@ func (uc *MenuUsecase) Update(ctx context.Context, g *Menu) error {
 
 // List 菜单列表全部
 func (uc *MenuUsecase) ListAll(ctx context.Context) ([]*Menu, int64) {
-	uc.log.WithContext(ctx).Infof("MenuList")
-	return uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithOrder("sort", false)))
+	uc.log.WithContext(ctx).Debugf("MenuList")
+	return uc.repo.ListPage(ctx, &pagination.Pagination{Nopaging: true, OrderBy: map[string]bool{"sort": true}})
 }
 
 // List 菜单列表分页
-func (uc *MenuUsecase) ListPage(ctx context.Context, pageNum, pageSize int32, query map[string]string, order map[string]bool) ([]*Menu, int64) {
-	uc.log.WithContext(ctx).Infof("MenuPage")
-	conditions := []pagination.Condition{}
-	for k, v := range query {
-		conditions = append(conditions, pagination.Condition{Query: k, Args: []interface{}{v}})
-	}
-	orders := []pagination.Order{}
-	for k, v := range order {
-		orders = append(orders, pagination.Order{Column: k, Desc: v})
-	}
-
-	page := pagination.NewPagination(
-		pagination.WithPageNum(pageNum),
-		pagination.WithPageSize(pageSize),
-		pagination.WithConditions(conditions...),
-		pagination.WithOrders(orders...),
-	)
-	return uc.repo.ListPage(ctx, page)
+func (uc *MenuUsecase) ListPage(ctx context.Context, paging *pagination.Pagination) ([]*Menu, int64) {
+	uc.log.WithContext(ctx).Debugf("MenuPage")
+	return uc.repo.ListPage(ctx, paging)
 }
 
 // GetID 根据角色ID菜单
 func (uc *MenuUsecase) GetID(ctx context.Context, g *Menu) (*Menu, error) {
-	uc.log.WithContext(ctx).Infof("GetMenuID: %v", g)
+	uc.log.WithContext(ctx).Debugf("GetMenuID: %v", g)
 	return uc.repo.FindByID(ctx, g.ID)
 }
 
 // Delete 根据角色ID删除菜单
 func (uc *MenuUsecase) Delete(ctx context.Context, g *Menu) error {
-	uc.log.WithContext(ctx).Infof("DeleteMenu: %v", g)
+	uc.log.WithContext(ctx).Debugf("DeleteMenu: %v", g)
 	return uc.repo.Delete(ctx, g)
 }
