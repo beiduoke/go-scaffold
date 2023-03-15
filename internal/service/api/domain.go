@@ -37,7 +37,7 @@ func TransformDomain(data *biz.Domain) *v1.Domain {
 
 // GetTreeDomain 列表部门-树形
 func (s *ApiService) ListDomainTree(ctx context.Context, in *v1.ListDomainTreeReq) (*v1.ListDomainTreeReply, error) {
-	results, _ := s.domainCase.ListAll(ctx)
+	results, _ := s.domainCase.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithOrderBy(map[string]bool{"sort": true})))
 
 	treeData := make([]*v1.Domain, 0)
 	for _, v := range results {
@@ -54,7 +54,7 @@ func (s *ApiService) ListDomainTree(ctx context.Context, in *v1.ListDomainTreeRe
 
 // ListDomain 列表-领域
 func (s *ApiService) ListDomain(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
-	results, total := s.domainCase.ListPage(ctx, &pagination.Pagination{Page: in.GetPage(), PageSize: in.GetPageSize(), Nopaging: in.GetNopaging(), Query: in.GetQuery(), OrderBy: in.GetOrderBy()})
+	results, total := s.domainCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize()), pagination.WithQuery(pagination.QueryUnmarshal(in.GetQuery())), pagination.WithOrderBy(in.GetOrderBy())))
 	return &protobuf.PagingReply{
 		Total: total,
 		Items: proto.ToAny(results, func(t *biz.Domain) protoreflect.ProtoMessage {

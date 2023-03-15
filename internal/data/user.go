@@ -3,7 +3,6 @@ package data
 import (
 	"context"
 	"errors"
-	"fmt"
 	"strconv"
 	"time"
 
@@ -16,6 +15,7 @@ import (
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -128,20 +128,40 @@ func (r *UserRepo) Delete(ctx context.Context, g *biz.User) error {
 }
 
 func (r *UserRepo) ListPage(ctx context.Context, paging *pagination.Pagination) (users []*biz.User, total int64) {
-	db := r.data.DBD(ctx).Model(&SysUser{}).Debug()
+	db := r.data.DBD(ctx).Model(&SysUser{})
 	sysUsers := []*SysUser{}
-	fmt.Println(paging.Query)
+
 	// 查询条件
-	if name, ok := paging.Query["name"]; ok {
-		if name != "" {
-			db = db.Where("name LIKE ?", name+"%")
+	if paging.Query != nil {
+		if name, ok := paging.Query["name"]; ok {
+			if name != "" {
+				db = db.Where("name LIKE ?", name+"%")
+			}
 		}
 
 		if dept, ok := paging.Query["deptId"]; ok && dept != "" {
-			var roleId []string
+			var roleIds []string
 			deptId, _ := strconv.Atoi(dept)
-			r.data.DBD(ctx).Table("sys_role_depts").Where("sys_dept_id", deptId).Pluck("sys_role_id", &roleId)
-			fmt.Println(roleId)
+			result := r.data.DB(ctx).Table("sys_role_depts").Where("sys_dept_id", deptId).Pluck("sys_role_id", &roleIds)
+			if result.Error != nil && errors.Is(result.Error, gorm.ErrRecordNotFound) {
+				r.log.Errorf("关联查询用户部门失败: %v", result.Error)
+				return
+			}
+
+			if len(roleIds) < 1 {
+				return
+			}
+
+			var userIds []string
+			for _, v := range roleIds {
+				userIds = append(userIds, r.data.enforcer.GetUsersForRoleInDomain(v, r.data.Domain(ctx))...)
+			}
+
+			if len(userIds) < 1 {
+				return
+			}
+
+			db = db.Where(userIds)
 		}
 	}
 
@@ -158,7 +178,7 @@ func (r *UserRepo) ListPage(ctx context.Context, paging *pagination.Pagination) 
 		db = db.Count(&total).Offset(pagination.GetPageOffset(paging.Page, paging.PageSize))
 	}
 
-	result := db.Limit(int(paging.Page)).Find(&sysUsers)
+	result := db.Limit(int(paging.PageSize)).Find(&sysUsers)
 	if result.Error != nil {
 		return nil, 0
 	}

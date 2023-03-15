@@ -156,7 +156,6 @@ func (r *DeptRepo) ListAll(ctx context.Context) ([]*biz.Dept, error) {
 func (r *DeptRepo) ListPage(ctx context.Context, paging *pagination.Pagination) (depts []*biz.Dept, total int64) {
 	db := r.data.DBD(ctx).Model(&SysDept{}).Debug()
 	sysDepts := []*SysDept{}
-
 	// 查询条件
 	if paging.Query != nil {
 		if name, ok := paging.Query["name"]; ok {
@@ -179,7 +178,7 @@ func (r *DeptRepo) ListPage(ctx context.Context, paging *pagination.Pagination) 
 		db = db.Count(&total).Offset(pagination.GetPageOffset(paging.Page, paging.PageSize))
 	}
 
-	result := db.Limit(int(paging.Page)).Find(&sysDepts)
+	result := db.Limit(int(paging.PageSize)).Find(&sysDepts)
 	if result.Error != nil {
 		return nil, 0
 	}

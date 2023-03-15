@@ -119,7 +119,7 @@ func (uc *MenuUsecase) Update(ctx context.Context, g *Menu) error {
 // List 菜单列表全部
 func (uc *MenuUsecase) ListAll(ctx context.Context) ([]*Menu, int64) {
 	uc.log.WithContext(ctx).Debugf("MenuList")
-	return uc.repo.ListPage(ctx, &pagination.Pagination{Nopaging: true, OrderBy: map[string]bool{"sort": true}})
+	return uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithOrderBy(map[string]bool{"id": true, "sort": true})))
 }
 
 // List 菜单列表分页

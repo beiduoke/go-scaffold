@@ -20,40 +20,48 @@ type Pagination struct {
 	Nopaging bool
 }
 
-func (p *Pagination) queryFormat() {
-	if query, ok := p.Query["query"]; ok {
-		err := json.Unmarshal([]byte(query), &p.Query)
+func QueryUnmarshal(q map[string]string) map[string]string {
+	if query, ok := q["query"]; ok {
+		err := json.Unmarshal([]byte(query), &q)
 		if err != nil {
 			log.Println(err)
 		}
 	}
+	return q
 }
 
-func (p *Pagination) orderByFormat() {
+func OrderByUnmarshal(o map[string]bool) map[string]bool {
 	// if order, ok := p.OrderBy["orderBy"]; ok {
 	// 	err := json.Unmarshal([]byte(order), &p.OrderBy)
 	// 	if err != nil {
 	// 		log.Println(err)
 	// 	}
 	// }
+	return o
 }
 
 func NewPagination(opts ...Option) *Pagination {
 	p := Pagination{
 		Page:     PAGE,
 		PageSize: PAGE_SIZE,
+		OrderBy:  make(map[string]bool),
+		Query:    make(map[string]string),
 	}
 	for _, o := range opts {
 		o(&p)
 	}
-	p.orderByFormat()
-	p.queryFormat()
+	if p.Nopaging {
+		p.PageSize = MAX_PAGE_SIZE
+	}
+	p.Query = QueryUnmarshal(p.Query)
+	p.OrderBy = OrderByUnmarshal(p.OrderBy)
 	return &p
 }
 
 func WithNopaging() Option {
 	return func(p *Pagination) {
 		p.Nopaging = true
+		p.PageSize = MAX_PAGE_SIZE
 	}
 }
 
@@ -72,5 +80,17 @@ func WithPageSize(size int32) Option {
 			size = PAGE_SIZE
 		}
 		p.PageSize = size
+	}
+}
+
+func WithQuery(q map[string]string) Option {
+	return func(p *Pagination) {
+		p.Query = q
+	}
+}
+
+func WithOrderBy(o map[string]bool) Option {
+	return func(p *Pagination) {
+		p.OrderBy = o
 	}
 }

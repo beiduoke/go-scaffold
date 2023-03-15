@@ -111,7 +111,7 @@ func TreeMenu(menus []*biz.Menu, pid uint) []*v1.Menu {
 
 // ListMenuTree 列表菜单-树形
 func (s *ApiService) ListMenuTree(ctx context.Context, in *v1.ListMenuTreeReq) (*v1.ListMenuTreeReply, error) {
-	results, total := s.menuCase.ListAll(ctx)
+	results, total := s.menuCase.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithOrderBy(map[string]bool{"id": false, "sort": true})))
 	treeData := make([]*v1.Menu, 0)
 	for _, v := range results {
 		treeData = append(treeData, TransformMenu(v))
@@ -127,7 +127,7 @@ func (s *ApiService) ListMenuTree(ctx context.Context, in *v1.ListMenuTreeReq) (
 
 // ListMenu 列表菜单
 func (s *ApiService) ListMenu(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
-	results, total := s.menuCase.ListPage(ctx, &pagination.Pagination{Page: in.GetPage(), PageSize: in.GetPageSize(), Nopaging: in.GetNopaging(), Query: in.GetQuery(), OrderBy: in.GetOrderBy()})
+	results, total := s.menuCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize()), pagination.WithQuery(pagination.QueryUnmarshal(in.GetQuery())), pagination.WithOrderBy(in.GetOrderBy())))
 	return &protobuf.PagingReply{
 		Total: total,
 		Items: proto.ToAny(results, func(t *biz.Menu) protoreflect.ProtoMessage {

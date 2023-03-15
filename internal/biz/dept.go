@@ -85,7 +85,7 @@ func (uc *DeptUsecase) Update(ctx context.Context, g *Dept) error {
 // List 部门列表全部
 func (uc *DeptUsecase) ListAll(ctx context.Context) ([]*Dept, int64) {
 	uc.log.WithContext(ctx).Debugf("ListAll")
-	return uc.repo.ListPage(ctx, &pagination.Pagination{Nopaging: true, OrderBy: map[string]bool{"id": true, "sort": true}})
+	return uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithOrderBy(map[string]bool{"id": true, "sort": true})))
 }
 
 // List 部门列表分页

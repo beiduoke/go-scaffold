@@ -41,7 +41,7 @@ func TransformUser(data *biz.User) *v1.User {
 
 // ListUser 列表用户
 func (s *ApiService) ListUser(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
-	results, total := s.userCase.ListPage(ctx, &pagination.Pagination{Page: in.GetPage(), PageSize: in.GetPageSize(), Nopaging: in.GetNopaging(), Query: in.GetQuery(), OrderBy: in.GetOrderBy()})
+	results, total := s.userCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize()), pagination.WithQuery(pagination.QueryUnmarshal(in.GetQuery())), pagination.WithOrderBy(in.GetOrderBy())))
 	items := make([]*anypb.Any, 0, len(results))
 	for _, v := range results {
 		item, _ := anypb.New(TransformUser(v))

@@ -141,7 +141,7 @@ func (r *ResourceRepo) ListPage(ctx context.Context, paging *pagination.Paginati
 		db = db.Count(&total).Offset(pagination.GetPageOffset(paging.Page, paging.PageSize))
 	}
 
-	result := db.Limit(int(paging.Page)).Find(&sysResources)
+	result := db.Limit(int(paging.PageSize)).Find(&sysResources)
 	if result.Error != nil {
 		return nil, 0
 	}

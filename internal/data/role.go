@@ -143,7 +143,7 @@ func (r *RoleRepo) ListPage(ctx context.Context, paging *pagination.Pagination) 
 		db = db.Count(&total).Offset(pagination.GetPageOffset(paging.Page, paging.PageSize))
 	}
 
-	result := db.Limit(int(paging.Page)).Find(&sysRoles)
+	result := db.Limit(int(paging.PageSize)).Find(&sysRoles)
 	if result.Error != nil {
 		return nil, 0
 	}

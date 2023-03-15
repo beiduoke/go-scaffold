@@ -59,8 +59,7 @@ func (s *ApiService) ListDeptTree(ctx context.Context, in *v1.ListDeptTreeReq) (
 
 // ListDept 列表-部门角色
 func (s *ApiService) ListDept(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
-	// pagination.NewPagination()
-	results, total := s.deptCase.ListPage(ctx, &pagination.Pagination{Page: in.GetPage(), PageSize: in.GetPageSize(), Nopaging: in.GetNopaging(), Query: in.GetQuery(), OrderBy: in.GetOrderBy()})
+	results, total := s.deptCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize()), pagination.WithQuery(pagination.QueryUnmarshal(in.GetQuery())), pagination.WithOrderBy(in.GetOrderBy())))
 	return &protobuf.PagingReply{
 		Total: total,
 		Items: proto.ToAny(results, func(t *biz.Dept) protoreflect.ProtoMessage {

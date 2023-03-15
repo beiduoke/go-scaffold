@@ -144,7 +144,7 @@ func (r *PostRepo) ListPage(ctx context.Context, paging *pagination.Pagination) 
 		db = db.Count(&total).Offset(pagination.GetPageOffset(paging.Page, paging.PageSize))
 	}
 
-	result := db.Limit(int(paging.Page)).Find(&sysPosts)
+	result := db.Limit(int(paging.PageSize)).Find(&sysPosts)
 	if result.Error != nil {
 		return nil, 0
 	}
