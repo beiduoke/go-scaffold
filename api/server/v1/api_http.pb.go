@@ -65,6 +65,7 @@ const OperationApiListRoleMenu = "/api.server.v1.Api/ListRoleMenu"
 const OperationApiListUser = "/api.server.v1.Api/ListUser"
 const OperationApiListUserRole = "/api.server.v1.Api/ListUserRole"
 const OperationApiListUserRoleMenuRouterTree = "/api.server.v1.Api/ListUserRoleMenuRouterTree"
+const OperationApiListUserRoleMenuTree = "/api.server.v1.Api/ListUserRoleMenuTree"
 const OperationApiListUserRolePermission = "/api.server.v1.Api/ListUserRolePermission"
 const OperationApiLogin = "/api.server.v1.Api/Login"
 const OperationApiLogout = "/api.server.v1.Api/Logout"
@@ -174,6 +175,8 @@ type ApiHTTPServer interface {
 	ListUserRole(context.Context, *emptypb.Empty) (*ListUserRoleReply, error)
 	// ListUserRoleMenuRouterTree 获取角色菜单路由树形列表
 	ListUserRoleMenuRouterTree(context.Context, *ListUserRoleMenuRouterTreeReq) (*ListUserRoleMenuRouterTreeReply, error)
+	// ListUserRoleMenuTree 获取角色菜单路由树形列表
+	ListUserRoleMenuTree(context.Context, *ListUserRoleMenuTreeReq) (*ListUserRoleMenuTreeReply, error)
 	// ListUserRolePermission 获取角色权限列表
 	ListUserRolePermission(context.Context, *ListUserRolePermissionReq) (*ListUserRolePermissionReply, error)
 	// Login 密码登陆
@@ -219,6 +222,8 @@ func RegisterApiHTTPServer(s *http.Server, srv ApiHTTPServer) {
 	r.GET("/v1/users/roles", _Api_ListUserRole0_HTTP_Handler(srv))
 	r.GET("/v1/users/roles/{role_id}/routers/trees", _Api_ListUserRoleMenuRouterTree0_HTTP_Handler(srv))
 	r.GET("/v1/users/routers/trees", _Api_ListUserRoleMenuRouterTree1_HTTP_Handler(srv))
+	r.GET("/v1/users/roles/{role_id}/menus/trees", _Api_ListUserRoleMenuTree0_HTTP_Handler(srv))
+	r.GET("/v1/users/menus/trees", _Api_ListUserRoleMenuTree1_HTTP_Handler(srv))
 	r.GET("/v1/users/roles/{role_id}/permissions", _Api_ListUserRolePermission0_HTTP_Handler(srv))
 	r.GET("/v1/users/permissions", _Api_ListUserRolePermission1_HTTP_Handler(srv))
 	r.GET("/v1/users", _Api_ListUser0_HTTP_Handler(srv))
@@ -505,6 +510,47 @@ func _Api_ListUserRoleMenuRouterTree1_HTTP_Handler(srv ApiHTTPServer) func(ctx h
 			return err
 		}
 		reply := out.(*ListUserRoleMenuRouterTreeReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Api_ListUserRoleMenuTree0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListUserRoleMenuTreeReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationApiListUserRoleMenuTree)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListUserRoleMenuTree(ctx, req.(*ListUserRoleMenuTreeReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListUserRoleMenuTreeReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Api_ListUserRoleMenuTree1_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListUserRoleMenuTreeReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationApiListUserRoleMenuTree)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListUserRoleMenuTree(ctx, req.(*ListUserRoleMenuTreeReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListUserRoleMenuTreeReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -1686,6 +1732,7 @@ type ApiHTTPClient interface {
 	ListUser(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
 	ListUserRole(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *ListUserRoleReply, err error)
 	ListUserRoleMenuRouterTree(ctx context.Context, req *ListUserRoleMenuRouterTreeReq, opts ...http.CallOption) (rsp *ListUserRoleMenuRouterTreeReply, err error)
+	ListUserRoleMenuTree(ctx context.Context, req *ListUserRoleMenuTreeReq, opts ...http.CallOption) (rsp *ListUserRoleMenuTreeReply, err error)
 	ListUserRolePermission(ctx context.Context, req *ListUserRolePermissionReq, opts ...http.CallOption) (rsp *ListUserRolePermissionReply, err error)
 	Login(ctx context.Context, req *LoginReq, opts ...http.CallOption) (rsp *LoginReply, err error)
 	Logout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *LogoutReply, err error)
@@ -2275,6 +2322,19 @@ func (c *ApiHTTPClientImpl) ListUserRoleMenuRouterTree(ctx context.Context, in *
 	pattern := "/v1/users/routers/trees"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationApiListUserRoleMenuRouterTree))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ApiHTTPClientImpl) ListUserRoleMenuTree(ctx context.Context, in *ListUserRoleMenuTreeReq, opts ...http.CallOption) (*ListUserRoleMenuTreeReply, error) {
+	var out ListUserRoleMenuTreeReply
+	pattern := "/v1/users/menus/trees"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationApiListUserRoleMenuTree))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

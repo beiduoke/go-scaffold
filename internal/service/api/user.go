@@ -235,7 +235,7 @@ func (s *ApiService) ListUserRole(ctx context.Context, in *emptypb.Empty) (*v1.L
 	}, nil
 }
 
-// 获取角色菜单树形列表
+// 获取角色菜单路由树形列表
 func (s *ApiService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.ListUserRoleMenuRouterTreeReq) (*v1.ListUserRoleMenuRouterTreeReply, error) {
 	results, err := s.userCase.RoleMenus(ctx)
 	if err != nil {
@@ -268,5 +268,26 @@ func (s *ApiService) ListUserRolePermission(ctx context.Context, in *v1.ListUser
 	menuModels, _ := s.userCase.RolePermissions(ctx)
 	return &v1.ListUserRolePermissionReply{
 		Items: convert.ArrayStrUnique(menuModels),
+	}, nil
+}
+
+// 获取角色菜单树形列表
+func (s *ApiService) ListUserRoleMenuTree(ctx context.Context, in *v1.ListUserRoleMenuTreeReq) (*v1.ListUserRoleMenuTreeReply, error) {
+	results, err := s.userCase.RoleMenus(ctx)
+	if err != nil {
+		s.log.Debugf("用户菜单查询失败 %v", err)
+	}
+	treeData := make([]*v1.Menu, 0)
+	for _, v := range results {
+		if v.Type == int32(protobuf.MenuType_MENU_TYPE_ABILITY) {
+			continue
+		}
+		treeData = append(treeData, TransformMenu(v))
+	}
+	return &v1.ListUserRoleMenuTreeReply{
+		Items: proto.ToTree(treeData, 0, func(t *v1.Menu, ts ...*v1.Menu) error {
+			t.Children = append(t.Children, ts...)
+			return nil
+		}),
 	}, nil
 }

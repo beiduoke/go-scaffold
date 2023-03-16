@@ -152,6 +152,15 @@ service Api {
     };
   }
   
+  // 获取角色菜单路由树形列表
+  rpc ListUserRoleMenuTree (ListUserRoleMenuTreeReq) returns (ListUserRoleMenuTreeReply) {
+    option (google.api.http) = {
+      get: "/v1/users/menus/trees"
+      additional_bindings {
+        get: "/v1/users/roles/{role_id}/menus/trees"
+      }
+    };
+  }
   // 获取角色权限列表
   rpc ListUserRolePermission (ListUserRolePermissionReq) returns (ListUserRolePermissionReply) {
     option (google.api.http) = {
@@ -753,6 +762,17 @@ message MenuRouter {
 // 回应 - 获取用户角色菜单列表-树形
 message ListUserRoleMenuRouterTreeReply {
   repeated MenuRouter items = 1;
+  optional int64 total = 2;
+}
+
+// 请求 - 获取用户角色列表
+message ListUserRoleMenuTreeReq {
+  uint64 role_id = 1 [(validate.rules).uint64 = {gte: 0}];
+}
+
+// 回应 - 获取用户角色列表
+message ListUserRoleMenuTreeReply {
+  repeated Menu items = 1;
   optional int64 total = 2;
 }
 

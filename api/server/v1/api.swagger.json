@@ -1954,6 +1954,38 @@
         ]
       }
     },
+    "/v1/users/menus/trees": {
+      "get": {
+        "summary": "获取角色菜单路由树形列表",
+        "operationId": "Api_ListUserRoleMenuTree",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListUserRoleMenuTreeReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
     "/v1/users/permissions": {
       "get": {
         "summary": "获取角色权限列表",
@@ -2027,6 +2059,38 @@
             }
           }
         },
+        "tags": [
+          "Api"
+        ]
+      }
+    },
+    "/v1/users/roles/{roleId}/menus/trees": {
+      "get": {
+        "summary": "获取角色菜单路由树形列表",
+        "operationId": "Api_ListUserRoleMenuTree2",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListUserRoleMenuTreeReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
         "tags": [
           "Api"
         ]
@@ -3537,6 +3601,22 @@
         }
       },
       "title": "回应 - 获取用户角色菜单列表-树形"
+    },
+    "v1ListUserRoleMenuTreeReply": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/serverv1Menu"
+          }
+        },
+        "total": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "title": "回应 - 获取用户角色列表"
     },
     "v1ListUserRolePermissionReply": {
       "type": "object",

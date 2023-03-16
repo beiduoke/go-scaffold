@@ -1176,6 +1176,25 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.server.v1.GetUserInfoReply'
+    /v1/users/menus/trees:
+        get:
+            tags:
+                - Api
+            description: 获取角色菜单路由树形列表
+            operationId: Api_ListUserRoleMenuTree
+            parameters:
+                - name: roleId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.server.v1.ListUserRoleMenuTreeReply'
     /v1/users/permissions:
         get:
             tags:
@@ -2033,6 +2052,17 @@ components:
                     type: integer
                     format: int64
             description: 回应 - 获取用户角色菜单列表-树形
+        api.server.v1.ListUserRoleMenuTreeReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.server.v1.Menu'
+                total:
+                    type: integer
+                    format: int64
+            description: 回应 - 获取用户角色列表
         api.server.v1.ListUserRolePermissionReply:
             type: object
             properties:

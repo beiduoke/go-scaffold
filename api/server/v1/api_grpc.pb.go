@@ -43,6 +43,8 @@ type ApiClient interface {
 	ListUserRole(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserRoleReply, error)
 	// 获取角色菜单路由树形列表
 	ListUserRoleMenuRouterTree(ctx context.Context, in *ListUserRoleMenuRouterTreeReq, opts ...grpc.CallOption) (*ListUserRoleMenuRouterTreeReply, error)
+	// 获取角色菜单路由树形列表
+	ListUserRoleMenuTree(ctx context.Context, in *ListUserRoleMenuTreeReq, opts ...grpc.CallOption) (*ListUserRoleMenuTreeReply, error)
 	// 获取角色权限列表
 	ListUserRolePermission(ctx context.Context, in *ListUserRolePermissionReq, opts ...grpc.CallOption) (*ListUserRolePermissionReply, error)
 	// 列表用户
@@ -231,6 +233,15 @@ func (c *apiClient) ListUserRole(ctx context.Context, in *emptypb.Empty, opts ..
 func (c *apiClient) ListUserRoleMenuRouterTree(ctx context.Context, in *ListUserRoleMenuRouterTreeReq, opts ...grpc.CallOption) (*ListUserRoleMenuRouterTreeReply, error) {
 	out := new(ListUserRoleMenuRouterTreeReply)
 	err := c.cc.Invoke(ctx, "/api.server.v1.Api/ListUserRoleMenuRouterTree", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) ListUserRoleMenuTree(ctx context.Context, in *ListUserRoleMenuTreeReq, opts ...grpc.CallOption) (*ListUserRoleMenuTreeReply, error) {
+	out := new(ListUserRoleMenuTreeReply)
+	err := c.cc.Invoke(ctx, "/api.server.v1.Api/ListUserRoleMenuTree", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -710,6 +721,8 @@ type ApiServer interface {
 	ListUserRole(context.Context, *emptypb.Empty) (*ListUserRoleReply, error)
 	// 获取角色菜单路由树形列表
 	ListUserRoleMenuRouterTree(context.Context, *ListUserRoleMenuRouterTreeReq) (*ListUserRoleMenuRouterTreeReply, error)
+	// 获取角色菜单路由树形列表
+	ListUserRoleMenuTree(context.Context, *ListUserRoleMenuTreeReq) (*ListUserRoleMenuTreeReply, error)
 	// 获取角色权限列表
 	ListUserRolePermission(context.Context, *ListUserRolePermissionReq) (*ListUserRolePermissionReply, error)
 	// 列表用户
@@ -846,6 +859,9 @@ func (UnimplementedApiServer) ListUserRole(context.Context, *emptypb.Empty) (*Li
 }
 func (UnimplementedApiServer) ListUserRoleMenuRouterTree(context.Context, *ListUserRoleMenuRouterTreeReq) (*ListUserRoleMenuRouterTreeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUserRoleMenuRouterTree not implemented")
+}
+func (UnimplementedApiServer) ListUserRoleMenuTree(context.Context, *ListUserRoleMenuTreeReq) (*ListUserRoleMenuTreeReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUserRoleMenuTree not implemented")
 }
 func (UnimplementedApiServer) ListUserRolePermission(context.Context, *ListUserRolePermissionReq) (*ListUserRolePermissionReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUserRolePermission not implemented")
@@ -1168,6 +1184,24 @@ func _Api_ListUserRoleMenuRouterTree_Handler(srv interface{}, ctx context.Contex
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ApiServer).ListUserRoleMenuRouterTree(ctx, req.(*ListUserRoleMenuRouterTreeReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_ListUserRoleMenuTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUserRoleMenuTreeReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).ListUserRoleMenuTree(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.server.v1.Api/ListUserRoleMenuTree",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).ListUserRoleMenuTree(ctx, req.(*ListUserRoleMenuTreeReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2114,6 +2148,10 @@ var Api_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListUserRoleMenuRouterTree",
 			Handler:    _Api_ListUserRoleMenuRouterTree_Handler,
+		},
+		{
+			MethodName: "ListUserRoleMenuTree",
+			Handler:    _Api_ListUserRoleMenuTree_Handler,
 		},
 		{
 			MethodName: "ListUserRolePermission",
