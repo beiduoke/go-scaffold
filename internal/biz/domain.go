@@ -60,13 +60,13 @@ type DomainRepo interface {
 
 	// 领域权限
 	// stdcasbin.IEnforcer
-	// SaveRoleUser 添加领域角色权限
+	// SaveRoleUser 添加领域领域权限
 	// SaveRoleForUserInDomain(context.Context, uint /* userID */, uint /* roleID */, uint /* domainID */) error
-	// GetRoleForUserInDomain 获取领域用户的角色
+	// GetRoleForUserInDomain 获取领域用户的领域
 	// GetRolesForUserInDomain(context.Context, uint /* userID */, uint /* domainID */) []*Role
-	// GetRolesForUserInDomain 获取具有域内角色的用户
+	// GetRolesForUserInDomain 获取具有域内领域的用户
 	// GetUsersForRoleInDomain(context.Context, uint /* roleID */, uint /* domainID */) []*User
-	// DeleteRoleForUserInDomain 域内删除用户的角色域内删除用户的角色
+	// DeleteRoleForUserInDomain 域内删除用户的领域域内删除用户的领域
 	// DeleteRoleForUserInDomain(context.Context, uint /* userID */, uint /* domainID */) error
 }
 
@@ -161,13 +161,19 @@ func (uc *DomainUsecase) ListPage(ctx context.Context, paging *pagination.Pagina
 	return uc.biz.domainRepo.ListPage(ctx, paging)
 }
 
-// GetID 根据角色ID领域
+// GetID 根据领域ID领域
 func (uc *DomainUsecase) GetID(ctx context.Context, g *Domain) (*Domain, error) {
 	uc.log.WithContext(ctx).Debugf("GetDomainID: %v", g)
 	return uc.biz.domainRepo.FindByID(ctx, g.ID)
 }
 
-// Delete 根据角色ID删除领域
+// GetID 根据领域Code领域
+func (uc *DomainUsecase) GetCode(ctx context.Context, g *Domain) (*Domain, error) {
+	uc.log.WithContext(ctx).Debugf("GetDomainCode: %v", g)
+	return uc.biz.domainRepo.FindByCode(ctx, g.Code)
+}
+
+// Delete 根据领域ID删除领域
 func (uc *DomainUsecase) Delete(ctx context.Context, g *Domain) error {
 	uc.log.WithContext(ctx).Debugf("DeleteDomain: %v", g)
 	return uc.biz.tm.InTx(ctx, func(ctx context.Context) error {

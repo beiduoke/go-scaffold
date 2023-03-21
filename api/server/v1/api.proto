@@ -256,6 +256,13 @@ service Api {
     };
   }
 
+  // 获取领域
+  rpc GetDomainCode (GetDomainCodeReq) returns (Domain) {
+    option (google.api.http) = {
+      get: "/v1/domains/{code}/code"
+    };
+  }
+
   // 修改领域
   rpc UpdateDomain (UpdateDomainReq) returns (UpdateDomainReply) {
     option (google.api.http) = {
@@ -987,6 +994,11 @@ message UpdateDomainStateReply {
 // 请求 - 获取领域
 message GetDomainReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 请求 - 获取领域Code
+message GetDomainCodeReq {
+  string code = 1 [(validate.rules).string.len = 19];
 }
 
 // 请求 - 删除领域

@@ -134,6 +134,15 @@ func (s *ApiService) GetDomain(ctx context.Context, in *v1.GetDomainReq) (*v1.Do
 	return TransformDomain(domain), nil
 }
 
+// GetDomainCode 获取领域
+func (s *ApiService) GetDomainCode(ctx context.Context, in *v1.GetDomainCodeReq) (*v1.Domain, error) {
+	domain, err := s.domainCase.GetCode(ctx, &biz.Domain{Code: in.GetCode()})
+	if err != nil {
+		return nil, v1.ErrorDomainNotFound("领域未找到")
+	}
+	return TransformDomain(domain), nil
+}
+
 // DeleteDomain 删除领域
 func (s *ApiService) DeleteDomain(ctx context.Context, in *v1.DeleteDomainReq) (*v1.DeleteDomainReply, error) {
 	if err := s.domainCase.Delete(ctx, &biz.Domain{ID: uint(in.GetId())}); err != nil {

@@ -25,13 +25,17 @@ func NewSysModelMigrate() []interface{} {
 type Model struct {
 	ID        uint           `gorm:"primarykey;comment:主键ID;"`
 	CreatedAt time.Time      `gorm:"comment:创建时间;"`
+	Creator   string         `gorm:"type:varchar(64);column:creator;not null;default:'';comment:创建者;"`
 	UpdatedAt time.Time      `gorm:"comment:修改时间;"`
+	Updater   string         `gorm:"type:varchar(64);column:updater;not null;default:'';comment:更新者;"`
 	DeletedAt gorm.DeletedAt `gorm:"index;comment:删除时间;"`
 }
 type DomainModel struct {
 	ID        uint           `gorm:"primarykey;comment:主键ID;"`
 	CreatedAt time.Time      `gorm:"comment:创建时间;"`
+	Creator   string         `gorm:"type:varchar(64);column:creator;not null;default:'';comment:创建者;"`
 	UpdatedAt time.Time      `gorm:"comment:修改时间;"`
+	Updater   string         `gorm:"type:varchar(64);column:updater;not null;default:'';comment:更新者;"`
 	DeletedAt gorm.DeletedAt `gorm:"index;comment:删除时间;"`
 	DomainID  uint           `gorm:"type:bigint(20);column:domain_id;not null;default:0;index:idx_domain_id_data;comment:领域ID;"`
 	Domain    *SysDomain     `gorm:"-"`

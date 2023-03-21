@@ -591,6 +591,37 @@
         ]
       }
     },
+    "/v1/domains/{code}/code": {
+      "get": {
+        "summary": "获取领域",
+        "operationId": "Api_GetDomainCode",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Domain"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
     "/v1/domains/{id}": {
       "get": {
         "summary": "获取领域",

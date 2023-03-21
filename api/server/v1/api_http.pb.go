@@ -39,6 +39,7 @@ const OperationApiEmailLogin = "/api.server.v1.Api/EmailLogin"
 const OperationApiExistUserName = "/api.server.v1.Api/ExistUserName"
 const OperationApiGetDept = "/api.server.v1.Api/GetDept"
 const OperationApiGetDomain = "/api.server.v1.Api/GetDomain"
+const OperationApiGetDomainCode = "/api.server.v1.Api/GetDomainCode"
 const OperationApiGetMenu = "/api.server.v1.Api/GetMenu"
 const OperationApiGetPost = "/api.server.v1.Api/GetPost"
 const OperationApiGetResource = "/api.server.v1.Api/GetResource"
@@ -119,6 +120,8 @@ type ApiHTTPServer interface {
 	GetDept(context.Context, *GetDeptReq) (*Dept, error)
 	// GetDomain 获取领域
 	GetDomain(context.Context, *GetDomainReq) (*Domain, error)
+	// GetDomainCode 获取领域
+	GetDomainCode(context.Context, *GetDomainCodeReq) (*Domain, error)
 	// GetMenu 获取菜单
 	GetMenu(context.Context, *GetMenuReq) (*Menu, error)
 	// GetPost 获取职位
@@ -238,6 +241,7 @@ func RegisterApiHTTPServer(s *http.Server, srv ApiHTTPServer) {
 	r.GET("/v1/domains/{id}/trees", _Api_ListDomainTree1_HTTP_Handler(srv))
 	r.POST("/v1/domains", _Api_CreateDomain0_HTTP_Handler(srv))
 	r.GET("/v1/domains/{id}", _Api_GetDomain0_HTTP_Handler(srv))
+	r.GET("/v1/domains/{code}/code", _Api_GetDomainCode0_HTTP_Handler(srv))
 	r.PUT("/v1/domains/{id}", _Api_UpdateDomain0_HTTP_Handler(srv))
 	r.DELETE("/v1/domains/{id}", _Api_DeleteDomain0_HTTP_Handler(srv))
 	r.PUT("/v1/domains/{id}/state", _Api_UpdateDomainState0_HTTP_Handler(srv))
@@ -838,6 +842,28 @@ func _Api_GetDomain0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) erro
 		http.SetOperation(ctx, OperationApiGetDomain)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.GetDomain(ctx, req.(*GetDomainReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*Domain)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Api_GetDomainCode0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetDomainCodeReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationApiGetDomainCode)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetDomainCode(ctx, req.(*GetDomainCodeReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -1706,6 +1732,7 @@ type ApiHTTPClient interface {
 	ExistUserName(ctx context.Context, req *ExistUserNameReq, opts ...http.CallOption) (rsp *ExistUserNameReply, err error)
 	GetDept(ctx context.Context, req *GetDeptReq, opts ...http.CallOption) (rsp *Dept, err error)
 	GetDomain(ctx context.Context, req *GetDomainReq, opts ...http.CallOption) (rsp *Domain, err error)
+	GetDomainCode(ctx context.Context, req *GetDomainCodeReq, opts ...http.CallOption) (rsp *Domain, err error)
 	GetMenu(ctx context.Context, req *GetMenuReq, opts ...http.CallOption) (rsp *Menu, err error)
 	GetPost(ctx context.Context, req *GetPostReq, opts ...http.CallOption) (rsp *Post, err error)
 	GetResource(ctx context.Context, req *GetResourceReq, opts ...http.CallOption) (rsp *Resource, err error)
@@ -1984,6 +2011,19 @@ func (c *ApiHTTPClientImpl) GetDomain(ctx context.Context, in *GetDomainReq, opt
 	pattern := "/v1/domains/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationApiGetDomain))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ApiHTTPClientImpl) GetDomainCode(ctx context.Context, in *GetDomainCodeReq, opts ...http.CallOption) (*Domain, error) {
+	var out Domain
+	pattern := "/v1/domains/{code}/code"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationApiGetDomainCode))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

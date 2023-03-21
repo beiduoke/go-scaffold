@@ -306,6 +306,25 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.server.v1.CreateDomainReply'
+    /v1/domains/{code}/code:
+        get:
+            tags:
+                - Api
+            description: 获取领域
+            operationId: Api_GetDomainCode
+            parameters:
+                - name: code
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.server.v1.Domain'
     /v1/domains/{id}:
         get:
             tags:
