@@ -7,6 +7,7 @@ import (
 	"github.com/beiduoke/go-scaffold/pkg/auth/authz"
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/middleware"
+	"google.golang.org/grpc/status"
 )
 
 const (
@@ -22,8 +23,8 @@ func Server(authenticator authn.Authenticator, userCreator authn.SecurityUserCre
 	return func(handler middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req interface{}) (interface{}, error) {
 			claims, err := authenticator.Authenticate(ctx)
-			if err != nil {
-				return nil, err
+			if err != nil && status.Convert(err) != nil {
+				return nil, errors.Unauthorized(reason, status.Convert(err).Message())
 			}
 
 			ctx = authn.ContextWithAuthClaims(ctx, claims)

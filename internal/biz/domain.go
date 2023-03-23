@@ -173,6 +173,12 @@ func (uc *DomainUsecase) GetCode(ctx context.Context, g *Domain) (*Domain, error
 	return uc.biz.domainRepo.FindByCode(ctx, g.Code)
 }
 
+// GetID 根据领域Name领域
+func (uc *DomainUsecase) GetName(ctx context.Context, g *Domain) (*Domain, error) {
+	uc.log.WithContext(ctx).Debugf("GetDomainName: %v", g)
+	return uc.biz.domainRepo.FindByName(ctx, g.Name)
+}
+
 // Delete 根据领域ID删除领域
 func (uc *DomainUsecase) Delete(ctx context.Context, g *Domain) error {
 	uc.log.WithContext(ctx).Debugf("DeleteDomain: %v", g)

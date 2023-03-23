@@ -71,6 +71,8 @@ type ApiClient interface {
 	GetDomain(ctx context.Context, in *GetDomainReq, opts ...grpc.CallOption) (*Domain, error)
 	// 获取领域
 	GetDomainCode(ctx context.Context, in *GetDomainCodeReq, opts ...grpc.CallOption) (*Domain, error)
+	// 获取领域
+	GetDomainName(ctx context.Context, in *GetDomainNameReq, opts ...grpc.CallOption) (*Domain, error)
 	// 修改领域
 	UpdateDomain(ctx context.Context, in *UpdateDomainReq, opts ...grpc.CallOption) (*UpdateDomainReply, error)
 	// 删除领域
@@ -361,6 +363,15 @@ func (c *apiClient) GetDomain(ctx context.Context, in *GetDomainReq, opts ...grp
 func (c *apiClient) GetDomainCode(ctx context.Context, in *GetDomainCodeReq, opts ...grpc.CallOption) (*Domain, error) {
 	out := new(Domain)
 	err := c.cc.Invoke(ctx, "/api.server.v1.Api/GetDomainCode", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) GetDomainName(ctx context.Context, in *GetDomainNameReq, opts ...grpc.CallOption) (*Domain, error) {
+	out := new(Domain)
+	err := c.cc.Invoke(ctx, "/api.server.v1.Api/GetDomainName", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -760,6 +771,8 @@ type ApiServer interface {
 	GetDomain(context.Context, *GetDomainReq) (*Domain, error)
 	// 获取领域
 	GetDomainCode(context.Context, *GetDomainCodeReq) (*Domain, error)
+	// 获取领域
+	GetDomainName(context.Context, *GetDomainNameReq) (*Domain, error)
 	// 修改领域
 	UpdateDomain(context.Context, *UpdateDomainReq) (*UpdateDomainReply, error)
 	// 删除领域
@@ -914,6 +927,9 @@ func (UnimplementedApiServer) GetDomain(context.Context, *GetDomainReq) (*Domain
 }
 func (UnimplementedApiServer) GetDomainCode(context.Context, *GetDomainCodeReq) (*Domain, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDomainCode not implemented")
+}
+func (UnimplementedApiServer) GetDomainName(context.Context, *GetDomainNameReq) (*Domain, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDomainName not implemented")
 }
 func (UnimplementedApiServer) UpdateDomain(context.Context, *UpdateDomainReq) (*UpdateDomainReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDomain not implemented")
@@ -1452,6 +1468,24 @@ func _Api_GetDomainCode_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ApiServer).GetDomainCode(ctx, req.(*GetDomainCodeReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_GetDomainName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDomainNameReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).GetDomainName(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.server.v1.Api/GetDomainName",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).GetDomainName(ctx, req.(*GetDomainNameReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2238,6 +2272,10 @@ var Api_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetDomainCode",
 			Handler:    _Api_GetDomainCode_Handler,
+		},
+		{
+			MethodName: "GetDomainName",
+			Handler:    _Api_GetDomainName_Handler,
 		},
 		{
 			MethodName: "UpdateDomain",

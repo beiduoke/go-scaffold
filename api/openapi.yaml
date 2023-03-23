@@ -480,6 +480,25 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.server.v1.ListDomainTreeReply'
+    /v1/domains/{name}/name:
+        get:
+            tags:
+                - Api
+            description: 获取领域
+            operationId: Api_GetDomainName
+            parameters:
+                - name: name
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.server.v1.Domain'
     /v1/menus:
         get:
             tags:
