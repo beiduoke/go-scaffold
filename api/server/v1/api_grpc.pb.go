@@ -140,15 +140,15 @@ type ApiClient interface {
 	DeleteDept(ctx context.Context, in *DeleteDeptReq, opts ...grpc.CallOption) (*DeleteDeptReply, error)
 	// 获取全部部门树形
 	ListDeptTree(ctx context.Context, in *ListDeptTreeReq, opts ...grpc.CallOption) (*ListDeptTreeReply, error)
-	// 列表职位
+	// 列表岗位
 	ListPost(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
-	// 创建职位
+	// 创建岗位
 	CreatePost(ctx context.Context, in *CreatePostReq, opts ...grpc.CallOption) (*CreatePostReply, error)
-	// 获取职位
+	// 获取岗位
 	GetPost(ctx context.Context, in *GetPostReq, opts ...grpc.CallOption) (*Post, error)
-	// 修改职位
+	// 修改岗位
 	UpdatePost(ctx context.Context, in *UpdatePostReq, opts ...grpc.CallOption) (*UpdatePostReply, error)
-	// 删除职位
+	// 删除岗位
 	DeletePost(ctx context.Context, in *DeletePostReq, opts ...grpc.CallOption) (*DeletePostReply, error)
 	// 设置领域状态
 	UpdatePostState(ctx context.Context, in *UpdatePostStateReq, opts ...grpc.CallOption) (*UpdatePostStateReply, error)
@@ -840,15 +840,15 @@ type ApiServer interface {
 	DeleteDept(context.Context, *DeleteDeptReq) (*DeleteDeptReply, error)
 	// 获取全部部门树形
 	ListDeptTree(context.Context, *ListDeptTreeReq) (*ListDeptTreeReply, error)
-	// 列表职位
+	// 列表岗位
 	ListPost(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
-	// 创建职位
+	// 创建岗位
 	CreatePost(context.Context, *CreatePostReq) (*CreatePostReply, error)
-	// 获取职位
+	// 获取岗位
 	GetPost(context.Context, *GetPostReq) (*Post, error)
-	// 修改职位
+	// 修改岗位
 	UpdatePost(context.Context, *UpdatePostReq) (*UpdatePostReply, error)
-	// 删除职位
+	// 删除岗位
 	DeletePost(context.Context, *DeletePostReq) (*DeletePostReply, error)
 	// 设置领域状态
 	UpdatePostState(context.Context, *UpdatePostStateReq) (*UpdatePostStateReply, error)

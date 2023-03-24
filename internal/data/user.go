@@ -142,26 +142,33 @@ func (r *UserRepo) ListPage(ctx context.Context, paging *pagination.Pagination) 
 		if dept, ok := paging.Query["deptId"]; ok && dept != "" {
 			var roleIds []string
 			deptId, _ := strconv.Atoi(dept)
-			result := r.data.DB(ctx).Table("sys_role_depts").Where("sys_dept_id", deptId).Pluck("sys_role_id", &roleIds)
-			if result.Error != nil && errors.Is(result.Error, gorm.ErrRecordNotFound) {
-				r.log.Errorf("关联查询用户部门失败: %v", result.Error)
-				return
-			}
 
-			if len(roleIds) < 1 {
-				return
-			}
+			// r.data.DBD(ctx).Model(SysDept{}).Where()
 
-			var userIds []string
-			for _, v := range roleIds {
-				userIds = append(userIds, r.data.enforcer.GetUsersForRoleInDomain(v, r.data.Domain(ctx))...)
-			}
+			db = db.Where("dept_id", deptId)
+			// 这里保留暂不执行
+			if false {
+				result := r.data.DB(ctx).Table("sys_role_depts").Where("sys_dept_id", deptId).Pluck("sys_role_id", &roleIds)
+				if result.Error != nil && errors.Is(result.Error, gorm.ErrRecordNotFound) {
+					r.log.Errorf("关联查询用户部门失败: %v", result.Error)
+					return
+				}
 
-			if len(userIds) < 1 {
-				return
-			}
+				if len(roleIds) < 1 {
+					return
+				}
 
-			db = db.Where(userIds)
+				var userIds []string
+				for _, v := range roleIds {
+					userIds = append(userIds, r.data.enforcer.GetUsersForRoleInDomain(v, r.data.Domain(ctx))...)
+				}
+
+				if len(userIds) < 1 {
+					return
+				}
+
+				db = db.Where(userIds)
+			}
 		}
 	}
 

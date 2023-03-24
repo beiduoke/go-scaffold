@@ -83,7 +83,8 @@ func (r *DeptRepo) FilterAncestors(ctx context.Context, g *biz.Dept) string {
 func (r *DeptRepo) Save(ctx context.Context, g *biz.Dept) (*biz.Dept, error) {
 	d := r.toModel(g)
 	d.Ancestors = r.FilterAncestors(ctx, g)
-	result := r.data.DBD(ctx).Create(d)
+	d.DomainID = r.data.DomainID(ctx)
+	result := r.data.DB(ctx).Debug().Create(d)
 	return r.toBiz(d), result.Error
 }
 

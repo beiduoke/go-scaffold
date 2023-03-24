@@ -511,14 +511,14 @@ service Api {
     };
   }
 
-  // 列表职位
+  // 列表岗位
   rpc ListPost (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
     option (google.api.http) = {
       get: "/v1/posts"
     };
   }
 
-  // 创建职位
+  // 创建岗位
   rpc CreatePost (CreatePostReq) returns (CreatePostReply) {
     option (google.api.http) = {
       post: "/v1/posts"
@@ -526,14 +526,14 @@ service Api {
     };
   }
 
-  // 获取职位
+  // 获取岗位
   rpc GetPost (GetPostReq) returns (Post) {
     option (google.api.http) = {
       get: "/v1/posts/{id}"
     };
   }
 
-  // 修改职位
+  // 修改岗位
   rpc UpdatePost (UpdatePostReq) returns (UpdatePostReply) {
     option (google.api.http) = {
       put: "/v1/posts/{id}"
@@ -541,7 +541,7 @@ service Api {
     };
   }
 
-  // 删除职位
+  // 删除岗位
   rpc DeletePost (DeletePostReq) returns (DeletePostReply) {
     option (google.api.http) = {
       delete: "/v1/posts/{id}"
@@ -1488,7 +1488,7 @@ message ListDeptTreeReply {
   optional int64 total = 2;
 }
 
-// 职位模块
+// 岗位模块
 message Post {
   google.protobuf.Timestamp created_at = 1;
   google.protobuf.Timestamp updated_at = 2;
@@ -1500,7 +1500,7 @@ message Post {
   api.protobuf.PostState state = 8;
 }
 
-// 请求 - 创建职位
+// 请求 - 创建岗位
 message CreatePostReq {
   string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
   optional string code = 2 [(validate.rules).string = {min_len: 1, max_len: 10}];
@@ -1509,7 +1509,7 @@ message CreatePostReq {
   optional string remarks = 5 [(validate.rules).string = {min_len: 0, max_len: 1000}];
 }
 
-// 回应 - 创建职位
+// 回应 - 创建岗位
 message CreatePostReply {
   int32 code = 1;
   string message = 2;
@@ -1517,7 +1517,7 @@ message CreatePostReply {
   bool success = 4;
 }
 
-// 请求 - 修改职位
+// 请求 - 修改岗位
 message UpdatePostReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
@@ -1530,7 +1530,7 @@ message UpdatePostReq {
   Data data = 2;
 }
 
-// 回应 - 创建职位
+// 回应 - 创建岗位
 message UpdatePostReply {
   int32 code = 1;
   string message = 2;
@@ -1538,24 +1538,24 @@ message UpdatePostReply {
   bool success = 4;
 }
 
-// 请求 - 获取职位
+// 请求 - 获取岗位
 message GetPostReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
-// 请求 - 删除职位
+// 请求 - 删除岗位
 message DeletePostReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
-// 回应 - 删除职位
+// 回应 - 删除岗位
 message DeletePostReply {
   int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
 }
 
-// 请求 - 修改职位-状态
+// 请求 - 修改岗位-状态
 message UpdatePostStateReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
@@ -1564,7 +1564,7 @@ message UpdatePostStateReq {
   Data data = 2;
 }
 
-// 回应 - 创建职位-状态
+// 回应 - 创建岗位-状态
 message UpdatePostStateReply {
   int32 code = 1;
   string message = 2;

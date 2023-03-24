@@ -1107,7 +1107,7 @@
     },
     "/v1/posts": {
       "get": {
-        "summary": "列表职位",
+        "summary": "列表岗位",
         "operationId": "Api_ListPost",
         "responses": {
           "200": {
@@ -1153,7 +1153,7 @@
         ]
       },
       "post": {
-        "summary": "创建职位",
+        "summary": "创建岗位",
         "operationId": "Api_CreatePost",
         "responses": {
           "200": {
@@ -1186,7 +1186,7 @@
     },
     "/v1/posts/{id}": {
       "get": {
-        "summary": "获取职位",
+        "summary": "获取岗位",
         "operationId": "Api_GetPost",
         "responses": {
           "200": {
@@ -1216,7 +1216,7 @@
         ]
       },
       "delete": {
-        "summary": "删除职位",
+        "summary": "删除岗位",
         "operationId": "Api_DeletePost",
         "responses": {
           "200": {
@@ -1246,7 +1246,7 @@
         ]
       },
       "put": {
-        "summary": "修改职位",
+        "summary": "修改岗位",
         "operationId": "Api_UpdatePost",
         "responses": {
           "200": {
@@ -2893,7 +2893,7 @@
           "type": "boolean"
         }
       },
-      "title": "回应 - 创建职位"
+      "title": "回应 - 创建岗位"
     },
     "v1CreatePostReq": {
       "type": "object",
@@ -2915,7 +2915,7 @@
           "type": "string"
         }
       },
-      "title": "请求 - 创建职位"
+      "title": "请求 - 创建岗位"
     },
     "v1CreateResourceReply": {
       "type": "object",
@@ -3131,7 +3131,7 @@
           "$ref": "#/definitions/protobufAny"
         }
       },
-      "title": "回应 - 删除职位"
+      "title": "回应 - 删除岗位"
     },
     "v1DeleteResourceReply": {
       "type": "object",
@@ -3851,7 +3851,7 @@
           "$ref": "#/definitions/protobufPostState"
         }
       },
-      "title": "职位模块"
+      "title": "岗位模块"
     },
     "v1RegisterReply": {
       "type": "object",
@@ -4195,7 +4195,7 @@
           "type": "boolean"
         }
       },
-      "title": "回应 - 创建职位"
+      "title": "回应 - 创建岗位"
     },
     "v1UpdatePostReqData": {
       "type": "object",
@@ -4235,7 +4235,7 @@
           "type": "boolean"
         }
       },
-      "title": "回应 - 创建职位-状态"
+      "title": "回应 - 创建岗位-状态"
     },
     "v1UpdatePostStateReqData": {
       "type": "object",

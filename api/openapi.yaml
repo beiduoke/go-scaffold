@@ -638,7 +638,7 @@ paths:
         get:
             tags:
                 - Api
-            description: 列表职位
+            description: 列表岗位
             operationId: Api_ListPost
             parameters:
                 - name: page
@@ -668,7 +668,7 @@ paths:
         post:
             tags:
                 - Api
-            description: 创建职位
+            description: 创建岗位
             operationId: Api_CreatePost
             requestBody:
                 content:
@@ -687,7 +687,7 @@ paths:
         get:
             tags:
                 - Api
-            description: 获取职位
+            description: 获取岗位
             operationId: Api_GetPost
             parameters:
                 - name: id
@@ -706,7 +706,7 @@ paths:
         put:
             tags:
                 - Api
-            description: 修改职位
+            description: 修改岗位
             operationId: Api_UpdatePost
             parameters:
                 - name: id
@@ -731,7 +731,7 @@ paths:
         delete:
             tags:
                 - Api
-            description: 删除职位
+            description: 删除岗位
             operationId: Api_DeletePost
             parameters:
                 - name: id
@@ -1542,7 +1542,7 @@ components:
                     $ref: '#/components/schemas/google.protobuf.Any'
                 success:
                     type: boolean
-            description: 回应 - 创建职位
+            description: 回应 - 创建岗位
         api.server.v1.CreatePostReq:
             type: object
             properties:
@@ -1558,7 +1558,7 @@ components:
                     format: enum
                 remarks:
                     type: string
-            description: 请求 - 创建职位
+            description: 请求 - 创建岗位
         api.server.v1.CreateResourceReply:
             type: object
             properties:
@@ -1708,7 +1708,7 @@ components:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
-            description: 回应 - 删除职位
+            description: 回应 - 删除岗位
         api.server.v1.DeleteResourceReply:
             type: object
             properties:
@@ -2307,7 +2307,7 @@ components:
                 state:
                     type: integer
                     format: enum
-            description: 职位模块
+            description: 岗位模块
         api.server.v1.RegisterReply:
             type: object
             properties:
@@ -2551,7 +2551,7 @@ components:
                     $ref: '#/components/schemas/google.protobuf.Any'
                 success:
                     type: boolean
-            description: 回应 - 创建职位
+            description: 回应 - 创建岗位
         api.server.v1.UpdatePostReq_Data:
             type: object
             properties:
@@ -2579,7 +2579,7 @@ components:
                     $ref: '#/components/schemas/google.protobuf.Any'
                 success:
                     type: boolean
-            description: 回应 - 创建职位-状态
+            description: 回应 - 创建岗位-状态
         api.server.v1.UpdatePostStateReq_Data:
             type: object
             properties:

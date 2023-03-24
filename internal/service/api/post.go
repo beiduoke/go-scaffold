@@ -26,7 +26,7 @@ func TransformPost(data *biz.Post) *v1.Post {
 	}
 }
 
-// ListPost 列表-职位
+// ListPost 列表-岗位
 func (s *ApiService) ListPost(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
 	results, total := s.postCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize()), pagination.WithQuery(pagination.QueryUnmarshal(in.GetQuery())), pagination.WithOrderBy(in.GetOrderBy())))
 	items := make([]*anypb.Any, 0, len(results))
@@ -40,7 +40,7 @@ func (s *ApiService) ListPost(ctx context.Context, in *protobuf.PagingReq) (*pro
 	}, nil
 }
 
-// CreatePost 创建职位
+// CreatePost 创建岗位
 func (s *ApiService) CreatePost(ctx context.Context, in *v1.CreatePostReq) (*v1.CreatePostReply, error) {
 	user, err := s.postCase.Create(ctx, &biz.Post{
 		Name:    in.GetName(),
@@ -49,7 +49,7 @@ func (s *ApiService) CreatePost(ctx context.Context, in *v1.CreatePostReq) (*v1.
 		Remarks: in.GetRemarks(),
 	})
 	if err != nil {
-		return nil, v1.ErrorPostCreateFail("职位创建失败: %v", err.Error())
+		return nil, v1.ErrorPostCreateFail("岗位创建失败: %v", err.Error())
 	}
 	data, _ := anypb.New(&protobuf.DataProto{
 		Id: uint64(user.ID),
@@ -61,7 +61,7 @@ func (s *ApiService) CreatePost(ctx context.Context, in *v1.CreatePostReq) (*v1.
 	}, nil
 }
 
-// UpdatePost 修改职位
+// UpdatePost 修改岗位
 func (s *ApiService) UpdatePost(ctx context.Context, in *v1.UpdatePostReq) (*v1.UpdatePostReply, error) {
 	v := in.GetData()
 	err := s.postCase.Update(ctx, &biz.Post{
@@ -72,7 +72,7 @@ func (s *ApiService) UpdatePost(ctx context.Context, in *v1.UpdatePostReq) (*v1.
 		Remarks: v.GetRemarks(),
 	})
 	if err != nil {
-		return nil, v1.ErrorPostUpdateFail("职位修改失败: %v", err.Error())
+		return nil, v1.ErrorPostUpdateFail("岗位修改失败: %v", err.Error())
 	}
 	return &v1.UpdatePostReply{
 		Success: true,
@@ -80,7 +80,7 @@ func (s *ApiService) UpdatePost(ctx context.Context, in *v1.UpdatePostReq) (*v1.
 	}, nil
 }
 
-// UpdatePostState 修改职位-状态
+// UpdatePostState 修改岗位-状态
 func (s *ApiService) UpdatePostState(ctx context.Context, in *v1.UpdatePostStateReq) (*v1.UpdatePostStateReply, error) {
 	v := in.GetData()
 	err := s.postCase.UpdateState(ctx, &biz.Post{
@@ -88,7 +88,7 @@ func (s *ApiService) UpdatePostState(ctx context.Context, in *v1.UpdatePostState
 		State: int32(v.GetState()),
 	})
 	if err != nil {
-		return nil, v1.ErrorPostUpdateFail("职位状态修改失败: %v", err.Error())
+		return nil, v1.ErrorPostUpdateFail("岗位状态修改失败: %v", err.Error())
 	}
 	return &v1.UpdatePostStateReply{
 		Success: true,
@@ -96,19 +96,19 @@ func (s *ApiService) UpdatePostState(ctx context.Context, in *v1.UpdatePostState
 	}, nil
 }
 
-// GetPost 获取职位
+// GetPost 获取岗位
 func (s *ApiService) GetPost(ctx context.Context, in *v1.GetPostReq) (*v1.Post, error) {
 	post, err := s.postCase.GetID(ctx, &biz.Post{ID: uint(in.GetId())})
 	if err != nil {
-		return nil, v1.ErrorPostNotFound("职位未找到")
+		return nil, v1.ErrorPostNotFound("岗位未找到")
 	}
 	return TransformPost(post), nil
 }
 
-// DeletePost 删除职位
+// DeletePost 删除岗位
 func (s *ApiService) DeletePost(ctx context.Context, in *v1.DeletePostReq) (*v1.DeletePostReply, error) {
 	if err := s.postCase.Delete(ctx, &biz.Post{ID: uint(in.GetId())}); err != nil {
-		return nil, v1.ErrorPostDeleteFail("职位删除失败：%v", err)
+		return nil, v1.ErrorPostDeleteFail("岗位删除失败：%v", err)
 	}
 	return &v1.DeletePostReply{
 		Message: "删除成功",

@@ -6732,7 +6732,7 @@ func (x *ListDeptTreeReply) GetTotal() int64 {
 	return 0
 }
 
-// 职位模块
+// 岗位模块
 type Post struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6836,7 +6836,7 @@ func (x *Post) GetState() protobuf.PostState {
 	return protobuf.PostState(0)
 }
 
-// 请求 - 创建职位
+// 请求 - 创建岗位
 type CreatePostReq struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6916,7 +6916,7 @@ func (x *CreatePostReq) GetRemarks() string {
 	return ""
 }
 
-// 回应 - 创建职位
+// 回应 - 创建岗位
 type CreatePostReply struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6988,7 +6988,7 @@ func (x *CreatePostReply) GetSuccess() bool {
 	return false
 }
 
-// 请求 - 修改职位
+// 请求 - 修改岗位
 type UpdatePostReq struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7044,7 +7044,7 @@ func (x *UpdatePostReq) GetData() *UpdatePostReq_Data {
 	return nil
 }
 
-// 回应 - 创建职位
+// 回应 - 创建岗位
 type UpdatePostReply struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7116,7 +7116,7 @@ func (x *UpdatePostReply) GetSuccess() bool {
 	return false
 }
 
-// 请求 - 获取职位
+// 请求 - 获取岗位
 type GetPostReq struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7164,7 +7164,7 @@ func (x *GetPostReq) GetId() uint64 {
 	return 0
 }
 
-// 请求 - 删除职位
+// 请求 - 删除岗位
 type DeletePostReq struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7212,7 +7212,7 @@ func (x *DeletePostReq) GetId() uint64 {
 	return 0
 }
 
-// 回应 - 删除职位
+// 回应 - 删除岗位
 type DeletePostReply struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7276,7 +7276,7 @@ func (x *DeletePostReply) GetResult() *anypb.Any {
 	return nil
 }
 
-// 请求 - 修改职位-状态
+// 请求 - 修改岗位-状态
 type UpdatePostStateReq struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7332,7 +7332,7 @@ func (x *UpdatePostStateReq) GetData() *UpdatePostStateReq_Data {
 	return nil
 }
 
-// 回应 - 创建职位-状态
+// 回应 - 创建岗位-状态
 type UpdatePostStateReply struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

@@ -30,6 +30,7 @@ type Model struct {
 	Updater   string         `gorm:"type:varchar(64);column:updater;not null;default:'';comment:更新者;"`
 	DeletedAt gorm.DeletedAt `gorm:"index;comment:删除时间;"`
 }
+
 type DomainModel struct {
 	ID        uint           `gorm:"primarykey;comment:主键ID;"`
 	CreatedAt time.Time      `gorm:"comment:创建时间;"`
@@ -40,6 +41,23 @@ type DomainModel struct {
 	DomainID  uint           `gorm:"type:bigint(20);column:domain_id;not null;default:0;index:idx_domain_id_data;comment:领域ID;"`
 	Domain    *SysDomain     `gorm:"-"`
 }
+
+// func (dm *DomainModel) BeforeUpdate(tx *gorm.DB) (err error) {
+// 	// tx.Statement.Context
+// 	// if dm.Updater == "admin" {
+// 	// 	return errors.New("admin user not allowed to update")
+// 	// }
+// 	fmt.Println("更新前")
+// 	return
+// }
+
+// func (dm *DomainModel) BeforeCreate(tx *gorm.DB) (err error) {
+// 	// if dm.Creator == "admin" {
+// 	// 	return errors.New("invalid role")
+// 	// }
+// 	fmt.Println("创建前")
+// 	return
+// }
 
 // SysDomain 领域
 type SysDomain struct {
@@ -69,10 +87,12 @@ type SysUser struct {
 	RealName      string     `gorm:"type:varchar(100);column:real_name;not null;default:'';index:idx_users_name_nick_name_real_name,priority:2;comment:实名;"`
 	Avatar        string     `gorm:"type:varchar(255);column:avatar;not null;default:'';comment:头像;"`
 	Password      string     `gorm:"type:varchar(255);column:password;not null;default:'';comment:密码;"`
+	PasswordSalt  string     `gorm:"type:varchar(255);column:salt;not null;default:'';comment:密码加盐;"`
 	Birthday      *time.Time `gorm:"type:datetime;column:birthday;comment:生日;"`
 	Gender        int32      `gorm:"type:tinyint(1);column:gender;not null;default:1;comment:性别 0 未指定 1 男 2 女;"`
 	Phone         string     `gorm:"type:varchar(20);column:phone;not null;default:'';index:idx_users_phone_email,priority:1;comment:手机号;"`
 	Email         string     `gorm:"type:varchar(50);column:email;not null;default:'';index:idx_users_phone_email,priority:2;comment:邮箱;"`
+	DeptID        uint       `gorm:"type:bigint(20);column:dept_id;not null;default:0;comment:部门ID"`
 	State         int32      `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:用户状态 0 未指定  1 启用 2 停用;"`
 	LastUseRoleID uint       `gorm:"type:bigint(20);column:last_use_role;not null;default:0;comment:最后使用角色"`
 	LastLoginAt   *time.Time `gorm:"type:datetime;column:last_login_at;comment:最后登录时间"`
@@ -198,16 +218,15 @@ type SysDept struct {
 	LeaderID  uint      `gorm:"type:bigint(20);column:leader_id;not null;default:0;comment:负责人id"`
 	Leader    *SysUser  `gorm:"foreignKey:LeaderID;"`
 	Roles     []SysRole `gorm:"many2many:sys_role_depts"`
-	// User     SysUser `gorm:"many2many:sys_dept_users;"`
 }
 
-// Post 职位
+// Post 岗位
 type SysPost struct {
 	DomainModel
-	Name    string    `gorm:"type:varchar(255);column:name;not null;comment:职位名称;"`
-	Code    string    `gorm:"type:varchar(100);column:code;not null;default:'';comment:职位编码;"`
+	Name    string    `gorm:"type:varchar(255);column:name;not null;comment:岗位名称;"`
+	Code    string    `gorm:"type:varchar(100);column:code;not null;default:'';comment:岗位编码;"`
 	Sort    int32     `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
-	State   int32     `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:职位状态 0 未指定  1 启用 2 停用;"`
+	State   int32     `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:岗位状态 0 未指定  1 启用 2 停用;"`
 	Remarks string    `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
 	Users   []SysUser `gorm:"many2many:sys_user_posts;"`
 }

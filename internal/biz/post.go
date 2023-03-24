@@ -59,25 +59,25 @@ func (uc *PostUsecase) Create(ctx context.Context, g *Post) (*Post, error) {
 	return g, err
 }
 
-// ListByIDs 获取指定职位ID集合
+// ListByIDs 获取指定岗位ID集合
 func (uc *PostUsecase) ListByIDs(ctx context.Context, id ...uint) (roles []*Post, err error) {
 	// roles, _ = uc.repo.ListPage(ctx, noop.NewPagination(noop.WithNopaging(), noop.WithCondition("id in ?", id)))
 	return
 }
 
-// Update 修改职位
+// Update 修改岗位
 func (uc *PostUsecase) Update(ctx context.Context, g *Post) error {
 	uc.log.WithContext(ctx).Debugf("UpdatePost: %v", g)
 
 	post, _ := uc.repo.FindByID(ctx, g.ID)
 	if post == nil {
-		return errors.New("职位未创建")
+		return errors.New("岗位未创建")
 	}
 
 	if post.Name != g.Name && g.Name != "" {
 		name, _ := uc.repo.FindByName(ctx, g.Name)
 		if name != nil {
-			return errors.New("职位名已存在")
+			return errors.New("岗位名已存在")
 		}
 	}
 
@@ -90,13 +90,13 @@ func (uc *PostUsecase) Update(ctx context.Context, g *Post) error {
 	return err
 }
 
-// UpdateState 修改职位状态
+// UpdateState 修改岗位状态
 func (uc *PostUsecase) UpdateState(ctx context.Context, g *Post) error {
 	uc.log.WithContext(ctx).Debugf("UpdatePostState: %v", g)
 
 	post, _ := uc.repo.FindByID(ctx, g.ID)
 	if post == nil {
-		return errors.New("职位不存在")
+		return errors.New("岗位不存在")
 	}
 
 	if g.State <= 0 {
@@ -108,25 +108,25 @@ func (uc *PostUsecase) UpdateState(ctx context.Context, g *Post) error {
 	return err
 }
 
-// List 职位列表全部
+// List 岗位列表全部
 func (uc *PostUsecase) ListAll(ctx context.Context) ([]*Post, int64) {
 	uc.log.WithContext(ctx).Debugf("PostList")
 	return uc.repo.ListPage(ctx, &pagination.Pagination{Nopaging: true, OrderBy: map[string]bool{"sort": true}})
 }
 
-// List 职位列表分页
+// List 岗位列表分页
 func (uc *PostUsecase) ListPage(ctx context.Context, paging *pagination.Pagination) ([]*Post, int64) {
 	uc.log.WithContext(ctx).Debugf("PostPage")
 	return uc.repo.ListPage(ctx, paging)
 }
 
-// GetID 根据角色ID职位
+// GetID 根据角色ID岗位
 func (uc *PostUsecase) GetID(ctx context.Context, g *Post) (*Post, error) {
 	uc.log.WithContext(ctx).Debugf("GetPostID: %v", g)
 	return uc.repo.FindByID(ctx, g.ID)
 }
 
-// Delete 根据角色ID删除职位
+// Delete 根据角色ID删除岗位
 func (uc *PostUsecase) Delete(ctx context.Context, g *Post) error {
 	uc.log.WithContext(ctx).Debugf("DeletePost: %v", g)
 	return uc.biz.tm.InTx(ctx, func(ctx context.Context) error {

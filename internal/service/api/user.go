@@ -21,7 +21,7 @@ var _ v1.ApiServer = (*ApiService)(nil)
 func TransformUser(data *biz.User) *v1.User {
 	var birthday string
 	if data.Birthday != nil {
-		birthday = data.Birthday.Format("2006-01-02")
+		birthday = data.Birthday.Format(time.DateOnly)
 	}
 	return &v1.User{
 		CreatedAt: timestamppb.New(data.CreatedAt),
