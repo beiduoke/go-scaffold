@@ -46,13 +46,7 @@ func Server(authorizer authz.Authorizer, opts ...Option) middleware.Middleware {
 				return nil, ErrInvalidClaims
 			}
 
-			var project authz.Project
-			if claims.Project == nil {
-				project = ""
-			} else {
-				project = *claims.Project
-			}
-			allowed, err = authorizer.IsAuthorized(ctx, *claims.Subject, *claims.Action, *claims.Resource, project)
+			allowed, err = authorizer.IsAuthorized(ctx, *claims.Subject, *claims.Action, *claims.Resource, *claims.Project)
 			if err != nil {
 				return nil, err
 			}

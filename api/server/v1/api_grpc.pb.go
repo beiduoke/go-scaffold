@@ -80,7 +80,7 @@ type ApiClient interface {
 	// 设置领域状态
 	UpdateDomainState(ctx context.Context, in *UpdateDomainStateReq, opts ...grpc.CallOption) (*UpdateDomainStateReply, error)
 	// 获取角色菜单
-	ListDomainMenu(ctx context.Context, in *ListDomainMenuReq, opts ...grpc.CallOption) (*ListDomainMenuReply, error)
+	ListDomainMenu(ctx context.Context, in *ListDomainMenuReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
 	// 处理角色菜单
 	HandleDomainMenu(ctx context.Context, in *HandleDomainMenuReq, opts ...grpc.CallOption) (*HandleDomainMenuReply, error)
 	// 角色模块
@@ -100,6 +100,12 @@ type ApiClient interface {
 	ListRoleMenu(ctx context.Context, in *ListRoleMenuReq, opts ...grpc.CallOption) (*ListRoleMenuReply, error)
 	// 处理角色菜单
 	HandleRoleMenu(ctx context.Context, in *HandleRoleMenuReq, opts ...grpc.CallOption) (*HandleRoleMenuReply, error)
+	// 获取角色数据
+	ListRoleDept(ctx context.Context, in *ListRoleDeptReq, opts ...grpc.CallOption) (*ListRoleDeptReply, error)
+	// 处理角色数据
+	HandleRoleDept(ctx context.Context, in *HandleRoleDeptReq, opts ...grpc.CallOption) (*HandleRoleDeptReply, error)
+	// 获取角色资源
+	ListRoleResource(ctx context.Context, in *ListRoleResourceReq, opts ...grpc.CallOption) (*ListRoleResourceReply, error)
 	// 处理角色资源
 	HandleRoleResource(ctx context.Context, in *HandleRoleResourceReq, opts ...grpc.CallOption) (*HandleRoleResourceReply, error)
 	// 资源模块
@@ -405,8 +411,8 @@ func (c *apiClient) UpdateDomainState(ctx context.Context, in *UpdateDomainState
 	return out, nil
 }
 
-func (c *apiClient) ListDomainMenu(ctx context.Context, in *ListDomainMenuReq, opts ...grpc.CallOption) (*ListDomainMenuReply, error) {
-	out := new(ListDomainMenuReply)
+func (c *apiClient) ListDomainMenu(ctx context.Context, in *ListDomainMenuReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
+	out := new(protobuf.PagingReply)
 	err := c.cc.Invoke(ctx, "/api.server.v1.Api/ListDomainMenu", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -489,6 +495,33 @@ func (c *apiClient) ListRoleMenu(ctx context.Context, in *ListRoleMenuReq, opts 
 func (c *apiClient) HandleRoleMenu(ctx context.Context, in *HandleRoleMenuReq, opts ...grpc.CallOption) (*HandleRoleMenuReply, error) {
 	out := new(HandleRoleMenuReply)
 	err := c.cc.Invoke(ctx, "/api.server.v1.Api/HandleRoleMenu", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) ListRoleDept(ctx context.Context, in *ListRoleDeptReq, opts ...grpc.CallOption) (*ListRoleDeptReply, error) {
+	out := new(ListRoleDeptReply)
+	err := c.cc.Invoke(ctx, "/api.server.v1.Api/ListRoleDept", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) HandleRoleDept(ctx context.Context, in *HandleRoleDeptReq, opts ...grpc.CallOption) (*HandleRoleDeptReply, error) {
+	out := new(HandleRoleDeptReply)
+	err := c.cc.Invoke(ctx, "/api.server.v1.Api/HandleRoleDept", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) ListRoleResource(ctx context.Context, in *ListRoleResourceReq, opts ...grpc.CallOption) (*ListRoleResourceReply, error) {
+	out := new(ListRoleResourceReply)
+	err := c.cc.Invoke(ctx, "/api.server.v1.Api/ListRoleResource", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -780,7 +813,7 @@ type ApiServer interface {
 	// 设置领域状态
 	UpdateDomainState(context.Context, *UpdateDomainStateReq) (*UpdateDomainStateReply, error)
 	// 获取角色菜单
-	ListDomainMenu(context.Context, *ListDomainMenuReq) (*ListDomainMenuReply, error)
+	ListDomainMenu(context.Context, *ListDomainMenuReq) (*protobuf.PagingReply, error)
 	// 处理角色菜单
 	HandleDomainMenu(context.Context, *HandleDomainMenuReq) (*HandleDomainMenuReply, error)
 	// 角色模块
@@ -800,6 +833,12 @@ type ApiServer interface {
 	ListRoleMenu(context.Context, *ListRoleMenuReq) (*ListRoleMenuReply, error)
 	// 处理角色菜单
 	HandleRoleMenu(context.Context, *HandleRoleMenuReq) (*HandleRoleMenuReply, error)
+	// 获取角色数据
+	ListRoleDept(context.Context, *ListRoleDeptReq) (*ListRoleDeptReply, error)
+	// 处理角色数据
+	HandleRoleDept(context.Context, *HandleRoleDeptReq) (*HandleRoleDeptReply, error)
+	// 获取角色资源
+	ListRoleResource(context.Context, *ListRoleResourceReq) (*ListRoleResourceReply, error)
 	// 处理角色资源
 	HandleRoleResource(context.Context, *HandleRoleResourceReq) (*HandleRoleResourceReply, error)
 	// 资源模块
@@ -940,7 +979,7 @@ func (UnimplementedApiServer) DeleteDomain(context.Context, *DeleteDomainReq) (*
 func (UnimplementedApiServer) UpdateDomainState(context.Context, *UpdateDomainStateReq) (*UpdateDomainStateReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDomainState not implemented")
 }
-func (UnimplementedApiServer) ListDomainMenu(context.Context, *ListDomainMenuReq) (*ListDomainMenuReply, error) {
+func (UnimplementedApiServer) ListDomainMenu(context.Context, *ListDomainMenuReq) (*protobuf.PagingReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDomainMenu not implemented")
 }
 func (UnimplementedApiServer) HandleDomainMenu(context.Context, *HandleDomainMenuReq) (*HandleDomainMenuReply, error) {
@@ -969,6 +1008,15 @@ func (UnimplementedApiServer) ListRoleMenu(context.Context, *ListRoleMenuReq) (*
 }
 func (UnimplementedApiServer) HandleRoleMenu(context.Context, *HandleRoleMenuReq) (*HandleRoleMenuReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HandleRoleMenu not implemented")
+}
+func (UnimplementedApiServer) ListRoleDept(context.Context, *ListRoleDeptReq) (*ListRoleDeptReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListRoleDept not implemented")
+}
+func (UnimplementedApiServer) HandleRoleDept(context.Context, *HandleRoleDeptReq) (*HandleRoleDeptReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HandleRoleDept not implemented")
+}
+func (UnimplementedApiServer) ListRoleResource(context.Context, *ListRoleResourceReq) (*ListRoleResourceReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListRoleResource not implemented")
 }
 func (UnimplementedApiServer) HandleRoleResource(context.Context, *HandleRoleResourceReq) (*HandleRoleResourceReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HandleRoleResource not implemented")
@@ -1724,6 +1772,60 @@ func _Api_HandleRoleMenu_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Api_ListRoleDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRoleDeptReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).ListRoleDept(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.server.v1.Api/ListRoleDept",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).ListRoleDept(ctx, req.(*ListRoleDeptReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_HandleRoleDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HandleRoleDeptReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).HandleRoleDept(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.server.v1.Api/HandleRoleDept",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).HandleRoleDept(ctx, req.(*HandleRoleDeptReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_ListRoleResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRoleResourceReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).ListRoleResource(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.server.v1.Api/ListRoleResource",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).ListRoleResource(ctx, req.(*ListRoleResourceReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Api_HandleRoleResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(HandleRoleResourceReq)
 	if err := dec(in); err != nil {
@@ -2328,6 +2430,18 @@ var Api_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "HandleRoleMenu",
 			Handler:    _Api_HandleRoleMenu_Handler,
+		},
+		{
+			MethodName: "ListRoleDept",
+			Handler:    _Api_ListRoleDept_Handler,
+		},
+		{
+			MethodName: "HandleRoleDept",
+			Handler:    _Api_HandleRoleDept_Handler,
+		},
+		{
+			MethodName: "ListRoleResource",
+			Handler:    _Api_ListRoleResource_Handler,
 		},
 		{
 			MethodName: "HandleRoleResource",

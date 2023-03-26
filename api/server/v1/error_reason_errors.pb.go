@@ -299,6 +299,18 @@ func ErrorRoleHandleResourceFail(format string, args ...interface{}) *errors.Err
 	return errors.New(400, ErrorReason_ROLE_HANDLE_RESOURCE_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
+func IsRoleHandleDeptFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_ROLE_HANDLE_DEPT_FAIL.String() && e.Code == 400
+}
+
+func ErrorRoleHandleDeptFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_ROLE_HANDLE_DEPT_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
 func IsMenuNotFound(err error) bool {
 	if err == nil {
 		return false

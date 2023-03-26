@@ -256,7 +256,8 @@ func (s *ApiService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.List
 				if !strings.HasPrefix(path, "/") {
 					path = "/" + path
 				}
-				t.Redirect = path + "/" + child.Path
+				redirect := path + "/" + child.Path
+				t.Redirect = &redirect
 			}
 			return nil
 		}),

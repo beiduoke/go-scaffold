@@ -131,7 +131,6 @@ func (s *State) IsAuthorized(_ context.Context, subject authz.Subject, action au
 	var err error
 	var allowed bool
 	if allowed, err = s.enforcer.Enforce(string(subject), string(resource), string(action), string(project)); err != nil {
-		//fmt.Println(allowed, err)
 		return false, err
 	} else if allowed {
 		return true, nil

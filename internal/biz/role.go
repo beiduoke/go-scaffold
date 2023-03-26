@@ -8,7 +8,6 @@ import (
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/imdario/mergo"
 	"github.com/pkg/errors"
 )
 
@@ -27,6 +26,7 @@ type Role struct {
 	Domains       []*Domain
 	Menus         []*Menu
 	Resources     []*Resource
+	Depts         []*Dept
 }
 
 func (g Role) GetID() string {
@@ -45,9 +45,12 @@ type RoleRepo interface {
 	Delete(context.Context, *Role) error
 	ListPage(context.Context, *pagination.Pagination) ([]*Role, int64)
 	HandleMenu(context.Context, *Role) error
-	HandleResource(context.Context, *Role) error
 	ListMenuByIDs(context.Context, ...uint) ([]*Menu, error)
 	ListMenuAndParentByIDs(context.Context, ...uint) ([]*Menu, error)
+	ListDeptByIDs(context.Context, ...uint) ([]*Dept, error)
+	HandleDept(context.Context, *Role) error
+	ListResourceByIDs(context.Context, ...uint) ([]*Resource, error)
+	HandleResource(context.Context, *Role) error
 }
 
 // RoleUsecase is a Role usecase.
@@ -93,10 +96,10 @@ func (uc *RoleUsecase) Update(ctx context.Context, g *Role) error {
 		g.State = int32(pb.RoleState_ROLE_STATE_ACTIVE)
 	}
 	// 新数据合并到源数据
-	if err := mergo.Merge(role, *g, mergo.WithOverwriteWithEmptyValue); err != nil {
-		return errors.Errorf("数据合并失败：%v", err)
-	}
-	_, err := uc.biz.roleRepo.Update(ctx, role)
+	// if err := mergo.Merge(role, *g, mergo.WithOverwriteWithEmptyValue); err != nil {
+	// 	return errors.Errorf("数据合并失败：%v", err)
+	// }
+	_, err := uc.biz.roleRepo.Update(ctx, g)
 	return err
 }
 
@@ -160,8 +163,26 @@ func (uc *RoleUsecase) HandleMenu(ctx context.Context, g *Role) error {
 	return uc.biz.roleRepo.HandleMenu(ctx, g)
 }
 
+// HandleMenu 获取角色菜单
+func (uc *RoleUsecase) ListResourceByID(ctx context.Context, g *Role) ([]*Resource, error) {
+	uc.log.WithContext(ctx).Debugf("ListMenuByIDs: %v", g)
+	return uc.biz.roleRepo.ListResourceByIDs(ctx, g.ID)
+}
+
 // HandleResource 绑定资源
 func (uc *RoleUsecase) HandleResource(ctx context.Context, g *Role) error {
 	uc.log.WithContext(ctx).Debugf("HandleResource: %v", g)
 	return uc.biz.roleRepo.HandleResource(ctx, g)
+}
+
+// HandleMenu 获取角色菜单
+func (uc *RoleUsecase) ListDeptByID(ctx context.Context, g *Role) ([]*Dept, error) {
+	uc.log.WithContext(ctx).Debugf("ListMenuByIDs: %v", g)
+	return uc.biz.roleRepo.ListDeptByIDs(ctx, g.ID)
+}
+
+// HandleDept 绑定数据
+func (uc *RoleUsecase) HandleDept(ctx context.Context, g *Role) error {
+	uc.log.WithContext(ctx).Debugf("HandleDept: %v", g)
+	return uc.biz.roleRepo.HandleDept(ctx, g)
 }

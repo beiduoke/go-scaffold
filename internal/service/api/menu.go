@@ -18,21 +18,29 @@ var _ v1.ApiServer = (*ApiService)(nil)
 
 // 将菜单转换路由树形结构
 func TransformMenuRouter(menu *biz.Menu) *v1.MenuRouter {
-	meta := &v1.MenuRouter_Meta{
-		// 路由title  一般必填
-		Title: menu.Title,
-		// 图标，也是菜单图标
-		Icon: &menu.Icon,
-		// 菜单排序，只对第一级有效
-		OrderNo: &menu.Sort,
+	id := uint64(menu.ID)
+	parentId := uint64(menu.ParentID)
+	router := &v1.MenuRouter{
+		Name: menu.Name,
+		Path: menu.Path,
+		Meta: &v1.MenuRouter_Meta{
+			// 路由title  一般必填
+			Title: menu.Title,
+			// 图标，也是菜单图标
+			Icon: &menu.Icon,
+			// 菜单排序，只对第一级有效
+			OrderNo: &menu.Sort,
+		},
+		Children: make([]*v1.MenuRouter, 0),
+		Id:       &id,
+		ParentId: &parentId,
 	}
 
 	// 是否隐藏
 	hidden := (menu.IsHidden == int32(protobuf.MenuHidden_MENU_HIDDEN_YES))
 	if hidden {
-		meta.HideMenu = &hidden
+		router.Meta.HideMenu = &hidden
 	}
-
 	// 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
 	if parent := menu.Parent; parent != nil && hidden {
 		currentActiveMenu := parent.Path
@@ -46,29 +54,38 @@ func TransformMenuRouter(menu *biz.Menu) *v1.MenuRouter {
 			}
 			currentActiveMenu = parent.Path + currentActiveMenu
 		}
-		meta.CurrentActiveMenu = &currentActiveMenu
+		router.Meta.CurrentActiveMenu = &currentActiveMenu
+	}
+	// 菜单是否固定 tab
+	if affix := menu.IsAffix == int32(protobuf.MenuAffix_MENU_AFFIX_YES); affix {
+		router.Meta.Affix = &affix
 	}
 	// 忽略缓存
 	if cache := menu.IsCache == int32(protobuf.MenuCache_MENU_CACHE_NO); cache {
-		meta.IgnoreKeepAlive = &cache
+		router.Meta.IgnoreKeepAlive = &cache
 	}
+
+	// 判断菜单外链类型
+	switch menu.LinkType {
+	case int32(protobuf.MenuLinkType_MENU_LINK_TYPE_BLANK):
+		router.Path = menu.LinkUrl
+	case int32(protobuf.MenuLinkType_MENU_LINK_TYPE_IFRAME):
+		router.Meta.FrameSrc = &menu.LinkUrl
+	default:
+		router.Meta.FrameSrc = nil
+	}
+
 	// 实体组件路径
-	component := menu.Component
-	if menu.LinkType == int32(protobuf.MenuLinkType_MENU_LINK_TYPE_IFRAME) {
-		meta.FrameSrc = &menu.LinkUrl
+	if component := menu.Component; component != "" {
+		router.Component = &component
 	}
-	id := uint64(menu.ID)
-	parentId := uint64(menu.ParentID)
-	return &v1.MenuRouter{
-		Name:      menu.Name,
-		Path:      menu.Path,
-		Component: component,
-		Redirect:  menu.Redirect,
-		Meta:      meta,
-		Children:  make([]*v1.MenuRouter, 0),
-		Id:        &id,
-		ParentId:  &parentId,
+
+	// 重定向
+	if redirect := menu.Redirect; redirect != "" {
+		router.Redirect = &redirect
 	}
+
+	return router
 }
 
 func TransformMenu(data *biz.Menu) *v1.Menu {

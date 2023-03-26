@@ -16,6 +16,10 @@ import (
 var _ v1.ApiServer = (*ApiService)(nil)
 
 func TransformRole(data *biz.Role) *v1.Role {
+	menus := make([]uint64, len(data.Menus))
+	for _, v := range data.Menus {
+		menus = append(menus, uint64(v.ID))
+	}
 	return &v1.Role{
 		CreatedAt:     timestamppb.New(data.CreatedAt),
 		UpdatedAt:     timestamppb.New(data.UpdatedAt),
@@ -26,6 +30,7 @@ func TransformRole(data *biz.Role) *v1.Role {
 		Sort:          data.Sort,
 		State:         protobuf.RoleState(data.State),
 		Remarks:       data.Remarks,
+		Menus:         menus,
 	}
 }
 
@@ -45,7 +50,7 @@ func (s *ApiService) ListRole(ctx context.Context, in *protobuf.PagingReq) (*pro
 
 // CreateRole 创建角色
 func (s *ApiService) CreateRole(ctx context.Context, in *v1.CreateRoleReq) (*v1.CreateRoleReply, error) {
-	user, err := s.roleCase.Create(ctx, &biz.Role{
+	role, err := s.roleCase.Create(ctx, &biz.Role{
 		Name:          in.GetName(),
 		ParentID:      uint(in.GetParentId()),
 		DefaultRouter: in.GetDefaultRouter(),
@@ -56,7 +61,7 @@ func (s *ApiService) CreateRole(ctx context.Context, in *v1.CreateRoleReq) (*v1.
 		return nil, v1.ErrorRoleCreateFail("角色创建失败: %v", err.Error())
 	}
 	data, _ := anypb.New(&protobuf.DataProto{
-		Id: uint64(user.ID),
+		Id: uint64(role.ID),
 	})
 	return &v1.CreateRoleReply{
 		Success: true,
@@ -127,10 +132,9 @@ func (s *ApiService) DeleteRole(ctx context.Context, in *v1.DeleteRoleReq) (*v1.
 func (s *ApiService) ListRoleMenu(ctx context.Context, in *v1.ListRoleMenuReq) (*v1.ListRoleMenuReply, error) {
 	id := in.GetId()
 	menus, _ := s.roleCase.ListMenuByID(ctx, &biz.Role{ID: uint(id)})
-	total := int64(len(menus))
 	return &v1.ListRoleMenuReply{Items: proto.ToAny(menus, func(t *biz.Menu) protoreflect.ProtoMessage {
 		return TransformMenu(t)
-	}), Total: &total}, nil
+	})}, nil
 }
 
 // HandleRoleMenu 处理角色菜单
@@ -160,6 +164,15 @@ func (s *ApiService) HandleRoleMenu(ctx context.Context, in *v1.HandleRoleMenuRe
 	}, nil
 }
 
+// ListRoleResource 获取角色资源
+func (s *ApiService) ListRoleResource(ctx context.Context, in *v1.ListRoleResourceReq) (*v1.ListRoleResourceReply, error) {
+	id := in.GetId()
+	resources, _ := s.roleCase.ListResourceByID(ctx, &biz.Role{ID: uint(id)})
+	return &v1.ListRoleResourceReply{Items: proto.ToAny(resources, func(t *biz.Resource) protoreflect.ProtoMessage {
+		return TransformResource(t)
+	})}, nil
+}
+
 // HandleRoleResource 处理角色资源
 func (s *ApiService) HandleRoleResource(ctx context.Context, in *v1.HandleRoleResourceReq) (*v1.HandleRoleResourceReply, error) {
 	inResourceIds := in.GetData().GetResourceIds()
@@ -175,6 +188,36 @@ func (s *ApiService) HandleRoleResource(ctx context.Context, in *v1.HandleRoleRe
 		return nil, v1.ErrorRoleHandleResourceFail("角色资源处理失败：%v", err)
 	}
 	return &v1.HandleRoleResourceReply{
+		Success: true,
+		Message: "处理成功",
+	}, nil
+}
+
+// ListRoleDept 获取角色部门
+func (s *ApiService) ListRoleDept(ctx context.Context, in *v1.ListRoleDeptReq) (*v1.ListRoleDeptReply, error) {
+	id := in.GetId()
+	menus, _ := s.roleCase.ListDeptByID(ctx, &biz.Role{ID: uint(id)})
+	return &v1.ListRoleDeptReply{Items: proto.ToAny(menus, func(t *biz.Dept) protoreflect.ProtoMessage {
+		return TransformDept(t)
+	})}, nil
+}
+
+// HandleRoleDept 处理角色数据
+func (s *ApiService) HandleRoleDept(ctx context.Context, in *v1.HandleRoleDeptReq) (*v1.HandleRoleDeptReply, error) {
+	inDeptCustoms := in.GetData().GetDeptCustoms()
+	// scope := in.Data.GetScope()
+	deptIds := make([]uint, 0, len(inDeptCustoms))
+	for _, v := range inDeptCustoms {
+		deptIds = append(deptIds, uint(v))
+	}
+	depts, err := s.deptCase.ListByIDs(ctx, deptIds...)
+	if err != nil {
+		return nil, v1.ErrorRoleHandleDeptFail("角色资源查询失败")
+	}
+	if err := s.roleCase.HandleDept(ctx, &biz.Role{ID: uint(in.GetId()), Depts: depts}); err != nil {
+		return nil, v1.ErrorRoleHandleDeptFail("角色资源处理失败：%v", err)
+	}
+	return &v1.HandleRoleDeptReply{
 		Success: true,
 		Message: "处理成功",
 	}, nil

@@ -63,6 +63,7 @@ type DomainModel struct {
 type SysDomain struct {
 	Model
 	ParentID    uint       `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
+	SuperUserID uint       `gorm:"type:bigint(20);column:super_user_id;not null;default:0;comment:超级用户ID"`
 	Name        string     `gorm:"type:varchar(255);column:name;not null;comment:领域名称;"`
 	Code        string     `gorm:"type:varchar(100);column:code;not null;index;comment:领域编码;"`
 	Title       string     `gorm:"type:varchar(255);column:title;not null;default:'';comment:领域标题;"`
@@ -74,6 +75,7 @@ type SysDomain struct {
 	State       int32      `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
 	Remarks     string     `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
 	Menus       []SysMenu  `gorm:"many2many:sys_domain_menus;"`
+	SuperUser   *SysUser   `gorm:"foreignKey:SuperUserID"`
 	Parent      *SysDomain `gorm:"foreignKey:ParentID"`
 	Users       []SysUser  `gorm:"-"`
 	Roles       []SysRole  `gorm:"-"`

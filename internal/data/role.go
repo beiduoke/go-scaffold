@@ -71,7 +71,7 @@ func (r *RoleRepo) Save(ctx context.Context, g *biz.Role) (*biz.Role, error) {
 
 func (r *RoleRepo) Update(ctx context.Context, g *biz.Role) (*biz.Role, error) {
 	d := r.toModel(g)
-	result := r.data.DBD(ctx).Model(d).Select("*").Omit("CreatedAt").Updates(d)
+	result := r.data.DBD(ctx).Model(d).Select("Name", "ParentID", "Sort", "DefaultRouter", "State", "Remarks").Updates(d)
 	return r.toBiz(d), result.Error
 }
 
@@ -159,9 +159,10 @@ func (r *RoleRepo) ListPage(ctx context.Context, paging *pagination.Pagination) 
 	return roles, total
 }
 
+// 处理角色菜单
 func (r *RoleRepo) HandleMenu(ctx context.Context, g *biz.Role) error {
 	sysRole := r.toModel(g)
-	err := r.data.DB(ctx).Debug().Model(sysRole).Association("Menus").Clear()
+	err := r.data.DB(ctx).Model(sysRole).Association("Menus").Clear()
 	if err != nil {
 		return err
 	}
@@ -187,7 +188,7 @@ func (r *RoleRepo) HandleMenu(ctx context.Context, g *biz.Role) error {
 	return r.data.DB(ctx).Model(&SysRoleMenu{}).CreateInBatches(&sysRoleMenus, len(g.Menus)).Error
 }
 
-// 处理角色绑定
+// 处理角色资源
 func (r *RoleRepo) HandleResource(ctx context.Context, g *biz.Role) error {
 	domain := r.data.Domain(ctx)
 
@@ -203,10 +204,10 @@ func (r *RoleRepo) HandleResource(ctx context.Context, g *biz.Role) error {
 	}
 
 	role := convert.UnitToString(g.ID)
-	// 删除角色域下所有权限
+	// 删除角色域下所有角色
 	for _, v := range r.data.enforcer.GetPermissionsForUser(role, domain) {
 		if _, err := r.data.enforcer.DeletePermissionForUser(role, v[1:]...); err != nil {
-			r.log.Errorf("删除casbin角色领域下权限失败 %v", err)
+			r.log.Errorf("删除casbin角色领域下角色失败 %v", err)
 		}
 	}
 	// 根据最新资源重新绑定
@@ -218,7 +219,7 @@ func (r *RoleRepo) HandleResource(ctx context.Context, g *biz.Role) error {
 	return err
 }
 
-// 获取指定权限菜单列表
+// 获取指定角色菜单列表
 func (r *RoleRepo) ListMenuByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu, error) {
 	var roleMenus []*SysRoleMenu
 	db := r.data.DB(ctx).Model(&SysRoleMenu{})
@@ -242,7 +243,17 @@ func (r *RoleRepo) ListMenuByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu,
 	return bizMenus, err
 }
 
-// 获取指定权限菜单列表-返回父级菜单
+// 获取指定角色部门列表
+func (r *RoleRepo) ListDeptByIDs(ctx context.Context, ids ...uint) ([]*biz.Dept, error) {
+	return nil, nil
+}
+
+// 获取指定角色部门列表
+func (r *RoleRepo) ListResourceByIDs(ctx context.Context, ids ...uint) ([]*biz.Resource, error) {
+	return nil, nil
+}
+
+// 获取指定角色菜单列表-返回父级菜单
 func (r *RoleRepo) ListMenuAndParentByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu, error) {
 	var roleMenus []*SysRoleMenu
 	db := r.data.DB(ctx).Model(&SysRoleMenu{}).Debug()
@@ -256,4 +267,16 @@ func (r *RoleRepo) ListMenuAndParentByIDs(ctx context.Context, ids ...uint) ([]*
 		menuIds = append(menuIds, v.MenuID)
 	}
 	return menuRecursiveParent(bizAllMenus, menuIds...), nil
+}
+
+// 处理角色数据
+func (r *RoleRepo) HandleDept(ctx context.Context, g *biz.Role) error {
+	var deptRepo = DeptRepo{}
+	var sysDepts []SysDept
+	for _, v := range g.Depts {
+		sysDepts = append(sysDepts, *deptRepo.toModel(v))
+	}
+
+	sysRole := r.toModel(g)
+	return r.data.DB(ctx).Model(sysRole).Debug().Association("Depts").Replace(&sysDepts)
 }

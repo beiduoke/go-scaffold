@@ -25,6 +25,7 @@ type UserRepo struct {
 	ac            *conf.Auth
 	data          *Data
 	log           *log.Helper
+	menu          MenuRepo
 	domain        DomainRepo
 	role          RoleRepo
 	authenticator auth.Authenticator
@@ -32,12 +33,14 @@ type UserRepo struct {
 
 // NewUserRepo .
 func NewUserRepo(logger log.Logger, data *Data, ac *conf.Auth, authenticator auth.Authenticator, menu biz.MenuRepo) biz.UserRepo {
+	menuRepo := *(menu.(*MenuRepo))
 	return &UserRepo{
 		ac:            ac,
 		data:          data,
 		log:           log.NewHelper(logger),
 		role:          RoleRepo{log: log.NewHelper(logger), data: data, menu: menu},
 		domain:        DomainRepo{log: log.NewHelper(logger), data: data, menu: menu},
+		menu:          menuRepo,
 		authenticator: authenticator,
 	}
 }
@@ -142,9 +145,7 @@ func (r *UserRepo) ListPage(ctx context.Context, paging *pagination.Pagination) 
 		if dept, ok := paging.Query["deptId"]; ok && dept != "" {
 			var roleIds []string
 			deptId, _ := strconv.Atoi(dept)
-
 			// r.data.DBD(ctx).Model(SysDept{}).Where()
-
 			db = db.Where("dept_id", deptId)
 			// 这里保留暂不执行
 			if false {
@@ -423,6 +424,14 @@ func (r *UserRepo) Roles(ctx context.Context) ([]*biz.Role, error) {
 
 func (r *UserRepo) RoleMenus(ctx context.Context) ([]*biz.Menu, error) {
 	rolesIdsStr := r.data.enforcer.GetRolesForUserInDomain(r.data.User(ctx), r.data.Domain(ctx))
+
+	if r.data.HasSuperAdmin(ctx) {
+		return r.menu.ListAll(ctx)
+	}
+
+	if r.data.HasDomainSuperUser(ctx) {
+		return r.domain.ListMenuByIDs(ctx, r.data.DomainID(ctx))
+	}
 	return r.role.ListMenuByIDs(ctx, convert.ArrayStringToUint(rolesIdsStr)...)
 }
 

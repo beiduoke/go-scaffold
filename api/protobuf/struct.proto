@@ -40,6 +40,12 @@ message PagingReply {
   repeated google.protobuf.Any items = 2;
 }
 
+
+// 列表通用结果
+message ListReply {
+  repeated google.protobuf.Any items = 1;
+}
+
 message WebsocketProto  {
   string event_id = 1;
   string payload = 2;

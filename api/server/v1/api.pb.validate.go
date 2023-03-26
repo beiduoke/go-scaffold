@@ -2084,10 +2084,6 @@ func (m *MenuRouter) validate(all bool) error {
 
 	// no validation rules for Path
 
-	// no validation rules for Component
-
-	// no validation rules for Redirect
-
 	if all {
 		switch v := interface{}(m.GetMeta()).(type) {
 		case interface{ ValidateAll() error }:
@@ -2149,6 +2145,14 @@ func (m *MenuRouter) validate(all bool) error {
 			}
 		}
 
+	}
+
+	if m.Component != nil {
+		// no validation rules for Component
+	}
+
+	if m.Redirect != nil {
+		// no validation rules for Redirect
 	}
 
 	if m.Id != nil {
@@ -7270,6 +7274,37 @@ func (m *CreateRoleReq) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	_CreateRoleReq_Menus_Unique := make(map[uint64]struct{}, len(m.GetMenus()))
+
+	for idx, item := range m.GetMenus() {
+		_, _ = idx, item
+
+		if _, exists := _CreateRoleReq_Menus_Unique[item]; exists {
+			err := CreateRoleReqValidationError{
+				field:  fmt.Sprintf("Menus[%v]", idx),
+				reason: "repeated value must contain unique items",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		} else {
+			_CreateRoleReq_Menus_Unique[item] = struct{}{}
+		}
+
+		if item <= 0 {
+			err := CreateRoleReqValidationError{
+				field:  fmt.Sprintf("Menus[%v]", idx),
+				reason: "value must be greater than 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if m.DefaultRouter != nil {
 
 		if l := utf8.RuneCountInString(m.GetDefaultRouter()); l < 1 || l > 100 {
@@ -8971,6 +9006,780 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = HandleRoleMenuReplyValidationError{}
+
+// Validate checks the field values on ListRoleDeptReq with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *ListRoleDeptReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListRoleDeptReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListRoleDeptReqMultiError, or nil if none found.
+func (m *ListRoleDeptReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListRoleDeptReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := ListRoleDeptReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return ListRoleDeptReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListRoleDeptReqMultiError is an error wrapping multiple validation errors
+// returned by ListRoleDeptReq.ValidateAll() if the designated constraints
+// aren't met.
+type ListRoleDeptReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListRoleDeptReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListRoleDeptReqMultiError) AllErrors() []error { return m }
+
+// ListRoleDeptReqValidationError is the validation error returned by
+// ListRoleDeptReq.Validate if the designated constraints aren't met.
+type ListRoleDeptReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListRoleDeptReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListRoleDeptReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListRoleDeptReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListRoleDeptReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListRoleDeptReqValidationError) ErrorName() string { return "ListRoleDeptReqValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ListRoleDeptReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListRoleDeptReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListRoleDeptReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListRoleDeptReqValidationError{}
+
+// Validate checks the field values on ListRoleDeptReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *ListRoleDeptReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListRoleDeptReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListRoleDeptReplyMultiError, or nil if none found.
+func (m *ListRoleDeptReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListRoleDeptReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetItems() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListRoleDeptReplyValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListRoleDeptReplyValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListRoleDeptReplyValidationError{
+					field:  fmt.Sprintf("Items[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.Total != nil {
+		// no validation rules for Total
+	}
+
+	if len(errors) > 0 {
+		return ListRoleDeptReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListRoleDeptReplyMultiError is an error wrapping multiple validation errors
+// returned by ListRoleDeptReply.ValidateAll() if the designated constraints
+// aren't met.
+type ListRoleDeptReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListRoleDeptReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListRoleDeptReplyMultiError) AllErrors() []error { return m }
+
+// ListRoleDeptReplyValidationError is the validation error returned by
+// ListRoleDeptReply.Validate if the designated constraints aren't met.
+type ListRoleDeptReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListRoleDeptReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListRoleDeptReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListRoleDeptReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListRoleDeptReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListRoleDeptReplyValidationError) ErrorName() string {
+	return "ListRoleDeptReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListRoleDeptReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListRoleDeptReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListRoleDeptReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListRoleDeptReplyValidationError{}
+
+// Validate checks the field values on HandleRoleDeptReq with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *HandleRoleDeptReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleRoleDeptReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HandleRoleDeptReqMultiError, or nil if none found.
+func (m *HandleRoleDeptReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleRoleDeptReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := HandleRoleDeptReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, HandleRoleDeptReqValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, HandleRoleDeptReqValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return HandleRoleDeptReqValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return HandleRoleDeptReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleRoleDeptReqMultiError is an error wrapping multiple validation errors
+// returned by HandleRoleDeptReq.ValidateAll() if the designated constraints
+// aren't met.
+type HandleRoleDeptReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleRoleDeptReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleRoleDeptReqMultiError) AllErrors() []error { return m }
+
+// HandleRoleDeptReqValidationError is the validation error returned by
+// HandleRoleDeptReq.Validate if the designated constraints aren't met.
+type HandleRoleDeptReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleRoleDeptReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleRoleDeptReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleRoleDeptReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleRoleDeptReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleRoleDeptReqValidationError) ErrorName() string {
+	return "HandleRoleDeptReqValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleRoleDeptReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleRoleDeptReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleRoleDeptReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleRoleDeptReqValidationError{}
+
+// Validate checks the field values on HandleRoleDeptReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HandleRoleDeptReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleRoleDeptReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HandleRoleDeptReplyMultiError, or nil if none found.
+func (m *HandleRoleDeptReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleRoleDeptReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Code
+
+	// no validation rules for Message
+
+	if all {
+		switch v := interface{}(m.GetResult()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, HandleRoleDeptReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, HandleRoleDeptReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return HandleRoleDeptReplyValidationError{
+				field:  "Result",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for Success
+
+	if len(errors) > 0 {
+		return HandleRoleDeptReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleRoleDeptReplyMultiError is an error wrapping multiple validation
+// errors returned by HandleRoleDeptReply.ValidateAll() if the designated
+// constraints aren't met.
+type HandleRoleDeptReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleRoleDeptReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleRoleDeptReplyMultiError) AllErrors() []error { return m }
+
+// HandleRoleDeptReplyValidationError is the validation error returned by
+// HandleRoleDeptReply.Validate if the designated constraints aren't met.
+type HandleRoleDeptReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleRoleDeptReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleRoleDeptReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleRoleDeptReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleRoleDeptReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleRoleDeptReplyValidationError) ErrorName() string {
+	return "HandleRoleDeptReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleRoleDeptReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleRoleDeptReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleRoleDeptReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleRoleDeptReplyValidationError{}
+
+// Validate checks the field values on ListRoleResourceReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListRoleResourceReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListRoleResourceReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListRoleResourceReqMultiError, or nil if none found.
+func (m *ListRoleResourceReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListRoleResourceReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	if len(errors) > 0 {
+		return ListRoleResourceReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListRoleResourceReqMultiError is an error wrapping multiple validation
+// errors returned by ListRoleResourceReq.ValidateAll() if the designated
+// constraints aren't met.
+type ListRoleResourceReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListRoleResourceReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListRoleResourceReqMultiError) AllErrors() []error { return m }
+
+// ListRoleResourceReqValidationError is the validation error returned by
+// ListRoleResourceReq.Validate if the designated constraints aren't met.
+type ListRoleResourceReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListRoleResourceReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListRoleResourceReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListRoleResourceReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListRoleResourceReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListRoleResourceReqValidationError) ErrorName() string {
+	return "ListRoleResourceReqValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListRoleResourceReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListRoleResourceReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListRoleResourceReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListRoleResourceReqValidationError{}
+
+// Validate checks the field values on ListRoleResourceReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListRoleResourceReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListRoleResourceReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListRoleResourceReplyMultiError, or nil if none found.
+func (m *ListRoleResourceReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListRoleResourceReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetItems() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListRoleResourceReplyValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListRoleResourceReplyValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListRoleResourceReplyValidationError{
+					field:  fmt.Sprintf("Items[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.Total != nil {
+		// no validation rules for Total
+	}
+
+	if len(errors) > 0 {
+		return ListRoleResourceReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListRoleResourceReplyMultiError is an error wrapping multiple validation
+// errors returned by ListRoleResourceReply.ValidateAll() if the designated
+// constraints aren't met.
+type ListRoleResourceReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListRoleResourceReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListRoleResourceReplyMultiError) AllErrors() []error { return m }
+
+// ListRoleResourceReplyValidationError is the validation error returned by
+// ListRoleResourceReply.Validate if the designated constraints aren't met.
+type ListRoleResourceReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListRoleResourceReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListRoleResourceReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListRoleResourceReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListRoleResourceReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListRoleResourceReplyValidationError) ErrorName() string {
+	return "ListRoleResourceReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListRoleResourceReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListRoleResourceReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListRoleResourceReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListRoleResourceReplyValidationError{}
 
 // Validate checks the field values on HandleRoleResourceReq with the rules
 // defined in the proto definition for this message. If any rules are
@@ -16402,6 +17211,10 @@ func (m *MenuRouter_Meta) validate(all bool) error {
 		// no validation rules for CurrentActiveMenu
 	}
 
+	if m.Affix != nil {
+		// no validation rules for Affix
+	}
+
 	if len(errors) > 0 {
 		return MenuRouter_MetaMultiError(errors)
 	}
@@ -17644,6 +18457,37 @@ func (m *UpdateRoleReq_Data) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	_UpdateRoleReq_Data_Menus_Unique := make(map[uint64]struct{}, len(m.GetMenus()))
+
+	for idx, item := range m.GetMenus() {
+		_, _ = idx, item
+
+		if _, exists := _UpdateRoleReq_Data_Menus_Unique[item]; exists {
+			err := UpdateRoleReq_DataValidationError{
+				field:  fmt.Sprintf("Menus[%v]", idx),
+				reason: "repeated value must contain unique items",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		} else {
+			_UpdateRoleReq_Data_Menus_Unique[item] = struct{}{}
+		}
+
+		if item <= 0 {
+			err := UpdateRoleReq_DataValidationError{
+				field:  fmt.Sprintf("Menus[%v]", idx),
+				reason: "value must be greater than 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if m.DefaultRouter != nil {
 
 		if l := utf8.RuneCountInString(m.GetDefaultRouter()); l < 1 || l > 100 {
@@ -18211,6 +19055,165 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = HandleRoleMenuReq_DataValidationError{}
+
+// Validate checks the field values on HandleRoleDeptReq_Data with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HandleRoleDeptReq_Data) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleRoleDeptReq_Data with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HandleRoleDeptReq_DataMultiError, or nil if none found.
+func (m *HandleRoleDeptReq_Data) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleRoleDeptReq_Data) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if _, ok := _HandleRoleDeptReq_Data_Scope_NotInLookup[m.GetScope()]; ok {
+		err := HandleRoleDeptReq_DataValidationError{
+			field:  "Scope",
+			reason: "value must not be in list [0]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := protobuf.RoleScope_name[int32(m.GetScope())]; !ok {
+		err := HandleRoleDeptReq_DataValidationError{
+			field:  "Scope",
+			reason: "value must be one of the defined enum values",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	_HandleRoleDeptReq_Data_DeptCustoms_Unique := make(map[uint64]struct{}, len(m.GetDeptCustoms()))
+
+	for idx, item := range m.GetDeptCustoms() {
+		_, _ = idx, item
+
+		if _, exists := _HandleRoleDeptReq_Data_DeptCustoms_Unique[item]; exists {
+			err := HandleRoleDeptReq_DataValidationError{
+				field:  fmt.Sprintf("DeptCustoms[%v]", idx),
+				reason: "repeated value must contain unique items",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		} else {
+			_HandleRoleDeptReq_Data_DeptCustoms_Unique[item] = struct{}{}
+		}
+
+		if item <= 0 {
+			err := HandleRoleDeptReq_DataValidationError{
+				field:  fmt.Sprintf("DeptCustoms[%v]", idx),
+				reason: "value must be greater than 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return HandleRoleDeptReq_DataMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleRoleDeptReq_DataMultiError is an error wrapping multiple validation
+// errors returned by HandleRoleDeptReq_Data.ValidateAll() if the designated
+// constraints aren't met.
+type HandleRoleDeptReq_DataMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleRoleDeptReq_DataMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleRoleDeptReq_DataMultiError) AllErrors() []error { return m }
+
+// HandleRoleDeptReq_DataValidationError is the validation error returned by
+// HandleRoleDeptReq_Data.Validate if the designated constraints aren't met.
+type HandleRoleDeptReq_DataValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleRoleDeptReq_DataValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleRoleDeptReq_DataValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleRoleDeptReq_DataValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleRoleDeptReq_DataValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleRoleDeptReq_DataValidationError) ErrorName() string {
+	return "HandleRoleDeptReq_DataValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleRoleDeptReq_DataValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleRoleDeptReq_Data.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleRoleDeptReq_DataValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleRoleDeptReq_DataValidationError{}
+
+var _HandleRoleDeptReq_Data_Scope_NotInLookup = map[protobuf.RoleScope]struct{}{
+	0: {},
+}
 
 // Validate checks the field values on HandleRoleResourceReq_Data with the
 // rules defined in the proto definition for this message. If any rules are

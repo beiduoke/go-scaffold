@@ -164,13 +164,12 @@ func (s *ApiService) DeleteDomain(ctx context.Context, in *v1.DeleteDomainReq) (
 }
 
 // ListDomainMenu 获取领域菜单
-func (s *ApiService) ListDomainMenu(ctx context.Context, in *v1.ListDomainMenuReq) (*v1.ListDomainMenuReply, error) {
+func (s *ApiService) ListDomainMenu(ctx context.Context, in *v1.ListDomainMenuReq) (*protobuf.PagingReply, error) {
 	id := in.GetId()
 	menus, _ := s.domainCase.ListMenuByID(ctx, &biz.Domain{ID: uint(id)})
-	total := int64(len(menus))
-	return &v1.ListDomainMenuReply{Items: proto.ToAny(menus, func(t *biz.Menu) protoreflect.ProtoMessage {
+	return &protobuf.PagingReply{Items: proto.ToAny(menus, func(t *biz.Menu) protoreflect.ProtoMessage {
 		return TransformMenu(t)
-	}), Total: &total}, nil
+	}), Total: int64(len(menus))}, nil
 }
 
 // HandleDomainMenu 处理领域菜单

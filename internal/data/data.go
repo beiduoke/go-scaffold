@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"errors"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/conf"
@@ -150,6 +151,22 @@ func (d *Data) DBScopesDept(id ...uint) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		return db.Where("dept_id IN (?)", id)
 	}
+}
+
+func (d *Data) HasSuperAdmin(ctx context.Context) bool {
+	if d.DomainID(ctx) == 1 && d.UserID(ctx) == 1 {
+		return true
+	}
+	return false
+}
+
+func (d *Data) HasDomainSuperUser(ctx context.Context) bool {
+	sysDomain, domainId, userId := SysDomain{}, d.DomainID(ctx), d.UserID(ctx)
+	result := d.DB(ctx).Model(sysDomain).Debug().Select("SuperUserID").Last(&sysDomain, domainId)
+	if !errors.Is(result.Error, gorm.ErrRecordNotFound) && sysDomain.SuperUserID == userId {
+		return true
+	}
+	return false
 }
 
 func (d *Data) DomainID(ctx context.Context) uint {

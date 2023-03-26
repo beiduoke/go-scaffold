@@ -161,6 +161,7 @@ service Api {
       }
     };
   }
+
   // 获取角色权限列表
   rpc ListUserRolePermission (ListUserRolePermissionReq) returns (ListUserRolePermissionReply) {
     option (google.api.http) = {
@@ -294,7 +295,7 @@ service Api {
   }
   
   // 获取角色菜单
-  rpc ListDomainMenu (ListDomainMenuReq) returns (ListDomainMenuReply) {
+  rpc ListDomainMenu (ListDomainMenuReq) returns (api.protobuf.PagingReply) {
     option (google.api.http) = {
       get: "/v1/domains/{id}/menus"
     };
@@ -369,6 +370,27 @@ service Api {
     };
   }
 
+  // 获取角色数据
+  rpc ListRoleDept (ListRoleDeptReq) returns (ListRoleDeptReply) {
+    option (google.api.http) = {
+      get: "/v1/roles/{id}/depts"
+    };
+  }
+
+  // 处理角色数据
+  rpc HandleRoleDept (HandleRoleDeptReq) returns (HandleRoleDeptReply) {
+    option (google.api.http) = {
+      post: "/v1/roles/{id}/depts"
+      body: "data"
+    };
+  }
+
+  // 获取角色资源
+  rpc ListRoleResource (ListRoleResourceReq) returns (ListRoleResourceReply) {
+    option (google.api.http) = {
+      get: "/v1/roles/{id}/resources"
+    };
+  }
   // 处理角色资源
   rpc HandleRoleResource (HandleRoleResourceReq) returns (HandleRoleResourceReply) {
     option (google.api.http) = {
@@ -762,11 +784,13 @@ message MenuRouter {
     optional int32 orderNo = 15;
     // 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
     optional string currentActiveMenu = 12;
+    // 固定菜单在tab栏
+    optional bool affix = 13;
   }
   string name = 1;
   string path = 2;
-  string component = 3;
-  string redirect = 4;
+  optional string component = 3;
+  optional string redirect = 4;
   Meta meta = 5;
   repeated MenuRouter children = 6;
   optional uint64 id = 7;
@@ -1070,6 +1094,7 @@ message Role {
   int32 sort = 7;
   api.protobuf.RoleState state = 8;
   string remarks = 9;
+  repeated uint64 menus = 10;
 }
 
 // 请求 - 创建角色
@@ -1080,7 +1105,7 @@ message CreateRoleReq {
   optional int32 sort = 4 [(validate.rules).int32 = {gte: 0}];
   api.protobuf.RoleState state = 5 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
   optional string remarks = 6 [(validate.rules).string = {min_len: 1, max_len: 1000}];
-  // repeated uint64 menus = 7 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+  repeated uint64 menus = 7 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
 }
 
 // 回应 - 创建角色
@@ -1101,7 +1126,7 @@ message UpdateRoleReq {
     optional int32 sort = 4 [(validate.rules).int32 = {gte: 0}];
     api.protobuf.RoleState state = 5 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
     optional string remarks = 6 [(validate.rules).string = {min_len: 0, max_len: 1000}];
-    // repeated uint64 menus = 7 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+    repeated uint64 menus = 7 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
   }
   Data data = 2;
 }
@@ -1180,6 +1205,46 @@ message HandleRoleMenuReply {
   string message = 2;
   google.protobuf.Any result = 3;
   bool success = 4;
+}
+
+// 请求 - 获取角色菜单
+message ListRoleDeptReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 获取角色菜单
+message ListRoleDeptReply {
+  repeated google.protobuf.Any items = 1;
+  optional int64 total = 2;
+}
+
+// 请求 - 处理角色数据
+message HandleRoleDeptReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    api.protobuf.RoleScope scope = 1 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    repeated uint64 dept_customs = 2 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 处理角色数据
+message HandleRoleDeptReply {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any result = 3;
+  bool success = 4;
+}
+
+// 请求 - 获取角色资源
+message ListRoleResourceReq {
+  uint64 id = 1;
+}
+
+// 回应 - 获取角色资源
+message ListRoleResourceReply {
+  optional int64 total = 1;
+  repeated google.protobuf.Any items = 2;
 }
 
 // 请求 - 处理角色资源

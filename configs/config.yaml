@@ -27,7 +27,7 @@ auth:
     scheme: Bearer
     multipoint: false
   casbin: 
-    model_path: ../../configs/casbin/model.conf
+    model_path: ../../configs/casbin/rbac_with_domains.conf
     policy_path: ../../configs/casbin/policy.csv
 admin:
   super: admin
