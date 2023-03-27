@@ -13,20 +13,23 @@ import (
 
 // Role is a Role model.
 type Role struct {
-	ID            uint
-	CreatedAt     time.Time
-	UpdatedAt     time.Time
-	Name          string
-	ParentID      uint
-	DefaultRouter string
-	Sort          int32
-	State         int32
-	Remarks       string
-	Users         []*User
-	Domains       []*Domain
-	Menus         []*Menu
-	Resources     []*Resource
-	Depts         []*Dept
+	ID                uint
+	CreatedAt         time.Time
+	UpdatedAt         time.Time
+	Name              string
+	ParentID          uint
+	DefaultRouter     string
+	Sort              int32
+	DataScope         int32
+	MenuCheckStrictly int32
+	DeptCheckStrictly int32
+	State             int32
+	Remarks           string
+	Users             []*User
+	Domains           []*Domain
+	Menus             []*Menu
+	Resources         []*Resource
+	Depts             []*Dept
 }
 
 func (g Role) GetID() string {
@@ -47,10 +50,10 @@ type RoleRepo interface {
 	HandleMenu(context.Context, *Role) error
 	ListMenuByIDs(context.Context, ...uint) ([]*Menu, error)
 	ListMenuAndParentByIDs(context.Context, ...uint) ([]*Menu, error)
-	ListDeptByIDs(context.Context, ...uint) ([]*Dept, error)
-	HandleDept(context.Context, *Role) error
 	ListResourceByIDs(context.Context, ...uint) ([]*Resource, error)
 	HandleResource(context.Context, *Role) error
+	ListDeptByIDs(context.Context, ...uint) ([]*Dept, error)
+	HandleDept(context.Context, *Role) error
 }
 
 // RoleUsecase is a Role usecase.
@@ -181,8 +184,32 @@ func (uc *RoleUsecase) ListDeptByID(ctx context.Context, g *Role) ([]*Dept, erro
 	return uc.biz.roleRepo.ListDeptByIDs(ctx, g.ID)
 }
 
-// HandleDept 绑定数据
-func (uc *RoleUsecase) HandleDept(ctx context.Context, g *Role) error {
-	uc.log.WithContext(ctx).Debugf("HandleDept: %v", g)
-	return uc.biz.roleRepo.HandleDept(ctx, g)
+// HandleMenu 获取角色数据范围
+func (uc *RoleUsecase) GetDataScopeByID(ctx context.Context, g *Role) (*Role, error) {
+	uc.log.WithContext(ctx).Debugf("GetDataScopeByID: %v", g)
+	role, err := uc.biz.roleRepo.FindByID(ctx, g.ID)
+	if err != nil {
+		return nil, err
+	}
+	role.Depts, _ = uc.biz.roleRepo.ListDeptByIDs(ctx, role.ID)
+	return role, err
+}
+
+// HandleDept 绑定数据范围
+func (uc *RoleUsecase) HandleDataScope(ctx context.Context, g *Role) error {
+	uc.log.WithContext(ctx).Debugf("HandleDataScope: %v", g)
+	role, err := uc.biz.roleRepo.FindByID(ctx, g.ID)
+	if err != nil {
+		return err
+	}
+
+	_, err = uc.biz.roleRepo.Update(ctx, role)
+	if err != nil {
+		return err
+	}
+
+	if len(g.Depts) > 0 {
+		return uc.biz.roleRepo.HandleDept(ctx, g)
+	}
+	return err
 }

@@ -9258,22 +9258,179 @@ var _ interface {
 	ErrorName() string
 } = ListRoleDeptReplyValidationError{}
 
-// Validate checks the field values on HandleRoleDeptReq with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *HandleRoleDeptReq) Validate() error {
+// Validate checks the field values on RoleDataScope with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *RoleDataScope) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on HandleRoleDeptReq with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// HandleRoleDeptReqMultiError, or nil if none found.
-func (m *HandleRoleDeptReq) ValidateAll() error {
+// ValidateAll checks the field values on RoleDataScope with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in RoleDataScopeMultiError, or
+// nil if none found.
+func (m *RoleDataScope) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *HandleRoleDeptReq) validate(all bool) error {
+func (m *RoleDataScope) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if _, ok := _RoleDataScope_Scope_NotInLookup[m.GetScope()]; ok {
+		err := RoleDataScopeValidationError{
+			field:  "Scope",
+			reason: "value must not be in list [0]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := protobuf.RoleScope_name[int32(m.GetScope())]; !ok {
+		err := RoleDataScopeValidationError{
+			field:  "Scope",
+			reason: "value must be one of the defined enum values",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	_RoleDataScope_DeptCustoms_Unique := make(map[uint64]struct{}, len(m.GetDeptCustoms()))
+
+	for idx, item := range m.GetDeptCustoms() {
+		_, _ = idx, item
+
+		if _, exists := _RoleDataScope_DeptCustoms_Unique[item]; exists {
+			err := RoleDataScopeValidationError{
+				field:  fmt.Sprintf("DeptCustoms[%v]", idx),
+				reason: "repeated value must contain unique items",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		} else {
+			_RoleDataScope_DeptCustoms_Unique[item] = struct{}{}
+		}
+
+		if item <= 0 {
+			err := RoleDataScopeValidationError{
+				field:  fmt.Sprintf("DeptCustoms[%v]", idx),
+				reason: "value must be greater than 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return RoleDataScopeMultiError(errors)
+	}
+
+	return nil
+}
+
+// RoleDataScopeMultiError is an error wrapping multiple validation errors
+// returned by RoleDataScope.ValidateAll() if the designated constraints
+// aren't met.
+type RoleDataScopeMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RoleDataScopeMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RoleDataScopeMultiError) AllErrors() []error { return m }
+
+// RoleDataScopeValidationError is the validation error returned by
+// RoleDataScope.Validate if the designated constraints aren't met.
+type RoleDataScopeValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RoleDataScopeValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RoleDataScopeValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RoleDataScopeValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RoleDataScopeValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RoleDataScopeValidationError) ErrorName() string { return "RoleDataScopeValidationError" }
+
+// Error satisfies the builtin error interface
+func (e RoleDataScopeValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRoleDataScope.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RoleDataScopeValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RoleDataScopeValidationError{}
+
+var _RoleDataScope_Scope_NotInLookup = map[protobuf.RoleScope]struct{}{
+	0: {},
+}
+
+// Validate checks the field values on GetRoleDataScopeReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetRoleDataScopeReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetRoleDataScopeReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetRoleDataScopeReqMultiError, or nil if none found.
+func (m *GetRoleDataScopeReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetRoleDataScopeReq) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -9281,7 +9438,120 @@ func (m *HandleRoleDeptReq) validate(all bool) error {
 	var errors []error
 
 	if m.GetId() <= 0 {
-		err := HandleRoleDeptReqValidationError{
+		err := GetRoleDataScopeReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return GetRoleDataScopeReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetRoleDataScopeReqMultiError is an error wrapping multiple validation
+// errors returned by GetRoleDataScopeReq.ValidateAll() if the designated
+// constraints aren't met.
+type GetRoleDataScopeReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetRoleDataScopeReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetRoleDataScopeReqMultiError) AllErrors() []error { return m }
+
+// GetRoleDataScopeReqValidationError is the validation error returned by
+// GetRoleDataScopeReq.Validate if the designated constraints aren't met.
+type GetRoleDataScopeReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetRoleDataScopeReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetRoleDataScopeReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetRoleDataScopeReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetRoleDataScopeReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetRoleDataScopeReqValidationError) ErrorName() string {
+	return "GetRoleDataScopeReqValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetRoleDataScopeReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetRoleDataScopeReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetRoleDataScopeReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetRoleDataScopeReqValidationError{}
+
+// Validate checks the field values on HandleRoleDataScopeReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HandleRoleDataScopeReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleRoleDataScopeReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HandleRoleDataScopeReqMultiError, or nil if none found.
+func (m *HandleRoleDataScopeReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleRoleDataScopeReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := HandleRoleDataScopeReqValidationError{
 			field:  "Id",
 			reason: "value must be greater than 0",
 		}
@@ -9295,7 +9565,7 @@ func (m *HandleRoleDeptReq) validate(all bool) error {
 		switch v := interface{}(m.GetData()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, HandleRoleDeptReqValidationError{
+				errors = append(errors, HandleRoleDataScopeReqValidationError{
 					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -9303,7 +9573,7 @@ func (m *HandleRoleDeptReq) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, HandleRoleDeptReqValidationError{
+				errors = append(errors, HandleRoleDataScopeReqValidationError{
 					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -9312,7 +9582,7 @@ func (m *HandleRoleDeptReq) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return HandleRoleDeptReqValidationError{
+			return HandleRoleDataScopeReqValidationError{
 				field:  "Data",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -9321,19 +9591,19 @@ func (m *HandleRoleDeptReq) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return HandleRoleDeptReqMultiError(errors)
+		return HandleRoleDataScopeReqMultiError(errors)
 	}
 
 	return nil
 }
 
-// HandleRoleDeptReqMultiError is an error wrapping multiple validation errors
-// returned by HandleRoleDeptReq.ValidateAll() if the designated constraints
-// aren't met.
-type HandleRoleDeptReqMultiError []error
+// HandleRoleDataScopeReqMultiError is an error wrapping multiple validation
+// errors returned by HandleRoleDataScopeReq.ValidateAll() if the designated
+// constraints aren't met.
+type HandleRoleDataScopeReqMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m HandleRoleDeptReqMultiError) Error() string {
+func (m HandleRoleDataScopeReqMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -9342,11 +9612,11 @@ func (m HandleRoleDeptReqMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m HandleRoleDeptReqMultiError) AllErrors() []error { return m }
+func (m HandleRoleDataScopeReqMultiError) AllErrors() []error { return m }
 
-// HandleRoleDeptReqValidationError is the validation error returned by
-// HandleRoleDeptReq.Validate if the designated constraints aren't met.
-type HandleRoleDeptReqValidationError struct {
+// HandleRoleDataScopeReqValidationError is the validation error returned by
+// HandleRoleDataScopeReq.Validate if the designated constraints aren't met.
+type HandleRoleDataScopeReqValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -9354,24 +9624,24 @@ type HandleRoleDeptReqValidationError struct {
 }
 
 // Field function returns field value.
-func (e HandleRoleDeptReqValidationError) Field() string { return e.field }
+func (e HandleRoleDataScopeReqValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e HandleRoleDeptReqValidationError) Reason() string { return e.reason }
+func (e HandleRoleDataScopeReqValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e HandleRoleDeptReqValidationError) Cause() error { return e.cause }
+func (e HandleRoleDataScopeReqValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e HandleRoleDeptReqValidationError) Key() bool { return e.key }
+func (e HandleRoleDataScopeReqValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e HandleRoleDeptReqValidationError) ErrorName() string {
-	return "HandleRoleDeptReqValidationError"
+func (e HandleRoleDataScopeReqValidationError) ErrorName() string {
+	return "HandleRoleDataScopeReqValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e HandleRoleDeptReqValidationError) Error() string {
+func (e HandleRoleDataScopeReqValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -9383,14 +9653,14 @@ func (e HandleRoleDeptReqValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sHandleRoleDeptReq.%s: %s%s",
+		"invalid %sHandleRoleDataScopeReq.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = HandleRoleDeptReqValidationError{}
+var _ error = HandleRoleDataScopeReqValidationError{}
 
 var _ interface {
 	Field() string
@@ -9398,24 +9668,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = HandleRoleDeptReqValidationError{}
+} = HandleRoleDataScopeReqValidationError{}
 
-// Validate checks the field values on HandleRoleDeptReply with the rules
+// Validate checks the field values on HandleRoleDataScopeReply with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *HandleRoleDeptReply) Validate() error {
+func (m *HandleRoleDataScopeReply) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on HandleRoleDeptReply with the rules
-// defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on HandleRoleDataScopeReply with the
+// rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// HandleRoleDeptReplyMultiError, or nil if none found.
-func (m *HandleRoleDeptReply) ValidateAll() error {
+// HandleRoleDataScopeReplyMultiError, or nil if none found.
+func (m *HandleRoleDataScopeReply) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *HandleRoleDeptReply) validate(all bool) error {
+func (m *HandleRoleDataScopeReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -9430,7 +9700,7 @@ func (m *HandleRoleDeptReply) validate(all bool) error {
 		switch v := interface{}(m.GetResult()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, HandleRoleDeptReplyValidationError{
+				errors = append(errors, HandleRoleDataScopeReplyValidationError{
 					field:  "Result",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -9438,7 +9708,7 @@ func (m *HandleRoleDeptReply) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, HandleRoleDeptReplyValidationError{
+				errors = append(errors, HandleRoleDataScopeReplyValidationError{
 					field:  "Result",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -9447,7 +9717,7 @@ func (m *HandleRoleDeptReply) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return HandleRoleDeptReplyValidationError{
+			return HandleRoleDataScopeReplyValidationError{
 				field:  "Result",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -9458,19 +9728,19 @@ func (m *HandleRoleDeptReply) validate(all bool) error {
 	// no validation rules for Success
 
 	if len(errors) > 0 {
-		return HandleRoleDeptReplyMultiError(errors)
+		return HandleRoleDataScopeReplyMultiError(errors)
 	}
 
 	return nil
 }
 
-// HandleRoleDeptReplyMultiError is an error wrapping multiple validation
-// errors returned by HandleRoleDeptReply.ValidateAll() if the designated
+// HandleRoleDataScopeReplyMultiError is an error wrapping multiple validation
+// errors returned by HandleRoleDataScopeReply.ValidateAll() if the designated
 // constraints aren't met.
-type HandleRoleDeptReplyMultiError []error
+type HandleRoleDataScopeReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m HandleRoleDeptReplyMultiError) Error() string {
+func (m HandleRoleDataScopeReplyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -9479,11 +9749,11 @@ func (m HandleRoleDeptReplyMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m HandleRoleDeptReplyMultiError) AllErrors() []error { return m }
+func (m HandleRoleDataScopeReplyMultiError) AllErrors() []error { return m }
 
-// HandleRoleDeptReplyValidationError is the validation error returned by
-// HandleRoleDeptReply.Validate if the designated constraints aren't met.
-type HandleRoleDeptReplyValidationError struct {
+// HandleRoleDataScopeReplyValidationError is the validation error returned by
+// HandleRoleDataScopeReply.Validate if the designated constraints aren't met.
+type HandleRoleDataScopeReplyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -9491,24 +9761,24 @@ type HandleRoleDeptReplyValidationError struct {
 }
 
 // Field function returns field value.
-func (e HandleRoleDeptReplyValidationError) Field() string { return e.field }
+func (e HandleRoleDataScopeReplyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e HandleRoleDeptReplyValidationError) Reason() string { return e.reason }
+func (e HandleRoleDataScopeReplyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e HandleRoleDeptReplyValidationError) Cause() error { return e.cause }
+func (e HandleRoleDataScopeReplyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e HandleRoleDeptReplyValidationError) Key() bool { return e.key }
+func (e HandleRoleDataScopeReplyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e HandleRoleDeptReplyValidationError) ErrorName() string {
-	return "HandleRoleDeptReplyValidationError"
+func (e HandleRoleDataScopeReplyValidationError) ErrorName() string {
+	return "HandleRoleDataScopeReplyValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e HandleRoleDeptReplyValidationError) Error() string {
+func (e HandleRoleDataScopeReplyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -9520,14 +9790,14 @@ func (e HandleRoleDeptReplyValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sHandleRoleDeptReply.%s: %s%s",
+		"invalid %sHandleRoleDataScopeReply.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = HandleRoleDeptReplyValidationError{}
+var _ error = HandleRoleDataScopeReplyValidationError{}
 
 var _ interface {
 	Field() string
@@ -9535,7 +9805,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = HandleRoleDeptReplyValidationError{}
+} = HandleRoleDataScopeReplyValidationError{}
 
 // Validate checks the field values on ListRoleResourceReq with the rules
 // defined in the proto definition for this message. If any rules are
@@ -18942,40 +19212,6 @@ func (m *HandleRoleMenuReq_Data) validate(all bool) error {
 
 	var errors []error
 
-	for idx, item := range m.GetMenus() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, HandleRoleMenuReq_DataValidationError{
-						field:  fmt.Sprintf("Menus[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, HandleRoleMenuReq_DataValidationError{
-						field:  fmt.Sprintf("Menus[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return HandleRoleMenuReq_DataValidationError{
-					field:  fmt.Sprintf("Menus[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
 	if len(errors) > 0 {
 		return HandleRoleMenuReq_DataMultiError(errors)
 	}
@@ -19055,165 +19291,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = HandleRoleMenuReq_DataValidationError{}
-
-// Validate checks the field values on HandleRoleDeptReq_Data with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *HandleRoleDeptReq_Data) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on HandleRoleDeptReq_Data with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// HandleRoleDeptReq_DataMultiError, or nil if none found.
-func (m *HandleRoleDeptReq_Data) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *HandleRoleDeptReq_Data) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if _, ok := _HandleRoleDeptReq_Data_Scope_NotInLookup[m.GetScope()]; ok {
-		err := HandleRoleDeptReq_DataValidationError{
-			field:  "Scope",
-			reason: "value must not be in list [0]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := protobuf.RoleScope_name[int32(m.GetScope())]; !ok {
-		err := HandleRoleDeptReq_DataValidationError{
-			field:  "Scope",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	_HandleRoleDeptReq_Data_DeptCustoms_Unique := make(map[uint64]struct{}, len(m.GetDeptCustoms()))
-
-	for idx, item := range m.GetDeptCustoms() {
-		_, _ = idx, item
-
-		if _, exists := _HandleRoleDeptReq_Data_DeptCustoms_Unique[item]; exists {
-			err := HandleRoleDeptReq_DataValidationError{
-				field:  fmt.Sprintf("DeptCustoms[%v]", idx),
-				reason: "repeated value must contain unique items",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		} else {
-			_HandleRoleDeptReq_Data_DeptCustoms_Unique[item] = struct{}{}
-		}
-
-		if item <= 0 {
-			err := HandleRoleDeptReq_DataValidationError{
-				field:  fmt.Sprintf("DeptCustoms[%v]", idx),
-				reason: "value must be greater than 0",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return HandleRoleDeptReq_DataMultiError(errors)
-	}
-
-	return nil
-}
-
-// HandleRoleDeptReq_DataMultiError is an error wrapping multiple validation
-// errors returned by HandleRoleDeptReq_Data.ValidateAll() if the designated
-// constraints aren't met.
-type HandleRoleDeptReq_DataMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m HandleRoleDeptReq_DataMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m HandleRoleDeptReq_DataMultiError) AllErrors() []error { return m }
-
-// HandleRoleDeptReq_DataValidationError is the validation error returned by
-// HandleRoleDeptReq_Data.Validate if the designated constraints aren't met.
-type HandleRoleDeptReq_DataValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e HandleRoleDeptReq_DataValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e HandleRoleDeptReq_DataValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e HandleRoleDeptReq_DataValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e HandleRoleDeptReq_DataValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e HandleRoleDeptReq_DataValidationError) ErrorName() string {
-	return "HandleRoleDeptReq_DataValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e HandleRoleDeptReq_DataValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sHandleRoleDeptReq_Data.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = HandleRoleDeptReq_DataValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = HandleRoleDeptReq_DataValidationError{}
-
-var _HandleRoleDeptReq_Data_Scope_NotInLookup = map[protobuf.RoleScope]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on HandleRoleResourceReq_Data with the
 // rules defined in the proto definition for this message. If any rules are

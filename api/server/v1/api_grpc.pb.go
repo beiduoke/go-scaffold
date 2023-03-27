@@ -92,7 +92,7 @@ type ApiClient interface {
 	GetRole(ctx context.Context, in *GetRoleReq, opts ...grpc.CallOption) (*Role, error)
 	// 修改角色
 	UpdateRole(ctx context.Context, in *UpdateRoleReq, opts ...grpc.CallOption) (*UpdateRoleReply, error)
-	// 设置领域状态
+	// 更新角色状态
 	UpdateRoleState(ctx context.Context, in *UpdateRoleStateReq, opts ...grpc.CallOption) (*UpdateRoleStateReply, error)
 	// 删除角色
 	DeleteRole(ctx context.Context, in *DeleteRoleReq, opts ...grpc.CallOption) (*DeleteRoleReply, error)
@@ -100,10 +100,12 @@ type ApiClient interface {
 	ListRoleMenu(ctx context.Context, in *ListRoleMenuReq, opts ...grpc.CallOption) (*ListRoleMenuReply, error)
 	// 处理角色菜单
 	HandleRoleMenu(ctx context.Context, in *HandleRoleMenuReq, opts ...grpc.CallOption) (*HandleRoleMenuReply, error)
-	// 获取角色数据
+	// 获取角色部门
 	ListRoleDept(ctx context.Context, in *ListRoleDeptReq, opts ...grpc.CallOption) (*ListRoleDeptReply, error)
-	// 处理角色数据
-	HandleRoleDept(ctx context.Context, in *HandleRoleDeptReq, opts ...grpc.CallOption) (*HandleRoleDeptReply, error)
+	// 获取角色数据范围
+	GetRoleDataScope(ctx context.Context, in *GetRoleDataScopeReq, opts ...grpc.CallOption) (*RoleDataScope, error)
+	// 处理角色数据范围
+	HandleRoleDataScope(ctx context.Context, in *HandleRoleDataScopeReq, opts ...grpc.CallOption) (*HandleRoleDataScopeReply, error)
 	// 获取角色资源
 	ListRoleResource(ctx context.Context, in *ListRoleResourceReq, opts ...grpc.CallOption) (*ListRoleResourceReply, error)
 	// 处理角色资源
@@ -510,9 +512,18 @@ func (c *apiClient) ListRoleDept(ctx context.Context, in *ListRoleDeptReq, opts 
 	return out, nil
 }
 
-func (c *apiClient) HandleRoleDept(ctx context.Context, in *HandleRoleDeptReq, opts ...grpc.CallOption) (*HandleRoleDeptReply, error) {
-	out := new(HandleRoleDeptReply)
-	err := c.cc.Invoke(ctx, "/api.server.v1.Api/HandleRoleDept", in, out, opts...)
+func (c *apiClient) GetRoleDataScope(ctx context.Context, in *GetRoleDataScopeReq, opts ...grpc.CallOption) (*RoleDataScope, error) {
+	out := new(RoleDataScope)
+	err := c.cc.Invoke(ctx, "/api.server.v1.Api/GetRoleDataScope", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) HandleRoleDataScope(ctx context.Context, in *HandleRoleDataScopeReq, opts ...grpc.CallOption) (*HandleRoleDataScopeReply, error) {
+	out := new(HandleRoleDataScopeReply)
+	err := c.cc.Invoke(ctx, "/api.server.v1.Api/HandleRoleDataScope", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -825,7 +836,7 @@ type ApiServer interface {
 	GetRole(context.Context, *GetRoleReq) (*Role, error)
 	// 修改角色
 	UpdateRole(context.Context, *UpdateRoleReq) (*UpdateRoleReply, error)
-	// 设置领域状态
+	// 更新角色状态
 	UpdateRoleState(context.Context, *UpdateRoleStateReq) (*UpdateRoleStateReply, error)
 	// 删除角色
 	DeleteRole(context.Context, *DeleteRoleReq) (*DeleteRoleReply, error)
@@ -833,10 +844,12 @@ type ApiServer interface {
 	ListRoleMenu(context.Context, *ListRoleMenuReq) (*ListRoleMenuReply, error)
 	// 处理角色菜单
 	HandleRoleMenu(context.Context, *HandleRoleMenuReq) (*HandleRoleMenuReply, error)
-	// 获取角色数据
+	// 获取角色部门
 	ListRoleDept(context.Context, *ListRoleDeptReq) (*ListRoleDeptReply, error)
-	// 处理角色数据
-	HandleRoleDept(context.Context, *HandleRoleDeptReq) (*HandleRoleDeptReply, error)
+	// 获取角色数据范围
+	GetRoleDataScope(context.Context, *GetRoleDataScopeReq) (*RoleDataScope, error)
+	// 处理角色数据范围
+	HandleRoleDataScope(context.Context, *HandleRoleDataScopeReq) (*HandleRoleDataScopeReply, error)
 	// 获取角色资源
 	ListRoleResource(context.Context, *ListRoleResourceReq) (*ListRoleResourceReply, error)
 	// 处理角色资源
@@ -1012,8 +1025,11 @@ func (UnimplementedApiServer) HandleRoleMenu(context.Context, *HandleRoleMenuReq
 func (UnimplementedApiServer) ListRoleDept(context.Context, *ListRoleDeptReq) (*ListRoleDeptReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRoleDept not implemented")
 }
-func (UnimplementedApiServer) HandleRoleDept(context.Context, *HandleRoleDeptReq) (*HandleRoleDeptReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method HandleRoleDept not implemented")
+func (UnimplementedApiServer) GetRoleDataScope(context.Context, *GetRoleDataScopeReq) (*RoleDataScope, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRoleDataScope not implemented")
+}
+func (UnimplementedApiServer) HandleRoleDataScope(context.Context, *HandleRoleDataScopeReq) (*HandleRoleDataScopeReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HandleRoleDataScope not implemented")
 }
 func (UnimplementedApiServer) ListRoleResource(context.Context, *ListRoleResourceReq) (*ListRoleResourceReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRoleResource not implemented")
@@ -1790,20 +1806,38 @@ func _Api_ListRoleDept_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Api_HandleRoleDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HandleRoleDeptReq)
+func _Api_GetRoleDataScope_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRoleDataScopeReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ApiServer).HandleRoleDept(ctx, in)
+		return srv.(ApiServer).GetRoleDataScope(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.server.v1.Api/HandleRoleDept",
+		FullMethod: "/api.server.v1.Api/GetRoleDataScope",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).HandleRoleDept(ctx, req.(*HandleRoleDeptReq))
+		return srv.(ApiServer).GetRoleDataScope(ctx, req.(*GetRoleDataScopeReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_HandleRoleDataScope_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HandleRoleDataScopeReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).HandleRoleDataScope(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.server.v1.Api/HandleRoleDataScope",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).HandleRoleDataScope(ctx, req.(*HandleRoleDataScopeReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2436,8 +2470,12 @@ var Api_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Api_ListRoleDept_Handler,
 		},
 		{
-			MethodName: "HandleRoleDept",
-			Handler:    _Api_HandleRoleDept_Handler,
+			MethodName: "GetRoleDataScope",
+			Handler:    _Api_GetRoleDataScope_Handler,
+		},
+		{
+			MethodName: "HandleRoleDataScope",
+			Handler:    _Api_HandleRoleDataScope_Handler,
 		},
 		{
 			MethodName: "ListRoleResource",

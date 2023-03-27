@@ -32,11 +32,16 @@ func (r *RoleRepo) toModel(d *biz.Role) *SysRole {
 		return nil
 	}
 	sysData := &SysRole{
-		Name:          d.Name,
-		DefaultRouter: d.DefaultRouter,
-		State:         d.State,
-		ParentID:      d.ParentID,
-		Remarks:       d.Remarks,
+		DomainModel:       DomainModel{},
+		Name:              d.Name,
+		ParentID:          d.ParentID,
+		DefaultRouter:     d.DefaultRouter,
+		Sort:              d.Sort,
+		DataScope:         d.DataScope,
+		MenuCheckStrictly: d.MenuCheckStrictly,
+		DeptCheckStrictly: d.DeptCheckStrictly,
+		State:             d.State,
+		Remarks:           d.Remarks,
 	}
 
 	sysData.ID = d.ID
@@ -50,15 +55,18 @@ func (r *RoleRepo) toBiz(d *SysRole) *biz.Role {
 		return nil
 	}
 	return &biz.Role{
-		ID:            d.ID,
-		CreatedAt:     d.CreatedAt,
-		UpdatedAt:     d.UpdatedAt,
-		Name:          d.Name,
-		ParentID:      d.ParentID,
-		DefaultRouter: d.DefaultRouter,
-		Sort:          d.Sort,
-		State:         d.State,
-		Remarks:       d.Remarks,
+		ID:                d.ID,
+		CreatedAt:         d.CreatedAt,
+		UpdatedAt:         d.UpdatedAt,
+		Name:              d.Name,
+		ParentID:          d.ParentID,
+		DefaultRouter:     d.DefaultRouter,
+		Sort:              d.Sort,
+		DataScope:         d.DataScope,
+		MenuCheckStrictly: d.MenuCheckStrictly,
+		DeptCheckStrictly: d.DeptCheckStrictly,
+		State:             d.State,
+		Remarks:           d.Remarks,
 	}
 }
 
@@ -71,7 +79,7 @@ func (r *RoleRepo) Save(ctx context.Context, g *biz.Role) (*biz.Role, error) {
 
 func (r *RoleRepo) Update(ctx context.Context, g *biz.Role) (*biz.Role, error) {
 	d := r.toModel(g)
-	result := r.data.DBD(ctx).Model(d).Select("Name", "ParentID", "Sort", "DefaultRouter", "State", "Remarks").Updates(d)
+	result := r.data.DBD(ctx).Model(d).Omit("UpdatedAt", "DomainID").Updates(d)
 	return r.toBiz(d), result.Error
 }
 
@@ -256,7 +264,7 @@ func (r *RoleRepo) ListResourceByIDs(ctx context.Context, ids ...uint) ([]*biz.R
 // 获取指定角色菜单列表-返回父级菜单
 func (r *RoleRepo) ListMenuAndParentByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu, error) {
 	var roleMenus []*SysRoleMenu
-	db := r.data.DB(ctx).Model(&SysRoleMenu{}).Debug()
+	db := r.data.DB(ctx).Model(&SysRoleMenu{})
 	result := db.Find(&roleMenus, "sys_role_id in ?", ids)
 	if err := result.Error; err != nil {
 		return nil, err
@@ -269,7 +277,7 @@ func (r *RoleRepo) ListMenuAndParentByIDs(ctx context.Context, ids ...uint) ([]*
 	return menuRecursiveParent(bizAllMenus, menuIds...), nil
 }
 
-// 处理角色数据
+// 绑定角色部门
 func (r *RoleRepo) HandleDept(ctx context.Context, g *biz.Role) error {
 	var deptRepo = DeptRepo{}
 	var sysDepts []SysDept

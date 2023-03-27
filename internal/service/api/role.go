@@ -142,17 +142,18 @@ func (s *ApiService) HandleRoleMenu(ctx context.Context, in *v1.HandleRoleMenuRe
 	var menus []*biz.Menu
 	data := in.GetData()
 	for _, v := range data.GetMenus() {
-		parameters, buttons := make([]*biz.MenuParameter, 0, len(v.GetMenuParameterIds())), make([]*biz.MenuButton, 0, len(v.GetMenuButtonIds()))
-		for _, v := range v.GetMenuParameterIds() {
-			parameters = append(parameters, &biz.MenuParameter{ID: uint(v)})
-		}
-		for _, v := range v.GetMenuButtonIds() {
-			buttons = append(buttons, &biz.MenuButton{ID: uint(v)})
-		}
+		// 暂不使用扩展菜单权限按钮以及参数配置
+		// parameters, buttons := make([]*biz.MenuParameter, 0, len(v.GetMenuParameterIds())), make([]*biz.MenuButton, 0, len(v.GetMenuButtonIds()))
+		// for _, v := range v.GetMenuParameterIds() {
+		// 	parameters = append(parameters, &biz.MenuParameter{ID: uint(v)})
+		// }
+		// for _, v := range v.GetMenuButtonIds() {
+		// 	buttons = append(buttons, &biz.MenuButton{ID: uint(v)})
+		// }
 		menus = append(menus, &biz.Menu{
-			ID:         uint(v.GetId()),
-			Parameters: parameters,
-			Buttons:    buttons,
+			ID: uint(v),
+			// Parameters: parameters,
+			// Buttons:    buttons,
 		})
 	}
 	if err := s.roleCase.HandleMenu(ctx, &biz.Role{ID: uint(in.GetId()), Menus: menus}); err != nil {
@@ -202,10 +203,23 @@ func (s *ApiService) ListRoleDept(ctx context.Context, in *v1.ListRoleDeptReq) (
 	})}, nil
 }
 
-// HandleRoleDept 处理角色数据
-func (s *ApiService) HandleRoleDept(ctx context.Context, in *v1.HandleRoleDeptReq) (*v1.HandleRoleDeptReply, error) {
+// GetRoleDataScope 获取角色部门
+func (s *ApiService) GetRoleDataScope(ctx context.Context, in *v1.GetRoleDataScopeReq) (*v1.RoleDataScope, error) {
+	id := in.GetId()
+	role, _ := s.roleCase.GetDataScopeByID(ctx, &biz.Role{ID: uint(id)})
+	deptCustoms := make([]uint64, len(role.Depts))
+	for _, v := range role.Depts {
+		deptCustoms = append(deptCustoms, uint64(v.ID))
+	}
+	return &v1.RoleDataScope{
+		Scope:       protobuf.RoleScope(role.DataScope),
+		DeptCustoms: deptCustoms,
+	}, nil
+}
+
+// HandleRoleDataScope 处理角色数据
+func (s *ApiService) HandleRoleDataScope(ctx context.Context, in *v1.HandleRoleDataScopeReq) (*v1.HandleRoleDataScopeReply, error) {
 	inDeptCustoms := in.GetData().GetDeptCustoms()
-	// scope := in.Data.GetScope()
 	deptIds := make([]uint, 0, len(inDeptCustoms))
 	for _, v := range inDeptCustoms {
 		deptIds = append(deptIds, uint(v))
@@ -214,10 +228,10 @@ func (s *ApiService) HandleRoleDept(ctx context.Context, in *v1.HandleRoleDeptRe
 	if err != nil {
 		return nil, v1.ErrorRoleHandleDeptFail("角色资源查询失败")
 	}
-	if err := s.roleCase.HandleDept(ctx, &biz.Role{ID: uint(in.GetId()), Depts: depts}); err != nil {
+	if err := s.roleCase.HandleDataScope(ctx, &biz.Role{ID: uint(in.GetId()), DataScope: int32(in.Data.GetScope()), Depts: depts}); err != nil {
 		return nil, v1.ErrorRoleHandleDeptFail("角色资源处理失败：%v", err)
 	}
-	return &v1.HandleRoleDeptReply{
+	return &v1.HandleRoleDataScopeReply{
 		Success: true,
 		Message: "处理成功",
 	}, nil
