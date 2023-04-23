@@ -88,27 +88,27 @@ type ApiClient interface {
 	ListRole(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
 	// 创建角色
 	CreateRole(ctx context.Context, in *CreateRoleReq, opts ...grpc.CallOption) (*CreateRoleReply, error)
-	// 获取角色
+	// 获取指定ID角色
 	GetRole(ctx context.Context, in *GetRoleReq, opts ...grpc.CallOption) (*Role, error)
-	// 修改角色
+	// 修改指定ID角色
 	UpdateRole(ctx context.Context, in *UpdateRoleReq, opts ...grpc.CallOption) (*UpdateRoleReply, error)
-	// 更新角色状态
+	// 更新指定ID角色状态
 	UpdateRoleState(ctx context.Context, in *UpdateRoleStateReq, opts ...grpc.CallOption) (*UpdateRoleStateReply, error)
-	// 删除角色
+	// 删除指定ID角色
 	DeleteRole(ctx context.Context, in *DeleteRoleReq, opts ...grpc.CallOption) (*DeleteRoleReply, error)
-	// 获取角色菜单
+	// 获取指定ID角色菜单
 	ListRoleMenu(ctx context.Context, in *ListRoleMenuReq, opts ...grpc.CallOption) (*ListRoleMenuReply, error)
-	// 处理角色菜单
+	// 处理指定ID角色菜单
 	HandleRoleMenu(ctx context.Context, in *HandleRoleMenuReq, opts ...grpc.CallOption) (*HandleRoleMenuReply, error)
-	// 获取角色部门
+	// 获取指定ID角色部门
 	ListRoleDept(ctx context.Context, in *ListRoleDeptReq, opts ...grpc.CallOption) (*ListRoleDeptReply, error)
-	// 获取角色数据范围
-	GetRoleDataScope(ctx context.Context, in *GetRoleDataScopeReq, opts ...grpc.CallOption) (*RoleDataScope, error)
-	// 处理角色数据范围
+	// 获取指定ID角色数据范围
+	GetRoleDataScope(ctx context.Context, in *GetRoleDataScopeReq, opts ...grpc.CallOption) (*GetRoleDataScopeReply, error)
+	// 处理指定ID角色数据范围
 	HandleRoleDataScope(ctx context.Context, in *HandleRoleDataScopeReq, opts ...grpc.CallOption) (*HandleRoleDataScopeReply, error)
-	// 获取角色资源
+	// 获取指定ID角色资源
 	ListRoleResource(ctx context.Context, in *ListRoleResourceReq, opts ...grpc.CallOption) (*ListRoleResourceReply, error)
-	// 处理角色资源
+	// 处理指定ID角色资源
 	HandleRoleResource(ctx context.Context, in *HandleRoleResourceReq, opts ...grpc.CallOption) (*HandleRoleResourceReply, error)
 	// 资源模块
 	// 列表资源
@@ -512,8 +512,8 @@ func (c *apiClient) ListRoleDept(ctx context.Context, in *ListRoleDeptReq, opts 
 	return out, nil
 }
 
-func (c *apiClient) GetRoleDataScope(ctx context.Context, in *GetRoleDataScopeReq, opts ...grpc.CallOption) (*RoleDataScope, error) {
-	out := new(RoleDataScope)
+func (c *apiClient) GetRoleDataScope(ctx context.Context, in *GetRoleDataScopeReq, opts ...grpc.CallOption) (*GetRoleDataScopeReply, error) {
+	out := new(GetRoleDataScopeReply)
 	err := c.cc.Invoke(ctx, "/api.server.v1.Api/GetRoleDataScope", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -832,27 +832,27 @@ type ApiServer interface {
 	ListRole(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
 	// 创建角色
 	CreateRole(context.Context, *CreateRoleReq) (*CreateRoleReply, error)
-	// 获取角色
+	// 获取指定ID角色
 	GetRole(context.Context, *GetRoleReq) (*Role, error)
-	// 修改角色
+	// 修改指定ID角色
 	UpdateRole(context.Context, *UpdateRoleReq) (*UpdateRoleReply, error)
-	// 更新角色状态
+	// 更新指定ID角色状态
 	UpdateRoleState(context.Context, *UpdateRoleStateReq) (*UpdateRoleStateReply, error)
-	// 删除角色
+	// 删除指定ID角色
 	DeleteRole(context.Context, *DeleteRoleReq) (*DeleteRoleReply, error)
-	// 获取角色菜单
+	// 获取指定ID角色菜单
 	ListRoleMenu(context.Context, *ListRoleMenuReq) (*ListRoleMenuReply, error)
-	// 处理角色菜单
+	// 处理指定ID角色菜单
 	HandleRoleMenu(context.Context, *HandleRoleMenuReq) (*HandleRoleMenuReply, error)
-	// 获取角色部门
+	// 获取指定ID角色部门
 	ListRoleDept(context.Context, *ListRoleDeptReq) (*ListRoleDeptReply, error)
-	// 获取角色数据范围
-	GetRoleDataScope(context.Context, *GetRoleDataScopeReq) (*RoleDataScope, error)
-	// 处理角色数据范围
+	// 获取指定ID角色数据范围
+	GetRoleDataScope(context.Context, *GetRoleDataScopeReq) (*GetRoleDataScopeReply, error)
+	// 处理指定ID角色数据范围
 	HandleRoleDataScope(context.Context, *HandleRoleDataScopeReq) (*HandleRoleDataScopeReply, error)
-	// 获取角色资源
+	// 获取指定ID角色资源
 	ListRoleResource(context.Context, *ListRoleResourceReq) (*ListRoleResourceReply, error)
-	// 处理角色资源
+	// 处理指定ID角色资源
 	HandleRoleResource(context.Context, *HandleRoleResourceReq) (*HandleRoleResourceReply, error)
 	// 资源模块
 	// 列表资源
@@ -1025,7 +1025,7 @@ func (UnimplementedApiServer) HandleRoleMenu(context.Context, *HandleRoleMenuReq
 func (UnimplementedApiServer) ListRoleDept(context.Context, *ListRoleDeptReq) (*ListRoleDeptReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRoleDept not implemented")
 }
-func (UnimplementedApiServer) GetRoleDataScope(context.Context, *GetRoleDataScopeReq) (*RoleDataScope, error) {
+func (UnimplementedApiServer) GetRoleDataScope(context.Context, *GetRoleDataScopeReq) (*GetRoleDataScopeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRoleDataScope not implemented")
 }
 func (UnimplementedApiServer) HandleRoleDataScope(context.Context, *HandleRoleDataScopeReq) (*HandleRoleDataScopeReply, error) {

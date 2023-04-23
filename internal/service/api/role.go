@@ -51,15 +51,29 @@ func (s *ApiService) ListRole(ctx context.Context, in *protobuf.PagingReq) (*pro
 // CreateRole 创建角色
 func (s *ApiService) CreateRole(ctx context.Context, in *v1.CreateRoleReq) (*v1.CreateRoleReply, error) {
 	role, err := s.roleCase.Create(ctx, &biz.Role{
-		Name:          in.GetName(),
-		ParentID:      uint(in.GetParentId()),
-		DefaultRouter: in.GetDefaultRouter(),
-		State:         int32(in.GetState()),
-		Remarks:       in.GetRemarks(),
+		Name:              in.GetName(),
+		ParentID:          uint(in.GetParentId()),
+		DefaultRouter:     in.GetDefaultRouter(),
+		Sort:              in.GetSort(),
+		DataScope:         int32(in.GetDataScope()),
+		MenuCheckStrictly: int32(in.GetMenuCheckStrictly()),
+		DeptCheckStrictly: int32(in.GetDeptCheckStrictly()),
+		State:             int32(in.GetState()),
+		Remarks:           in.GetRemarks(),
 	})
 	if err != nil {
 		return nil, v1.ErrorRoleCreateFail("角色创建失败: %v", err.Error())
 	}
+	if len(in.GetMenus()) > 0 {
+		// 同步角色菜单操作
+		if _, err = s.HandleRoleMenu(ctx, &v1.HandleRoleMenuReq{
+			Id:   uint64(role.ID),
+			Data: &v1.HandleRoleMenuReq_Data{Menus: in.GetMenus()},
+		}); err != nil {
+			return nil, err
+		}
+	}
+
 	data, _ := anypb.New(&protobuf.DataProto{
 		Id: uint64(role.ID),
 	})
@@ -70,21 +84,30 @@ func (s *ApiService) CreateRole(ctx context.Context, in *v1.CreateRoleReq) (*v1.
 	}, nil
 }
 
-// UpdateRole 创建角色
+// UpdateRole 修改角色
 func (s *ApiService) UpdateRole(ctx context.Context, in *v1.UpdateRoleReq) (*v1.UpdateRoleReply, error) {
 	v := in.GetData()
-
 	err := s.roleCase.Update(ctx, &biz.Role{
-		ID:            uint(in.GetId()),
-		Name:          v.GetName(),
-		ParentID:      uint(v.GetParentId()),
-		DefaultRouter: v.GetDefaultRouter(),
-		Sort:          v.GetSort(),
-		State:         int32(v.GetState()),
-		Remarks:       v.GetRemarks(),
+		ID:                uint(in.GetId()),
+		Name:              v.GetName(),
+		ParentID:          uint(v.GetParentId()),
+		DefaultRouter:     v.GetDefaultRouter(),
+		Sort:              v.GetSort(),
+		DataScope:         int32(v.GetDataScope()),
+		MenuCheckStrictly: int32(v.GetMenuCheckStrictly()),
+		DeptCheckStrictly: int32(v.GetDeptCheckStrictly()),
+		State:             int32(v.GetState()),
+		Remarks:           v.GetRemarks(),
 	})
 	if err != nil {
-		return nil, v1.ErrorRoleUpdateFail("角色创建失败: %v", err.Error())
+		return nil, v1.ErrorRoleUpdateFail("角色修改失败: %v", err.Error())
+	}
+	// 同步角色菜单操作
+	if _, err = s.HandleRoleMenu(ctx, &v1.HandleRoleMenuReq{
+		Id:   in.GetId(),
+		Data: &v1.HandleRoleMenuReq_Data{Menus: v.GetMenus()},
+	}); err != nil {
+		return nil, err
 	}
 	return &v1.UpdateRoleReply{
 		Success: true,
@@ -128,7 +151,7 @@ func (s *ApiService) DeleteRole(ctx context.Context, in *v1.DeleteRoleReq) (*v1.
 	}, nil
 }
 
-// ListRoleMenu 获取角色菜单
+// ListRoleMenu 列表-指定ID角色菜单
 func (s *ApiService) ListRoleMenu(ctx context.Context, in *v1.ListRoleMenuReq) (*v1.ListRoleMenuReply, error) {
 	id := in.GetId()
 	menus, _ := s.roleCase.ListMenuByID(ctx, &biz.Role{ID: uint(id)})
@@ -137,10 +160,10 @@ func (s *ApiService) ListRoleMenu(ctx context.Context, in *v1.ListRoleMenuReq) (
 	})}, nil
 }
 
-// HandleRoleMenu 处理角色菜单
+// HandleRoleMenu 处理指定ID角色菜单
 func (s *ApiService) HandleRoleMenu(ctx context.Context, in *v1.HandleRoleMenuReq) (*v1.HandleRoleMenuReply, error) {
-	var menus []*biz.Menu
 	data := in.GetData()
+	menus := make([]*biz.Menu, len(data.GetMenus()))
 	for _, v := range data.GetMenus() {
 		// 暂不使用扩展菜单权限按钮以及参数配置
 		// parameters, buttons := make([]*biz.MenuParameter, 0, len(v.GetMenuParameterIds())), make([]*biz.MenuButton, 0, len(v.GetMenuButtonIds()))
@@ -165,7 +188,7 @@ func (s *ApiService) HandleRoleMenu(ctx context.Context, in *v1.HandleRoleMenuRe
 	}, nil
 }
 
-// ListRoleResource 获取角色资源
+// ListRoleResource 列表-指定ID角色资源
 func (s *ApiService) ListRoleResource(ctx context.Context, in *v1.ListRoleResourceReq) (*v1.ListRoleResourceReply, error) {
 	id := in.GetId()
 	resources, _ := s.roleCase.ListResourceByID(ctx, &biz.Role{ID: uint(id)})
@@ -174,7 +197,7 @@ func (s *ApiService) ListRoleResource(ctx context.Context, in *v1.ListRoleResour
 	})}, nil
 }
 
-// HandleRoleResource 处理角色资源
+// HandleRoleResource 处理指定ID角色资源
 func (s *ApiService) HandleRoleResource(ctx context.Context, in *v1.HandleRoleResourceReq) (*v1.HandleRoleResourceReply, error) {
 	inResourceIds := in.GetData().GetResourceIds()
 	apiIds := make([]uint, 0, len(inResourceIds))
@@ -194,7 +217,7 @@ func (s *ApiService) HandleRoleResource(ctx context.Context, in *v1.HandleRoleRe
 	}, nil
 }
 
-// ListRoleDept 获取角色部门
+// ListRoleDept 列表-获取指定ID角色部门
 func (s *ApiService) ListRoleDept(ctx context.Context, in *v1.ListRoleDeptReq) (*v1.ListRoleDeptReply, error) {
 	id := in.GetId()
 	menus, _ := s.roleCase.ListDeptByID(ctx, &biz.Role{ID: uint(id)})
@@ -203,17 +226,18 @@ func (s *ApiService) ListRoleDept(ctx context.Context, in *v1.ListRoleDeptReq) (
 	})}, nil
 }
 
-// GetRoleDataScope 获取角色部门
-func (s *ApiService) GetRoleDataScope(ctx context.Context, in *v1.GetRoleDataScopeReq) (*v1.RoleDataScope, error) {
+// GetRoleDataScope 获取指定ID角色数据范围
+func (s *ApiService) GetRoleDataScope(ctx context.Context, in *v1.GetRoleDataScopeReq) (*v1.GetRoleDataScopeReply, error) {
 	id := in.GetId()
 	role, _ := s.roleCase.GetDataScopeByID(ctx, &biz.Role{ID: uint(id)})
 	deptCustoms := make([]uint64, len(role.Depts))
 	for _, v := range role.Depts {
 		deptCustoms = append(deptCustoms, uint64(v.ID))
 	}
-	return &v1.RoleDataScope{
-		Scope:       protobuf.RoleScope(role.DataScope),
-		DeptCustoms: deptCustoms,
+	return &v1.GetRoleDataScopeReply{
+		Scope:             protobuf.RoleDataScope(role.DataScope),
+		DeptCheckStrictly: (*protobuf.RoleDeptCheckStrictly)(&role.DeptCheckStrictly),
+		DeptCustoms:       deptCustoms,
 	}, nil
 }
 

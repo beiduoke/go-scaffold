@@ -112,7 +112,7 @@ type SysRole struct {
 	ParentID          uint          `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
 	DefaultRouter     string        `gorm:"type:varchar(255);column:default_router;not null;default:'/dashboard';comment:默认路由;"`
 	Sort              int32         `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
-	DataScope         int32         `gorm:"type:tinyint(2);column:data_scope;not null;default:1;comment:数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限）;"`
+	DataScope         int32         `gorm:"type:tinyint(2);column:data_scope;not null;default:1;comment:数据范围（0：未指定 1：本人数据权限 2：全部数据权限 3：本部门数据权限 4：本部门及以下数据权限 5：自定部门数据权限 ）;"`
 	MenuCheckStrictly int32         `gorm:"type:tinyint(2);column:menu_check_strictly;not null;default:1;comment:菜单树选择项是否关联显示;"`
 	DeptCheckStrictly int32         `gorm:"type:tinyint(2);column:dept_check_strictly;not null;default:1;comment:部门树选择项是否关联显示;"`
 	State             int32         `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:角色状态 0 未指定  1 启用 2 停用;"`

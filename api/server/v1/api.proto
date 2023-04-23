@@ -325,14 +325,14 @@ service Api {
     };
   }
 
-  // 获取角色
+  // 获取指定ID角色
   rpc GetRole (GetRoleReq) returns (Role) {
     option (google.api.http) = {
       get: "/v1/roles/{id}"
     };
   }
 
-  // 修改角色
+  // 修改指定ID角色
   rpc UpdateRole (UpdateRoleReq) returns (UpdateRoleReply) {
     option (google.api.http) = {
       put: "/v1/roles/{id}"
@@ -340,7 +340,7 @@ service Api {
     };
   }
 
-  // 更新角色状态
+  // 更新指定ID角色状态
   rpc UpdateRoleState (UpdateRoleStateReq) returns (UpdateRoleStateReply) {
     option (google.api.http) = {
       put: "/v1/roles/{id}/state"
@@ -348,21 +348,21 @@ service Api {
     };
   }
 
-  // 删除角色
+  // 删除指定ID角色
   rpc DeleteRole (DeleteRoleReq) returns (DeleteRoleReply) {
     option (google.api.http) = {
       delete: "/v1/roles/{id}"
     };
   }
 
-  // 获取角色菜单
+  // 获取指定ID角色菜单
   rpc ListRoleMenu (ListRoleMenuReq) returns (ListRoleMenuReply) {
     option (google.api.http) = {
       get: "/v1/roles/{id}/menus"
     };
   }
 
-  // 处理角色菜单
+  // 处理指定ID角色菜单
   rpc HandleRoleMenu (HandleRoleMenuReq) returns (HandleRoleMenuReply) {
     option (google.api.http) = {
       post: "/v1/roles/{id}/menus"
@@ -370,21 +370,21 @@ service Api {
     };
   }
 
-  // 获取角色部门
+  // 获取指定ID角色部门
   rpc ListRoleDept (ListRoleDeptReq) returns (ListRoleDeptReply) {
     option (google.api.http) = {
       get: "/v1/roles/{id}/depts"
     };
   }
 
-  // 获取角色数据范围
-  rpc GetRoleDataScope (GetRoleDataScopeReq) returns (RoleDataScope) {
+  // 获取指定ID角色数据范围
+  rpc GetRoleDataScope (GetRoleDataScopeReq) returns (GetRoleDataScopeReply) {
     option (google.api.http) = {
       get: "/v1/roles/{id}/dataScopes"
     };
   }
 
-  // 处理角色数据范围
+  // 处理指定ID角色数据范围
   rpc HandleRoleDataScope (HandleRoleDataScopeReq) returns (HandleRoleDataScopeReply) {
     option (google.api.http) = {
       post: "/v1/roles/{id}/dataScopes"
@@ -392,13 +392,13 @@ service Api {
     };
   }
 
-  // 获取角色资源
+  // 获取指定ID角色资源
   rpc ListRoleResource (ListRoleResourceReq) returns (ListRoleResourceReply) {
     option (google.api.http) = {
       get: "/v1/roles/{id}/resources"
     };
   }
-  // 处理角色资源
+  // 处理指定ID角色资源
   rpc HandleRoleResource (HandleRoleResourceReq) returns (HandleRoleResourceReply) {
     option (google.api.http) = {
       post: "/v1/roles/{id}/resources"
@@ -1099,9 +1099,12 @@ message Role {
   uint64 parent_id = 5;
   string default_router = 6;
   int32 sort = 7;
-  api.protobuf.RoleState state = 8;
-  string remarks = 9;
-  repeated uint64 menus = 10;
+	api.protobuf.RoleDataScope data_scope = 8;         
+	api.protobuf.RoleMenuCheckStrictly menu_check_strictly = 9; 
+	api.protobuf.RoleDeptCheckStrictly dept_check_strictly = 10; 
+  api.protobuf.RoleState state = 11;
+  string remarks = 12;
+  repeated uint64 menus = 13;
 }
 
 // 请求 - 创建角色
@@ -1110,9 +1113,12 @@ message CreateRoleReq {
   uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
   optional string default_router = 3 [(validate.rules).string = {min_len: 1, max_len: 100}];
   optional int32 sort = 4 [(validate.rules).int32 = {gte: 0}];
-  api.protobuf.RoleState state = 5 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-  optional string remarks = 6 [(validate.rules).string = {min_len: 1, max_len: 1000}];
-  repeated uint64 menus = 7 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+	optional api.protobuf.RoleDataScope data_scope = 5 [(validate.rules).enum = {defined_only: true, not_in: [0]}];         
+	optional api.protobuf.RoleMenuCheckStrictly menu_check_strictly = 6 [(validate.rules).enum = {defined_only: true, not_in: [0]}]; 
+	optional api.protobuf.RoleDeptCheckStrictly dept_check_strictly = 7 [(validate.rules).enum = {defined_only: true, not_in: [0]}]; 
+  api.protobuf.RoleState state = 8 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  optional string remarks = 9 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+  repeated uint64 menus = 10 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
 }
 
 // 回应 - 创建角色
@@ -1131,9 +1137,12 @@ message UpdateRoleReq {
     uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
     optional string default_router = 3 [(validate.rules).string = {min_len: 1, max_len: 100}];
     optional int32 sort = 4 [(validate.rules).int32 = {gte: 0}];
-    api.protobuf.RoleState state = 5 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-    optional string remarks = 6 [(validate.rules).string = {min_len: 0, max_len: 1000}];
-    repeated uint64 menus = 7 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+    optional api.protobuf.RoleDataScope data_scope = 5 [(validate.rules).enum = {defined_only: true, not_in: [0]}];         
+    optional api.protobuf.RoleMenuCheckStrictly menu_check_strictly = 6 [(validate.rules).enum = {defined_only: true, not_in: [0]}]; 
+    optional api.protobuf.RoleDeptCheckStrictly dept_check_strictly = 7 [(validate.rules).enum = {defined_only: true, not_in: [0]}]; 
+    api.protobuf.RoleState state = 8 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    optional string remarks = 9 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+    repeated uint64 menus = 10 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
   }
   Data data = 2;
 }
@@ -1226,21 +1235,28 @@ message ListRoleDeptReply {
   repeated google.protobuf.Any items = 2;
 }
 
-// 角色菜单数据范围
-message RoleDataScope {
-  api.protobuf.RoleScope scope = 1 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-  repeated uint64 dept_customs = 2 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
-}
 
-// 请求 - 获取角色菜单
+// 请求 - 获取角色数据权限
 message GetRoleDataScopeReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 角色菜单数据范围
+message GetRoleDataScopeReply {
+  api.protobuf.RoleDataScope scope = 1;
+  optional api.protobuf.RoleDeptCheckStrictly dept_check_strictly = 2;
+  repeated uint64 dept_customs = 3;
 }
 
 // 请求 - 处理角色数据范围
 message HandleRoleDataScopeReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
-  RoleDataScope data = 2;
+  message DataScope {
+    api.protobuf.RoleDataScope scope = 1 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+    optional api.protobuf.RoleDeptCheckStrictly dept_check_strictly = 2 [(validate.rules).enum = {defined_only: true, not_in: [0]}]; 
+    repeated uint64 dept_customs = 3 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+  }
+  DataScope data = 2;
 }
 
 // 回应 - 处理角色数据

@@ -7127,6 +7127,12 @@ func (m *Role) validate(all bool) error {
 
 	// no validation rules for Sort
 
+	// no validation rules for DataScope
+
+	// no validation rules for MenuCheckStrictly
+
+	// no validation rules for DeptCheckStrictly
+
 	// no validation rules for State
 
 	// no validation rules for Remarks
@@ -7335,6 +7341,84 @@ func (m *CreateRoleReq) validate(all bool) error {
 
 	}
 
+	if m.DataScope != nil {
+
+		if _, ok := _CreateRoleReq_DataScope_NotInLookup[m.GetDataScope()]; ok {
+			err := CreateRoleReqValidationError{
+				field:  "DataScope",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.RoleDataScope_name[int32(m.GetDataScope())]; !ok {
+			err := CreateRoleReqValidationError{
+				field:  "DataScope",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.MenuCheckStrictly != nil {
+
+		if _, ok := _CreateRoleReq_MenuCheckStrictly_NotInLookup[m.GetMenuCheckStrictly()]; ok {
+			err := CreateRoleReqValidationError{
+				field:  "MenuCheckStrictly",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.RoleMenuCheckStrictly_name[int32(m.GetMenuCheckStrictly())]; !ok {
+			err := CreateRoleReqValidationError{
+				field:  "MenuCheckStrictly",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.DeptCheckStrictly != nil {
+
+		if _, ok := _CreateRoleReq_DeptCheckStrictly_NotInLookup[m.GetDeptCheckStrictly()]; ok {
+			err := CreateRoleReqValidationError{
+				field:  "DeptCheckStrictly",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.RoleDeptCheckStrictly_name[int32(m.GetDeptCheckStrictly())]; !ok {
+			err := CreateRoleReqValidationError{
+				field:  "DeptCheckStrictly",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if m.Remarks != nil {
 
 		if l := utf8.RuneCountInString(m.GetRemarks()); l < 1 || l > 1000 {
@@ -7427,6 +7511,18 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CreateRoleReqValidationError{}
+
+var _CreateRoleReq_DataScope_NotInLookup = map[protobuf.RoleDataScope]struct{}{
+	0: {},
+}
+
+var _CreateRoleReq_MenuCheckStrictly_NotInLookup = map[protobuf.RoleMenuCheckStrictly]struct{}{
+	0: {},
+}
+
+var _CreateRoleReq_DeptCheckStrictly_NotInLookup = map[protobuf.RoleDeptCheckStrictly]struct{}{
+	0: {},
+}
 
 var _CreateRoleReq_State_NotInLookup = map[protobuf.RoleState]struct{}{
 	0: {},
@@ -9258,163 +9354,6 @@ var _ interface {
 	ErrorName() string
 } = ListRoleDeptReplyValidationError{}
 
-// Validate checks the field values on RoleDataScope with the rules defined in
-// the proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *RoleDataScope) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on RoleDataScope with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in RoleDataScopeMultiError, or
-// nil if none found.
-func (m *RoleDataScope) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *RoleDataScope) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if _, ok := _RoleDataScope_Scope_NotInLookup[m.GetScope()]; ok {
-		err := RoleDataScopeValidationError{
-			field:  "Scope",
-			reason: "value must not be in list [0]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := protobuf.RoleScope_name[int32(m.GetScope())]; !ok {
-		err := RoleDataScopeValidationError{
-			field:  "Scope",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	_RoleDataScope_DeptCustoms_Unique := make(map[uint64]struct{}, len(m.GetDeptCustoms()))
-
-	for idx, item := range m.GetDeptCustoms() {
-		_, _ = idx, item
-
-		if _, exists := _RoleDataScope_DeptCustoms_Unique[item]; exists {
-			err := RoleDataScopeValidationError{
-				field:  fmt.Sprintf("DeptCustoms[%v]", idx),
-				reason: "repeated value must contain unique items",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		} else {
-			_RoleDataScope_DeptCustoms_Unique[item] = struct{}{}
-		}
-
-		if item <= 0 {
-			err := RoleDataScopeValidationError{
-				field:  fmt.Sprintf("DeptCustoms[%v]", idx),
-				reason: "value must be greater than 0",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return RoleDataScopeMultiError(errors)
-	}
-
-	return nil
-}
-
-// RoleDataScopeMultiError is an error wrapping multiple validation errors
-// returned by RoleDataScope.ValidateAll() if the designated constraints
-// aren't met.
-type RoleDataScopeMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m RoleDataScopeMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m RoleDataScopeMultiError) AllErrors() []error { return m }
-
-// RoleDataScopeValidationError is the validation error returned by
-// RoleDataScope.Validate if the designated constraints aren't met.
-type RoleDataScopeValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e RoleDataScopeValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e RoleDataScopeValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e RoleDataScopeValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e RoleDataScopeValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e RoleDataScopeValidationError) ErrorName() string { return "RoleDataScopeValidationError" }
-
-// Error satisfies the builtin error interface
-func (e RoleDataScopeValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sRoleDataScope.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = RoleDataScopeValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = RoleDataScopeValidationError{}
-
-var _RoleDataScope_Scope_NotInLookup = map[protobuf.RoleScope]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on GetRoleDataScopeReq with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -9527,6 +9466,114 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetRoleDataScopeReqValidationError{}
+
+// Validate checks the field values on GetRoleDataScopeReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetRoleDataScopeReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetRoleDataScopeReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetRoleDataScopeReplyMultiError, or nil if none found.
+func (m *GetRoleDataScopeReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetRoleDataScopeReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Scope
+
+	if m.DeptCheckStrictly != nil {
+		// no validation rules for DeptCheckStrictly
+	}
+
+	if len(errors) > 0 {
+		return GetRoleDataScopeReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetRoleDataScopeReplyMultiError is an error wrapping multiple validation
+// errors returned by GetRoleDataScopeReply.ValidateAll() if the designated
+// constraints aren't met.
+type GetRoleDataScopeReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetRoleDataScopeReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetRoleDataScopeReplyMultiError) AllErrors() []error { return m }
+
+// GetRoleDataScopeReplyValidationError is the validation error returned by
+// GetRoleDataScopeReply.Validate if the designated constraints aren't met.
+type GetRoleDataScopeReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetRoleDataScopeReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetRoleDataScopeReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetRoleDataScopeReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetRoleDataScopeReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetRoleDataScopeReplyValidationError) ErrorName() string {
+	return "GetRoleDataScopeReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetRoleDataScopeReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetRoleDataScopeReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetRoleDataScopeReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetRoleDataScopeReplyValidationError{}
 
 // Validate checks the field values on HandleRoleDataScopeReq with the rules
 // defined in the proto definition for this message. If any rules are
@@ -18788,12 +18835,90 @@ func (m *UpdateRoleReq_Data) validate(all bool) error {
 
 	}
 
+	if m.DataScope != nil {
+
+		if _, ok := _UpdateRoleReq_Data_DataScope_NotInLookup[m.GetDataScope()]; ok {
+			err := UpdateRoleReq_DataValidationError{
+				field:  "DataScope",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.RoleDataScope_name[int32(m.GetDataScope())]; !ok {
+			err := UpdateRoleReq_DataValidationError{
+				field:  "DataScope",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.MenuCheckStrictly != nil {
+
+		if _, ok := _UpdateRoleReq_Data_MenuCheckStrictly_NotInLookup[m.GetMenuCheckStrictly()]; ok {
+			err := UpdateRoleReq_DataValidationError{
+				field:  "MenuCheckStrictly",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.RoleMenuCheckStrictly_name[int32(m.GetMenuCheckStrictly())]; !ok {
+			err := UpdateRoleReq_DataValidationError{
+				field:  "MenuCheckStrictly",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.DeptCheckStrictly != nil {
+
+		if _, ok := _UpdateRoleReq_Data_DeptCheckStrictly_NotInLookup[m.GetDeptCheckStrictly()]; ok {
+			err := UpdateRoleReq_DataValidationError{
+				field:  "DeptCheckStrictly",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.RoleDeptCheckStrictly_name[int32(m.GetDeptCheckStrictly())]; !ok {
+			err := UpdateRoleReq_DataValidationError{
+				field:  "DeptCheckStrictly",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if m.Remarks != nil {
 
-		if l := utf8.RuneCountInString(m.GetRemarks()); l < 0 || l > 1000 {
+		if l := utf8.RuneCountInString(m.GetRemarks()); l < 1 || l > 1000 {
 			err := UpdateRoleReq_DataValidationError{
 				field:  "Remarks",
-				reason: "value length must be between 0 and 1000 runes, inclusive",
+				reason: "value length must be between 1 and 1000 runes, inclusive",
 			}
 			if !all {
 				return err
@@ -18882,6 +19007,18 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = UpdateRoleReq_DataValidationError{}
+
+var _UpdateRoleReq_Data_DataScope_NotInLookup = map[protobuf.RoleDataScope]struct{}{
+	0: {},
+}
+
+var _UpdateRoleReq_Data_MenuCheckStrictly_NotInLookup = map[protobuf.RoleMenuCheckStrictly]struct{}{
+	0: {},
+}
+
+var _UpdateRoleReq_Data_DeptCheckStrictly_NotInLookup = map[protobuf.RoleDeptCheckStrictly]struct{}{
+	0: {},
+}
 
 var _UpdateRoleReq_Data_State_NotInLookup = map[protobuf.RoleState]struct{}{
 	0: {},
@@ -19291,6 +19428,198 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = HandleRoleMenuReq_DataValidationError{}
+
+// Validate checks the field values on HandleRoleDataScopeReq_DataScope with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the first error encountered is returned, or nil if there are
+// no violations.
+func (m *HandleRoleDataScopeReq_DataScope) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleRoleDataScopeReq_DataScope with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// HandleRoleDataScopeReq_DataScopeMultiError, or nil if none found.
+func (m *HandleRoleDataScopeReq_DataScope) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleRoleDataScopeReq_DataScope) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if _, ok := _HandleRoleDataScopeReq_DataScope_Scope_NotInLookup[m.GetScope()]; ok {
+		err := HandleRoleDataScopeReq_DataScopeValidationError{
+			field:  "Scope",
+			reason: "value must not be in list [0]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := protobuf.RoleDataScope_name[int32(m.GetScope())]; !ok {
+		err := HandleRoleDataScopeReq_DataScopeValidationError{
+			field:  "Scope",
+			reason: "value must be one of the defined enum values",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	_HandleRoleDataScopeReq_DataScope_DeptCustoms_Unique := make(map[uint64]struct{}, len(m.GetDeptCustoms()))
+
+	for idx, item := range m.GetDeptCustoms() {
+		_, _ = idx, item
+
+		if _, exists := _HandleRoleDataScopeReq_DataScope_DeptCustoms_Unique[item]; exists {
+			err := HandleRoleDataScopeReq_DataScopeValidationError{
+				field:  fmt.Sprintf("DeptCustoms[%v]", idx),
+				reason: "repeated value must contain unique items",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		} else {
+			_HandleRoleDataScopeReq_DataScope_DeptCustoms_Unique[item] = struct{}{}
+		}
+
+		if item <= 0 {
+			err := HandleRoleDataScopeReq_DataScopeValidationError{
+				field:  fmt.Sprintf("DeptCustoms[%v]", idx),
+				reason: "value must be greater than 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.DeptCheckStrictly != nil {
+
+		if _, ok := _HandleRoleDataScopeReq_DataScope_DeptCheckStrictly_NotInLookup[m.GetDeptCheckStrictly()]; ok {
+			err := HandleRoleDataScopeReq_DataScopeValidationError{
+				field:  "DeptCheckStrictly",
+				reason: "value must not be in list [0]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if _, ok := protobuf.RoleDeptCheckStrictly_name[int32(m.GetDeptCheckStrictly())]; !ok {
+			err := HandleRoleDataScopeReq_DataScopeValidationError{
+				field:  "DeptCheckStrictly",
+				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return HandleRoleDataScopeReq_DataScopeMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleRoleDataScopeReq_DataScopeMultiError is an error wrapping multiple
+// validation errors returned by
+// HandleRoleDataScopeReq_DataScope.ValidateAll() if the designated
+// constraints aren't met.
+type HandleRoleDataScopeReq_DataScopeMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleRoleDataScopeReq_DataScopeMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleRoleDataScopeReq_DataScopeMultiError) AllErrors() []error { return m }
+
+// HandleRoleDataScopeReq_DataScopeValidationError is the validation error
+// returned by HandleRoleDataScopeReq_DataScope.Validate if the designated
+// constraints aren't met.
+type HandleRoleDataScopeReq_DataScopeValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleRoleDataScopeReq_DataScopeValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleRoleDataScopeReq_DataScopeValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleRoleDataScopeReq_DataScopeValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleRoleDataScopeReq_DataScopeValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleRoleDataScopeReq_DataScopeValidationError) ErrorName() string {
+	return "HandleRoleDataScopeReq_DataScopeValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleRoleDataScopeReq_DataScopeValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleRoleDataScopeReq_DataScope.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleRoleDataScopeReq_DataScopeValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleRoleDataScopeReq_DataScopeValidationError{}
+
+var _HandleRoleDataScopeReq_DataScope_Scope_NotInLookup = map[protobuf.RoleDataScope]struct{}{
+	0: {},
+}
+
+var _HandleRoleDataScopeReq_DataScope_DeptCheckStrictly_NotInLookup = map[protobuf.RoleDeptCheckStrictly]struct{}{
+	0: {},
+}
 
 // Validate checks the field values on HandleRoleResourceReq_Data with the
 // rules defined in the proto definition for this message. If any rules are

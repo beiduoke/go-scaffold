@@ -1632,7 +1632,7 @@
     },
     "/v1/roles/{id}": {
       "get": {
-        "summary": "获取角色",
+        "summary": "获取指定ID角色",
         "operationId": "Api_GetRole",
         "responses": {
           "200": {
@@ -1662,7 +1662,7 @@
         ]
       },
       "delete": {
-        "summary": "删除角色",
+        "summary": "删除指定ID角色",
         "operationId": "Api_DeleteRole",
         "responses": {
           "200": {
@@ -1692,7 +1692,7 @@
         ]
       },
       "put": {
-        "summary": "修改角色",
+        "summary": "修改指定ID角色",
         "operationId": "Api_UpdateRole",
         "responses": {
           "200": {
@@ -1732,13 +1732,13 @@
     },
     "/v1/roles/{id}/dataScopes": {
       "get": {
-        "summary": "获取角色数据范围",
+        "summary": "获取指定ID角色数据范围",
         "operationId": "Api_GetRoleDataScope",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1RoleDataScope"
+              "$ref": "#/definitions/v1GetRoleDataScopeReply"
             }
           },
           "default": {
@@ -1762,7 +1762,7 @@
         ]
       },
       "post": {
-        "summary": "处理角色数据范围",
+        "summary": "处理指定ID角色数据范围",
         "operationId": "Api_HandleRoleDataScope",
         "responses": {
           "200": {
@@ -1791,7 +1791,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1RoleDataScope"
+              "$ref": "#/definitions/HandleRoleDataScopeReqDataScope"
             }
           }
         ],
@@ -1802,7 +1802,7 @@
     },
     "/v1/roles/{id}/depts": {
       "get": {
-        "summary": "获取角色部门",
+        "summary": "获取指定ID角色部门",
         "operationId": "Api_ListRoleDept",
         "responses": {
           "200": {
@@ -1834,7 +1834,7 @@
     },
     "/v1/roles/{id}/menus": {
       "get": {
-        "summary": "获取角色菜单",
+        "summary": "获取指定ID角色菜单",
         "operationId": "Api_ListRoleMenu",
         "responses": {
           "200": {
@@ -1864,7 +1864,7 @@
         ]
       },
       "post": {
-        "summary": "处理角色菜单",
+        "summary": "处理指定ID角色菜单",
         "operationId": "Api_HandleRoleMenu",
         "responses": {
           "200": {
@@ -1904,7 +1904,7 @@
     },
     "/v1/roles/{id}/resources": {
       "get": {
-        "summary": "获取角色资源",
+        "summary": "获取指定ID角色资源",
         "operationId": "Api_ListRoleResource",
         "responses": {
           "200": {
@@ -1934,7 +1934,7 @@
         ]
       },
       "post": {
-        "summary": "处理角色资源",
+        "summary": "处理指定ID角色资源",
         "operationId": "Api_HandleRoleResource",
         "responses": {
           "200": {
@@ -1974,7 +1974,7 @@
     },
     "/v1/roles/{id}/state": {
       "put": {
-        "summary": "更新角色状态",
+        "summary": "更新指定ID角色状态",
         "operationId": "Api_UpdateRoleState",
         "responses": {
           "200": {
@@ -2546,6 +2546,24 @@
         }
       }
     },
+    "HandleRoleDataScopeReqDataScope": {
+      "type": "object",
+      "properties": {
+        "scope": {
+          "$ref": "#/definitions/protobufRoleDataScope"
+        },
+        "deptCheckStrictly": {
+          "$ref": "#/definitions/protobufRoleDeptCheckStrictly"
+        },
+        "deptCustoms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
+        }
+      }
+    },
     "MenuRouterMeta": {
       "type": "object",
       "properties": {
@@ -2611,7 +2629,8 @@
         "DEPT_STATE_INACTIVE",
         "DEPT_STATE_BANNED"
       ],
-      "default": "DEPT_STATE_UNSPECIFIED"
+      "default": "DEPT_STATE_UNSPECIFIED",
+      "title": "部门状态"
     },
     "protobufDomainState": {
       "type": "string",
@@ -2621,7 +2640,8 @@
         "DOMAIN_STATE_INACTIVE",
         "DOMAIN_STATE_BANNED"
       ],
-      "default": "DOMAIN_STATE_UNSPECIFIED"
+      "default": "DOMAIN_STATE_UNSPECIFIED",
+      "title": "领域状态"
     },
     "protobufMenuAffix": {
       "type": "string",
@@ -2630,7 +2650,8 @@
         "MENU_AFFIX_YES",
         "MENU_AFFIX_NO"
       ],
-      "default": "MENU_AFFIX_UNSPECIFIED"
+      "default": "MENU_AFFIX_UNSPECIFIED",
+      "title": "菜单固定"
     },
     "protobufMenuCache": {
       "type": "string",
@@ -2639,7 +2660,8 @@
         "MENU_CACHE_YES",
         "MENU_CACHE_NO"
       ],
-      "default": "MENU_CACHE_UNSPECIFIED"
+      "default": "MENU_CACHE_UNSPECIFIED",
+      "title": "菜单缓存"
     },
     "protobufMenuHidden": {
       "type": "string",
@@ -2648,7 +2670,8 @@
         "MENU_HIDDEN_YES",
         "MENU_HIDDEN_NO"
       ],
-      "default": "MENU_HIDDEN_UNSPECIFIED"
+      "default": "MENU_HIDDEN_UNSPECIFIED",
+      "title": "菜单隐藏"
     },
     "protobufMenuLinkType": {
       "type": "string",
@@ -2658,7 +2681,8 @@
         "MENU_LINK_TYPE_IFRAME",
         "MENU_LINK_TYPE_BLANK"
       ],
-      "default": "MENU_LINK_TYPE_UNSPECIFIED"
+      "default": "MENU_LINK_TYPE_UNSPECIFIED",
+      "title": "菜单链接类型"
     },
     "protobufMenuParameterType": {
       "type": "string",
@@ -2667,7 +2691,8 @@
         "MENU_PARAMETER_TYPE_PARAMS",
         "MENU_PARAMETER_TYPE_QUERY"
       ],
-      "default": "MENU_PARAMETER_TYPE_UNSPECIFIED"
+      "default": "MENU_PARAMETER_TYPE_UNSPECIFIED",
+      "title": "菜单参数类型"
     },
     "protobufMenuType": {
       "type": "string",
@@ -2677,7 +2702,8 @@
         "MENU_TYPE_MENU",
         "MENU_TYPE_ABILITY"
       ],
-      "default": "MENU_TYPE_UNSPECIFIED"
+      "default": "MENU_TYPE_UNSPECIFIED",
+      "title": "菜单类型"
     },
     "protobufPagingReply": {
       "type": "object",
@@ -2703,19 +2729,41 @@
         "POST_STATE_INACTIVE",
         "POST_STATE_BANNED"
       ],
-      "default": "POST_STATE_UNSPECIFIED"
+      "default": "POST_STATE_UNSPECIFIED",
+      "title": "岗位状态"
     },
-    "protobufRoleScope": {
+    "protobufRoleDataScope": {
       "type": "string",
       "enum": [
-        "ROLE_SCOPE_UNSPECIFIED",
-        "ROLE_SCOPE_ALL",
-        "ROLE_SCOPE_SELF",
-        "ROLE_SCOPE_DEPT",
-        "ROLE_SCOPE_DEPT_CHILDREN",
-        "ROLE_SCOPE_DEPT_CUSTOM"
+        "ROLE_DATA_SCOPE_UNSPECIFIED",
+        "ROLE_DATA_SCOPE_SELF",
+        "ROLE_DATA_SCOPE_ALL",
+        "ROLE_DATA_SCOPE_DEPT",
+        "ROLE_DATA_SCOPE_DEPT_FOLLOW",
+        "ROLE_DATA_SCOPE_DEPT_CUSTOM"
       ],
-      "default": "ROLE_SCOPE_UNSPECIFIED"
+      "default": "ROLE_DATA_SCOPE_UNSPECIFIED",
+      "title": "角色数据范围"
+    },
+    "protobufRoleDeptCheckStrictly": {
+      "type": "string",
+      "enum": [
+        "ROLE_DEPT_CHECK_STRICTLY_UNSPECIFIED",
+        "ROLE_DEPT_CHECK_STRICTLY_YES",
+        "ROLE_DEPT_CHECK_STRICTLY_NO"
+      ],
+      "default": "ROLE_DEPT_CHECK_STRICTLY_UNSPECIFIED",
+      "title": "角色部门树选择项是否关联显示"
+    },
+    "protobufRoleMenuCheckStrictly": {
+      "type": "string",
+      "enum": [
+        "ROLE_MENU_CHECK_STRICTLY_UNSPECIFIED",
+        "ROLE_MENU_CHECK_STRICTLY_YES",
+        "ROLE_MENU_CHECK_STRICTLY_NO"
+      ],
+      "default": "ROLE_MENU_CHECK_STRICTLY_UNSPECIFIED",
+      "title": "角色菜单树选择项是否关联显示"
     },
     "protobufRoleState": {
       "type": "string",
@@ -2725,7 +2773,8 @@
         "ROLE_STATE_INACTIVE",
         "ROLE_STATE_BANNED"
       ],
-      "default": "ROLE_STATE_UNSPECIFIED"
+      "default": "ROLE_STATE_UNSPECIFIED",
+      "title": "菜单状态"
     },
     "protobufUserGender": {
       "type": "string",
@@ -2734,7 +2783,8 @@
         "USER_GENDER_MAN",
         "USER_GENDER_WOMAN"
       ],
-      "default": "USER_GENDER_UNSPECIFIED"
+      "default": "USER_GENDER_UNSPECIFIED",
+      "title": "用户性别"
     },
     "protobufUserState": {
       "type": "string",
@@ -2744,7 +2794,8 @@
         "USER_STATE_INACTIVE",
         "USER_STATE_BANNED"
       ],
-      "default": "USER_STATE_UNSPECIFIED"
+      "default": "USER_STATE_UNSPECIFIED",
+      "title": "用户状态"
     },
     "rpcStatus": {
       "type": "object",
@@ -3144,6 +3195,15 @@
           "type": "integer",
           "format": "int32"
         },
+        "dataScope": {
+          "$ref": "#/definitions/protobufRoleDataScope"
+        },
+        "menuCheckStrictly": {
+          "$ref": "#/definitions/protobufRoleMenuCheckStrictly"
+        },
+        "deptCheckStrictly": {
+          "$ref": "#/definitions/protobufRoleDeptCheckStrictly"
+        },
         "state": {
           "$ref": "#/definitions/protobufRoleState"
         },
@@ -3483,6 +3543,25 @@
         }
       },
       "title": "请求 - 验证用户是否存在"
+    },
+    "v1GetRoleDataScopeReply": {
+      "type": "object",
+      "properties": {
+        "scope": {
+          "$ref": "#/definitions/protobufRoleDataScope"
+        },
+        "deptCheckStrictly": {
+          "$ref": "#/definitions/protobufRoleDeptCheckStrictly"
+        },
+        "deptCustoms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
+        }
+      },
+      "title": "回应 - 角色菜单数据范围"
     },
     "v1GetUserInfoReply": {
       "type": "object",
@@ -4122,6 +4201,15 @@
           "type": "integer",
           "format": "int32"
         },
+        "dataScope": {
+          "$ref": "#/definitions/protobufRoleDataScope"
+        },
+        "menuCheckStrictly": {
+          "$ref": "#/definitions/protobufRoleMenuCheckStrictly"
+        },
+        "deptCheckStrictly": {
+          "$ref": "#/definitions/protobufRoleDeptCheckStrictly"
+        },
         "state": {
           "$ref": "#/definitions/protobufRoleState"
         },
@@ -4137,22 +4225,6 @@
         }
       },
       "title": "角色模块"
-    },
-    "v1RoleDataScope": {
-      "type": "object",
-      "properties": {
-        "scope": {
-          "$ref": "#/definitions/protobufRoleScope"
-        },
-        "deptCustoms": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "format": "uint64"
-          }
-        }
-      },
-      "title": "角色菜单数据范围"
     },
     "v1SmsLoginReqAuth": {
       "type": "object",
@@ -4513,6 +4585,15 @@
         "sort": {
           "type": "integer",
           "format": "int32"
+        },
+        "dataScope": {
+          "$ref": "#/definitions/protobufRoleDataScope"
+        },
+        "menuCheckStrictly": {
+          "$ref": "#/definitions/protobufRoleMenuCheckStrictly"
+        },
+        "deptCheckStrictly": {
+          "$ref": "#/definitions/protobufRoleDeptCheckStrictly"
         },
         "state": {
           "$ref": "#/definitions/protobufRoleState"

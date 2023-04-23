@@ -974,7 +974,7 @@ paths:
         get:
             tags:
                 - Api
-            description: 获取角色
+            description: 获取指定ID角色
             operationId: Api_GetRole
             parameters:
                 - name: id
@@ -993,7 +993,7 @@ paths:
         put:
             tags:
                 - Api
-            description: 修改角色
+            description: 修改指定ID角色
             operationId: Api_UpdateRole
             parameters:
                 - name: id
@@ -1018,7 +1018,7 @@ paths:
         delete:
             tags:
                 - Api
-            description: 删除角色
+            description: 删除指定ID角色
             operationId: Api_DeleteRole
             parameters:
                 - name: id
@@ -1038,7 +1038,7 @@ paths:
         get:
             tags:
                 - Api
-            description: 获取角色数据范围
+            description: 获取指定ID角色数据范围
             operationId: Api_GetRoleDataScope
             parameters:
                 - name: id
@@ -1053,11 +1053,11 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.server.v1.RoleDataScope'
+                                $ref: '#/components/schemas/api.server.v1.GetRoleDataScopeReply'
         post:
             tags:
                 - Api
-            description: 处理角色数据范围
+            description: 处理指定ID角色数据范围
             operationId: Api_HandleRoleDataScope
             parameters:
                 - name: id
@@ -1070,7 +1070,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.server.v1.RoleDataScope'
+                            $ref: '#/components/schemas/api.server.v1.HandleRoleDataScopeReq_DataScope'
                 required: true
             responses:
                 "200":
@@ -1083,7 +1083,7 @@ paths:
         get:
             tags:
                 - Api
-            description: 获取角色部门
+            description: 获取指定ID角色部门
             operationId: Api_ListRoleDept
             parameters:
                 - name: id
@@ -1103,7 +1103,7 @@ paths:
         get:
             tags:
                 - Api
-            description: 获取角色菜单
+            description: 获取指定ID角色菜单
             operationId: Api_ListRoleMenu
             parameters:
                 - name: id
@@ -1122,7 +1122,7 @@ paths:
         post:
             tags:
                 - Api
-            description: 处理角色菜单
+            description: 处理指定ID角色菜单
             operationId: Api_HandleRoleMenu
             parameters:
                 - name: id
@@ -1148,7 +1148,7 @@ paths:
         get:
             tags:
                 - Api
-            description: 获取角色资源
+            description: 获取指定ID角色资源
             operationId: Api_ListRoleResource
             parameters:
                 - name: id
@@ -1167,7 +1167,7 @@ paths:
         post:
             tags:
                 - Api
-            description: 处理角色资源
+            description: 处理指定ID角色资源
             operationId: Api_HandleRoleResource
             parameters:
                 - name: id
@@ -1193,7 +1193,7 @@ paths:
         put:
             tags:
                 - Api
-            description: 更新角色状态
+            description: 更新指定ID角色状态
             operationId: Api_UpdateRoleState
             parameters:
                 - name: id
@@ -1698,6 +1698,15 @@ components:
                 sort:
                     type: integer
                     format: int32
+                dataScope:
+                    type: integer
+                    format: enum
+                menuCheckStrictly:
+                    type: integer
+                    format: enum
+                deptCheckStrictly:
+                    type: integer
+                    format: enum
                 state:
                     type: integer
                     format: enum
@@ -1935,6 +1944,21 @@ components:
                 name:
                     type: string
             description: 请求 - 验证用户是否存在
+        api.server.v1.GetRoleDataScopeReply:
+            type: object
+            properties:
+                scope:
+                    type: integer
+                    format: enum
+                deptCheckStrictly:
+                    type: integer
+                    format: enum
+                deptCustoms:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
+            description: 回应 - 角色菜单数据范围
         api.server.v1.GetUserInfoReply:
             type: object
             properties:
@@ -2035,6 +2059,20 @@ components:
                 success:
                     type: boolean
             description: 回应 - 处理角色数据
+        api.server.v1.HandleRoleDataScopeReq_DataScope:
+            type: object
+            properties:
+                scope:
+                    type: integer
+                    format: enum
+                deptCheckStrictly:
+                    type: integer
+                    format: enum
+                deptCustoms:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
         api.server.v1.HandleRoleMenuReply:
             type: object
             properties:
@@ -2481,6 +2519,15 @@ components:
                 sort:
                     type: integer
                     format: int32
+                dataScope:
+                    type: integer
+                    format: enum
+                menuCheckStrictly:
+                    type: integer
+                    format: enum
+                deptCheckStrictly:
+                    type: integer
+                    format: enum
                 state:
                     type: integer
                     format: enum
@@ -2492,18 +2539,6 @@ components:
                         type: integer
                         format: uint64
             description: 角色模块
-        api.server.v1.RoleDataScope:
-            type: object
-            properties:
-                scope:
-                    type: integer
-                    format: enum
-                deptCustoms:
-                    type: array
-                    items:
-                        type: integer
-                        format: uint64
-            description: 角色菜单数据范围
         api.server.v1.SmsLoginReq_Auth:
             type: object
             properties:
@@ -2758,6 +2793,15 @@ components:
                 sort:
                     type: integer
                     format: int32
+                dataScope:
+                    type: integer
+                    format: enum
+                menuCheckStrictly:
+                    type: integer
+                    format: enum
+                deptCheckStrictly:
+                    type: integer
+                    format: enum
                 state:
                     type: integer
                     format: enum

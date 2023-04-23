@@ -113,7 +113,7 @@ type ApiHTTPServer interface {
 	GetPost(context.Context, *GetPostReq) (*Post, error)
 	GetResource(context.Context, *GetResourceReq) (*Resource, error)
 	GetRole(context.Context, *GetRoleReq) (*Role, error)
-	GetRoleDataScope(context.Context, *GetRoleDataScopeReq) (*RoleDataScope, error)
+	GetRoleDataScope(context.Context, *GetRoleDataScopeReq) (*GetRoleDataScopeReply, error)
 	GetUser(context.Context, *GetUserReq) (*User, error)
 	GetUserInfo(context.Context, *emptypb.Empty) (*GetUserInfoReply, error)
 	GetUserProfile(context.Context, *emptypb.Empty) (*GetUserProfileReply, error)
@@ -1183,7 +1183,7 @@ func _Api_GetRoleDataScope0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Contex
 		if err != nil {
 			return err
 		}
-		reply := out.(*RoleDataScope)
+		reply := out.(*GetRoleDataScopeReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -1801,7 +1801,7 @@ type ApiHTTPClient interface {
 	GetPost(ctx context.Context, req *GetPostReq, opts ...http.CallOption) (rsp *Post, err error)
 	GetResource(ctx context.Context, req *GetResourceReq, opts ...http.CallOption) (rsp *Resource, err error)
 	GetRole(ctx context.Context, req *GetRoleReq, opts ...http.CallOption) (rsp *Role, err error)
-	GetRoleDataScope(ctx context.Context, req *GetRoleDataScopeReq, opts ...http.CallOption) (rsp *RoleDataScope, err error)
+	GetRoleDataScope(ctx context.Context, req *GetRoleDataScopeReq, opts ...http.CallOption) (rsp *GetRoleDataScopeReply, err error)
 	GetUser(ctx context.Context, req *GetUserReq, opts ...http.CallOption) (rsp *User, err error)
 	GetUserInfo(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserInfoReply, err error)
 	GetUserProfile(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserProfileReply, err error)
@@ -2165,8 +2165,8 @@ func (c *ApiHTTPClientImpl) GetRole(ctx context.Context, in *GetRoleReq, opts ..
 	return &out, err
 }
 
-func (c *ApiHTTPClientImpl) GetRoleDataScope(ctx context.Context, in *GetRoleDataScopeReq, opts ...http.CallOption) (*RoleDataScope, error) {
-	var out RoleDataScope
+func (c *ApiHTTPClientImpl) GetRoleDataScope(ctx context.Context, in *GetRoleDataScopeReq, opts ...http.CallOption) (*GetRoleDataScopeReply, error) {
+	var out GetRoleDataScopeReply
 	pattern := "/v1/roles/{id}/dataScopes"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationApiGetRoleDataScope))
