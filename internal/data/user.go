@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -313,8 +314,8 @@ func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, er
 	if result.Error != nil {
 		return nil, result.Error
 	}
-
-	if crypto.CheckPasswordHash(g.Password, sysUser.Password) {
+	fmt.Println(g.Password, sysUser.Password)
+	if !crypto.CheckPasswordHash(g.Password, sysUser.Password) {
 		return nil, errors.New("密码校验失败")
 	}
 
