@@ -1169,7 +1169,7 @@ message UpdateRoleStateReply {
   int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
-  bool success = 4;
+  api.protobuf.HandleType type = 4;
 }
 
 // 请求 - 获取角色
@@ -1221,7 +1221,7 @@ message HandleRoleMenuReply {
   int32 code = 1;
   string message = 2;
   google.protobuf.Any result = 3;
-  bool success = 4;
+  api.protobuf.HandleType type = 4;
 }
 
 // 请求 - 获取角色菜单

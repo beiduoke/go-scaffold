@@ -183,7 +183,7 @@ func (s *ApiService) HandleRoleMenu(ctx context.Context, in *v1.HandleRoleMenuRe
 		return nil, v1.ErrorRoleHandleMenuFail("角色菜单处理失败：%v", err)
 	}
 	return &v1.HandleRoleMenuReply{
-		Success: true,
+		Type:    protobuf.HandleType_HANDLE_TYPE_SUCCESS,
 		Message: "处理成功",
 	}, nil
 }

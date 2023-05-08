@@ -2643,6 +2643,17 @@
       "default": "DOMAIN_STATE_UNSPECIFIED",
       "title": "领域状态"
     },
+    "protobufHandleType": {
+      "type": "string",
+      "enum": [
+        "HANDLE_TYPE_UNSPECIFIED",
+        "HANDLE_TYPE_SUCCESS",
+        "HANDLE_TYPE_ERROR",
+        "HANDLE_TYPE_WARNING"
+      ],
+      "default": "HANDLE_TYPE_UNSPECIFIED",
+      "title": "处理类型"
+    },
     "protobufMenuAffix": {
       "type": "string",
       "enum": [
@@ -3702,8 +3713,8 @@
         "result": {
           "$ref": "#/definitions/protobufAny"
         },
-        "success": {
-          "type": "boolean"
+        "type": {
+          "$ref": "#/definitions/protobufHandleType"
         }
       },
       "title": "回应 - 处理角色菜单"

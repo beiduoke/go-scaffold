@@ -9021,7 +9021,7 @@ func (m *HandleRoleMenuReply) validate(all bool) error {
 		}
 	}
 
-	// no validation rules for Success
+	// no validation rules for Type
 
 	if len(errors) > 0 {
 		return HandleRoleMenuReplyMultiError(errors)
