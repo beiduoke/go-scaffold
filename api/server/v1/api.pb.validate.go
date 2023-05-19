@@ -36,7 +36,7 @@ var (
 	_ = anypb.Any{}
 	_ = sort.Sort
 
-	_ = protobuf.PostState(0)
+	_ = protobuf.UserGender(0)
 )
 
 // Validate checks the field values on LoginReply with the rules defined in the
@@ -195,36 +195,40 @@ func (m *RegisterReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, RegisterReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, RegisterReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return RegisterReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, RegisterReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, RegisterReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return RegisterReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return RegisterReplyMultiError(errors)
@@ -330,36 +334,40 @@ func (m *LogoutReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, LogoutReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, LogoutReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return LogoutReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, LogoutReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, LogoutReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return LogoutReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return LogoutReplyMultiError(errors)
@@ -1832,7 +1840,31 @@ func (m *ListUserRoleMenuRouterTreeReq) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for RoleId
+	if m.GetRoleId() < 0 {
+		err := ListUserRoleMenuRouterTreeReqValidationError{
+			field:  "RoleId",
+			reason: "value must be greater than or equal to 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.MenuParentId != nil {
+
+		if m.GetMenuParentId() < 0 {
+			err := ListUserRoleMenuRouterTreeReqValidationError{
+				field:  "MenuParentId",
+				reason: "value must be greater than or equal to 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return ListUserRoleMenuRouterTreeReqMultiError(errors)
@@ -2414,6 +2446,21 @@ func (m *ListUserRoleMenuTreeReq) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if m.MenuParentId != nil {
+
+		if m.GetMenuParentId() < 0 {
+			err := ListUserRoleMenuTreeReqValidationError{
+				field:  "MenuParentId",
+				reason: "value must be greater than or equal to 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if len(errors) > 0 {
 		return ListUserRoleMenuTreeReqMultiError(errors)
 	}
@@ -2901,7 +2948,7 @@ func (m *CreateUserReq) validate(all bool) error {
 	if _, ok := _CreateUserReq_State_NotInLookup[m.GetState()]; ok {
 		err := CreateUserReqValidationError{
 			field:  "State",
-			reason: "value must not be in list [0]",
+			reason: "value must not be in list [USER_STATE_UNSPECIFIED]",
 		}
 		if !all {
 			return err
@@ -2989,7 +3036,7 @@ func (m *CreateUserReq) validate(all bool) error {
 		if _, ok := _CreateUserReq_Gender_NotInLookup[m.GetGender()]; ok {
 			err := CreateUserReqValidationError{
 				field:  "Gender",
-				reason: "value must not be in list [0]",
+				reason: "value must not be in list [USER_GENDER_UNSPECIFIED]",
 			}
 			if !all {
 				return err
@@ -3192,36 +3239,40 @@ func (m *CreateUserReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CreateUserReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, CreateUserReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CreateUserReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, CreateUserReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, CreateUserReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return CreateUserReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return CreateUserReplyMultiError(errors)
@@ -3469,36 +3520,40 @@ func (m *HandleUserRoleReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, HandleUserRoleReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, HandleUserRoleReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return HandleUserRoleReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, HandleUserRoleReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, HandleUserRoleReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return HandleUserRoleReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return HandleUserRoleReplyMultiError(errors)
@@ -3827,36 +3882,40 @@ func (m *DeleteUserReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, DeleteUserReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, DeleteUserReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return DeleteUserReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, DeleteUserReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, DeleteUserReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return DeleteUserReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return DeleteUserReplyMultiError(errors)
@@ -4102,36 +4161,40 @@ func (m *UpdateUserReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UpdateUserReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, UpdateUserReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UpdateUserReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UpdateUserReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UpdateUserReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UpdateUserReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return UpdateUserReplyMultiError(errors)
@@ -4479,36 +4542,40 @@ func (m *ExistUserNameReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, ExistUserNameReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, ExistUserNameReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return ExistUserNameReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ExistUserNameReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ExistUserNameReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ExistUserNameReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return ExistUserNameReplyMultiError(errors)
@@ -5125,7 +5192,7 @@ func (m *CreateDomainReq) validate(all bool) error {
 		if _, ok := _CreateDomainReq_State_NotInLookup[m.GetState()]; ok {
 			err := CreateDomainReqValidationError{
 				field:  "State",
-				reason: "value must not be in list [0]",
+				reason: "value must not be in list [DOMAIN_STATE_UNSPECIFIED]",
 			}
 			if !all {
 				return err
@@ -5258,36 +5325,40 @@ func (m *CreateDomainReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CreateDomainReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, CreateDomainReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CreateDomainReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, CreateDomainReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, CreateDomainReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return CreateDomainReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return CreateDomainReplyMultiError(errors)
@@ -5535,36 +5606,40 @@ func (m *UpdateDomainReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UpdateDomainReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, UpdateDomainReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UpdateDomainReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UpdateDomainReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UpdateDomainReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UpdateDomainReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return UpdateDomainReplyMultiError(errors)
@@ -5814,36 +5889,40 @@ func (m *UpdateDomainStateReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UpdateDomainStateReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, UpdateDomainStateReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UpdateDomainStateReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UpdateDomainStateReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UpdateDomainStateReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UpdateDomainStateReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return UpdateDomainStateReplyMultiError(errors)
@@ -6395,36 +6474,40 @@ func (m *DeleteDomainReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, DeleteDomainReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, DeleteDomainReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return DeleteDomainReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, DeleteDomainReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, DeleteDomainReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return DeleteDomainReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return DeleteDomainReplyMultiError(errors)
@@ -6927,36 +7010,40 @@ func (m *HandleDomainMenuReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, HandleDomainMenuReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, HandleDomainMenuReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return HandleDomainMenuReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, HandleDomainMenuReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, HandleDomainMenuReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return HandleDomainMenuReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return HandleDomainMenuReplyMultiError(errors)
@@ -7261,7 +7348,7 @@ func (m *CreateRoleReq) validate(all bool) error {
 	if _, ok := _CreateRoleReq_State_NotInLookup[m.GetState()]; ok {
 		err := CreateRoleReqValidationError{
 			field:  "State",
-			reason: "value must not be in list [0]",
+			reason: "value must not be in list [ROLE_STATE_UNSPECIFIED]",
 		}
 		if !all {
 			return err
@@ -7346,7 +7433,7 @@ func (m *CreateRoleReq) validate(all bool) error {
 		if _, ok := _CreateRoleReq_DataScope_NotInLookup[m.GetDataScope()]; ok {
 			err := CreateRoleReqValidationError{
 				field:  "DataScope",
-				reason: "value must not be in list [0]",
+				reason: "value must not be in list [ROLE_DATA_SCOPE_UNSPECIFIED]",
 			}
 			if !all {
 				return err
@@ -7372,7 +7459,7 @@ func (m *CreateRoleReq) validate(all bool) error {
 		if _, ok := _CreateRoleReq_MenuCheckStrictly_NotInLookup[m.GetMenuCheckStrictly()]; ok {
 			err := CreateRoleReqValidationError{
 				field:  "MenuCheckStrictly",
-				reason: "value must not be in list [0]",
+				reason: "value must not be in list [ROLE_MENU_CHECK_STRICTLY_UNSPECIFIED]",
 			}
 			if !all {
 				return err
@@ -7398,7 +7485,7 @@ func (m *CreateRoleReq) validate(all bool) error {
 		if _, ok := _CreateRoleReq_DeptCheckStrictly_NotInLookup[m.GetDeptCheckStrictly()]; ok {
 			err := CreateRoleReqValidationError{
 				field:  "DeptCheckStrictly",
-				reason: "value must not be in list [0]",
+				reason: "value must not be in list [ROLE_DEPT_CHECK_STRICTLY_UNSPECIFIED]",
 			}
 			if !all {
 				return err
@@ -7554,36 +7641,40 @@ func (m *CreateRoleReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CreateRoleReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, CreateRoleReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CreateRoleReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, CreateRoleReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, CreateRoleReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return CreateRoleReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return CreateRoleReplyMultiError(errors)
@@ -7829,36 +7920,40 @@ func (m *UpdateRoleReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UpdateRoleReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, UpdateRoleReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UpdateRoleReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UpdateRoleReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UpdateRoleReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UpdateRoleReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return UpdateRoleReplyMultiError(errors)
@@ -8106,36 +8201,40 @@ func (m *UpdateRoleStateReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UpdateRoleStateReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, UpdateRoleStateReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UpdateRoleStateReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UpdateRoleStateReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UpdateRoleStateReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UpdateRoleStateReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return UpdateRoleStateReplyMultiError(errors)
@@ -8464,36 +8563,40 @@ func (m *DeleteRoleReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, DeleteRoleReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, DeleteRoleReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return DeleteRoleReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, DeleteRoleReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, DeleteRoleReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return DeleteRoleReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return DeleteRoleReplyMultiError(errors)
@@ -8992,36 +9095,40 @@ func (m *HandleRoleMenuReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, HandleRoleMenuReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, HandleRoleMenuReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return HandleRoleMenuReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
 	// no validation rules for Type
+
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, HandleRoleMenuReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, HandleRoleMenuReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return HandleRoleMenuReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return HandleRoleMenuReplyMultiError(errors)
@@ -9743,36 +9850,40 @@ func (m *HandleRoleDataScopeReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, HandleRoleDataScopeReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, HandleRoleDataScopeReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return HandleRoleDataScopeReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, HandleRoleDataScopeReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, HandleRoleDataScopeReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return HandleRoleDataScopeReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return HandleRoleDataScopeReplyMultiError(errors)
@@ -10266,36 +10377,40 @@ func (m *HandleRoleResourceReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, HandleRoleResourceReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, HandleRoleResourceReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return HandleRoleResourceReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, HandleRoleResourceReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, HandleRoleResourceReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return HandleRoleResourceReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return HandleRoleResourceReplyMultiError(errors)
@@ -10873,36 +10988,40 @@ func (m *CreateResourceReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CreateResourceReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, CreateResourceReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CreateResourceReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, CreateResourceReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, CreateResourceReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return CreateResourceReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return CreateResourceReplyMultiError(errors)
@@ -11152,36 +11271,40 @@ func (m *UpdateResourceReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UpdateResourceReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, UpdateResourceReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UpdateResourceReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UpdateResourceReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UpdateResourceReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UpdateResourceReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return UpdateResourceReplyMultiError(errors)
@@ -11513,36 +11636,40 @@ func (m *DeleteResourceReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, DeleteResourceReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, DeleteResourceReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return DeleteResourceReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, DeleteResourceReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, DeleteResourceReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return DeleteResourceReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return DeleteResourceReplyMultiError(errors)
@@ -12146,7 +12273,7 @@ func (m *CreateMenuReq) validate(all bool) error {
 	if _, ok := _CreateMenuReq_Type_NotInLookup[m.GetType()]; ok {
 		err := CreateMenuReqValidationError{
 			field:  "Type",
-			reason: "value must not be in list [0]",
+			reason: "value must not be in list [MENU_TYPE_UNSPECIFIED]",
 		}
 		if !all {
 			return err
@@ -12179,7 +12306,7 @@ func (m *CreateMenuReq) validate(all bool) error {
 	if _, ok := _CreateMenuReq_IsHidden_NotInLookup[m.GetIsHidden()]; ok {
 		err := CreateMenuReqValidationError{
 			field:  "IsHidden",
-			reason: "value must not be in list [0]",
+			reason: "value must not be in list [MENU_HIDDEN_UNSPECIFIED]",
 		}
 		if !all {
 			return err
@@ -12372,7 +12499,7 @@ func (m *CreateMenuReq) validate(all bool) error {
 		if _, ok := _CreateMenuReq_IsCache_NotInLookup[m.GetIsCache()]; ok {
 			err := CreateMenuReqValidationError{
 				field:  "IsCache",
-				reason: "value must not be in list [0]",
+				reason: "value must not be in list [MENU_CACHE_UNSPECIFIED]",
 			}
 			if !all {
 				return err
@@ -12413,7 +12540,7 @@ func (m *CreateMenuReq) validate(all bool) error {
 		if _, ok := _CreateMenuReq_IsAffix_NotInLookup[m.GetIsAffix()]; ok {
 			err := CreateMenuReqValidationError{
 				field:  "IsAffix",
-				reason: "value must not be in list [0]",
+				reason: "value must not be in list [MENU_AFFIX_UNSPECIFIED]",
 			}
 			if !all {
 				return err
@@ -12439,7 +12566,7 @@ func (m *CreateMenuReq) validate(all bool) error {
 		if _, ok := _CreateMenuReq_LinkType_NotInLookup[m.GetLinkType()]; ok {
 			err := CreateMenuReqValidationError{
 				field:  "LinkType",
-				reason: "value must not be in list [0]",
+				reason: "value must not be in list [MENU_LINK_TYPE_UNSPECIFIED]",
 			}
 			if !all {
 				return err
@@ -12584,36 +12711,40 @@ func (m *CreateMenuReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CreateMenuReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, CreateMenuReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CreateMenuReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, CreateMenuReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, CreateMenuReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return CreateMenuReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return CreateMenuReplyMultiError(errors)
@@ -12859,36 +12990,40 @@ func (m *UpdateMenuReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UpdateMenuReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, UpdateMenuReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UpdateMenuReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UpdateMenuReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UpdateMenuReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UpdateMenuReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return UpdateMenuReplyMultiError(errors)
@@ -13215,36 +13350,40 @@ func (m *DeleteMenuReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, DeleteMenuReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, DeleteMenuReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return DeleteMenuReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, DeleteMenuReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, DeleteMenuReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return DeleteMenuReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return DeleteMenuReplyMultiError(errors)
@@ -13967,7 +14106,7 @@ func (m *CreateDeptReq) validate(all bool) error {
 	if _, ok := _CreateDeptReq_State_NotInLookup[m.GetState()]; ok {
 		err := CreateDeptReqValidationError{
 			field:  "State",
-			reason: "value must not be in list [0]",
+			reason: "value must not be in list [DEPT_STATE_UNSPECIFIED]",
 		}
 		if !all {
 			return err
@@ -14109,36 +14248,40 @@ func (m *CreateDeptReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CreateDeptReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, CreateDeptReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CreateDeptReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, CreateDeptReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, CreateDeptReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return CreateDeptReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return CreateDeptReplyMultiError(errors)
@@ -14384,36 +14527,40 @@ func (m *UpdateDeptReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UpdateDeptReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, UpdateDeptReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UpdateDeptReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UpdateDeptReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UpdateDeptReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UpdateDeptReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return UpdateDeptReplyMultiError(errors)
@@ -14740,36 +14887,40 @@ func (m *DeleteDeptReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, DeleteDeptReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, DeleteDeptReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return DeleteDeptReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, DeleteDeptReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, DeleteDeptReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return DeleteDeptReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return DeleteDeptReplyMultiError(errors)
@@ -15306,7 +15457,7 @@ func (m *CreatePostReq) validate(all bool) error {
 	if _, ok := _CreatePostReq_State_NotInLookup[m.GetState()]; ok {
 		err := CreatePostReqValidationError{
 			field:  "State",
-			reason: "value must not be in list [0]",
+			reason: "value must not be in list [POST_STATE_UNSPECIFIED]",
 		}
 		if !all {
 			return err
@@ -15463,36 +15614,40 @@ func (m *CreatePostReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CreatePostReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, CreatePostReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CreatePostReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, CreatePostReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, CreatePostReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return CreatePostReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return CreatePostReplyMultiError(errors)
@@ -15738,36 +15893,40 @@ func (m *UpdatePostReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UpdatePostReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, UpdatePostReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UpdatePostReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UpdatePostReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UpdatePostReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UpdatePostReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return UpdatePostReplyMultiError(errors)
@@ -16094,33 +16253,37 @@ func (m *DeletePostReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, DeletePostReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, DeletePostReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, DeletePostReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
 			}
-		case interface{ Validate() error }:
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				errors = append(errors, DeletePostReplyValidationError{
+				return DeletePostReplyValidationError{
 					field:  "Result",
 					reason: "embedded message failed validation",
 					cause:  err,
-				})
+				}
 			}
 		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return DeletePostReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
+
 	}
 
 	if len(errors) > 0 {
@@ -16369,36 +16532,40 @@ func (m *UpdatePostStateReply) validate(all bool) error {
 
 	// no validation rules for Message
 
-	if all {
-		switch v := interface{}(m.GetResult()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UpdatePostStateReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, UpdatePostStateReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UpdatePostStateReplyValidationError{
-				field:  "Result",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Type
 
-	// no validation rules for Success
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UpdatePostStateReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UpdatePostStateReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UpdatePostStateReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return UpdatePostStateReplyMultiError(errors)
@@ -17812,7 +17979,7 @@ func (m *UpdateUserReq_Data) validate(all bool) error {
 	if _, ok := _UpdateUserReq_Data_State_NotInLookup[m.GetState()]; ok {
 		err := UpdateUserReq_DataValidationError{
 			field:  "State",
-			reason: "value must not be in list [0]",
+			reason: "value must not be in list [USER_STATE_UNSPECIFIED]",
 		}
 		if !all {
 			return err
@@ -17896,7 +18063,7 @@ func (m *UpdateUserReq_Data) validate(all bool) error {
 		if _, ok := _UpdateUserReq_Data_Gender_NotInLookup[m.GetGender()]; ok {
 			err := UpdateUserReq_DataValidationError{
 				field:  "Gender",
-				reason: "value must not be in list [0]",
+				reason: "value must not be in list [USER_GENDER_UNSPECIFIED]",
 			}
 			if !all {
 				return err
@@ -18156,7 +18323,7 @@ func (m *UpdateDomainReq_Data) validate(all bool) error {
 		if _, ok := _UpdateDomainReq_Data_State_NotInLookup[m.GetState()]; ok {
 			err := UpdateDomainReq_DataValidationError{
 				field:  "State",
-				reason: "value must not be in list [0]",
+				reason: "value must not be in list [DOMAIN_STATE_UNSPECIFIED]",
 			}
 			if !all {
 				return err
@@ -18292,7 +18459,7 @@ func (m *UpdateDomainStateReq_Data) validate(all bool) error {
 		if _, ok := _UpdateDomainStateReq_Data_State_NotInLookup[m.GetState()]; ok {
 			err := UpdateDomainStateReq_DataValidationError{
 				field:  "State",
-				reason: "value must not be in list [0]",
+				reason: "value must not be in list [DOMAIN_STATE_UNSPECIFIED]",
 			}
 			if !all {
 				return err
@@ -18755,7 +18922,7 @@ func (m *UpdateRoleReq_Data) validate(all bool) error {
 	if _, ok := _UpdateRoleReq_Data_State_NotInLookup[m.GetState()]; ok {
 		err := UpdateRoleReq_DataValidationError{
 			field:  "State",
-			reason: "value must not be in list [0]",
+			reason: "value must not be in list [ROLE_STATE_UNSPECIFIED]",
 		}
 		if !all {
 			return err
@@ -18840,7 +19007,7 @@ func (m *UpdateRoleReq_Data) validate(all bool) error {
 		if _, ok := _UpdateRoleReq_Data_DataScope_NotInLookup[m.GetDataScope()]; ok {
 			err := UpdateRoleReq_DataValidationError{
 				field:  "DataScope",
-				reason: "value must not be in list [0]",
+				reason: "value must not be in list [ROLE_DATA_SCOPE_UNSPECIFIED]",
 			}
 			if !all {
 				return err
@@ -18866,7 +19033,7 @@ func (m *UpdateRoleReq_Data) validate(all bool) error {
 		if _, ok := _UpdateRoleReq_Data_MenuCheckStrictly_NotInLookup[m.GetMenuCheckStrictly()]; ok {
 			err := UpdateRoleReq_DataValidationError{
 				field:  "MenuCheckStrictly",
-				reason: "value must not be in list [0]",
+				reason: "value must not be in list [ROLE_MENU_CHECK_STRICTLY_UNSPECIFIED]",
 			}
 			if !all {
 				return err
@@ -18892,7 +19059,7 @@ func (m *UpdateRoleReq_Data) validate(all bool) error {
 		if _, ok := _UpdateRoleReq_Data_DeptCheckStrictly_NotInLookup[m.GetDeptCheckStrictly()]; ok {
 			err := UpdateRoleReq_DataValidationError{
 				field:  "DeptCheckStrictly",
-				reason: "value must not be in list [0]",
+				reason: "value must not be in list [ROLE_DEPT_CHECK_STRICTLY_UNSPECIFIED]",
 			}
 			if !all {
 				return err
@@ -19049,7 +19216,7 @@ func (m *UpdateRoleStateReq_Data) validate(all bool) error {
 	if _, ok := _UpdateRoleStateReq_Data_State_NotInLookup[m.GetState()]; ok {
 		err := UpdateRoleStateReq_DataValidationError{
 			field:  "State",
-			reason: "value must not be in list [0]",
+			reason: "value must not be in list [ROLE_STATE_UNSPECIFIED]",
 		}
 		if !all {
 			return err
@@ -19455,7 +19622,7 @@ func (m *HandleRoleDataScopeReq_DataScope) validate(all bool) error {
 	if _, ok := _HandleRoleDataScopeReq_DataScope_Scope_NotInLookup[m.GetScope()]; ok {
 		err := HandleRoleDataScopeReq_DataScopeValidationError{
 			field:  "Scope",
-			reason: "value must not be in list [0]",
+			reason: "value must not be in list [ROLE_DATA_SCOPE_UNSPECIFIED]",
 		}
 		if !all {
 			return err
@@ -19510,7 +19677,7 @@ func (m *HandleRoleDataScopeReq_DataScope) validate(all bool) error {
 		if _, ok := _HandleRoleDataScopeReq_DataScope_DeptCheckStrictly_NotInLookup[m.GetDeptCheckStrictly()]; ok {
 			err := HandleRoleDataScopeReq_DataScopeValidationError{
 				field:  "DeptCheckStrictly",
-				reason: "value must not be in list [0]",
+				reason: "value must not be in list [ROLE_DEPT_CHECK_STRICTLY_UNSPECIFIED]",
 			}
 			if !all {
 				return err
@@ -19941,7 +20108,7 @@ func (m *UpdateMenuReq_Data) validate(all bool) error {
 	if _, ok := _UpdateMenuReq_Data_Type_NotInLookup[m.GetType()]; ok {
 		err := UpdateMenuReq_DataValidationError{
 			field:  "Type",
-			reason: "value must not be in list [0]",
+			reason: "value must not be in list [MENU_TYPE_UNSPECIFIED]",
 		}
 		if !all {
 			return err
@@ -20085,7 +20252,7 @@ func (m *UpdateMenuReq_Data) validate(all bool) error {
 		if _, ok := _UpdateMenuReq_Data_IsHidden_NotInLookup[m.GetIsHidden()]; ok {
 			err := UpdateMenuReq_DataValidationError{
 				field:  "IsHidden",
-				reason: "value must not be in list [0]",
+				reason: "value must not be in list [MENU_HIDDEN_UNSPECIFIED]",
 			}
 			if !all {
 				return err
@@ -20171,7 +20338,7 @@ func (m *UpdateMenuReq_Data) validate(all bool) error {
 		if _, ok := _UpdateMenuReq_Data_IsCache_NotInLookup[m.GetIsCache()]; ok {
 			err := UpdateMenuReq_DataValidationError{
 				field:  "IsCache",
-				reason: "value must not be in list [0]",
+				reason: "value must not be in list [MENU_CACHE_UNSPECIFIED]",
 			}
 			if !all {
 				return err
@@ -20212,7 +20379,7 @@ func (m *UpdateMenuReq_Data) validate(all bool) error {
 		if _, ok := _UpdateMenuReq_Data_IsAffix_NotInLookup[m.GetIsAffix()]; ok {
 			err := UpdateMenuReq_DataValidationError{
 				field:  "IsAffix",
-				reason: "value must not be in list [0]",
+				reason: "value must not be in list [MENU_AFFIX_UNSPECIFIED]",
 			}
 			if !all {
 				return err
@@ -20238,7 +20405,7 @@ func (m *UpdateMenuReq_Data) validate(all bool) error {
 		if _, ok := _UpdateMenuReq_Data_LinkType_NotInLookup[m.GetLinkType()]; ok {
 			err := UpdateMenuReq_DataValidationError{
 				field:  "LinkType",
-				reason: "value must not be in list [0]",
+				reason: "value must not be in list [MENU_LINK_TYPE_UNSPECIFIED]",
 			}
 			if !all {
 				return err
@@ -20417,7 +20584,7 @@ func (m *UpdateDeptReq_Data) validate(all bool) error {
 	if _, ok := _UpdateDeptReq_Data_State_NotInLookup[m.GetState()]; ok {
 		err := UpdateDeptReq_DataValidationError{
 			field:  "State",
-			reason: "value must not be in list [0]",
+			reason: "value must not be in list [DEPT_STATE_UNSPECIFIED]",
 		}
 		if !all {
 			return err
@@ -20582,7 +20749,7 @@ func (m *UpdatePostReq_Data) validate(all bool) error {
 	if _, ok := _UpdatePostReq_Data_State_NotInLookup[m.GetState()]; ok {
 		err := UpdatePostReq_DataValidationError{
 			field:  "State",
-			reason: "value must not be in list [0]",
+			reason: "value must not be in list [POST_STATE_UNSPECIFIED]",
 		}
 		if !all {
 			return err
@@ -20738,7 +20905,7 @@ func (m *UpdatePostStateReq_Data) validate(all bool) error {
 		if _, ok := _UpdatePostStateReq_Data_State_NotInLookup[m.GetState()]; ok {
 			err := UpdatePostStateReq_DataValidationError{
 				field:  "State",
-				reason: "value must not be in list [0]",
+				reason: "value must not be in list [POST_STATE_UNSPECIFIED]",
 			}
 			if !all {
 				return err

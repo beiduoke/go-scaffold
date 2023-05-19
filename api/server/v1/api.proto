@@ -598,16 +598,16 @@ message LoginReply {
 message RegisterReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 回应 - 退出登录
 message LogoutReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 密码登录
@@ -716,7 +716,8 @@ message ListUserReply {
 
 // 请求 - 获取用户角色菜单树形
 message ListUserRoleMenuRouterTreeReq {
-  uint64 role_id = 1;
+  uint64 role_id = 1 [(validate.rules).uint64 = {gte: 0}];
+  optional uint64 menu_parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
 }
 
 // 回应 - 获取用户角色菜单树形 Deprecated
@@ -804,15 +805,16 @@ message MenuRouter {
   optional uint64 parent_id = 8;
 }
 
-// 回应 - 获取用户角色菜单列表-树形
+// 回应 - 获取用户角色菜单路由列表-树形
 message ListUserRoleMenuRouterTreeReply {
   repeated MenuRouter items = 1;
   optional int64 total = 2;
 }
 
-// 请求 - 获取用户角色列表
+// 请求 - 获取用户角色菜单列表-树形
 message ListUserRoleMenuTreeReq {
   uint64 role_id = 1 [(validate.rules).uint64 = {gte: 0}];
+  optional uint64 menu_parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
 }
 
 // 回应 - 获取用户角色列表
@@ -850,8 +852,8 @@ message CreateUserReq {
 message CreateUserReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 绑定用户领域权限
@@ -868,8 +870,8 @@ message HandleUserRoleReq {
 message HandleUserRoleReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 获取用户
@@ -886,8 +888,8 @@ message DeleteUserReq {
 message DeleteUserReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 修改用户
@@ -913,8 +915,8 @@ message UpdateUserReq {
 message UpdateUserReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 回应 - 获取用户菜单
@@ -932,8 +934,8 @@ message ExistUserNameReq {
 message ExistUserNameReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 
@@ -982,8 +984,8 @@ message CreateDomainReq {
 message CreateDomainReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 修改领域
@@ -1008,8 +1010,8 @@ message UpdateDomainReq {
 message UpdateDomainReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 修改领域-状态
@@ -1025,8 +1027,8 @@ message UpdateDomainStateReq {
 message UpdateDomainStateReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 获取领域
@@ -1053,8 +1055,8 @@ message DeleteDomainReq {
 message DeleteDomainReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 获取领域菜单
@@ -1086,8 +1088,8 @@ message HandleDomainMenuReq {
 message HandleDomainMenuReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 角色模块
@@ -1125,8 +1127,8 @@ message CreateRoleReq {
 message CreateRoleReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 修改角色
@@ -1151,8 +1153,8 @@ message UpdateRoleReq {
 message UpdateRoleReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 修改角色
@@ -1168,8 +1170,8 @@ message UpdateRoleStateReq {
 message UpdateRoleStateReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  api.protobuf.HandleType type = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 获取角色
@@ -1186,8 +1188,8 @@ message DeleteRoleReq {
 message DeleteRoleReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 获取角色菜单
@@ -1220,8 +1222,8 @@ message HandleRoleMenuReq {
 message HandleRoleMenuReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  api.protobuf.HandleType type = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 获取角色菜单
@@ -1263,8 +1265,8 @@ message HandleRoleDataScopeReq {
 message HandleRoleDataScopeReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 获取角色资源
@@ -1291,8 +1293,8 @@ message HandleRoleResourceReq {
 message HandleRoleResourceReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 资源模块
@@ -1328,8 +1330,8 @@ message CreateResourceReq {
 message CreateResourceReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 修改资源
@@ -1350,8 +1352,8 @@ message UpdateResourceReq {
 message UpdateResourceReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 获取资源
@@ -1368,8 +1370,8 @@ message DeleteResourceReq {
 message DeleteResourceReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 菜单模块
@@ -1431,8 +1433,8 @@ message CreateMenuReq {
 message CreateMenuReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 修改菜单
@@ -1463,8 +1465,8 @@ message UpdateMenuReq {
 message UpdateMenuReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 获取菜单
@@ -1481,8 +1483,8 @@ message DeleteMenuReq {
 message DeleteMenuReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 message MenuTree {
@@ -1530,8 +1532,8 @@ message CreateDeptReq {
 message CreateDeptReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 修改部门
@@ -1551,8 +1553,8 @@ message UpdateDeptReq {
 message UpdateDeptReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 获取部门
@@ -1569,8 +1571,8 @@ message DeleteDeptReq {
 message DeleteDeptReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 获取树形部门
@@ -1609,8 +1611,8 @@ message CreatePostReq {
 message CreatePostReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 修改岗位
@@ -1630,8 +1632,8 @@ message UpdatePostReq {
 message UpdatePostReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }
 
 // 请求 - 获取岗位
@@ -1648,7 +1650,7 @@ message DeletePostReq {
 message DeletePostReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
+  optional google.protobuf.Any result = 3;
 }
 
 // 请求 - 修改岗位-状态
@@ -1664,6 +1666,6 @@ message UpdatePostStateReq {
 message UpdatePostStateReply {
   int32 code = 1;
   string message = 2;
-  google.protobuf.Any result = 3;
-  bool success = 4;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
 }

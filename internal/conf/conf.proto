@@ -46,8 +46,14 @@ message Data {
     google.protobuf.Duration read_timeout = 4;
     google.protobuf.Duration write_timeout = 5;
   }
+  message Meilisearch {
+    string host = 1;
+    string api_key = 2;
+    google.protobuf.Duration timeout = 3;
+  }
   Database database = 1;
   Redis redis = 2;
+  Meilisearch meilisearch = 3;
 }
 
 message Auth {

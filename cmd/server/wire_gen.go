@@ -25,12 +25,13 @@ func wireApp(confServer *conf.Server, auth *conf.Auth, confData *conf.Data, logg
 	v := data.NewModelMigrate()
 	db := data.NewDB(confData, logger, v)
 	client := data.NewRDB(confData, logger)
+	meilisearchClient := data.NewSDB(confData, logger)
 	model := data.NewAuthModel(auth, logger)
 	adapter := data.NewAuthAdapter(db, auth, logger)
 	watcher := data.NewWatcher(confData, logger)
 	iEnforcer := data.NewAuthEnforcer(model, adapter, watcher, logger)
 	node := data.NewSnowflake(logger)
-	dataData, cleanup, err := data.NewData(db, client, iEnforcer, node, logger)
+	dataData, cleanup, err := data.NewData(db, client, meilisearchClient, iEnforcer, node, logger)
 	if err != nil {
 		return nil, nil, err
 	}

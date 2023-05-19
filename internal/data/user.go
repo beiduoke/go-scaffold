@@ -424,15 +424,12 @@ func (r *UserRepo) Roles(ctx context.Context) ([]*biz.Role, error) {
 }
 
 func (r *UserRepo) RoleMenus(ctx context.Context) ([]*biz.Menu, error) {
-	rolesIdsStr := r.data.enforcer.GetRolesForUserInDomain(r.data.User(ctx), r.data.Domain(ctx))
-
 	if r.data.HasSuperAdmin(ctx) {
 		return r.menu.ListAll(ctx)
-	}
-
-	if r.data.HasDomainSuperUser(ctx) {
+	} else if r.data.HasDomainSuperUser(ctx) {
 		return r.domain.ListMenuByIDs(ctx, r.data.DomainID(ctx))
 	}
+	rolesIdsStr := r.data.enforcer.GetRolesForUserInDomain(r.data.User(ctx), r.data.Domain(ctx))
 	return r.role.ListMenuByIDs(ctx, convert.ArrayStringToUint(rolesIdsStr)...)
 }
 

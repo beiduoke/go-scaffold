@@ -6,6 +6,7 @@ import (
 	"github.com/beiduoke/go-scaffold/api/protobuf"
 	v1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/internal/pkg/constant"
 	"github.com/beiduoke/go-scaffold/internal/pkg/proto"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -84,7 +85,7 @@ func (s *ApiService) CreateDomain(ctx context.Context, in *v1.CreateDomainReq) (
 		Id: uint64(user.ID),
 	})
 	return &v1.CreateDomainReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "创建成功",
 		Result:  data,
 	}, nil
@@ -104,7 +105,7 @@ func (s *ApiService) UpdateDomain(ctx context.Context, in *v1.UpdateDomainReq) (
 		return nil, v1.ErrorDomainUpdateFail("领域修改失败: %v", err.Error())
 	}
 	return &v1.UpdateDomainReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "修改成功",
 	}, nil
 }
@@ -120,7 +121,7 @@ func (s *ApiService) UpdateDomainState(ctx context.Context, in *v1.UpdateDomainS
 		return nil, v1.ErrorDomainUpdateFail("领域状态修改失败: %v", err.Error())
 	}
 	return &v1.UpdateDomainStateReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "修改成功",
 	}, nil
 }
@@ -158,7 +159,7 @@ func (s *ApiService) DeleteDomain(ctx context.Context, in *v1.DeleteDomainReq) (
 		return nil, v1.ErrorDomainDeleteFail("领域删除失败：%v", err)
 	}
 	return &v1.DeleteDomainReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "删除成功",
 	}, nil
 }
@@ -194,7 +195,7 @@ func (s *ApiService) HandleDomainMenu(ctx context.Context, in *v1.HandleDomainMe
 		return nil, v1.ErrorDomainHandleMenuFail("领域菜单处理失败：%v", err)
 	}
 	return &v1.HandleDomainMenuReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "处理成功",
 	}, nil
 }

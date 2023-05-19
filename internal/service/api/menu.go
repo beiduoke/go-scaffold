@@ -7,6 +7,7 @@ import (
 	"github.com/beiduoke/go-scaffold/api/protobuf"
 	v1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/internal/pkg/constant"
 	"github.com/beiduoke/go-scaffold/internal/pkg/proto"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -195,7 +196,7 @@ func (s *ApiService) CreateMenu(ctx context.Context, in *v1.CreateMenuReq) (*v1.
 		Id: uint64(user.ID),
 	})
 	return &v1.CreateMenuReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "创建成功",
 		Result:  data,
 	}, nil
@@ -242,7 +243,7 @@ func (s *ApiService) UpdateMenu(ctx context.Context, in *v1.UpdateMenuReq) (*v1.
 		return nil, v1.ErrorMenuUpdateFail("菜单修改失败: %v", err.Error())
 	}
 	return &v1.UpdateMenuReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "修改成功",
 	}, nil
 }
@@ -276,7 +277,7 @@ func (s *ApiService) DeleteMenu(ctx context.Context, in *v1.DeleteMenuReq) (*v1.
 		return nil, v1.ErrorMenuDeleteFail("菜单删除失败：%v", err)
 	}
 	return &v1.DeleteMenuReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "删除成功",
 	}, nil
 }

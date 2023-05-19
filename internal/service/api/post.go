@@ -6,6 +6,7 @@ import (
 	"github.com/beiduoke/go-scaffold/api/protobuf"
 	v1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/internal/pkg/constant"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -55,7 +56,7 @@ func (s *ApiService) CreatePost(ctx context.Context, in *v1.CreatePostReq) (*v1.
 		Id: uint64(user.ID),
 	})
 	return &v1.CreatePostReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "创建成功",
 		Result:  data,
 	}, nil
@@ -75,7 +76,7 @@ func (s *ApiService) UpdatePost(ctx context.Context, in *v1.UpdatePostReq) (*v1.
 		return nil, v1.ErrorPostUpdateFail("岗位修改失败: %v", err.Error())
 	}
 	return &v1.UpdatePostReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "修改成功",
 	}, nil
 }
@@ -91,7 +92,7 @@ func (s *ApiService) UpdatePostState(ctx context.Context, in *v1.UpdatePostState
 		return nil, v1.ErrorPostUpdateFail("岗位状态修改失败: %v", err.Error())
 	}
 	return &v1.UpdatePostStateReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "修改成功",
 	}, nil
 }

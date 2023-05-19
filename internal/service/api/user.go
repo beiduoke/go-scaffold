@@ -8,6 +8,7 @@ import (
 	"github.com/beiduoke/go-scaffold/api/protobuf"
 	v1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/internal/pkg/constant"
 	"github.com/beiduoke/go-scaffold/internal/pkg/proto"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
@@ -82,7 +83,7 @@ func (s *ApiService) CreateUser(ctx context.Context, in *v1.CreateUserReq) (*v1.
 		Id: uint64(user.ID),
 	})
 	return &v1.CreateUserReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "创建成功",
 		Result:  data,
 	}, nil
@@ -120,7 +121,7 @@ func (s *ApiService) UpdateUser(ctx context.Context, in *v1.UpdateUserReq) (*v1.
 		return nil, v1.ErrorUserUpdateFail("用户修改失败 %v", err)
 	}
 	return &v1.UpdateUserReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "修改成功",
 	}, nil
 }
@@ -140,7 +141,7 @@ func (s *ApiService) DeleteUser(ctx context.Context, in *v1.DeleteUserReq) (*v1.
 		return nil, v1.ErrorUserDeleteFail("用户删除失败：%v", err)
 	}
 	return &v1.DeleteUserReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "删除成功",
 	}, nil
 }
@@ -148,14 +149,14 @@ func (s *ApiService) DeleteUser(ctx context.Context, in *v1.DeleteUserReq) (*v1.
 // ExistUserName 用户名是否存在
 func (s *ApiService) ExistUserName(ctx context.Context, in *v1.ExistUserNameReq) (*v1.ExistUserNameReply, error) {
 	user, _ := s.userCase.GetName(ctx, &biz.User{Name: in.GetName()})
-	exist, message := false, "用户不存在"
+	handleType, message := constant.HandleType_error.String(), "用户不存在"
 	if user != nil && user.ID > 0 {
-		exist = true
+		handleType = constant.HandleType_success.String()
 		message = "用户存在"
 	}
 
 	return &v1.ExistUserNameReply{
-		Success: exist,
+		Type:    handleType,
 		Message: message,
 	}, nil
 }
@@ -180,7 +181,7 @@ func (s *ApiService) HandleUserRole(ctx context.Context, in *v1.HandleUserRoleRe
 		return nil, v1.ErrorUserHandleRoleFail("绑定用户权限失败: %v", err.Error())
 	}
 	return &v1.HandleUserRoleReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "处理成功",
 	}, nil
 }
@@ -237,19 +238,19 @@ func (s *ApiService) ListUserRole(ctx context.Context, in *emptypb.Empty) (*v1.L
 
 // 获取角色菜单路由树形列表
 func (s *ApiService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.ListUserRoleMenuRouterTreeReq) (*v1.ListUserRoleMenuRouterTreeReply, error) {
-	results, err := s.userCase.RoleMenus(ctx)
+	roleMenus, err := s.userCase.RoleMenus(ctx)
 	if err != nil {
 		s.log.Debugf("用户菜单查询失败 %v", err)
 	}
 	treeData := make([]*v1.MenuRouter, 0)
-	for _, v := range results {
+	for _, v := range roleMenus {
 		if v.Type == int32(protobuf.MenuType_MENU_TYPE_ABILITY) {
 			continue
 		}
 		treeData = append(treeData, TransformMenuRouter(v))
 	}
 	return &v1.ListUserRoleMenuRouterTreeReply{
-		Items: proto.ToTree(treeData, 0, func(t *v1.MenuRouter, ts ...*v1.MenuRouter) error {
+		Items: proto.ToTree(treeData, in.GetMenuParentId(), func(t *v1.MenuRouter, ts ...*v1.MenuRouter) error {
 			t.Children = append(t.Children, ts...)
 			if len(ts) > 0 && !ts[0].GetMeta().GetHideMenu() {
 				path, child := t.Path, ts[0]
@@ -286,7 +287,7 @@ func (s *ApiService) ListUserRoleMenuTree(ctx context.Context, in *v1.ListUserRo
 		treeData = append(treeData, TransformMenu(v))
 	}
 	return &v1.ListUserRoleMenuTreeReply{
-		Items: proto.ToTree(treeData, 0, func(t *v1.Menu, ts ...*v1.Menu) error {
+		Items: proto.ToTree(treeData, in.GetMenuParentId(), func(t *v1.Menu, ts ...*v1.Menu) error {
 			t.Children = append(t.Children, ts...)
 			return nil
 		}),

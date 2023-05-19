@@ -6,6 +6,7 @@ import (
 	"github.com/beiduoke/go-scaffold/api/protobuf"
 	v1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/internal/pkg/constant"
 	"github.com/beiduoke/go-scaffold/internal/pkg/proto"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -83,7 +84,7 @@ func (s *ApiService) CreateDept(ctx context.Context, in *v1.CreateDeptReq) (*v1.
 		Id: uint64(user.ID),
 	})
 	return &v1.CreateDeptReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "创建成功",
 		Result:  data,
 	}, nil
@@ -104,7 +105,7 @@ func (s *ApiService) UpdateDept(ctx context.Context, in *v1.UpdateDeptReq) (*v1.
 		return nil, v1.ErrorDeptUpdateFail("部门角色创建失败: %v", err.Error())
 	}
 	return &v1.UpdateDeptReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "修改成功",
 	}, nil
 }
@@ -124,7 +125,7 @@ func (s *ApiService) DeleteDept(ctx context.Context, in *v1.DeleteDeptReq) (*v1.
 		return nil, v1.ErrorDeptDeleteFail("部门角色删除失败：%v", err)
 	}
 	return &v1.DeleteDeptReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "删除成功",
 	}, nil
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/beiduoke/go-scaffold/api/protobuf"
 	v1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/internal/pkg/constant"
 	"github.com/beiduoke/go-scaffold/internal/pkg/proto"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -78,7 +79,7 @@ func (s *ApiService) CreateRole(ctx context.Context, in *v1.CreateRoleReq) (*v1.
 		Id: uint64(role.ID),
 	})
 	return &v1.CreateRoleReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "创建成功",
 		Result:  data,
 	}, nil
@@ -110,7 +111,7 @@ func (s *ApiService) UpdateRole(ctx context.Context, in *v1.UpdateRoleReq) (*v1.
 		return nil, err
 	}
 	return &v1.UpdateRoleReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "修改成功",
 	}, nil
 }
@@ -126,8 +127,8 @@ func (s *ApiService) UpdateRoleState(ctx context.Context, in *v1.UpdateRoleState
 		return nil, v1.ErrorDomainUpdateFail("领域状态修改失败: %v", err.Error())
 	}
 	return &v1.UpdateRoleStateReply{
-		Success: true,
 		Message: "修改成功",
+		Type:    constant.HandleType_success.String(),
 	}, nil
 }
 
@@ -146,7 +147,7 @@ func (s *ApiService) DeleteRole(ctx context.Context, in *v1.DeleteRoleReq) (*v1.
 		return nil, v1.ErrorRoleDeleteFail("角色删除失败：%v", err)
 	}
 	return &v1.DeleteRoleReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "删除成功",
 	}, nil
 }
@@ -183,7 +184,7 @@ func (s *ApiService) HandleRoleMenu(ctx context.Context, in *v1.HandleRoleMenuRe
 		return nil, v1.ErrorRoleHandleMenuFail("角色菜单处理失败：%v", err)
 	}
 	return &v1.HandleRoleMenuReply{
-		Type:    protobuf.HandleType_HANDLE_TYPE_SUCCESS,
+		Type:    constant.HandleType_success.String(),
 		Message: "处理成功",
 	}, nil
 }
@@ -212,7 +213,7 @@ func (s *ApiService) HandleRoleResource(ctx context.Context, in *v1.HandleRoleRe
 		return nil, v1.ErrorRoleHandleResourceFail("角色资源处理失败：%v", err)
 	}
 	return &v1.HandleRoleResourceReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "处理成功",
 	}, nil
 }
@@ -256,7 +257,7 @@ func (s *ApiService) HandleRoleDataScope(ctx context.Context, in *v1.HandleRoleD
 		return nil, v1.ErrorRoleHandleDeptFail("角色资源处理失败：%v", err)
 	}
 	return &v1.HandleRoleDataScopeReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "处理成功",
 	}, nil
 }

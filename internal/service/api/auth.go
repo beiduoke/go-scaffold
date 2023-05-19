@@ -6,6 +6,7 @@ import (
 
 	v1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/internal/pkg/constant"
 	"github.com/beiduoke/go-scaffold/internal/pkg/middleware/localize"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -37,7 +38,7 @@ func (s *ApiService) Logout(ctx context.Context, in *emptypb.Empty) (*v1.LogoutR
 		return nil, err
 	}
 	return &v1.LogoutReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "退出成功",
 	}, nil
 }
@@ -97,7 +98,7 @@ func (s *ApiService) Register(ctx context.Context, in *v1.RegisterReq) (*v1.Regi
 	}
 
 	return &v1.RegisterReply{
-		Success: true,
+		Type:    constant.HandleType_success.String(),
 		Message: "注册成功",
 	}, nil
 }

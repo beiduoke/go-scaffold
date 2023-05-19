@@ -12,6 +12,7 @@ import (
 	"github.com/casbin/casbin/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
+	"github.com/meilisearch/meilisearch-go"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -24,6 +25,7 @@ var ProviderSet = wire.NewSet(
 	// 基础配置
 	NewDB,
 	NewRDB,
+	NewSDB,
 	NewSnowflake,
 	NewModelMigrate,
 	NewData,
@@ -75,14 +77,15 @@ type Data struct {
 	log      *log.Helper
 	db       *gorm.DB
 	rdb      *redis.Client
+	sdb      *meilisearch.Client
 	sf       *snowflake.Node
 	enforcer casbin.IEnforcer
 }
 
 // NewData .
-func NewData(db *gorm.DB, rdb *redis.Client, enforcer casbin.IEnforcer, sf *snowflake.Node, logger log.Logger) (*Data, func(), error) {
+func NewData(db *gorm.DB, rdb *redis.Client, sdb *meilisearch.Client, enforcer casbin.IEnforcer, sf *snowflake.Node, logger log.Logger) (*Data, func(), error) {
 	l := log.NewHelper(log.With(logger, "module", "data/initialize"))
-	d := &Data{db: db, rdb: rdb, log: l, sf: sf, enforcer: enforcer}
+	d := &Data{db: db, rdb: rdb, sdb: sdb, log: l, sf: sf, enforcer: enforcer}
 	return d, func() {
 		l.Info("closing db")
 		sql, err := db.DB()
@@ -95,6 +98,7 @@ func NewData(db *gorm.DB, rdb *redis.Client, enforcer casbin.IEnforcer, sf *snow
 		}
 		l.Info("closing rdb")
 		rdb.Close()
+		l.Info("closing sdb")
 	}, nil
 }
 
@@ -239,4 +243,19 @@ func NewRDB(conf *conf.Data, logger log.Logger) *redis.Client {
 		log.Fatalf("failed opening connection to redis %v", err)
 	}
 	return rdb
+}
+
+func NewSDB(conf *conf.Data, logger log.Logger) *meilisearch.Client {
+	return nil
+	log := log.NewHelper(log.With(logger, "module", "data/meilisearch"))
+	sdb := meilisearch.NewClient(meilisearch.ClientConfig{
+		Host:    conf.GetMeilisearch().GetHost(),
+		APIKey:  conf.GetMeilisearch().ApiKey,
+		Timeout: conf.Meilisearch.Timeout.AsDuration(),
+	})
+	_, err := sdb.Health()
+	if err != nil {
+		log.Fatalf("failed opening connection to redis %v", err)
+	}
+	return sdb
 }
