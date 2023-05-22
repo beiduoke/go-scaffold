@@ -144,9 +144,9 @@ func (s *ApiService) ListMenuTree(ctx context.Context, in *v1.ListMenuTreeReq) (
 }
 
 // ListMenu 列表菜单
-func (s *ApiService) ListMenu(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
-	results, total := s.menuCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize()), pagination.WithQuery(pagination.QueryUnmarshal(in.GetQuery())), pagination.WithOrderBy(in.GetOrderBy())))
-	return &protobuf.PagingReply{
+func (s *ApiService) ListMenu(ctx context.Context, in *v1.ListMenuReq) (*v1.ListMenuReply, error) {
+	results, total := s.menuCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize())))
+	return &v1.ListMenuReply{
 		Total: total,
 		Items: proto.ToAny(results, func(t *biz.Menu) protoreflect.ProtoMessage {
 			return TransformMenu(t)

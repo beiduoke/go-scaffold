@@ -8,7 +8,6 @@ package v1
 
 import (
 	context "context"
-	protobuf "github.com/beiduoke/go-scaffold/api/protobuf"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -157,30 +156,30 @@ type ApiHTTPServer interface {
 	// HandleUserRole 绑定用户领域权限
 	HandleUserRole(context.Context, *HandleUserRoleReq) (*HandleUserRoleReply, error)
 	// ListDept 列表部门
-	ListDept(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	ListDept(context.Context, *ListDeptReq) (*ListDeptReply, error)
 	// ListDeptTree 获取全部部门树形
 	ListDeptTree(context.Context, *ListDeptTreeReq) (*ListDeptTreeReply, error)
 	// ListDomain 列表领域
-	ListDomain(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	ListDomain(context.Context, *ListDomainReq) (*ListDomainReply, error)
 	// ListDomainMenu 获取角色菜单
-	ListDomainMenu(context.Context, *ListDomainMenuReq) (*protobuf.PagingReply, error)
+	ListDomainMenu(context.Context, *ListDomainMenuReq) (*ListDomainMenuReply, error)
 	// ListDomainTree 获取领域树形列表
 	ListDomainTree(context.Context, *ListDomainTreeReq) (*ListDomainTreeReply, error)
 	// ListMenu 菜单模块
 	// 列表菜单
-	ListMenu(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	ListMenu(context.Context, *ListMenuReq) (*ListMenuReply, error)
 	// ListMenuTree 获取树形菜单
 	ListMenuTree(context.Context, *ListMenuTreeReq) (*ListMenuTreeReply, error)
 	// ListPost 列表岗位
-	ListPost(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	ListPost(context.Context, *ListPostReq) (*ListPostReply, error)
 	// ListResource 资源模块
 	// 列表资源
-	ListResource(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	ListResource(context.Context, *ListResourceReq) (*ListResourceReply, error)
 	// ListResourceGroup 列表资源-分组
-	ListResourceGroup(context.Context, *protobuf.PagingReq) (*ListResourceGroupReply, error)
+	ListResourceGroup(context.Context, *emptypb.Empty) (*ListResourceGroupReply, error)
 	// ListRole 角色模块
 	// 列表角色
-	ListRole(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	ListRole(context.Context, *ListRoleReq) (*ListRoleReply, error)
 	// ListRoleDept 获取指定ID角色部门
 	ListRoleDept(context.Context, *ListRoleDeptReq) (*ListRoleDeptReply, error)
 	// ListRoleMenu 获取指定ID角色菜单
@@ -188,7 +187,7 @@ type ApiHTTPServer interface {
 	// ListRoleResource 获取指定ID角色资源
 	ListRoleResource(context.Context, *ListRoleResourceReq) (*ListRoleResourceReply, error)
 	// ListUser 列表用户
-	ListUser(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	ListUser(context.Context, *ListUserReq) (*ListUserReply, error)
 	// ListUserRole 当前登录用户拥有角色
 	ListUserRole(context.Context, *emptypb.Empty) (*ListUserRoleReply, error)
 	// ListUserRoleMenuRouterTree 获取角色菜单路由树形列表
@@ -622,19 +621,19 @@ func _Api_ListUserRolePermission1_HTTP_Handler(srv ApiHTTPServer) func(ctx http.
 
 func _Api_ListUser0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in protobuf.PagingReq
+		var in ListUserReq
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationApiListUser)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListUser(ctx, req.(*protobuf.PagingReq))
+			return srv.ListUser(ctx, req.(*ListUserReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*protobuf.PagingReply)
+		reply := out.(*ListUserReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -773,19 +772,19 @@ func _Api_ExistUserName0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) 
 
 func _Api_ListDomain0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in protobuf.PagingReq
+		var in ListDomainReq
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationApiListDomain)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListDomain(ctx, req.(*protobuf.PagingReq))
+			return srv.ListDomain(ctx, req.(*ListDomainReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*protobuf.PagingReply)
+		reply := out.(*ListDomainReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -1005,7 +1004,7 @@ func _Api_ListDomainMenu0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context)
 		if err != nil {
 			return err
 		}
-		reply := out.(*protobuf.PagingReply)
+		reply := out.(*ListDomainMenuReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -1037,19 +1036,19 @@ func _Api_HandleDomainMenu0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Contex
 
 func _Api_ListRole0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in protobuf.PagingReq
+		var in ListRoleReq
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationApiListRole)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListRole(ctx, req.(*protobuf.PagingReq))
+			return srv.ListRole(ctx, req.(*ListRoleReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*protobuf.PagingReply)
+		reply := out.(*ListRoleReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -1332,32 +1331,32 @@ func _Api_HandleRoleResource0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Cont
 
 func _Api_ListResource0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in protobuf.PagingReq
+		var in ListResourceReq
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationApiListResource)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListResource(ctx, req.(*protobuf.PagingReq))
+			return srv.ListResource(ctx, req.(*ListResourceReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*protobuf.PagingReply)
+		reply := out.(*ListResourceReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 func _Api_ListResourceGroup0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in protobuf.PagingReq
+		var in emptypb.Empty
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationApiListResourceGroup)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListResourceGroup(ctx, req.(*protobuf.PagingReq))
+			return srv.ListResourceGroup(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -1458,19 +1457,19 @@ func _Api_DeleteResource0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context)
 
 func _Api_ListMenu0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in protobuf.PagingReq
+		var in ListMenuReq
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationApiListMenu)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListMenu(ctx, req.(*protobuf.PagingReq))
+			return srv.ListMenu(ctx, req.(*ListMenuReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*protobuf.PagingReply)
+		reply := out.(*ListMenuReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -1587,19 +1586,19 @@ func _Api_DeleteMenu0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) err
 
 func _Api_ListDept0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in protobuf.PagingReq
+		var in ListDeptReq
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationApiListDept)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListDept(ctx, req.(*protobuf.PagingReq))
+			return srv.ListDept(ctx, req.(*ListDeptReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*protobuf.PagingReply)
+		reply := out.(*ListDeptReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -1716,19 +1715,19 @@ func _Api_ListDeptTree0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) e
 
 func _Api_ListPost0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in protobuf.PagingReq
+		var in ListPostReq
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationApiListPost)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListPost(ctx, req.(*protobuf.PagingReq))
+			return srv.ListPost(ctx, req.(*ListPostReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*protobuf.PagingReply)
+		reply := out.(*ListPostReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -1880,21 +1879,21 @@ type ApiHTTPClient interface {
 	HandleRoleMenu(ctx context.Context, req *HandleRoleMenuReq, opts ...http.CallOption) (rsp *HandleRoleMenuReply, err error)
 	HandleRoleResource(ctx context.Context, req *HandleRoleResourceReq, opts ...http.CallOption) (rsp *HandleRoleResourceReply, err error)
 	HandleUserRole(ctx context.Context, req *HandleUserRoleReq, opts ...http.CallOption) (rsp *HandleUserRoleReply, err error)
-	ListDept(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
+	ListDept(ctx context.Context, req *ListDeptReq, opts ...http.CallOption) (rsp *ListDeptReply, err error)
 	ListDeptTree(ctx context.Context, req *ListDeptTreeReq, opts ...http.CallOption) (rsp *ListDeptTreeReply, err error)
-	ListDomain(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
-	ListDomainMenu(ctx context.Context, req *ListDomainMenuReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
+	ListDomain(ctx context.Context, req *ListDomainReq, opts ...http.CallOption) (rsp *ListDomainReply, err error)
+	ListDomainMenu(ctx context.Context, req *ListDomainMenuReq, opts ...http.CallOption) (rsp *ListDomainMenuReply, err error)
 	ListDomainTree(ctx context.Context, req *ListDomainTreeReq, opts ...http.CallOption) (rsp *ListDomainTreeReply, err error)
-	ListMenu(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
+	ListMenu(ctx context.Context, req *ListMenuReq, opts ...http.CallOption) (rsp *ListMenuReply, err error)
 	ListMenuTree(ctx context.Context, req *ListMenuTreeReq, opts ...http.CallOption) (rsp *ListMenuTreeReply, err error)
-	ListPost(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
-	ListResource(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
-	ListResourceGroup(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *ListResourceGroupReply, err error)
-	ListRole(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
+	ListPost(ctx context.Context, req *ListPostReq, opts ...http.CallOption) (rsp *ListPostReply, err error)
+	ListResource(ctx context.Context, req *ListResourceReq, opts ...http.CallOption) (rsp *ListResourceReply, err error)
+	ListResourceGroup(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *ListResourceGroupReply, err error)
+	ListRole(ctx context.Context, req *ListRoleReq, opts ...http.CallOption) (rsp *ListRoleReply, err error)
 	ListRoleDept(ctx context.Context, req *ListRoleDeptReq, opts ...http.CallOption) (rsp *ListRoleDeptReply, err error)
 	ListRoleMenu(ctx context.Context, req *ListRoleMenuReq, opts ...http.CallOption) (rsp *ListRoleMenuReply, err error)
 	ListRoleResource(ctx context.Context, req *ListRoleResourceReq, opts ...http.CallOption) (rsp *ListRoleResourceReply, err error)
-	ListUser(ctx context.Context, req *protobuf.PagingReq, opts ...http.CallOption) (rsp *protobuf.PagingReply, err error)
+	ListUser(ctx context.Context, req *ListUserReq, opts ...http.CallOption) (rsp *ListUserReply, err error)
 	ListUserRole(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *ListUserRoleReply, err error)
 	ListUserRoleMenuRouterTree(ctx context.Context, req *ListUserRoleMenuRouterTreeReq, opts ...http.CallOption) (rsp *ListUserRoleMenuRouterTreeReply, err error)
 	ListUserRoleMenuTree(ctx context.Context, req *ListUserRoleMenuTreeReq, opts ...http.CallOption) (rsp *ListUserRoleMenuTreeReply, err error)
@@ -2352,8 +2351,8 @@ func (c *ApiHTTPClientImpl) HandleUserRole(ctx context.Context, in *HandleUserRo
 	return &out, err
 }
 
-func (c *ApiHTTPClientImpl) ListDept(ctx context.Context, in *protobuf.PagingReq, opts ...http.CallOption) (*protobuf.PagingReply, error) {
-	var out protobuf.PagingReply
+func (c *ApiHTTPClientImpl) ListDept(ctx context.Context, in *ListDeptReq, opts ...http.CallOption) (*ListDeptReply, error) {
+	var out ListDeptReply
 	pattern := "/v1/depts"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationApiListDept))
@@ -2378,8 +2377,8 @@ func (c *ApiHTTPClientImpl) ListDeptTree(ctx context.Context, in *ListDeptTreeRe
 	return &out, err
 }
 
-func (c *ApiHTTPClientImpl) ListDomain(ctx context.Context, in *protobuf.PagingReq, opts ...http.CallOption) (*protobuf.PagingReply, error) {
-	var out protobuf.PagingReply
+func (c *ApiHTTPClientImpl) ListDomain(ctx context.Context, in *ListDomainReq, opts ...http.CallOption) (*ListDomainReply, error) {
+	var out ListDomainReply
 	pattern := "/v1/domains"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationApiListDomain))
@@ -2391,8 +2390,8 @@ func (c *ApiHTTPClientImpl) ListDomain(ctx context.Context, in *protobuf.PagingR
 	return &out, err
 }
 
-func (c *ApiHTTPClientImpl) ListDomainMenu(ctx context.Context, in *ListDomainMenuReq, opts ...http.CallOption) (*protobuf.PagingReply, error) {
-	var out protobuf.PagingReply
+func (c *ApiHTTPClientImpl) ListDomainMenu(ctx context.Context, in *ListDomainMenuReq, opts ...http.CallOption) (*ListDomainMenuReply, error) {
+	var out ListDomainMenuReply
 	pattern := "/v1/domains/{id}/menus"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationApiListDomainMenu))
@@ -2417,8 +2416,8 @@ func (c *ApiHTTPClientImpl) ListDomainTree(ctx context.Context, in *ListDomainTr
 	return &out, err
 }
 
-func (c *ApiHTTPClientImpl) ListMenu(ctx context.Context, in *protobuf.PagingReq, opts ...http.CallOption) (*protobuf.PagingReply, error) {
-	var out protobuf.PagingReply
+func (c *ApiHTTPClientImpl) ListMenu(ctx context.Context, in *ListMenuReq, opts ...http.CallOption) (*ListMenuReply, error) {
+	var out ListMenuReply
 	pattern := "/v1/menus"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationApiListMenu))
@@ -2443,8 +2442,8 @@ func (c *ApiHTTPClientImpl) ListMenuTree(ctx context.Context, in *ListMenuTreeRe
 	return &out, err
 }
 
-func (c *ApiHTTPClientImpl) ListPost(ctx context.Context, in *protobuf.PagingReq, opts ...http.CallOption) (*protobuf.PagingReply, error) {
-	var out protobuf.PagingReply
+func (c *ApiHTTPClientImpl) ListPost(ctx context.Context, in *ListPostReq, opts ...http.CallOption) (*ListPostReply, error) {
+	var out ListPostReply
 	pattern := "/v1/posts"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationApiListPost))
@@ -2456,8 +2455,8 @@ func (c *ApiHTTPClientImpl) ListPost(ctx context.Context, in *protobuf.PagingReq
 	return &out, err
 }
 
-func (c *ApiHTTPClientImpl) ListResource(ctx context.Context, in *protobuf.PagingReq, opts ...http.CallOption) (*protobuf.PagingReply, error) {
-	var out protobuf.PagingReply
+func (c *ApiHTTPClientImpl) ListResource(ctx context.Context, in *ListResourceReq, opts ...http.CallOption) (*ListResourceReply, error) {
+	var out ListResourceReply
 	pattern := "/v1/resources"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationApiListResource))
@@ -2469,7 +2468,7 @@ func (c *ApiHTTPClientImpl) ListResource(ctx context.Context, in *protobuf.Pagin
 	return &out, err
 }
 
-func (c *ApiHTTPClientImpl) ListResourceGroup(ctx context.Context, in *protobuf.PagingReq, opts ...http.CallOption) (*ListResourceGroupReply, error) {
+func (c *ApiHTTPClientImpl) ListResourceGroup(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*ListResourceGroupReply, error) {
 	var out ListResourceGroupReply
 	pattern := "/v1/resources/groups"
 	path := binding.EncodeURL(pattern, in, true)
@@ -2482,8 +2481,8 @@ func (c *ApiHTTPClientImpl) ListResourceGroup(ctx context.Context, in *protobuf.
 	return &out, err
 }
 
-func (c *ApiHTTPClientImpl) ListRole(ctx context.Context, in *protobuf.PagingReq, opts ...http.CallOption) (*protobuf.PagingReply, error) {
-	var out protobuf.PagingReply
+func (c *ApiHTTPClientImpl) ListRole(ctx context.Context, in *ListRoleReq, opts ...http.CallOption) (*ListRoleReply, error) {
+	var out ListRoleReply
 	pattern := "/v1/roles"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationApiListRole))
@@ -2534,8 +2533,8 @@ func (c *ApiHTTPClientImpl) ListRoleResource(ctx context.Context, in *ListRoleRe
 	return &out, err
 }
 
-func (c *ApiHTTPClientImpl) ListUser(ctx context.Context, in *protobuf.PagingReq, opts ...http.CallOption) (*protobuf.PagingReply, error) {
-	var out protobuf.PagingReply
+func (c *ApiHTTPClientImpl) ListUser(ctx context.Context, in *ListUserReq, opts ...http.CallOption) (*ListUserReply, error) {
+	var out ListUserReply
 	pattern := "/v1/users"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationApiListUser))

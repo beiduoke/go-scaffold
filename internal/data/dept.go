@@ -159,7 +159,7 @@ func (r *DeptRepo) ListPage(ctx context.Context, paging *pagination.Pagination) 
 	sysDepts := []*SysDept{}
 	// 查询条件
 	if paging.Query != nil {
-		if name, ok := paging.Query["name"]; ok {
+		if name, ok := paging.Query["name"].(string); ok {
 			db = db.Where("name LIKE ?", name+"%")
 		}
 	}

@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strconv"
 	"time"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
@@ -16,7 +15,6 @@ import (
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -137,40 +135,14 @@ func (r *UserRepo) ListPage(ctx context.Context, paging *pagination.Pagination) 
 
 	// 查询条件
 	if paging.Query != nil {
-		if name, ok := paging.Query["name"]; ok {
+		if name, ok := paging.Query["name"].(string); ok && name != "" {
 			if name != "" {
 				db = db.Where("name LIKE ?", name+"%")
 			}
 		}
 
-		if dept, ok := paging.Query["deptId"]; ok && dept != "" {
-			var roleIds []string
-			deptId, _ := strconv.Atoi(dept)
-			// r.data.DBD(ctx).Model(SysDept{}).Where()
+		if deptId, ok := paging.Query["deptId"].(int32); ok && deptId > 0 {
 			db = db.Where("dept_id", deptId)
-			// 这里保留暂不执行
-			if false {
-				result := r.data.DB(ctx).Table("sys_role_depts").Where("sys_dept_id", deptId).Pluck("sys_role_id", &roleIds)
-				if result.Error != nil && errors.Is(result.Error, gorm.ErrRecordNotFound) {
-					r.log.Errorf("关联查询用户部门失败: %v", result.Error)
-					return
-				}
-
-				if len(roleIds) < 1 {
-					return
-				}
-
-				var userIds []string
-				for _, v := range roleIds {
-					userIds = append(userIds, r.data.enforcer.GetUsersForRoleInDomain(v, r.data.Domain(ctx))...)
-				}
-
-				if len(userIds) < 1 {
-					return
-				}
-
-				db = db.Where(userIds)
-			}
 		}
 	}
 

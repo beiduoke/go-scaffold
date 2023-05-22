@@ -13,7 +13,7 @@ type Pagination struct {
 	// 每一页的行数
 	PageSize int32
 	// 查询参数
-	Query map[string]string
+	Query map[string]interface{}
 	// 排序
 	OrderBy map[string]bool
 	// 是否不分页
@@ -45,7 +45,7 @@ func NewPagination(opts ...Option) *Pagination {
 		Page:     PAGE,
 		PageSize: PAGE_SIZE,
 		OrderBy:  make(map[string]bool),
-		Query:    make(map[string]string),
+		Query:    make(map[string]interface{}),
 	}
 	for _, o := range opts {
 		o(&p)
@@ -53,8 +53,6 @@ func NewPagination(opts ...Option) *Pagination {
 	if p.Nopaging {
 		p.PageSize = MAX_PAGE_SIZE
 	}
-	p.Query = QueryUnmarshal(p.Query)
-	p.OrderBy = OrderByUnmarshal(p.OrderBy)
 	return &p
 }
 
@@ -83,7 +81,7 @@ func WithPageSize(size int32) Option {
 	}
 }
 
-func WithQuery(q map[string]string) Option {
+func WithQuery(q map[string]interface{}) Option {
 	return func(p *Pagination) {
 		p.Query = q
 	}

@@ -9,6 +9,7 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/pkg/constant"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"google.golang.org/protobuf/types/known/anypb"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -29,21 +30,21 @@ func TransformResource(data *biz.Resource) *v1.Resource {
 }
 
 // ListResource 列表资源
-func (s *ApiService) ListResource(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
-	results, total := s.resourceCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize()), pagination.WithQuery(pagination.QueryUnmarshal(in.GetQuery())), pagination.WithOrderBy(in.GetOrderBy())))
+func (s *ApiService) ListResource(ctx context.Context, in *v1.ListResourceReq) (*v1.ListResourceReply, error) {
+	results, total := s.resourceCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize())))
 	items := make([]*anypb.Any, 0, len(results))
 	for _, v := range results {
 		item, _ := anypb.New(TransformResource(v))
 		items = append(items, item)
 	}
-	return &protobuf.PagingReply{
+	return &v1.ListResourceReply{
 		Total: total,
 		Items: items,
 	}, nil
 }
 
 // ListResourceGroup 列表资源-分组
-func (s *ApiService) ListResourceGroup(ctx context.Context, in *protobuf.PagingReq) (*v1.ListResourceGroupReply, error) {
+func (s *ApiService) ListResourceGroup(ctx context.Context, in *emptypb.Empty) (*v1.ListResourceGroupReply, error) {
 	results, total := s.resourceCase.ListAllGroup(ctx)
 	return &v1.ListResourceGroupReply{
 		Total: &total,

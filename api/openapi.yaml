@@ -131,6 +131,11 @@ paths:
             description: 列表部门
             operationId: Api_ListDept
             parameters:
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
                 - name: page
                   in: query
                   description: 当前页
@@ -143,18 +148,13 @@ paths:
                   schema:
                     type: integer
                     format: int32
-                - name: nopaging
-                  in: query
-                  description: 是否不分页
-                  schema:
-                    type: boolean
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.protobuf.PagingReply'
+                                $ref: '#/components/schemas/api.server.v1.ListDeptReply'
         post:
             tags:
                 - Api
@@ -264,6 +264,11 @@ paths:
             description: 列表领域
             operationId: Api_ListDomain
             parameters:
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
                 - name: page
                   in: query
                   description: 当前页
@@ -276,18 +281,13 @@ paths:
                   schema:
                     type: integer
                     format: int32
-                - name: nopaging
-                  in: query
-                  description: 是否不分页
-                  schema:
-                    type: boolean
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.protobuf.PagingReply'
+                                $ref: '#/components/schemas/api.server.v1.ListDomainReply'
         post:
             tags:
                 - Api
@@ -408,7 +408,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.protobuf.PagingReply'
+                                $ref: '#/components/schemas/api.server.v1.ListDomainMenuReply'
         post:
             tags:
                 - Api
@@ -508,6 +508,11 @@ paths:
                  列表菜单
             operationId: Api_ListMenu
             parameters:
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
                 - name: page
                   in: query
                   description: 当前页
@@ -520,18 +525,13 @@ paths:
                   schema:
                     type: integer
                     format: int32
-                - name: nopaging
-                  in: query
-                  description: 是否不分页
-                  schema:
-                    type: boolean
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.protobuf.PagingReply'
+                                $ref: '#/components/schemas/api.server.v1.ListMenuReply'
         post:
             tags:
                 - Api
@@ -641,6 +641,11 @@ paths:
             description: 列表岗位
             operationId: Api_ListPost
             parameters:
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
                 - name: page
                   in: query
                   description: 当前页
@@ -653,18 +658,13 @@ paths:
                   schema:
                     type: integer
                     format: int32
-                - name: nopaging
-                  in: query
-                  description: 是否不分页
-                  schema:
-                    type: boolean
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.protobuf.PagingReply'
+                                $ref: '#/components/schemas/api.server.v1.ListPostReply'
         post:
             tags:
                 - Api
@@ -782,6 +782,11 @@ paths:
                  列表资源
             operationId: Api_ListResource
             parameters:
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
                 - name: page
                   in: query
                   description: 当前页
@@ -794,18 +799,13 @@ paths:
                   schema:
                     type: integer
                     format: int32
-                - name: nopaging
-                  in: query
-                  description: 是否不分页
-                  schema:
-                    type: boolean
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.protobuf.PagingReply'
+                                $ref: '#/components/schemas/api.server.v1.ListResourceReply'
         post:
             tags:
                 - Api
@@ -830,24 +830,6 @@ paths:
                 - Api
             description: 列表资源-分组
             operationId: Api_ListResourceGroup
-            parameters:
-                - name: page
-                  in: query
-                  description: 当前页
-                  schema:
-                    type: integer
-                    format: int32
-                - name: pageSize
-                  in: query
-                  description: 每一页的行数
-                  schema:
-                    type: integer
-                    format: int32
-                - name: nopaging
-                  in: query
-                  description: 是否不分页
-                  schema:
-                    type: boolean
             responses:
                 "200":
                     description: OK
@@ -928,6 +910,11 @@ paths:
                  列表角色
             operationId: Api_ListRole
             parameters:
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
                 - name: page
                   in: query
                   description: 当前页
@@ -940,18 +927,13 @@ paths:
                   schema:
                     type: integer
                     format: int32
-                - name: nopaging
-                  in: query
-                  description: 是否不分页
-                  schema:
-                    type: boolean
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.protobuf.PagingReply'
+                                $ref: '#/components/schemas/api.server.v1.ListRoleReply'
         post:
             tags:
                 - Api
@@ -1222,6 +1204,11 @@ paths:
             description: 列表用户
             operationId: Api_ListUser
             parameters:
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
                 - name: page
                   in: query
                   description: 当前页
@@ -1234,18 +1221,26 @@ paths:
                   schema:
                     type: integer
                     format: int32
-                - name: nopaging
+                - name: deptId
                   in: query
-                  description: 是否不分页
                   schema:
-                    type: boolean
+                    type: integer
+                    format: int32
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: nickName
+                  in: query
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.protobuf.PagingReply'
+                                $ref: '#/components/schemas/api.server.v1.ListUserReply'
         post:
             tags:
                 - Api
@@ -1483,17 +1478,6 @@ paths:
                                 $ref: '#/components/schemas/api.server.v1.HandleUserRoleReply'
 components:
     schemas:
-        api.protobuf.PagingReply:
-            type: object
-            properties:
-                total:
-                    type: integer
-                    format: int64
-                items:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/google.protobuf.Any'
-            description: 分页通用结果
         api.server.v1.CreateDeptReply:
             type: object
             properties:
@@ -2149,6 +2133,17 @@ components:
                     items:
                         type: integer
                         format: uint64
+        api.server.v1.ListDeptReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int64
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/google.protobuf.Any'
+            description: 回应 - 列表部门
         api.server.v1.ListDeptTreeReply:
             type: object
             properties:
@@ -2160,6 +2155,28 @@ components:
                     type: integer
                     format: int64
             description: 回应 - 获取树形部门
+        api.server.v1.ListDomainMenuReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/google.protobuf.Any'
+                total:
+                    type: integer
+                    format: int64
+            description: 回应 - 获取领域菜单
+        api.server.v1.ListDomainReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int64
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/google.protobuf.Any'
+            description: 回应 - 列表领域
         api.server.v1.ListDomainTreeReply:
             type: object
             properties:
@@ -2170,6 +2187,18 @@ components:
                 total:
                     type: integer
                     format: int64
+            description: 回应 - 列表领域
+        api.server.v1.ListMenuReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int64
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/google.protobuf.Any'
+            description: 回应 - 列表菜单
         api.server.v1.ListMenuTreeReply:
             type: object
             properties:
@@ -2181,6 +2210,17 @@ components:
                     type: integer
                     format: int64
             description: 回应 - 获取树形菜单
+        api.server.v1.ListPostReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int64
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/google.protobuf.Any'
+            description: 回应 - 列表部门
         api.server.v1.ListResourceGroupReply:
             type: object
             properties:
@@ -2192,6 +2232,17 @@ components:
                     type: integer
                     format: int64
             description: 回应 - 创建资源
+        api.server.v1.ListResourceReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int64
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/google.protobuf.Any'
+            description: 回应 - 列表部门
         api.server.v1.ListRoleDeptReply:
             type: object
             properties:
@@ -2214,6 +2265,17 @@ components:
                     type: integer
                     format: int64
             description: 回应 - 获取角色菜单
+        api.server.v1.ListRoleReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int64
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/google.protobuf.Any'
+            description: 回应 - 列表角色
         api.server.v1.ListRoleResourceReply:
             type: object
             properties:
@@ -2225,6 +2287,17 @@ components:
                     items:
                         $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 获取角色资源
+        api.server.v1.ListUserReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int64
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/google.protobuf.Any'
+            description: 回应 - 列表用户
         api.server.v1.ListUserRoleMenuRouterTreeReply:
             type: object
             properties:

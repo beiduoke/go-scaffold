@@ -8,7 +8,6 @@ package v1
 
 import (
 	context "context"
-	protobuf "github.com/beiduoke/go-scaffold/api/protobuf"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -117,7 +116,7 @@ type ApiClient interface {
 	// 获取角色权限列表
 	ListUserRolePermission(ctx context.Context, in *ListUserRolePermissionReq, opts ...grpc.CallOption) (*ListUserRolePermissionReply, error)
 	// 列表用户
-	ListUser(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
+	ListUser(ctx context.Context, in *ListUserReq, opts ...grpc.CallOption) (*ListUserReply, error)
 	// 创建用户
 	CreateUser(ctx context.Context, in *CreateUserReq, opts ...grpc.CallOption) (*CreateUserReply, error)
 	// 获取用户
@@ -131,7 +130,7 @@ type ApiClient interface {
 	// 验证用户名是否存在
 	ExistUserName(ctx context.Context, in *ExistUserNameReq, opts ...grpc.CallOption) (*ExistUserNameReply, error)
 	// 列表领域
-	ListDomain(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
+	ListDomain(ctx context.Context, in *ListDomainReq, opts ...grpc.CallOption) (*ListDomainReply, error)
 	// 获取领域树形列表
 	ListDomainTree(ctx context.Context, in *ListDomainTreeReq, opts ...grpc.CallOption) (*ListDomainTreeReply, error)
 	// 创建领域
@@ -149,12 +148,12 @@ type ApiClient interface {
 	// 设置领域状态
 	UpdateDomainState(ctx context.Context, in *UpdateDomainStateReq, opts ...grpc.CallOption) (*UpdateDomainStateReply, error)
 	// 获取角色菜单
-	ListDomainMenu(ctx context.Context, in *ListDomainMenuReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
+	ListDomainMenu(ctx context.Context, in *ListDomainMenuReq, opts ...grpc.CallOption) (*ListDomainMenuReply, error)
 	// 处理角色菜单
 	HandleDomainMenu(ctx context.Context, in *HandleDomainMenuReq, opts ...grpc.CallOption) (*HandleDomainMenuReply, error)
 	// 角色模块
 	// 列表角色
-	ListRole(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
+	ListRole(ctx context.Context, in *ListRoleReq, opts ...grpc.CallOption) (*ListRoleReply, error)
 	// 创建角色
 	CreateRole(ctx context.Context, in *CreateRoleReq, opts ...grpc.CallOption) (*CreateRoleReply, error)
 	// 获取指定ID角色
@@ -181,9 +180,9 @@ type ApiClient interface {
 	HandleRoleResource(ctx context.Context, in *HandleRoleResourceReq, opts ...grpc.CallOption) (*HandleRoleResourceReply, error)
 	// 资源模块
 	// 列表资源
-	ListResource(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
+	ListResource(ctx context.Context, in *ListResourceReq, opts ...grpc.CallOption) (*ListResourceReply, error)
 	// 列表资源-分组
-	ListResourceGroup(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*ListResourceGroupReply, error)
+	ListResourceGroup(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListResourceGroupReply, error)
 	// 创建资源
 	CreateResource(ctx context.Context, in *CreateResourceReq, opts ...grpc.CallOption) (*CreateResourceReply, error)
 	// 获取资源
@@ -194,7 +193,7 @@ type ApiClient interface {
 	DeleteResource(ctx context.Context, in *DeleteResourceReq, opts ...grpc.CallOption) (*DeleteResourceReply, error)
 	// 菜单模块
 	// 列表菜单
-	ListMenu(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
+	ListMenu(ctx context.Context, in *ListMenuReq, opts ...grpc.CallOption) (*ListMenuReply, error)
 	// 创建菜单
 	CreateMenu(ctx context.Context, in *CreateMenuReq, opts ...grpc.CallOption) (*CreateMenuReply, error)
 	// 获取树形菜单
@@ -206,7 +205,7 @@ type ApiClient interface {
 	// 删除菜单
 	DeleteMenu(ctx context.Context, in *DeleteMenuReq, opts ...grpc.CallOption) (*DeleteMenuReply, error)
 	// 列表部门
-	ListDept(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
+	ListDept(ctx context.Context, in *ListDeptReq, opts ...grpc.CallOption) (*ListDeptReply, error)
 	// 创建部门
 	CreateDept(ctx context.Context, in *CreateDeptReq, opts ...grpc.CallOption) (*CreateDeptReply, error)
 	// 获取部门
@@ -218,7 +217,7 @@ type ApiClient interface {
 	// 获取全部部门树形
 	ListDeptTree(ctx context.Context, in *ListDeptTreeReq, opts ...grpc.CallOption) (*ListDeptTreeReply, error)
 	// 列表岗位
-	ListPost(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error)
+	ListPost(ctx context.Context, in *ListPostReq, opts ...grpc.CallOption) (*ListPostReply, error)
 	// 创建岗位
 	CreatePost(ctx context.Context, in *CreatePostReq, opts ...grpc.CallOption) (*CreatePostReply, error)
 	// 获取岗位
@@ -338,8 +337,8 @@ func (c *apiClient) ListUserRolePermission(ctx context.Context, in *ListUserRole
 	return out, nil
 }
 
-func (c *apiClient) ListUser(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
-	out := new(protobuf.PagingReply)
+func (c *apiClient) ListUser(ctx context.Context, in *ListUserReq, opts ...grpc.CallOption) (*ListUserReply, error) {
+	out := new(ListUserReply)
 	err := c.cc.Invoke(ctx, Api_ListUser_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -401,8 +400,8 @@ func (c *apiClient) ExistUserName(ctx context.Context, in *ExistUserNameReq, opt
 	return out, nil
 }
 
-func (c *apiClient) ListDomain(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
-	out := new(protobuf.PagingReply)
+func (c *apiClient) ListDomain(ctx context.Context, in *ListDomainReq, opts ...grpc.CallOption) (*ListDomainReply, error) {
+	out := new(ListDomainReply)
 	err := c.cc.Invoke(ctx, Api_ListDomain_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -482,8 +481,8 @@ func (c *apiClient) UpdateDomainState(ctx context.Context, in *UpdateDomainState
 	return out, nil
 }
 
-func (c *apiClient) ListDomainMenu(ctx context.Context, in *ListDomainMenuReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
-	out := new(protobuf.PagingReply)
+func (c *apiClient) ListDomainMenu(ctx context.Context, in *ListDomainMenuReq, opts ...grpc.CallOption) (*ListDomainMenuReply, error) {
+	out := new(ListDomainMenuReply)
 	err := c.cc.Invoke(ctx, Api_ListDomainMenu_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -500,8 +499,8 @@ func (c *apiClient) HandleDomainMenu(ctx context.Context, in *HandleDomainMenuRe
 	return out, nil
 }
 
-func (c *apiClient) ListRole(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
-	out := new(protobuf.PagingReply)
+func (c *apiClient) ListRole(ctx context.Context, in *ListRoleReq, opts ...grpc.CallOption) (*ListRoleReply, error) {
+	out := new(ListRoleReply)
 	err := c.cc.Invoke(ctx, Api_ListRole_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -617,8 +616,8 @@ func (c *apiClient) HandleRoleResource(ctx context.Context, in *HandleRoleResour
 	return out, nil
 }
 
-func (c *apiClient) ListResource(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
-	out := new(protobuf.PagingReply)
+func (c *apiClient) ListResource(ctx context.Context, in *ListResourceReq, opts ...grpc.CallOption) (*ListResourceReply, error) {
+	out := new(ListResourceReply)
 	err := c.cc.Invoke(ctx, Api_ListResource_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -626,7 +625,7 @@ func (c *apiClient) ListResource(ctx context.Context, in *protobuf.PagingReq, op
 	return out, nil
 }
 
-func (c *apiClient) ListResourceGroup(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*ListResourceGroupReply, error) {
+func (c *apiClient) ListResourceGroup(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListResourceGroupReply, error) {
 	out := new(ListResourceGroupReply)
 	err := c.cc.Invoke(ctx, Api_ListResourceGroup_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -671,8 +670,8 @@ func (c *apiClient) DeleteResource(ctx context.Context, in *DeleteResourceReq, o
 	return out, nil
 }
 
-func (c *apiClient) ListMenu(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
-	out := new(protobuf.PagingReply)
+func (c *apiClient) ListMenu(ctx context.Context, in *ListMenuReq, opts ...grpc.CallOption) (*ListMenuReply, error) {
+	out := new(ListMenuReply)
 	err := c.cc.Invoke(ctx, Api_ListMenu_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -725,8 +724,8 @@ func (c *apiClient) DeleteMenu(ctx context.Context, in *DeleteMenuReq, opts ...g
 	return out, nil
 }
 
-func (c *apiClient) ListDept(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
-	out := new(protobuf.PagingReply)
+func (c *apiClient) ListDept(ctx context.Context, in *ListDeptReq, opts ...grpc.CallOption) (*ListDeptReply, error) {
+	out := new(ListDeptReply)
 	err := c.cc.Invoke(ctx, Api_ListDept_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -779,8 +778,8 @@ func (c *apiClient) ListDeptTree(ctx context.Context, in *ListDeptTreeReq, opts 
 	return out, nil
 }
 
-func (c *apiClient) ListPost(ctx context.Context, in *protobuf.PagingReq, opts ...grpc.CallOption) (*protobuf.PagingReply, error) {
-	out := new(protobuf.PagingReply)
+func (c *apiClient) ListPost(ctx context.Context, in *ListPostReq, opts ...grpc.CallOption) (*ListPostReply, error) {
+	out := new(ListPostReply)
 	err := c.cc.Invoke(ctx, Api_ListPost_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -861,7 +860,7 @@ type ApiServer interface {
 	// 获取角色权限列表
 	ListUserRolePermission(context.Context, *ListUserRolePermissionReq) (*ListUserRolePermissionReply, error)
 	// 列表用户
-	ListUser(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	ListUser(context.Context, *ListUserReq) (*ListUserReply, error)
 	// 创建用户
 	CreateUser(context.Context, *CreateUserReq) (*CreateUserReply, error)
 	// 获取用户
@@ -875,7 +874,7 @@ type ApiServer interface {
 	// 验证用户名是否存在
 	ExistUserName(context.Context, *ExistUserNameReq) (*ExistUserNameReply, error)
 	// 列表领域
-	ListDomain(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	ListDomain(context.Context, *ListDomainReq) (*ListDomainReply, error)
 	// 获取领域树形列表
 	ListDomainTree(context.Context, *ListDomainTreeReq) (*ListDomainTreeReply, error)
 	// 创建领域
@@ -893,12 +892,12 @@ type ApiServer interface {
 	// 设置领域状态
 	UpdateDomainState(context.Context, *UpdateDomainStateReq) (*UpdateDomainStateReply, error)
 	// 获取角色菜单
-	ListDomainMenu(context.Context, *ListDomainMenuReq) (*protobuf.PagingReply, error)
+	ListDomainMenu(context.Context, *ListDomainMenuReq) (*ListDomainMenuReply, error)
 	// 处理角色菜单
 	HandleDomainMenu(context.Context, *HandleDomainMenuReq) (*HandleDomainMenuReply, error)
 	// 角色模块
 	// 列表角色
-	ListRole(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	ListRole(context.Context, *ListRoleReq) (*ListRoleReply, error)
 	// 创建角色
 	CreateRole(context.Context, *CreateRoleReq) (*CreateRoleReply, error)
 	// 获取指定ID角色
@@ -925,9 +924,9 @@ type ApiServer interface {
 	HandleRoleResource(context.Context, *HandleRoleResourceReq) (*HandleRoleResourceReply, error)
 	// 资源模块
 	// 列表资源
-	ListResource(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	ListResource(context.Context, *ListResourceReq) (*ListResourceReply, error)
 	// 列表资源-分组
-	ListResourceGroup(context.Context, *protobuf.PagingReq) (*ListResourceGroupReply, error)
+	ListResourceGroup(context.Context, *emptypb.Empty) (*ListResourceGroupReply, error)
 	// 创建资源
 	CreateResource(context.Context, *CreateResourceReq) (*CreateResourceReply, error)
 	// 获取资源
@@ -938,7 +937,7 @@ type ApiServer interface {
 	DeleteResource(context.Context, *DeleteResourceReq) (*DeleteResourceReply, error)
 	// 菜单模块
 	// 列表菜单
-	ListMenu(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	ListMenu(context.Context, *ListMenuReq) (*ListMenuReply, error)
 	// 创建菜单
 	CreateMenu(context.Context, *CreateMenuReq) (*CreateMenuReply, error)
 	// 获取树形菜单
@@ -950,7 +949,7 @@ type ApiServer interface {
 	// 删除菜单
 	DeleteMenu(context.Context, *DeleteMenuReq) (*DeleteMenuReply, error)
 	// 列表部门
-	ListDept(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	ListDept(context.Context, *ListDeptReq) (*ListDeptReply, error)
 	// 创建部门
 	CreateDept(context.Context, *CreateDeptReq) (*CreateDeptReply, error)
 	// 获取部门
@@ -962,7 +961,7 @@ type ApiServer interface {
 	// 获取全部部门树形
 	ListDeptTree(context.Context, *ListDeptTreeReq) (*ListDeptTreeReply, error)
 	// 列表岗位
-	ListPost(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error)
+	ListPost(context.Context, *ListPostReq) (*ListPostReply, error)
 	// 创建岗位
 	CreatePost(context.Context, *CreatePostReq) (*CreatePostReply, error)
 	// 获取岗位
@@ -1013,7 +1012,7 @@ func (UnimplementedApiServer) ListUserRoleMenuTree(context.Context, *ListUserRol
 func (UnimplementedApiServer) ListUserRolePermission(context.Context, *ListUserRolePermissionReq) (*ListUserRolePermissionReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUserRolePermission not implemented")
 }
-func (UnimplementedApiServer) ListUser(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
+func (UnimplementedApiServer) ListUser(context.Context, *ListUserReq) (*ListUserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUser not implemented")
 }
 func (UnimplementedApiServer) CreateUser(context.Context, *CreateUserReq) (*CreateUserReply, error) {
@@ -1034,7 +1033,7 @@ func (UnimplementedApiServer) HandleUserRole(context.Context, *HandleUserRoleReq
 func (UnimplementedApiServer) ExistUserName(context.Context, *ExistUserNameReq) (*ExistUserNameReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ExistUserName not implemented")
 }
-func (UnimplementedApiServer) ListDomain(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
+func (UnimplementedApiServer) ListDomain(context.Context, *ListDomainReq) (*ListDomainReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDomain not implemented")
 }
 func (UnimplementedApiServer) ListDomainTree(context.Context, *ListDomainTreeReq) (*ListDomainTreeReply, error) {
@@ -1061,13 +1060,13 @@ func (UnimplementedApiServer) DeleteDomain(context.Context, *DeleteDomainReq) (*
 func (UnimplementedApiServer) UpdateDomainState(context.Context, *UpdateDomainStateReq) (*UpdateDomainStateReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDomainState not implemented")
 }
-func (UnimplementedApiServer) ListDomainMenu(context.Context, *ListDomainMenuReq) (*protobuf.PagingReply, error) {
+func (UnimplementedApiServer) ListDomainMenu(context.Context, *ListDomainMenuReq) (*ListDomainMenuReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDomainMenu not implemented")
 }
 func (UnimplementedApiServer) HandleDomainMenu(context.Context, *HandleDomainMenuReq) (*HandleDomainMenuReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HandleDomainMenu not implemented")
 }
-func (UnimplementedApiServer) ListRole(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
+func (UnimplementedApiServer) ListRole(context.Context, *ListRoleReq) (*ListRoleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRole not implemented")
 }
 func (UnimplementedApiServer) CreateRole(context.Context, *CreateRoleReq) (*CreateRoleReply, error) {
@@ -1106,10 +1105,10 @@ func (UnimplementedApiServer) ListRoleResource(context.Context, *ListRoleResourc
 func (UnimplementedApiServer) HandleRoleResource(context.Context, *HandleRoleResourceReq) (*HandleRoleResourceReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HandleRoleResource not implemented")
 }
-func (UnimplementedApiServer) ListResource(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
+func (UnimplementedApiServer) ListResource(context.Context, *ListResourceReq) (*ListResourceReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListResource not implemented")
 }
-func (UnimplementedApiServer) ListResourceGroup(context.Context, *protobuf.PagingReq) (*ListResourceGroupReply, error) {
+func (UnimplementedApiServer) ListResourceGroup(context.Context, *emptypb.Empty) (*ListResourceGroupReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListResourceGroup not implemented")
 }
 func (UnimplementedApiServer) CreateResource(context.Context, *CreateResourceReq) (*CreateResourceReply, error) {
@@ -1124,7 +1123,7 @@ func (UnimplementedApiServer) UpdateResource(context.Context, *UpdateResourceReq
 func (UnimplementedApiServer) DeleteResource(context.Context, *DeleteResourceReq) (*DeleteResourceReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteResource not implemented")
 }
-func (UnimplementedApiServer) ListMenu(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
+func (UnimplementedApiServer) ListMenu(context.Context, *ListMenuReq) (*ListMenuReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMenu not implemented")
 }
 func (UnimplementedApiServer) CreateMenu(context.Context, *CreateMenuReq) (*CreateMenuReply, error) {
@@ -1142,7 +1141,7 @@ func (UnimplementedApiServer) UpdateMenu(context.Context, *UpdateMenuReq) (*Upda
 func (UnimplementedApiServer) DeleteMenu(context.Context, *DeleteMenuReq) (*DeleteMenuReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteMenu not implemented")
 }
-func (UnimplementedApiServer) ListDept(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
+func (UnimplementedApiServer) ListDept(context.Context, *ListDeptReq) (*ListDeptReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDept not implemented")
 }
 func (UnimplementedApiServer) CreateDept(context.Context, *CreateDeptReq) (*CreateDeptReply, error) {
@@ -1160,7 +1159,7 @@ func (UnimplementedApiServer) DeleteDept(context.Context, *DeleteDeptReq) (*Dele
 func (UnimplementedApiServer) ListDeptTree(context.Context, *ListDeptTreeReq) (*ListDeptTreeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDeptTree not implemented")
 }
-func (UnimplementedApiServer) ListPost(context.Context, *protobuf.PagingReq) (*protobuf.PagingReply, error) {
+func (UnimplementedApiServer) ListPost(context.Context, *ListPostReq) (*ListPostReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListPost not implemented")
 }
 func (UnimplementedApiServer) CreatePost(context.Context, *CreatePostReq) (*CreatePostReply, error) {
@@ -1390,7 +1389,7 @@ func _Api_ListUserRolePermission_Handler(srv interface{}, ctx context.Context, d
 }
 
 func _Api_ListUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(protobuf.PagingReq)
+	in := new(ListUserReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1402,7 +1401,7 @@ func _Api_ListUser_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: Api_ListUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).ListUser(ctx, req.(*protobuf.PagingReq))
+		return srv.(ApiServer).ListUser(ctx, req.(*ListUserReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1516,7 +1515,7 @@ func _Api_ExistUserName_Handler(srv interface{}, ctx context.Context, dec func(i
 }
 
 func _Api_ListDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(protobuf.PagingReq)
+	in := new(ListDomainReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1528,7 +1527,7 @@ func _Api_ListDomain_Handler(srv interface{}, ctx context.Context, dec func(inte
 		FullMethod: Api_ListDomain_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).ListDomain(ctx, req.(*protobuf.PagingReq))
+		return srv.(ApiServer).ListDomain(ctx, req.(*ListDomainReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1714,7 +1713,7 @@ func _Api_HandleDomainMenu_Handler(srv interface{}, ctx context.Context, dec fun
 }
 
 func _Api_ListRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(protobuf.PagingReq)
+	in := new(ListRoleReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1726,7 +1725,7 @@ func _Api_ListRole_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: Api_ListRole_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).ListRole(ctx, req.(*protobuf.PagingReq))
+		return srv.(ApiServer).ListRole(ctx, req.(*ListRoleReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1948,7 +1947,7 @@ func _Api_HandleRoleResource_Handler(srv interface{}, ctx context.Context, dec f
 }
 
 func _Api_ListResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(protobuf.PagingReq)
+	in := new(ListResourceReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1960,13 +1959,13 @@ func _Api_ListResource_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: Api_ListResource_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).ListResource(ctx, req.(*protobuf.PagingReq))
+		return srv.(ApiServer).ListResource(ctx, req.(*ListResourceReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Api_ListResourceGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(protobuf.PagingReq)
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1978,7 +1977,7 @@ func _Api_ListResourceGroup_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: Api_ListResourceGroup_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).ListResourceGroup(ctx, req.(*protobuf.PagingReq))
+		return srv.(ApiServer).ListResourceGroup(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2056,7 +2055,7 @@ func _Api_DeleteResource_Handler(srv interface{}, ctx context.Context, dec func(
 }
 
 func _Api_ListMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(protobuf.PagingReq)
+	in := new(ListMenuReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2068,7 +2067,7 @@ func _Api_ListMenu_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: Api_ListMenu_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).ListMenu(ctx, req.(*protobuf.PagingReq))
+		return srv.(ApiServer).ListMenu(ctx, req.(*ListMenuReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2164,7 +2163,7 @@ func _Api_DeleteMenu_Handler(srv interface{}, ctx context.Context, dec func(inte
 }
 
 func _Api_ListDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(protobuf.PagingReq)
+	in := new(ListDeptReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2176,7 +2175,7 @@ func _Api_ListDept_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: Api_ListDept_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).ListDept(ctx, req.(*protobuf.PagingReq))
+		return srv.(ApiServer).ListDept(ctx, req.(*ListDeptReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2272,7 +2271,7 @@ func _Api_ListDeptTree_Handler(srv interface{}, ctx context.Context, dec func(in
 }
 
 func _Api_ListPost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(protobuf.PagingReq)
+	in := new(ListPostReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2284,7 +2283,7 @@ func _Api_ListPost_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: Api_ListPost_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).ListPost(ctx, req.(*protobuf.PagingReq))
+		return srv.(ApiServer).ListPost(ctx, req.(*ListPostReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

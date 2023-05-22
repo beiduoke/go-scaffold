@@ -28,14 +28,14 @@ func TransformPost(data *biz.Post) *v1.Post {
 }
 
 // ListPost 列表-岗位
-func (s *ApiService) ListPost(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
-	results, total := s.postCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize()), pagination.WithQuery(pagination.QueryUnmarshal(in.GetQuery())), pagination.WithOrderBy(in.GetOrderBy())))
+func (s *ApiService) ListPost(ctx context.Context, in *v1.ListPostReq) (*v1.ListPostReply, error) {
+	results, total := s.postCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize())))
 	items := make([]*anypb.Any, 0, len(results))
 	for _, v := range results {
 		item, _ := anypb.New(TransformPost(v))
 		items = append(items, item)
 	}
-	return &protobuf.PagingReply{
+	return &v1.ListPostReply{
 		Total: total,
 		Items: items,
 	}, nil

@@ -277,7 +277,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/protobufPagingReply"
+              "$ref": "#/definitions/v1ListDeptReply"
             }
           },
           "default": {
@@ -288,6 +288,13 @@
           }
         },
         "parameters": [
+          {
+            "name": "nopaging",
+            "description": "是否不分页",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
           {
             "name": "page",
             "description": "当前页",
@@ -303,13 +310,6 @@
             "required": false,
             "type": "integer",
             "format": "int32"
-          },
-          {
-            "name": "nopaging",
-            "description": "是否不分页",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
           }
         ],
         "tags": [
@@ -488,7 +488,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/protobufPagingReply"
+              "$ref": "#/definitions/v1ListDomainReply"
             }
           },
           "default": {
@@ -499,6 +499,13 @@
           }
         },
         "parameters": [
+          {
+            "name": "nopaging",
+            "description": "是否不分页",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
           {
             "name": "page",
             "description": "当前页",
@@ -514,13 +521,6 @@
             "required": false,
             "type": "integer",
             "format": "int32"
-          },
-          {
-            "name": "nopaging",
-            "description": "是否不分页",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
           }
         ],
         "tags": [
@@ -730,7 +730,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/protobufPagingReply"
+              "$ref": "#/definitions/v1ListDomainMenuReply"
             }
           },
           "default": {
@@ -903,7 +903,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/protobufPagingReply"
+              "$ref": "#/definitions/v1ListMenuReply"
             }
           },
           "default": {
@@ -914,6 +914,13 @@
           }
         },
         "parameters": [
+          {
+            "name": "nopaging",
+            "description": "是否不分页",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
           {
             "name": "page",
             "description": "当前页",
@@ -929,13 +936,6 @@
             "required": false,
             "type": "integer",
             "format": "int32"
-          },
-          {
-            "name": "nopaging",
-            "description": "是否不分页",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
           }
         ],
         "tags": [
@@ -1114,7 +1114,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/protobufPagingReply"
+              "$ref": "#/definitions/v1ListPostReply"
             }
           },
           "default": {
@@ -1125,6 +1125,13 @@
           }
         },
         "parameters": [
+          {
+            "name": "nopaging",
+            "description": "是否不分页",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
           {
             "name": "page",
             "description": "当前页",
@@ -1140,13 +1147,6 @@
             "required": false,
             "type": "integer",
             "format": "int32"
-          },
-          {
-            "name": "nopaging",
-            "description": "是否不分页",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
           }
         ],
         "tags": [
@@ -1333,7 +1333,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/protobufPagingReply"
+              "$ref": "#/definitions/v1ListResourceReply"
             }
           },
           "default": {
@@ -1344,6 +1344,13 @@
           }
         },
         "parameters": [
+          {
+            "name": "nopaging",
+            "description": "是否不分页",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
           {
             "name": "page",
             "description": "当前页",
@@ -1359,13 +1366,6 @@
             "required": false,
             "type": "integer",
             "format": "int32"
-          },
-          {
-            "name": "nopaging",
-            "description": "是否不分页",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
           }
         ],
         "tags": [
@@ -1422,31 +1422,6 @@
             }
           }
         },
-        "parameters": [
-          {
-            "name": "page",
-            "description": "当前页",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "pageSize",
-            "description": "每一页的行数",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "nopaging",
-            "description": "是否不分页",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          }
-        ],
         "tags": [
           "Api"
         ]
@@ -1560,7 +1535,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/protobufPagingReply"
+              "$ref": "#/definitions/v1ListRoleReply"
             }
           },
           "default": {
@@ -1571,6 +1546,13 @@
           }
         },
         "parameters": [
+          {
+            "name": "nopaging",
+            "description": "是否不分页",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
           {
             "name": "page",
             "description": "当前页",
@@ -1586,13 +1568,6 @@
             "required": false,
             "type": "integer",
             "format": "int32"
-          },
-          {
-            "name": "nopaging",
-            "description": "是否不分页",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
           }
         ],
         "tags": [
@@ -2021,7 +1996,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/protobufPagingReply"
+              "$ref": "#/definitions/v1ListUserReply"
             }
           },
           "default": {
@@ -2032,6 +2007,13 @@
           }
         },
         "parameters": [
+          {
+            "name": "nopaging",
+            "description": "是否不分页",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
           {
             "name": "page",
             "description": "当前页",
@@ -2049,11 +2031,23 @@
             "format": "int32"
           },
           {
-            "name": "nopaging",
-            "description": "是否不分页",
+            "name": "deptId",
             "in": "query",
             "required": false,
-            "type": "boolean"
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "nickName",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -2729,22 +2723,6 @@
       ],
       "default": "MENU_TYPE_UNSPECIFIED",
       "title": "菜单类型"
-    },
-    "protobufPagingReply": {
-      "type": "object",
-      "properties": {
-        "total": {
-          "type": "string",
-          "format": "int64"
-        },
-        "items": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/protobufAny"
-          }
-        }
-      },
-      "title": "分页通用结果"
     },
     "protobufPostState": {
       "type": "string",
@@ -3811,6 +3789,22 @@
         }
       }
     },
+    "v1ListDeptReply": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "string",
+          "format": "int64"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      },
+      "title": "回应 - 列表部门"
+    },
     "v1ListDeptTreeReply": {
       "type": "object",
       "properties": {
@@ -3827,6 +3821,38 @@
       },
       "title": "回应 - 获取树形部门"
     },
+    "v1ListDomainMenuReply": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        },
+        "total": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "title": "回应 - 获取领域菜单"
+    },
+    "v1ListDomainReply": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "string",
+          "format": "int64"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      },
+      "title": "回应 - 列表领域"
+    },
     "v1ListDomainTreeReply": {
       "type": "object",
       "properties": {
@@ -3840,7 +3866,24 @@
           "type": "string",
           "format": "int64"
         }
-      }
+      },
+      "title": "回应 - 列表领域"
+    },
+    "v1ListMenuReply": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "string",
+          "format": "int64"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      },
+      "title": "回应 - 列表菜单"
     },
     "v1ListMenuTreeReply": {
       "type": "object",
@@ -3858,6 +3901,22 @@
       },
       "title": "回应 - 获取树形菜单"
     },
+    "v1ListPostReply": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "string",
+          "format": "int64"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      },
+      "title": "回应 - 列表部门"
+    },
     "v1ListResourceGroupReply": {
       "type": "object",
       "properties": {
@@ -3873,6 +3932,22 @@
         }
       },
       "title": "回应 - 创建资源"
+    },
+    "v1ListResourceReply": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "string",
+          "format": "int64"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      },
+      "title": "回应 - 列表部门"
     },
     "v1ListRoleDeptReply": {
       "type": "object",
@@ -3906,6 +3981,22 @@
       },
       "title": "回应 - 获取角色菜单"
     },
+    "v1ListRoleReply": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "string",
+          "format": "int64"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      },
+      "title": "回应 - 列表角色"
+    },
     "v1ListRoleResourceReply": {
       "type": "object",
       "properties": {
@@ -3921,6 +4012,22 @@
         }
       },
       "title": "回应 - 获取角色资源"
+    },
+    "v1ListUserReply": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "string",
+          "format": "int64"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      },
+      "title": "回应 - 列表用户"
     },
     "v1ListUserRoleMenuRouterTreeReply": {
       "type": "object",

@@ -54,9 +54,9 @@ func (s *ApiService) ListDomainTree(ctx context.Context, in *v1.ListDomainTreeRe
 }
 
 // ListDomain 列表-领域
-func (s *ApiService) ListDomain(ctx context.Context, in *protobuf.PagingReq) (*protobuf.PagingReply, error) {
-	results, total := s.domainCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize()), pagination.WithQuery(pagination.QueryUnmarshal(in.GetQuery())), pagination.WithOrderBy(in.GetOrderBy())))
-	return &protobuf.PagingReply{
+func (s *ApiService) ListDomain(ctx context.Context, in *v1.ListDomainReq) (*v1.ListDomainReply, error) {
+	results, total := s.domainCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize())))
+	return &v1.ListDomainReply{
 		Total: total,
 		Items: proto.ToAny(results, func(t *biz.Domain) protoreflect.ProtoMessage {
 			return TransformDomain(t)
@@ -165,12 +165,13 @@ func (s *ApiService) DeleteDomain(ctx context.Context, in *v1.DeleteDomainReq) (
 }
 
 // ListDomainMenu 获取领域菜单
-func (s *ApiService) ListDomainMenu(ctx context.Context, in *v1.ListDomainMenuReq) (*protobuf.PagingReply, error) {
+func (s *ApiService) ListDomainMenu(ctx context.Context, in *v1.ListDomainMenuReq) (*v1.ListDomainMenuReply, error) {
 	id := in.GetId()
 	menus, _ := s.domainCase.ListMenuByID(ctx, &biz.Domain{ID: uint(id)})
-	return &protobuf.PagingReply{Items: proto.ToAny(menus, func(t *biz.Menu) protoreflect.ProtoMessage {
+	total := int64(len(menus))
+	return &v1.ListDomainMenuReply{Items: proto.ToAny(menus, func(t *biz.Menu) protoreflect.ProtoMessage {
 		return TransformMenu(t)
-	}), Total: int64(len(menus))}, nil
+	}), Total: &total}, nil
 }
 
 // HandleDomainMenu 处理领域菜单

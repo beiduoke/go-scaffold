@@ -8,7 +8,7 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
 import "validate/validate.proto";
 import "protobuf/enum.proto";
-import "protobuf/struct.proto";
+// import "protobuf/struct.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "github.com/beiduoke/go-scaffold/api/v1;v1";
@@ -173,7 +173,7 @@ service Api {
   }
 
   // 列表用户
-  rpc ListUser (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+  rpc ListUser (ListUserReq) returns (ListUserReply) {
     option (google.api.http) = {
       get: "/v1/users"
     };
@@ -226,7 +226,7 @@ service Api {
   }
 
   // 列表领域
-  rpc ListDomain (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+  rpc ListDomain (ListDomainReq) returns (ListDomainReply) {
     option (google.api.http) = {
       get: "/v1/domains"
     };
@@ -295,7 +295,7 @@ service Api {
   }
   
   // 获取角色菜单
-  rpc ListDomainMenu (ListDomainMenuReq) returns (api.protobuf.PagingReply) {
+  rpc ListDomainMenu (ListDomainMenuReq) returns (ListDomainMenuReply) {
     option (google.api.http) = {
       get: "/v1/domains/{id}/menus"
     };
@@ -311,7 +311,7 @@ service Api {
 
   // 角色模块
   // 列表角色
-  rpc ListRole (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+  rpc ListRole (ListRoleReq) returns (ListRoleReply) {
     option (google.api.http) = {
       get: "/v1/roles"
     };
@@ -408,14 +408,14 @@ service Api {
 
   // 资源模块
   // 列表资源
-  rpc ListResource (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+  rpc ListResource (ListResourceReq) returns (ListResourceReply) {
     option (google.api.http) = {
       get: "/v1/resources"
     };
   }
 
   // 列表资源-分组
-  rpc ListResourceGroup (api.protobuf.PagingReq) returns (ListResourceGroupReply) {
+  rpc ListResourceGroup (google.protobuf.Empty) returns (ListResourceGroupReply) {
     option (google.api.http) = {
       get: "/v1/resources/groups"
     };
@@ -453,7 +453,7 @@ service Api {
 
   // 菜单模块
   // 列表菜单
-  rpc ListMenu (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+  rpc ListMenu (ListMenuReq) returns (ListMenuReply) {
     option (google.api.http) = {
       get: "/v1/menus"
     };
@@ -497,7 +497,7 @@ service Api {
   }
 
   // 列表部门
-  rpc ListDept (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+  rpc ListDept (ListDeptReq) returns (ListDeptReply) {
     option (google.api.http) = {
       get: "/v1/depts"
     };
@@ -541,7 +541,7 @@ service Api {
   }
 
   // 列表岗位
-  rpc ListPost (api.protobuf.PagingReq) returns (api.protobuf.PagingReply) {
+  rpc ListPost (ListPostReq) returns (ListPostReply) {
     option (google.api.http) = {
       get: "/v1/posts"
     };
@@ -708,10 +708,23 @@ message ListUserRoleReply {
   optional int64 total = 2;
 }
 
-// 回应 - 列表用户 - 未使用
+// 请求 - 列表用户
+message ListUserReq {
+  // 是否不分页
+  optional bool nopaging = 1;
+  // 当前页
+  optional int32 page = 2;
+  // 每一页的行数
+  optional int32 page_size = 3;
+  optional int32 dept_id = 4;
+  optional string name = 5;
+  optional string nick_name = 6;
+}
+
+// 回应 - 列表用户
 message ListUserReply {
-  repeated User items = 1;
-  optional int64 total = 2;
+  int64 total = 1;
+  repeated google.protobuf.Any items = 2;
 }
 
 // 请求 - 获取用户角色菜单树形
@@ -958,9 +971,28 @@ message Domain {
   repeated Domain children = 15;
 }
 
+// 请求 - 列表领域
+message ListDomainReq {
+  // 是否不分页
+  optional bool nopaging = 1;
+  // 当前页
+  optional int32 page = 2;
+  // 每一页的行数
+  optional int32 page_size = 3;
+}
+
+// 回应 - 列表领域
+message ListDomainReply {
+  int64 total = 1;
+  repeated google.protobuf.Any items = 2;
+}
+
+// 请求 - 列表领域
 message ListDomainTreeReq {
   uint64 id = 1;
 }
+
+// 回应 - 列表领域
 message ListDomainTreeReply {
   repeated Domain items = 1;
   optional int64 total = 2;
@@ -1107,6 +1139,22 @@ message Role {
   api.protobuf.RoleState state = 11;
   string remarks = 12;
   repeated uint64 menus = 13;
+}
+
+// 请求 - 列表角色
+message ListRoleReq {
+  // 是否不分页
+  optional bool nopaging = 1;
+  // 当前页
+  optional int32 page = 2;
+  // 每一页的行数
+  optional int32 page_size = 3;
+}
+
+// 回应 - 列表角色
+message ListRoleReply {
+  int64 total = 1;
+  repeated google.protobuf.Any items = 2;
 }
 
 // 请求 - 创建角色
@@ -1310,6 +1358,23 @@ message Resource {
   string operation = 9;
 }
 
+// 请求 - 列表部门
+message ListResourceReq {
+  // 是否不分页
+  optional bool nopaging = 1;
+  // 当前页
+  optional int32 page = 2;
+  // 每一页的行数
+  optional int32 page_size = 3;
+}
+
+// 回应 - 列表部门
+message ListResourceReply {
+  int64 total = 1;
+  repeated google.protobuf.Any items = 2;
+}
+
+
 // 回应 - 创建资源
 message ListResourceGroupReply {
   repeated string items = 1;
@@ -1407,6 +1472,22 @@ message MenuParameter {
   api.protobuf.MenuParameterType type = 1;
   string name = 2;
   string value = 3;
+}
+
+// 请求 - 列表菜单
+message ListMenuReq {
+  // 是否不分页
+  optional bool nopaging = 1;
+  // 当前页
+  optional int32 page = 2;
+  // 每一页的行数
+  optional int32 page_size = 3;
+}
+
+// 回应 - 列表菜单
+message ListMenuReply {
+  int64 total = 1;
+  repeated google.protobuf.Any items = 2;
 }
 
 // 请求 - 创建菜单
@@ -1519,6 +1600,22 @@ message Dept {
   repeated Dept children = 9;
 }
 
+// 请求 - 列表部门
+message ListDeptReq {
+  // 是否不分页
+  optional bool nopaging = 1;
+  // 当前页
+  optional int32 page = 2;
+  // 每一页的行数
+  optional int32 page_size = 3;
+}
+
+// 回应 - 列表部门
+message ListDeptReply {
+  int64 total = 1;
+  repeated google.protobuf.Any items = 2;
+}
+
 // 请求 - 创建部门
 message CreateDeptReq {
   string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
@@ -1596,6 +1693,22 @@ message Post {
   int32 sort = 6;
   string remarks = 7;
   api.protobuf.PostState state = 8;
+}
+
+// 请求 - 列表部门
+message ListPostReq {
+  // 是否不分页
+  optional bool nopaging = 1;
+  // 当前页
+  optional int32 page = 2;
+  // 每一页的行数
+  optional int32 page_size = 3;
+}
+
+// 回应 - 列表部门
+message ListPostReply {
+  int64 total = 1;
+  repeated google.protobuf.Any items = 2;
 }
 
 // 请求 - 创建岗位

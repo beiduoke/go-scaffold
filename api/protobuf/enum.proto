@@ -29,17 +29,12 @@ enum Enabled {
   ENABLED_NO = 2;
 }
 
-// 处理类型
+// 处理类型-（弃用）
 enum HandleType {
-  option allow_alias = true;
   HANDLE_TYPE_UNSPECIFIED = 0;
   HANDLE_TYPE_SUCCESS = 1;
   HANDLE_TYPE_ERROR = 2;
   HANDLE_TYPE_WARNING = 3;
-  // 特殊处理前端现实状态
-  success = 1;
-  error = 2;
-  warning = 3;
 }
 
 // 用户性别
