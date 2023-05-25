@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"sort"
 	"time"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
@@ -395,7 +396,12 @@ func (r *UserRepo) Roles(ctx context.Context) ([]*biz.Role, error) {
 	return r.ListRoles(ctx, &biz.User{ID: r.data.UserID(ctx), DomainID: r.data.DomainID(ctx)})
 }
 
-func (r *UserRepo) RoleMenus(ctx context.Context) ([]*biz.Menu, error) {
+func (r *UserRepo) RoleMenus(ctx context.Context) (menus []*biz.Menu, err error) {
+	defer func() {
+		sort.SliceStable(menus, func(i, j int) bool {
+			return int32(menus[i].Sort) < int32(menus[j].Sort)
+		})
+	}()
 	if r.data.HasSuperAdmin(ctx) {
 		return r.menu.ListAll(ctx)
 	} else if r.data.HasDomainSuperUser(ctx) {

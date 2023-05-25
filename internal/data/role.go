@@ -3,7 +3,6 @@ package data
 import (
 	"context"
 	"encoding/json"
-	"sort"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
@@ -245,9 +244,6 @@ func (r *RoleRepo) ListMenuByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu,
 			}
 		}
 	}
-	sort.SliceStable(bizMenus, func(i, j int) bool {
-		return int32(bizMenus[i].ID) < int32(bizMenus[j].ID)
-	})
 	return bizMenus, err
 }
 

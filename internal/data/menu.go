@@ -2,7 +2,6 @@ package data
 
 import (
 	"context"
-	"sort"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
@@ -249,9 +248,5 @@ func menuRecursiveParent(menus []*biz.Menu, ids ...uint) []*biz.Menu {
 			}
 		}
 	}
-	// 根据序号进行排序
-	sort.SliceStable(result, func(i, j int) bool {
-		return result[i].Sort < result[j].Sort
-	})
 	return result
 }
