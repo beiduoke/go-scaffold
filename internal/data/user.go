@@ -28,19 +28,20 @@ type UserRepo struct {
 	menu          MenuRepo
 	domain        DomainRepo
 	role          RoleRepo
+	dept          DeptRepo
 	authenticator auth.Authenticator
 }
 
 // NewUserRepo .
-func NewUserRepo(logger log.Logger, data *Data, ac *conf.Auth, authenticator auth.Authenticator, menu biz.MenuRepo) biz.UserRepo {
-	menuRepo := *(menu.(*MenuRepo))
+func NewUserRepo(logger log.Logger, data *Data, ac *conf.Auth, authenticator auth.Authenticator, role biz.RoleRepo, domain biz.DomainRepo, menu biz.MenuRepo, dept biz.DeptRepo) biz.UserRepo {
 	return &UserRepo{
 		ac:            ac,
 		data:          data,
 		log:           log.NewHelper(logger),
-		role:          RoleRepo{log: log.NewHelper(logger), data: data, menu: menu},
-		domain:        DomainRepo{log: log.NewHelper(logger), data: data, menu: menu},
-		menu:          menuRepo,
+		role:          *(role.(*RoleRepo)),
+		domain:        *(domain.(*DomainRepo)),
+		menu:          *(menu.(*MenuRepo)),
+		dept:          *(dept.(*DeptRepo)),
 		authenticator: authenticator,
 	}
 }
@@ -131,7 +132,7 @@ func (r *UserRepo) Delete(ctx context.Context, g *biz.User) error {
 }
 
 func (r *UserRepo) ListPage(ctx context.Context, paging *pagination.Pagination) (users []*biz.User, total int64) {
-	db := r.data.DBD(ctx).Model(&SysUser{})
+	db := r.data.DBD(ctx).Model(&SysUser{}).Debug()
 	sysUsers := []*SysUser{}
 
 	// 查询条件
@@ -143,7 +144,12 @@ func (r *UserRepo) ListPage(ctx context.Context, paging *pagination.Pagination) 
 		}
 
 		if deptId, ok := paging.Query["deptId"].(int32); ok && deptId > 0 {
-			db = db.Where("dept_id", deptId)
+			deptIds := []uint{uint(deptId)}
+			depts, _ := r.dept.ListAll(ctx)
+			for _, v := range r.dept.LinkedChildren(depts, uint(deptId)) {
+				deptIds = append(deptIds, v.ID)
+			}
+			db = db.Where("dept_id", deptIds)
 		}
 	}
 

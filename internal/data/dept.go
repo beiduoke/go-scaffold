@@ -58,17 +58,31 @@ func (r *DeptRepo) toBiz(d *SysDept) *biz.Dept {
 	}
 }
 
+// 连接子集
+func (r *DeptRepo) LinkedChildren(list []*biz.Dept, pid uint) (depts []*biz.Dept) {
+	if pid == 0 {
+		return append(depts, &biz.Dept{})
+	}
+	for _, v := range list {
+		if v.ParentID == pid {
+			depts = append(depts, append(r.LinkedChildren(list, v.ID), v)...)
+			continue
+		}
+	}
+	return depts
+}
+
+// 连接父级
 func (r *DeptRepo) LinkedAncestors(list []*biz.Dept, pid uint) (depts []*biz.Dept) {
 	if pid == 0 {
 		return append(depts, &biz.Dept{})
 	}
 	for _, v := range list {
 		if v.ID == pid {
-			depts = append(depts, append(r.LinkedAncestors(list, v.ParentID), v)...)
-			break
+			return append(depts, append(r.LinkedAncestors(list, v.ParentID), v)...)
 		}
 	}
-	return
+	return nil
 }
 
 func (r *DeptRepo) FilterAncestors(ctx context.Context, g *biz.Dept) string {
@@ -155,7 +169,7 @@ func (r *DeptRepo) ListAll(ctx context.Context) ([]*biz.Dept, error) {
 }
 
 func (r *DeptRepo) ListPage(ctx context.Context, paging *pagination.Pagination) (depts []*biz.Dept, total int64) {
-	db := r.data.DBD(ctx).Model(&SysDept{}).Debug()
+	db := r.data.DBD(ctx).Model(&SysDept{})
 	sysDepts := []*SysDept{}
 	// 查询条件
 	if paging.Query != nil {
