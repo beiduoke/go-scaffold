@@ -164,7 +164,7 @@ func (s *ApiService) ListRoleMenu(ctx context.Context, in *v1.ListRoleMenuReq) (
 // HandleRoleMenu 处理指定ID角色菜单
 func (s *ApiService) HandleRoleMenu(ctx context.Context, in *v1.HandleRoleMenuReq) (*v1.HandleRoleMenuReply, error) {
 	data := in.GetData()
-	menus := make([]*biz.Menu, len(data.GetMenus()))
+	menus := make([]*biz.Menu, 0, len(data.GetMenus()))
 	for _, v := range data.GetMenus() {
 		// 暂不使用扩展菜单权限按钮以及参数配置
 		// parameters, buttons := make([]*biz.MenuParameter, 0, len(v.GetMenuParameterIds())), make([]*biz.MenuButton, 0, len(v.GetMenuButtonIds()))
@@ -244,14 +244,14 @@ func (s *ApiService) GetRoleDataScope(ctx context.Context, in *v1.GetRoleDataSco
 
 // HandleRoleDataScope 处理角色数据
 func (s *ApiService) HandleRoleDataScope(ctx context.Context, in *v1.HandleRoleDataScopeReq) (*v1.HandleRoleDataScopeReply, error) {
-	inDeptCustoms := in.GetData().GetDeptCustoms()
-	deptIds := make([]uint, 0, len(inDeptCustoms))
-	for _, v := range inDeptCustoms {
-		deptIds = append(deptIds, uint(v))
-	}
-	depts, err := s.deptCase.ListByIDs(ctx, deptIds...)
-	if err != nil {
-		return nil, v1.ErrorRoleHandleDeptFail("角色资源查询失败")
+	var depts []*biz.Dept
+	if in.Data.GetScope() == protobuf.RoleDataScope_ROLE_DATA_SCOPE_DEPT_CUSTOM {
+		inDeptCustoms := in.GetData().GetDeptCustoms()
+		deptIds := make([]uint, 0, len(inDeptCustoms))
+		for _, v := range inDeptCustoms {
+			deptIds = append(deptIds, uint(v))
+		}
+		depts, _ = s.deptCase.ListByIDs(ctx, deptIds...)
 	}
 	if err := s.roleCase.HandleDataScope(ctx, &biz.Role{ID: uint(in.GetId()), DataScope: int32(in.Data.GetScope()), Depts: depts}); err != nil {
 		return nil, v1.ErrorRoleHandleDeptFail("角色资源处理失败：%v", err)

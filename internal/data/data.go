@@ -52,8 +52,8 @@ var ProviderSet = wire.NewSet(
 // NewModelMigrate 数据模型迁移
 func NewModelMigrate() []interface{} {
 	migrates := NewSysModelMigrate()
-	// migrates = append(migrates, NewWebModelMigrate()...)
-	return migrates
+	// migrates = append(migrates, NewBusModelMigrate()...)
+	return append(migrates, NewBusModelMigrate()...)
 }
 
 // NewSnowflake 生成雪花算法id

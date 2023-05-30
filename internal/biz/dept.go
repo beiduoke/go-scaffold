@@ -54,7 +54,7 @@ func (uc *DeptUsecase) Create(ctx context.Context, g *Dept) (*Dept, error) {
 
 // ListByIDs 获取指定部门ID集合
 func (uc *DeptUsecase) ListByIDs(ctx context.Context, id ...uint) (roles []*Dept, err error) {
-	// roles, _ = uc.repo.ListPage(ctx, &pagination.Pagination{Nopaging: true, Query: map[string]string{"id": true}})
+	roles, _ = uc.repo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithQuery(map[string]interface{}{"ids": id}), pagination.WithOrderBy(map[string]bool{"id": true, "sort": true})))
 	return
 }
 

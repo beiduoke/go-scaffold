@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	pb "github.com/beiduoke/go-scaffold/api/protobuf"
@@ -191,7 +192,9 @@ func (uc *RoleUsecase) GetDataScopeByID(ctx context.Context, g *Role) (*Role, er
 	if err != nil {
 		return nil, err
 	}
-	role.Depts, _ = uc.biz.roleRepo.ListDeptByIDs(ctx, role.ID)
+	if role.DataScope == int32(pb.RoleDataScope_ROLE_DATA_SCOPE_DEPT_CUSTOM) {
+		role.Depts, _ = uc.biz.roleRepo.ListDeptByIDs(ctx, role.ID)
+	}
 	return role, err
 }
 
@@ -202,13 +205,17 @@ func (uc *RoleUsecase) HandleDataScope(ctx context.Context, g *Role) error {
 	if err != nil {
 		return err
 	}
-
+	role.DataScope = g.DataScope
 	_, err = uc.biz.roleRepo.Update(ctx, role)
 	if err != nil {
 		return err
 	}
 
-	if len(g.Depts) > 0 {
+	for _, v := range g.Depts {
+		fmt.Println(v.ID, "这里是部门ID")
+	}
+
+	if g.DataScope == int32(pb.RoleDataScope_ROLE_DATA_SCOPE_DEPT_CUSTOM) && len(g.Depts) > 0 {
 		return uc.biz.roleRepo.HandleDept(ctx, g)
 	}
 	return err

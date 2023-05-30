@@ -176,6 +176,9 @@ func (r *DeptRepo) ListPage(ctx context.Context, paging *pagination.Pagination) 
 		if name, ok := paging.Query["name"].(string); ok {
 			db = db.Where("name LIKE ?", name+"%")
 		}
+		if ids, ok := paging.Query["ids"]; ok {
+			db = db.Where("id", ids)
+		}
 	}
 
 	// 排序
