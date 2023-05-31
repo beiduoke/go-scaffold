@@ -8,8 +8,8 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/pkg/constant"
 	"github.com/beiduoke/go-scaffold/internal/pkg/proto"
+	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
-	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -23,15 +23,15 @@ func TransformDomain(data *biz.Domain) *v1.Domain {
 		Id:          uint64(data.ID),
 		Name:        data.Name,
 		ParentId:    uint64(data.ParentID),
-		Code:        data.Code,
-		Sort:        int32(data.Sort),
-		Title:       data.Title,
-		Logo:        data.Logo,
-		Pic:         data.Pic,
-		Keywords:    data.Keywords,
-		Description: data.Description,
-		State:       protobuf.DomainState(data.State),
-		Remarks:     data.Remarks,
+		Code:        &data.Code,
+		Sort:        &data.Sort,
+		Alias:       &data.Alias,
+		Logo:        &data.Logo,
+		Pic:         &data.Pic,
+		Keywords:    &data.Keywords,
+		Description: &data.Description,
+		State:       (*protobuf.DomainState)(&data.State),
+		Remarks:     &data.Remarks,
 		Children:    make([]*v1.Domain, 0),
 	}
 }
@@ -58,7 +58,7 @@ func (s *ApiService) ListDomain(ctx context.Context, in *v1.ListDomainReq) (*v1.
 	results, total := s.domainCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize())))
 	return &v1.ListDomainReply{
 		Total: total,
-		Items: proto.ToAny(results, func(t *biz.Domain) protoreflect.ProtoMessage {
+		Items: convert.ArrayToAny(results, func(t *biz.Domain) *v1.Domain {
 			return TransformDomain(t)
 		}),
 	}, nil
@@ -69,7 +69,7 @@ func (s *ApiService) CreateDomain(ctx context.Context, in *v1.CreateDomainReq) (
 	user, err := s.domainCase.Create(ctx, &biz.Domain{
 		ParentID:    uint(in.GetParentId()),
 		Name:        in.GetName(),
-		Title:       in.GetTitle(),
+		Alias:       in.GetAlias(),
 		Keywords:    in.GetKeywords(),
 		Logo:        in.GetLogo(),
 		Pic:         in.GetPic(),
@@ -169,7 +169,7 @@ func (s *ApiService) ListDomainMenu(ctx context.Context, in *v1.ListDomainMenuRe
 	id := in.GetId()
 	menus, _ := s.domainCase.ListMenuByID(ctx, &biz.Domain{ID: uint(id)})
 	total := int64(len(menus))
-	return &v1.ListDomainMenuReply{Items: proto.ToAny(menus, func(t *biz.Menu) protoreflect.ProtoMessage {
+	return &v1.ListDomainMenuReply{Items: convert.ArrayToAny(menus, func(t *biz.Menu) *v1.Menu {
 		return TransformMenu(t)
 	}), Total: &total}, nil
 }

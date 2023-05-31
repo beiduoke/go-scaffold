@@ -2,7 +2,6 @@ package biz
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	pb "github.com/beiduoke/go-scaffold/api/protobuf"
@@ -210,11 +209,6 @@ func (uc *RoleUsecase) HandleDataScope(ctx context.Context, g *Role) error {
 	if err != nil {
 		return err
 	}
-
-	for _, v := range g.Depts {
-		fmt.Println(v.ID, "这里是部门ID")
-	}
-
 	if g.DataScope == int32(pb.RoleDataScope_ROLE_DATA_SCOPE_DEPT_CUSTOM) && len(g.Depts) > 0 {
 		return uc.biz.roleRepo.HandleDept(ctx, g)
 	}

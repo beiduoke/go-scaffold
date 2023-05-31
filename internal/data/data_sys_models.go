@@ -66,7 +66,7 @@ type SysDomain struct {
 	SuperUserID uint       `gorm:"type:bigint(20);column:super_user_id;not null;default:0;comment:超级用户ID"`
 	Name        string     `gorm:"type:varchar(255);column:name;not null;comment:领域名称;"`
 	Code        string     `gorm:"type:varchar(100);column:code;not null;index;comment:领域编码;"`
-	Title       string     `gorm:"type:varchar(255);column:title;not null;default:'';comment:领域标题;"`
+	Alias       string     `gorm:"type:varchar(255);column:alias;not null;default:'';comment:领域别名;"`
 	Keywords    string     `gorm:"type:varchar(255);column:keywords;not null;default:'';comment:领域关键字;"`
 	Logo        string     `gorm:"type:varchar(255);column:logo;not null;default:'';comment:领域LOGO;"`
 	Pic         string     `gorm:"type:varchar(255);column:pic;not null;default:'';comment:领域主图;"`

@@ -7,9 +7,8 @@ import (
 	v1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/pkg/constant"
-	"github.com/beiduoke/go-scaffold/internal/pkg/proto"
+	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
-	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -27,10 +26,10 @@ func TransformRole(data *biz.Role) *v1.Role {
 		Id:            uint64(data.ID),
 		Name:          data.Name,
 		ParentId:      uint64(data.ParentID),
-		DefaultRouter: data.DefaultRouter,
-		Sort:          data.Sort,
-		State:         protobuf.RoleState(data.State),
-		Remarks:       data.Remarks,
+		DefaultRouter: &data.DefaultRouter,
+		Sort:          &data.Sort,
+		State:         (*protobuf.RoleState)(&data.State),
+		Remarks:       &data.Remarks,
 		Menus:         menus,
 	}
 }
@@ -38,14 +37,11 @@ func TransformRole(data *biz.Role) *v1.Role {
 // ListRole 列表-角色
 func (s *ApiService) ListRole(ctx context.Context, in *v1.ListRoleReq) (*v1.ListRoleReply, error) {
 	results, total := s.roleCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize())))
-	items := make([]*anypb.Any, 0, len(results))
-	for _, v := range results {
-		item, _ := anypb.New(TransformRole(v))
-		items = append(items, item)
-	}
 	return &v1.ListRoleReply{
 		Total: total,
-		Items: items,
+		Items: convert.ArrayToAny(results, func(v *biz.Role) *v1.Role {
+			return TransformRole(v)
+		}),
 	}, nil
 }
 
@@ -156,7 +152,7 @@ func (s *ApiService) DeleteRole(ctx context.Context, in *v1.DeleteRoleReq) (*v1.
 func (s *ApiService) ListRoleMenu(ctx context.Context, in *v1.ListRoleMenuReq) (*v1.ListRoleMenuReply, error) {
 	id := in.GetId()
 	menus, _ := s.roleCase.ListMenuByID(ctx, &biz.Role{ID: uint(id)})
-	return &v1.ListRoleMenuReply{Items: proto.ToAny(menus, func(t *biz.Menu) protoreflect.ProtoMessage {
+	return &v1.ListRoleMenuReply{Items: convert.ArrayToAny(menus, func(t *biz.Menu) *v1.Menu {
 		return TransformMenu(t)
 	})}, nil
 }
@@ -193,7 +189,7 @@ func (s *ApiService) HandleRoleMenu(ctx context.Context, in *v1.HandleRoleMenuRe
 func (s *ApiService) ListRoleResource(ctx context.Context, in *v1.ListRoleResourceReq) (*v1.ListRoleResourceReply, error) {
 	id := in.GetId()
 	resources, _ := s.roleCase.ListResourceByID(ctx, &biz.Role{ID: uint(id)})
-	return &v1.ListRoleResourceReply{Items: proto.ToAny(resources, func(t *biz.Resource) protoreflect.ProtoMessage {
+	return &v1.ListRoleResourceReply{Items: convert.ArrayToAny(resources, func(t *biz.Resource) *v1.Resource {
 		return TransformResource(t)
 	})}, nil
 }
@@ -222,7 +218,7 @@ func (s *ApiService) HandleRoleResource(ctx context.Context, in *v1.HandleRoleRe
 func (s *ApiService) ListRoleDept(ctx context.Context, in *v1.ListRoleDeptReq) (*v1.ListRoleDeptReply, error) {
 	id := in.GetId()
 	menus, _ := s.roleCase.ListDeptByID(ctx, &biz.Role{ID: uint(id)})
-	return &v1.ListRoleDeptReply{Items: proto.ToAny(menus, func(t *biz.Dept) protoreflect.ProtoMessage {
+	return &v1.ListRoleDeptReply{Items: convert.ArrayToAny(menus, func(t *biz.Dept) *v1.Dept {
 		return TransformDept(t)
 	})}, nil
 }
@@ -231,7 +227,7 @@ func (s *ApiService) ListRoleDept(ctx context.Context, in *v1.ListRoleDeptReq) (
 func (s *ApiService) GetRoleDataScope(ctx context.Context, in *v1.GetRoleDataScopeReq) (*v1.GetRoleDataScopeReply, error) {
 	id := in.GetId()
 	role, _ := s.roleCase.GetDataScopeByID(ctx, &biz.Role{ID: uint(id)})
-	deptCustoms := make([]uint64, len(role.Depts))
+	deptCustoms := make([]uint64, 0, len(role.Depts))
 	for _, v := range role.Depts {
 		deptCustoms = append(deptCustoms, uint64(v.ID))
 	}

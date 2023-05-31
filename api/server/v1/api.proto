@@ -664,16 +664,18 @@ message RegisterReq {
 message User {
   uint64 id = 1;
   string name = 2;
-  string nick_name = 4;
-  string real_name = 5;
-  string birthday = 6;
-  api.protobuf.UserGender gender = 7; 
-  string phone = 8;
-  string email = 9;
-  string avatar = 10;
-  api.protobuf.UserState state = 11;
-  google.protobuf.Timestamp created_at = 12;
-  google.protobuf.Timestamp updated_at = 13;
+  optional string nick_name = 4;
+  optional string real_name = 5;
+  optional string birthday = 6;
+  optional api.protobuf.UserGender gender = 7; 
+  optional string phone = 8;
+  optional string email = 9;
+  optional string avatar = 10;
+  optional api.protobuf.UserState state = 11;
+  optional google.protobuf.Timestamp created_at = 12;
+  optional google.protobuf.Timestamp updated_at = 13;
+  optional Dept dept = 14;
+  repeated Role role = 15;
 }
 
 // 回应 - 用户概况详情
@@ -724,7 +726,7 @@ message ListUserReq {
 // 回应 - 列表用户
 message ListUserReply {
   int64 total = 1;
-  repeated google.protobuf.Any items = 2;
+  repeated User items = 2;
 }
 
 // 请求 - 获取用户角色菜单树形
@@ -954,20 +956,20 @@ message ExistUserNameReply {
 
 // 领域模块
 message Domain {
-  google.protobuf.Timestamp created_at = 1;
-  google.protobuf.Timestamp updated_at = 2;
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
   uint64 id = 3;
   string name = 4;
   uint64 parent_id = 5;
-  string code = 6;
-  int32 sort = 7;
-  string title = 8;
-  string logo = 9;
-  string pic = 10;
-  string keywords = 11;
-  string description = 12;
-  api.protobuf.DomainState state = 13;
-  string remarks = 14;
+  optional string code = 6;
+  optional int32 sort = 7;
+  optional string alias = 8;
+  optional string logo = 9;
+  optional string pic = 10;
+  optional string keywords = 11;
+  optional string description = 12;
+  optional api.protobuf.DomainState state = 13;
+  optional string remarks = 14;
   repeated Domain children = 15;
 }
 
@@ -984,7 +986,7 @@ message ListDomainReq {
 // 回应 - 列表领域
 message ListDomainReply {
   int64 total = 1;
-  repeated google.protobuf.Any items = 2;
+  repeated Domain items = 2;
 }
 
 // 请求 - 列表领域
@@ -1003,7 +1005,7 @@ message CreateDomainReq {
   string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
   optional uint64 parent_id = 2;
   optional int32 sort = 3;
-  optional string title = 4 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  optional string alias = 4 [(validate.rules).string = {min_len: 1, max_len: 100}];
   optional string logo = 5;
   optional string pic = 6;
   optional string keywords = 7;
@@ -1027,7 +1029,7 @@ message UpdateDomainReq {
     string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
     optional uint64 parent_id = 2;
     optional int32 sort = 3;
-    optional string title = 4 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    optional string alias = 4 [(validate.rules).string = {min_len: 1, max_len: 100}];
     optional string logo = 5;
     optional string pic = 6;
     optional string keywords = 7;
@@ -1098,7 +1100,7 @@ message ListDomainMenuReq {
 
 // 回应 - 获取领域菜单
 message ListDomainMenuReply {
-  repeated google.protobuf.Any items = 1;
+  repeated Menu items = 1;
   optional int64 total = 2;
 }
 
@@ -1126,18 +1128,18 @@ message HandleDomainMenuReply {
 
 // 角色模块
 message Role {
-  google.protobuf.Timestamp created_at = 1;
-  google.protobuf.Timestamp updated_at = 2;
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
   uint64 id = 3;
   string name = 4;
   uint64 parent_id = 5;
-  string default_router = 6;
-  int32 sort = 7;
-	api.protobuf.RoleDataScope data_scope = 8;         
-	api.protobuf.RoleMenuCheckStrictly menu_check_strictly = 9; 
-	api.protobuf.RoleDeptCheckStrictly dept_check_strictly = 10; 
-  api.protobuf.RoleState state = 11;
-  string remarks = 12;
+  optional string default_router = 6;
+  optional int32 sort = 7;
+	optional api.protobuf.RoleDataScope data_scope = 8;         
+	optional api.protobuf.RoleMenuCheckStrictly menu_check_strictly = 9; 
+	optional api.protobuf.RoleDeptCheckStrictly dept_check_strictly = 10; 
+  optional api.protobuf.RoleState state = 11;
+  optional string remarks = 12;
   repeated uint64 menus = 13;
 }
 
@@ -1154,7 +1156,7 @@ message ListRoleReq {
 // 回应 - 列表角色
 message ListRoleReply {
   int64 total = 1;
-  repeated google.protobuf.Any items = 2;
+  repeated Role items = 2;
 }
 
 // 请求 - 创建角色
@@ -1247,7 +1249,7 @@ message ListRoleMenuReq {
 
 // 回应 - 获取角色菜单
 message ListRoleMenuReply {
-  repeated google.protobuf.Any items = 1;
+  repeated Menu items = 1;
   optional int64 total = 2;
 }
 
@@ -1282,7 +1284,7 @@ message ListRoleDeptReq {
 // 回应 - 获取角色菜单（未使用）
 message ListRoleDeptReply {
   optional int64 total = 1;
-  repeated google.protobuf.Any items = 2;
+  repeated Dept items = 2;
 }
 
 
@@ -1325,7 +1327,7 @@ message ListRoleResourceReq {
 // 回应 - 获取角色资源
 message ListRoleResourceReply {
   optional int64 total = 1;
-  repeated google.protobuf.Any items = 2;
+  repeated Resource items = 2;
 }
 
 // 请求 - 处理角色资源
@@ -1347,15 +1349,15 @@ message HandleRoleResourceReply {
 
 // 资源模块
 message Resource {
-  google.protobuf.Timestamp created_at = 1;
-  google.protobuf.Timestamp updated_at = 2;
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
   uint64 id = 3;
   string name = 4;
-  string path = 5;
-  string method = 6;
-  string group = 7;
-  string description = 8;
-  string operation = 9;
+  optional string path = 5;
+  optional string method = 6;
+  optional string group = 7;
+  optional string description = 8;
+  optional string operation = 9;
 }
 
 // 请求 - 列表部门
@@ -1371,7 +1373,7 @@ message ListResourceReq {
 // 回应 - 列表部门
 message ListResourceReply {
   int64 total = 1;
-  repeated google.protobuf.Any items = 2;
+  repeated Resource items = 2;
 }
 
 
@@ -1441,23 +1443,23 @@ message DeleteResourceReply {
 
 // 菜单模块
 message Menu {
-  google.protobuf.Timestamp created_at = 1;
-  google.protobuf.Timestamp updated_at = 2;
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
   uint64 id = 3;
   string name = 4;
-  api.protobuf.MenuType type = 5;
+  optional api.protobuf.MenuType type = 5;
   uint64 parent_id = 6;
-  string path = 7;
-  api.protobuf.MenuHidden is_hidden = 8;
-  string component = 9;
-  string permission = 10;
-  int32 sort = 11;
-  string icon = 12;
+  optional string path = 7;
+  optional api.protobuf.MenuHidden is_hidden = 8;
+  optional string component = 9;
+  optional string permission = 10;
+  optional int32 sort = 11;
+  optional string icon = 12;
   string title = 13;
-  api.protobuf.MenuCache is_cache = 14;
-  api.protobuf.MenuAffix is_affix = 16;
-  api.protobuf.MenuLinkType link_type = 17;
-  string link_url = 15;
+  optional api.protobuf.MenuCache is_cache = 14;
+  optional api.protobuf.MenuAffix is_affix = 16;
+  optional api.protobuf.MenuLinkType link_type = 17;
+  optional string link_url = 15;
   repeated Menu children = 18;
   repeated MenuParameter parameters = 19;
   repeated MenuButton buttons = 20;
@@ -1487,7 +1489,7 @@ message ListMenuReq {
 // 回应 - 列表菜单
 message ListMenuReply {
   int64 total = 1;
-  repeated google.protobuf.Any items = 2;
+  repeated Menu items = 2;
 }
 
 // 请求 - 创建菜单
@@ -1589,14 +1591,14 @@ message ListMenuTreeReply {
 
 // 部门模块
 message Dept {
-  google.protobuf.Timestamp created_at = 1;
-  google.protobuf.Timestamp updated_at = 2;
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
   uint64 id = 3;
   string name = 4;
-  uint64 parent_id = 5;
-  int32 sort = 6;
-  string remarks = 7;
-  api.protobuf.DeptState state = 8;
+  optional uint64 parent_id = 5;
+  optional int32 sort = 6;
+  optional string remarks = 7;
+  optional api.protobuf.DeptState state = 8;
   repeated Dept children = 9;
 }
 
@@ -1613,7 +1615,7 @@ message ListDeptReq {
 // 回应 - 列表部门
 message ListDeptReply {
   int64 total = 1;
-  repeated google.protobuf.Any items = 2;
+  repeated Dept items = 2;
 }
 
 // 请求 - 创建部门
@@ -1685,14 +1687,14 @@ message ListDeptTreeReply {
 
 // 岗位模块
 message Post {
-  google.protobuf.Timestamp created_at = 1;
-  google.protobuf.Timestamp updated_at = 2;
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
   uint64 id = 3;
   string name = 4;
-  string code = 5;
-  int32 sort = 6;
-  string remarks = 7;
-  api.protobuf.PostState state = 8;
+  optional string code = 5;
+  optional int32 sort = 6;
+  optional string remarks = 7;
+  optional api.protobuf.PostState state = 8;
 }
 
 // 请求 - 列表部门
@@ -1708,7 +1710,7 @@ message ListPostReq {
 // 回应 - 列表部门
 message ListPostReply {
   int64 total = 1;
-  repeated google.protobuf.Any items = 2;
+  repeated Post items = 2;
 }
 
 // 请求 - 创建岗位

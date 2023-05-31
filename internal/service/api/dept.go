@@ -8,8 +8,8 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/pkg/constant"
 	"github.com/beiduoke/go-scaffold/internal/pkg/proto"
+	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
-	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -17,15 +17,16 @@ import (
 var _ v1.ApiServer = (*ApiService)(nil)
 
 func TransformDept(data *biz.Dept) *v1.Dept {
+	pid := uint64(data.ParentID)
 	return &v1.Dept{
 		CreatedAt: timestamppb.New(data.CreatedAt),
 		UpdatedAt: timestamppb.New(data.UpdatedAt),
 		Id:        uint64(data.ID),
 		Name:      data.Name,
-		ParentId:  uint64(data.ParentID),
-		Sort:      data.Sort,
-		Remarks:   data.Remarks,
-		State:     protobuf.DeptState(data.State),
+		ParentId:  &pid,
+		Sort:      &data.Sort,
+		Remarks:   &data.Remarks,
+		State:     (*protobuf.DeptState)(&data.State),
 		Children:  []*v1.Dept{},
 	}
 }
@@ -63,7 +64,7 @@ func (s *ApiService) ListDept(ctx context.Context, in *v1.ListDeptReq) (*v1.List
 	results, total := s.deptCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize())))
 	return &v1.ListDeptReply{
 		Total: total,
-		Items: proto.ToAny(results, func(t *biz.Dept) protoreflect.ProtoMessage {
+		Items: convert.ArrayToAny(results, func(t *biz.Dept) *v1.Dept {
 			return TransformDept(t)
 		}),
 	}, nil

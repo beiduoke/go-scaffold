@@ -14,15 +14,17 @@ import (
 type RoleRepo struct {
 	data *Data
 	log  *log.Helper
-	menu biz.MenuRepo
+	menu MenuRepo
+	dept DeptRepo
 }
 
 // NewRoleRepo .
-func NewRoleRepo(logger log.Logger, data *Data, menu biz.MenuRepo) biz.RoleRepo {
+func NewRoleRepo(logger log.Logger, data *Data, menu biz.MenuRepo, dept biz.DeptRepo) biz.RoleRepo {
 	return &RoleRepo{
 		data: data,
 		log:  log.NewHelper(logger),
-		menu: menu,
+		menu: *(menu.(*MenuRepo)),
+		dept: *(dept.(*DeptRepo)),
 	}
 }
 
@@ -71,7 +73,7 @@ func (r *RoleRepo) toBiz(d *SysRole) *biz.Role {
 
 func (r *RoleRepo) Save(ctx context.Context, g *biz.Role) (*biz.Role, error) {
 	d := r.toModel(g)
-	d.DomainID = r.data.DomainID(ctx)
+	d.DomainID = r.data.CtxDomainID(ctx)
 	result := r.data.DB(ctx).Omit(clause.Associations).Create(d).Error
 	return r.toBiz(d), result
 }
@@ -197,7 +199,7 @@ func (r *RoleRepo) HandleMenu(ctx context.Context, g *biz.Role) error {
 
 // 处理角色资源
 func (r *RoleRepo) HandleResource(ctx context.Context, g *biz.Role) error {
-	domain := r.data.Domain(ctx)
+	ctxDomain := r.data.CtxAuthUser(ctx).GetDomain()
 
 	var apiRepo = ResourceRepo{}
 	var resources []SysResource
@@ -212,7 +214,7 @@ func (r *RoleRepo) HandleResource(ctx context.Context, g *biz.Role) error {
 
 	role := convert.UnitToString(g.ID)
 	// 删除角色域下所有角色
-	for _, v := range r.data.enforcer.GetPermissionsForUser(role, domain) {
+	for _, v := range r.data.enforcer.GetPermissionsForUser(role, ctxDomain) {
 		if _, err := r.data.enforcer.DeletePermissionForUser(role, v[1:]...); err != nil {
 			r.log.Errorf("删除casbin角色领域下角色失败 %v", err)
 		}
@@ -220,7 +222,7 @@ func (r *RoleRepo) HandleResource(ctx context.Context, g *biz.Role) error {
 	// 根据最新资源重新绑定
 	rules := make([][]string, 0, len(g.Resources))
 	for _, v := range g.Resources {
-		rules = append(rules, []string{domain, v.Path, v.Method})
+		rules = append(rules, []string{ctxDomain, v.Path, v.Method})
 	}
 	_, err := r.data.enforcer.AddPermissionsForUser(role, rules...)
 	return err
@@ -249,7 +251,17 @@ func (r *RoleRepo) ListMenuByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu,
 
 // 获取指定角色部门列表
 func (r *RoleRepo) ListDeptByIDs(ctx context.Context, ids ...uint) ([]*biz.Dept, error) {
-	return nil, nil
+	sysDepts, bizDepts := []*SysDept{}, []*biz.Dept{}
+	result := r.data.DBD(ctx).Joins("right join sys_role_depts on sys_role_depts.sys_dept_id = sys_depts.id").Where("sys_role_depts.sys_role_id", ids).Find(&sysDepts)
+	if err := result.Error; err != nil {
+		return nil, err
+	}
+	deptRepo := r.dept
+	for _, d := range sysDepts {
+		bizDepts = append(bizDepts, deptRepo.toBiz(d))
+	}
+
+	return bizDepts, nil
 }
 
 // 获取指定角色部门列表
@@ -259,15 +271,15 @@ func (r *RoleRepo) ListResourceByIDs(ctx context.Context, ids ...uint) ([]*biz.R
 
 // 获取指定角色菜单列表-返回父级菜单
 func (r *RoleRepo) ListMenuAndParentByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu, error) {
-	var roleMenus []*SysRoleMenu
+	var sysRoleMenus []*SysRoleMenu
 	db := r.data.DB(ctx).Model(&SysRoleMenu{})
-	result := db.Find(&roleMenus, "sys_role_id in ?", ids)
+	result := db.Find(&sysRoleMenus, "sys_role_id in ?", ids)
 	if err := result.Error; err != nil {
 		return nil, err
 	}
 	bizAllMenus, _ := r.menu.ListAll(ctx)
 	menuIds := []uint{}
-	for _, v := range roleMenus {
+	for _, v := range sysRoleMenus {
 		menuIds = append(menuIds, v.MenuID)
 	}
 	return menuRecursiveParent(bizAllMenus, menuIds...), nil
@@ -275,12 +287,9 @@ func (r *RoleRepo) ListMenuAndParentByIDs(ctx context.Context, ids ...uint) ([]*
 
 // 绑定角色部门
 func (r *RoleRepo) HandleDept(ctx context.Context, g *biz.Role) error {
-	var deptRepo = DeptRepo{}
-	var sysDepts []SysDept
+	sysRole, sysDepts := r.toModel(g), []SysDept{}
 	for _, v := range g.Depts {
-		sysDepts = append(sysDepts, *deptRepo.toModel(v))
+		sysDepts = append(sysDepts, *r.dept.toModel(v))
 	}
-
-	sysRole := r.toModel(g)
-	return r.data.DB(ctx).Model(sysRole).Debug().Association("Depts").Replace(&sysDepts)
+	return r.data.DB(ctx).Model(sysRole).Association("Depts").Replace(&sysDepts)
 }

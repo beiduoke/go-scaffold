@@ -7,6 +7,7 @@ import (
 	v1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/pkg/constant"
+	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -21,25 +22,22 @@ func TransformResource(data *biz.Resource) *v1.Resource {
 		UpdatedAt:   timestamppb.New(data.UpdatedAt),
 		Id:          uint64(data.ID),
 		Name:        data.Name,
-		Path:        data.Path,
-		Method:      data.Method,
-		Group:       data.Group,
-		Description: data.Description,
-		Operation:   data.Operation,
+		Path:        &data.Path,
+		Method:      &data.Method,
+		Group:       &data.Group,
+		Description: &data.Description,
+		Operation:   &data.Operation,
 	}
 }
 
 // ListResource 列表资源
 func (s *ApiService) ListResource(ctx context.Context, in *v1.ListResourceReq) (*v1.ListResourceReply, error) {
 	results, total := s.resourceCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize())))
-	items := make([]*anypb.Any, 0, len(results))
-	for _, v := range results {
-		item, _ := anypb.New(TransformResource(v))
-		items = append(items, item)
-	}
 	return &v1.ListResourceReply{
 		Total: total,
-		Items: items,
+		Items: convert.ArrayToAny(results, func(t *biz.Resource) *v1.Resource {
+			return TransformResource(t)
+		}),
 	}, nil
 }
 

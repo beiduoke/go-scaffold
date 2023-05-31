@@ -2973,7 +2973,7 @@
           "type": "integer",
           "format": "int32"
         },
-        "title": {
+        "alias": {
           "type": "string"
         },
         "logo": {
@@ -3478,7 +3478,7 @@
           "type": "integer",
           "format": "int32"
         },
-        "title": {
+        "alias": {
           "type": "string"
         },
         "logo": {
@@ -3799,7 +3799,7 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/protobufAny"
+            "$ref": "#/definitions/v1Dept"
           }
         }
       },
@@ -3827,7 +3827,7 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/protobufAny"
+            "$ref": "#/definitions/serverv1Menu"
           }
         },
         "total": {
@@ -3847,7 +3847,7 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/protobufAny"
+            "$ref": "#/definitions/v1Domain"
           }
         }
       },
@@ -3879,7 +3879,7 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/protobufAny"
+            "$ref": "#/definitions/serverv1Menu"
           }
         }
       },
@@ -3911,7 +3911,7 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/protobufAny"
+            "$ref": "#/definitions/v1Post"
           }
         }
       },
@@ -3943,7 +3943,7 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/protobufAny"
+            "$ref": "#/definitions/v1Resource"
           }
         }
       },
@@ -3959,7 +3959,7 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/protobufAny"
+            "$ref": "#/definitions/v1Dept"
           }
         }
       },
@@ -3971,7 +3971,7 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/protobufAny"
+            "$ref": "#/definitions/serverv1Menu"
           }
         },
         "total": {
@@ -3991,7 +3991,7 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/protobufAny"
+            "$ref": "#/definitions/v1Role"
           }
         }
       },
@@ -4007,7 +4007,7 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/protobufAny"
+            "$ref": "#/definitions/v1Resource"
           }
         }
       },
@@ -4023,7 +4023,7 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/protobufAny"
+            "$ref": "#/definitions/v1User"
           }
         }
       },
@@ -4443,7 +4443,7 @@
           "type": "integer",
           "format": "int32"
         },
-        "title": {
+        "alias": {
           "type": "string"
         },
         "logo": {
@@ -4865,6 +4865,15 @@
         "updatedAt": {
           "type": "string",
           "format": "date-time"
+        },
+        "dept": {
+          "$ref": "#/definitions/v1Dept"
+        },
+        "role": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Role"
+          }
         }
       },
       "title": "用户模块"

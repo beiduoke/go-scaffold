@@ -18,22 +18,21 @@ func TransformPost(data *biz.Post) *v1.Post {
 	return &v1.Post{
 		Id:        uint64(data.ID),
 		Name:      data.Name,
-		Code:      data.Code,
-		Sort:      int32(data.Sort),
-		State:     protobuf.PostState(data.State),
+		Code:      &data.Code,
+		Sort:      &data.Sort,
+		State:     (*protobuf.PostState)(&data.State),
 		CreatedAt: timestamppb.New(data.CreatedAt),
 		UpdatedAt: timestamppb.New(data.UpdatedAt),
-		Remarks:   data.Remarks,
+		Remarks:   &data.Remarks,
 	}
 }
 
 // ListPost 列表-岗位
 func (s *ApiService) ListPost(ctx context.Context, in *v1.ListPostReq) (*v1.ListPostReply, error) {
 	results, total := s.postCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize())))
-	items := make([]*anypb.Any, 0, len(results))
+	items := make([]*v1.Post, 0, len(results))
 	for _, v := range results {
-		item, _ := anypb.New(TransformPost(v))
-		items = append(items, item)
+		items = append(items, TransformPost(v))
 	}
 	return &v1.ListPostReply{
 		Total: total,

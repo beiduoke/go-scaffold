@@ -2,12 +2,9 @@ package data
 
 import (
 	"context"
-	"errors"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/conf"
-	"github.com/beiduoke/go-scaffold/pkg/auth/authn"
-	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/bwmarrin/snowflake"
 	"github.com/casbin/casbin/v2"
 	"github.com/go-kratos/kratos/v2/log"
@@ -124,89 +121,15 @@ func (d *Data) DB(ctx context.Context) *gorm.DB {
 
 func (d *Data) DBD(ctx context.Context) *gorm.DB {
 	var db *gorm.DB
-	domainId := d.DomainID(ctx)
 	if tx, ok := ctx.Value(contextTxKey{}).(*gorm.DB); ok {
 		db = tx
 	} else {
 		db = d.db
 	}
-	if domainId > 0 {
-		db = db.Scopes(d.DBScopesDomain(domainId))
+	if domainId := d.CtxDomainID(ctx); domainId > 0 {
+		db = db.Scopes(DBScopesDomain(domainId))
 	}
 	return db
-}
-
-// DBScopesDomain 获取租户
-func (d *Data) DBScopesDomain(id ...uint) func(db *gorm.DB) *gorm.DB {
-	return func(db *gorm.DB) *gorm.DB {
-		return db.Where("domain_id IN (?)", id)
-	}
-}
-
-// DBScopesUser 获取用户
-func (d *Data) DBScopesUser(id ...uint) func(db *gorm.DB) *gorm.DB {
-	return func(db *gorm.DB) *gorm.DB {
-		return db.Where("user_id IN (?)", id)
-	}
-}
-
-// DBScopesDept 获取部门
-func (d *Data) DBScopesDept(id ...uint) func(db *gorm.DB) *gorm.DB {
-	return func(db *gorm.DB) *gorm.DB {
-		return db.Where("dept_id IN (?)", id)
-	}
-}
-
-func (d *Data) HasSuperAdmin(ctx context.Context) bool {
-	if d.DomainID(ctx) == 1 && d.UserID(ctx) == 1 {
-		return true
-	}
-	return false
-}
-
-func (d *Data) HasDomainSuperUser(ctx context.Context) bool {
-	sysDomain, domainId, userId := SysDomain{}, d.DomainID(ctx), d.UserID(ctx)
-	result := d.DB(ctx).Model(sysDomain).Debug().Select("SuperUserID").Last(&sysDomain, domainId)
-	if !errors.Is(result.Error, gorm.ErrRecordNotFound) && sysDomain.SuperUserID == userId {
-		return true
-	}
-	return false
-}
-
-func (d *Data) DomainID(ctx context.Context) uint {
-	return convert.StringToUint(d.Domain(ctx))
-}
-
-func (d *Data) UserID(ctx context.Context) uint {
-	return convert.StringToUint(d.User(ctx))
-}
-
-func (d *Data) RoleID(ctx context.Context) uint {
-	return convert.StringToUint(d.Role(ctx))
-}
-
-func (d *Data) Domain(ctx context.Context) string {
-	security, success := authn.AuthUserFromContext(ctx)
-	if !success {
-		return ""
-	}
-	return security.GetDomain()
-}
-
-func (d *Data) User(ctx context.Context) string {
-	security, success := authn.AuthUserFromContext(ctx)
-	if !success {
-		return ""
-	}
-	return security.GetUser()
-}
-
-func (d *Data) Role(ctx context.Context) string {
-	security, success := authn.AuthUserFromContext(ctx)
-	if !success {
-		return ""
-	}
-	return security.GetSubject()
 }
 
 // NewDB gorm Connecting to a Database

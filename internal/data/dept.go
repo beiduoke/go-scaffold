@@ -97,7 +97,7 @@ func (r *DeptRepo) FilterAncestors(ctx context.Context, g *biz.Dept) string {
 func (r *DeptRepo) Save(ctx context.Context, g *biz.Dept) (*biz.Dept, error) {
 	d := r.toModel(g)
 	d.Ancestors = r.FilterAncestors(ctx, g)
-	d.DomainID = r.data.DomainID(ctx)
+	d.DomainID = r.data.CtxDomainID(ctx)
 	result := r.data.DB(ctx).Debug().Create(d)
 	return r.toBiz(d), result.Error
 }
@@ -169,7 +169,7 @@ func (r *DeptRepo) ListAll(ctx context.Context) ([]*biz.Dept, error) {
 }
 
 func (r *DeptRepo) ListPage(ctx context.Context, paging *pagination.Pagination) (depts []*biz.Dept, total int64) {
-	db := r.data.DBD(ctx).Model(&SysDept{})
+	db := r.data.DBD(ctx).Model(&SysDept{}).Debug()
 	sysDepts := []*SysDept{}
 	// 查询条件
 	if paging.Query != nil {
@@ -183,6 +183,10 @@ func (r *DeptRepo) ListPage(ctx context.Context, paging *pagination.Pagination) 
 
 	// 排序
 	if paging.OrderBy != nil {
+		if sortBy, ok := paging.OrderBy["sort"]; ok {
+			db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: "sort"}, Desc: sortBy})
+		}
+
 		if orderBy, ok := paging.OrderBy["createdAt"]; ok {
 			db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: "created_at"}, Desc: orderBy})
 		}

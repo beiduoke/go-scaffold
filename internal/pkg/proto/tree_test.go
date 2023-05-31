@@ -14,32 +14,26 @@ var domainData = []*v1.Domain{
 	{
 		Id:       1,
 		Name:     "测试1",
-		Title:    "title1",
 		ParentId: 0,
 	}, {
 		Id:       2,
 		Name:     "测试2",
-		Title:    "title2",
 		ParentId: 0,
 	}, {
 		Id:       3,
 		Name:     "测试3",
-		Title:    "title3",
 		ParentId: 1,
 	}, {
 		Id:       4,
 		Name:     "测试4",
-		Title:    "title4",
 		ParentId: 1,
 	}, {
 		Id:       5,
 		Name:     "测试5",
-		Title:    "title5",
 		ParentId: 2,
 	}, {
 		Id:       6,
 		Name:     "测试6",
-		Title:    "title6",
 		ParentId: 0,
 	},
 }

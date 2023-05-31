@@ -29,14 +29,14 @@ func TransformUser(data *biz.User) *v1.User {
 		UpdatedAt: timestamppb.New(data.UpdatedAt),
 		Id:        uint64(data.ID),
 		Name:      data.Name,
-		Avatar:    data.Avatar,
-		NickName:  data.NickName,
-		RealName:  data.RealName,
-		Gender:    protobuf.UserGender(data.Gender),
-		Birthday:  birthday,
-		Phone:     data.Phone,
-		Email:     data.Email,
-		State:     protobuf.UserState(data.State),
+		Avatar:    &data.Avatar,
+		NickName:  &data.NickName,
+		RealName:  &data.RealName,
+		Gender:    (*protobuf.UserGender)(&data.Gender),
+		Birthday:  &birthday,
+		Phone:     &data.Phone,
+		Email:     &data.Email,
+		State:     (*protobuf.UserState)(&data.State),
 	}
 }
 
@@ -51,10 +51,9 @@ func (s *ApiService) ListUser(ctx context.Context, in *v1.ListUserReq) (*v1.List
 			"deptId":   in.GetDeptId(),
 		}),
 	))
-	items := make([]*anypb.Any, 0, len(results))
+	items := make([]*v1.User, 0, len(results))
 	for _, v := range results {
-		item, _ := anypb.New(TransformUser(v))
-		items = append(items, item)
+		items = append(items, TransformUser(v))
 	}
 	return &v1.ListUserReply{
 		Total: total,

@@ -102,7 +102,8 @@ func (r *UserRepo) toBiz(d *SysUser) *biz.User {
 
 func (r *UserRepo) Save(ctx context.Context, g *biz.User) (*biz.User, error) {
 	d := r.toModel(g)
-	d.DomainID = r.data.DomainID(ctx)
+	d.DomainID = r.data.CtxDomainID(ctx)
+	// d.ID = uint(r.data.sf.Generate())
 	result := r.data.DB(ctx).Omit(clause.Associations).Create(d).Error
 	return r.toBiz(d), result
 }
@@ -247,10 +248,10 @@ func (r *UserRepo) ListByEmail(ctx context.Context, s string) ([]*biz.User, erro
 
 // HandleDomainRole 绑定权限
 func (r *UserRepo) HandleRole(ctx context.Context, g *biz.User) error {
-	domainId := r.data.Domain(ctx)
+	ctxDomain := r.data.CtxAuthUser(ctx).GetDomain()
 	rules := make([][]string, 0, len(g.Roles))
 	for _, v := range g.Roles {
-		rules = append(rules, []string{convert.UnitToString(g.ID), convert.UnitToString(v.ID), domainId, "0"})
+		rules = append(rules, []string{convert.UnitToString(g.ID), convert.UnitToString(v.ID), ctxDomain, "0"})
 		// if _, err := r.data.enforcer.AddRoleForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(v.ID), domainId); err != nil {
 		// 	r.log.Errorf("领域权限绑定失败 %v", err)
 		// }
@@ -369,11 +370,11 @@ func (r *UserRepo) Register(ctx context.Context, g *biz.User) error {
 
 // Register 注册
 func (r *UserRepo) Logout(ctx context.Context) error {
-	return r.DeleteLoginCache(ctx, r.data.UserID(ctx))
+	return r.DeleteLoginCache(ctx, r.data.CtxUserID(ctx))
 }
 
 func (r *UserRepo) Info(ctx context.Context) (*biz.User, error) {
-	authUser, err := r.GetLoginCache(ctx, r.data.UserID(ctx))
+	authUser, err := r.GetLoginCache(ctx, r.data.CtxUserID(ctx))
 	if err != nil {
 		return nil, err
 	}
@@ -399,7 +400,7 @@ func (r *UserRepo) Info(ctx context.Context) (*biz.User, error) {
 }
 
 func (r *UserRepo) Roles(ctx context.Context) ([]*biz.Role, error) {
-	return r.ListRoles(ctx, &biz.User{ID: r.data.UserID(ctx), DomainID: r.data.DomainID(ctx)})
+	return r.ListRoles(ctx, &biz.User{ID: r.data.CtxUserID(ctx), DomainID: r.data.CtxDomainID(ctx)})
 }
 
 func (r *UserRepo) RoleMenus(ctx context.Context) (menus []*biz.Menu, err error) {
@@ -411,9 +412,10 @@ func (r *UserRepo) RoleMenus(ctx context.Context) (menus []*biz.Menu, err error)
 	if r.data.HasSuperAdmin(ctx) {
 		return r.menu.ListAll(ctx)
 	} else if r.data.HasDomainSuperUser(ctx) {
-		return r.domain.ListMenuByIDs(ctx, r.data.DomainID(ctx))
+		return r.domain.ListMenuByIDs(ctx, r.data.CtxDomainID(ctx))
 	}
-	rolesIdsStr := r.data.enforcer.GetRolesForUserInDomain(r.data.User(ctx), r.data.Domain(ctx))
+	ctxAuthUser := r.data.CtxAuthUser(ctx)
+	rolesIdsStr := r.data.enforcer.GetRolesForUserInDomain(ctxAuthUser.GetUser(), ctxAuthUser.GetDomain())
 	return r.role.ListMenuByIDs(ctx, convert.ArrayStringToUint(rolesIdsStr)...)
 }
 

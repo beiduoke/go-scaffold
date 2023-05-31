@@ -59,7 +59,7 @@ func (r *PostRepo) Save(ctx context.Context, g *biz.Post) (*biz.Post, error) {
 	d := r.toModel(g)
 	sfId := r.data.sf.Generate()
 	d.Code = sfId.String()
-	d.DomainID = r.data.DomainID(ctx)
+	d.DomainID = r.data.CtxDomainID(ctx)
 	result := r.data.DBD(ctx).Create(d)
 	return r.toBiz(d), result.Error
 }

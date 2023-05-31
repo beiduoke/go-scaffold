@@ -27,7 +27,7 @@ type Domain struct {
 	ParentID    uint
 	Name        string
 	Code        string
-	Title       string
+	Alias       string
 	Keywords    string
 	Logo        string
 	Pic         string

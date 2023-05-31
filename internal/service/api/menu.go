@@ -9,8 +9,8 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/pkg/constant"
 	"github.com/beiduoke/go-scaffold/internal/pkg/proto"
+	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
-	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -95,19 +95,19 @@ func TransformMenu(data *biz.Menu) *v1.Menu {
 		UpdatedAt:  timestamppb.New(data.UpdatedAt),
 		Id:         uint64(data.ID),
 		Name:       data.Name,
-		Type:       protobuf.MenuType(data.Type),
+		Type:       (*protobuf.MenuType)(&data.Type),
 		ParentId:   uint64(data.ParentID),
-		Path:       data.Path,
-		IsHidden:   protobuf.MenuHidden(data.IsHidden),
-		Component:  data.Component,
-		Permission: data.Permission,
-		Sort:       data.Sort,
-		Icon:       data.Icon,
+		Path:       &data.Path,
+		IsHidden:   (*protobuf.MenuHidden)(&data.IsHidden),
+		Component:  &data.Component,
+		Permission: &data.Permission,
+		Sort:       &data.Sort,
+		Icon:       &data.Icon,
 		Title:      data.Title,
-		IsCache:    protobuf.MenuCache(data.IsCache),
-		IsAffix:    protobuf.MenuAffix(data.IsAffix),
-		LinkType:   protobuf.MenuLinkType(data.LinkType),
-		LinkUrl:    data.LinkUrl,
+		IsCache:    (*protobuf.MenuCache)(&data.IsCache),
+		IsAffix:    (*protobuf.MenuAffix)(&data.IsAffix),
+		LinkType:   (*protobuf.MenuLinkType)(&data.LinkType),
+		LinkUrl:    &data.LinkUrl,
 		Children:   make([]*v1.Menu, 0),
 		Parameters: make([]*v1.MenuParameter, 0),
 		Buttons:    make([]*v1.MenuButton, 0),
@@ -148,7 +148,7 @@ func (s *ApiService) ListMenu(ctx context.Context, in *v1.ListMenuReq) (*v1.List
 	results, total := s.menuCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize())))
 	return &v1.ListMenuReply{
 		Total: total,
-		Items: proto.ToAny(results, func(t *biz.Menu) protoreflect.ProtoMessage {
+		Items: convert.ArrayToAny(results, func(t *biz.Menu) *v1.Menu {
 			return TransformMenu(t)
 		}),
 	}, nil
