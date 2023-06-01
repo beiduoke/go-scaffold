@@ -140,12 +140,22 @@ func (r *RoleRepo) ListPage(ctx context.Context, paging *pagination.Pagination) 
 	db := r.data.DBD(ctx).Model(&SysRole{})
 	sysRoles := []*SysRole{}
 	// 查询条件
-	for k, v := range paging.Query {
-		db = db.Where(k, v)
+	if name, ok := paging.Query["name"].(string); ok && name != "" {
+		if name != "" {
+			db = db.Where("name LIKE ?", name+"%")
+		}
 	}
 	// 排序
-	for k, v := range paging.OrderBy {
-		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: k}, Desc: v})
+	if createdBy, ok := paging.OrderBy["createdAt"]; ok {
+		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: "created_at"}, Desc: createdBy})
+	}
+
+	if idBy, ok := paging.OrderBy["id"]; ok {
+		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: "id"}, Desc: idBy})
+	}
+
+	if sortBy, ok := paging.OrderBy["sort"]; ok {
+		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: "sort"}, Desc: sortBy})
 	}
 
 	if !paging.Nopaging {

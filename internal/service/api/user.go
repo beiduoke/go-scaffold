@@ -51,13 +51,27 @@ func (s *ApiService) ListUser(ctx context.Context, in *v1.ListUserReq) (*v1.List
 			"deptId":   in.GetDeptId(),
 		}),
 	))
-	items := make([]*v1.User, 0, len(results))
-	for _, v := range results {
-		items = append(items, TransformUser(v))
-	}
+	depts, _ := s.deptCase.ListAll(ctx)
+	roles, _ := s.roleCase.ListAll(ctx)
 	return &v1.ListUserReply{
 		Total: total,
-		Items: items,
+		Items: convert.ArrayToAny(results, func(v *biz.User) *v1.User {
+			user := TransformUser(v)
+			for _, d := range depts {
+				if v.DeptID == d.ID {
+					user.Dept = &v1.Dept{Id: uint64(d.ID), Name: d.Name}
+				}
+			}
+			roleIds, _ := s.userCase.ListRoleID(ctx, v)
+			for _, r := range roles {
+				for _, s := range roleIds {
+					if s == r.ID {
+						user.Roles = append(user.Roles, &v1.Role{Id: uint64(r.ID), Name: r.Name})
+					}
+				}
+			}
+			return user
+		}),
 	}, nil
 }
 

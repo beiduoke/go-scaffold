@@ -70,6 +70,7 @@ func (r *UserRepo) toModel(d *biz.User) *SysUser {
 		Phone:    d.Phone,
 		Email:    d.Email,
 		State:    d.State,
+		DeptID:   d.DeptID,
 		Roles:    roles,
 	}
 }
@@ -96,6 +97,8 @@ func (r *UserRepo) toBiz(d *SysUser) *biz.User {
 		Phone:     d.Phone,
 		Email:     d.Email,
 		State:     d.State,
+		DeptID:    d.DeptID,
+		DomainID:  d.DomainID,
 		Roles:     roles,
 	}
 }
@@ -137,21 +140,19 @@ func (r *UserRepo) ListPage(ctx context.Context, paging *pagination.Pagination) 
 	sysUsers := []*SysUser{}
 
 	// 查询条件
-	if paging.Query != nil {
-		if name, ok := paging.Query["name"].(string); ok && name != "" {
-			if name != "" {
-				db = db.Where("name LIKE ?", name+"%")
-			}
+	if name, ok := paging.Query["name"].(string); ok && name != "" {
+		if name != "" {
+			db = db.Where("name LIKE ?", name+"%")
 		}
+	}
 
-		if deptId, ok := paging.Query["deptId"].(int32); ok && deptId > 0 {
-			deptIds := []uint{uint(deptId)}
-			depts, _ := r.dept.ListAll(ctx)
-			for _, v := range r.dept.LinkedChildren(depts, uint(deptId)) {
-				deptIds = append(deptIds, v.ID)
-			}
-			db = db.Where("dept_id", deptIds)
+	if deptId, ok := paging.Query["deptId"].(int32); ok && deptId > 0 {
+		deptIds := []uint{uint(deptId)}
+		depts, _ := r.dept.ListAll(ctx)
+		for _, v := range r.dept.LinkedChildren(depts, uint(deptId)) {
+			deptIds = append(deptIds, v.ID)
 		}
+		db = db.Where("dept_id", deptIds)
 	}
 
 	// 排序

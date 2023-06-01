@@ -4869,7 +4869,7 @@
         "dept": {
           "$ref": "#/definitions/v1Dept"
         },
-        "role": {
+        "roles": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/v1Role"

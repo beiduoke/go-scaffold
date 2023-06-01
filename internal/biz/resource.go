@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/pkg/errors"
@@ -112,7 +111,6 @@ func (uc *ResourceUsecase) Delete(ctx context.Context, g *Resource) error {
 		if err := uc.repo.Delete(ctx, g); err != nil {
 			return err
 		}
-		_, err := uc.biz.enforcer.DeleteRole(convert.UnitToString(g.ID))
-		return err
+		return nil
 	})
 }

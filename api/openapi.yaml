@@ -2987,7 +2987,7 @@ components:
                     format: date-time
                 dept:
                     $ref: '#/components/schemas/api.server.v1.Dept'
-                role:
+                roles:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.server.v1.Role'

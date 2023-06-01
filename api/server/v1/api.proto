@@ -675,7 +675,7 @@ message User {
   optional google.protobuf.Timestamp created_at = 12;
   optional google.protobuf.Timestamp updated_at = 13;
   optional Dept dept = 14;
-  repeated Role role = 15;
+  repeated Role roles = 15;
 }
 
 // 回应 - 用户概况详情

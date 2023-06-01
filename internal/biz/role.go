@@ -127,7 +127,10 @@ func (uc *RoleUsecase) UpdateState(ctx context.Context, g *Role) error {
 // List 角色列表全部
 func (uc *RoleUsecase) ListAll(ctx context.Context) ([]*Role, int64) {
 	uc.log.WithContext(ctx).Debugf("RoleList")
-	return uc.biz.roleRepo.ListPage(ctx, &pagination.Pagination{Nopaging: true, OrderBy: map[string]bool{"sort": true}})
+	return uc.biz.roleRepo.ListPage(ctx, pagination.NewPagination(
+		pagination.WithNopaging(),
+		pagination.WithOrderBy(map[string]bool{"sort": false, "id": true}),
+	))
 }
 
 // List 角色列表分页

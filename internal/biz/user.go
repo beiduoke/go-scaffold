@@ -30,6 +30,8 @@ type User struct {
 	Phone           string
 	Email           string
 	State           int32
+	DeptID          uint
+	Dept            *Dept
 	DomainID        uint
 	Domain          *Domain
 	Roles           []*Role
@@ -38,6 +40,10 @@ type User struct {
 
 func (g User) GetID() string {
 	return convert.UnitToString(g.ID)
+}
+
+func (g User) GetDomainID() string {
+	return convert.UnitToString(g.DomainID)
 }
 
 // UserRepo is a Greater repo.
@@ -234,23 +240,13 @@ func (ac *UserUsecase) RolePermissions(ctx context.Context) ([]string, error) {
 
 // ListRoleID 获取角色ID列表
 func (ac *UserUsecase) ListRoleID(ctx context.Context, g *User) (roleIds []uint, err error) {
-	uidStr := g.GetID()
-	if g.Domain == nil {
+	if g.DomainID <= 0 {
 		return nil, errors.New("领域不能为空")
 	}
-
-	rolesIdsStr := ac.biz.enforcer.GetRolesForUserInDomain(uidStr, g.Domain.GetID())
-
-	if err != nil {
-		return nil, err
+	for _, v := range ac.biz.enforcer.GetRolesForUserInDomain(g.GetID(), g.GetDomainID()) {
+		roleIds = append(roleIds, convert.StringToUint(v))
 	}
-
-	rolesIds := make([]uint, 0, len(rolesIdsStr))
-	for _, v := range rolesIdsStr {
-		rolesIds = append(rolesIds, convert.StringToUint(v))
-	}
-
-	return rolesIds, nil
+	return roleIds, nil
 }
 
 // ListRoleAll 获取角色列表
