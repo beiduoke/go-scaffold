@@ -16,6 +16,7 @@ import (
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -28,18 +29,20 @@ type UserRepo struct {
 	menu          MenuRepo
 	domain        DomainRepo
 	role          RoleRepo
+	post          PostRepo
 	dept          DeptRepo
 	authenticator auth.Authenticator
 }
 
 // NewUserRepo .
-func NewUserRepo(logger log.Logger, data *Data, ac *conf.Auth, authenticator auth.Authenticator, role biz.RoleRepo, domain biz.DomainRepo, menu biz.MenuRepo, dept biz.DeptRepo) biz.UserRepo {
+func NewUserRepo(logger log.Logger, data *Data, ac *conf.Auth, authenticator auth.Authenticator, domain biz.DomainRepo, role biz.RoleRepo, post biz.PostRepo, menu biz.MenuRepo, dept biz.DeptRepo) biz.UserRepo {
 	return &UserRepo{
 		ac:            ac,
 		data:          data,
 		log:           log.NewHelper(logger),
-		role:          *(role.(*RoleRepo)),
 		domain:        *(domain.(*DomainRepo)),
+		role:          *(role.(*RoleRepo)),
+		post:          *(post.(*PostRepo)),
 		menu:          *(menu.(*MenuRepo)),
 		dept:          *(dept.(*DeptRepo)),
 		authenticator: authenticator,
@@ -51,10 +54,7 @@ func (r *UserRepo) toModel(d *biz.User) *SysUser {
 		return nil
 	}
 	roles := []SysRole{}
-	for _, v := range d.Roles {
-		roles = append(roles, *r.role.toModel(v))
-	}
-	return &SysUser{
+	u := &SysUser{
 		DomainModel: DomainModel{
 			ID:        d.ID,
 			CreatedAt: d.CreatedAt,
@@ -73,48 +73,63 @@ func (r *UserRepo) toModel(d *biz.User) *SysUser {
 		DeptID:   d.DeptID,
 		Roles:    roles,
 	}
+	for _, v := range d.Roles {
+		u.Roles = append(u.Roles, *r.role.toModel(v))
+	}
+	for _, v := range d.Posts {
+		u.Posts = append(u.Posts, *r.post.toModel(v))
+	}
+	return u
 }
 
 func (r *UserRepo) toBiz(d *SysUser) *biz.User {
 	if d == nil {
 		return nil
 	}
-	roles := []*biz.Role{}
+	u := &biz.User{
+		CreatedAt: d.CreatedAt, UpdatedAt: d.UpdatedAt, ID: d.ID,
+		Avatar: d.Avatar, Name: d.Name, NickName: d.NickName,
+		RealName: d.RealName, Password: d.Password, Birthday: d.Birthday,
+		Gender: d.Gender, Phone: d.Phone, Email: d.Email,
+		State: d.State, DeptID: d.DeptID, DomainID: d.DomainID,
+		Dept: r.dept.toBiz(d.Dept),
+	}
 	for _, v := range d.Roles {
-		roles = append(roles, r.role.toBiz(&v))
+		u.Roles = append(u.Roles, r.role.toBiz(&v))
 	}
-	return &biz.User{
-		CreatedAt: d.CreatedAt,
-		UpdatedAt: d.UpdatedAt,
-		ID:        d.ID,
-		Avatar:    d.Avatar,
-		Name:      d.Name,
-		NickName:  d.NickName,
-		RealName:  d.RealName,
-		Password:  d.Password,
-		Birthday:  d.Birthday,
-		Gender:    d.Gender,
-		Phone:     d.Phone,
-		Email:     d.Email,
-		State:     d.State,
-		DeptID:    d.DeptID,
-		DomainID:  d.DomainID,
-		Roles:     roles,
+	for _, v := range d.Posts {
+		u.Posts = append(u.Posts, r.post.toBiz(&v))
 	}
+	return u
 }
 
 func (r *UserRepo) Save(ctx context.Context, g *biz.User) (*biz.User, error) {
 	d := r.toModel(g)
 	d.DomainID = r.data.CtxDomainID(ctx)
 	// d.ID = uint(r.data.sf.Generate())
-	result := r.data.DB(ctx).Omit(clause.Associations).Create(d).Error
+	result := r.data.DB(ctx).Create(d).Error
 	return r.toBiz(d), result
 }
 
 func (r *UserRepo) Update(ctx context.Context, g *biz.User) (*biz.User, error) {
 	d := r.toModel(g)
-	result := r.data.DBD(ctx).Model(d).Select("*").Omit("CreatedAt").Updates(d)
-	return r.toBiz(d), result.Error
+	err := r.data.DB(ctx).Debug().Transaction(func(tx *gorm.DB) error {
+		userModel := *d
+		err := tx.Model(&userModel).Association("Roles").Clear()
+		if err != nil {
+			return err
+		}
+		err = tx.Model(&userModel).Association("Posts").Clear()
+		if err != nil {
+			return err
+		}
+		result := tx.Model(d).Scopes(DBScopesOmitUpdate()).Updates(d)
+		if err := result.Error; err != nil {
+			return err
+		}
+		return nil
+	})
+	return r.toBiz(d), err
 }
 
 func (r *UserRepo) FindByID(ctx context.Context, id uint) (*biz.User, error) {
@@ -162,6 +177,17 @@ func (r *UserRepo) ListPage(ctx context.Context, paging *pagination.Pagination) 
 
 	if idBy, ok := paging.OrderBy["id"]; ok {
 		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: "id"}, Desc: idBy})
+	}
+
+	// 预加载识别
+	if _, ok := paging.Query["preloadPosts"]; ok {
+		db = db.Preload("Posts")
+	}
+	if _, ok := paging.Query["preloadRoles"]; ok {
+		db = db.Preload("Roles")
+	}
+	if _, ok := paging.Query["preloadDept"]; ok {
+		db = db.Preload("Dept")
 	}
 
 	if !paging.Nopaging {

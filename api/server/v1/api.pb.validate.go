@@ -1106,6 +1106,40 @@ func (m *User) validate(all bool) error {
 
 	}
 
+	for idx, item := range m.GetPosts() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UserValidationError{
+						field:  fmt.Sprintf("Posts[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UserValidationError{
+						field:  fmt.Sprintf("Posts[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UserValidationError{
+					field:  fmt.Sprintf("Posts[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
 	if m.NickName != nil {
 		// no validation rules for NickName
 	}
@@ -1202,6 +1236,10 @@ func (m *User) validate(all bool) error {
 			}
 		}
 
+	}
+
+	if m.DeptId != nil {
+		// no validation rules for DeptId
 	}
 
 	if m.Dept != nil {
@@ -3179,6 +3217,59 @@ func (m *CreateUserReq) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if m.GetDeptId() <= 0 {
+		err := CreateUserReqValidationError{
+			field:  "DeptId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(m.GetRoleIds()) < 1 {
+		err := CreateUserReqValidationError{
+			field:  "RoleIds",
+			reason: "value must contain at least 1 item(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	_CreateUserReq_RoleIds_Unique := make(map[uint64]struct{}, len(m.GetRoleIds()))
+
+	for idx, item := range m.GetRoleIds() {
+		_, _ = idx, item
+
+		if _, exists := _CreateUserReq_RoleIds_Unique[item]; exists {
+			err := CreateUserReqValidationError{
+				field:  fmt.Sprintf("RoleIds[%v]", idx),
+				reason: "repeated value must contain unique items",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		} else {
+			_CreateUserReq_RoleIds_Unique[item] = struct{}{}
+		}
+
+		if item <= 0 {
+			err := CreateUserReqValidationError{
+				field:  fmt.Sprintf("RoleIds[%v]", idx),
+				reason: "value must be greater than 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if m.Avatar != nil {
 		// no validation rules for Avatar
 	}
@@ -3283,6 +3374,25 @@ func (m *CreateUserReq) validate(all bool) error {
 			errors = append(errors, err)
 		}
 
+	}
+
+	if m.PostId != nil {
+
+		if m.GetPostId() <= 0 {
+			err := CreateUserReqValidationError{
+				field:  "PostId",
+				reason: "value must be greater than 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Remarks != nil {
+		// no validation rules for Remarks
 	}
 
 	if len(errors) > 0 {
@@ -19824,6 +19934,79 @@ func (m *UpdateUserReq_Data) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	_UpdateUserReq_Data_RoleIds_Unique := make(map[uint64]struct{}, len(m.GetRoleIds()))
+
+	for idx, item := range m.GetRoleIds() {
+		_, _ = idx, item
+
+		if _, exists := _UpdateUserReq_Data_RoleIds_Unique[item]; exists {
+			err := UpdateUserReq_DataValidationError{
+				field:  fmt.Sprintf("RoleIds[%v]", idx),
+				reason: "repeated value must contain unique items",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		} else {
+			_UpdateUserReq_Data_RoleIds_Unique[item] = struct{}{}
+		}
+
+		if item <= 0 {
+			err := UpdateUserReq_DataValidationError{
+				field:  fmt.Sprintf("RoleIds[%v]", idx),
+				reason: "value must be greater than 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	_UpdateUserReq_Data_PostIds_Unique := make(map[uint64]struct{}, len(m.GetPostIds()))
+
+	for idx, item := range m.GetPostIds() {
+		_, _ = idx, item
+
+		if _, exists := _UpdateUserReq_Data_PostIds_Unique[item]; exists {
+			err := UpdateUserReq_DataValidationError{
+				field:  fmt.Sprintf("PostIds[%v]", idx),
+				reason: "repeated value must contain unique items",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		} else {
+			_UpdateUserReq_Data_PostIds_Unique[item] = struct{}{}
+		}
+
+		if item <= 0 {
+			err := UpdateUserReq_DataValidationError{
+				field:  fmt.Sprintf("PostIds[%v]", idx),
+				reason: "value must be greater than 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.GetDeptId() <= 0 {
+		err := UpdateUserReq_DataValidationError{
+			field:  "DeptId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if m.Password != nil {
 
 		if l := utf8.RuneCountInString(m.GetPassword()); l < 6 || l > 28 {
@@ -19874,7 +20057,7 @@ func (m *UpdateUserReq_Data) validate(all bool) error {
 		if !_UpdateUserReq_Data_Birthday_Pattern.MatchString(m.GetBirthday()) {
 			err := UpdateUserReq_DataValidationError{
 				field:  "Birthday",
-				reason: "value does not match regex pattern \"^[1-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$\"",
+				reason: "value does not match regex pattern \"^(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)$\"",
 			}
 			if !all {
 				return err
@@ -20060,7 +20243,7 @@ var _ interface {
 	ErrorName() string
 } = UpdateUserReq_DataValidationError{}
 
-var _UpdateUserReq_Data_Birthday_Pattern = regexp.MustCompile("^[1-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$")
+var _UpdateUserReq_Data_Birthday_Pattern = regexp.MustCompile("^(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)$")
 
 var _UpdateUserReq_Data_Gender_NotInLookup = map[protobuf.UserGender]struct{}{
 	0: {},

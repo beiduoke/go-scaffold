@@ -101,8 +101,9 @@ type SysUser struct {
 	LastLoginIP   string     `gorm:"type:varchar(50);column:last_login_ip;not null;default:'';comment:最后登录IP"`
 	Remarks       string     `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
 	Posts         []SysPost  `gorm:"many2many:sys_user_posts;"`
+	Roles         []SysRole  `gorm:"many2many:sys_user_roles;"`
+	Dept          *SysDept   `gorm:"foreignKey:DeptID"`
 	LastUseRole   *SysRole   `gorm:"-"`
-	Roles         []SysRole  `gorm:"-"`
 }
 
 // Role 角色
@@ -122,7 +123,7 @@ type SysRole struct {
 	Menus             []SysMenu     `gorm:"many2many:sys_role_menus;"`
 	Resources         []SysResource `gorm:"many2many:sys_role_resources;"`
 	Depts             []SysDept     `gorm:"many2many:sys_role_depts;joinForeignKey:SysRoleID"`
-	Users             []SysUser     `gorm:"-"`
+	Users             []SysUser     `gorm:"many2many:sys_user_roles;"`
 	Domains           []SysDomain   `gorm:"-"`
 }
 

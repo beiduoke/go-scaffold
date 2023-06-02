@@ -17,6 +17,9 @@ import (
 var _ v1.ApiServer = (*ApiService)(nil)
 
 func TransformDept(data *biz.Dept) *v1.Dept {
+	if data == nil {
+		return nil
+	}
 	pid := uint64(data.ParentID)
 	return &v1.Dept{
 		CreatedAt: timestamppb.New(data.CreatedAt),

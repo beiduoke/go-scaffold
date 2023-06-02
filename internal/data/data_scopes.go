@@ -24,3 +24,10 @@ func DBScopesDept(id ...uint) func(db *gorm.DB) *gorm.DB {
 		return db.Where("dept_id", id)
 	}
 }
+
+func DBScopesOmitUpdate(args ...string) func(db *gorm.DB) *gorm.DB {
+	args = append(args, []string{"ID", "CreatedAt", "DomainID"}...)
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Omit(args...)
+	}
+}

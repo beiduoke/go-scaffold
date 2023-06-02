@@ -1,6 +1,8 @@
 package convert
 
-import "strconv"
+import (
+	"strconv"
+)
 
 func StringToUint(id string) uint {
 	idStr, err := strconv.Atoi(id)

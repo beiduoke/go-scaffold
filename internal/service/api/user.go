@@ -49,26 +49,29 @@ func (s *ApiService) ListUser(ctx context.Context, in *v1.ListUserReq) (*v1.List
 			"name":     in.GetName(),
 			"nickName": in.GetNickName(),
 			"deptId":   in.GetDeptId(),
+			// 预加载查询
+			"preloadPosts": true,
+			"preloadRoles": true,
+			"preloadDept":  true,
 		}),
+		pagination.WithOrderBy(map[string]bool{"id": true}),
 	))
-	depts, _ := s.deptCase.ListAll(ctx)
-	roles, _ := s.roleCase.ListAll(ctx)
 	return &v1.ListUserReply{
 		Total: total,
 		Items: convert.ArrayToAny(results, func(v *biz.User) *v1.User {
 			user := TransformUser(v)
-			for _, d := range depts {
-				if v.DeptID == d.ID {
-					user.Dept = &v1.Dept{Id: uint64(d.ID), Name: d.Name}
-				}
+			if v.DeptID > 0 {
+				deptId := uint64(v.DeptID)
+				user.DeptId = &deptId
+				user.Dept = TransformDept(v.Dept)
 			}
-			roleIds, _ := s.userCase.ListRoleID(ctx, v)
-			for _, r := range roles {
-				for _, s := range roleIds {
-					if s == r.ID {
-						user.Roles = append(user.Roles, &v1.Role{Id: uint64(r.ID), Name: r.Name})
-					}
-				}
+			for _, p := range v.Roles {
+				user.RoleIds = append(user.RoleIds, uint64(p.ID))
+				user.Roles = append(user.Roles, &v1.Role{Id: uint64(p.ID), Name: p.Name})
+			}
+			for _, p := range v.Posts {
+				user.PostIds = append(user.PostIds, uint64(p.ID))
+				user.Posts = append(user.Posts, &v1.Post{Id: uint64(p.ID), Name: p.Name})
 			}
 			return user
 		}),
@@ -117,27 +120,39 @@ func (s *ApiService) UpdateUser(ctx context.Context, in *v1.UpdateUserReq) (*v1.
 		return nil, v1.ErrorUserIdNull("修改用户ID不能为空")
 	}
 	v := in.GetData()
-	var birthday *time.Time
-	if v.GetBirthday() != "" {
-		day, err := time.Parse("2006-01-02", v.GetBirthday())
-		if err != nil {
-			return nil, v1.ErrorUserUpdateFail("生日格式错误")
-		}
-		birthday = &day
-	}
-	err := s.userCase.Update(ctx, &biz.User{
+	bizUser := biz.User{
 		ID:       uint(id),
 		Name:     v.GetName(),
 		Avatar:   v.GetAvatar(),
 		NickName: v.GetNickName(),
 		RealName: v.GetRealName(),
 		Password: v.GetPassword(),
-		Birthday: birthday,
 		Gender:   int32(v.GetGender()),
 		Phone:    v.GetPhone(),
 		Email:    v.GetEmail(),
 		State:    int32(v.GetState()),
-	})
+		DeptID:   uint(v.GetDeptId()),
+		Roles: func(roleIds []uint64) (bizRoles []*biz.Role) {
+			for _, v := range roleIds {
+				bizRoles = append(bizRoles, &biz.Role{ID: uint(v)})
+			}
+			return bizRoles
+		}(v.GetRoleIds()),
+		Posts: func(postIds []uint64) (bizPosts []*biz.Post) {
+			for _, v := range postIds {
+				bizPosts = append(bizPosts, &biz.Post{ID: uint(v)})
+			}
+			return bizPosts
+		}(v.GetPostIds()),
+	}
+	if v.GetBirthday() != "" {
+		birthday, err := time.Parse("2006-01-02", v.GetBirthday())
+		if err != nil {
+			return nil, v1.ErrorUserUpdateFail("生日格式错误")
+		}
+		bizUser.Birthday = &birthday
+	}
+	err := s.userCase.Update(ctx, &bizUser)
 	if err != nil {
 		return nil, v1.ErrorUserUpdateFail("用户修改失败 %v", err)
 	}

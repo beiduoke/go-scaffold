@@ -3274,6 +3274,24 @@
         },
         "state": {
           "$ref": "#/definitions/protobufUserState"
+        },
+        "deptId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "postId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "roleIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
+        },
+        "remarks": {
+          "type": "string"
         }
       },
       "title": "请求 - 创建用户"
@@ -4821,6 +4839,24 @@
         },
         "avatar": {
           "type": "string"
+        },
+        "roleIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
+        },
+        "postIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
+        },
+        "deptId": {
+          "type": "string",
+          "format": "uint64"
         }
       }
     },
@@ -4866,6 +4902,24 @@
           "type": "string",
           "format": "date-time"
         },
+        "deptId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "postIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
+        },
+        "roleIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
+        },
         "dept": {
           "$ref": "#/definitions/v1Dept"
         },
@@ -4873,6 +4927,12 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/v1Role"
+          }
+        },
+        "posts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Post"
           }
         }
       },

@@ -11,7 +11,6 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
-	"github.com/imdario/mergo"
 	"github.com/zzsds/go-tools/pkg/password"
 )
 
@@ -35,6 +34,7 @@ type User struct {
 	DomainID        uint
 	Domain          *Domain
 	Roles           []*Role
+	Posts           []*Post
 	DomainRoleUsers []*DomainRoleUser
 }
 
@@ -164,10 +164,10 @@ func (uc *UserUsecase) Update(ctx context.Context, g *User) error {
 		g.State = int32(pb.UserState_USER_STATE_ACTIVE)
 	}
 	// 新数据合并到源数据
-	if err := mergo.Merge(user, *g, mergo.WithOverride); err != nil {
-		return errors.Errorf("数据合并失败：%v", err)
-	}
-	_, err := uc.biz.userRepo.Update(ctx, user)
+	// if err := mergo.Merge(user, *g, mergo.WithOverride); err != nil {
+	// 	return errors.Errorf("数据合并失败：%v", err)
+	// }
+	_, err := uc.biz.userRepo.Update(ctx, g)
 	return err
 }
 
@@ -236,6 +236,12 @@ func (ac *UserUsecase) RoleMenus(ctx context.Context) ([]*Menu, error) {
 // GetRoles 用户角色权限
 func (ac *UserUsecase) RolePermissions(ctx context.Context) ([]string, error) {
 	return ac.biz.userRepo.RolePermissions(ctx)
+}
+
+// ListPostID 获取岗位ID列表
+func (ac *UserUsecase) ListPostID(ctx context.Context, g *User) (postIds []uint, err error) {
+
+	return postIds, nil
 }
 
 // ListRoleID 获取角色ID列表

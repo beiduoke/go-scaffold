@@ -1750,6 +1750,19 @@ components:
                 state:
                     type: integer
                     format: enum
+                deptId:
+                    type: integer
+                    format: uint64
+                postId:
+                    type: integer
+                    format: uint64
+                roleIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
+                remarks:
+                    type: string
             description: 请求 - 创建用户
         api.server.v1.DeleteDeptReply:
             type: object
@@ -2953,6 +2966,19 @@ components:
                     format: enum
                 avatar:
                     type: string
+                roleIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
+                postIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
+                deptId:
+                    type: integer
+                    format: uint64
         api.server.v1.User:
             type: object
             properties:
@@ -2985,12 +3011,29 @@ components:
                 updatedAt:
                     type: string
                     format: date-time
+                deptId:
+                    type: integer
+                    format: uint64
+                postIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
+                roleIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
                 dept:
                     $ref: '#/components/schemas/api.server.v1.Dept'
                 roles:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.server.v1.Role'
+                posts:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.server.v1.Post'
             description: 用户模块
         google.protobuf.Any:
             type: object
