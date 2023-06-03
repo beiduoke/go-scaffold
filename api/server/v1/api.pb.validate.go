@@ -3228,6 +3228,37 @@ func (m *CreateUserReq) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	_CreateUserReq_PostIds_Unique := make(map[uint64]struct{}, len(m.GetPostIds()))
+
+	for idx, item := range m.GetPostIds() {
+		_, _ = idx, item
+
+		if _, exists := _CreateUserReq_PostIds_Unique[item]; exists {
+			err := CreateUserReqValidationError{
+				field:  fmt.Sprintf("PostIds[%v]", idx),
+				reason: "repeated value must contain unique items",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		} else {
+			_CreateUserReq_PostIds_Unique[item] = struct{}{}
+		}
+
+		if item <= 0 {
+			err := CreateUserReqValidationError{
+				field:  fmt.Sprintf("PostIds[%v]", idx),
+				reason: "value must be greater than 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if len(m.GetRoleIds()) < 1 {
 		err := CreateUserReqValidationError{
 			field:  "RoleIds",
@@ -3324,7 +3355,7 @@ func (m *CreateUserReq) validate(all bool) error {
 		if !_CreateUserReq_Birthday_Pattern.MatchString(m.GetBirthday()) {
 			err := CreateUserReqValidationError{
 				field:  "Birthday",
-				reason: "value does not match regex pattern \"^[1-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$\"",
+				reason: "value does not match regex pattern \"^(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)$\"",
 			}
 			if !all {
 				return err
@@ -3335,17 +3366,6 @@ func (m *CreateUserReq) validate(all bool) error {
 	}
 
 	if m.Gender != nil {
-
-		if _, ok := _CreateUserReq_Gender_NotInLookup[m.GetGender()]; ok {
-			err := CreateUserReqValidationError{
-				field:  "Gender",
-				reason: "value must not be in list [USER_GENDER_UNSPECIFIED]",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
 
 		if _, ok := protobuf.UserGender_name[int32(m.GetGender())]; !ok {
 			err := CreateUserReqValidationError{
@@ -3367,21 +3387,6 @@ func (m *CreateUserReq) validate(all bool) error {
 				field:  "Email",
 				reason: "value must be a valid email address",
 				cause:  err,
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.PostId != nil {
-
-		if m.GetPostId() <= 0 {
-			err := CreateUserReqValidationError{
-				field:  "PostId",
-				reason: "value must be greater than 0",
 			}
 			if !all {
 				return err
@@ -3523,11 +3528,7 @@ var _ interface {
 	ErrorName() string
 } = CreateUserReqValidationError{}
 
-var _CreateUserReq_Birthday_Pattern = regexp.MustCompile("^[1-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$")
-
-var _CreateUserReq_Gender_NotInLookup = map[protobuf.UserGender]struct{}{
-	0: {},
-}
+var _CreateUserReq_Birthday_Pattern = regexp.MustCompile("^(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)$")
 
 var _CreateUserReq_Phone_Pattern = regexp.MustCompile("^1[0-9]{10}$")
 

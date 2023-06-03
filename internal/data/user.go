@@ -14,6 +14,7 @@ import (
 	"github.com/beiduoke/go-scaffold/pkg/util/crypto"
 	"github.com/beiduoke/go-scaffold/pkg/util/ip"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
+	"github.com/casbin/casbin/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -276,20 +277,19 @@ func (r *UserRepo) ListByEmail(ctx context.Context, s string) ([]*biz.User, erro
 // HandleDomainRole 绑定权限
 func (r *UserRepo) HandleRole(ctx context.Context, g *biz.User) error {
 	ctxDomain := r.data.CtxAuthUser(ctx).GetDomain()
+	if _, err := r.data.enforcer.(*casbin.SyncedEnforcer).DeleteRolesForUserInDomain(g.GetID(), ctxDomain); err != nil {
+		return err
+	}
 	rules := make([][]string, 0, len(g.Roles))
 	for _, v := range g.Roles {
-		rules = append(rules, []string{convert.UnitToString(g.ID), convert.UnitToString(v.ID), ctxDomain, "0"})
-		// if _, err := r.data.enforcer.AddRoleForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(v.ID), domainId); err != nil {
-		// 	r.log.Errorf("领域权限绑定失败 %v", err)
-		// }
+		rules = append(rules, []string{g.GetID(), convert.UnitToString(v.ID), ctxDomain})
 	}
 	_, err := r.data.enforcer.AddGroupingPolicies(rules)
-	// r.log.Debugf("策略添加 %t %v", success, err)
 	return err
 }
 
 func (r *UserRepo) ListRoles(ctx context.Context, g *biz.User) ([]*biz.Role, error) {
-	rolesIdsStr := r.data.enforcer.GetRolesForUserInDomain(convert.UnitToString(g.ID), convert.UnitToString(g.DomainID))
+	rolesIdsStr := r.data.enforcer.GetRolesForUserInDomain(g.GetID(), convert.UnitToString(g.DomainID))
 	rolesIds, sysRoles := make([]uint, 0, len(rolesIdsStr)), make([]SysRole, 0, len(rolesIdsStr))
 	for _, v := range rolesIdsStr {
 		rolesIds = append(rolesIds, convert.StringToUint(v))

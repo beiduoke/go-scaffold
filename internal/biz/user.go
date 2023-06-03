@@ -90,13 +90,12 @@ func NewUserUsecase(logger log.Logger, biz *Biz, ac *conf.Auth) *UserUsecase {
 }
 
 // Create 创建用户
-func (uc *UserUsecase) Create(ctx context.Context, g *User) (*User, error) {
+func (uc *UserUsecase) Create(ctx context.Context, g *User) (user *User, err error) {
 	uc.log.WithContext(ctx).Debugf("CreateUser: %v", g)
-	user, _ := uc.biz.userRepo.FindByName(ctx, g.Name)
+	user, _ = uc.biz.userRepo.FindByName(ctx, g.Name)
 	if user != nil && user.Name != "" {
 		return nil, errors.New("用户名已存在")
 	}
-
 	if g.Password != "" {
 		password, err := password.Encryption(g.Password)
 		if err != nil {
@@ -104,11 +103,16 @@ func (uc *UserUsecase) Create(ctx context.Context, g *User) (*User, error) {
 		}
 		g.Password = password
 	}
-
 	if g.State <= 0 {
 		g.State = int32(pb.UserState_USER_STATE_ACTIVE)
 	}
-	return uc.biz.userRepo.Save(ctx, g)
+	err = uc.biz.tm.InTx(ctx, func(ctx context.Context) error {
+		if user, err = uc.biz.userRepo.Save(ctx, g); err != nil {
+			return err
+		}
+		return uc.biz.userRepo.HandleRole(ctx, g)
+	})
+	return user, err
 }
 
 // HandleRole 绑定领域权限
@@ -167,7 +171,12 @@ func (uc *UserUsecase) Update(ctx context.Context, g *User) error {
 	// if err := mergo.Merge(user, *g, mergo.WithOverride); err != nil {
 	// 	return errors.Errorf("数据合并失败：%v", err)
 	// }
-	_, err := uc.biz.userRepo.Update(ctx, g)
+	err := uc.biz.tm.InTx(ctx, func(ctx context.Context) error {
+		if _, err := uc.biz.userRepo.Update(ctx, g); err != nil {
+			return err
+		}
+		return uc.biz.userRepo.HandleRole(ctx, g)
+	})
 	return err
 }
 

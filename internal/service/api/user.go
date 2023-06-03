@@ -91,14 +91,27 @@ func (s *ApiService) CreateUser(ctx context.Context, in *v1.CreateUserReq) (*v1.
 	user, err := s.userCase.Create(ctx, &biz.User{
 		Name:     in.GetName(),
 		Avatar:   in.GetAvatar(),
-		Password: in.GetPassword(),
-		Gender:   int32(in.GetGender()),
 		NickName: in.GetNickName(),
 		RealName: in.GetRealName(),
+		Password: in.GetPassword(),
 		Birthday: birthday,
+		Gender:   int32(in.GetGender()),
 		Phone:    in.GetPhone(),
 		Email:    in.GetEmail(),
 		State:    int32(in.GetState()),
+		DeptID:   uint(in.GetDeptId()),
+		Roles: func(roleIds []uint64) (bizRoles []*biz.Role) {
+			for _, v := range roleIds {
+				bizRoles = append(bizRoles, &biz.Role{ID: uint(v)})
+			}
+			return bizRoles
+		}(in.GetRoleIds()),
+		Posts: func(postIds []uint64) (bizPosts []*biz.Post) {
+			for _, v := range postIds {
+				bizPosts = append(bizPosts, &biz.Post{ID: uint(v)})
+			}
+			return bizPosts
+		}(in.GetPostIds()),
 	})
 	if err != nil {
 		return nil, v1.ErrorUserCreateFail("用户创建失败: %v", err.Error())

@@ -3279,9 +3279,12 @@
           "type": "string",
           "format": "uint64"
         },
-        "postId": {
-          "type": "string",
-          "format": "uint64"
+        "postIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
         },
         "roleIds": {
           "type": "array",

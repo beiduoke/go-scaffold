@@ -1753,9 +1753,11 @@ components:
                 deptId:
                     type: integer
                     format: uint64
-                postId:
-                    type: integer
-                    format: uint64
+                postIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
                 roleIds:
                     type: array
                     items:
