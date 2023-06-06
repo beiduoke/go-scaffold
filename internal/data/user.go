@@ -3,7 +3,6 @@ package data
 import (
 	"context"
 	"errors"
-	"fmt"
 	"sort"
 	"time"
 
@@ -312,20 +311,21 @@ func (r *UserRepo) ListRoles(ctx context.Context, g *biz.User) ([]*biz.Role, err
 
 // Login 登录
 func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, error) {
-	sysDomain := SysDomain{}
+	var (
+		now       = time.Now()
+		sysDomain = SysDomain{}
+		sysUser   = SysUser{}
+	)
 	if err := r.data.DB(ctx).Last(&sysDomain, "code = ?", g.Domain.Code).Error; err != nil {
 		return nil, err
 	}
-	sysUser := SysUser{}
-	result := r.data.DB(ctx).Where("domain_id = ?", sysDomain.ID).Last(&sysUser, "name = ?", g.Name)
+	result := r.data.DB(ctx).Where("domain_id = ?", sysDomain.ID).Preload("Dept").Last(&sysUser, "name = ?", g.Name)
 	if result.Error != nil {
 		return nil, result.Error
 	}
-	fmt.Println(g.Password, sysUser.Password)
 	if !crypto.CheckPasswordHash(g.Password, sysUser.Password) {
 		return nil, errors.New("密码校验失败")
 	}
-
 	sysUser.Domain = &sysDomain
 	authClaims := auth.AuthClaims{
 		Subject: uuid.NewString(),
@@ -333,17 +333,10 @@ func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, er
 			sysDomain.Code: true,
 		},
 	}
-
 	token, err := r.authenticator.CreateIdentity(ctx, authClaims)
 	if err != nil {
 		return nil, err
 	}
-	now := time.Now()
-	r.data.DB(ctx).Model(sysUser).Select("LastLoginAt", "LastLoginIP").Updates(SysUser{
-		LastLoginAt: &now,
-		LastLoginIP: ip.FormContext(ctx),
-	})
-
 	// 判断多点登录
 	// 如果已有用户登录设备则踢出，反之
 	if !r.ac.Jwt.GetMultipoint() && r.ExistLoginCache(ctx, sysUser.ID) {
@@ -351,15 +344,15 @@ func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, er
 			r.log.Errorf("用户登录缓存删除失败 %v", err)
 		}
 	}
-
 	bizRoles, err := r.ListRoles(ctx, &biz.User{ID: sysUser.ID, DomainID: sysDomain.ID})
 	if err != nil {
 		return nil, err
 	}
-	if len(bizRoles) < 1 {
+	numBizRoles := len(bizRoles)
+	if numBizRoles < 1 {
 		return nil, errors.New("未指定角色权限")
 	}
-	authRoles := make([]AuthRole, 0, len(bizRoles))
+	authRoles := make([]AuthRole, 0, numBizRoles)
 	for _, v := range bizRoles {
 		authRoles = append(authRoles, AuthRole{
 			ID:            v.ID,
@@ -368,21 +361,45 @@ func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, er
 			Sort:          v.Sort,
 		})
 	}
-
+	if sysUser.LastUseRoleID <= 0 {
+		sysUser.LastUseRoleID = bizRoles[numBizRoles-1].ID
+	}
 	loginInfo := UserLoginInfo{
 		UUID:  authClaims.Subject,
 		Token: token,
 		AuthUser: AuthUser{ID: sysUser.ID, DomainID: sysUser.DomainID,
 			Name: sysUser.Name, NickName: sysUser.NickName, RealName: sysUser.RealName,
 			Avatar: sysUser.Avatar, Birthday: sysUser.Birthday, Gender: sysUser.Gender,
-			Phone: sysUser.Phone, Email: sysUser.Email, State: sysUser.State, Remarks: sysUser.Remarks, RoleID: sysUser.LastUseRoleID, Roles: authRoles},
+			Phone: sysUser.Phone, Email: sysUser.Email, State: sysUser.State,
+			Remarks: sysUser.Remarks, LastUseRoleID: sysUser.LastUseRoleID,
+			Roles: authRoles, DeptId: sysUser.DeptID,
+			LastUseRole: func() *AuthRole {
+				if role := sysUser.LastUseRole; role != nil {
+					return &AuthRole{ID: role.ID, Name: role.Name}
+				}
+				return nil
+			}(),
+			Dept: func() *AuthDept {
+				if dept := sysUser.Dept; dept != nil {
+					return &AuthDept{ID: dept.ID, Name: dept.Name}
+				}
+				return nil
+			}(),
+			LastLoginAt: &now,
+		},
 		Expiration: r.ac.Jwt.ExpiresTime.AsDuration(),
 	}
-
-	if err := r.SetLoginCache(ctx, loginInfo); err != nil {
+	err = r.data.DB(ctx).Model(sysUser).Select("LastLoginAt", "LastLoginIP", "LastUseRoleID").Updates(SysUser{
+		LastLoginAt:   &now,
+		LastLoginIP:   ip.FormContext(ctx),
+		LastUseRoleID: sysUser.LastUseRoleID,
+	}).Error
+	if err != nil {
 		return nil, err
 	}
-
+	if err = r.SetLoginCache(ctx, loginInfo); err != nil {
+		return nil, err
+	}
 	expires := now.Add(loginInfo.Expiration)
 	return &biz.LoginResult{
 		Token:     token,

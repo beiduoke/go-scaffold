@@ -39,7 +39,7 @@ type DomainModel struct {
 	Updater   string         `gorm:"type:varchar(64);column:updater;not null;default:'';comment:更新者;"`
 	DeletedAt gorm.DeletedAt `gorm:"index;comment:删除时间;"`
 	DomainID  uint           `gorm:"type:bigint(20);column:domain_id;not null;default:0;index:idx_domain_id_data;comment:领域ID;"`
-	Domain    *SysDomain     `gorm:"-"`
+	Domain    *SysDomain     `gorm:"foreignKey:DomainID"`
 }
 
 // func (dm *DomainModel) BeforeUpdate(tx *gorm.DB) (err error) {
@@ -96,14 +96,14 @@ type SysUser struct {
 	Email         string     `gorm:"type:varchar(50);column:email;not null;default:'';index:idx_users_phone_email,priority:2;comment:邮箱;"`
 	DeptID        uint       `gorm:"type:bigint(20);column:dept_id;not null;default:0;comment:部门ID"`
 	State         int32      `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:用户状态 0 未指定  1 启用 2 停用;"`
-	LastUseRoleID uint       `gorm:"type:bigint(20);column:last_use_role;not null;default:0;comment:最后使用角色"`
+	LastUseRoleID uint       `gorm:"type:bigint(20);column:last_use_role_id;not null;default:0;comment:最后使用角色ID"`
 	LastLoginAt   *time.Time `gorm:"type:datetime;column:last_login_at;comment:最后登录时间"`
 	LastLoginIP   string     `gorm:"type:varchar(50);column:last_login_ip;not null;default:'';comment:最后登录IP"`
 	Remarks       string     `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
 	Posts         []SysPost  `gorm:"many2many:sys_user_posts;"`
 	Roles         []SysRole  `gorm:"many2many:sys_user_roles;"`
 	Dept          *SysDept   `gorm:"foreignKey:DeptID"`
-	LastUseRole   *SysRole   `gorm:"-"`
+	LastUseRole   *SysRole   `gorm:"foreignKey:LastUseRoleID"`
 }
 
 // Role 角色
