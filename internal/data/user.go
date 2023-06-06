@@ -312,16 +312,22 @@ func (r *UserRepo) ListRoles(ctx context.Context, g *biz.User) ([]*biz.Role, err
 // Login 登录
 func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, error) {
 	var (
-		now       = time.Now()
-		sysDomain = SysDomain{}
-		sysUser   = SysUser{}
+		now         = time.Now()
+		sysDomain   = SysDomain{}
+		sysUser     = SysUser{}
+		sysRoles    = []SysRole{}
+		numSysRoles = 0
 	)
 	if err := r.data.DB(ctx).Last(&sysDomain, "code = ?", g.Domain.Code).Error; err != nil {
 		return nil, err
 	}
-	result := r.data.DB(ctx).Where("domain_id = ?", sysDomain.ID).Preload("Dept").Last(&sysUser, "name = ?", g.Name)
+	result := r.data.DB(ctx).Where("domain_id = ?", sysDomain.ID).Preload("Dept").Preload("Roles").Last(&sysUser, "name = ?", g.Name)
 	if result.Error != nil {
 		return nil, result.Error
+	}
+	sysRoles, numSysRoles = sysUser.Roles, len(sysUser.Roles)
+	if numSysRoles == 0 {
+		return nil, errors.New("未指定角色权限")
 	}
 	if !crypto.CheckPasswordHash(g.Password, sysUser.Password) {
 		return nil, errors.New("密码校验失败")
@@ -344,25 +350,19 @@ func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, er
 			r.log.Errorf("用户登录缓存删除失败 %v", err)
 		}
 	}
-	bizRoles, err := r.ListRoles(ctx, &biz.User{ID: sysUser.ID, DomainID: sysDomain.ID})
-	if err != nil {
-		return nil, err
+	if sysUser.LastUseRoleID <= 0 {
+		sysUser.LastUseRoleID = sysRoles[numSysRoles-1].ID
+		lastUseRole := sysRoles[numSysRoles-1]
+		sysUser.LastUseRole = &lastUseRole
 	}
-	numBizRoles := len(bizRoles)
-	if numBizRoles < 1 {
-		return nil, errors.New("未指定角色权限")
-	}
-	authRoles := make([]AuthRole, 0, numBizRoles)
-	for _, v := range bizRoles {
+	authRoles := make([]AuthRole, 0, numSysRoles)
+	for _, v := range sysUser.Roles {
 		authRoles = append(authRoles, AuthRole{
 			ID:            v.ID,
 			Name:          v.Name,
 			DefaultRouter: v.DefaultRouter,
 			Sort:          v.Sort,
 		})
-	}
-	if sysUser.LastUseRoleID <= 0 {
-		sysUser.LastUseRoleID = bizRoles[numBizRoles-1].ID
 	}
 	loginInfo := UserLoginInfo{
 		UUID:  authClaims.Subject,

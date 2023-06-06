@@ -7,7 +7,6 @@ import (
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/pkg/errors"
 )
 
 // Menu is a Menu model.
@@ -91,27 +90,6 @@ func (uc *MenuUsecase) ListByIDs(ctx context.Context, id ...uint) (roles []*Menu
 // Update 修改菜单
 func (uc *MenuUsecase) Update(ctx context.Context, g *Menu) error {
 	uc.log.WithContext(ctx).Debugf("UpdateMenu: %v", g)
-
-	menu, _ := uc.repo.FindByID(ctx, g.ID)
-	if menu == nil {
-		return errors.New("菜单未注册")
-	}
-
-	if menu.Name != g.Name && g.Name != "" {
-		name, _ := uc.repo.FindByName(ctx, g.Name)
-		if name != nil {
-			return errors.New("菜单名已存在")
-		}
-	}
-
-	// 清理原始数据
-	// menu.Parameters = []*MenuParameter{}
-	// menu.Buttons = []*MenuButton{}
-	// menu.Component = ""
-	// // 新数据合并到源数据
-	// if err := mergo.Merge(menu, *g, mergo.WithOverride); err != nil {
-	// 	return errors.Errorf("数据合并失败：%v", err)
-	// }
 	_, err := uc.repo.Update(ctx, g)
 	return err
 }

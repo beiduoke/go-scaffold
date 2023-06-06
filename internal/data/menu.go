@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"errors"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
@@ -115,19 +116,19 @@ func (r *MenuRepo) Save(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 
 func (r *MenuRepo) Update(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 	d := r.toModel(g)
-
+	result := r.data.DB(ctx).Model(&SysMenu{}).Not(g.ID).Where("name", g.Name).Pluck("id", nil)
+	if result.RowsAffected > 0 {
+		return nil, errors.New("duplicate name")
+	}
 	// 一对多关联，删除原始按钮
 	if err := r.data.DB(ctx).Model(&SysMenuButton{}).Delete(&SysMenuButton{}, "menu_id", g.ID).Error; err != nil {
 		return nil, err
 	}
-
 	// 一对多关联，删除原始参数
 	if err := r.data.DB(ctx).Model(&SysMenuParameter{}).Delete(&SysMenuParameter{}, "menu_id", g.ID).Error; err != nil {
 		return nil, err
 	}
-
-	result := r.data.DB(ctx).Model(d).Debug().Select("*").Omit("CreatedAt").Updates(d)
-
+	result = r.data.DB(ctx).Model(d).Omit("CreatedAt").Updates(d)
 	if result.Error == nil {
 		result.Error = r.SetCache(ctx, d)
 	}
@@ -194,7 +195,7 @@ func (r *MenuRepo) ListAll(ctx context.Context) (menus []*biz.Menu, err error) {
 }
 
 func (r *MenuRepo) ListPage(ctx context.Context, paging *pagination.Pagination) (menus []*biz.Menu, total int64) {
-	db := r.data.DB(ctx).Model(&SysMenu{}).Debug()
+	db := r.data.DB(ctx).Model(&SysMenu{})
 	sysMenus := []*SysMenu{}
 	// 查询条件
 	for k, v := range paging.Query {

@@ -35,3 +35,4 @@ bin/
 .idea/
 *.swp
 cmd/server/server
+cmd/server/__debug_bin
