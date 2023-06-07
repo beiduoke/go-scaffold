@@ -60,14 +60,6 @@ const (
 	Api_ListRoleDept_FullMethodName               = "/api.server.v1.Api/ListRoleDept"
 	Api_GetRoleDataScope_FullMethodName           = "/api.server.v1.Api/GetRoleDataScope"
 	Api_HandleRoleDataScope_FullMethodName        = "/api.server.v1.Api/HandleRoleDataScope"
-	Api_ListRoleResource_FullMethodName           = "/api.server.v1.Api/ListRoleResource"
-	Api_HandleRoleResource_FullMethodName         = "/api.server.v1.Api/HandleRoleResource"
-	Api_ListResource_FullMethodName               = "/api.server.v1.Api/ListResource"
-	Api_ListResourceGroup_FullMethodName          = "/api.server.v1.Api/ListResourceGroup"
-	Api_CreateResource_FullMethodName             = "/api.server.v1.Api/CreateResource"
-	Api_GetResource_FullMethodName                = "/api.server.v1.Api/GetResource"
-	Api_UpdateResource_FullMethodName             = "/api.server.v1.Api/UpdateResource"
-	Api_DeleteResource_FullMethodName             = "/api.server.v1.Api/DeleteResource"
 	Api_ListMenu_FullMethodName                   = "/api.server.v1.Api/ListMenu"
 	Api_CreateMenu_FullMethodName                 = "/api.server.v1.Api/CreateMenu"
 	Api_ListMenuTree_FullMethodName               = "/api.server.v1.Api/ListMenuTree"
@@ -174,23 +166,6 @@ type ApiClient interface {
 	GetRoleDataScope(ctx context.Context, in *GetRoleDataScopeReq, opts ...grpc.CallOption) (*GetRoleDataScopeReply, error)
 	// 处理指定ID角色数据范围
 	HandleRoleDataScope(ctx context.Context, in *HandleRoleDataScopeReq, opts ...grpc.CallOption) (*HandleRoleDataScopeReply, error)
-	// 获取指定ID角色资源
-	ListRoleResource(ctx context.Context, in *ListRoleResourceReq, opts ...grpc.CallOption) (*ListRoleResourceReply, error)
-	// 处理指定ID角色资源
-	HandleRoleResource(ctx context.Context, in *HandleRoleResourceReq, opts ...grpc.CallOption) (*HandleRoleResourceReply, error)
-	// 资源模块
-	// 列表资源
-	ListResource(ctx context.Context, in *ListResourceReq, opts ...grpc.CallOption) (*ListResourceReply, error)
-	// 列表资源-分组
-	ListResourceGroup(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListResourceGroupReply, error)
-	// 创建资源
-	CreateResource(ctx context.Context, in *CreateResourceReq, opts ...grpc.CallOption) (*CreateResourceReply, error)
-	// 获取资源
-	GetResource(ctx context.Context, in *GetResourceReq, opts ...grpc.CallOption) (*Resource, error)
-	// 修改资源
-	UpdateResource(ctx context.Context, in *UpdateResourceReq, opts ...grpc.CallOption) (*UpdateResourceReply, error)
-	// 删除资源
-	DeleteResource(ctx context.Context, in *DeleteResourceReq, opts ...grpc.CallOption) (*DeleteResourceReply, error)
 	// 菜单模块
 	// 列表菜单
 	ListMenu(ctx context.Context, in *ListMenuReq, opts ...grpc.CallOption) (*ListMenuReply, error)
@@ -598,78 +573,6 @@ func (c *apiClient) HandleRoleDataScope(ctx context.Context, in *HandleRoleDataS
 	return out, nil
 }
 
-func (c *apiClient) ListRoleResource(ctx context.Context, in *ListRoleResourceReq, opts ...grpc.CallOption) (*ListRoleResourceReply, error) {
-	out := new(ListRoleResourceReply)
-	err := c.cc.Invoke(ctx, Api_ListRoleResource_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *apiClient) HandleRoleResource(ctx context.Context, in *HandleRoleResourceReq, opts ...grpc.CallOption) (*HandleRoleResourceReply, error) {
-	out := new(HandleRoleResourceReply)
-	err := c.cc.Invoke(ctx, Api_HandleRoleResource_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *apiClient) ListResource(ctx context.Context, in *ListResourceReq, opts ...grpc.CallOption) (*ListResourceReply, error) {
-	out := new(ListResourceReply)
-	err := c.cc.Invoke(ctx, Api_ListResource_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *apiClient) ListResourceGroup(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListResourceGroupReply, error) {
-	out := new(ListResourceGroupReply)
-	err := c.cc.Invoke(ctx, Api_ListResourceGroup_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *apiClient) CreateResource(ctx context.Context, in *CreateResourceReq, opts ...grpc.CallOption) (*CreateResourceReply, error) {
-	out := new(CreateResourceReply)
-	err := c.cc.Invoke(ctx, Api_CreateResource_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *apiClient) GetResource(ctx context.Context, in *GetResourceReq, opts ...grpc.CallOption) (*Resource, error) {
-	out := new(Resource)
-	err := c.cc.Invoke(ctx, Api_GetResource_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *apiClient) UpdateResource(ctx context.Context, in *UpdateResourceReq, opts ...grpc.CallOption) (*UpdateResourceReply, error) {
-	out := new(UpdateResourceReply)
-	err := c.cc.Invoke(ctx, Api_UpdateResource_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *apiClient) DeleteResource(ctx context.Context, in *DeleteResourceReq, opts ...grpc.CallOption) (*DeleteResourceReply, error) {
-	out := new(DeleteResourceReply)
-	err := c.cc.Invoke(ctx, Api_DeleteResource_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *apiClient) ListMenu(ctx context.Context, in *ListMenuReq, opts ...grpc.CallOption) (*ListMenuReply, error) {
 	out := new(ListMenuReply)
 	err := c.cc.Invoke(ctx, Api_ListMenu_FullMethodName, in, out, opts...)
@@ -918,23 +821,6 @@ type ApiServer interface {
 	GetRoleDataScope(context.Context, *GetRoleDataScopeReq) (*GetRoleDataScopeReply, error)
 	// 处理指定ID角色数据范围
 	HandleRoleDataScope(context.Context, *HandleRoleDataScopeReq) (*HandleRoleDataScopeReply, error)
-	// 获取指定ID角色资源
-	ListRoleResource(context.Context, *ListRoleResourceReq) (*ListRoleResourceReply, error)
-	// 处理指定ID角色资源
-	HandleRoleResource(context.Context, *HandleRoleResourceReq) (*HandleRoleResourceReply, error)
-	// 资源模块
-	// 列表资源
-	ListResource(context.Context, *ListResourceReq) (*ListResourceReply, error)
-	// 列表资源-分组
-	ListResourceGroup(context.Context, *emptypb.Empty) (*ListResourceGroupReply, error)
-	// 创建资源
-	CreateResource(context.Context, *CreateResourceReq) (*CreateResourceReply, error)
-	// 获取资源
-	GetResource(context.Context, *GetResourceReq) (*Resource, error)
-	// 修改资源
-	UpdateResource(context.Context, *UpdateResourceReq) (*UpdateResourceReply, error)
-	// 删除资源
-	DeleteResource(context.Context, *DeleteResourceReq) (*DeleteResourceReply, error)
 	// 菜单模块
 	// 列表菜单
 	ListMenu(context.Context, *ListMenuReq) (*ListMenuReply, error)
@@ -1098,30 +984,6 @@ func (UnimplementedApiServer) GetRoleDataScope(context.Context, *GetRoleDataScop
 }
 func (UnimplementedApiServer) HandleRoleDataScope(context.Context, *HandleRoleDataScopeReq) (*HandleRoleDataScopeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HandleRoleDataScope not implemented")
-}
-func (UnimplementedApiServer) ListRoleResource(context.Context, *ListRoleResourceReq) (*ListRoleResourceReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListRoleResource not implemented")
-}
-func (UnimplementedApiServer) HandleRoleResource(context.Context, *HandleRoleResourceReq) (*HandleRoleResourceReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method HandleRoleResource not implemented")
-}
-func (UnimplementedApiServer) ListResource(context.Context, *ListResourceReq) (*ListResourceReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListResource not implemented")
-}
-func (UnimplementedApiServer) ListResourceGroup(context.Context, *emptypb.Empty) (*ListResourceGroupReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListResourceGroup not implemented")
-}
-func (UnimplementedApiServer) CreateResource(context.Context, *CreateResourceReq) (*CreateResourceReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateResource not implemented")
-}
-func (UnimplementedApiServer) GetResource(context.Context, *GetResourceReq) (*Resource, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetResource not implemented")
-}
-func (UnimplementedApiServer) UpdateResource(context.Context, *UpdateResourceReq) (*UpdateResourceReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateResource not implemented")
-}
-func (UnimplementedApiServer) DeleteResource(context.Context, *DeleteResourceReq) (*DeleteResourceReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteResource not implemented")
 }
 func (UnimplementedApiServer) ListMenu(context.Context, *ListMenuReq) (*ListMenuReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMenu not implemented")
@@ -1910,150 +1772,6 @@ func _Api_HandleRoleDataScope_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Api_ListRoleResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListRoleResourceReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ApiServer).ListRoleResource(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Api_ListRoleResource_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).ListRoleResource(ctx, req.(*ListRoleResourceReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Api_HandleRoleResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HandleRoleResourceReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ApiServer).HandleRoleResource(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Api_HandleRoleResource_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).HandleRoleResource(ctx, req.(*HandleRoleResourceReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Api_ListResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListResourceReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ApiServer).ListResource(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Api_ListResource_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).ListResource(ctx, req.(*ListResourceReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Api_ListResourceGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ApiServer).ListResourceGroup(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Api_ListResourceGroup_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).ListResourceGroup(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Api_CreateResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateResourceReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ApiServer).CreateResource(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Api_CreateResource_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).CreateResource(ctx, req.(*CreateResourceReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Api_GetResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetResourceReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ApiServer).GetResource(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Api_GetResource_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).GetResource(ctx, req.(*GetResourceReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Api_UpdateResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateResourceReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ApiServer).UpdateResource(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Api_UpdateResource_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).UpdateResource(ctx, req.(*UpdateResourceReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Api_DeleteResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteResourceReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ApiServer).DeleteResource(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Api_DeleteResource_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).DeleteResource(ctx, req.(*DeleteResourceReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Api_ListMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListMenuReq)
 	if err := dec(in); err != nil {
@@ -2544,38 +2262,6 @@ var Api_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "HandleRoleDataScope",
 			Handler:    _Api_HandleRoleDataScope_Handler,
-		},
-		{
-			MethodName: "ListRoleResource",
-			Handler:    _Api_ListRoleResource_Handler,
-		},
-		{
-			MethodName: "HandleRoleResource",
-			Handler:    _Api_HandleRoleResource_Handler,
-		},
-		{
-			MethodName: "ListResource",
-			Handler:    _Api_ListResource_Handler,
-		},
-		{
-			MethodName: "ListResourceGroup",
-			Handler:    _Api_ListResourceGroup_Handler,
-		},
-		{
-			MethodName: "CreateResource",
-			Handler:    _Api_CreateResource_Handler,
-		},
-		{
-			MethodName: "GetResource",
-			Handler:    _Api_GetResource_Handler,
-		},
-		{
-			MethodName: "UpdateResource",
-			Handler:    _Api_UpdateResource_Handler,
-		},
-		{
-			MethodName: "DeleteResource",
-			Handler:    _Api_DeleteResource_Handler,
 		},
 		{
 			MethodName: "ListMenu",

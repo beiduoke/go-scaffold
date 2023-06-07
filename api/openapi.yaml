@@ -773,134 +773,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.server.v1.UpdatePostStateReply'
-    /v1/resources:
-        get:
-            tags:
-                - Api
-            description: |-
-                资源模块
-                 列表资源
-            operationId: Api_ListResource
-            parameters:
-                - name: nopaging
-                  in: query
-                  description: 是否不分页
-                  schema:
-                    type: boolean
-                - name: page
-                  in: query
-                  description: 当前页
-                  schema:
-                    type: integer
-                    format: int32
-                - name: pageSize
-                  in: query
-                  description: 每一页的行数
-                  schema:
-                    type: integer
-                    format: int32
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.server.v1.ListResourceReply'
-        post:
-            tags:
-                - Api
-            description: 创建资源
-            operationId: Api_CreateResource
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.server.v1.CreateResourceReq'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.server.v1.CreateResourceReply'
-    /v1/resources/groups:
-        get:
-            tags:
-                - Api
-            description: 列表资源-分组
-            operationId: Api_ListResourceGroup
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.server.v1.ListResourceGroupReply'
-    /v1/resources/{id}:
-        get:
-            tags:
-                - Api
-            description: 获取资源
-            operationId: Api_GetResource
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.server.v1.Resource'
-        put:
-            tags:
-                - Api
-            description: 修改资源
-            operationId: Api_UpdateResource
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.server.v1.UpdateResourceReq_Data'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.server.v1.UpdateResourceReply'
-        delete:
-            tags:
-                - Api
-            description: 删除资源
-            operationId: Api_DeleteResource
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.server.v1.DeleteResourceReply'
     /v1/roles:
         get:
             tags:
@@ -1126,51 +998,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.server.v1.HandleRoleMenuReply'
-    /v1/roles/{id}/resources:
-        get:
-            tags:
-                - Api
-            description: 获取指定ID角色资源
-            operationId: Api_ListRoleResource
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.server.v1.ListRoleResourceReply'
-        post:
-            tags:
-                - Api
-            description: 处理指定ID角色资源
-            operationId: Api_HandleRoleResource
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.server.v1.HandleRoleResourceReq_Data'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.server.v1.HandleRoleResourceReply'
     /v1/roles/{id}/state:
         put:
             tags:
@@ -1607,6 +1434,8 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.server.v1.MenuButton'
+                apiResource:
+                    type: string
             description: 请求 - 创建菜单
         api.server.v1.CreatePostReply:
             type: object
@@ -1637,35 +1466,6 @@ components:
                 remarks:
                     type: string
             description: 请求 - 创建岗位
-        api.server.v1.CreateResourceReply:
-            type: object
-            properties:
-                code:
-                    type: integer
-                    format: int32
-                message:
-                    type: string
-                result:
-                    $ref: '#/components/schemas/google.protobuf.Any'
-                type:
-                    type: string
-            description: 回应 - 创建资源
-        api.server.v1.CreateResourceReq:
-            type: object
-            properties:
-                name:
-                    type: string
-                path:
-                    type: string
-                method:
-                    type: string
-                group:
-                    type: string
-                description:
-                    type: string
-                operation:
-                    type: string
-            description: 请求 - 创建资源
         api.server.v1.CreateRoleReply:
             type: object
             properties:
@@ -1816,19 +1616,6 @@ components:
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: 回应 - 删除岗位
-        api.server.v1.DeleteResourceReply:
-            type: object
-            properties:
-                code:
-                    type: integer
-                    format: int32
-                message:
-                    type: string
-                result:
-                    $ref: '#/components/schemas/google.protobuf.Any'
-                type:
-                    type: string
-            description: 回应 - 删除资源
         api.server.v1.DeleteRoleReply:
             type: object
             properties:
@@ -2103,27 +1890,6 @@ components:
                     items:
                         type: integer
                         format: uint64
-        api.server.v1.HandleRoleResourceReply:
-            type: object
-            properties:
-                code:
-                    type: integer
-                    format: int32
-                message:
-                    type: string
-                result:
-                    $ref: '#/components/schemas/google.protobuf.Any'
-                type:
-                    type: string
-            description: 回应 - 处理角色资源
-        api.server.v1.HandleRoleResourceReq_Data:
-            type: object
-            properties:
-                resourceIds:
-                    type: array
-                    items:
-                        type: integer
-                        format: uint64
         api.server.v1.HandleUserRoleReply:
             type: object
             properties:
@@ -2236,28 +2002,6 @@ components:
                     items:
                         $ref: '#/components/schemas/api.server.v1.Post'
             description: 回应 - 列表部门
-        api.server.v1.ListResourceGroupReply:
-            type: object
-            properties:
-                items:
-                    type: array
-                    items:
-                        type: string
-                total:
-                    type: integer
-                    format: int64
-            description: 回应 - 创建资源
-        api.server.v1.ListResourceReply:
-            type: object
-            properties:
-                total:
-                    type: integer
-                    format: int64
-                items:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.server.v1.Resource'
-            description: 回应 - 列表部门
         api.server.v1.ListRoleDeptReply:
             type: object
             properties:
@@ -2291,17 +2035,6 @@ components:
                     items:
                         $ref: '#/components/schemas/api.server.v1.Role'
             description: 回应 - 列表角色
-        api.server.v1.ListRoleResourceReply:
-            type: object
-            properties:
-                total:
-                    type: integer
-                    format: int64
-                items:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.server.v1.Resource'
-            description: 回应 - 获取角色资源
         api.server.v1.ListUserReply:
             type: object
             properties:
@@ -2427,14 +2160,14 @@ components:
                 isCache:
                     type: integer
                     format: enum
+                linkUrl:
+                    type: string
                 isAffix:
                     type: integer
                     format: enum
                 linkType:
                     type: integer
                     format: enum
-                linkUrl:
-                    type: string
                 children:
                     type: array
                     items:
@@ -2447,6 +2180,8 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.server.v1.MenuButton'
+                apiResource:
+                    type: string
             description: 菜单模块
         api.server.v1.MenuButton:
             type: object
@@ -2570,31 +2305,6 @@ components:
                 phone:
                     type: string
                     description: 电话
-        api.server.v1.Resource:
-            type: object
-            properties:
-                createdAt:
-                    type: string
-                    format: date-time
-                updatedAt:
-                    type: string
-                    format: date-time
-                id:
-                    type: integer
-                    format: uint64
-                name:
-                    type: string
-                path:
-                    type: string
-                method:
-                    type: string
-                group:
-                    type: string
-                description:
-                    type: string
-                operation:
-                    type: string
-            description: 资源模块
         api.server.v1.Role:
             type: object
             properties:
@@ -2790,6 +2500,8 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.server.v1.MenuButton'
+                apiResource:
+                    type: string
         api.server.v1.UpdatePostReply:
             type: object
             properties:
@@ -2837,34 +2549,6 @@ components:
                 state:
                     type: integer
                     format: enum
-        api.server.v1.UpdateResourceReply:
-            type: object
-            properties:
-                code:
-                    type: integer
-                    format: int32
-                message:
-                    type: string
-                result:
-                    $ref: '#/components/schemas/google.protobuf.Any'
-                type:
-                    type: string
-            description: 回应 - 创建资源
-        api.server.v1.UpdateResourceReq_Data:
-            type: object
-            properties:
-                name:
-                    type: string
-                path:
-                    type: string
-                method:
-                    type: string
-                group:
-                    type: string
-                description:
-                    type: string
-                operation:
-                    type: string
         api.server.v1.UpdateRoleReply:
             type: object
             properties:

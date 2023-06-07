@@ -11075,289 +11075,6 @@ var _ interface {
 	ErrorName() string
 } = ListRoleResourceReplyValidationError{}
 
-// Validate checks the field values on HandleRoleResourceReq with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *HandleRoleResourceReq) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on HandleRoleResourceReq with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// HandleRoleResourceReqMultiError, or nil if none found.
-func (m *HandleRoleResourceReq) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *HandleRoleResourceReq) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetId() <= 0 {
-		err := HandleRoleResourceReqValidationError{
-			field:  "Id",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if all {
-		switch v := interface{}(m.GetData()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, HandleRoleResourceReqValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, HandleRoleResourceReqValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return HandleRoleResourceReqValidationError{
-				field:  "Data",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if len(errors) > 0 {
-		return HandleRoleResourceReqMultiError(errors)
-	}
-
-	return nil
-}
-
-// HandleRoleResourceReqMultiError is an error wrapping multiple validation
-// errors returned by HandleRoleResourceReq.ValidateAll() if the designated
-// constraints aren't met.
-type HandleRoleResourceReqMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m HandleRoleResourceReqMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m HandleRoleResourceReqMultiError) AllErrors() []error { return m }
-
-// HandleRoleResourceReqValidationError is the validation error returned by
-// HandleRoleResourceReq.Validate if the designated constraints aren't met.
-type HandleRoleResourceReqValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e HandleRoleResourceReqValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e HandleRoleResourceReqValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e HandleRoleResourceReqValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e HandleRoleResourceReqValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e HandleRoleResourceReqValidationError) ErrorName() string {
-	return "HandleRoleResourceReqValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e HandleRoleResourceReqValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sHandleRoleResourceReq.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = HandleRoleResourceReqValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = HandleRoleResourceReqValidationError{}
-
-// Validate checks the field values on HandleRoleResourceReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *HandleRoleResourceReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on HandleRoleResourceReply with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// HandleRoleResourceReplyMultiError, or nil if none found.
-func (m *HandleRoleResourceReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *HandleRoleResourceReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Code
-
-	// no validation rules for Message
-
-	// no validation rules for Type
-
-	if m.Result != nil {
-
-		if all {
-			switch v := interface{}(m.GetResult()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, HandleRoleResourceReplyValidationError{
-						field:  "Result",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, HandleRoleResourceReplyValidationError{
-						field:  "Result",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return HandleRoleResourceReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return HandleRoleResourceReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// HandleRoleResourceReplyMultiError is an error wrapping multiple validation
-// errors returned by HandleRoleResourceReply.ValidateAll() if the designated
-// constraints aren't met.
-type HandleRoleResourceReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m HandleRoleResourceReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m HandleRoleResourceReplyMultiError) AllErrors() []error { return m }
-
-// HandleRoleResourceReplyValidationError is the validation error returned by
-// HandleRoleResourceReply.Validate if the designated constraints aren't met.
-type HandleRoleResourceReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e HandleRoleResourceReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e HandleRoleResourceReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e HandleRoleResourceReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e HandleRoleResourceReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e HandleRoleResourceReplyValidationError) ErrorName() string {
-	return "HandleRoleResourceReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e HandleRoleResourceReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sHandleRoleResourceReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = HandleRoleResourceReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = HandleRoleResourceReplyValidationError{}
-
 // Validate checks the field values on Resource with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -13114,6 +12831,10 @@ func (m *Menu) validate(all bool) error {
 		// no validation rules for IsCache
 	}
 
+	if m.LinkUrl != nil {
+		// no validation rules for LinkUrl
+	}
+
 	if m.IsAffix != nil {
 		// no validation rules for IsAffix
 	}
@@ -13122,8 +12843,8 @@ func (m *Menu) validate(all bool) error {
 		// no validation rules for LinkType
 	}
 
-	if m.LinkUrl != nil {
-		// no validation rules for LinkUrl
+	if m.ApiResource != nil {
+		// no validation rules for ApiResource
 	}
 
 	if len(errors) > 0 {
@@ -13989,6 +13710,21 @@ func (m *CreateMenuReq) validate(all bool) error {
 			err := CreateMenuReqValidationError{
 				field:  "LinkType",
 				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.ApiResource != nil {
+
+		if l := utf8.RuneCountInString(m.GetApiResource()); l < 1 || l > 100 {
+			err := CreateMenuReqValidationError{
+				field:  "ApiResource",
+				reason: "value length must be between 1 and 100 runes, inclusive",
 			}
 			if !all {
 				return err
@@ -21798,108 +21534,6 @@ var _HandleRoleDataScopeReq_DataScope_DeptCheckStrictly_NotInLookup = map[protob
 	0: {},
 }
 
-// Validate checks the field values on HandleRoleResourceReq_Data with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *HandleRoleResourceReq_Data) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on HandleRoleResourceReq_Data with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// HandleRoleResourceReq_DataMultiError, or nil if none found.
-func (m *HandleRoleResourceReq_Data) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *HandleRoleResourceReq_Data) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if len(errors) > 0 {
-		return HandleRoleResourceReq_DataMultiError(errors)
-	}
-
-	return nil
-}
-
-// HandleRoleResourceReq_DataMultiError is an error wrapping multiple
-// validation errors returned by HandleRoleResourceReq_Data.ValidateAll() if
-// the designated constraints aren't met.
-type HandleRoleResourceReq_DataMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m HandleRoleResourceReq_DataMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m HandleRoleResourceReq_DataMultiError) AllErrors() []error { return m }
-
-// HandleRoleResourceReq_DataValidationError is the validation error returned
-// by HandleRoleResourceReq_Data.Validate if the designated constraints aren't met.
-type HandleRoleResourceReq_DataValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e HandleRoleResourceReq_DataValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e HandleRoleResourceReq_DataValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e HandleRoleResourceReq_DataValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e HandleRoleResourceReq_DataValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e HandleRoleResourceReq_DataValidationError) ErrorName() string {
-	return "HandleRoleResourceReq_DataValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e HandleRoleResourceReq_DataValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sHandleRoleResourceReq_Data.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = HandleRoleResourceReq_DataValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = HandleRoleResourceReq_DataValidationError{}
-
 // Validate checks the field values on UpdateResourceReq_Data with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -22427,6 +22061,21 @@ func (m *UpdateMenuReq_Data) validate(all bool) error {
 			err := UpdateMenuReq_DataValidationError{
 				field:  "LinkType",
 				reason: "value must be one of the defined enum values",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.ApiResource != nil {
+
+		if l := utf8.RuneCountInString(m.GetApiResource()); l < 1 || l > 100 {
+			err := UpdateMenuReq_DataValidationError{
+				field:  "ApiResource",
+				reason: "value length must be between 1 and 100 runes, inclusive",
 			}
 			if !all {
 				return err

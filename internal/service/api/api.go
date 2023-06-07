@@ -29,18 +29,17 @@ var _ v1.ApiServer = (*ApiService)(nil)
 // ApiService is a Api service.
 type ApiService struct {
 	v1.UnimplementedApiServer
-	ac           *conf.Auth
-	log          *log.Helper
-	ws           *websocket.WebsocketService
-	dig          *dig.Container
-	authCase     *biz.AuthUsecase
-	userCase     *biz.UserUsecase
-	domainCase   *biz.DomainUsecase
-	roleCase     *biz.RoleUsecase
-	menuCase     *biz.MenuUsecase
-	resourceCase *biz.ResourceUsecase
-	deptCase     *biz.DeptUsecase
-	postCase     *biz.PostUsecase
+	ac         *conf.Auth
+	log        *log.Helper
+	ws         *websocket.WebsocketService
+	dig        *dig.Container
+	authCase   *biz.AuthUsecase
+	userCase   *biz.UserUsecase
+	domainCase *biz.DomainUsecase
+	roleCase   *biz.RoleUsecase
+	menuCase   *biz.MenuUsecase
+	deptCase   *biz.DeptUsecase
+	postCase   *biz.PostUsecase
 }
 
 // NewApiService new a Api service.
@@ -53,22 +52,20 @@ func NewApiService(
 	domainCase *biz.DomainUsecase,
 	roleCase *biz.RoleUsecase,
 	menuCase *biz.MenuUsecase,
-	resourceCase *biz.ResourceUsecase,
 	deptCase *biz.DeptUsecase,
 	postCase *biz.PostUsecase,
 ) *ApiService {
 	l := log.NewHelper(log.With(logger, "module", "service/api"))
 	return &ApiService{
-		log:          l,
-		ac:           ac,
-		ws:           ws,
-		authCase:     authCase,
-		userCase:     userCase,
-		domainCase:   domainCase,
-		roleCase:     roleCase,
-		menuCase:     menuCase,
-		resourceCase: resourceCase,
-		deptCase:     deptCase,
-		postCase:     postCase,
+		log:        l,
+		ac:         ac,
+		ws:         ws,
+		authCase:   authCase,
+		userCase:   userCase,
+		domainCase: domainCase,
+		roleCase:   roleCase,
+		menuCase:   menuCase,
+		deptCase:   deptCase,
+		postCase:   postCase,
 	}
 }

@@ -1325,208 +1325,6 @@
         ]
       }
     },
-    "/v1/resources": {
-      "get": {
-        "summary": "资源模块\n列表资源",
-        "operationId": "Api_ListResource",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1ListResourceReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "nopaging",
-            "description": "是否不分页",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "page",
-            "description": "当前页",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "pageSize",
-            "description": "每一页的行数",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          }
-        ],
-        "tags": [
-          "Api"
-        ]
-      },
-      "post": {
-        "summary": "创建资源",
-        "operationId": "Api_CreateResource",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1CreateResourceReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1CreateResourceReq"
-            }
-          }
-        ],
-        "tags": [
-          "Api"
-        ]
-      }
-    },
-    "/v1/resources/groups": {
-      "get": {
-        "summary": "列表资源-分组",
-        "operationId": "Api_ListResourceGroup",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1ListResourceGroupReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "Api"
-        ]
-      }
-    },
-    "/v1/resources/{id}": {
-      "get": {
-        "summary": "获取资源",
-        "operationId": "Api_GetResource",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1Resource"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "Api"
-        ]
-      },
-      "delete": {
-        "summary": "删除资源",
-        "operationId": "Api_DeleteResource",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1DeleteResourceReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "Api"
-        ]
-      },
-      "put": {
-        "summary": "修改资源",
-        "operationId": "Api_UpdateResource",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1UpdateResourceReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          },
-          {
-            "name": "data",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1UpdateResourceReqData"
-            }
-          }
-        ],
-        "tags": [
-          "Api"
-        ]
-      }
-    },
     "/v1/roles": {
       "get": {
         "summary": "角色模块\n列表角色",
@@ -1870,76 +1668,6 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/v1HandleRoleMenuReqData"
-            }
-          }
-        ],
-        "tags": [
-          "Api"
-        ]
-      }
-    },
-    "/v1/roles/{id}/resources": {
-      "get": {
-        "summary": "获取指定ID角色资源",
-        "operationId": "Api_ListRoleResource",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1ListRoleResourceReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "Api"
-        ]
-      },
-      "post": {
-        "summary": "处理指定ID角色资源",
-        "operationId": "Api_HandleRoleResource",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1HandleRoleResourceReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          },
-          {
-            "name": "data",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1HandleRoleResourceReqData"
             }
           }
         ],
@@ -2868,14 +2596,14 @@
         "isCache": {
           "$ref": "#/definitions/protobufMenuCache"
         },
+        "linkUrl": {
+          "type": "string"
+        },
         "isAffix": {
           "$ref": "#/definitions/protobufMenuAffix"
         },
         "linkType": {
           "$ref": "#/definitions/protobufMenuLinkType"
-        },
-        "linkUrl": {
-          "type": "string"
         },
         "children": {
           "type": "array",
@@ -2894,6 +2622,9 @@
           "items": {
             "$ref": "#/definitions/v1MenuButton"
           }
+        },
+        "apiResource": {
+          "type": "string"
         }
       },
       "title": "菜单模块"
@@ -3074,6 +2805,9 @@
           "items": {
             "$ref": "#/definitions/v1MenuButton"
           }
+        },
+        "apiResource": {
+          "type": "string"
         }
       },
       "title": "请求 - 创建菜单"
@@ -3118,49 +2852,6 @@
         }
       },
       "title": "请求 - 创建岗位"
-    },
-    "v1CreateResourceReply": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "message": {
-          "type": "string"
-        },
-        "result": {
-          "$ref": "#/definitions/protobufAny"
-        },
-        "type": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 创建资源"
-    },
-    "v1CreateResourceReq": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "path": {
-          "type": "string"
-        },
-        "method": {
-          "type": "string"
-        },
-        "group": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "operation": {
-          "type": "string"
-        }
-      },
-      "title": "请求 - 创建资源"
     },
     "v1CreateRoleReply": {
       "type": "object",
@@ -3371,25 +3062,6 @@
         }
       },
       "title": "回应 - 删除岗位"
-    },
-    "v1DeleteResourceReply": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "message": {
-          "type": "string"
-        },
-        "result": {
-          "$ref": "#/definitions/protobufAny"
-        },
-        "type": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 删除资源"
     },
     "v1DeleteRoleReply": {
       "type": "object",
@@ -3744,37 +3416,6 @@
         }
       }
     },
-    "v1HandleRoleResourceReply": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "message": {
-          "type": "string"
-        },
-        "result": {
-          "$ref": "#/definitions/protobufAny"
-        },
-        "type": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 处理角色资源"
-    },
-    "v1HandleRoleResourceReqData": {
-      "type": "object",
-      "properties": {
-        "resourceIds": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "format": "uint64"
-          }
-        }
-      }
-    },
     "v1HandleUserRoleReply": {
       "type": "object",
       "properties": {
@@ -3938,38 +3579,6 @@
       },
       "title": "回应 - 列表部门"
     },
-    "v1ListResourceGroupReply": {
-      "type": "object",
-      "properties": {
-        "items": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "total": {
-          "type": "string",
-          "format": "int64"
-        }
-      },
-      "title": "回应 - 创建资源"
-    },
-    "v1ListResourceReply": {
-      "type": "object",
-      "properties": {
-        "total": {
-          "type": "string",
-          "format": "int64"
-        },
-        "items": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1Resource"
-          }
-        }
-      },
-      "title": "回应 - 列表部门"
-    },
     "v1ListRoleDeptReply": {
       "type": "object",
       "properties": {
@@ -4017,22 +3626,6 @@
         }
       },
       "title": "回应 - 列表角色"
-    },
-    "v1ListRoleResourceReply": {
-      "type": "object",
-      "properties": {
-        "total": {
-          "type": "string",
-          "format": "int64"
-        },
-        "items": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1Resource"
-          }
-        }
-      },
-      "title": "回应 - 获取角色资源"
     },
     "v1ListUserReply": {
       "type": "object",
@@ -4288,42 +3881,6 @@
           "title": "电话"
         }
       }
-    },
-    "v1Resource": {
-      "type": "object",
-      "properties": {
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "name": {
-          "type": "string"
-        },
-        "path": {
-          "type": "string"
-        },
-        "method": {
-          "type": "string"
-        },
-        "group": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "operation": {
-          "type": "string"
-        }
-      },
-      "title": "资源模块"
     },
     "v1Role": {
       "type": "object",
@@ -4591,6 +4148,9 @@
           "items": {
             "$ref": "#/definitions/v1MenuButton"
           }
+        },
+        "apiResource": {
+          "type": "string"
         }
       }
     },
@@ -4658,48 +4218,6 @@
       "properties": {
         "state": {
           "$ref": "#/definitions/protobufPostState"
-        }
-      }
-    },
-    "v1UpdateResourceReply": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "message": {
-          "type": "string"
-        },
-        "result": {
-          "$ref": "#/definitions/protobufAny"
-        },
-        "type": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 创建资源"
-    },
-    "v1UpdateResourceReqData": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "path": {
-          "type": "string"
-        },
-        "method": {
-          "type": "string"
-        },
-        "group": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "operation": {
-          "type": "string"
         }
       }
     },

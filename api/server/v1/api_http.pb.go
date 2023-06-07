@@ -24,14 +24,12 @@ const OperationApiCreateDept = "/api.server.v1.Api/CreateDept"
 const OperationApiCreateDomain = "/api.server.v1.Api/CreateDomain"
 const OperationApiCreateMenu = "/api.server.v1.Api/CreateMenu"
 const OperationApiCreatePost = "/api.server.v1.Api/CreatePost"
-const OperationApiCreateResource = "/api.server.v1.Api/CreateResource"
 const OperationApiCreateRole = "/api.server.v1.Api/CreateRole"
 const OperationApiCreateUser = "/api.server.v1.Api/CreateUser"
 const OperationApiDeleteDept = "/api.server.v1.Api/DeleteDept"
 const OperationApiDeleteDomain = "/api.server.v1.Api/DeleteDomain"
 const OperationApiDeleteMenu = "/api.server.v1.Api/DeleteMenu"
 const OperationApiDeletePost = "/api.server.v1.Api/DeletePost"
-const OperationApiDeleteResource = "/api.server.v1.Api/DeleteResource"
 const OperationApiDeleteRole = "/api.server.v1.Api/DeleteRole"
 const OperationApiDeleteUser = "/api.server.v1.Api/DeleteUser"
 const OperationApiEmailLogin = "/api.server.v1.Api/EmailLogin"
@@ -42,7 +40,6 @@ const OperationApiGetDomainCode = "/api.server.v1.Api/GetDomainCode"
 const OperationApiGetDomainName = "/api.server.v1.Api/GetDomainName"
 const OperationApiGetMenu = "/api.server.v1.Api/GetMenu"
 const OperationApiGetPost = "/api.server.v1.Api/GetPost"
-const OperationApiGetResource = "/api.server.v1.Api/GetResource"
 const OperationApiGetRole = "/api.server.v1.Api/GetRole"
 const OperationApiGetRoleDataScope = "/api.server.v1.Api/GetRoleDataScope"
 const OperationApiGetUser = "/api.server.v1.Api/GetUser"
@@ -51,7 +48,6 @@ const OperationApiGetUserProfile = "/api.server.v1.Api/GetUserProfile"
 const OperationApiHandleDomainMenu = "/api.server.v1.Api/HandleDomainMenu"
 const OperationApiHandleRoleDataScope = "/api.server.v1.Api/HandleRoleDataScope"
 const OperationApiHandleRoleMenu = "/api.server.v1.Api/HandleRoleMenu"
-const OperationApiHandleRoleResource = "/api.server.v1.Api/HandleRoleResource"
 const OperationApiHandleUserRole = "/api.server.v1.Api/HandleUserRole"
 const OperationApiListDept = "/api.server.v1.Api/ListDept"
 const OperationApiListDeptTree = "/api.server.v1.Api/ListDeptTree"
@@ -61,12 +57,9 @@ const OperationApiListDomainTree = "/api.server.v1.Api/ListDomainTree"
 const OperationApiListMenu = "/api.server.v1.Api/ListMenu"
 const OperationApiListMenuTree = "/api.server.v1.Api/ListMenuTree"
 const OperationApiListPost = "/api.server.v1.Api/ListPost"
-const OperationApiListResource = "/api.server.v1.Api/ListResource"
-const OperationApiListResourceGroup = "/api.server.v1.Api/ListResourceGroup"
 const OperationApiListRole = "/api.server.v1.Api/ListRole"
 const OperationApiListRoleDept = "/api.server.v1.Api/ListRoleDept"
 const OperationApiListRoleMenu = "/api.server.v1.Api/ListRoleMenu"
-const OperationApiListRoleResource = "/api.server.v1.Api/ListRoleResource"
 const OperationApiListUser = "/api.server.v1.Api/ListUser"
 const OperationApiListUserRole = "/api.server.v1.Api/ListUserRole"
 const OperationApiListUserRoleMenuRouterTree = "/api.server.v1.Api/ListUserRoleMenuRouterTree"
@@ -82,7 +75,6 @@ const OperationApiUpdateDomainState = "/api.server.v1.Api/UpdateDomainState"
 const OperationApiUpdateMenu = "/api.server.v1.Api/UpdateMenu"
 const OperationApiUpdatePost = "/api.server.v1.Api/UpdatePost"
 const OperationApiUpdatePostState = "/api.server.v1.Api/UpdatePostState"
-const OperationApiUpdateResource = "/api.server.v1.Api/UpdateResource"
 const OperationApiUpdateRole = "/api.server.v1.Api/UpdateRole"
 const OperationApiUpdateRoleState = "/api.server.v1.Api/UpdateRoleState"
 const OperationApiUpdateUser = "/api.server.v1.Api/UpdateUser"
@@ -96,8 +88,6 @@ type ApiHTTPServer interface {
 	CreateMenu(context.Context, *CreateMenuReq) (*CreateMenuReply, error)
 	// CreatePost 创建岗位
 	CreatePost(context.Context, *CreatePostReq) (*CreatePostReply, error)
-	// CreateResource 创建资源
-	CreateResource(context.Context, *CreateResourceReq) (*CreateResourceReply, error)
 	// CreateRole 创建角色
 	CreateRole(context.Context, *CreateRoleReq) (*CreateRoleReply, error)
 	// CreateUser 创建用户
@@ -110,8 +100,6 @@ type ApiHTTPServer interface {
 	DeleteMenu(context.Context, *DeleteMenuReq) (*DeleteMenuReply, error)
 	// DeletePost 删除岗位
 	DeletePost(context.Context, *DeletePostReq) (*DeletePostReply, error)
-	// DeleteResource 删除资源
-	DeleteResource(context.Context, *DeleteResourceReq) (*DeleteResourceReply, error)
 	// DeleteRole 删除指定ID角色
 	DeleteRole(context.Context, *DeleteRoleReq) (*DeleteRoleReply, error)
 	// DeleteUser 删除用户
@@ -132,8 +120,6 @@ type ApiHTTPServer interface {
 	GetMenu(context.Context, *GetMenuReq) (*Menu, error)
 	// GetPost 获取岗位
 	GetPost(context.Context, *GetPostReq) (*Post, error)
-	// GetResource 获取资源
-	GetResource(context.Context, *GetResourceReq) (*Resource, error)
 	// GetRole 获取指定ID角色
 	GetRole(context.Context, *GetRoleReq) (*Role, error)
 	// GetRoleDataScope 获取指定ID角色数据范围
@@ -151,8 +137,6 @@ type ApiHTTPServer interface {
 	HandleRoleDataScope(context.Context, *HandleRoleDataScopeReq) (*HandleRoleDataScopeReply, error)
 	// HandleRoleMenu 处理指定ID角色菜单
 	HandleRoleMenu(context.Context, *HandleRoleMenuReq) (*HandleRoleMenuReply, error)
-	// HandleRoleResource 处理指定ID角色资源
-	HandleRoleResource(context.Context, *HandleRoleResourceReq) (*HandleRoleResourceReply, error)
 	// HandleUserRole 绑定用户领域权限
 	HandleUserRole(context.Context, *HandleUserRoleReq) (*HandleUserRoleReply, error)
 	// ListDept 列表部门
@@ -172,11 +156,6 @@ type ApiHTTPServer interface {
 	ListMenuTree(context.Context, *ListMenuTreeReq) (*ListMenuTreeReply, error)
 	// ListPost 列表岗位
 	ListPost(context.Context, *ListPostReq) (*ListPostReply, error)
-	// ListResource 资源模块
-	// 列表资源
-	ListResource(context.Context, *ListResourceReq) (*ListResourceReply, error)
-	// ListResourceGroup 列表资源-分组
-	ListResourceGroup(context.Context, *emptypb.Empty) (*ListResourceGroupReply, error)
 	// ListRole 角色模块
 	// 列表角色
 	ListRole(context.Context, *ListRoleReq) (*ListRoleReply, error)
@@ -184,8 +163,6 @@ type ApiHTTPServer interface {
 	ListRoleDept(context.Context, *ListRoleDeptReq) (*ListRoleDeptReply, error)
 	// ListRoleMenu 获取指定ID角色菜单
 	ListRoleMenu(context.Context, *ListRoleMenuReq) (*ListRoleMenuReply, error)
-	// ListRoleResource 获取指定ID角色资源
-	ListRoleResource(context.Context, *ListRoleResourceReq) (*ListRoleResourceReply, error)
 	// ListUser 列表用户
 	ListUser(context.Context, *ListUserReq) (*ListUserReply, error)
 	// ListUserRole 当前登录用户拥有角色
@@ -216,8 +193,6 @@ type ApiHTTPServer interface {
 	UpdatePost(context.Context, *UpdatePostReq) (*UpdatePostReply, error)
 	// UpdatePostState 设置领域状态
 	UpdatePostState(context.Context, *UpdatePostStateReq) (*UpdatePostStateReply, error)
-	// UpdateResource 修改资源
-	UpdateResource(context.Context, *UpdateResourceReq) (*UpdateResourceReply, error)
 	// UpdateRole 修改指定ID角色
 	UpdateRole(context.Context, *UpdateRoleReq) (*UpdateRoleReply, error)
 	// UpdateRoleState 更新指定ID角色状态
@@ -273,14 +248,6 @@ func RegisterApiHTTPServer(s *http.Server, srv ApiHTTPServer) {
 	r.GET("/v1/roles/{id}/depts", _Api_ListRoleDept0_HTTP_Handler(srv))
 	r.GET("/v1/roles/{id}/dataScopes", _Api_GetRoleDataScope0_HTTP_Handler(srv))
 	r.POST("/v1/roles/{id}/dataScopes", _Api_HandleRoleDataScope0_HTTP_Handler(srv))
-	r.GET("/v1/roles/{id}/resources", _Api_ListRoleResource0_HTTP_Handler(srv))
-	r.POST("/v1/roles/{id}/resources", _Api_HandleRoleResource0_HTTP_Handler(srv))
-	r.GET("/v1/resources", _Api_ListResource0_HTTP_Handler(srv))
-	r.GET("/v1/resources/groups", _Api_ListResourceGroup0_HTTP_Handler(srv))
-	r.POST("/v1/resources", _Api_CreateResource0_HTTP_Handler(srv))
-	r.GET("/v1/resources/{id}", _Api_GetResource0_HTTP_Handler(srv))
-	r.PUT("/v1/resources/{id}", _Api_UpdateResource0_HTTP_Handler(srv))
-	r.DELETE("/v1/resources/{id}", _Api_DeleteResource0_HTTP_Handler(srv))
 	r.GET("/v1/menus", _Api_ListMenu0_HTTP_Handler(srv))
 	r.POST("/v1/menus", _Api_CreateMenu0_HTTP_Handler(srv))
 	r.GET("/v1/menus/{id}/trees", _Api_ListMenuTree0_HTTP_Handler(srv))
@@ -1282,179 +1249,6 @@ func _Api_HandleRoleDataScope0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Con
 	}
 }
 
-func _Api_ListRoleResource0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ListRoleResourceReq
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationApiListRoleResource)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListRoleResource(ctx, req.(*ListRoleResourceReq))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListRoleResourceReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Api_HandleRoleResource0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in HandleRoleResourceReq
-		if err := ctx.Bind(&in.Data); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationApiHandleRoleResource)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.HandleRoleResource(ctx, req.(*HandleRoleResourceReq))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*HandleRoleResourceReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Api_ListResource0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ListResourceReq
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationApiListResource)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListResource(ctx, req.(*ListResourceReq))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListResourceReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Api_ListResourceGroup0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in emptypb.Empty
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationApiListResourceGroup)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListResourceGroup(ctx, req.(*emptypb.Empty))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListResourceGroupReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Api_CreateResource0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in CreateResourceReq
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationApiCreateResource)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.CreateResource(ctx, req.(*CreateResourceReq))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*CreateResourceReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Api_GetResource0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in GetResourceReq
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationApiGetResource)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetResource(ctx, req.(*GetResourceReq))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*Resource)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Api_UpdateResource0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in UpdateResourceReq
-		if err := ctx.Bind(&in.Data); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationApiUpdateResource)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdateResource(ctx, req.(*UpdateResourceReq))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*UpdateResourceReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Api_DeleteResource0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in DeleteResourceReq
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationApiDeleteResource)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.DeleteResource(ctx, req.(*DeleteResourceReq))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*DeleteResourceReply)
-		return ctx.Result(200, reply)
-	}
-}
-
 func _Api_ListMenu0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ListMenuReq
@@ -1850,14 +1644,12 @@ type ApiHTTPClient interface {
 	CreateDomain(ctx context.Context, req *CreateDomainReq, opts ...http.CallOption) (rsp *CreateDomainReply, err error)
 	CreateMenu(ctx context.Context, req *CreateMenuReq, opts ...http.CallOption) (rsp *CreateMenuReply, err error)
 	CreatePost(ctx context.Context, req *CreatePostReq, opts ...http.CallOption) (rsp *CreatePostReply, err error)
-	CreateResource(ctx context.Context, req *CreateResourceReq, opts ...http.CallOption) (rsp *CreateResourceReply, err error)
 	CreateRole(ctx context.Context, req *CreateRoleReq, opts ...http.CallOption) (rsp *CreateRoleReply, err error)
 	CreateUser(ctx context.Context, req *CreateUserReq, opts ...http.CallOption) (rsp *CreateUserReply, err error)
 	DeleteDept(ctx context.Context, req *DeleteDeptReq, opts ...http.CallOption) (rsp *DeleteDeptReply, err error)
 	DeleteDomain(ctx context.Context, req *DeleteDomainReq, opts ...http.CallOption) (rsp *DeleteDomainReply, err error)
 	DeleteMenu(ctx context.Context, req *DeleteMenuReq, opts ...http.CallOption) (rsp *DeleteMenuReply, err error)
 	DeletePost(ctx context.Context, req *DeletePostReq, opts ...http.CallOption) (rsp *DeletePostReply, err error)
-	DeleteResource(ctx context.Context, req *DeleteResourceReq, opts ...http.CallOption) (rsp *DeleteResourceReply, err error)
 	DeleteRole(ctx context.Context, req *DeleteRoleReq, opts ...http.CallOption) (rsp *DeleteRoleReply, err error)
 	DeleteUser(ctx context.Context, req *DeleteUserReq, opts ...http.CallOption) (rsp *DeleteUserReply, err error)
 	EmailLogin(ctx context.Context, req *EmailLoginReq, opts ...http.CallOption) (rsp *LoginReply, err error)
@@ -1868,7 +1660,6 @@ type ApiHTTPClient interface {
 	GetDomainName(ctx context.Context, req *GetDomainNameReq, opts ...http.CallOption) (rsp *Domain, err error)
 	GetMenu(ctx context.Context, req *GetMenuReq, opts ...http.CallOption) (rsp *Menu, err error)
 	GetPost(ctx context.Context, req *GetPostReq, opts ...http.CallOption) (rsp *Post, err error)
-	GetResource(ctx context.Context, req *GetResourceReq, opts ...http.CallOption) (rsp *Resource, err error)
 	GetRole(ctx context.Context, req *GetRoleReq, opts ...http.CallOption) (rsp *Role, err error)
 	GetRoleDataScope(ctx context.Context, req *GetRoleDataScopeReq, opts ...http.CallOption) (rsp *GetRoleDataScopeReply, err error)
 	GetUser(ctx context.Context, req *GetUserReq, opts ...http.CallOption) (rsp *User, err error)
@@ -1877,7 +1668,6 @@ type ApiHTTPClient interface {
 	HandleDomainMenu(ctx context.Context, req *HandleDomainMenuReq, opts ...http.CallOption) (rsp *HandleDomainMenuReply, err error)
 	HandleRoleDataScope(ctx context.Context, req *HandleRoleDataScopeReq, opts ...http.CallOption) (rsp *HandleRoleDataScopeReply, err error)
 	HandleRoleMenu(ctx context.Context, req *HandleRoleMenuReq, opts ...http.CallOption) (rsp *HandleRoleMenuReply, err error)
-	HandleRoleResource(ctx context.Context, req *HandleRoleResourceReq, opts ...http.CallOption) (rsp *HandleRoleResourceReply, err error)
 	HandleUserRole(ctx context.Context, req *HandleUserRoleReq, opts ...http.CallOption) (rsp *HandleUserRoleReply, err error)
 	ListDept(ctx context.Context, req *ListDeptReq, opts ...http.CallOption) (rsp *ListDeptReply, err error)
 	ListDeptTree(ctx context.Context, req *ListDeptTreeReq, opts ...http.CallOption) (rsp *ListDeptTreeReply, err error)
@@ -1887,12 +1677,9 @@ type ApiHTTPClient interface {
 	ListMenu(ctx context.Context, req *ListMenuReq, opts ...http.CallOption) (rsp *ListMenuReply, err error)
 	ListMenuTree(ctx context.Context, req *ListMenuTreeReq, opts ...http.CallOption) (rsp *ListMenuTreeReply, err error)
 	ListPost(ctx context.Context, req *ListPostReq, opts ...http.CallOption) (rsp *ListPostReply, err error)
-	ListResource(ctx context.Context, req *ListResourceReq, opts ...http.CallOption) (rsp *ListResourceReply, err error)
-	ListResourceGroup(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *ListResourceGroupReply, err error)
 	ListRole(ctx context.Context, req *ListRoleReq, opts ...http.CallOption) (rsp *ListRoleReply, err error)
 	ListRoleDept(ctx context.Context, req *ListRoleDeptReq, opts ...http.CallOption) (rsp *ListRoleDeptReply, err error)
 	ListRoleMenu(ctx context.Context, req *ListRoleMenuReq, opts ...http.CallOption) (rsp *ListRoleMenuReply, err error)
-	ListRoleResource(ctx context.Context, req *ListRoleResourceReq, opts ...http.CallOption) (rsp *ListRoleResourceReply, err error)
 	ListUser(ctx context.Context, req *ListUserReq, opts ...http.CallOption) (rsp *ListUserReply, err error)
 	ListUserRole(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *ListUserRoleReply, err error)
 	ListUserRoleMenuRouterTree(ctx context.Context, req *ListUserRoleMenuRouterTreeReq, opts ...http.CallOption) (rsp *ListUserRoleMenuRouterTreeReply, err error)
@@ -1908,7 +1695,6 @@ type ApiHTTPClient interface {
 	UpdateMenu(ctx context.Context, req *UpdateMenuReq, opts ...http.CallOption) (rsp *UpdateMenuReply, err error)
 	UpdatePost(ctx context.Context, req *UpdatePostReq, opts ...http.CallOption) (rsp *UpdatePostReply, err error)
 	UpdatePostState(ctx context.Context, req *UpdatePostStateReq, opts ...http.CallOption) (rsp *UpdatePostStateReply, err error)
-	UpdateResource(ctx context.Context, req *UpdateResourceReq, opts ...http.CallOption) (rsp *UpdateResourceReply, err error)
 	UpdateRole(ctx context.Context, req *UpdateRoleReq, opts ...http.CallOption) (rsp *UpdateRoleReply, err error)
 	UpdateRoleState(ctx context.Context, req *UpdateRoleStateReq, opts ...http.CallOption) (rsp *UpdateRoleStateReply, err error)
 	UpdateUser(ctx context.Context, req *UpdateUserReq, opts ...http.CallOption) (rsp *UpdateUserReply, err error)
@@ -1966,19 +1752,6 @@ func (c *ApiHTTPClientImpl) CreatePost(ctx context.Context, in *CreatePostReq, o
 	pattern := "/v1/posts"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationApiCreatePost))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *ApiHTTPClientImpl) CreateResource(ctx context.Context, in *CreateResourceReq, opts ...http.CallOption) (*CreateResourceReply, error) {
-	var out CreateResourceReply
-	pattern := "/v1/resources"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationApiCreateResource))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -2057,19 +1830,6 @@ func (c *ApiHTTPClientImpl) DeletePost(ctx context.Context, in *DeletePostReq, o
 	pattern := "/v1/posts/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationApiDeletePost))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *ApiHTTPClientImpl) DeleteResource(ctx context.Context, in *DeleteResourceReq, opts ...http.CallOption) (*DeleteResourceReply, error) {
-	var out DeleteResourceReply
-	pattern := "/v1/resources/{id}"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationApiDeleteResource))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
 	if err != nil {
@@ -2208,19 +1968,6 @@ func (c *ApiHTTPClientImpl) GetPost(ctx context.Context, in *GetPostReq, opts ..
 	return &out, err
 }
 
-func (c *ApiHTTPClientImpl) GetResource(ctx context.Context, in *GetResourceReq, opts ...http.CallOption) (*Resource, error) {
-	var out Resource
-	pattern := "/v1/resources/{id}"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationApiGetResource))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
 func (c *ApiHTTPClientImpl) GetRole(ctx context.Context, in *GetRoleReq, opts ...http.CallOption) (*Role, error) {
 	var out Role
 	pattern := "/v1/roles/{id}"
@@ -2317,19 +2064,6 @@ func (c *ApiHTTPClientImpl) HandleRoleMenu(ctx context.Context, in *HandleRoleMe
 	pattern := "/v1/roles/{id}/menus"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationApiHandleRoleMenu))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *ApiHTTPClientImpl) HandleRoleResource(ctx context.Context, in *HandleRoleResourceReq, opts ...http.CallOption) (*HandleRoleResourceReply, error) {
-	var out HandleRoleResourceReply
-	pattern := "/v1/roles/{id}/resources"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationApiHandleRoleResource))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
 	if err != nil {
@@ -2455,32 +2189,6 @@ func (c *ApiHTTPClientImpl) ListPost(ctx context.Context, in *ListPostReq, opts 
 	return &out, err
 }
 
-func (c *ApiHTTPClientImpl) ListResource(ctx context.Context, in *ListResourceReq, opts ...http.CallOption) (*ListResourceReply, error) {
-	var out ListResourceReply
-	pattern := "/v1/resources"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationApiListResource))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *ApiHTTPClientImpl) ListResourceGroup(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*ListResourceGroupReply, error) {
-	var out ListResourceGroupReply
-	pattern := "/v1/resources/groups"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationApiListResourceGroup))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
 func (c *ApiHTTPClientImpl) ListRole(ctx context.Context, in *ListRoleReq, opts ...http.CallOption) (*ListRoleReply, error) {
 	var out ListRoleReply
 	pattern := "/v1/roles"
@@ -2512,19 +2220,6 @@ func (c *ApiHTTPClientImpl) ListRoleMenu(ctx context.Context, in *ListRoleMenuRe
 	pattern := "/v1/roles/{id}/menus"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationApiListRoleMenu))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *ApiHTTPClientImpl) ListRoleResource(ctx context.Context, in *ListRoleResourceReq, opts ...http.CallOption) (*ListRoleResourceReply, error) {
-	var out ListRoleResourceReply
-	pattern := "/v1/roles/{id}/resources"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationApiListRoleResource))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -2720,19 +2415,6 @@ func (c *ApiHTTPClientImpl) UpdatePostState(ctx context.Context, in *UpdatePostS
 	pattern := "/v1/posts/{id}/state"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationApiUpdatePostState))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in.Data, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *ApiHTTPClientImpl) UpdateResource(ctx context.Context, in *UpdateResourceReq, opts ...http.CallOption) (*UpdateResourceReply, error) {
-	var out UpdateResourceReply
-	pattern := "/v1/resources/{id}"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationApiUpdateResource))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in.Data, &out, opts...)
 	if err != nil {

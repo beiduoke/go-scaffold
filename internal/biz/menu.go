@@ -11,28 +11,29 @@ import (
 
 // Menu is a Menu model.
 type Menu struct {
-	ID         uint
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
-	Name       string
-	Type       int32
-	ParentID   uint
-	Path       string
-	Redirect   string
-	Component  string
-	Permission string
-	Sort       int32
-	Icon       string
-	Title      string
-	IsHidden   int32
-	IsCache    int32
-	IsAffix    int32
-	LinkType   int32
-	LinkUrl    string
-	Parent     *Menu
-	Children   []*Menu
-	Parameters []*MenuParameter
-	Buttons    []*MenuButton
+	ID          uint
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	Name        string
+	Type        int32
+	ParentID    uint
+	Path        string
+	Redirect    string
+	Component   string
+	Permission  string
+	Sort        int32
+	Icon        string
+	Title       string
+	IsHidden    int32
+	IsCache     int32
+	IsAffix     int32
+	LinkType    int32
+	LinkUrl     string
+	ApiResource string
+	Parent      *Menu
+	Children    []*Menu
+	Parameters  []*MenuParameter
+	Buttons     []*MenuButton
 }
 
 func (g Menu) GetID() string {

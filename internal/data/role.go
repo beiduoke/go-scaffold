@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
-	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 	"gorm.io/gorm/clause"
@@ -146,16 +145,16 @@ func (r *RoleRepo) ListPage(ctx context.Context, paging *pagination.Pagination) 
 		}
 	}
 	// 排序
+	if sortBy, ok := paging.OrderBy["sort"]; ok {
+		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: "sort"}, Desc: sortBy})
+	}
+
 	if createdBy, ok := paging.OrderBy["createdAt"]; ok {
 		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: "created_at"}, Desc: createdBy})
 	}
 
 	if idBy, ok := paging.OrderBy["id"]; ok {
 		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: "id"}, Desc: idBy})
-	}
-
-	if sortBy, ok := paging.OrderBy["sort"]; ok {
-		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: "sort"}, Desc: sortBy})
 	}
 
 	if !paging.Nopaging {
@@ -207,37 +206,6 @@ func (r *RoleRepo) HandleMenu(ctx context.Context, g *biz.Role) error {
 	return r.data.DB(ctx).Model(&SysRoleMenu{}).CreateInBatches(&sysRoleMenus, len(g.Menus)).Error
 }
 
-// 处理角色资源
-func (r *RoleRepo) HandleResource(ctx context.Context, g *biz.Role) error {
-	ctxDomain := r.data.CtxAuthUser(ctx).GetDomain()
-
-	var apiRepo = ResourceRepo{}
-	var resources []SysResource
-	for _, v := range g.Resources {
-		resources = append(resources, *apiRepo.toModel(v))
-	}
-
-	sysRole := r.toModel(g)
-	if err := r.data.DB(ctx).Model(sysRole).Debug().Association("Resources").Replace(&resources); err != nil {
-		return err
-	}
-
-	role := convert.UnitToString(g.ID)
-	// 删除角色域下所有角色
-	for _, v := range r.data.enforcer.GetPermissionsForUser(role, ctxDomain) {
-		if _, err := r.data.enforcer.DeletePermissionForUser(role, v[1:]...); err != nil {
-			r.log.Errorf("删除casbin角色领域下角色失败 %v", err)
-		}
-	}
-	// 根据最新资源重新绑定
-	rules := make([][]string, 0, len(g.Resources))
-	for _, v := range g.Resources {
-		rules = append(rules, []string{ctxDomain, v.Path, v.Method})
-	}
-	_, err := r.data.enforcer.AddPermissionsForUser(role, rules...)
-	return err
-}
-
 // 获取指定角色菜单列表
 func (r *RoleRepo) ListMenuByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu, error) {
 	var roleMenus []*SysRoleMenu
@@ -272,11 +240,6 @@ func (r *RoleRepo) ListDeptByIDs(ctx context.Context, ids ...uint) ([]*biz.Dept,
 	}
 
 	return bizDepts, nil
-}
-
-// 获取指定角色部门列表
-func (r *RoleRepo) ListResourceByIDs(ctx context.Context, ids ...uint) ([]*biz.Resource, error) {
-	return nil, nil
 }
 
 // 获取指定角色菜单列表-返回父级菜单

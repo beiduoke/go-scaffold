@@ -91,26 +91,27 @@ func TransformMenuRouter(menu *biz.Menu) *v1.MenuRouter {
 
 func TransformMenu(data *biz.Menu) *v1.Menu {
 	return &v1.Menu{
-		CreatedAt:  timestamppb.New(data.CreatedAt),
-		UpdatedAt:  timestamppb.New(data.UpdatedAt),
-		Id:         uint64(data.ID),
-		Name:       data.Name,
-		Type:       (*protobuf.MenuType)(&data.Type),
-		ParentId:   uint64(data.ParentID),
-		Path:       &data.Path,
-		IsHidden:   (*protobuf.MenuHidden)(&data.IsHidden),
-		Component:  &data.Component,
-		Permission: &data.Permission,
-		Sort:       &data.Sort,
-		Icon:       &data.Icon,
-		Title:      data.Title,
-		IsCache:    (*protobuf.MenuCache)(&data.IsCache),
-		IsAffix:    (*protobuf.MenuAffix)(&data.IsAffix),
-		LinkType:   (*protobuf.MenuLinkType)(&data.LinkType),
-		LinkUrl:    &data.LinkUrl,
-		Children:   make([]*v1.Menu, 0),
-		Parameters: make([]*v1.MenuParameter, 0),
-		Buttons:    make([]*v1.MenuButton, 0),
+		CreatedAt:   timestamppb.New(data.CreatedAt),
+		UpdatedAt:   timestamppb.New(data.UpdatedAt),
+		Id:          uint64(data.ID),
+		Name:        data.Name,
+		Type:        (*protobuf.MenuType)(&data.Type),
+		ParentId:    uint64(data.ParentID),
+		Path:        &data.Path,
+		IsHidden:    (*protobuf.MenuHidden)(&data.IsHidden),
+		Component:   &data.Component,
+		Permission:  &data.Permission,
+		Sort:        &data.Sort,
+		Icon:        &data.Icon,
+		Title:       data.Title,
+		IsCache:     (*protobuf.MenuCache)(&data.IsCache),
+		IsAffix:     (*protobuf.MenuAffix)(&data.IsAffix),
+		LinkType:    (*protobuf.MenuLinkType)(&data.LinkType),
+		LinkUrl:     &data.LinkUrl,
+		Children:    make([]*v1.Menu, 0),
+		Parameters:  make([]*v1.MenuParameter, 0),
+		Buttons:     make([]*v1.MenuButton, 0),
+		ApiResource: &data.ApiResource,
 	}
 }
 
@@ -129,7 +130,7 @@ func TreeMenu(menus []*biz.Menu, pid uint) []*v1.Menu {
 
 // ListMenuTree 列表菜单-树形
 func (s *ApiService) ListMenuTree(ctx context.Context, in *v1.ListMenuTreeReq) (*v1.ListMenuTreeReply, error) {
-	results, total := s.menuCase.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithOrderBy(map[string]bool{"id": false, "sort": true})))
+	results, total := s.menuCase.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithOrderBy(map[string]bool{"sort": false, "id": true})))
 	treeData := make([]*v1.Menu, 0)
 	for _, v := range results {
 		treeData = append(treeData, TransformMenu(v))
@@ -172,22 +173,23 @@ func (s *ApiService) CreateMenu(ctx context.Context, in *v1.CreateMenuReq) (*v1.
 	}
 
 	user, err := s.menuCase.Create(ctx, &biz.Menu{
-		Name:       in.GetName(),
-		Type:       int32(in.GetType()),
-		Path:       in.GetPath(),
-		ParentID:   uint(in.GetParentId()),
-		Component:  in.GetComponent(),
-		Permission: in.GetPermission(),
-		Sort:       in.GetSort(),
-		Icon:       in.GetIcon(),
-		Title:      in.GetTitle(),
-		IsHidden:   int32(in.GetIsHidden()),
-		IsCache:    int32(in.GetIsCache()),
-		IsAffix:    int32(in.GetIsAffix()),
-		LinkType:   int32(in.GetLinkType()),
-		LinkUrl:    in.GetLinkUrl(),
-		Parameters: parameters,
-		Buttons:    buttons,
+		Name:        in.GetName(),
+		Type:        int32(in.GetType()),
+		Path:        in.GetPath(),
+		ParentID:    uint(in.GetParentId()),
+		Component:   in.GetComponent(),
+		Permission:  in.GetPermission(),
+		Sort:        in.GetSort(),
+		Icon:        in.GetIcon(),
+		Title:       in.GetTitle(),
+		IsHidden:    int32(in.GetIsHidden()),
+		IsCache:     int32(in.GetIsCache()),
+		IsAffix:     int32(in.GetIsAffix()),
+		LinkType:    int32(in.GetLinkType()),
+		LinkUrl:     in.GetLinkUrl(),
+		Parameters:  parameters,
+		Buttons:     buttons,
+		ApiResource: in.GetApiResource(),
 	})
 	if err != nil {
 		return nil, v1.ErrorMenuCreateFail("菜单创建失败: %v", err.Error())
@@ -221,23 +223,24 @@ func (s *ApiService) UpdateMenu(ctx context.Context, in *v1.UpdateMenuReq) (*v1.
 		})
 	}
 	err := s.menuCase.Update(ctx, &biz.Menu{
-		ID:         uint(in.GetId()),
-		Name:       v.GetName(),
-		Type:       int32(v.Type),
-		ParentID:   uint(v.GetParentId()),
-		Path:       v.GetPath(),
-		Component:  v.GetComponent(),
-		Permission: v.GetPermission(),
-		Sort:       v.GetSort(),
-		Icon:       v.GetIcon(),
-		Title:      v.GetTitle(),
-		IsHidden:   int32(v.GetIsHidden()),
-		IsCache:    int32(v.GetIsCache()),
-		IsAffix:    int32(v.GetIsAffix()),
-		LinkType:   int32(v.GetLinkType()),
-		LinkUrl:    v.GetLinkUrl(),
-		Parameters: parameters,
-		Buttons:    buttons,
+		ID:          uint(in.GetId()),
+		Name:        v.GetName(),
+		Type:        int32(v.Type),
+		ParentID:    uint(v.GetParentId()),
+		Path:        v.GetPath(),
+		Component:   v.GetComponent(),
+		Permission:  v.GetPermission(),
+		Sort:        v.GetSort(),
+		Icon:        v.GetIcon(),
+		Title:       v.GetTitle(),
+		IsHidden:    int32(v.GetIsHidden()),
+		IsCache:     int32(v.GetIsCache()),
+		IsAffix:     int32(v.GetIsAffix()),
+		LinkType:    int32(v.GetLinkType()),
+		LinkUrl:     v.GetLinkUrl(),
+		Parameters:  parameters,
+		Buttons:     buttons,
+		ApiResource: v.GetApiResource(),
 	})
 	if err != nil {
 		return nil, v1.ErrorMenuUpdateFail("菜单修改失败: %v", err.Error())

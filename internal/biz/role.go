@@ -28,7 +28,6 @@ type Role struct {
 	Users             []*User
 	Domains           []*Domain
 	Menus             []*Menu
-	Resources         []*Resource
 	Depts             []*Dept
 }
 
@@ -50,8 +49,6 @@ type RoleRepo interface {
 	HandleMenu(context.Context, *Role) error
 	ListMenuByIDs(context.Context, ...uint) ([]*Menu, error)
 	ListMenuAndParentByIDs(context.Context, ...uint) ([]*Menu, error)
-	ListResourceByIDs(context.Context, ...uint) ([]*Resource, error)
-	HandleResource(context.Context, *Role) error
 	ListDeptByIDs(context.Context, ...uint) ([]*Dept, error)
 	HandleDept(context.Context, *Role) error
 }
@@ -167,18 +164,6 @@ func (uc *RoleUsecase) ListMenuByID(ctx context.Context, g *Role) ([]*Menu, erro
 func (uc *RoleUsecase) HandleMenu(ctx context.Context, g *Role) error {
 	uc.log.WithContext(ctx).Debugf("HandleMenu: %v", g)
 	return uc.biz.roleRepo.HandleMenu(ctx, g)
-}
-
-// HandleMenu 获取角色菜单
-func (uc *RoleUsecase) ListResourceByID(ctx context.Context, g *Role) ([]*Resource, error) {
-	uc.log.WithContext(ctx).Debugf("ListMenuByIDs: %v", g)
-	return uc.biz.roleRepo.ListResourceByIDs(ctx, g.ID)
-}
-
-// HandleResource 绑定资源
-func (uc *RoleUsecase) HandleResource(ctx context.Context, g *Role) error {
-	uc.log.WithContext(ctx).Debugf("HandleResource: %v", g)
-	return uc.biz.roleRepo.HandleResource(ctx, g)
 }
 
 // HandleMenu 获取角色菜单

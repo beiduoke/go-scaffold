@@ -28,22 +28,23 @@ func (r *MenuRepo) toModel(d *biz.Menu) *SysMenu {
 		return nil
 	}
 	sysData := &SysMenu{
-		Name:       d.Name,
-		Type:       d.Type,
-		ParentID:   d.ParentID,
-		Path:       d.Path,
-		Component:  d.Component,
-		Permission: d.Permission,
-		Sort:       d.Sort,
-		Icon:       d.Icon,
-		Title:      d.Title,
-		IsHidden:   d.IsHidden,
-		IsCache:    d.IsCache,
-		IsAffix:    d.IsAffix,
-		LinkType:   d.LinkType,
-		LinkUrl:    d.LinkUrl,
-		Parameters: make([]SysMenuParameter, 0, len(d.Parameters)),
-		Buttons:    make([]SysMenuButton, 0, len(d.Buttons)),
+		Name:        d.Name,
+		Type:        d.Type,
+		ParentID:    d.ParentID,
+		Path:        d.Path,
+		Component:   d.Component,
+		Permission:  d.Permission,
+		Sort:        d.Sort,
+		Icon:        d.Icon,
+		Title:       d.Title,
+		IsHidden:    d.IsHidden,
+		IsCache:     d.IsCache,
+		IsAffix:     d.IsAffix,
+		LinkType:    d.LinkType,
+		LinkUrl:     d.LinkUrl,
+		Parameters:  make([]SysMenuParameter, 0, len(d.Parameters)),
+		Buttons:     make([]SysMenuButton, 0, len(d.Buttons)),
+		ApiResource: d.ApiResource,
 	}
 	for _, v := range d.Parameters {
 		sysData.Parameters = append(sysData.Parameters, SysMenuParameter{
@@ -69,25 +70,26 @@ func (r *MenuRepo) toBiz(d *SysMenu) *biz.Menu {
 		return nil
 	}
 	data := &biz.Menu{
-		CreatedAt:  d.CreatedAt,
-		UpdatedAt:  d.UpdatedAt,
-		ID:         d.ID,
-		Name:       d.Name,
-		Type:       d.Type,
-		ParentID:   d.ParentID,
-		Path:       d.Path,
-		Component:  d.Component,
-		Permission: d.Permission,
-		Sort:       d.Sort,
-		Icon:       d.Icon,
-		Title:      d.Title,
-		IsHidden:   d.IsHidden,
-		IsCache:    d.IsCache,
-		IsAffix:    d.IsAffix,
-		LinkType:   d.LinkType,
-		LinkUrl:    d.LinkUrl,
-		Parameters: make([]*biz.MenuParameter, 0, len(d.Parameters)),
-		Buttons:    make([]*biz.MenuButton, 0, len(d.Buttons)),
+		CreatedAt:   d.CreatedAt,
+		UpdatedAt:   d.UpdatedAt,
+		ID:          d.ID,
+		Name:        d.Name,
+		Type:        d.Type,
+		ParentID:    d.ParentID,
+		Path:        d.Path,
+		Component:   d.Component,
+		Permission:  d.Permission,
+		Sort:        d.Sort,
+		Icon:        d.Icon,
+		Title:       d.Title,
+		IsHidden:    d.IsHidden,
+		IsCache:     d.IsCache,
+		IsAffix:     d.IsAffix,
+		LinkType:    d.LinkType,
+		LinkUrl:     d.LinkUrl,
+		Parameters:  make([]*biz.MenuParameter, 0, len(d.Parameters)),
+		Buttons:     make([]*biz.MenuButton, 0, len(d.Buttons)),
+		ApiResource: d.ApiResource,
 	}
 	for _, v := range d.Parameters {
 		data.Parameters = append(data.Parameters, &biz.MenuParameter{
@@ -195,15 +197,30 @@ func (r *MenuRepo) ListAll(ctx context.Context) (menus []*biz.Menu, err error) {
 }
 
 func (r *MenuRepo) ListPage(ctx context.Context, paging *pagination.Pagination) (menus []*biz.Menu, total int64) {
-	db := r.data.DB(ctx).Model(&SysMenu{})
+	db := r.data.DB(ctx).Model(&SysMenu{}).Debug()
 	sysMenus := []*SysMenu{}
 	// 查询条件
-	for k, v := range paging.Query {
-		db = db.Where(k, v)
+	if name, ok := paging.Query["name"].(string); ok && name != "" {
+		if name != "" {
+			db = db.Where("name LIKE ?", name+"%")
+		}
+	}
+	if title, ok := paging.Query["title"].(string); ok && title != "" {
+		if title != "" {
+			db = db.Where("title LIKE ?", title+"%")
+		}
 	}
 	// 排序
-	for k, v := range paging.OrderBy {
-		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: k}, Desc: v})
+	if sortBy, ok := paging.OrderBy["sort"]; ok {
+		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: "sort"}, Desc: sortBy})
+	}
+
+	if createdBy, ok := paging.OrderBy["createdAt"]; ok {
+		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: "created_at"}, Desc: createdBy})
+	}
+
+	if idBy, ok := paging.OrderBy["id"]; ok {
+		db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: "id"}, Desc: idBy})
 	}
 
 	if !paging.Nopaging {

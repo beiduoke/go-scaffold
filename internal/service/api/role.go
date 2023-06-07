@@ -185,35 +185,6 @@ func (s *ApiService) HandleRoleMenu(ctx context.Context, in *v1.HandleRoleMenuRe
 	}, nil
 }
 
-// ListRoleResource 列表-指定ID角色资源
-func (s *ApiService) ListRoleResource(ctx context.Context, in *v1.ListRoleResourceReq) (*v1.ListRoleResourceReply, error) {
-	id := in.GetId()
-	resources, _ := s.roleCase.ListResourceByID(ctx, &biz.Role{ID: uint(id)})
-	return &v1.ListRoleResourceReply{Items: convert.ArrayToAny(resources, func(t *biz.Resource) *v1.Resource {
-		return TransformResource(t)
-	})}, nil
-}
-
-// HandleRoleResource 处理指定ID角色资源
-func (s *ApiService) HandleRoleResource(ctx context.Context, in *v1.HandleRoleResourceReq) (*v1.HandleRoleResourceReply, error) {
-	inResourceIds := in.GetData().GetResourceIds()
-	apiIds := make([]uint, 0, len(inResourceIds))
-	for _, v := range inResourceIds {
-		apiIds = append(apiIds, uint(v))
-	}
-	resources, err := s.resourceCase.ListByIDs(ctx, apiIds...)
-	if err != nil {
-		return nil, v1.ErrorRoleHandleResourceFail("角色资源查询失败")
-	}
-	if err := s.roleCase.HandleResource(ctx, &biz.Role{ID: uint(in.GetId()), Resources: resources}); err != nil {
-		return nil, v1.ErrorRoleHandleResourceFail("角色资源处理失败：%v", err)
-	}
-	return &v1.HandleRoleResourceReply{
-		Type:    constant.HandleType_success.String(),
-		Message: "处理成功",
-	}, nil
-}
-
 // ListRoleDept 列表-获取指定ID角色部门
 func (s *ApiService) ListRoleDept(ctx context.Context, in *v1.ListRoleDeptReq) (*v1.ListRoleDeptReply, error) {
 	id := in.GetId()
