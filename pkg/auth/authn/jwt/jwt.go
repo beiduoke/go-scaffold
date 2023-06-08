@@ -119,23 +119,12 @@ func (a *Authenticator) Authenticate(ctx context.Context) (*authn.AuthClaims, er
 		return nil, authn.ErrInvalidClaims
 	}
 
-	authClaims, err := authn.MapClaimsToAuthClaims(claims)
-	if err != nil {
-		return nil, err
-	}
-
-	return authClaims, nil
+	return authn.MapClaimsToAuthClaims(claims)
 }
 
 func (a *Authenticator) CreateIdentity(ctx context.Context, claims authn.AuthClaims) (string, error) {
 	token := jwt.NewWithClaims(a.signingMethod, authn.AuthClaimsToJwtClaims(claims))
-
-	tokenStr, err := a.generateToken(token)
-	if err != nil {
-		return "", err
-	}
-
-	return tokenStr, nil
+	return a.generateToken(token)
 }
 
 func (a *Authenticator) parseToken(token string) (*jwt.Token, error) {

@@ -2,11 +2,9 @@ package data
 
 import (
 	"context"
-	"errors"
 
 	"github.com/beiduoke/go-scaffold/pkg/auth/authn"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
-	"gorm.io/gorm"
 )
 
 func (d *Data) HasSuperAdmin(ctx context.Context) bool {
@@ -17,9 +15,9 @@ func (d *Data) HasSuperAdmin(ctx context.Context) bool {
 }
 
 func (d *Data) HasDomainSuperUser(ctx context.Context) bool {
-	sysDomain, domainId, userId := SysDomain{}, d.CtxDomainID(ctx), d.CtxUserID(ctx)
-	result := d.DB(ctx).Model(sysDomain).Debug().Select("SuperUserID").Last(&sysDomain, domainId)
-	if !errors.Is(result.Error, gorm.ErrRecordNotFound) && sysDomain.SuperUserID == userId {
+	sysDomain, userId := SysDomain{}, d.CtxUserID(ctx)
+	result := d.DBD(ctx).Model(sysDomain).Select("SuperUserID").Last(&sysDomain)
+	if result.RowsAffected > 0 && sysDomain.SuperUserID == userId {
 		return true
 	}
 	return false
@@ -30,6 +28,7 @@ func (d *Data) CtxAuthUser(ctx context.Context) authn.SecurityUser {
 	if !success {
 		return &securityUser{}
 	}
+	// securityUser := security.(*securityUser)
 	return security
 }
 

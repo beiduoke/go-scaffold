@@ -24,7 +24,7 @@ type SecurityUser interface {
 	GetAction() string
 	// GetDomain returns the domain of the token.
 	GetDomain() string
-	// GetID returns the user of the token.
+	// GetUser returns the user of the token.
 	GetUser() string
 }
 

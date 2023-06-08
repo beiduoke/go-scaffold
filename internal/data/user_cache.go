@@ -161,11 +161,11 @@ func (r *UserRepo) DeleteLoginCache(ctx context.Context, uid uint) error {
 // GetLoginIDCache 获取登录信息
 func (r *UserRepo) GetLoginIDCache(ctx context.Context, uuid string) (*biz.User, error) {
 	result := r.data.rdb.Get(ctx, fmt.Sprintf(cacheStringLoginID, uuid))
-	authUser := biz.User{}
-	if err := json.Unmarshal([]byte(result.Val()), &authUser); err != nil {
+	bizUser := biz.User{}
+	if err := json.Unmarshal([]byte(result.Val()), &bizUser); err != nil {
 		r.log.Errorf("unmarshal login auth user", err)
 		return nil, err
 	}
 
-	return &authUser, result.Err()
+	return &bizUser, result.Err()
 }

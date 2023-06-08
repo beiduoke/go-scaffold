@@ -1,11 +1,5 @@
 package constant
 
-import (
-	"google.golang.org/protobuf/runtime/protoimpl"
-)
-
-var file_protobuf_enum_proto_enumTypes = make([]protoimpl.EnumInfo, 20)
-
 // 处理类型
 type HandleType int32
 

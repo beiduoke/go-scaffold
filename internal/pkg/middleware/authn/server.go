@@ -26,7 +26,6 @@ func Server(authenticator authn.Authenticator, userCreator authn.SecurityUserCre
 			if err != nil && status.Convert(err) != nil {
 				return nil, errors.Unauthorized(reason, status.Convert(err).Message())
 			}
-
 			ctx = authn.ContextWithAuthClaims(ctx, claims)
 			if userCreator != nil {
 				securityUser := userCreator(claims)
@@ -45,7 +44,6 @@ func Server(authenticator authn.Authenticator, userCreator authn.SecurityUserCre
 					Project:  &project,
 				})
 			}
-
 			return handler(ctx, req)
 		}
 	}
