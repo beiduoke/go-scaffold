@@ -21,22 +21,22 @@ type DomainRoleUser struct {
 
 // Domain is a Domain model.
 type Domain struct {
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	ID          uint
-	ParentID    uint
-	Name        string
-	Code        string
-	Alias       string
-	Keywords    string
-	Logo        string
-	Pic         string
-	Description string
-	Sort        int32
-	State       int32
-	Remarks     string
-	Role        *Role
-	Menus       []*Menu
+	CreatedAt   time.Time `json:"createdAt,omitempty" form:"createdAt,omitempty"`
+	UpdatedAt   time.Time `json:"updatedAt,omitempty" form:"updatedAt,omitempty"`
+	ID          uint      `json:"id,omitempty" form:"id,omitempty"`
+	ParentID    uint      `json:"parentID,omitempty" form:"parentID,omitempty"`
+	Name        string    `json:"name,omitempty" form:"name,omitempty"`
+	Code        string    `json:"code,omitempty" form:"code,omitempty"`
+	Alias       string    `json:"alias,omitempty" form:"alias,omitempty"`
+	Keywords    string    `json:"keywords,omitempty" form:"keywords,omitempty"`
+	Logo        string    `json:"logo,omitempty" form:"logo,omitempty"`
+	Pic         string    `json:"pic,omitempty" form:"pic,omitempty"`
+	Description string    `json:"description,omitempty" form:"description,omitempty"`
+	Sort        int32     `json:"sort,omitempty" form:"sort,omitempty"`
+	State       int32     `json:"state,omitempty" form:"state,omitempty"`
+	Remarks     string    `json:"remarks,omitempty" form:"remarks,omitempty"`
+	Role        *Role     `json:"role,omitempty" form:"role,omitempty"`
+	Menus       []*Menu   `json:"menus,omitempty" form:"menus,omitempty"`
 }
 
 func (g Domain) GetID() string {

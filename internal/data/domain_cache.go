@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 
+	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"gorm.io/gorm"
 )
@@ -13,10 +14,10 @@ const (
 	cacheHashKeyDomain = "sys_domain"
 )
 
-var _ Cache[*SysDomain] = (*DomainRepo)(nil)
+var _ Cache[*biz.Domain] = (*DomainRepo)(nil)
 
 // SetCache 设置领域缓存
-func (r *DomainRepo) SetCache(ctx context.Context, g *SysDomain) error {
+func (r *DomainRepo) SetCache(ctx context.Context, g *biz.Domain) error {
 	dataStr, err := json.Marshal(g)
 	if err != nil {
 		r.log.Errorf("领域缓存失败 %v", err)
@@ -26,15 +27,15 @@ func (r *DomainRepo) SetCache(ctx context.Context, g *SysDomain) error {
 }
 
 // GetCache 获取领域缓存
-func (r *DomainRepo) GetCache(ctx context.Context, key string) (sysDomain *SysDomain) {
+func (r *DomainRepo) GetCache(ctx context.Context, key string) (bizDomain *biz.Domain) {
 	dataStr, err := r.data.rdb.HGet(ctx, cacheHashKeyDomain, key).Result()
 	if err != nil {
 		return nil
 	}
-	if err := json.Unmarshal([]byte(dataStr), &sysDomain); err != nil {
+	if err := json.Unmarshal([]byte(dataStr), &bizDomain); err != nil {
 		r.log.Errorf("缓存反序列化失败 %v", err)
 	}
-	return sysDomain
+	return bizDomain
 }
 
 // DeleteCache 获取领域缓存
@@ -43,28 +44,28 @@ func (r *DomainRepo) DeleteCache(ctx context.Context, key string) error {
 }
 
 // ListAllCache 获取全部缓存数据
-func (r *DomainRepo) ListAllCache(ctx context.Context) (sysDomains []*SysDomain) {
+func (r *DomainRepo) ListAllCache(ctx context.Context) (bizDomains []*biz.Domain) {
 	if l, _ := r.data.rdb.HLen(ctx, cacheHashKeyDomain).Result(); l > 0 {
 		domainMap, _ := r.data.rdb.HGetAll(ctx, cacheHashKeyDomain).Result()
 		for _, v := range domainMap {
-			sysDomain := SysDomain{}
-			err := json.Unmarshal([]byte(v), &sysDomain)
+			bizDomain := biz.Domain{}
+			err := json.Unmarshal([]byte(v), &bizDomain)
 			if err != nil {
 				r.log.Errorf("领域缓存反序列失败 %v", err)
 				continue
 			}
-			sysDomains = append(sysDomains, &sysDomain)
+			bizDomains = append(bizDomains, &bizDomain)
 		}
-		return sysDomains
+		return bizDomains
 	}
 
-	result := r.data.DB(ctx).Find(&sysDomains)
+	result := r.data.DB(ctx).Find(&bizDomains)
 	if result.Error != nil && !errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		r.log.Errorf("领域查询失败 %v", result.Error)
 		return nil
 	}
 	domainMap := make(map[string]string)
-	for _, v := range sysDomains {
+	for _, v := range bizDomains {
 		menuStr, err := json.Marshal(v)
 		if err != nil {
 			r.log.Errorf("领域缓存序列化失败 %v", err)
@@ -75,5 +76,5 @@ func (r *DomainRepo) ListAllCache(ctx context.Context) (sysDomains []*SysDomain)
 	if err := r.data.rdb.HSet(ctx, cacheHashKeyDomain, domainMap).Err(); err != nil {
 		r.log.Errorf("领域缓存失败 %v", err)
 	}
-	return sysDomains
+	return bizDomains
 }

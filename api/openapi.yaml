@@ -257,6 +257,288 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.server.v1.ListDeptTreeReply'
+    /v1/dictData:
+        get:
+            tags:
+                - Api
+            description: 列表字典数据
+            operationId: Api_ListDictData
+            parameters:
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
+                - name: page
+                  in: query
+                  description: 当前页
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  description: 每一页的行数
+                  schema:
+                    type: integer
+                    format: int32
+                - name: dictType
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.server.v1.ListDictDataReply'
+        post:
+            tags:
+                - Api
+            description: 创建字典数据
+            operationId: Api_CreateDictData
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.server.v1.CreateDictDataReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.server.v1.CreateDictDataReply'
+    /v1/dictData/{id}:
+        get:
+            tags:
+                - Api
+            description: 获取字典数据
+            operationId: Api_GetDictData
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.server.v1.DictData'
+        put:
+            tags:
+                - Api
+            description: 修改字典数据
+            operationId: Api_UpdateDictData
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.server.v1.UpdateDictDataReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.server.v1.UpdateDictDataReply'
+        delete:
+            tags:
+                - Api
+            description: 删除字典数据
+            operationId: Api_DeleteDictData
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.server.v1.DeleteDictDataReply'
+    /v1/dictData/{id}/state:
+        put:
+            tags:
+                - Api
+            description: 设置字典数据状态
+            operationId: Api_UpdateDictDataState
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.server.v1.UpdateDictDataStateReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.server.v1.UpdateDictDataStateReply'
+    /v1/dicts:
+        get:
+            tags:
+                - Api
+            description: 列表字典
+            operationId: Api_ListDict
+            parameters:
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
+                - name: page
+                  in: query
+                  description: 当前页
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  description: 每一页的行数
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.server.v1.ListDictReply'
+        post:
+            tags:
+                - Api
+            description: 创建字典
+            operationId: Api_CreateDict
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.server.v1.CreateDictReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.server.v1.CreateDictReply'
+    /v1/dicts/{id}:
+        get:
+            tags:
+                - Api
+            description: 获取字典
+            operationId: Api_GetDict
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.server.v1.Dict'
+        put:
+            tags:
+                - Api
+            description: 修改字典
+            operationId: Api_UpdateDict
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.server.v1.UpdateDictReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.server.v1.UpdateDictReply'
+        delete:
+            tags:
+                - Api
+            description: 删除字典
+            operationId: Api_DeleteDict
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.server.v1.DeleteDictReply'
+    /v1/dicts/{id}/state:
+        put:
+            tags:
+                - Api
+            description: 设置字典状态
+            operationId: Api_UpdateDictState
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.server.v1.UpdateDictStateReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.server.v1.UpdateDictStateReply'
     /v1/domains:
         get:
             tags:
@@ -751,7 +1033,7 @@ paths:
         put:
             tags:
                 - Api
-            description: 设置领域状态
+            description: 设置岗位状态
             operationId: Api_UpdatePostState
             parameters:
                 - name: id
@@ -1335,6 +1617,70 @@ components:
                 remarks:
                     type: string
             description: 请求 - 创建部门
+        api.server.v1.CreateDictDataReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/google.protobuf.Any'
+                type:
+                    type: string
+            description: 回应 - 创建字典数据
+        api.server.v1.CreateDictDataReq:
+            type: object
+            properties:
+                label:
+                    type: string
+                value:
+                    type: string
+                dictType:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                state:
+                    type: integer
+                    format: enum
+                remarks:
+                    type: string
+                colorType:
+                    type: string
+                cssClass:
+                    type: string
+            description: 请求 - 创建字典数据
+        api.server.v1.CreateDictReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/google.protobuf.Any'
+                type:
+                    type: string
+            description: 回应 - 创建字典
+        api.server.v1.CreateDictReq:
+            type: object
+            properties:
+                name:
+                    type: string
+                type:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                state:
+                    type: integer
+                    format: enum
+                remarks:
+                    type: string
+            description: 请求 - 创建字典
         api.server.v1.CreateDomainReply:
             type: object
             properties:
@@ -1579,6 +1925,32 @@ components:
                 type:
                     type: string
             description: 回应 - 删除部门
+        api.server.v1.DeleteDictDataReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/google.protobuf.Any'
+                type:
+                    type: string
+            description: 回应 - 删除字典数据
+        api.server.v1.DeleteDictReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/google.protobuf.Any'
+                type:
+                    type: string
+            description: 回应 - 删除字典
         api.server.v1.DeleteDomainReply:
             type: object
             properties:
@@ -1615,6 +1987,8 @@ components:
                     type: string
                 result:
                     $ref: '#/components/schemas/google.protobuf.Any'
+                type:
+                    type: string
             description: 回应 - 删除岗位
         api.server.v1.DeleteRoleReply:
             type: object
@@ -1672,6 +2046,62 @@ components:
                     items:
                         $ref: '#/components/schemas/api.server.v1.Dept'
             description: 部门模块
+        api.server.v1.Dict:
+            type: object
+            properties:
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                id:
+                    type: integer
+                    format: uint64
+                name:
+                    type: string
+                type:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                remarks:
+                    type: string
+                state:
+                    type: integer
+                    format: enum
+            description: 字典模块
+        api.server.v1.DictData:
+            type: object
+            properties:
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                id:
+                    type: integer
+                    format: uint64
+                label:
+                    type: string
+                value:
+                    type: string
+                dictType:
+                    type: string
+                colorType:
+                    type: string
+                cssClass:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                remarks:
+                    type: string
+                state:
+                    type: integer
+                    format: enum
+            description: 字典数据模块
         api.server.v1.Domain:
             type: object
             properties:
@@ -1936,6 +2366,28 @@ components:
                     type: integer
                     format: int64
             description: 回应 - 获取树形部门
+        api.server.v1.ListDictDataReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int64
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.server.v1.DictData'
+            description: 回应 - 列表字典数据
+        api.server.v1.ListDictReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int64
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.server.v1.Dict'
+            description: 回应 - 列表字典
         api.server.v1.ListDomainMenuReply:
             type: object
             properties:
@@ -2001,7 +2453,7 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.server.v1.Post'
-            description: 回应 - 列表部门
+            description: 回应 - 列表岗位
         api.server.v1.ListRoleDeptReply:
             type: object
             properties:
@@ -2383,6 +2835,102 @@ components:
                     format: enum
                 remarks:
                     type: string
+        api.server.v1.UpdateDictDataReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/google.protobuf.Any'
+                type:
+                    type: string
+            description: 回应 - 创建字典数据
+        api.server.v1.UpdateDictDataReq_Data:
+            type: object
+            properties:
+                label:
+                    type: string
+                value:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                state:
+                    type: integer
+                    format: enum
+                remarks:
+                    type: string
+                colorType:
+                    type: string
+                cssClass:
+                    type: string
+        api.server.v1.UpdateDictDataStateReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/google.protobuf.Any'
+                type:
+                    type: string
+            description: 回应 - 创建字典数据-状态
+        api.server.v1.UpdateDictDataStateReq_Data:
+            type: object
+            properties:
+                state:
+                    type: integer
+                    format: enum
+        api.server.v1.UpdateDictReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/google.protobuf.Any'
+                type:
+                    type: string
+            description: 回应 - 创建字典
+        api.server.v1.UpdateDictReq_Data:
+            type: object
+            properties:
+                name:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                state:
+                    type: integer
+                    format: enum
+                remarks:
+                    type: string
+        api.server.v1.UpdateDictStateReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/google.protobuf.Any'
+                type:
+                    type: string
+            description: 回应 - 创建字典-状态
+        api.server.v1.UpdateDictStateReq_Data:
+            type: object
+            properties:
+                state:
+                    type: integer
+                    format: enum
         api.server.v1.UpdateDomainReply:
             type: object
             properties:

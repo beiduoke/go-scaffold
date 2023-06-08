@@ -110,10 +110,11 @@ func (r *MenuRepo) toBiz(d *SysMenu) *biz.Menu {
 func (r *MenuRepo) Save(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 	d := r.toModel(g)
 	result := r.data.DB(ctx).Create(d)
+	bizMenu := r.toBiz(d)
 	if result.Error == nil {
-		result.Error = r.SetCache(ctx, d)
+		result.Error = r.SetCache(ctx, bizMenu)
 	}
-	return r.toBiz(d), result.Error
+	return bizMenu, result.Error
 }
 
 func (r *MenuRepo) Update(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
@@ -131,10 +132,11 @@ func (r *MenuRepo) Update(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 		return nil, err
 	}
 	result = r.data.DB(ctx).Model(d).Omit("CreatedAt").Updates(d)
+	bizMenu := r.toBiz(d)
 	if result.Error == nil {
-		result.Error = r.SetCache(ctx, d)
+		result.Error = r.SetCache(ctx, bizMenu)
 	}
-	return r.toBiz(d), result.Error
+	return bizMenu, result.Error
 }
 
 func (r *MenuRepo) FindByName(ctx context.Context, s string) (*biz.Menu, error) {
@@ -190,10 +192,7 @@ func (r *MenuRepo) Delete(ctx context.Context, g *biz.Menu) error {
 }
 
 func (r *MenuRepo) ListAll(ctx context.Context) (menus []*biz.Menu, err error) {
-	for _, v := range r.ListAllCache(ctx) {
-		menus = append(menus, r.toBiz(v))
-	}
-	return
+	return r.ListAllCache(ctx), nil
 }
 
 func (r *MenuRepo) ListPage(ctx context.Context, paging *pagination.Pagination) (menus []*biz.Menu, total int64) {

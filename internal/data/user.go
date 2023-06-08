@@ -53,25 +53,20 @@ func (r *UserRepo) toModel(d *biz.User) *SysUser {
 	if d == nil {
 		return nil
 	}
-	roles := []SysRole{}
 	u := &SysUser{
-		DomainModel: DomainModel{
-			ID:        d.ID,
-			CreatedAt: d.CreatedAt,
-			UpdatedAt: d.UpdatedAt,
-		},
-		Name:     d.Name,
-		Avatar:   d.Avatar,
-		NickName: d.NickName,
-		RealName: d.RealName,
-		Password: d.Password,
-		Birthday: d.Birthday,
-		Gender:   d.Gender,
-		Phone:    d.Phone,
-		Email:    d.Email,
-		State:    d.State,
-		DeptID:   d.DeptID,
-		Roles:    roles,
+		DomainModel: DomainModel{ID: d.ID, CreatedAt: d.CreatedAt, UpdatedAt: d.UpdatedAt},
+		Name:        d.Name,
+		NickName:    d.NickName,
+		RealName:    d.RealName,
+		Avatar:      d.Avatar,
+		Password:    d.Password,
+		Birthday:    d.Birthday,
+		Gender:      d.Gender,
+		Phone:       d.Phone,
+		Email:       d.Email,
+		DeptID:      d.DeptID,
+		State:       d.State,
+		Remarks:     d.Remarks,
 	}
 	for _, v := range d.Roles {
 		u.Roles = append(u.Roles, *r.role.toModel(v))
@@ -275,38 +270,35 @@ func (r *UserRepo) ListByEmail(ctx context.Context, s string) ([]*biz.User, erro
 
 // HandleDomainRole 绑定权限
 func (r *UserRepo) HandleRole(ctx context.Context, g *biz.User) error {
+	sysUser := r.toModel(g)
+	err := r.data.DB(ctx).Model(&sysUser).Association("Roles").Replace(sysUser.Roles)
+	if err != nil {
+		return err
+	}
 	ctxDomain := r.data.CtxAuthUser(ctx).GetDomain()
 	if _, err := r.data.enforcer.(*casbin.SyncedEnforcer).DeleteRolesForUserInDomain(g.GetID(), ctxDomain); err != nil {
 		return err
 	}
 	rules := make([][]string, 0, len(g.Roles))
-	for _, v := range g.Roles {
-		rules = append(rules, []string{g.GetID(), convert.UnitToString(v.ID), ctxDomain})
+	for _, r := range g.Roles {
+		rules = append(rules, []string{g.GetID(), r.GetID(), ctxDomain})
 	}
-	_, err := r.data.enforcer.AddGroupingPolicies(rules)
+	_, err = r.data.enforcer.AddGroupingPolicies(rules)
 	return err
 }
 
 func (r *UserRepo) ListRoles(ctx context.Context, g *biz.User) ([]*biz.Role, error) {
-	rolesIdsStr := r.data.enforcer.GetRolesForUserInDomain(g.GetID(), convert.UnitToString(g.DomainID))
-	rolesIds, sysRoles := make([]uint, 0, len(rolesIdsStr)), make([]SysRole, 0, len(rolesIdsStr))
-	for _, v := range rolesIdsStr {
-		rolesIds = append(rolesIds, convert.StringToUint(v))
+	sysUser := SysUser{}
+	result := r.data.DB(ctx).Preload("Roles").Last(&sysUser, g.ID)
+	if err := result.Error; !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
 	}
-	if len(rolesIds) < 1 {
-		return nil, errors.New("未指定角色权限")
-	}
-
-	err := r.data.DB(ctx).Where("domain_id = ?", g.DomainID).Find(&sysRoles, rolesIds).Error
-	if err != nil {
-		return nil, errors.New("角色权限查询失败")
-	}
-	bizRoles := make([]*biz.Role, 0, len(sysRoles))
-	for _, v := range sysRoles {
+	bizRoles := make([]*biz.Role, 0)
+	for _, v := range sysUser.Roles {
 		bizRoles = append(bizRoles, r.role.toBiz(&v))
 	}
 
-	return bizRoles, err
+	return bizRoles, nil
 }
 
 // Login 登录
@@ -353,12 +345,12 @@ func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, er
 	if sysUser.LastUseRoleID <= 0 {
 		sysUser.LastUseRoleID = sysRoles[numSysRoles-1].ID
 	}
-	authRoles := make([]AuthRole, 0, numSysRoles)
+	authRoles := make([]*biz.Role, 0, numSysRoles)
 	for _, v := range sysRoles {
 		if v.ID == sysUser.LastUseRoleID {
 			sysUser.LastUseRole = &v
 		}
-		authRoles = append(authRoles, AuthRole{
+		authRoles = append(authRoles, &biz.Role{
 			ID:            v.ID,
 			Name:          v.Name,
 			DefaultRouter: v.DefaultRouter,
@@ -368,21 +360,21 @@ func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, er
 	loginInfo := UserLoginInfo{
 		UUID:  authClaims.Subject,
 		Token: token,
-		AuthUser: AuthUser{ID: sysUser.ID, DomainID: sysUser.DomainID,
+		AuthUser: biz.User{ID: sysUser.ID, DomainID: sysUser.DomainID,
 			Name: sysUser.Name, NickName: sysUser.NickName, RealName: sysUser.RealName,
 			Avatar: sysUser.Avatar, Birthday: sysUser.Birthday, Gender: sysUser.Gender,
 			Phone: sysUser.Phone, Email: sysUser.Email, State: sysUser.State,
 			Remarks: sysUser.Remarks, LastUseRoleID: sysUser.LastUseRoleID,
-			Roles: authRoles, DeptId: sysUser.DeptID,
-			LastUseRole: func() *AuthRole {
+			Roles: authRoles, DeptID: sysUser.DeptID,
+			LastUseRole: func() *biz.Role {
 				if role := sysUser.LastUseRole; role != nil {
-					return &AuthRole{ID: role.ID, Name: role.Name}
+					return &biz.Role{ID: role.ID, Name: role.Name}
 				}
 				return nil
 			}(),
-			Dept: func() *AuthDept {
+			Dept: func() *biz.Dept {
 				if dept := sysUser.Dept; dept != nil {
-					return &AuthDept{ID: dept.ID, Name: dept.Name}
+					return &biz.Dept{ID: dept.ID, Name: dept.Name}
 				}
 				return nil
 			}(),
@@ -418,37 +410,15 @@ func (r *UserRepo) Logout(ctx context.Context) error {
 	return r.DeleteLoginCache(ctx, r.data.CtxUserID(ctx))
 }
 
-func (r *UserRepo) Info(ctx context.Context) (*biz.User, error) {
-	authUser, err := r.GetLoginCache(ctx, r.data.CtxUserID(ctx))
-	if err != nil {
-		return nil, err
-	}
-	return &biz.User{
-		ID: authUser.ID, Name: authUser.Name,
-		Avatar: authUser.Avatar, NickName: authUser.NickName,
-		RealName: authUser.RealName, Birthday: authUser.Birthday,
-		Gender: authUser.Gender, Phone: authUser.Phone,
-		Email: authUser.Email, State: authUser.State,
-		DomainID: authUser.DomainID,
-		Roles: func(authRoles []AuthRole) (bizRoles []*biz.Role) {
-			for _, v := range authRoles {
-				bizRoles = append(bizRoles, &biz.Role{
-					ID:            v.ID,
-					Name:          v.Name,
-					Sort:          v.Sort,
-					DefaultRouter: v.DefaultRouter,
-				})
-			}
-			return bizRoles
-		}(authUser.Roles),
-	}, nil
+func (r *UserRepo) AccessInfo(ctx context.Context) (*biz.User, error) {
+	return r.GetLoginCache(ctx, r.data.CtxUserID(ctx))
 }
 
-func (r *UserRepo) Roles(ctx context.Context) ([]*biz.Role, error) {
-	return r.ListRoles(ctx, &biz.User{ID: r.data.CtxUserID(ctx), DomainID: r.data.CtxDomainID(ctx)})
+func (r *UserRepo) AccessRoles(ctx context.Context) ([]*biz.Role, error) {
+	return r.ListRoles(ctx, &biz.User{ID: r.data.CtxUserID(ctx)})
 }
 
-func (r *UserRepo) RoleMenus(ctx context.Context) (menus []*biz.Menu, err error) {
+func (r *UserRepo) AccessRoleMenus(ctx context.Context) (menus []*biz.Menu, err error) {
 	defer func() {
 		sort.SliceStable(menus, func(i, j int) bool {
 			return int32(menus[i].Sort) < int32(menus[j].Sort)
@@ -464,8 +434,8 @@ func (r *UserRepo) RoleMenus(ctx context.Context) (menus []*biz.Menu, err error)
 	return r.role.ListMenuByIDs(ctx, convert.ArrayStringToUint(rolesIdsStr)...)
 }
 
-func (r *UserRepo) RolePermissions(ctx context.Context) ([]string, error) {
-	bizMenus, err := r.RoleMenus(ctx)
+func (r *UserRepo) AccessRolePermissions(ctx context.Context) ([]string, error) {
+	bizMenus, err := r.AccessRoleMenus(ctx)
 	if err != nil {
 		return nil, err
 	}

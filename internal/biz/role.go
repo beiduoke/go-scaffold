@@ -13,22 +13,22 @@ import (
 
 // Role is a Role model.
 type Role struct {
-	ID                uint
-	CreatedAt         time.Time
-	UpdatedAt         time.Time
-	Name              string
-	ParentID          uint
-	DefaultRouter     string
-	Sort              int32
-	DataScope         int32
-	MenuCheckStrictly int32
-	DeptCheckStrictly int32
-	State             int32
-	Remarks           string
-	Users             []*User
-	Domains           []*Domain
-	Menus             []*Menu
-	Depts             []*Dept
+	ID                uint      `json:"id,omitempty" form:"id,omitempty"`
+	CreatedAt         time.Time `json:"createdAt,omitempty" form:"createdAt,omitempty"`
+	UpdatedAt         time.Time `json:"updatedAt,omitempty" form:"updatedAt,omitempty"`
+	Name              string    `json:"name,omitempty" form:"name,omitempty"`
+	ParentID          uint      `json:"parentID,omitempty" form:"parentID,omitempty"`
+	DefaultRouter     string    `json:"defaultRouter,omitempty" form:"defaultRouter,omitempty"`
+	Sort              int32     `json:"sort,omitempty" form:"sort,omitempty"`
+	DataScope         int32     `json:"dataScope,omitempty" form:"dataScope,omitempty"`
+	MenuCheckStrictly int32     `json:"menuCheckStrictly,omitempty" form:"menuCheckStrictly,omitempty"`
+	DeptCheckStrictly int32     `json:"deptCheckStrictly,omitempty" form:"deptCheckStrictly,omitempty"`
+	State             int32     `json:"state,omitempty" form:"state,omitempty"`
+	Remarks           string    `json:"remarks,omitempty" form:"remarks,omitempty"`
+	Users             []*User   `json:"users,omitempty" form:"users,omitempty"`
+	Domains           []*Domain `json:"domains,omitempty" form:"domains,omitempty"`
+	Menus             []*Menu   `json:"menus,omitempty" form:"menus,omitempty"`
+	Depts             []*Dept   `json:"depts,omitempty" form:"depts,omitempty"`
 }
 
 func (g Role) GetID() string {

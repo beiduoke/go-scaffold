@@ -12,15 +12,15 @@ import (
 
 // Dept is a Dept model.
 type Dept struct {
-	ID        uint
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	Name      string
-	ParentID  uint
-	Sort      int32
-	Remarks   string
-	State     int32
-	Children  []*Dept
+	ID        uint      `json:"id,omitempty" form:"id,omitempty"`
+	CreatedAt time.Time `json:"createdAt,omitempty" form:"createdAt,omitempty"`
+	UpdatedAt time.Time `json:"updatedAt,omitempty" form:"updatedAt,omitempty"`
+	Name      string    `json:"name,omitempty" form:"name,omitempty"`
+	ParentID  uint      `json:"parentID,omitempty" form:"parentID,omitempty"`
+	Sort      int32     `json:"sort,omitempty" form:"sort,omitempty"`
+	Remarks   string    `json:"remarks,omitempty" form:"remarks,omitempty"`
+	State     int32     `json:"state,omitempty" form:"state,omitempty"`
+	Children  []*Dept   `json:"children,omitempty" form:"children,omitempty"`
 }
 
 // DeptRepo is a Greater repo.

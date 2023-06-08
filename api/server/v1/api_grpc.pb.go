@@ -78,6 +78,18 @@ const (
 	Api_UpdatePost_FullMethodName                 = "/api.server.v1.Api/UpdatePost"
 	Api_DeletePost_FullMethodName                 = "/api.server.v1.Api/DeletePost"
 	Api_UpdatePostState_FullMethodName            = "/api.server.v1.Api/UpdatePostState"
+	Api_ListDict_FullMethodName                   = "/api.server.v1.Api/ListDict"
+	Api_CreateDict_FullMethodName                 = "/api.server.v1.Api/CreateDict"
+	Api_GetDict_FullMethodName                    = "/api.server.v1.Api/GetDict"
+	Api_UpdateDict_FullMethodName                 = "/api.server.v1.Api/UpdateDict"
+	Api_DeleteDict_FullMethodName                 = "/api.server.v1.Api/DeleteDict"
+	Api_UpdateDictState_FullMethodName            = "/api.server.v1.Api/UpdateDictState"
+	Api_ListDictData_FullMethodName               = "/api.server.v1.Api/ListDictData"
+	Api_CreateDictData_FullMethodName             = "/api.server.v1.Api/CreateDictData"
+	Api_GetDictData_FullMethodName                = "/api.server.v1.Api/GetDictData"
+	Api_UpdateDictData_FullMethodName             = "/api.server.v1.Api/UpdateDictData"
+	Api_DeleteDictData_FullMethodName             = "/api.server.v1.Api/DeleteDictData"
+	Api_UpdateDictDataState_FullMethodName        = "/api.server.v1.Api/UpdateDictDataState"
 )
 
 // ApiClient is the client API for Api service.
@@ -201,8 +213,32 @@ type ApiClient interface {
 	UpdatePost(ctx context.Context, in *UpdatePostReq, opts ...grpc.CallOption) (*UpdatePostReply, error)
 	// 删除岗位
 	DeletePost(ctx context.Context, in *DeletePostReq, opts ...grpc.CallOption) (*DeletePostReply, error)
-	// 设置领域状态
+	// 设置岗位状态
 	UpdatePostState(ctx context.Context, in *UpdatePostStateReq, opts ...grpc.CallOption) (*UpdatePostStateReply, error)
+	// 列表字典
+	ListDict(ctx context.Context, in *ListDictReq, opts ...grpc.CallOption) (*ListDictReply, error)
+	// 创建字典
+	CreateDict(ctx context.Context, in *CreateDictReq, opts ...grpc.CallOption) (*CreateDictReply, error)
+	// 获取字典
+	GetDict(ctx context.Context, in *GetDictReq, opts ...grpc.CallOption) (*Dict, error)
+	// 修改字典
+	UpdateDict(ctx context.Context, in *UpdateDictReq, opts ...grpc.CallOption) (*UpdateDictReply, error)
+	// 删除字典
+	DeleteDict(ctx context.Context, in *DeleteDictReq, opts ...grpc.CallOption) (*DeleteDictReply, error)
+	// 设置字典状态
+	UpdateDictState(ctx context.Context, in *UpdateDictStateReq, opts ...grpc.CallOption) (*UpdateDictStateReply, error)
+	// 列表字典数据
+	ListDictData(ctx context.Context, in *ListDictDataReq, opts ...grpc.CallOption) (*ListDictDataReply, error)
+	// 创建字典数据
+	CreateDictData(ctx context.Context, in *CreateDictDataReq, opts ...grpc.CallOption) (*CreateDictDataReply, error)
+	// 获取字典数据
+	GetDictData(ctx context.Context, in *GetDictDataReq, opts ...grpc.CallOption) (*DictData, error)
+	// 修改字典数据
+	UpdateDictData(ctx context.Context, in *UpdateDictDataReq, opts ...grpc.CallOption) (*UpdateDictDataReply, error)
+	// 删除字典数据
+	DeleteDictData(ctx context.Context, in *DeleteDictDataReq, opts ...grpc.CallOption) (*DeleteDictDataReply, error)
+	// 设置字典数据状态
+	UpdateDictDataState(ctx context.Context, in *UpdateDictDataStateReq, opts ...grpc.CallOption) (*UpdateDictDataStateReply, error)
 }
 
 type apiClient struct {
@@ -735,6 +771,114 @@ func (c *apiClient) UpdatePostState(ctx context.Context, in *UpdatePostStateReq,
 	return out, nil
 }
 
+func (c *apiClient) ListDict(ctx context.Context, in *ListDictReq, opts ...grpc.CallOption) (*ListDictReply, error) {
+	out := new(ListDictReply)
+	err := c.cc.Invoke(ctx, Api_ListDict_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) CreateDict(ctx context.Context, in *CreateDictReq, opts ...grpc.CallOption) (*CreateDictReply, error) {
+	out := new(CreateDictReply)
+	err := c.cc.Invoke(ctx, Api_CreateDict_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) GetDict(ctx context.Context, in *GetDictReq, opts ...grpc.CallOption) (*Dict, error) {
+	out := new(Dict)
+	err := c.cc.Invoke(ctx, Api_GetDict_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) UpdateDict(ctx context.Context, in *UpdateDictReq, opts ...grpc.CallOption) (*UpdateDictReply, error) {
+	out := new(UpdateDictReply)
+	err := c.cc.Invoke(ctx, Api_UpdateDict_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) DeleteDict(ctx context.Context, in *DeleteDictReq, opts ...grpc.CallOption) (*DeleteDictReply, error) {
+	out := new(DeleteDictReply)
+	err := c.cc.Invoke(ctx, Api_DeleteDict_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) UpdateDictState(ctx context.Context, in *UpdateDictStateReq, opts ...grpc.CallOption) (*UpdateDictStateReply, error) {
+	out := new(UpdateDictStateReply)
+	err := c.cc.Invoke(ctx, Api_UpdateDictState_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) ListDictData(ctx context.Context, in *ListDictDataReq, opts ...grpc.CallOption) (*ListDictDataReply, error) {
+	out := new(ListDictDataReply)
+	err := c.cc.Invoke(ctx, Api_ListDictData_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) CreateDictData(ctx context.Context, in *CreateDictDataReq, opts ...grpc.CallOption) (*CreateDictDataReply, error) {
+	out := new(CreateDictDataReply)
+	err := c.cc.Invoke(ctx, Api_CreateDictData_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) GetDictData(ctx context.Context, in *GetDictDataReq, opts ...grpc.CallOption) (*DictData, error) {
+	out := new(DictData)
+	err := c.cc.Invoke(ctx, Api_GetDictData_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) UpdateDictData(ctx context.Context, in *UpdateDictDataReq, opts ...grpc.CallOption) (*UpdateDictDataReply, error) {
+	out := new(UpdateDictDataReply)
+	err := c.cc.Invoke(ctx, Api_UpdateDictData_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) DeleteDictData(ctx context.Context, in *DeleteDictDataReq, opts ...grpc.CallOption) (*DeleteDictDataReply, error) {
+	out := new(DeleteDictDataReply)
+	err := c.cc.Invoke(ctx, Api_DeleteDictData_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) UpdateDictDataState(ctx context.Context, in *UpdateDictDataStateReq, opts ...grpc.CallOption) (*UpdateDictDataStateReply, error) {
+	out := new(UpdateDictDataStateReply)
+	err := c.cc.Invoke(ctx, Api_UpdateDictDataState_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ApiServer is the server API for Api service.
 // All implementations must embed UnimplementedApiServer
 // for forward compatibility
@@ -856,8 +1000,32 @@ type ApiServer interface {
 	UpdatePost(context.Context, *UpdatePostReq) (*UpdatePostReply, error)
 	// 删除岗位
 	DeletePost(context.Context, *DeletePostReq) (*DeletePostReply, error)
-	// 设置领域状态
+	// 设置岗位状态
 	UpdatePostState(context.Context, *UpdatePostStateReq) (*UpdatePostStateReply, error)
+	// 列表字典
+	ListDict(context.Context, *ListDictReq) (*ListDictReply, error)
+	// 创建字典
+	CreateDict(context.Context, *CreateDictReq) (*CreateDictReply, error)
+	// 获取字典
+	GetDict(context.Context, *GetDictReq) (*Dict, error)
+	// 修改字典
+	UpdateDict(context.Context, *UpdateDictReq) (*UpdateDictReply, error)
+	// 删除字典
+	DeleteDict(context.Context, *DeleteDictReq) (*DeleteDictReply, error)
+	// 设置字典状态
+	UpdateDictState(context.Context, *UpdateDictStateReq) (*UpdateDictStateReply, error)
+	// 列表字典数据
+	ListDictData(context.Context, *ListDictDataReq) (*ListDictDataReply, error)
+	// 创建字典数据
+	CreateDictData(context.Context, *CreateDictDataReq) (*CreateDictDataReply, error)
+	// 获取字典数据
+	GetDictData(context.Context, *GetDictDataReq) (*DictData, error)
+	// 修改字典数据
+	UpdateDictData(context.Context, *UpdateDictDataReq) (*UpdateDictDataReply, error)
+	// 删除字典数据
+	DeleteDictData(context.Context, *DeleteDictDataReq) (*DeleteDictDataReply, error)
+	// 设置字典数据状态
+	UpdateDictDataState(context.Context, *UpdateDictDataStateReq) (*UpdateDictDataStateReply, error)
 	mustEmbedUnimplementedApiServer()
 }
 
@@ -1038,6 +1206,42 @@ func (UnimplementedApiServer) DeletePost(context.Context, *DeletePostReq) (*Dele
 }
 func (UnimplementedApiServer) UpdatePostState(context.Context, *UpdatePostStateReq) (*UpdatePostStateReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdatePostState not implemented")
+}
+func (UnimplementedApiServer) ListDict(context.Context, *ListDictReq) (*ListDictReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListDict not implemented")
+}
+func (UnimplementedApiServer) CreateDict(context.Context, *CreateDictReq) (*CreateDictReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateDict not implemented")
+}
+func (UnimplementedApiServer) GetDict(context.Context, *GetDictReq) (*Dict, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDict not implemented")
+}
+func (UnimplementedApiServer) UpdateDict(context.Context, *UpdateDictReq) (*UpdateDictReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateDict not implemented")
+}
+func (UnimplementedApiServer) DeleteDict(context.Context, *DeleteDictReq) (*DeleteDictReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteDict not implemented")
+}
+func (UnimplementedApiServer) UpdateDictState(context.Context, *UpdateDictStateReq) (*UpdateDictStateReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateDictState not implemented")
+}
+func (UnimplementedApiServer) ListDictData(context.Context, *ListDictDataReq) (*ListDictDataReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListDictData not implemented")
+}
+func (UnimplementedApiServer) CreateDictData(context.Context, *CreateDictDataReq) (*CreateDictDataReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateDictData not implemented")
+}
+func (UnimplementedApiServer) GetDictData(context.Context, *GetDictDataReq) (*DictData, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDictData not implemented")
+}
+func (UnimplementedApiServer) UpdateDictData(context.Context, *UpdateDictDataReq) (*UpdateDictDataReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateDictData not implemented")
+}
+func (UnimplementedApiServer) DeleteDictData(context.Context, *DeleteDictDataReq) (*DeleteDictDataReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteDictData not implemented")
+}
+func (UnimplementedApiServer) UpdateDictDataState(context.Context, *UpdateDictDataStateReq) (*UpdateDictDataStateReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateDictDataState not implemented")
 }
 func (UnimplementedApiServer) mustEmbedUnimplementedApiServer() {}
 
@@ -2096,6 +2300,222 @@ func _Api_UpdatePostState_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Api_ListDict_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListDictReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).ListDict(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Api_ListDict_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).ListDict(ctx, req.(*ListDictReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_CreateDict_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateDictReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).CreateDict(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Api_CreateDict_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).CreateDict(ctx, req.(*CreateDictReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_GetDict_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDictReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).GetDict(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Api_GetDict_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).GetDict(ctx, req.(*GetDictReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_UpdateDict_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateDictReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).UpdateDict(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Api_UpdateDict_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).UpdateDict(ctx, req.(*UpdateDictReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_DeleteDict_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteDictReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).DeleteDict(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Api_DeleteDict_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).DeleteDict(ctx, req.(*DeleteDictReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_UpdateDictState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateDictStateReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).UpdateDictState(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Api_UpdateDictState_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).UpdateDictState(ctx, req.(*UpdateDictStateReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_ListDictData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListDictDataReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).ListDictData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Api_ListDictData_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).ListDictData(ctx, req.(*ListDictDataReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_CreateDictData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateDictDataReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).CreateDictData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Api_CreateDictData_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).CreateDictData(ctx, req.(*CreateDictDataReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_GetDictData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDictDataReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).GetDictData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Api_GetDictData_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).GetDictData(ctx, req.(*GetDictDataReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_UpdateDictData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateDictDataReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).UpdateDictData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Api_UpdateDictData_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).UpdateDictData(ctx, req.(*UpdateDictDataReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_DeleteDictData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteDictDataReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).DeleteDictData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Api_DeleteDictData_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).DeleteDictData(ctx, req.(*DeleteDictDataReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_UpdateDictDataState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateDictDataStateReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).UpdateDictDataState(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Api_UpdateDictDataState_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).UpdateDictDataState(ctx, req.(*UpdateDictDataStateReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Api_ServiceDesc is the grpc.ServiceDesc for Api service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -2334,6 +2754,54 @@ var Api_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdatePostState",
 			Handler:    _Api_UpdatePostState_Handler,
+		},
+		{
+			MethodName: "ListDict",
+			Handler:    _Api_ListDict_Handler,
+		},
+		{
+			MethodName: "CreateDict",
+			Handler:    _Api_CreateDict_Handler,
+		},
+		{
+			MethodName: "GetDict",
+			Handler:    _Api_GetDict_Handler,
+		},
+		{
+			MethodName: "UpdateDict",
+			Handler:    _Api_UpdateDict_Handler,
+		},
+		{
+			MethodName: "DeleteDict",
+			Handler:    _Api_DeleteDict_Handler,
+		},
+		{
+			MethodName: "UpdateDictState",
+			Handler:    _Api_UpdateDictState_Handler,
+		},
+		{
+			MethodName: "ListDictData",
+			Handler:    _Api_ListDictData_Handler,
+		},
+		{
+			MethodName: "CreateDictData",
+			Handler:    _Api_CreateDictData_Handler,
+		},
+		{
+			MethodName: "GetDictData",
+			Handler:    _Api_GetDictData_Handler,
+		},
+		{
+			MethodName: "UpdateDictData",
+			Handler:    _Api_UpdateDictData_Handler,
+		},
+		{
+			MethodName: "DeleteDictData",
+			Handler:    _Api_DeleteDictData_Handler,
+		},
+		{
+			MethodName: "UpdateDictDataState",
+			Handler:    _Api_UpdateDictDataState_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -18,6 +18,8 @@ func NewSysModelMigrate() []interface{} {
 		&SysRoleMenu{},
 		&SysDept{},
 		&SysPost{},
+		&SysDict{},
+		&SysDictData{},
 	}
 }
 
@@ -239,4 +241,29 @@ type JwtBlacklist struct {
 	Model
 	UserID uint   `gorm:"type:bigint(20);column:user_id;not null;default:0;comment:用户id"`
 	Jwt    string `gorm:"type:text;column:jwt;comment:jwt;"`
+}
+
+// Dict 字典
+type SysDict struct {
+	Model
+	Name        string        `gorm:"type:varchar(255);column:name;not null;comment:字典名称;"`
+	Type        string        `gorm:"type:varchar(100);column:type;not null;comment:字典类型;"`
+	Sort        int32         `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
+	State       int32         `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:字典状态 0 未指定  1 启用 2 停用;"`
+	Remarks     string        `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
+	SysDictData []SysDictData `gorm:"foreignKey:DictType;references:Type"`
+}
+
+// DictData 字典数据
+type SysDictData struct {
+	Model
+	DictType  string   `gorm:"type:varchar(100);column:dict_type;not null;comment:字典类型;"`
+	Label     string   `gorm:"type:varchar(255);column:label;not null;comment:字典标签;"`
+	Value     string   `gorm:"type:varchar(255);column:value;not null;default:'';comment:字典键值;"`
+	ColorType string   `gorm:"type:varchar(100);column:color_type;not null;default:'';comment:颜色类型;"`
+	CssClass  string   `gorm:"type:varchar(100);column:css_class;not null;default:'';comment:CSS样式;"`
+	Sort      int32    `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
+	State     int32    `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:字典状态 0 未指定  1 启用 2 停用;"`
+	Remarks   string   `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
+	SysDict   *SysDict `gorm:"foreignKey:Type;references:DictType"`
 }

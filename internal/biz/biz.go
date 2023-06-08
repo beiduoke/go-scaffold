@@ -16,8 +16,9 @@ var ProviderSet = wire.NewSet(
 	NewMenuUsecase,
 	NewUserUsecase,
 	NewDeptUsecase,
-	NewPostUsecase,
 	NewAuthUsecase,
+	NewPostUsecase,
+	NewDictUsecase,
 )
 
 type BizType interface {

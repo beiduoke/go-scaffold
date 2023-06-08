@@ -3,7 +3,6 @@ package data
 import (
 	"context"
 	"errors"
-	"time"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/auth/authn"
@@ -11,39 +10,6 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/transport"
 )
-
-type AuthRole struct {
-	ID            uint   `json:"id" form:"id"`
-	Name          string `json:"name" form:"name"`
-	Sort          int32  `json:"sort" form:"sort"`
-	DefaultRouter string `json:"defaultRouter" form:"defaultRouter"`
-}
-
-type AuthDept struct {
-	ID   uint   `json:"id" form:"id"`
-	Name string `json:"name" form:"name"`
-}
-
-type AuthUser struct {
-	ID            uint       `json:"id" form:"id"`
-	DomainID      uint       `json:"domainId" form:"domainId"`
-	Name          string     `json:"name" form:"name"`
-	NickName      string     `json:"nickName" form:"nickName"`
-	RealName      string     `json:"realName" form:"realName"`
-	Avatar        string     `json:"avatar" form:"avatar"`
-	Birthday      *time.Time `json:"birthday" form:"birthday"`
-	Gender        int32      `json:"gender" form:"gender"`
-	Phone         string     `json:"phone" form:"phone"`
-	Email         string     `json:"email" form:"email"`
-	State         int32      `json:"state" form:"state"`
-	Remarks       string     `json:"remarks" form:"remarks"`
-	DeptId        uint       `json:"deptId" form:"deptId"`
-	LastUseRoleID uint       `json:"lastUseRoleId" form:"lastUseRoleId"`
-	LastLoginAt   *time.Time `json:"lastLoginAt" form:"lastLoginAt"`
-	LastUseRole   *AuthRole  `json:"lastUseRole" form:"lastUseRole"`
-	Roles         []AuthRole `json:"roles" form:"roles"`
-	Dept          *AuthDept  `json:"dept" form:"dept"`
-}
 
 var _ authn.SecurityUser = (*securityUser)(nil)
 

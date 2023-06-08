@@ -43,6 +43,7 @@ var ProviderSet = wire.NewSet(
 	NewUserRepo,
 	NewDeptRepo,
 	NewPostRepo,
+	NewDictRepo,
 )
 
 // NewModelMigrate 数据模型迁移

@@ -6,7 +6,6 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	"github.com/beiduoke/go-scaffold/internal/pkg/websocket"
 	"github.com/go-kratos/kratos/v2/log"
-	"go.uber.org/dig"
 )
 
 var _ v1.ApiServer = (*ApiService)(nil)
@@ -29,10 +28,10 @@ var _ v1.ApiServer = (*ApiService)(nil)
 // ApiService is a Api service.
 type ApiService struct {
 	v1.UnimplementedApiServer
-	ac         *conf.Auth
-	log        *log.Helper
-	ws         *websocket.WebsocketService
-	dig        *dig.Container
+	ac  *conf.Auth
+	log *log.Helper
+	ws  *websocket.WebsocketService
+	// dig        *dig.Container
 	authCase   *biz.AuthUsecase
 	userCase   *biz.UserUsecase
 	domainCase *biz.DomainUsecase
@@ -40,6 +39,7 @@ type ApiService struct {
 	menuCase   *biz.MenuUsecase
 	deptCase   *biz.DeptUsecase
 	postCase   *biz.PostUsecase
+	dictCase   *biz.DictUsecase
 }
 
 // NewApiService new a Api service.
@@ -54,6 +54,7 @@ func NewApiService(
 	menuCase *biz.MenuUsecase,
 	deptCase *biz.DeptUsecase,
 	postCase *biz.PostUsecase,
+	dictCase *biz.DictUsecase,
 ) *ApiService {
 	l := log.NewHelper(log.With(logger, "module", "service/api"))
 	return &ApiService{
@@ -67,5 +68,6 @@ func NewApiService(
 		menuCase:   menuCase,
 		deptCase:   deptCase,
 		postCase:   postCase,
+		dictCase:   dictCase,
 	}
 }

@@ -502,3 +502,99 @@ func IsPostDeleteFail(err error) bool {
 func ErrorPostDeleteFail(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_POST_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
 }
+
+func IsDictNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_DICT_NOT_FOUND.String() && e.Code == 400
+}
+
+func ErrorDictNotFound(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_DICT_NOT_FOUND.String(), fmt.Sprintf(format, args...))
+}
+
+func IsDictCreateFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_DICT_CREATE_FAIL.String() && e.Code == 400
+}
+
+func ErrorDictCreateFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_DICT_CREATE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsDictUpdateFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_DICT_UPDATE_FAIL.String() && e.Code == 400
+}
+
+func ErrorDictUpdateFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_DICT_UPDATE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsDictDeleteFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_DICT_DELETE_FAIL.String() && e.Code == 400
+}
+
+func ErrorDictDeleteFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_DICT_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsDictDataNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_DICT_DATA_NOT_FOUND.String() && e.Code == 400
+}
+
+func ErrorDictDataNotFound(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_DICT_DATA_NOT_FOUND.String(), fmt.Sprintf(format, args...))
+}
+
+func IsDictDataCreateFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_DICT_DATA_CREATE_FAIL.String() && e.Code == 400
+}
+
+func ErrorDictDataCreateFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_DICT_DATA_CREATE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsDictDataUpdateFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_DICT_DATA_UPDATE_FAIL.String() && e.Code == 400
+}
+
+func ErrorDictDataUpdateFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_DICT_DATA_UPDATE_FAIL.String(), fmt.Sprintf(format, args...))
+}
+
+func IsDictDataDeleteFail(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_DICT_DATA_DELETE_FAIL.String() && e.Code == 400
+}
+
+func ErrorDictDataDeleteFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_DICT_DATA_DELETE_FAIL.String(), fmt.Sprintf(format, args...))
+}

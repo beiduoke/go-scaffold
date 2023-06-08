@@ -13,14 +13,14 @@ import (
 
 // Post is a Post model.
 type Post struct {
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	ID        uint
-	Code      string
-	Remarks   string
-	Name      string
-	Sort      int32
-	State     int32
+	CreatedAt time.Time `json:"createdAt,omitempty" form:"createdAt,omitempty"`
+	UpdatedAt time.Time `json:"updatedAt,omitempty" form:"updatedAt,omitempty"`
+	ID        uint      `json:"id,omitempty" form:"id,omitempty"`
+	Code      string    `json:"code,omitempty" form:"code,omitempty"`
+	Remarks   string    `json:"remarks,omitempty" form:"remarks,omitempty"`
+	Name      string    `json:"name,omitempty" form:"name,omitempty"`
+	Sort      int32     `json:"sort,omitempty" form:"sort,omitempty"`
+	State     int32     `json:"state,omitempty" form:"state,omitempty"`
 }
 
 // PostRepo is a Greater repo.

@@ -16,26 +16,30 @@ import (
 
 // User is a User model.
 type User struct {
-	CreatedAt       time.Time
-	UpdatedAt       time.Time
-	ID              uint
-	Name            string
-	Avatar          string
-	NickName        string
-	RealName        string
-	Password        string
-	Birthday        *time.Time
-	Gender          int32
-	Phone           string
-	Email           string
-	State           int32
-	DeptID          uint
-	Dept            *Dept
-	DomainID        uint
-	Domain          *Domain
-	Roles           []*Role
-	Posts           []*Post
-	DomainRoleUsers []*DomainRoleUser
+	CreatedAt       time.Time         `json:"createdAt,omitempty" form:"createdAt"`
+	UpdatedAt       time.Time         `json:"updatedAt,omitempty" form:"updatedAt"`
+	ID              uint              `json:"id,omitempty" form:"id"`
+	Name            string            `json:"name,omitempty" form:"name"`
+	Avatar          string            `json:"avatar,omitempty" form:"avatar"`
+	NickName        string            `json:"nickName,omitempty" form:"nickName"`
+	RealName        string            `json:"realName,omitempty" form:"realName"`
+	Password        string            `json:"-,omitempty" form:"-,omitempty"`
+	Birthday        *time.Time        `json:"birthday,omitempty" form:"birthday"`
+	Gender          int32             `json:"gender,omitempty" form:"gender"`
+	Phone           string            `json:"phone,omitempty" form:"phone"`
+	Email           string            `json:"email,omitempty" form:"email"`
+	State           int32             `json:"state,omitempty" form:"state"`
+	Remarks         string            `json:"remarks,omitempty" form:"remarks"`
+	DeptID          uint              `json:"deptId,omitempty" form:"deptId"`
+	Dept            *Dept             `json:"dept,omitempty" form:"dept"`
+	DomainID        uint              `json:"domainId,omitempty" form:"domainId"`
+	Domain          *Domain           `json:"domain,omitempty" form:"domain"`
+	Roles           []*Role           `json:"roles,omitempty" form:"roles"`
+	Posts           []*Post           `json:"posts,omitempty" form:"posts"`
+	DomainRoleUsers []*DomainRoleUser `json:"domainRoleUsers,omitempty" form:"domainRoleUsers"`
+	LastUseRoleID   uint              `json:"lastUseRoleId,omitempty" form:"lastUseRoleId"`
+	LastLoginAt     *time.Time        `json:"lastLoginAt,omitempty" form:"lastLoginAt"`
+	LastUseRole     *Role             `json:"lastUseRole,omitempty" form:"lastUseRole"`
 }
 
 func (g User) GetID() string {
@@ -52,11 +56,11 @@ type UserRepo interface {
 	Login(context.Context, *User) (*LoginResult, error)
 	Register(context.Context, *User) error
 	Logout(context.Context) error
-	// 当前用户相关
-	Info(context.Context) (*User, error)
-	Roles(context.Context) ([]*Role, error)
-	RoleMenus(context.Context) ([]*Menu, error)
-	RolePermissions(context.Context) ([]string, error)
+	// 访问用户相关
+	AccessInfo(context.Context) (*User, error)
+	AccessRoles(context.Context) ([]*Role, error)
+	AccessRoleMenus(context.Context) ([]*Menu, error)
+	AccessRolePermissions(context.Context) ([]string, error)
 	// 基础操作
 	Save(context.Context, *User) (*User, error)
 	Update(context.Context, *User) (*User, error)
@@ -228,28 +232,27 @@ func (uc *UserUsecase) Delete(ctx context.Context, g *User) error {
 }
 
 // GetInfo 用户信息
-func (ac *UserUsecase) Info(ctx context.Context) (*User, error) {
-	return ac.biz.userRepo.Info(ctx)
+func (ac *UserUsecase) AccessInfo(ctx context.Context) (*User, error) {
+	return ac.biz.userRepo.AccessInfo(ctx)
 }
 
 // GetRoles 用户角色
-func (ac *UserUsecase) Roles(ctx context.Context) ([]*Role, error) {
-	return ac.biz.userRepo.Roles(ctx)
+func (ac *UserUsecase) AccessRoles(ctx context.Context) ([]*Role, error) {
+	return ac.biz.userRepo.AccessRoles(ctx)
 }
 
 // GetRoles 用户角色菜单
-func (ac *UserUsecase) RoleMenus(ctx context.Context) ([]*Menu, error) {
-	return ac.biz.userRepo.RoleMenus(ctx)
+func (ac *UserUsecase) AccessRoleMenus(ctx context.Context) ([]*Menu, error) {
+	return ac.biz.userRepo.AccessRoleMenus(ctx)
 }
 
 // GetRoles 用户角色权限
-func (ac *UserUsecase) RolePermissions(ctx context.Context) ([]string, error) {
-	return ac.biz.userRepo.RolePermissions(ctx)
+func (ac *UserUsecase) AccessRolePermissions(ctx context.Context) ([]string, error) {
+	return ac.biz.userRepo.AccessRolePermissions(ctx)
 }
 
 // ListPostID 获取岗位ID列表
 func (ac *UserUsecase) ListPostID(ctx context.Context, g *User) (postIds []uint, err error) {
-
 	return postIds, nil
 }
 

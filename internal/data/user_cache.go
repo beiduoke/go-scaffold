@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"gorm.io/gorm"
 )
@@ -18,18 +19,18 @@ const (
 	cacheStringLoginUser string = "login_user:%d"
 )
 
-var _ Cache[*SysUser] = (*UserRepo)(nil)
+var _ Cache[*biz.User] = (*UserRepo)(nil)
 
 type UserLoginInfo struct {
 	UUID       string
 	Token      string
 	Expiration time.Duration
-	AuthUser   AuthUser
+	AuthUser   biz.User
 	Info       map[string]interface{}
 }
 
 // SetCache 设置用户缓存
-func (r *UserRepo) SetCache(ctx context.Context, g *SysUser) error {
+func (r *UserRepo) SetCache(ctx context.Context, g *biz.User) error {
 	dataStr, err := json.Marshal(g)
 	if err != nil {
 		r.log.Errorf("用户缓存失败 %v", err)
@@ -39,15 +40,15 @@ func (r *UserRepo) SetCache(ctx context.Context, g *SysUser) error {
 }
 
 // GetCache 获取用户缓存
-func (r *UserRepo) GetCache(ctx context.Context, key string) (sysUser *SysUser) {
+func (r *UserRepo) GetCache(ctx context.Context, key string) (bizUser *biz.User) {
 	dataStr, err := r.data.rdb.HGet(ctx, cacheHashKeyUser, key).Result()
 	if err != nil {
 		return nil
 	}
-	if err := json.Unmarshal([]byte(dataStr), &sysUser); err != nil {
+	if err := json.Unmarshal([]byte(dataStr), &bizUser); err != nil {
 		r.log.Errorf("缓存反序列化失败 %v", err)
 	}
-	return sysUser
+	return bizUser
 }
 
 // DeleteCache 获取用户缓存
@@ -56,39 +57,41 @@ func (r *UserRepo) DeleteCache(ctx context.Context, key string) error {
 }
 
 // ListAllCache 获取全部缓存数据
-func (r *UserRepo) ListAllCache(ctx context.Context) (sysUsers []*SysUser) {
+func (r *UserRepo) ListAllCache(ctx context.Context) (bizUsers []*biz.User) {
 	if l, _ := r.data.rdb.HLen(ctx, cacheHashKeyUser).Result(); l > 0 {
 		domainMap, _ := r.data.rdb.HGetAll(ctx, cacheHashKeyUser).Result()
 		for _, v := range domainMap {
-			sysUser := SysUser{}
-			err := json.Unmarshal([]byte(v), &sysUser)
+			bizUser := biz.User{}
+			err := json.Unmarshal([]byte(v), &bizUser)
 			if err != nil {
 				r.log.Errorf("用户缓存反序列失败 %v", err)
 				continue
 			}
-			sysUsers = append(sysUsers, &sysUser)
+			bizUsers = append(bizUsers, &bizUser)
 		}
-		return sysUsers
+		return bizUsers
 	}
 
+	sysUsers := []SysUser{}
 	result := r.data.DB(ctx).Find(&sysUsers)
 	if result.Error != nil && !errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		r.log.Errorf("用户查询失败 %v", result.Error)
 		return nil
 	}
-	domainMap := make(map[string]string)
+	userMap := make(map[string]string)
 	for _, v := range sysUsers {
-		menuStr, err := json.Marshal(v)
+		bizUser := r.toBiz(&v)
+		marshalUserJson, err := json.Marshal(bizUser)
 		if err != nil {
 			r.log.Errorf("用户缓存序列化失败 %v", err)
 			continue
 		}
-		domainMap[convert.UnitToString(v.ID)] = string(menuStr)
+		userMap[bizUser.GetID()] = string(marshalUserJson)
 	}
-	if err := r.data.rdb.HSet(ctx, cacheHashKeyUser, domainMap).Err(); err != nil {
+	if err := r.data.rdb.HSet(ctx, cacheHashKeyUser, userMap).Err(); err != nil {
 		r.log.Errorf("用户缓存失败 %v", err)
 	}
-	return sysUsers
+	return bizUsers
 }
 
 // SetLoginCache 设置登录信息
@@ -109,14 +112,14 @@ func (r *UserRepo) SetLoginCache(ctx context.Context, info UserLoginInfo) error 
 }
 
 // GetLoginCache 获取登录信息
-func (r *UserRepo) GetLoginCache(ctx context.Context, uid uint) (*AuthUser, error) {
+func (r *UserRepo) GetLoginCache(ctx context.Context, uid uint) (*biz.User, error) {
 	result := r.data.rdb.Get(ctx, fmt.Sprintf(cacheStringLoginUser, uid))
 	if err := result.Err(); err != nil {
 		return nil, err
 	}
 
 	result = r.data.rdb.Get(ctx, fmt.Sprintf(cacheStringLoginID, result.Val()))
-	authUser := AuthUser{}
+	authUser := biz.User{}
 	if err := json.Unmarshal([]byte(result.Val()), &authUser); err != nil {
 		r.log.Errorf("unmarshal login auth user", err)
 		return nil, err
@@ -156,9 +159,9 @@ func (r *UserRepo) DeleteLoginCache(ctx context.Context, uid uint) error {
 }
 
 // GetLoginIDCache 获取登录信息
-func (r *UserRepo) GetLoginIDCache(ctx context.Context, uuid string) (*AuthUser, error) {
+func (r *UserRepo) GetLoginIDCache(ctx context.Context, uuid string) (*biz.User, error) {
 	result := r.data.rdb.Get(ctx, fmt.Sprintf(cacheStringLoginID, uuid))
-	authUser := AuthUser{}
+	authUser := biz.User{}
 	if err := json.Unmarshal([]byte(result.Val()), &authUser); err != nil {
 		r.log.Errorf("unmarshal login auth user", err)
 		return nil, err

@@ -237,7 +237,7 @@ func (s *ApiService) HandleUserRole(ctx context.Context, in *v1.HandleUserRoleRe
 
 // GetUserInfo 用户详情
 func (s *ApiService) GetUserInfo(ctx context.Context, in *emptypb.Empty) (*v1.GetUserInfoReply, error) {
-	user, err := s.userCase.Info(ctx)
+	user, err := s.userCase.AccessInfo(ctx)
 	if err != nil {
 		return nil, v1.ErrorUserNotFound("用户查询失败 %v", err)
 	}
@@ -272,7 +272,7 @@ func (s *ApiService) GetUserInfo(ctx context.Context, in *emptypb.Empty) (*v1.Ge
 
 // ListUserRole 用户角色
 func (s *ApiService) ListUserRole(ctx context.Context, in *emptypb.Empty) (*v1.ListUserRoleReply, error) {
-	roleModels, err := s.userCase.Roles(ctx)
+	roleModels, err := s.userCase.AccessRoles(ctx)
 	if err != nil {
 		return nil, v1.ErrorUserRoleFindFail("用户角色失败 %v", err)
 	}
@@ -287,7 +287,7 @@ func (s *ApiService) ListUserRole(ctx context.Context, in *emptypb.Empty) (*v1.L
 
 // 获取角色菜单路由树形列表
 func (s *ApiService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.ListUserRoleMenuRouterTreeReq) (*v1.ListUserRoleMenuRouterTreeReply, error) {
-	roleMenus, err := s.userCase.RoleMenus(ctx)
+	roleMenus, err := s.userCase.AccessRoleMenus(ctx)
 	if err != nil {
 		s.log.Debugf("用户菜单查询失败 %v", err)
 	}
@@ -300,15 +300,21 @@ func (s *ApiService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.List
 	}
 	return &v1.ListUserRoleMenuRouterTreeReply{
 		Items: proto.ToTree(treeData, in.GetMenuParentId(), func(t *v1.MenuRouter, ts ...*v1.MenuRouter) error {
-			t.Children = append(t.Children, ts...)
-			if len(ts) > 0 && !ts[0].GetMeta().GetHideMenu() {
-				path, child := t.Path, ts[0]
-				if !strings.HasPrefix(path, "/") {
-					path = "/" + path
+			if len(ts) > 0 {
+				redirect := t.Path
+				for _, v := range ts {
+					if !v.GetMeta().GetHideMenu() {
+						if !strings.HasPrefix(redirect, "/") {
+							redirect = "/" + redirect
+						}
+						break
+					}
 				}
-				redirect := path + "/" + child.Path
-				t.Redirect = &redirect
+				if redirect != t.Path {
+					t.Redirect = &redirect
+				}
 			}
+			t.Children = append(t.Children, ts...)
 			return nil
 		}),
 	}, nil
@@ -316,7 +322,7 @@ func (s *ApiService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.List
 
 // 获取角色权限列表
 func (s *ApiService) ListUserRolePermission(ctx context.Context, in *v1.ListUserRolePermissionReq) (*v1.ListUserRolePermissionReply, error) {
-	menuModels, _ := s.userCase.RolePermissions(ctx)
+	menuModels, _ := s.userCase.AccessRolePermissions(ctx)
 	return &v1.ListUserRolePermissionReply{
 		Items: convert.ArrayStrUnique(menuModels),
 	}, nil
@@ -324,7 +330,7 @@ func (s *ApiService) ListUserRolePermission(ctx context.Context, in *v1.ListUser
 
 // 获取角色菜单树形列表
 func (s *ApiService) ListUserRoleMenuTree(ctx context.Context, in *v1.ListUserRoleMenuTreeReq) (*v1.ListUserRoleMenuTreeReply, error) {
-	results, err := s.userCase.RoleMenus(ctx)
+	results, err := s.userCase.AccessRoleMenus(ctx)
 	if err != nil {
 		s.log.Debugf("用户菜单查询失败 %v", err)
 	}

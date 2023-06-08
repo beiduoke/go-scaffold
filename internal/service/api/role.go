@@ -120,7 +120,7 @@ func (s *ApiService) UpdateRoleState(ctx context.Context, in *v1.UpdateRoleState
 		State: int32(v.GetState()),
 	})
 	if err != nil {
-		return nil, v1.ErrorDomainUpdateFail("领域状态修改失败: %v", err.Error())
+		return nil, v1.ErrorRoleUpdateFail("领域状态修改失败: %v", err.Error())
 	}
 	return &v1.UpdateRoleStateReply{
 		Message: "修改成功",

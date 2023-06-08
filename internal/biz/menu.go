@@ -11,29 +11,29 @@ import (
 
 // Menu is a Menu model.
 type Menu struct {
-	ID          uint
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	Name        string
-	Type        int32
-	ParentID    uint
-	Path        string
-	Redirect    string
-	Component   string
-	Permission  string
-	Sort        int32
-	Icon        string
-	Title       string
-	IsHidden    int32
-	IsCache     int32
-	IsAffix     int32
-	LinkType    int32
-	LinkUrl     string
-	ApiResource string
-	Parent      *Menu
-	Children    []*Menu
-	Parameters  []*MenuParameter
-	Buttons     []*MenuButton
+	ID          uint             `json:"id,omitempty" form:"id,omitempty"`
+	CreatedAt   time.Time        `json:"createdAt,omitempty" form:"createdAt,omitempty"`
+	UpdatedAt   time.Time        `json:"updatedAt,omitempty" form:"updatedAt,omitempty"`
+	Name        string           `json:"name,omitempty" form:"name,omitempty"`
+	Type        int32            `json:"type,omitempty" form:"type,omitempty"`
+	ParentID    uint             `json:"parentID,omitempty" form:"parentID,omitempty"`
+	Path        string           `json:"path,omitempty" form:"path,omitempty"`
+	Redirect    string           `json:"redirect,omitempty" form:"redirect,omitempty"`
+	Component   string           `json:"component,omitempty" form:"component,omitempty"`
+	Permission  string           `json:"permission,omitempty" form:"permission,omitempty"`
+	Sort        int32            `json:"sort,omitempty" form:"sort,omitempty"`
+	Icon        string           `json:"icon,omitempty" form:"icon,omitempty"`
+	Title       string           `json:"title,omitempty" form:"title,omitempty"`
+	IsHidden    int32            `json:"isHidden,omitempty" form:"isHidden,omitempty"`
+	IsCache     int32            `json:"isCache,omitempty" form:"isCache,omitempty"`
+	IsAffix     int32            `json:"isAffix,omitempty" form:"isAffix,omitempty"`
+	LinkType    int32            `json:"linkType,omitempty" form:"linkType,omitempty"`
+	LinkUrl     string           `json:"linkUrl,omitempty" form:"linkUrl,omitempty"`
+	ApiResource string           `json:"apiResource,omitempty" form:"apiResource,omitempty"`
+	Parent      *Menu            `json:"parent,omitempty" form:"parent,omitempty"`
+	Children    []*Menu          `json:"children,omitempty" form:"children,omitempty"`
+	Parameters  []*MenuParameter `json:"parameters,omitempty" form:"parameters,omitempty"`
+	Buttons     []*MenuButton    `json:"buttons,omitempty" form:"buttons,omitempty"`
 }
 
 func (g Menu) GetID() string {

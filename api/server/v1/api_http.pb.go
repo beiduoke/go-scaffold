@@ -21,12 +21,16 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 const OperationApiCreateDept = "/api.server.v1.Api/CreateDept"
+const OperationApiCreateDict = "/api.server.v1.Api/CreateDict"
+const OperationApiCreateDictData = "/api.server.v1.Api/CreateDictData"
 const OperationApiCreateDomain = "/api.server.v1.Api/CreateDomain"
 const OperationApiCreateMenu = "/api.server.v1.Api/CreateMenu"
 const OperationApiCreatePost = "/api.server.v1.Api/CreatePost"
 const OperationApiCreateRole = "/api.server.v1.Api/CreateRole"
 const OperationApiCreateUser = "/api.server.v1.Api/CreateUser"
 const OperationApiDeleteDept = "/api.server.v1.Api/DeleteDept"
+const OperationApiDeleteDict = "/api.server.v1.Api/DeleteDict"
+const OperationApiDeleteDictData = "/api.server.v1.Api/DeleteDictData"
 const OperationApiDeleteDomain = "/api.server.v1.Api/DeleteDomain"
 const OperationApiDeleteMenu = "/api.server.v1.Api/DeleteMenu"
 const OperationApiDeletePost = "/api.server.v1.Api/DeletePost"
@@ -35,6 +39,8 @@ const OperationApiDeleteUser = "/api.server.v1.Api/DeleteUser"
 const OperationApiEmailLogin = "/api.server.v1.Api/EmailLogin"
 const OperationApiExistUserName = "/api.server.v1.Api/ExistUserName"
 const OperationApiGetDept = "/api.server.v1.Api/GetDept"
+const OperationApiGetDict = "/api.server.v1.Api/GetDict"
+const OperationApiGetDictData = "/api.server.v1.Api/GetDictData"
 const OperationApiGetDomain = "/api.server.v1.Api/GetDomain"
 const OperationApiGetDomainCode = "/api.server.v1.Api/GetDomainCode"
 const OperationApiGetDomainName = "/api.server.v1.Api/GetDomainName"
@@ -51,6 +57,8 @@ const OperationApiHandleRoleMenu = "/api.server.v1.Api/HandleRoleMenu"
 const OperationApiHandleUserRole = "/api.server.v1.Api/HandleUserRole"
 const OperationApiListDept = "/api.server.v1.Api/ListDept"
 const OperationApiListDeptTree = "/api.server.v1.Api/ListDeptTree"
+const OperationApiListDict = "/api.server.v1.Api/ListDict"
+const OperationApiListDictData = "/api.server.v1.Api/ListDictData"
 const OperationApiListDomain = "/api.server.v1.Api/ListDomain"
 const OperationApiListDomainMenu = "/api.server.v1.Api/ListDomainMenu"
 const OperationApiListDomainTree = "/api.server.v1.Api/ListDomainTree"
@@ -70,6 +78,10 @@ const OperationApiLogout = "/api.server.v1.Api/Logout"
 const OperationApiRegister = "/api.server.v1.Api/Register"
 const OperationApiSmsLogin = "/api.server.v1.Api/SmsLogin"
 const OperationApiUpdateDept = "/api.server.v1.Api/UpdateDept"
+const OperationApiUpdateDict = "/api.server.v1.Api/UpdateDict"
+const OperationApiUpdateDictData = "/api.server.v1.Api/UpdateDictData"
+const OperationApiUpdateDictDataState = "/api.server.v1.Api/UpdateDictDataState"
+const OperationApiUpdateDictState = "/api.server.v1.Api/UpdateDictState"
 const OperationApiUpdateDomain = "/api.server.v1.Api/UpdateDomain"
 const OperationApiUpdateDomainState = "/api.server.v1.Api/UpdateDomainState"
 const OperationApiUpdateMenu = "/api.server.v1.Api/UpdateMenu"
@@ -82,6 +94,10 @@ const OperationApiUpdateUser = "/api.server.v1.Api/UpdateUser"
 type ApiHTTPServer interface {
 	// CreateDept 创建部门
 	CreateDept(context.Context, *CreateDeptReq) (*CreateDeptReply, error)
+	// CreateDict 创建字典
+	CreateDict(context.Context, *CreateDictReq) (*CreateDictReply, error)
+	// CreateDictData 创建字典数据
+	CreateDictData(context.Context, *CreateDictDataReq) (*CreateDictDataReply, error)
 	// CreateDomain 创建领域
 	CreateDomain(context.Context, *CreateDomainReq) (*CreateDomainReply, error)
 	// CreateMenu 创建菜单
@@ -94,6 +110,10 @@ type ApiHTTPServer interface {
 	CreateUser(context.Context, *CreateUserReq) (*CreateUserReply, error)
 	// DeleteDept 删除部门
 	DeleteDept(context.Context, *DeleteDeptReq) (*DeleteDeptReply, error)
+	// DeleteDict 删除字典
+	DeleteDict(context.Context, *DeleteDictReq) (*DeleteDictReply, error)
+	// DeleteDictData 删除字典数据
+	DeleteDictData(context.Context, *DeleteDictDataReq) (*DeleteDictDataReply, error)
 	// DeleteDomain 删除领域
 	DeleteDomain(context.Context, *DeleteDomainReq) (*DeleteDomainReply, error)
 	// DeleteMenu 删除菜单
@@ -110,6 +130,10 @@ type ApiHTTPServer interface {
 	ExistUserName(context.Context, *ExistUserNameReq) (*ExistUserNameReply, error)
 	// GetDept 获取部门
 	GetDept(context.Context, *GetDeptReq) (*Dept, error)
+	// GetDict 获取字典
+	GetDict(context.Context, *GetDictReq) (*Dict, error)
+	// GetDictData 获取字典数据
+	GetDictData(context.Context, *GetDictDataReq) (*DictData, error)
 	// GetDomain 获取领域
 	GetDomain(context.Context, *GetDomainReq) (*Domain, error)
 	// GetDomainCode 获取领域
@@ -143,6 +167,10 @@ type ApiHTTPServer interface {
 	ListDept(context.Context, *ListDeptReq) (*ListDeptReply, error)
 	// ListDeptTree 获取全部部门树形
 	ListDeptTree(context.Context, *ListDeptTreeReq) (*ListDeptTreeReply, error)
+	// ListDict 列表字典
+	ListDict(context.Context, *ListDictReq) (*ListDictReply, error)
+	// ListDictData 列表字典数据
+	ListDictData(context.Context, *ListDictDataReq) (*ListDictDataReply, error)
 	// ListDomain 列表领域
 	ListDomain(context.Context, *ListDomainReq) (*ListDomainReply, error)
 	// ListDomainMenu 获取角色菜单
@@ -183,6 +211,14 @@ type ApiHTTPServer interface {
 	SmsLogin(context.Context, *SmsLoginReq) (*LoginReply, error)
 	// UpdateDept 修改部门
 	UpdateDept(context.Context, *UpdateDeptReq) (*UpdateDeptReply, error)
+	// UpdateDict 修改字典
+	UpdateDict(context.Context, *UpdateDictReq) (*UpdateDictReply, error)
+	// UpdateDictData 修改字典数据
+	UpdateDictData(context.Context, *UpdateDictDataReq) (*UpdateDictDataReply, error)
+	// UpdateDictDataState 设置字典数据状态
+	UpdateDictDataState(context.Context, *UpdateDictDataStateReq) (*UpdateDictDataStateReply, error)
+	// UpdateDictState 设置字典状态
+	UpdateDictState(context.Context, *UpdateDictStateReq) (*UpdateDictStateReply, error)
 	// UpdateDomain 修改领域
 	UpdateDomain(context.Context, *UpdateDomainReq) (*UpdateDomainReply, error)
 	// UpdateDomainState 设置领域状态
@@ -191,7 +227,7 @@ type ApiHTTPServer interface {
 	UpdateMenu(context.Context, *UpdateMenuReq) (*UpdateMenuReply, error)
 	// UpdatePost 修改岗位
 	UpdatePost(context.Context, *UpdatePostReq) (*UpdatePostReply, error)
-	// UpdatePostState 设置领域状态
+	// UpdatePostState 设置岗位状态
 	UpdatePostState(context.Context, *UpdatePostStateReq) (*UpdatePostStateReply, error)
 	// UpdateRole 修改指定ID角色
 	UpdateRole(context.Context, *UpdateRoleReq) (*UpdateRoleReply, error)
@@ -266,6 +302,18 @@ func RegisterApiHTTPServer(s *http.Server, srv ApiHTTPServer) {
 	r.PUT("/v1/posts/{id}", _Api_UpdatePost0_HTTP_Handler(srv))
 	r.DELETE("/v1/posts/{id}", _Api_DeletePost0_HTTP_Handler(srv))
 	r.PUT("/v1/posts/{id}/state", _Api_UpdatePostState0_HTTP_Handler(srv))
+	r.GET("/v1/dicts", _Api_ListDict0_HTTP_Handler(srv))
+	r.POST("/v1/dicts", _Api_CreateDict0_HTTP_Handler(srv))
+	r.GET("/v1/dicts/{id}", _Api_GetDict0_HTTP_Handler(srv))
+	r.PUT("/v1/dicts/{id}", _Api_UpdateDict0_HTTP_Handler(srv))
+	r.DELETE("/v1/dicts/{id}", _Api_DeleteDict0_HTTP_Handler(srv))
+	r.PUT("/v1/dicts/{id}/state", _Api_UpdateDictState0_HTTP_Handler(srv))
+	r.GET("/v1/dictData", _Api_ListDictData0_HTTP_Handler(srv))
+	r.POST("/v1/dictData", _Api_CreateDictData0_HTTP_Handler(srv))
+	r.GET("/v1/dictData/{id}", _Api_GetDictData0_HTTP_Handler(srv))
+	r.PUT("/v1/dictData/{id}", _Api_UpdateDictData0_HTTP_Handler(srv))
+	r.DELETE("/v1/dictData/{id}", _Api_DeleteDictData0_HTTP_Handler(srv))
+	r.PUT("/v1/dictData/{id}/state", _Api_UpdateDictDataState0_HTTP_Handler(srv))
 }
 
 func _Api_Logout0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
@@ -1639,14 +1687,282 @@ func _Api_UpdatePostState0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context
 	}
 }
 
+func _Api_ListDict0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListDictReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationApiListDict)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListDict(ctx, req.(*ListDictReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListDictReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Api_CreateDict0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CreateDictReq
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationApiCreateDict)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateDict(ctx, req.(*CreateDictReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CreateDictReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Api_GetDict0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetDictReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationApiGetDict)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetDict(ctx, req.(*GetDictReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*Dict)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Api_UpdateDict0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateDictReq
+		if err := ctx.Bind(&in.Data); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationApiUpdateDict)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateDict(ctx, req.(*UpdateDictReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateDictReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Api_DeleteDict0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteDictReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationApiDeleteDict)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteDict(ctx, req.(*DeleteDictReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DeleteDictReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Api_UpdateDictState0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateDictStateReq
+		if err := ctx.Bind(&in.Data); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationApiUpdateDictState)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateDictState(ctx, req.(*UpdateDictStateReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateDictStateReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Api_ListDictData0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListDictDataReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationApiListDictData)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListDictData(ctx, req.(*ListDictDataReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListDictDataReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Api_CreateDictData0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CreateDictDataReq
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationApiCreateDictData)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateDictData(ctx, req.(*CreateDictDataReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CreateDictDataReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Api_GetDictData0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetDictDataReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationApiGetDictData)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetDictData(ctx, req.(*GetDictDataReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DictData)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Api_UpdateDictData0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateDictDataReq
+		if err := ctx.Bind(&in.Data); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationApiUpdateDictData)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateDictData(ctx, req.(*UpdateDictDataReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateDictDataReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Api_DeleteDictData0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteDictDataReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationApiDeleteDictData)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteDictData(ctx, req.(*DeleteDictDataReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DeleteDictDataReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Api_UpdateDictDataState0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateDictDataStateReq
+		if err := ctx.Bind(&in.Data); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationApiUpdateDictDataState)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateDictDataState(ctx, req.(*UpdateDictDataStateReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateDictDataStateReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type ApiHTTPClient interface {
 	CreateDept(ctx context.Context, req *CreateDeptReq, opts ...http.CallOption) (rsp *CreateDeptReply, err error)
+	CreateDict(ctx context.Context, req *CreateDictReq, opts ...http.CallOption) (rsp *CreateDictReply, err error)
+	CreateDictData(ctx context.Context, req *CreateDictDataReq, opts ...http.CallOption) (rsp *CreateDictDataReply, err error)
 	CreateDomain(ctx context.Context, req *CreateDomainReq, opts ...http.CallOption) (rsp *CreateDomainReply, err error)
 	CreateMenu(ctx context.Context, req *CreateMenuReq, opts ...http.CallOption) (rsp *CreateMenuReply, err error)
 	CreatePost(ctx context.Context, req *CreatePostReq, opts ...http.CallOption) (rsp *CreatePostReply, err error)
 	CreateRole(ctx context.Context, req *CreateRoleReq, opts ...http.CallOption) (rsp *CreateRoleReply, err error)
 	CreateUser(ctx context.Context, req *CreateUserReq, opts ...http.CallOption) (rsp *CreateUserReply, err error)
 	DeleteDept(ctx context.Context, req *DeleteDeptReq, opts ...http.CallOption) (rsp *DeleteDeptReply, err error)
+	DeleteDict(ctx context.Context, req *DeleteDictReq, opts ...http.CallOption) (rsp *DeleteDictReply, err error)
+	DeleteDictData(ctx context.Context, req *DeleteDictDataReq, opts ...http.CallOption) (rsp *DeleteDictDataReply, err error)
 	DeleteDomain(ctx context.Context, req *DeleteDomainReq, opts ...http.CallOption) (rsp *DeleteDomainReply, err error)
 	DeleteMenu(ctx context.Context, req *DeleteMenuReq, opts ...http.CallOption) (rsp *DeleteMenuReply, err error)
 	DeletePost(ctx context.Context, req *DeletePostReq, opts ...http.CallOption) (rsp *DeletePostReply, err error)
@@ -1655,6 +1971,8 @@ type ApiHTTPClient interface {
 	EmailLogin(ctx context.Context, req *EmailLoginReq, opts ...http.CallOption) (rsp *LoginReply, err error)
 	ExistUserName(ctx context.Context, req *ExistUserNameReq, opts ...http.CallOption) (rsp *ExistUserNameReply, err error)
 	GetDept(ctx context.Context, req *GetDeptReq, opts ...http.CallOption) (rsp *Dept, err error)
+	GetDict(ctx context.Context, req *GetDictReq, opts ...http.CallOption) (rsp *Dict, err error)
+	GetDictData(ctx context.Context, req *GetDictDataReq, opts ...http.CallOption) (rsp *DictData, err error)
 	GetDomain(ctx context.Context, req *GetDomainReq, opts ...http.CallOption) (rsp *Domain, err error)
 	GetDomainCode(ctx context.Context, req *GetDomainCodeReq, opts ...http.CallOption) (rsp *Domain, err error)
 	GetDomainName(ctx context.Context, req *GetDomainNameReq, opts ...http.CallOption) (rsp *Domain, err error)
@@ -1671,6 +1989,8 @@ type ApiHTTPClient interface {
 	HandleUserRole(ctx context.Context, req *HandleUserRoleReq, opts ...http.CallOption) (rsp *HandleUserRoleReply, err error)
 	ListDept(ctx context.Context, req *ListDeptReq, opts ...http.CallOption) (rsp *ListDeptReply, err error)
 	ListDeptTree(ctx context.Context, req *ListDeptTreeReq, opts ...http.CallOption) (rsp *ListDeptTreeReply, err error)
+	ListDict(ctx context.Context, req *ListDictReq, opts ...http.CallOption) (rsp *ListDictReply, err error)
+	ListDictData(ctx context.Context, req *ListDictDataReq, opts ...http.CallOption) (rsp *ListDictDataReply, err error)
 	ListDomain(ctx context.Context, req *ListDomainReq, opts ...http.CallOption) (rsp *ListDomainReply, err error)
 	ListDomainMenu(ctx context.Context, req *ListDomainMenuReq, opts ...http.CallOption) (rsp *ListDomainMenuReply, err error)
 	ListDomainTree(ctx context.Context, req *ListDomainTreeReq, opts ...http.CallOption) (rsp *ListDomainTreeReply, err error)
@@ -1690,6 +2010,10 @@ type ApiHTTPClient interface {
 	Register(ctx context.Context, req *RegisterReq, opts ...http.CallOption) (rsp *RegisterReply, err error)
 	SmsLogin(ctx context.Context, req *SmsLoginReq, opts ...http.CallOption) (rsp *LoginReply, err error)
 	UpdateDept(ctx context.Context, req *UpdateDeptReq, opts ...http.CallOption) (rsp *UpdateDeptReply, err error)
+	UpdateDict(ctx context.Context, req *UpdateDictReq, opts ...http.CallOption) (rsp *UpdateDictReply, err error)
+	UpdateDictData(ctx context.Context, req *UpdateDictDataReq, opts ...http.CallOption) (rsp *UpdateDictDataReply, err error)
+	UpdateDictDataState(ctx context.Context, req *UpdateDictDataStateReq, opts ...http.CallOption) (rsp *UpdateDictDataStateReply, err error)
+	UpdateDictState(ctx context.Context, req *UpdateDictStateReq, opts ...http.CallOption) (rsp *UpdateDictStateReply, err error)
 	UpdateDomain(ctx context.Context, req *UpdateDomainReq, opts ...http.CallOption) (rsp *UpdateDomainReply, err error)
 	UpdateDomainState(ctx context.Context, req *UpdateDomainStateReq, opts ...http.CallOption) (rsp *UpdateDomainStateReply, err error)
 	UpdateMenu(ctx context.Context, req *UpdateMenuReq, opts ...http.CallOption) (rsp *UpdateMenuReply, err error)
@@ -1713,6 +2037,32 @@ func (c *ApiHTTPClientImpl) CreateDept(ctx context.Context, in *CreateDeptReq, o
 	pattern := "/v1/depts"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationApiCreateDept))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ApiHTTPClientImpl) CreateDict(ctx context.Context, in *CreateDictReq, opts ...http.CallOption) (*CreateDictReply, error) {
+	var out CreateDictReply
+	pattern := "/v1/dicts"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationApiCreateDict))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ApiHTTPClientImpl) CreateDictData(ctx context.Context, in *CreateDictDataReq, opts ...http.CallOption) (*CreateDictDataReply, error) {
+	var out CreateDictDataReply
+	pattern := "/v1/dictData"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationApiCreateDictData))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -1791,6 +2141,32 @@ func (c *ApiHTTPClientImpl) DeleteDept(ctx context.Context, in *DeleteDeptReq, o
 	pattern := "/v1/depts/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationApiDeleteDept))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ApiHTTPClientImpl) DeleteDict(ctx context.Context, in *DeleteDictReq, opts ...http.CallOption) (*DeleteDictReply, error) {
+	var out DeleteDictReply
+	pattern := "/v1/dicts/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationApiDeleteDict))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ApiHTTPClientImpl) DeleteDictData(ctx context.Context, in *DeleteDictDataReq, opts ...http.CallOption) (*DeleteDictDataReply, error) {
+	var out DeleteDictDataReply
+	pattern := "/v1/dictData/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationApiDeleteDictData))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
 	if err != nil {
@@ -1895,6 +2271,32 @@ func (c *ApiHTTPClientImpl) GetDept(ctx context.Context, in *GetDeptReq, opts ..
 	pattern := "/v1/depts/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationApiGetDept))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ApiHTTPClientImpl) GetDict(ctx context.Context, in *GetDictReq, opts ...http.CallOption) (*Dict, error) {
+	var out Dict
+	pattern := "/v1/dicts/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationApiGetDict))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ApiHTTPClientImpl) GetDictData(ctx context.Context, in *GetDictDataReq, opts ...http.CallOption) (*DictData, error) {
+	var out DictData
+	pattern := "/v1/dictData/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationApiGetDictData))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -2103,6 +2505,32 @@ func (c *ApiHTTPClientImpl) ListDeptTree(ctx context.Context, in *ListDeptTreeRe
 	pattern := "/v1/depts/{id}/trees"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationApiListDeptTree))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ApiHTTPClientImpl) ListDict(ctx context.Context, in *ListDictReq, opts ...http.CallOption) (*ListDictReply, error) {
+	var out ListDictReply
+	pattern := "/v1/dicts"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationApiListDict))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ApiHTTPClientImpl) ListDictData(ctx context.Context, in *ListDictDataReq, opts ...http.CallOption) (*ListDictDataReply, error) {
+	var out ListDictDataReply
+	pattern := "/v1/dictData"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationApiListDictData))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -2350,6 +2778,58 @@ func (c *ApiHTTPClientImpl) UpdateDept(ctx context.Context, in *UpdateDeptReq, o
 	pattern := "/v1/depts/{id}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationApiUpdateDept))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in.Data, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ApiHTTPClientImpl) UpdateDict(ctx context.Context, in *UpdateDictReq, opts ...http.CallOption) (*UpdateDictReply, error) {
+	var out UpdateDictReply
+	pattern := "/v1/dicts/{id}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationApiUpdateDict))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in.Data, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ApiHTTPClientImpl) UpdateDictData(ctx context.Context, in *UpdateDictDataReq, opts ...http.CallOption) (*UpdateDictDataReply, error) {
+	var out UpdateDictDataReply
+	pattern := "/v1/dictData/{id}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationApiUpdateDictData))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in.Data, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ApiHTTPClientImpl) UpdateDictDataState(ctx context.Context, in *UpdateDictDataStateReq, opts ...http.CallOption) (*UpdateDictDataStateReply, error) {
+	var out UpdateDictDataStateReply
+	pattern := "/v1/dictData/{id}/state"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationApiUpdateDictDataState))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in.Data, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ApiHTTPClientImpl) UpdateDictState(ctx context.Context, in *UpdateDictStateReq, opts ...http.CallOption) (*UpdateDictStateReply, error) {
+	var out UpdateDictStateReply
+	pattern := "/v1/dicts/{id}/state"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationApiUpdateDictState))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in.Data, &out, opts...)
 	if err != nil {
