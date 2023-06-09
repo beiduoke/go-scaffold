@@ -14,9 +14,9 @@ import (
 
 const (
 	cacheHashKeyUser     string = "sys_user"
-	cacheStringLoginID   string = "login_uuid:%s"
-	cacheHashLoginToken  string = "login_token:%d"
+	cacheStringLoginUUID string = "login_uuid:%s"
 	cacheStringLoginUser string = "login_user:%d"
+	cacheHashLoginToken  string = "login_token:%d"
 )
 
 var _ Cache[*biz.User] = (*UserRepo)(nil)
@@ -102,7 +102,7 @@ func (r *UserRepo) SetLoginCache(ctx context.Context, info UserLoginInfo) error 
 		r.log.Errorf("用户缓存序列化失败 %v", err)
 		return err
 	}
-	err = r.data.rdb.Set(ctx, fmt.Sprintf(cacheStringLoginID, info.UUID), dataStr, info.Expiration).Err()
+	err = r.data.rdb.Set(ctx, fmt.Sprintf(cacheStringLoginUUID, info.UUID), dataStr, info.Expiration).Err()
 	if err != nil {
 		r.log.Errorf("登录用户信息缓存失败 %v", err)
 		return err
@@ -118,7 +118,7 @@ func (r *UserRepo) GetLoginCache(ctx context.Context, uid uint) (*biz.User, erro
 		return nil, err
 	}
 
-	result = r.data.rdb.Get(ctx, fmt.Sprintf(cacheStringLoginID, result.Val()))
+	result = r.data.rdb.Get(ctx, fmt.Sprintf(cacheStringLoginUUID, result.Val()))
 	authUser := biz.User{}
 	if err := json.Unmarshal([]byte(result.Val()), &authUser); err != nil {
 		r.log.Errorf("unmarshal login auth user", err)
@@ -137,7 +137,7 @@ func (r *UserRepo) ExistLoginCache(ctx context.Context, uid uint) bool {
 	return result.Val() == 1
 }
 
-// DeleteLoginCache 删除登录信息
+// DeleteLoginCache 删除登录用户ID信息
 func (r *UserRepo) DeleteLoginCache(ctx context.Context, uid uint) error {
 	result := r.data.rdb.Get(ctx, fmt.Sprintf(cacheStringLoginUser, uid))
 	err := result.Err()
@@ -147,10 +147,9 @@ func (r *UserRepo) DeleteLoginCache(ctx context.Context, uid uint) error {
 	}
 	// 删除缓存信息
 	{
-		if err = r.data.rdb.Del(ctx, fmt.Sprintf(cacheStringLoginID, result.Val())).Err(); err != nil {
+		if err = r.data.rdb.Del(ctx, fmt.Sprintf(cacheStringLoginUUID, result.Val())).Err(); err != nil {
 			r.log.Errorf("登录用户ID信息缓存删除失败 %v", err)
 		}
-
 		if err = r.data.rdb.Del(ctx, fmt.Sprintf(cacheStringLoginUser, uid)).Err(); err != nil {
 			r.log.Errorf("登录用户信息缓存删除失败 %v", err)
 		}
@@ -158,14 +157,21 @@ func (r *UserRepo) DeleteLoginCache(ctx context.Context, uid uint) error {
 	return err
 }
 
-// GetLoginIDCache 获取登录信息
-func (r *UserRepo) GetLoginIDCache(ctx context.Context, uuid string) (*biz.User, error) {
-	result := r.data.rdb.Get(ctx, fmt.Sprintf(cacheStringLoginID, uuid))
-	bizUser := biz.User{}
-	if err := json.Unmarshal([]byte(result.Val()), &bizUser); err != nil {
-		r.log.Errorf("unmarshal login auth user", err)
+// DeleteLoginCache 删除指定UUID登录信息
+func (r *UserRepo) DeleteLoginUUIDCache(ctx context.Context, uuid string) error {
+	return r.data.rdb.Del(ctx, fmt.Sprintf(cacheStringLoginUUID, uuid)).Err()
+}
+
+// GetLoginIDCache 获取登录UUID信息
+func (r *UserRepo) GetLoginUUIDCache(ctx context.Context, uuid string) (bizUser *biz.User, err error) {
+	result := r.data.rdb.Get(ctx, fmt.Sprintf(cacheStringLoginUUID, uuid))
+	if err = result.Err(); err != nil {
+		r.log.Errorf("failed to data login auth user： %v", err)
 		return nil, err
 	}
-
-	return &bizUser, result.Err()
+	if err = json.Unmarshal([]byte(result.Val()), &bizUser); err != nil {
+		r.log.Errorf("failed to unmarshal login auth user： %v", err)
+		return nil, err
+	}
+	return bizUser, nil
 }

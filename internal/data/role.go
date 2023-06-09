@@ -2,7 +2,6 @@ package data
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
@@ -18,12 +17,12 @@ type RoleRepo struct {
 }
 
 // NewRoleRepo .
-func NewRoleRepo(logger log.Logger, data *Data, menu biz.MenuRepo, dept biz.DeptRepo) biz.RoleRepo {
+func NewRoleRepo(logger log.Logger, data *Data, menuRepo biz.MenuRepo, deptRepo biz.DeptRepo) biz.RoleRepo {
 	return &RoleRepo{
 		data: data,
 		log:  log.NewHelper(logger),
-		menu: *(menu.(*MenuRepo)),
-		dept: *(dept.(*DeptRepo)),
+		menu: *(menuRepo.(*MenuRepo)),
+		dept: *(deptRepo.(*DeptRepo)),
 	}
 }
 
@@ -179,46 +178,26 @@ func (r *RoleRepo) ListPage(ctx context.Context, paging *pagination.Pagination) 
 
 // 处理角色菜单
 func (r *RoleRepo) HandleMenu(ctx context.Context, g *biz.Role) error {
-	sysRole := r.toModel(g)
-	err := r.data.DB(ctx).Model(sysRole).Association("Menus").Clear()
-	if err != nil {
-		return err
-	}
-	sysRoleMenus := []SysRoleMenu{}
+	sysRole, sysMenus := SysRole{}, make([]*SysMenu, 0)
 	for _, v := range g.Menus {
-		menuButtons := make([]uint, 0, len(v.Buttons))
-		for _, m := range v.Buttons {
-			menuButtons = append(menuButtons, m.ID)
-		}
-		buttons, _ := json.Marshal(menuButtons)
-		menuParameters := make([]uint, 0, len(v.Parameters))
-		for _, m := range v.Parameters {
-			menuParameters = append(menuParameters, m.ID)
-		}
-		parameters, _ := json.Marshal(menuParameters)
-		sysRoleMenus = append(sysRoleMenus, SysRoleMenu{
-			RoleID:        g.ID,
-			MenuID:        v.ID,
-			MenuButton:    string(buttons),
-			MenuParameter: string(parameters),
-		})
+		sysMenus = append(sysMenus, r.menu.toModel(v))
 	}
-	return r.data.DB(ctx).Model(&SysRoleMenu{}).CreateInBatches(&sysRoleMenus, len(g.Menus)).Error
+	sysRole.ID = g.ID
+	return r.data.DB(ctx).Model(&sysRole).Association("Menus").Replace(sysMenus)
 }
 
 // 获取指定角色菜单列表
 func (r *RoleRepo) ListMenuByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu, error) {
-	var roleMenus []*SysRoleMenu
-	db := r.data.DB(ctx).Model(&SysRoleMenu{})
-	result := db.Find(&roleMenus, "sys_role_id in ?", ids)
+	var roleMenuIds []uint
+	result := r.data.DB(ctx).Debug().Table("sys_role_menus").Where("sys_role_id", ids).Pluck("sys_menu_id", &roleMenuIds)
 	if err := result.Error; err != nil {
 		return nil, err
 	}
 	bizAllMenus, err := r.menu.ListAll(ctx)
-	bizMenus := make([]*biz.Menu, 0, len(roleMenus))
+	bizMenus := make([]*biz.Menu, 0, len(roleMenuIds))
 	for _, menu := range bizAllMenus {
-		for _, authMenu := range roleMenus {
-			if authMenu.MenuID == menu.ID {
+		for _, menuId := range roleMenuIds {
+			if menuId == menu.ID {
 				bizMenus = append(bizMenus, menu)
 				continue
 			}
@@ -244,18 +223,13 @@ func (r *RoleRepo) ListDeptByIDs(ctx context.Context, ids ...uint) ([]*biz.Dept,
 
 // 获取指定角色菜单列表-返回父级菜单
 func (r *RoleRepo) ListMenuAndParentByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu, error) {
-	var sysRoleMenus []*SysRoleMenu
-	db := r.data.DB(ctx).Model(&SysRoleMenu{})
-	result := db.Find(&sysRoleMenus, "sys_role_id in ?", ids)
+	var roleMenuIds []uint
+	result := r.data.DB(ctx).Debug().Table("sys_role_menus").Where("sys_role_id", ids).Pluck("sys_menu_id", &roleMenuIds)
 	if err := result.Error; err != nil {
 		return nil, err
 	}
 	bizAllMenus, _ := r.menu.ListAll(ctx)
-	menuIds := []uint{}
-	for _, v := range sysRoleMenus {
-		menuIds = append(menuIds, v.MenuID)
-	}
-	return menuRecursiveParent(bizAllMenus, menuIds...), nil
+	return menuRecursiveParent(bizAllMenus, roleMenuIds...), nil
 }
 
 // 绑定角色部门

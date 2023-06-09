@@ -31,7 +31,6 @@ require (
 	go.etcd.io/etcd/client/v3 v3.5.7
 	go.opentelemetry.io/otel/exporters/jaeger v1.12.0
 	go.opentelemetry.io/otel/sdk v1.12.0
-	go.uber.org/dig v1.16.1
 	golang.org/x/crypto v0.8.0
 	gorm.io/driver/mysql v1.4.5
 	gorm.io/gorm v1.24.5

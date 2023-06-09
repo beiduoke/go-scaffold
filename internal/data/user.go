@@ -9,7 +9,6 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	auth "github.com/beiduoke/go-scaffold/pkg/auth/authn"
-	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/crypto"
 	"github.com/beiduoke/go-scaffold/pkg/util/ip"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
@@ -35,16 +34,16 @@ type UserRepo struct {
 }
 
 // NewUserRepo .
-func NewUserRepo(logger log.Logger, data *Data, ac *conf.Auth, authenticator auth.Authenticator, domain biz.DomainRepo, role biz.RoleRepo, post biz.PostRepo, menu biz.MenuRepo, dept biz.DeptRepo) biz.UserRepo {
+func NewUserRepo(logger log.Logger, data *Data, ac *conf.Auth, authenticator auth.Authenticator, domainRepo biz.DomainRepo, roleRepo biz.RoleRepo, postRepo biz.PostRepo, menuRepo biz.MenuRepo, deptRepo biz.DeptRepo) biz.UserRepo {
 	return &UserRepo{
 		ac:            ac,
 		data:          data,
 		log:           log.NewHelper(logger),
-		domain:        *(domain.(*DomainRepo)),
-		role:          *(role.(*RoleRepo)),
-		post:          *(post.(*PostRepo)),
-		menu:          *(menu.(*MenuRepo)),
-		dept:          *(dept.(*DeptRepo)),
+		domain:        *(domainRepo.(*DomainRepo)),
+		role:          *(roleRepo.(*RoleRepo)),
+		post:          *(postRepo.(*PostRepo)),
+		menu:          *(menuRepo.(*MenuRepo)),
+		dept:          *(deptRepo.(*DeptRepo)),
 		authenticator: authenticator,
 	}
 }
@@ -108,7 +107,7 @@ func (r *UserRepo) Save(ctx context.Context, g *biz.User) (*biz.User, error) {
 
 func (r *UserRepo) Update(ctx context.Context, g *biz.User) (*biz.User, error) {
 	d := r.toModel(g)
-	err := r.data.DB(ctx).Debug().Transaction(func(tx *gorm.DB) error {
+	err := r.data.DB(ctx).Transaction(func(tx *gorm.DB) error {
 		userModel := *d
 		err := tx.Model(&userModel).Association("Roles").Clear()
 		if err != nil {
@@ -146,7 +145,7 @@ func (r *UserRepo) Delete(ctx context.Context, g *biz.User) error {
 }
 
 func (r *UserRepo) ListPage(ctx context.Context, paging *pagination.Pagination) (users []*biz.User, total int64) {
-	db := r.data.DBD(ctx).Model(&SysUser{}).Debug()
+	db := r.data.DBD(ctx).Model(&SysUser{})
 	sysUsers := []*SysUser{}
 
 	// 查询条件
@@ -271,7 +270,7 @@ func (r *UserRepo) ListByEmail(ctx context.Context, s string) ([]*biz.User, erro
 // HandleDomainRole 绑定权限
 func (r *UserRepo) HandleRole(ctx context.Context, g *biz.User) error {
 	sysUser := r.toModel(g)
-	err := r.data.DB(ctx).Model(&sysUser).Association("Roles").Replace(sysUser.Roles)
+	err := r.data.DB(ctx).Model(&sysUser).Association("Roles").Replace(&sysUser.Roles)
 	if err != nil {
 		return err
 	}
@@ -287,6 +286,7 @@ func (r *UserRepo) HandleRole(ctx context.Context, g *biz.User) error {
 	return err
 }
 
+// ListRoles 指定用户角色列表
 func (r *UserRepo) ListRoles(ctx context.Context, g *biz.User) ([]*biz.Role, error) {
 	sysUser := SysUser{}
 	result := r.data.DB(ctx).Preload("Roles").Last(&sysUser, g.ID)
@@ -297,7 +297,6 @@ func (r *UserRepo) ListRoles(ctx context.Context, g *biz.User) ([]*biz.Role, err
 	for _, v := range sysUser.Roles {
 		bizRoles = append(bizRoles, r.role.toBiz(&v))
 	}
-
 	return bizRoles, nil
 }
 
@@ -407,33 +406,44 @@ func (r *UserRepo) Register(ctx context.Context, g *biz.User) error {
 
 // Register 注册
 func (r *UserRepo) Logout(ctx context.Context) error {
-	return r.DeleteLoginCache(ctx, r.data.CtxUserID(ctx))
+	return r.DeleteLoginUUIDCache(ctx, r.data.CtxAuthClaimSubject(ctx))
 }
 
+// AccessInfo 访问用户登录缓存信息
 func (r *UserRepo) AccessInfo(ctx context.Context) (*biz.User, error) {
-	return r.GetLoginCache(ctx, r.data.CtxUserID(ctx))
+	return r.GetLoginUUIDCache(ctx, r.data.CtxAuthClaimSubject(ctx))
 }
 
+// AccessRoles 访问用户角色列表
 func (r *UserRepo) AccessRoles(ctx context.Context) ([]*biz.Role, error) {
-	return r.ListRoles(ctx, &biz.User{ID: r.data.CtxUserID(ctx)})
+	bizUser, err := r.GetLoginUUIDCache(ctx, r.data.CtxAuthClaimSubject(ctx))
+	if err != nil {
+		return nil, err
+	}
+	return bizUser.Roles, nil
 }
 
+// AccessRoleMenus 访问用户角色菜单列表
 func (r *UserRepo) AccessRoleMenus(ctx context.Context) (menus []*biz.Menu, err error) {
 	defer func() {
 		sort.SliceStable(menus, func(i, j int) bool {
 			return int32(menus[i].Sort) < int32(menus[j].Sort)
 		})
 	}()
-	if r.data.HasSuperAdmin(ctx) {
+	if r.data.HasSystemSuperAdmin(ctx) {
 		return r.menu.ListAll(ctx)
 	} else if r.data.HasDomainSuperUser(ctx) {
 		return r.domain.ListMenuByIDs(ctx, r.data.CtxDomainID(ctx))
 	}
-	ctxAuthUser := r.data.CtxAuthUser(ctx)
-	rolesIdsStr := r.data.enforcer.GetRolesForUserInDomain(ctxAuthUser.GetUser(), ctxAuthUser.GetDomain())
-	return r.role.ListMenuByIDs(ctx, convert.ArrayStringToUint(rolesIdsStr)...)
+
+	bizUser, err := r.GetLoginUUIDCache(ctx, r.data.CtxAuthClaimSubject(ctx))
+	if err != nil {
+		return nil, err
+	}
+	return r.role.ListMenuByIDs(ctx, bizUser.LastUseRoleID)
 }
 
+// AccessRolePermissions 访问用户角色的权限列表
 func (r *UserRepo) AccessRolePermissions(ctx context.Context) ([]string, error) {
 	bizMenus, err := r.AccessRoleMenus(ctx)
 	if err != nil {

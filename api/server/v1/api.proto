@@ -209,14 +209,6 @@ service Api {
     };
   }
 
-  // 绑定用户领域权限
-  rpc HandleUserRole (HandleUserRoleReq) returns (HandleUserRoleReply) {
-    option (google.api.http) = {
-      post: "/v1/users/{id}/roles"
-      body: "data"
-    };
-  }
-
   // 验证用户名是否存在
   rpc ExistUserName (ExistUserNameReq) returns (ExistUserNameReply) {
     option (google.api.http) = {
@@ -716,13 +708,7 @@ message User {
 
 // 回应 - 用户概况详情
 message GetUserInfoReply {
-  message UserRole {
-    uint64 id = 3;
-    string name = 4;
-    string default_router = 6;
-    int32 sort = 7;
-  }
-  repeated UserRole roles = 1;
+  repeated Role roles = 1;
   string name = 2;
   string nick_name = 4;
   string real_name = 5;
@@ -846,13 +832,21 @@ message MenuRouter {
     // 固定菜单在tab栏
     optional bool affix = 13;
   }
+  // 路由名称
   string name = 1;
+  // 路由地址
   string path = 2;
+  // 路由组件
   optional string component = 3;
+  // 路由重定向
   optional string redirect = 4;
+  // 路由头信息
   Meta meta = 5;
+  // 路由子集
   repeated MenuRouter children = 6;
+  // 路由ID
   optional uint64 id = 7;
+  // 路由父级
   optional uint64 parent_id = 8;
 }
 
@@ -911,7 +905,7 @@ message CreateUserReply {
   string type = 4;
 }
 
-// 请求 - 绑定用户领域权限
+// 请求 - 绑定用户权限
 message HandleUserRoleReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
@@ -921,7 +915,7 @@ message HandleUserRoleReq {
   Data data = 3;
 }
 
-// 回应 - 绑定用户领域权限
+// 回应 - 绑定用户权限
 message HandleUserRoleReply {
   int32 code = 1;
   string message = 2;
@@ -1150,13 +1144,8 @@ message ListDomainMenuReply {
 // 请求 - 处理领域菜单
 message HandleDomainMenuReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
-  message Menu {
-    uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
-    repeated uint64 menu_parameter_ids = 2 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
-    repeated uint64 menu_button_ids = 3 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
-  }
   message Data {
-    repeated Menu menus = 1;
+    repeated uint64 menu_ids = 10 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
   }
   Data data = 2;
 }
@@ -1299,14 +1288,8 @@ message ListRoleMenuReply {
 // 请求 - 处理角色菜单
 message HandleRoleMenuReq {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
-  // 作为扩展菜单权限按钮以及参数配置（未使用）
-  message Menu {
-    uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
-    repeated uint64 menu_parameter_ids = 2 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
-    repeated uint64 menu_button_ids = 3 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
-  }
   message Data {
-    repeated uint64 menus = 1;
+    repeated uint64 menu_ids = 10 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
   }
   Data data = 2;
 }

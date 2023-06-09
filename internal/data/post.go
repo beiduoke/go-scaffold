@@ -66,7 +66,7 @@ func (r *PostRepo) Save(ctx context.Context, g *biz.Post) (*biz.Post, error) {
 
 func (r *PostRepo) Update(ctx context.Context, g *biz.Post) (*biz.Post, error) {
 	d := r.toModel(g)
-	result := r.data.DBD(ctx).Debug().Model(d).Omit("Code").Updates(d)
+	result := r.data.DBD(ctx).Model(d).Omit("Code").Updates(d)
 	return r.toBiz(d), result.Error
 }
 

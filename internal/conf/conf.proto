@@ -9,6 +9,7 @@ message Bootstrap {
   Server server = 1;
   Data data = 2;
   Auth auth = 4;
+  System system = 5;
 }
 
 message Server {
@@ -76,6 +77,10 @@ message Localize {
   string default = 1;
 }
 
-message Admin {
-  string super = 1;
+message System {
+  message SuperAdmin {
+    uint64 domain_id = 1;
+    uint64 user_id = 2;
+  }
+  SuperAdmin superAdmin = 1;
 }

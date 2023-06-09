@@ -65,7 +65,7 @@ func (s *ApiService) CreateRole(ctx context.Context, in *v1.CreateRoleReq) (*v1.
 		// 同步角色菜单操作
 		if _, err = s.HandleRoleMenu(ctx, &v1.HandleRoleMenuReq{
 			Id:   uint64(role.ID),
-			Data: &v1.HandleRoleMenuReq_Data{Menus: in.GetMenus()},
+			Data: &v1.HandleRoleMenuReq_Data{MenuIds: in.GetMenus()},
 		}); err != nil {
 			return nil, err
 		}
@@ -102,7 +102,7 @@ func (s *ApiService) UpdateRole(ctx context.Context, in *v1.UpdateRoleReq) (*v1.
 	// 同步角色菜单操作
 	if _, err = s.HandleRoleMenu(ctx, &v1.HandleRoleMenuReq{
 		Id:   in.GetId(),
-		Data: &v1.HandleRoleMenuReq_Data{Menus: v.GetMenus()},
+		Data: &v1.HandleRoleMenuReq_Data{MenuIds: v.GetMenus()},
 	}); err != nil {
 		return nil, err
 	}
@@ -160,20 +160,10 @@ func (s *ApiService) ListRoleMenu(ctx context.Context, in *v1.ListRoleMenuReq) (
 // HandleRoleMenu 处理指定ID角色菜单
 func (s *ApiService) HandleRoleMenu(ctx context.Context, in *v1.HandleRoleMenuReq) (*v1.HandleRoleMenuReply, error) {
 	data := in.GetData()
-	menus := make([]*biz.Menu, 0, len(data.GetMenus()))
-	for _, v := range data.GetMenus() {
-		// 暂不使用扩展菜单权限按钮以及参数配置
-		// parameters, buttons := make([]*biz.MenuParameter, 0, len(v.GetMenuParameterIds())), make([]*biz.MenuButton, 0, len(v.GetMenuButtonIds()))
-		// for _, v := range v.GetMenuParameterIds() {
-		// 	parameters = append(parameters, &biz.MenuParameter{ID: uint(v)})
-		// }
-		// for _, v := range v.GetMenuButtonIds() {
-		// 	buttons = append(buttons, &biz.MenuButton{ID: uint(v)})
-		// }
+	menus := make([]*biz.Menu, 0, len(data.GetMenuIds()))
+	for _, v := range data.GetMenuIds() {
 		menus = append(menus, &biz.Menu{
 			ID: uint(v),
-			// Parameters: parameters,
-			// Buttons:    buttons,
 		})
 	}
 	if err := s.roleCase.HandleMenu(ctx, &biz.Role{ID: uint(in.GetId()), Menus: menus}); err != nil {

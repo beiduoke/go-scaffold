@@ -54,7 +54,6 @@ const OperationApiGetUserProfile = "/api.server.v1.Api/GetUserProfile"
 const OperationApiHandleDomainMenu = "/api.server.v1.Api/HandleDomainMenu"
 const OperationApiHandleRoleDataScope = "/api.server.v1.Api/HandleRoleDataScope"
 const OperationApiHandleRoleMenu = "/api.server.v1.Api/HandleRoleMenu"
-const OperationApiHandleUserRole = "/api.server.v1.Api/HandleUserRole"
 const OperationApiListDept = "/api.server.v1.Api/ListDept"
 const OperationApiListDeptTree = "/api.server.v1.Api/ListDeptTree"
 const OperationApiListDict = "/api.server.v1.Api/ListDict"
@@ -161,8 +160,6 @@ type ApiHTTPServer interface {
 	HandleRoleDataScope(context.Context, *HandleRoleDataScopeReq) (*HandleRoleDataScopeReply, error)
 	// HandleRoleMenu 处理指定ID角色菜单
 	HandleRoleMenu(context.Context, *HandleRoleMenuReq) (*HandleRoleMenuReply, error)
-	// HandleUserRole 绑定用户领域权限
-	HandleUserRole(context.Context, *HandleUserRoleReq) (*HandleUserRoleReply, error)
 	// ListDept 列表部门
 	ListDept(context.Context, *ListDeptReq) (*ListDeptReply, error)
 	// ListDeptTree 获取全部部门树形
@@ -259,7 +256,6 @@ func RegisterApiHTTPServer(s *http.Server, srv ApiHTTPServer) {
 	r.GET("/v1/users/{id}", _Api_GetUser0_HTTP_Handler(srv))
 	r.PUT("/v1/users/{id}", _Api_UpdateUser0_HTTP_Handler(srv))
 	r.DELETE("/v1/users/{id}", _Api_DeleteUser0_HTTP_Handler(srv))
-	r.POST("/v1/users/{id}/roles", _Api_HandleUserRole0_HTTP_Handler(srv))
 	r.POST("/v1/users/existName", _Api_ExistUserName0_HTTP_Handler(srv))
 	r.GET("/v1/domains", _Api_ListDomain0_HTTP_Handler(srv))
 	r.GET("/v1/domains/trees", _Api_ListDomainTree0_HTTP_Handler(srv))
@@ -737,31 +733,6 @@ func _Api_DeleteUser0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) err
 			return err
 		}
 		reply := out.(*DeleteUserReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Api_HandleUserRole0_HTTP_Handler(srv ApiHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in HandleUserRoleReq
-		if err := ctx.Bind(&in.Data); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationApiHandleUserRole)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.HandleUserRole(ctx, req.(*HandleUserRoleReq))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*HandleUserRoleReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -1986,7 +1957,6 @@ type ApiHTTPClient interface {
 	HandleDomainMenu(ctx context.Context, req *HandleDomainMenuReq, opts ...http.CallOption) (rsp *HandleDomainMenuReply, err error)
 	HandleRoleDataScope(ctx context.Context, req *HandleRoleDataScopeReq, opts ...http.CallOption) (rsp *HandleRoleDataScopeReply, err error)
 	HandleRoleMenu(ctx context.Context, req *HandleRoleMenuReq, opts ...http.CallOption) (rsp *HandleRoleMenuReply, err error)
-	HandleUserRole(ctx context.Context, req *HandleUserRoleReq, opts ...http.CallOption) (rsp *HandleUserRoleReply, err error)
 	ListDept(ctx context.Context, req *ListDeptReq, opts ...http.CallOption) (rsp *ListDeptReply, err error)
 	ListDeptTree(ctx context.Context, req *ListDeptTreeReq, opts ...http.CallOption) (rsp *ListDeptTreeReply, err error)
 	ListDict(ctx context.Context, req *ListDictReq, opts ...http.CallOption) (rsp *ListDictReply, err error)
@@ -2466,19 +2436,6 @@ func (c *ApiHTTPClientImpl) HandleRoleMenu(ctx context.Context, in *HandleRoleMe
 	pattern := "/v1/roles/{id}/menus"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationApiHandleRoleMenu))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *ApiHTTPClientImpl) HandleUserRole(ctx context.Context, in *HandleUserRoleReq, opts ...http.CallOption) (*HandleUserRoleReply, error) {
-	var out HandleUserRoleReply
-	pattern := "/v1/users/{id}/roles"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationApiHandleUserRole))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
 	if err != nil {

@@ -21,31 +21,25 @@ var (
 
 func Server(authorizer authz.Authorizer, opts ...Option) middleware.Middleware {
 	o := &options{}
-
-	for _, opt := range opts {
-		opt(o)
-	}
-
 	if authorizer == nil {
 		return nil
 	}
-
+	for _, opt := range opts {
+		opt(o)
+	}
 	return func(handler middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req interface{}) (interface{}, error) {
 			var (
 				allowed bool
 				err     error
 			)
-
 			claims, ok := authz.AuthClaimsFromContext(ctx)
 			if !ok {
 				return nil, ErrMissingClaims
 			}
-
 			if claims.Subject == nil || claims.Action == nil || claims.Resource == nil {
 				return nil, ErrInvalidClaims
 			}
-
 			allowed, err = authorizer.IsAuthorized(ctx, *claims.Subject, *claims.Action, *claims.Resource, *claims.Project)
 			if err != nil {
 				return nil, err
@@ -53,7 +47,6 @@ func Server(authorizer authz.Authorizer, opts ...Option) middleware.Middleware {
 			if !allowed {
 				return nil, ErrUnauthorized
 			}
-
 			return handler(ctx, req)
 		}
 	}

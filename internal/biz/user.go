@@ -251,55 +251,7 @@ func (ac *UserUsecase) AccessRolePermissions(ctx context.Context) ([]string, err
 	return ac.biz.userRepo.AccessRolePermissions(ctx)
 }
 
-// ListPostID 获取岗位ID列表
-func (ac *UserUsecase) ListPostID(ctx context.Context, g *User) (postIds []uint, err error) {
-	return postIds, nil
-}
-
-// ListRoleID 获取角色ID列表
-func (ac *UserUsecase) ListRoleID(ctx context.Context, g *User) (roleIds []uint, err error) {
-	if g.DomainID <= 0 {
-		return nil, errors.New("领域不能为空")
-	}
-	for _, v := range ac.biz.enforcer.GetRolesForUserInDomain(g.GetID(), g.GetDomainID()) {
-		roleIds = append(roleIds, convert.StringToUint(v))
-	}
-	return roleIds, nil
-}
-
-// ListRoleAll 获取角色列表
-func (ac *UserUsecase) ListRoleAll(ctx context.Context, g *User) (roles []*Role, err error) {
-	roleIds, err := ac.ListRoleID(ctx, g)
-	if err != nil || len(roleIds) < 1 {
-		return roles, err
-	}
-	return ac.biz.roleRepo.ListByIDs(ctx, roleIds...)
-}
-
-// ListRoleMenu 用户角色菜单列表(包含权限标识)
-func (ac *UserUsecase) ListRoleMenu(ctx context.Context, g *User) ([]*Menu, error) {
-	roleIds, err := ac.ListRoleID(ctx, g)
-	if err != nil {
-		return nil, errors.Errorf("用户角色查询失败 %v", err)
-	}
-
-	roleIdsRes := make([]uint, len(roleIds))
-	if len(g.Roles) > 1 {
-		for _, v := range g.Roles {
-			for _, a := range roleIds {
-				if a == v.ID {
-					roleIdsRes = append(roleIdsRes, v.ID)
-					break
-				}
-			}
-		}
-	} else {
-		roleIdsRes = roleIds
-	}
-
-	if len(roleIdsRes) < 1 {
-		return nil, nil
-	}
-
-	return ac.biz.roleRepo.ListMenuAndParentByIDs(ctx, roleIdsRes...)
+// ListRoles 获取角色列表
+func (ac *UserUsecase) ListRoles(ctx context.Context, g *User) (roles []*Role, err error) {
+	return ac.biz.userRepo.ListRoles(ctx, g)
 }

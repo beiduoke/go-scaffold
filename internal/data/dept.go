@@ -98,7 +98,7 @@ func (r *DeptRepo) Save(ctx context.Context, g *biz.Dept) (*biz.Dept, error) {
 	d := r.toModel(g)
 	d.Ancestors = r.FilterAncestors(ctx, g)
 	d.DomainID = r.data.CtxDomainID(ctx)
-	result := r.data.DB(ctx).Debug().Create(d)
+	result := r.data.DB(ctx).Create(d)
 	return r.toBiz(d), result.Error
 }
 
@@ -169,7 +169,7 @@ func (r *DeptRepo) ListAll(ctx context.Context) ([]*biz.Dept, error) {
 }
 
 func (r *DeptRepo) ListPage(ctx context.Context, paging *pagination.Pagination) (depts []*biz.Dept, total int64) {
-	db := r.data.DBD(ctx).Model(&SysDept{}).Debug()
+	db := r.data.DBD(ctx).Model(&SysDept{})
 	sysDepts := []*SysDept{}
 	// 查询条件
 	if name, ok := paging.Query["name"].(string); ok {

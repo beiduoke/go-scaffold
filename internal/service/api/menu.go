@@ -105,9 +105,9 @@ func TransformMenu(data *biz.Menu) *v1.Menu {
 		Icon:        &data.Icon,
 		Title:       data.Title,
 		IsCache:     (*protobuf.MenuCache)(&data.IsCache),
+		LinkUrl:     &data.LinkUrl,
 		IsAffix:     (*protobuf.MenuAffix)(&data.IsAffix),
 		LinkType:    (*protobuf.MenuLinkType)(&data.LinkType),
-		LinkUrl:     &data.LinkUrl,
 		Children:    make([]*v1.Menu, 0),
 		Parameters:  make([]*v1.MenuParameter, 0),
 		Buttons:     make([]*v1.MenuButton, 0),
@@ -253,25 +253,25 @@ func (s *ApiService) UpdateMenu(ctx context.Context, in *v1.UpdateMenuReq) (*v1.
 
 // GetMenu 获取菜单
 func (s *ApiService) GetMenu(ctx context.Context, in *v1.GetMenuReq) (*v1.Menu, error) {
-	menu, err := s.menuCase.GetID(ctx, &biz.Menu{ID: uint(in.GetId())})
+	bizMenu, err := s.menuCase.GetID(ctx, &biz.Menu{ID: uint(in.GetId())})
 	if err != nil {
 		return nil, v1.ErrorMenuNotFound("菜单未找到")
 	}
-	m := TransformMenu(menu)
-	for _, v := range menu.Buttons {
-		m.Buttons = append(m.Buttons, &v1.MenuButton{
+	apiMenu := TransformMenu(bizMenu)
+	for _, v := range bizMenu.Buttons {
+		apiMenu.Buttons = append(apiMenu.Buttons, &v1.MenuButton{
 			Name:    v.Name,
 			Remarks: v.Remarks,
 		})
 	}
-	for _, v := range menu.Parameters {
-		m.Parameters = append(m.Parameters, &v1.MenuParameter{
+	for _, v := range bizMenu.Parameters {
+		apiMenu.Parameters = append(apiMenu.Parameters, &v1.MenuParameter{
 			Type:  protobuf.MenuParameterType(v.Type),
 			Name:  v.Name,
 			Value: v.Value,
 		})
 	}
-	return m, nil
+	return apiMenu, nil
 }
 
 // DeleteMenu 删除菜单

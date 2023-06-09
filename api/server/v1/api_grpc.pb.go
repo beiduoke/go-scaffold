@@ -36,7 +36,6 @@ const (
 	Api_GetUser_FullMethodName                    = "/api.server.v1.Api/GetUser"
 	Api_UpdateUser_FullMethodName                 = "/api.server.v1.Api/UpdateUser"
 	Api_DeleteUser_FullMethodName                 = "/api.server.v1.Api/DeleteUser"
-	Api_HandleUserRole_FullMethodName             = "/api.server.v1.Api/HandleUserRole"
 	Api_ExistUserName_FullMethodName              = "/api.server.v1.Api/ExistUserName"
 	Api_ListDomain_FullMethodName                 = "/api.server.v1.Api/ListDomain"
 	Api_ListDomainTree_FullMethodName             = "/api.server.v1.Api/ListDomainTree"
@@ -129,8 +128,6 @@ type ApiClient interface {
 	UpdateUser(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*UpdateUserReply, error)
 	// 删除用户
 	DeleteUser(ctx context.Context, in *DeleteUserReq, opts ...grpc.CallOption) (*DeleteUserReply, error)
-	// 绑定用户领域权限
-	HandleUserRole(ctx context.Context, in *HandleUserRoleReq, opts ...grpc.CallOption) (*HandleUserRoleReply, error)
 	// 验证用户名是否存在
 	ExistUserName(ctx context.Context, in *ExistUserNameReq, opts ...grpc.CallOption) (*ExistUserNameReply, error)
 	// 列表领域
@@ -387,15 +384,6 @@ func (c *apiClient) UpdateUser(ctx context.Context, in *UpdateUserReq, opts ...g
 func (c *apiClient) DeleteUser(ctx context.Context, in *DeleteUserReq, opts ...grpc.CallOption) (*DeleteUserReply, error) {
 	out := new(DeleteUserReply)
 	err := c.cc.Invoke(ctx, Api_DeleteUser_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *apiClient) HandleUserRole(ctx context.Context, in *HandleUserRoleReq, opts ...grpc.CallOption) (*HandleUserRoleReply, error) {
-	out := new(HandleUserRoleReply)
-	err := c.cc.Invoke(ctx, Api_HandleUserRole_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -916,8 +904,6 @@ type ApiServer interface {
 	UpdateUser(context.Context, *UpdateUserReq) (*UpdateUserReply, error)
 	// 删除用户
 	DeleteUser(context.Context, *DeleteUserReq) (*DeleteUserReply, error)
-	// 绑定用户领域权限
-	HandleUserRole(context.Context, *HandleUserRoleReq) (*HandleUserRoleReply, error)
 	// 验证用户名是否存在
 	ExistUserName(context.Context, *ExistUserNameReq) (*ExistUserNameReply, error)
 	// 列表领域
@@ -1080,9 +1066,6 @@ func (UnimplementedApiServer) UpdateUser(context.Context, *UpdateUserReq) (*Upda
 }
 func (UnimplementedApiServer) DeleteUser(context.Context, *DeleteUserReq) (*DeleteUserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
-}
-func (UnimplementedApiServer) HandleUserRole(context.Context, *HandleUserRoleReq) (*HandleUserRoleReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method HandleUserRole not implemented")
 }
 func (UnimplementedApiServer) ExistUserName(context.Context, *ExistUserNameReq) (*ExistUserNameReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ExistUserName not implemented")
@@ -1540,24 +1523,6 @@ func _Api_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(inte
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ApiServer).DeleteUser(ctx, req.(*DeleteUserReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Api_HandleUserRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HandleUserRoleReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ApiServer).HandleUserRole(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Api_HandleUserRole_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).HandleUserRole(ctx, req.(*HandleUserRoleReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2586,10 +2551,6 @@ var Api_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteUser",
 			Handler:    _Api_DeleteUser_Handler,
-		},
-		{
-			MethodName: "HandleUserRole",
-			Handler:    _Api_HandleUserRole_Handler,
 		},
 		{
 			MethodName: "ExistUserName",

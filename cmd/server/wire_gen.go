@@ -20,7 +20,7 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, auth *conf.Auth, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
+func wireApp(confServer *conf.Server, auth *conf.Auth, confData *conf.Data, system *conf.System, logger log.Logger) (*kratos.App, func(), error) {
 	websocketService := websocket.NewWebsocketService(logger)
 	v := data.NewModelMigrate()
 	db := data.NewDB(confData, logger, v)
@@ -31,7 +31,7 @@ func wireApp(confServer *conf.Server, auth *conf.Auth, confData *conf.Data, logg
 	watcher := data.NewWatcher(confData, logger)
 	iEnforcer := data.NewAuthEnforcer(model, adapter, watcher, logger)
 	node := data.NewSnowflake(logger)
-	dataData, cleanup, err := data.NewData(db, client, meilisearchClient, iEnforcer, node, logger)
+	dataData, cleanup, err := data.NewData(db, client, meilisearchClient, iEnforcer, node, logger, system)
 	if err != nil {
 		return nil, nil, err
 	}

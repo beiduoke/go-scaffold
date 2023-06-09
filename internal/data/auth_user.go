@@ -19,11 +19,11 @@ func NewSecurityUser(logger log.Logger, data *Data, userRepo biz.UserRepo) authn
 		if ac == nil {
 			log.Error("auth claims creator fail ac == nil")
 		}
-		return &securityUser{options: Options{data: data, log: log, userRepo: userRepo.(*UserRepo), authClaims: ac}}
+		return &securityUser{options: SecurityOptions{data: data, log: log, userRepo: userRepo.(*UserRepo), authClaims: ac}}
 	}
 }
 
-type Options struct {
+type SecurityOptions struct {
 	data       *Data
 	log        *log.Helper
 	authClaims *authn.AuthClaims
@@ -31,7 +31,7 @@ type Options struct {
 }
 
 type securityUser struct {
-	options Options
+	options SecurityOptions
 	// 用户
 	user uint
 	// 域/租户
@@ -58,7 +58,7 @@ func (su *securityUser) ParseFromContext(ctx context.Context) error {
 	} else {
 		return errors.New("parse from request header")
 	}
-	authUser, err := su.options.userRepo.GetLoginIDCache(ctx, su.options.authClaims.Subject)
+	authUser, err := su.options.userRepo.GetLoginUUIDCache(ctx, su.options.authClaims.Subject)
 	if err != nil {
 		su.options.log.Errorf("result auth user fail: %v", err)
 		return err

@@ -3675,289 +3675,6 @@ var _ interface {
 	ErrorName() string
 } = CreateUserReplyValidationError{}
 
-// Validate checks the field values on HandleUserRoleReq with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *HandleUserRoleReq) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on HandleUserRoleReq with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// HandleUserRoleReqMultiError, or nil if none found.
-func (m *HandleUserRoleReq) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *HandleUserRoleReq) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetId() <= 0 {
-		err := HandleUserRoleReqValidationError{
-			field:  "Id",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if all {
-		switch v := interface{}(m.GetData()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, HandleUserRoleReqValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, HandleUserRoleReqValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return HandleUserRoleReqValidationError{
-				field:  "Data",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if len(errors) > 0 {
-		return HandleUserRoleReqMultiError(errors)
-	}
-
-	return nil
-}
-
-// HandleUserRoleReqMultiError is an error wrapping multiple validation errors
-// returned by HandleUserRoleReq.ValidateAll() if the designated constraints
-// aren't met.
-type HandleUserRoleReqMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m HandleUserRoleReqMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m HandleUserRoleReqMultiError) AllErrors() []error { return m }
-
-// HandleUserRoleReqValidationError is the validation error returned by
-// HandleUserRoleReq.Validate if the designated constraints aren't met.
-type HandleUserRoleReqValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e HandleUserRoleReqValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e HandleUserRoleReqValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e HandleUserRoleReqValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e HandleUserRoleReqValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e HandleUserRoleReqValidationError) ErrorName() string {
-	return "HandleUserRoleReqValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e HandleUserRoleReqValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sHandleUserRoleReq.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = HandleUserRoleReqValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = HandleUserRoleReqValidationError{}
-
-// Validate checks the field values on HandleUserRoleReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *HandleUserRoleReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on HandleUserRoleReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// HandleUserRoleReplyMultiError, or nil if none found.
-func (m *HandleUserRoleReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *HandleUserRoleReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Code
-
-	// no validation rules for Message
-
-	// no validation rules for Type
-
-	if m.Result != nil {
-
-		if all {
-			switch v := interface{}(m.GetResult()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, HandleUserRoleReplyValidationError{
-						field:  "Result",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, HandleUserRoleReplyValidationError{
-						field:  "Result",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return HandleUserRoleReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return HandleUserRoleReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// HandleUserRoleReplyMultiError is an error wrapping multiple validation
-// errors returned by HandleUserRoleReply.ValidateAll() if the designated
-// constraints aren't met.
-type HandleUserRoleReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m HandleUserRoleReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m HandleUserRoleReplyMultiError) AllErrors() []error { return m }
-
-// HandleUserRoleReplyValidationError is the validation error returned by
-// HandleUserRoleReply.Validate if the designated constraints aren't met.
-type HandleUserRoleReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e HandleUserRoleReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e HandleUserRoleReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e HandleUserRoleReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e HandleUserRoleReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e HandleUserRoleReplyValidationError) ErrorName() string {
-	return "HandleUserRoleReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e HandleUserRoleReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sHandleUserRoleReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = HandleUserRoleReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = HandleUserRoleReplyValidationError{}
-
 // Validate checks the field values on GetUserReq with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -22282,116 +21999,6 @@ var _ interface {
 
 var _RegisterReq_Auth_Phone_Pattern = regexp.MustCompile("^1[0-9]{10}$")
 
-// Validate checks the field values on GetUserInfoReply_UserRole with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *GetUserInfoReply_UserRole) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on GetUserInfoReply_UserRole with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// GetUserInfoReply_UserRoleMultiError, or nil if none found.
-func (m *GetUserInfoReply_UserRole) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *GetUserInfoReply_UserRole) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	// no validation rules for Name
-
-	// no validation rules for DefaultRouter
-
-	// no validation rules for Sort
-
-	if len(errors) > 0 {
-		return GetUserInfoReply_UserRoleMultiError(errors)
-	}
-
-	return nil
-}
-
-// GetUserInfoReply_UserRoleMultiError is an error wrapping multiple validation
-// errors returned by GetUserInfoReply_UserRole.ValidateAll() if the
-// designated constraints aren't met.
-type GetUserInfoReply_UserRoleMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m GetUserInfoReply_UserRoleMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m GetUserInfoReply_UserRoleMultiError) AllErrors() []error { return m }
-
-// GetUserInfoReply_UserRoleValidationError is the validation error returned by
-// GetUserInfoReply_UserRole.Validate if the designated constraints aren't met.
-type GetUserInfoReply_UserRoleValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e GetUserInfoReply_UserRoleValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e GetUserInfoReply_UserRoleValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e GetUserInfoReply_UserRoleValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e GetUserInfoReply_UserRoleValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e GetUserInfoReply_UserRoleValidationError) ErrorName() string {
-	return "GetUserInfoReply_UserRoleValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e GetUserInfoReply_UserRoleValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sGetUserInfoReply_UserRole.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = GetUserInfoReply_UserRoleValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = GetUserInfoReply_UserRoleValidationError{}
-
 // Validate checks the field values on
 // ListUserRoleMenuTreeReply_Deprecated_MenuMeta with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
@@ -22851,161 +22458,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = MenuRouter_MetaValidationError{}
-
-// Validate checks the field values on HandleUserRoleReq_Data with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *HandleUserRoleReq_Data) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on HandleUserRoleReq_Data with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// HandleUserRoleReq_DataMultiError, or nil if none found.
-func (m *HandleUserRoleReq_Data) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *HandleUserRoleReq_Data) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetDomainId() <= 0 {
-		err := HandleUserRoleReq_DataValidationError{
-			field:  "DomainId",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if len(m.GetRoleIds()) < 1 {
-		err := HandleUserRoleReq_DataValidationError{
-			field:  "RoleIds",
-			reason: "value must contain at least 1 item(s)",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	_HandleUserRoleReq_Data_RoleIds_Unique := make(map[uint64]struct{}, len(m.GetRoleIds()))
-
-	for idx, item := range m.GetRoleIds() {
-		_, _ = idx, item
-
-		if _, exists := _HandleUserRoleReq_Data_RoleIds_Unique[item]; exists {
-			err := HandleUserRoleReq_DataValidationError{
-				field:  fmt.Sprintf("RoleIds[%v]", idx),
-				reason: "repeated value must contain unique items",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		} else {
-			_HandleUserRoleReq_Data_RoleIds_Unique[item] = struct{}{}
-		}
-
-		if item <= 0 {
-			err := HandleUserRoleReq_DataValidationError{
-				field:  fmt.Sprintf("RoleIds[%v]", idx),
-				reason: "value must be greater than 0",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return HandleUserRoleReq_DataMultiError(errors)
-	}
-
-	return nil
-}
-
-// HandleUserRoleReq_DataMultiError is an error wrapping multiple validation
-// errors returned by HandleUserRoleReq_Data.ValidateAll() if the designated
-// constraints aren't met.
-type HandleUserRoleReq_DataMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m HandleUserRoleReq_DataMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m HandleUserRoleReq_DataMultiError) AllErrors() []error { return m }
-
-// HandleUserRoleReq_DataValidationError is the validation error returned by
-// HandleUserRoleReq_Data.Validate if the designated constraints aren't met.
-type HandleUserRoleReq_DataValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e HandleUserRoleReq_DataValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e HandleUserRoleReq_DataValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e HandleUserRoleReq_DataValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e HandleUserRoleReq_DataValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e HandleUserRoleReq_DataValidationError) ErrorName() string {
-	return "HandleUserRoleReq_DataValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e HandleUserRoleReq_DataValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sHandleUserRoleReq_Data.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = HandleUserRoleReq_DataValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = HandleUserRoleReq_DataValidationError{}
 
 // Validate checks the field values on UpdateUserReq_Data with the rules
 // defined in the proto definition for this message. If any rules are
@@ -23712,181 +23164,6 @@ var _UpdateDomainStateReq_Data_State_NotInLookup = map[protobuf.DomainState]stru
 	0: {},
 }
 
-// Validate checks the field values on HandleDomainMenuReq_Menu with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *HandleDomainMenuReq_Menu) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on HandleDomainMenuReq_Menu with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// HandleDomainMenuReq_MenuMultiError, or nil if none found.
-func (m *HandleDomainMenuReq_Menu) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *HandleDomainMenuReq_Menu) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetId() <= 0 {
-		err := HandleDomainMenuReq_MenuValidationError{
-			field:  "Id",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	_HandleDomainMenuReq_Menu_MenuParameterIds_Unique := make(map[uint64]struct{}, len(m.GetMenuParameterIds()))
-
-	for idx, item := range m.GetMenuParameterIds() {
-		_, _ = idx, item
-
-		if _, exists := _HandleDomainMenuReq_Menu_MenuParameterIds_Unique[item]; exists {
-			err := HandleDomainMenuReq_MenuValidationError{
-				field:  fmt.Sprintf("MenuParameterIds[%v]", idx),
-				reason: "repeated value must contain unique items",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		} else {
-			_HandleDomainMenuReq_Menu_MenuParameterIds_Unique[item] = struct{}{}
-		}
-
-		if item <= 0 {
-			err := HandleDomainMenuReq_MenuValidationError{
-				field:  fmt.Sprintf("MenuParameterIds[%v]", idx),
-				reason: "value must be greater than 0",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	_HandleDomainMenuReq_Menu_MenuButtonIds_Unique := make(map[uint64]struct{}, len(m.GetMenuButtonIds()))
-
-	for idx, item := range m.GetMenuButtonIds() {
-		_, _ = idx, item
-
-		if _, exists := _HandleDomainMenuReq_Menu_MenuButtonIds_Unique[item]; exists {
-			err := HandleDomainMenuReq_MenuValidationError{
-				field:  fmt.Sprintf("MenuButtonIds[%v]", idx),
-				reason: "repeated value must contain unique items",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		} else {
-			_HandleDomainMenuReq_Menu_MenuButtonIds_Unique[item] = struct{}{}
-		}
-
-		if item <= 0 {
-			err := HandleDomainMenuReq_MenuValidationError{
-				field:  fmt.Sprintf("MenuButtonIds[%v]", idx),
-				reason: "value must be greater than 0",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return HandleDomainMenuReq_MenuMultiError(errors)
-	}
-
-	return nil
-}
-
-// HandleDomainMenuReq_MenuMultiError is an error wrapping multiple validation
-// errors returned by HandleDomainMenuReq_Menu.ValidateAll() if the designated
-// constraints aren't met.
-type HandleDomainMenuReq_MenuMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m HandleDomainMenuReq_MenuMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m HandleDomainMenuReq_MenuMultiError) AllErrors() []error { return m }
-
-// HandleDomainMenuReq_MenuValidationError is the validation error returned by
-// HandleDomainMenuReq_Menu.Validate if the designated constraints aren't met.
-type HandleDomainMenuReq_MenuValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e HandleDomainMenuReq_MenuValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e HandleDomainMenuReq_MenuValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e HandleDomainMenuReq_MenuValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e HandleDomainMenuReq_MenuValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e HandleDomainMenuReq_MenuValidationError) ErrorName() string {
-	return "HandleDomainMenuReq_MenuValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e HandleDomainMenuReq_MenuValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sHandleDomainMenuReq_Menu.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = HandleDomainMenuReq_MenuValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = HandleDomainMenuReq_MenuValidationError{}
-
 // Validate checks the field values on HandleDomainMenuReq_Data with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -23909,36 +23186,33 @@ func (m *HandleDomainMenuReq_Data) validate(all bool) error {
 
 	var errors []error
 
-	for idx, item := range m.GetMenus() {
+	_HandleDomainMenuReq_Data_MenuIds_Unique := make(map[uint64]struct{}, len(m.GetMenuIds()))
+
+	for idx, item := range m.GetMenuIds() {
 		_, _ = idx, item
 
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, HandleDomainMenuReq_DataValidationError{
-						field:  fmt.Sprintf("Menus[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, HandleDomainMenuReq_DataValidationError{
-						field:  fmt.Sprintf("Menus[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
+		if _, exists := _HandleDomainMenuReq_Data_MenuIds_Unique[item]; exists {
+			err := HandleDomainMenuReq_DataValidationError{
+				field:  fmt.Sprintf("MenuIds[%v]", idx),
+				reason: "repeated value must contain unique items",
 			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return HandleDomainMenuReq_DataValidationError{
-					field:  fmt.Sprintf("Menus[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
+			if !all {
+				return err
 			}
+			errors = append(errors, err)
+		} else {
+			_HandleDomainMenuReq_Data_MenuIds_Unique[item] = struct{}{}
+		}
+
+		if item <= 0 {
+			err := HandleDomainMenuReq_DataValidationError{
+				field:  fmt.Sprintf("MenuIds[%v]", idx),
+				reason: "value must be greater than 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
 		}
 
 	}
@@ -24467,181 +23741,6 @@ var _UpdateRoleStateReq_Data_State_NotInLookup = map[protobuf.RoleState]struct{}
 	0: {},
 }
 
-// Validate checks the field values on HandleRoleMenuReq_Menu with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *HandleRoleMenuReq_Menu) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on HandleRoleMenuReq_Menu with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// HandleRoleMenuReq_MenuMultiError, or nil if none found.
-func (m *HandleRoleMenuReq_Menu) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *HandleRoleMenuReq_Menu) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetId() <= 0 {
-		err := HandleRoleMenuReq_MenuValidationError{
-			field:  "Id",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	_HandleRoleMenuReq_Menu_MenuParameterIds_Unique := make(map[uint64]struct{}, len(m.GetMenuParameterIds()))
-
-	for idx, item := range m.GetMenuParameterIds() {
-		_, _ = idx, item
-
-		if _, exists := _HandleRoleMenuReq_Menu_MenuParameterIds_Unique[item]; exists {
-			err := HandleRoleMenuReq_MenuValidationError{
-				field:  fmt.Sprintf("MenuParameterIds[%v]", idx),
-				reason: "repeated value must contain unique items",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		} else {
-			_HandleRoleMenuReq_Menu_MenuParameterIds_Unique[item] = struct{}{}
-		}
-
-		if item <= 0 {
-			err := HandleRoleMenuReq_MenuValidationError{
-				field:  fmt.Sprintf("MenuParameterIds[%v]", idx),
-				reason: "value must be greater than 0",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	_HandleRoleMenuReq_Menu_MenuButtonIds_Unique := make(map[uint64]struct{}, len(m.GetMenuButtonIds()))
-
-	for idx, item := range m.GetMenuButtonIds() {
-		_, _ = idx, item
-
-		if _, exists := _HandleRoleMenuReq_Menu_MenuButtonIds_Unique[item]; exists {
-			err := HandleRoleMenuReq_MenuValidationError{
-				field:  fmt.Sprintf("MenuButtonIds[%v]", idx),
-				reason: "repeated value must contain unique items",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		} else {
-			_HandleRoleMenuReq_Menu_MenuButtonIds_Unique[item] = struct{}{}
-		}
-
-		if item <= 0 {
-			err := HandleRoleMenuReq_MenuValidationError{
-				field:  fmt.Sprintf("MenuButtonIds[%v]", idx),
-				reason: "value must be greater than 0",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return HandleRoleMenuReq_MenuMultiError(errors)
-	}
-
-	return nil
-}
-
-// HandleRoleMenuReq_MenuMultiError is an error wrapping multiple validation
-// errors returned by HandleRoleMenuReq_Menu.ValidateAll() if the designated
-// constraints aren't met.
-type HandleRoleMenuReq_MenuMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m HandleRoleMenuReq_MenuMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m HandleRoleMenuReq_MenuMultiError) AllErrors() []error { return m }
-
-// HandleRoleMenuReq_MenuValidationError is the validation error returned by
-// HandleRoleMenuReq_Menu.Validate if the designated constraints aren't met.
-type HandleRoleMenuReq_MenuValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e HandleRoleMenuReq_MenuValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e HandleRoleMenuReq_MenuValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e HandleRoleMenuReq_MenuValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e HandleRoleMenuReq_MenuValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e HandleRoleMenuReq_MenuValidationError) ErrorName() string {
-	return "HandleRoleMenuReq_MenuValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e HandleRoleMenuReq_MenuValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sHandleRoleMenuReq_Menu.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = HandleRoleMenuReq_MenuValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = HandleRoleMenuReq_MenuValidationError{}
-
 // Validate checks the field values on HandleRoleMenuReq_Data with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -24663,6 +23762,37 @@ func (m *HandleRoleMenuReq_Data) validate(all bool) error {
 	}
 
 	var errors []error
+
+	_HandleRoleMenuReq_Data_MenuIds_Unique := make(map[uint64]struct{}, len(m.GetMenuIds()))
+
+	for idx, item := range m.GetMenuIds() {
+		_, _ = idx, item
+
+		if _, exists := _HandleRoleMenuReq_Data_MenuIds_Unique[item]; exists {
+			err := HandleRoleMenuReq_DataValidationError{
+				field:  fmt.Sprintf("MenuIds[%v]", idx),
+				reason: "repeated value must contain unique items",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		} else {
+			_HandleRoleMenuReq_Data_MenuIds_Unique[item] = struct{}{}
+		}
+
+		if item <= 0 {
+			err := HandleRoleMenuReq_DataValidationError{
+				field:  fmt.Sprintf("MenuIds[%v]", idx),
+				reason: "value must be greater than 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return HandleRoleMenuReq_DataMultiError(errors)

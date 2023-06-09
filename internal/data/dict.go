@@ -284,7 +284,7 @@ func (r *DictRepo) DataListAll(ctx context.Context) ([]*biz.DictData, error) {
 }
 
 func (r *DictRepo) DataListPage(ctx context.Context, paging *pagination.Pagination) (dicts []*biz.DictData, total int64) {
-	db := r.data.DB(ctx).Model(&SysDictData{}).Debug()
+	db := r.data.DB(ctx).Model(&SysDictData{})
 	sysDictDatas := []*SysDictData{}
 
 	// 查询条件

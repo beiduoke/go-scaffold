@@ -2,7 +2,6 @@ package data
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
@@ -13,15 +12,15 @@ import (
 type DomainRepo struct {
 	data *Data
 	log  *log.Helper
-	menu biz.MenuRepo
+	menu MenuRepo
 }
 
 // NewDomainRepo .
-func NewDomainRepo(logger log.Logger, data *Data, menu biz.MenuRepo) biz.DomainRepo {
+func NewDomainRepo(logger log.Logger, data *Data, menuRepo biz.MenuRepo) biz.DomainRepo {
 	return &DomainRepo{
 		data: data,
 		log:  log.NewHelper(logger),
-		menu: menu,
+		menu: *(menuRepo.(*MenuRepo)),
 	}
 }
 
@@ -189,34 +188,30 @@ func (r *DomainRepo) ListPage(ctx context.Context, paging *pagination.Pagination
 }
 
 func (r *DomainRepo) HandleMenu(ctx context.Context, g *biz.Domain) error {
-	sysDomain := r.toModel(g)
-	fmt.Printf("%#v \n 切换", sysDomain)
-	err := r.data.DB(ctx).Model(&sysDomain).Association("Menus").Clear()
-	if err != nil {
-		return err
-	}
-	sysMenu := make([]*SysMenu, 0)
-
+	sysDomain, sysMenus := SysDomain{}, make([]*SysMenu, 0)
 	for _, v := range g.Menus {
-		sysMenu = append(sysMenu, r.menu.(*MenuRepo).toModel(v))
+		sysMenus = append(sysMenus, r.menu.toModel(v))
 	}
-	return r.data.DB(ctx).Model(&sysDomain).Association("Menus").Replace(sysMenu)
+	sysDomain.ID = g.ID
+	return r.data.DB(ctx).Model(&sysDomain).Association("Menus").Replace(sysMenus)
 }
 
 // 获取指定权限菜单列表
 func (r *DomainRepo) ListMenuByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu, error) {
-	var sysDomains []*SysDomain
-	db := r.data.DB(ctx).Model(&SysDomain{})
-	result := db.Preload("Menus").Find(&sysDomains, ids)
+	var domainMenuIds []uint
+	result := r.data.DB(ctx).Debug().Table("sys_domain_menus").Where("sys_domain_id", ids).Pluck("sys_menu_id", &domainMenuIds)
 	if err := result.Error; err != nil {
 		return nil, err
 	}
-	// bizAllMenus, err := r.menu.ListAll(ctx)
-	bizMenus := make([]*biz.Menu, 0)
-	for _, v := range sysDomains {
-		for _, m := range v.Menus {
-			bizMenus = append(bizMenus, r.menu.(*MenuRepo).toBiz(&m))
+	bizAllMenus, err := r.menu.ListAll(ctx)
+	bizMenus := make([]*biz.Menu, 0, len(domainMenuIds))
+	for _, menu := range bizAllMenus {
+		for _, menuID := range domainMenuIds {
+			if menuID == menu.ID {
+				bizMenus = append(bizMenus, menu)
+				continue
+			}
 		}
 	}
-	return bizMenus, nil
+	return bizMenus, err
 }

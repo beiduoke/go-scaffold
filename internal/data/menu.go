@@ -42,22 +42,7 @@ func (r *MenuRepo) toModel(d *biz.Menu) *SysMenu {
 		IsAffix:     d.IsAffix,
 		LinkType:    d.LinkType,
 		LinkUrl:     d.LinkUrl,
-		Parameters:  make([]SysMenuParameter, 0, len(d.Parameters)),
-		Buttons:     make([]SysMenuButton, 0, len(d.Buttons)),
 		ApiResource: d.ApiResource,
-	}
-	for _, v := range d.Parameters {
-		sysData.Parameters = append(sysData.Parameters, SysMenuParameter{
-			Type:  v.Type,
-			Name:  v.Name,
-			Value: v.Value,
-		})
-	}
-	for _, v := range d.Buttons {
-		sysData.Buttons = append(sysData.Buttons, SysMenuButton{
-			Name:    v.Name,
-			Remarks: v.Remarks,
-		})
 	}
 	sysData.ID = d.ID
 	sysData.CreatedAt = d.CreatedAt
@@ -87,22 +72,7 @@ func (r *MenuRepo) toBiz(d *SysMenu) *biz.Menu {
 		IsAffix:     d.IsAffix,
 		LinkType:    d.LinkType,
 		LinkUrl:     d.LinkUrl,
-		Parameters:  make([]*biz.MenuParameter, 0, len(d.Parameters)),
-		Buttons:     make([]*biz.MenuButton, 0, len(d.Buttons)),
 		ApiResource: d.ApiResource,
-	}
-	for _, v := range d.Parameters {
-		data.Parameters = append(data.Parameters, &biz.MenuParameter{
-			Type:  v.Type,
-			Name:  v.Name,
-			Value: v.Value,
-		})
-	}
-	for _, v := range d.Buttons {
-		data.Buttons = append(data.Buttons, &biz.MenuButton{
-			Name:    v.Name,
-			Remarks: v.Remarks,
-		})
 	}
 	return data
 }
@@ -122,14 +92,6 @@ func (r *MenuRepo) Update(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 	result := r.data.DB(ctx).Model(&SysMenu{}).Not(g.ID).Where("name", g.Name).Pluck("id", nil)
 	if result.RowsAffected > 0 {
 		return nil, errors.New("duplicate name")
-	}
-	// 一对多关联，删除原始按钮
-	if err := r.data.DB(ctx).Model(&SysMenuButton{}).Delete(&SysMenuButton{}, "menu_id", g.ID).Error; err != nil {
-		return nil, err
-	}
-	// 一对多关联，删除原始参数
-	if err := r.data.DB(ctx).Model(&SysMenuParameter{}).Delete(&SysMenuParameter{}, "menu_id", g.ID).Error; err != nil {
-		return nil, err
 	}
 	result = r.data.DB(ctx).Model(d).Omit("CreatedAt").Updates(d)
 	bizMenu := r.toBiz(d)
@@ -196,7 +158,7 @@ func (r *MenuRepo) ListAll(ctx context.Context) (menus []*biz.Menu, err error) {
 }
 
 func (r *MenuRepo) ListPage(ctx context.Context, paging *pagination.Pagination) (menus []*biz.Menu, total int64) {
-	db := r.data.DB(ctx).Model(&SysMenu{}).Debug()
+	db := r.data.DB(ctx).Model(&SysMenu{})
 	sysMenus := []*SysMenu{}
 	// 查询条件
 	if name, ok := paging.Query["name"].(string); ok && name != "" {

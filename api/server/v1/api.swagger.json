@@ -2679,68 +2679,9 @@
           "Api"
         ]
       }
-    },
-    "/v1/users/{id}/roles": {
-      "post": {
-        "summary": "绑定用户领域权限",
-        "operationId": "Api_HandleUserRole",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1HandleUserRoleReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          },
-          {
-            "name": "data",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1HandleUserRoleReqData"
-            }
-          }
-        ],
-        "tags": [
-          "Api"
-        ]
-      }
     }
   },
   "definitions": {
-    "GetUserInfoReplyUserRole": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "name": {
-          "type": "string"
-        },
-        "defaultRouter": {
-          "type": "string"
-        },
-        "sort": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
     "HandleRoleDataScopeReqDataScope": {
       "type": "object",
       "properties": {
@@ -3940,7 +3881,7 @@
         "roles": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/GetUserInfoReplyUserRole"
+            "$ref": "#/definitions/v1Role"
           }
         },
         "name": {
@@ -4010,29 +3951,7 @@
     "v1HandleDomainMenuReqData": {
       "type": "object",
       "properties": {
-        "menus": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1HandleDomainMenuReqMenu"
-          }
-        }
-      }
-    },
-    "v1HandleDomainMenuReqMenu": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "menuParameterIds": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "format": "uint64"
-          }
-        },
-        "menuButtonIds": {
+        "menuIds": {
           "type": "array",
           "items": {
             "type": "string",
@@ -4082,42 +4001,7 @@
     "v1HandleRoleMenuReqData": {
       "type": "object",
       "properties": {
-        "menus": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "format": "uint64"
-          }
-        }
-      }
-    },
-    "v1HandleUserRoleReply": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "message": {
-          "type": "string"
-        },
-        "result": {
-          "$ref": "#/definitions/protobufAny"
-        },
-        "type": {
-          "type": "string"
-        }
-      },
-      "title": "回应 - 绑定用户领域权限"
-    },
-    "v1HandleUserRoleReqData": {
-      "type": "object",
-      "properties": {
-        "domainId": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "roleIds": {
+        "menuIds": {
           "type": "array",
           "items": {
             "type": "string",
@@ -4488,33 +4372,41 @@
       "type": "object",
       "properties": {
         "name": {
-          "type": "string"
+          "type": "string",
+          "title": "路由名称"
         },
         "path": {
-          "type": "string"
+          "type": "string",
+          "title": "路由地址"
         },
         "component": {
-          "type": "string"
+          "type": "string",
+          "title": "路由组件"
         },
         "redirect": {
-          "type": "string"
+          "type": "string",
+          "title": "路由重定向"
         },
         "meta": {
-          "$ref": "#/definitions/MenuRouterMeta"
+          "$ref": "#/definitions/MenuRouterMeta",
+          "title": "路由头信息"
         },
         "children": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/v1MenuRouter"
-          }
+          },
+          "title": "路由子集"
         },
         "id": {
           "type": "string",
-          "format": "uint64"
+          "format": "uint64",
+          "title": "路由ID"
         },
         "parentId": {
           "type": "string",
-          "format": "uint64"
+          "format": "uint64",
+          "title": "路由父级"
         }
       },
       "title": "路由菜单"

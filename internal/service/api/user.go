@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"time"
 
@@ -210,31 +211,6 @@ func (s *ApiService) ExistUserName(ctx context.Context, in *v1.ExistUserNameReq)
 	}, nil
 }
 
-// HandleUserRole 绑定用户权限
-func (s *ApiService) HandleUserRole(ctx context.Context, in *v1.HandleUserRoleReq) (*v1.HandleUserRoleReply, error) {
-	v := in.GetData()
-	_, err := s.userCase.GetID(ctx, &biz.User{ID: uint(in.GetId())})
-	if err != nil {
-		return nil, v1.ErrorUserNotFound("用户查询失败 %v", err)
-	}
-	roleIds := make([]uint, 0, len(v.GetRoleIds()))
-	for _, roleId := range v.GetRoleIds() {
-		roleIds = append(roleIds, uint(roleId))
-	}
-	roles, _ := s.roleCase.ListByIDs(ctx, roleIds...)
-	err = s.userCase.HandleRole(ctx, &biz.User{
-		ID:    uint(in.GetId()),
-		Roles: roles,
-	})
-	if err != nil {
-		return nil, v1.ErrorUserHandleRoleFail("绑定用户权限失败: %v", err.Error())
-	}
-	return &v1.HandleUserRoleReply{
-		Type:    constant.HandleType_success.String(),
-		Message: "处理成功",
-	}, nil
-}
-
 // GetUserInfo 用户详情
 func (s *ApiService) GetUserInfo(ctx context.Context, in *emptypb.Empty) (*v1.GetUserInfoReply, error) {
 	user, err := s.userCase.AccessInfo(ctx)
@@ -256,13 +232,13 @@ func (s *ApiService) GetUserInfo(ctx context.Context, in *emptypb.Empty) (*v1.Ge
 		Email:  user.Email,
 		Avatar: user.Avatar,
 		State:  protobuf.UserState(user.State),
-		Roles: func(roles []*biz.Role) (userRoles []*v1.GetUserInfoReply_UserRole) {
+		Roles: func(roles []*biz.Role) (userRoles []*v1.Role) {
 			for _, v := range roles {
-				userRoles = append(userRoles, &v1.GetUserInfoReply_UserRole{
+				userRoles = append(userRoles, &v1.Role{
 					Id:            uint64(v.ID),
 					Name:          v.Name,
-					DefaultRouter: v.DefaultRouter,
-					Sort:          v.Sort,
+					DefaultRouter: &v.DefaultRouter,
+					Sort:          &v.Sort,
 				})
 			}
 			return userRoles
@@ -296,27 +272,30 @@ func (s *ApiService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.List
 		if v.Type == int32(protobuf.MenuType_MENU_TYPE_ABILITY) {
 			continue
 		}
+		fmt.Println(v.Name, v.Path, v.Title, "这里是所有路由")
 		treeData = append(treeData, TransformMenuRouter(v))
 	}
-	return &v1.ListUserRoleMenuRouterTreeReply{
-		Items: proto.ToTree(treeData, in.GetMenuParentId(), func(t *v1.MenuRouter, ts ...*v1.MenuRouter) error {
-			if len(ts) > 0 {
-				redirect := t.Path
-				for _, v := range ts {
-					if !v.GetMeta().GetHideMenu() {
-						if !strings.HasPrefix(redirect, "/") {
-							redirect = "/" + redirect
-						}
-						break
-					}
+	items := proto.ToTree(treeData, in.GetMenuParentId(), func(t *v1.MenuRouter, ts ...*v1.MenuRouter) error {
+		redirect := t.Path
+		for _, v := range ts {
+			if !v.GetMeta().GetHideMenu() {
+				if !strings.HasPrefix(redirect, "/") {
+					redirect = "/" + redirect
 				}
-				if redirect != t.Path {
-					t.Redirect = &redirect
-				}
+				redirect += "/" + v.Path
+				break
 			}
-			t.Children = append(t.Children, ts...)
-			return nil
-		}),
+			v.Meta.CurrentActiveMenu = &t.Path
+			fmt.Println(v.Name, redirect, v.Path, t.Redirect, "这个是隐藏的路由")
+		}
+		if t.Redirect == nil && redirect != t.Path {
+			t.Redirect = &redirect
+		}
+		t.Children = append(t.Children, ts...)
+		return nil
+	})
+	return &v1.ListUserRoleMenuRouterTreeReply{
+		Items: items,
 	}, nil
 }
 
@@ -324,7 +303,7 @@ func (s *ApiService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.List
 func (s *ApiService) ListUserRolePermission(ctx context.Context, in *v1.ListUserRolePermissionReq) (*v1.ListUserRolePermissionReply, error) {
 	menuModels, _ := s.userCase.AccessRolePermissions(ctx)
 	return &v1.ListUserRolePermissionReply{
-		Items: convert.ArrayStrUnique(menuModels),
+		Items: convert.ArrayUnique(menuModels),
 	}, nil
 }
 
@@ -337,9 +316,8 @@ func (s *ApiService) ListUserRoleMenuTree(ctx context.Context, in *v1.ListUserRo
 	treeData := make([]*v1.Menu, 0)
 	for _, v := range results {
 		if v.Type == int32(protobuf.MenuType_MENU_TYPE_ABILITY) {
-			continue
+			treeData = append(treeData, TransformMenu(v))
 		}
-		treeData = append(treeData, TransformMenu(v))
 	}
 	return &v1.ListUserRoleMenuTreeReply{
 		Items: proto.ToTree(treeData, in.GetMenuParentId(), func(t *v1.Menu, ts ...*v1.Menu) error {

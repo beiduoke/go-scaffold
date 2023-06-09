@@ -1559,32 +1559,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.server.v1.DeleteUserReply'
-    /v1/users/{id}/roles:
-        post:
-            tags:
-                - Api
-            description: 绑定用户领域权限
-            operationId: Api_HandleUserRole
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: integer
-                    format: uint64
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.server.v1.HandleUserRoleReq_Data'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.server.v1.HandleUserRoleReply'
 components:
     schemas:
         api.server.v1.CreateDeptReply:
@@ -2191,7 +2165,7 @@ components:
                 roles:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.server.v1.GetUserInfoReply_UserRole'
+                        $ref: '#/components/schemas/api.server.v1.Role'
                 name:
                     type: string
                 nickName:
@@ -2213,19 +2187,6 @@ components:
                     type: integer
                     format: enum
             description: 回应 - 用户概况详情
-        api.server.v1.GetUserInfoReply_UserRole:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: uint64
-                name:
-                    type: string
-                defaultRouter:
-                    type: string
-                sort:
-                    type: integer
-                    format: int32
         api.server.v1.GetUserProfileReply:
             type: object
             properties:
@@ -2252,22 +2213,7 @@ components:
         api.server.v1.HandleDomainMenuReq_Data:
             type: object
             properties:
-                menus:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.server.v1.HandleDomainMenuReq_Menu'
-        api.server.v1.HandleDomainMenuReq_Menu:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: uint64
-                menuParameterIds:
-                    type: array
-                    items:
-                        type: integer
-                        format: uint64
-                menuButtonIds:
+                menuIds:
                     type: array
                     items:
                         type: integer
@@ -2315,31 +2261,7 @@ components:
         api.server.v1.HandleRoleMenuReq_Data:
             type: object
             properties:
-                menus:
-                    type: array
-                    items:
-                        type: integer
-                        format: uint64
-        api.server.v1.HandleUserRoleReply:
-            type: object
-            properties:
-                code:
-                    type: integer
-                    format: int32
-                message:
-                    type: string
-                result:
-                    $ref: '#/components/schemas/google.protobuf.Any'
-                type:
-                    type: string
-            description: 回应 - 绑定用户领域权限
-        api.server.v1.HandleUserRoleReq_Data:
-            type: object
-            properties:
-                domainId:
-                    type: integer
-                    format: uint64
-                roleIds:
+                menuIds:
                     type: array
                     items:
                         type: integer
@@ -2657,23 +2579,30 @@ components:
             properties:
                 name:
                     type: string
+                    description: 路由名称
                 path:
                     type: string
+                    description: 路由地址
                 component:
                     type: string
+                    description: 路由组件
                 redirect:
                     type: string
+                    description: 路由重定向
                 meta:
                     $ref: '#/components/schemas/api.server.v1.MenuRouter_Meta'
                 children:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.server.v1.MenuRouter'
+                    description: 路由子集
                 id:
                     type: integer
+                    description: 路由ID
                     format: uint64
                 parentId:
                     type: integer
+                    description: 路由父级
                     format: uint64
             description: 路由菜单
         api.server.v1.MenuRouter_Meta:

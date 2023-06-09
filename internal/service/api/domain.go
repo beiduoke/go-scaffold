@@ -178,18 +178,9 @@ func (s *ApiService) ListDomainMenu(ctx context.Context, in *v1.ListDomainMenuRe
 func (s *ApiService) HandleDomainMenu(ctx context.Context, in *v1.HandleDomainMenuReq) (*v1.HandleDomainMenuReply, error) {
 	var menus []*biz.Menu
 	data := in.GetData()
-	for _, v := range data.GetMenus() {
-		parameters, buttons := make([]*biz.MenuParameter, 0, len(v.GetMenuParameterIds())), make([]*biz.MenuButton, 0, len(v.GetMenuButtonIds()))
-		for _, v := range v.GetMenuParameterIds() {
-			parameters = append(parameters, &biz.MenuParameter{ID: uint(v)})
-		}
-		for _, v := range v.GetMenuButtonIds() {
-			buttons = append(buttons, &biz.MenuButton{ID: uint(v)})
-		}
+	for _, v := range data.GetMenuIds() {
 		menus = append(menus, &biz.Menu{
-			ID:         uint(v.GetId()),
-			Parameters: parameters,
-			Buttons:    buttons,
+			ID: uint(v),
 		})
 	}
 	if err := s.domainCase.HandleMenu(ctx, &biz.Domain{ID: uint(in.GetId()), Menus: menus}); err != nil {
