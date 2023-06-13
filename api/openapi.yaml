@@ -1826,7 +1826,7 @@ components:
                     format: enum
                 remarks:
                     type: string
-                menus:
+                menuIds:
                     type: array
                     items:
                         type: integer
@@ -2722,7 +2722,7 @@ components:
                     format: enum
                 remarks:
                     type: string
-                menus:
+                menuIds:
                     type: array
                     items:
                         type: integer
@@ -3066,7 +3066,7 @@ components:
                     format: enum
                 remarks:
                     type: string
-                menus:
+                menuIds:
                     type: array
                     items:
                         type: integer

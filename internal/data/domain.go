@@ -135,7 +135,14 @@ func (r *DomainRepo) ListByName(ctx context.Context, name string) ([]*biz.Domain
 }
 
 func (r *DomainRepo) Delete(ctx context.Context, g *biz.Domain) error {
-	return r.data.DB(ctx).Delete(r.toModel(g)).Error
+	return r.data.InTx(ctx, func(ctx context.Context) error {
+		result := r.data.DB(ctx).Delete(r.toModel(g))
+		if err := result.Error; err != nil {
+			return err
+		}
+		_, err := r.data.enforcer.DeleteRole(g.GetID())
+		return err
+	})
 }
 
 func (r *DomainRepo) ListAll(ctx context.Context) ([]*biz.Domain, error) {
@@ -196,14 +203,25 @@ func (r *DomainRepo) HandleMenu(ctx context.Context, g *biz.Domain) error {
 	return r.data.DB(ctx).Model(&sysDomain).Association("Menus").Replace(sysMenus)
 }
 
+func (r *DomainRepo) ListMenuIDByIDs(ctx context.Context, ids ...uint) []uint {
+	var domainMenuIds []uint
+	result := r.data.DB(ctx).Table("sys_domain_menus").Where("sys_domain_id", ids).Pluck("sys_menu_id", &domainMenuIds)
+	err := result.Error
+	if err != nil {
+		r.log.Error(err)
+		return nil
+	}
+	return domainMenuIds
+}
+
 // 获取指定权限菜单列表
 func (r *DomainRepo) ListMenuByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu, error) {
-	var domainMenuIds []uint
-	result := r.data.DB(ctx).Debug().Table("sys_domain_menus").Where("sys_domain_id", ids).Pluck("sys_menu_id", &domainMenuIds)
-	if err := result.Error; err != nil {
+	domainMenuIds := r.ListMenuIDByIDs(ctx, ids...)
+	bizAllMenus, err := r.menu.ListAll(ctx)
+	if err != nil {
+		r.log.Error(err)
 		return nil, err
 	}
-	bizAllMenus, err := r.menu.ListAll(ctx)
 	bizMenus := make([]*biz.Menu, 0, len(domainMenuIds))
 	for _, menu := range bizAllMenus {
 		for _, menuID := range domainMenuIds {
@@ -213,5 +231,11 @@ func (r *DomainRepo) ListMenuByIDs(ctx context.Context, ids ...uint) ([]*biz.Men
 			}
 		}
 	}
-	return bizMenus, err
+	return bizMenus, nil
+}
+
+// ListMenuAndParentByIDs
+func (r *DomainRepo) ListMenuAndParentByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu, error) {
+	bizAllMenus, _ := r.menu.ListAll(ctx)
+	return menuRecursiveParent(bizAllMenus, r.ListMenuIDByIDs(ctx, ids...)...), nil
 }

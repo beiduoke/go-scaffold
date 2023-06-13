@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-	"fmt"
 	"strings"
 	"time"
 
@@ -272,7 +271,6 @@ func (s *ApiService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.List
 		if v.Type == int32(protobuf.MenuType_MENU_TYPE_ABILITY) {
 			continue
 		}
-		fmt.Println(v.Name, v.Path, v.Title, "这里是所有路由")
 		treeData = append(treeData, TransformMenuRouter(v))
 	}
 	items := proto.ToTree(treeData, in.GetMenuParentId(), func(t *v1.MenuRouter, ts ...*v1.MenuRouter) error {
@@ -285,8 +283,6 @@ func (s *ApiService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.List
 				redirect += "/" + v.Path
 				break
 			}
-			v.Meta.CurrentActiveMenu = &t.Path
-			fmt.Println(v.Name, redirect, v.Path, t.Redirect, "这个是隐藏的路由")
 		}
 		if t.Redirect == nil && redirect != t.Path {
 			t.Redirect = &redirect
@@ -315,9 +311,7 @@ func (s *ApiService) ListUserRoleMenuTree(ctx context.Context, in *v1.ListUserRo
 	}
 	treeData := make([]*v1.Menu, 0)
 	for _, v := range results {
-		if v.Type == int32(protobuf.MenuType_MENU_TYPE_ABILITY) {
-			treeData = append(treeData, TransformMenu(v))
-		}
+		treeData = append(treeData, TransformMenu(v))
 	}
 	return &v1.ListUserRoleMenuTreeReply{
 		Items: proto.ToTree(treeData, in.GetMenuParentId(), func(t *v1.Menu, ts ...*v1.Menu) error {

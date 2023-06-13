@@ -221,14 +221,7 @@ func (uc *UserUsecase) GetName(ctx context.Context, g *User) (*User, error) {
 // Delete 删除用户
 func (uc *UserUsecase) Delete(ctx context.Context, g *User) error {
 	uc.log.WithContext(ctx).Debugf("DeleteUser: %v", g)
-	return uc.biz.tm.InTx(ctx, func(ctx context.Context) error {
-		if err := uc.biz.userRepo.Delete(ctx, g); err != nil {
-			return err
-		}
-
-		_, err := uc.biz.enforcer.DeleteUser(g.GetID())
-		return err
-	})
+	return uc.biz.userRepo.Delete(ctx, g)
 }
 
 // GetInfo 用户信息

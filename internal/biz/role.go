@@ -47,7 +47,9 @@ type RoleRepo interface {
 	Delete(context.Context, *Role) error
 	ListPage(context.Context, *pagination.Pagination) ([]*Role, int64)
 	HandleMenu(context.Context, *Role) error
+	// 指定角色ID菜单列表
 	ListMenuByIDs(context.Context, ...uint) ([]*Menu, error)
+	// 指定角色ID菜单及父级菜单列表
 	ListMenuAndParentByIDs(context.Context, ...uint) ([]*Menu, error)
 	ListDeptByIDs(context.Context, ...uint) ([]*Dept, error)
 	HandleDept(context.Context, *Role) error
@@ -66,7 +68,7 @@ func NewRoleUsecase(logger log.Logger, biz *Biz) *RoleUsecase {
 
 // Create creates a Role, and returns the new Role.
 func (uc *RoleUsecase) Create(ctx context.Context, g *Role) (*Role, error) {
-	uc.log.WithContext(ctx).Debugf("Create: %v", g.Name)
+	uc.log.WithContext(ctx).Debugf("RoleCreate: %v", g.Name)
 	return uc.biz.roleRepo.Save(ctx, g)
 }
 
@@ -78,7 +80,7 @@ func (uc *RoleUsecase) ListByIDs(ctx context.Context, id ...uint) (roles []*Role
 
 // Update 修改角色
 func (uc *RoleUsecase) Update(ctx context.Context, g *Role) error {
-	uc.log.WithContext(ctx).Debugf("UpdateRole: %v", g)
+	uc.log.WithContext(ctx).Debugf("RoleUpdate: %v", g)
 
 	role, _ := uc.biz.roleRepo.FindByID(ctx, g.ID)
 	if role == nil {
@@ -105,7 +107,7 @@ func (uc *RoleUsecase) Update(ctx context.Context, g *Role) error {
 
 // UpdateState 修改角色状态
 func (uc *RoleUsecase) UpdateState(ctx context.Context, g *Role) error {
-	uc.log.WithContext(ctx).Debugf("UpdateRoleState: %v", g)
+	uc.log.WithContext(ctx).Debugf("RoleUpdateRoleState: %v", g)
 
 	role, _ := uc.biz.roleRepo.FindByID(ctx, g.ID)
 	if role == nil {
@@ -123,7 +125,7 @@ func (uc *RoleUsecase) UpdateState(ctx context.Context, g *Role) error {
 
 // List 角色列表全部
 func (uc *RoleUsecase) ListAll(ctx context.Context) ([]*Role, int64) {
-	uc.log.WithContext(ctx).Debugf("RoleList")
+	uc.log.WithContext(ctx).Debugf("RoleListAll")
 	return uc.biz.roleRepo.ListPage(ctx, pagination.NewPagination(
 		pagination.WithNopaging(),
 		pagination.WithOrderBy(map[string]bool{"sort": false, "id": true}),
@@ -132,49 +134,43 @@ func (uc *RoleUsecase) ListAll(ctx context.Context) ([]*Role, int64) {
 
 // List 角色列表分页
 func (uc *RoleUsecase) ListPage(ctx context.Context, paging *pagination.Pagination) ([]*Role, int64) {
-	uc.log.WithContext(ctx).Debugf("RolePage")
+	uc.log.WithContext(ctx).Debugf("RoleListPage")
 	return uc.biz.roleRepo.ListPage(ctx, paging)
 }
 
 // GetID 根据角色ID角色
 func (uc *RoleUsecase) GetID(ctx context.Context, g *Role) (*Role, error) {
-	uc.log.WithContext(ctx).Debugf("GetRoleID: %v", g)
+	uc.log.WithContext(ctx).Debugf("RoleGetID: %v", g)
 	return uc.biz.roleRepo.FindByID(ctx, g.ID)
 }
 
 // Delete 根据角色ID删除角色
 func (uc *RoleUsecase) Delete(ctx context.Context, g *Role) error {
-	uc.log.WithContext(ctx).Debugf("DeleteRole: %v", g)
-	return uc.biz.tm.InTx(ctx, func(ctx context.Context) error {
-		if err := uc.biz.roleRepo.Delete(ctx, g); err != nil {
-			return err
-		}
-		_, err := uc.biz.enforcer.DeleteRole(g.GetID())
-		return err
-	})
+	uc.log.WithContext(ctx).Debugf("RoleDelete: %v", g)
+	return uc.biz.roleRepo.Delete(ctx, g)
 }
 
-// HandleMenu 获取角色菜单
+// ListMenuByID 获取角色菜单
 func (uc *RoleUsecase) ListMenuByID(ctx context.Context, g *Role) ([]*Menu, error) {
-	uc.log.WithContext(ctx).Debugf("ListMenuByIDs: %v", g)
+	uc.log.WithContext(ctx).Debugf("RoleListMenuByID: %v", g)
 	return uc.biz.roleRepo.ListMenuByIDs(ctx, g.ID)
 }
 
 // HandleMenu 绑定菜单
 func (uc *RoleUsecase) HandleMenu(ctx context.Context, g *Role) error {
-	uc.log.WithContext(ctx).Debugf("HandleMenu: %v", g)
+	uc.log.WithContext(ctx).Debugf("RoleHandleMenu: %v", g)
 	return uc.biz.roleRepo.HandleMenu(ctx, g)
 }
 
-// HandleMenu 获取角色菜单
+// ListDeptByID 获取角色部门列表
 func (uc *RoleUsecase) ListDeptByID(ctx context.Context, g *Role) ([]*Dept, error) {
-	uc.log.WithContext(ctx).Debugf("ListMenuByIDs: %v", g)
+	uc.log.WithContext(ctx).Debugf("RoleListDeptByID: %v", g)
 	return uc.biz.roleRepo.ListDeptByIDs(ctx, g.ID)
 }
 
-// HandleMenu 获取角色数据范围
+// GetDataScopeByID 获取角色数据范围
 func (uc *RoleUsecase) GetDataScopeByID(ctx context.Context, g *Role) (*Role, error) {
-	uc.log.WithContext(ctx).Debugf("GetDataScopeByID: %v", g)
+	uc.log.WithContext(ctx).Debugf("RoleGetDataScopeByID: %v", g)
 	role, err := uc.biz.roleRepo.FindByID(ctx, g.ID)
 	if err != nil {
 		return nil, err
@@ -187,7 +183,7 @@ func (uc *RoleUsecase) GetDataScopeByID(ctx context.Context, g *Role) (*Role, er
 
 // HandleDept 绑定数据范围
 func (uc *RoleUsecase) HandleDataScope(ctx context.Context, g *Role) error {
-	uc.log.WithContext(ctx).Debugf("HandleDataScope: %v", g)
+	uc.log.WithContext(ctx).Debugf("RoleHandleDataScope: %v", g)
 	role, err := uc.biz.roleRepo.FindByID(ctx, g.ID)
 	if err != nil {
 		return err

@@ -12,7 +12,6 @@ import (
 	"github.com/beiduoke/go-scaffold/pkg/util/crypto"
 	"github.com/beiduoke/go-scaffold/pkg/util/ip"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
-	"github.com/casbin/casbin/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -141,7 +140,14 @@ func (r *UserRepo) ListAll(ctx context.Context) ([]*biz.User, error) {
 }
 
 func (r *UserRepo) Delete(ctx context.Context, g *biz.User) error {
-	return r.data.DBD(ctx).Delete(r.toModel(g)).Error
+	return r.data.InTx(ctx, func(ctx context.Context) error {
+		result := r.data.DB(ctx).Delete(r.toModel(g))
+		if err := result.Error; err != nil {
+			return err
+		}
+		_, err := r.data.enforcer.DeleteUser(g.GetID())
+		return err
+	})
 }
 
 func (r *UserRepo) ListPage(ctx context.Context, paging *pagination.Pagination) (users []*biz.User, total int64) {
@@ -275,7 +281,7 @@ func (r *UserRepo) HandleRole(ctx context.Context, g *biz.User) error {
 		return err
 	}
 	ctxDomain := r.data.CtxAuthUser(ctx).GetDomain()
-	if _, err := r.data.enforcer.(*casbin.SyncedEnforcer).DeleteRolesForUserInDomain(g.GetID(), ctxDomain); err != nil {
+	if _, err := r.data.enforcer.DeleteRolesForUserInDomain(g.GetID(), ctxDomain); err != nil {
 		return err
 	}
 	rules := make([][]string, 0, len(g.Roles))
@@ -424,23 +430,24 @@ func (r *UserRepo) AccessRoles(ctx context.Context) ([]*biz.Role, error) {
 }
 
 // AccessRoleMenus 访问用户角色菜单列表
-func (r *UserRepo) AccessRoleMenus(ctx context.Context) (menus []*biz.Menu, err error) {
+func (r *UserRepo) AccessRoleMenus(ctx context.Context) (bizMenus []*biz.Menu, err error) {
 	defer func() {
-		sort.SliceStable(menus, func(i, j int) bool {
-			return int32(menus[i].Sort) < int32(menus[j].Sort)
+		sort.SliceStable(bizMenus, func(i, j int) bool {
+			return int32(bizMenus[i].Sort) < int32(bizMenus[j].Sort)
 		})
 	}()
+	bizAllMenus, err := r.menu.ListAll(ctx)
+	var accessMenuIds = []uint{}
 	if r.data.HasSystemSuperAdmin(ctx) {
-		return r.menu.ListAll(ctx)
+		for _, v := range bizAllMenus {
+			accessMenuIds = append(accessMenuIds, v.ID)
+		}
 	} else if r.data.HasDomainSuperUser(ctx) {
-		return r.domain.ListMenuByIDs(ctx, r.data.CtxDomainID(ctx))
+		accessMenuIds = r.domain.ListMenuIDByIDs(ctx, r.data.CtxDomainID(ctx))
+	} else {
+		accessMenuIds = r.role.ListMenuIDByIDs(ctx, r.data.CtxRoleID(ctx))
 	}
-
-	bizUser, err := r.GetLoginUUIDCache(ctx, r.data.CtxAuthClaimSubject(ctx))
-	if err != nil {
-		return nil, err
-	}
-	return r.role.ListMenuByIDs(ctx, bizUser.LastUseRoleID)
+	return menuRecursiveParent(bizAllMenus, accessMenuIds...), nil
 }
 
 // AccessRolePermissions 访问用户角色的权限列表

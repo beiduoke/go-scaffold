@@ -16,9 +16,9 @@ import (
 var _ v1.ApiServer = (*ApiService)(nil)
 
 func TransformRole(data *biz.Role) *v1.Role {
-	menus := make([]uint64, len(data.Menus))
+	menuIds := make([]uint64, len(data.Menus))
 	for _, v := range data.Menus {
-		menus = append(menus, uint64(v.ID))
+		menuIds = append(menuIds, uint64(v.ID))
 	}
 	return &v1.Role{
 		CreatedAt:     timestamppb.New(data.CreatedAt),
@@ -30,7 +30,7 @@ func TransformRole(data *biz.Role) *v1.Role {
 		Sort:          &data.Sort,
 		State:         (*protobuf.RoleState)(&data.State),
 		Remarks:       &data.Remarks,
-		Menus:         menus,
+		MenuIds:       menuIds,
 	}
 }
 
@@ -61,11 +61,11 @@ func (s *ApiService) CreateRole(ctx context.Context, in *v1.CreateRoleReq) (*v1.
 	if err != nil {
 		return nil, v1.ErrorRoleCreateFail("角色创建失败: %v", err.Error())
 	}
-	if len(in.GetMenus()) > 0 {
+	if len(in.GetMenuIds()) > 0 {
 		// 同步角色菜单操作
 		if _, err = s.HandleRoleMenu(ctx, &v1.HandleRoleMenuReq{
 			Id:   uint64(role.ID),
-			Data: &v1.HandleRoleMenuReq_Data{MenuIds: in.GetMenus()},
+			Data: &v1.HandleRoleMenuReq_Data{MenuIds: in.GetMenuIds()},
 		}); err != nil {
 			return nil, err
 		}
@@ -102,7 +102,7 @@ func (s *ApiService) UpdateRole(ctx context.Context, in *v1.UpdateRoleReq) (*v1.
 	// 同步角色菜单操作
 	if _, err = s.HandleRoleMenu(ctx, &v1.HandleRoleMenuReq{
 		Id:   in.GetId(),
-		Data: &v1.HandleRoleMenuReq_Data{MenuIds: v.GetMenus()},
+		Data: &v1.HandleRoleMenuReq_Data{MenuIds: v.GetMenuIds()},
 	}); err != nil {
 		return nil, err
 	}

@@ -80,13 +80,13 @@ type Data struct {
 	rdb      *redis.Client
 	sdb      *meilisearch.Client
 	sf       *snowflake.Node
-	enforcer casbin.IEnforcer
+	enforcer *casbin.SyncedEnforcer
 }
 
 // NewData .
 func NewData(db *gorm.DB, rdb *redis.Client, sdb *meilisearch.Client, enforcer casbin.IEnforcer, sf *snowflake.Node, logger log.Logger, systemConf *conf.System) (*Data, func(), error) {
 	l := log.NewHelper(log.With(logger, "module", "data/initialize"))
-	d := &Data{db: db, rdb: rdb, sdb: sdb, log: l, sf: sf, enforcer: enforcer, conf: ConfigOptions{system: systemConf}}
+	d := &Data{db: db, rdb: rdb, sdb: sdb, log: l, sf: sf, enforcer: enforcer.(*casbin.SyncedEnforcer), conf: ConfigOptions{system: systemConf}}
 	return d, func() {
 		l.Info("closing db")
 		sql, err := db.DB()

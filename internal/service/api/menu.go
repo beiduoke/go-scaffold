@@ -157,21 +157,6 @@ func (s *ApiService) ListMenu(ctx context.Context, in *v1.ListMenuReq) (*v1.List
 
 // CreateMenu 创建菜单
 func (s *ApiService) CreateMenu(ctx context.Context, in *v1.CreateMenuReq) (*v1.CreateMenuReply, error) {
-	parameters, buttons := make([]*biz.MenuParameter, 0, len(in.GetParameters())), make([]*biz.MenuButton, 0, len(in.GetButtons()))
-	for _, v := range in.GetParameters() {
-		parameters = append(parameters, &biz.MenuParameter{
-			Type:  int32(v.GetType()),
-			Name:  v.GetName(),
-			Value: v.GetValue(),
-		})
-	}
-	for _, v := range in.GetButtons() {
-		buttons = append(buttons, &biz.MenuButton{
-			Name:    v.GetName(),
-			Remarks: v.GetRemarks(),
-		})
-	}
-
 	user, err := s.menuCase.Create(ctx, &biz.Menu{
 		Name:        in.GetName(),
 		Type:        int32(in.GetType()),
@@ -187,8 +172,6 @@ func (s *ApiService) CreateMenu(ctx context.Context, in *v1.CreateMenuReq) (*v1.
 		IsAffix:     int32(in.GetIsAffix()),
 		LinkType:    int32(in.GetLinkType()),
 		LinkUrl:     in.GetLinkUrl(),
-		Parameters:  parameters,
-		Buttons:     buttons,
 		ApiResource: in.GetApiResource(),
 	})
 	if err != nil {
@@ -207,21 +190,6 @@ func (s *ApiService) CreateMenu(ctx context.Context, in *v1.CreateMenuReq) (*v1.
 // UpdateMenu 创建菜单
 func (s *ApiService) UpdateMenu(ctx context.Context, in *v1.UpdateMenuReq) (*v1.UpdateMenuReply, error) {
 	v := in.GetData()
-
-	parameters, buttons := make([]*biz.MenuParameter, 0, len(v.GetParameters())), make([]*biz.MenuButton, 0, len(v.GetButtons()))
-	for _, v := range v.GetParameters() {
-		parameters = append(parameters, &biz.MenuParameter{
-			Type:  int32(v.GetType()),
-			Name:  v.GetName(),
-			Value: v.GetValue(),
-		})
-	}
-	for _, v := range v.GetButtons() {
-		buttons = append(buttons, &biz.MenuButton{
-			Name:    v.GetName(),
-			Remarks: v.GetRemarks(),
-		})
-	}
 	err := s.menuCase.Update(ctx, &biz.Menu{
 		ID:          uint(in.GetId()),
 		Name:        v.GetName(),
@@ -238,8 +206,6 @@ func (s *ApiService) UpdateMenu(ctx context.Context, in *v1.UpdateMenuReq) (*v1.
 		IsAffix:     int32(v.GetIsAffix()),
 		LinkType:    int32(v.GetLinkType()),
 		LinkUrl:     v.GetLinkUrl(),
-		Parameters:  parameters,
-		Buttons:     buttons,
 		ApiResource: v.GetApiResource(),
 	})
 	if err != nil {
@@ -257,21 +223,7 @@ func (s *ApiService) GetMenu(ctx context.Context, in *v1.GetMenuReq) (*v1.Menu, 
 	if err != nil {
 		return nil, v1.ErrorMenuNotFound("菜单未找到")
 	}
-	apiMenu := TransformMenu(bizMenu)
-	for _, v := range bizMenu.Buttons {
-		apiMenu.Buttons = append(apiMenu.Buttons, &v1.MenuButton{
-			Name:    v.Name,
-			Remarks: v.Remarks,
-		})
-	}
-	for _, v := range bizMenu.Parameters {
-		apiMenu.Parameters = append(apiMenu.Parameters, &v1.MenuParameter{
-			Type:  protobuf.MenuParameterType(v.Type),
-			Name:  v.Name,
-			Value: v.Value,
-		})
-	}
-	return apiMenu, nil
+	return TransformMenu(bizMenu), nil
 }
 
 // DeleteMenu 删除菜单

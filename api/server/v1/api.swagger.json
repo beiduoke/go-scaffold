@@ -3402,7 +3402,7 @@
         "remarks": {
           "type": "string"
         },
-        "menus": {
+        "menuIds": {
           "type": "array",
           "items": {
             "type": "string",
@@ -4525,7 +4525,7 @@
         "remarks": {
           "type": "string"
         },
-        "menus": {
+        "menuIds": {
           "type": "array",
           "items": {
             "type": "string",
@@ -5008,7 +5008,7 @@
         "remarks": {
           "type": "string"
         },
-        "menus": {
+        "menuIds": {
           "type": "array",
           "items": {
             "type": "string",

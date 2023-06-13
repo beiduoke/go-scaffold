@@ -82,5 +82,5 @@ message System {
     uint64 domain_id = 1;
     uint64 user_id = 2;
   }
-  SuperAdmin superAdmin = 1;
+  SuperAdmin super_admin = 1;
 }

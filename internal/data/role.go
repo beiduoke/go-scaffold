@@ -127,7 +127,14 @@ func (r *RoleRepo) ListByName(ctx context.Context, name string) ([]*biz.Role, er
 }
 
 func (r *RoleRepo) Delete(ctx context.Context, g *biz.Role) error {
-	return r.data.DBD(ctx).Delete(r.toModel(g)).Error
+	return r.data.InTx(ctx, func(ctx context.Context) error {
+		result := r.data.DB(ctx).Delete(r.toModel(g))
+		if err := result.Error; err != nil {
+			return err
+		}
+		_, err := r.data.enforcer.DeleteRole(g.GetID())
+		return err
+	})
 }
 
 func (r *RoleRepo) ListAll(ctx context.Context) ([]*biz.Role, error) {
@@ -178,22 +185,58 @@ func (r *RoleRepo) ListPage(ctx context.Context, paging *pagination.Pagination) 
 
 // 处理角色菜单
 func (r *RoleRepo) HandleMenu(ctx context.Context, g *biz.Role) error {
-	sysRole, sysMenus := SysRole{}, make([]*SysMenu, 0)
+	menuIds, sysRole, sysMenus := make([]uint, 0, len(g.Menus)), SysRole{}, make([]*SysMenu, 0)
 	for _, v := range g.Menus {
 		sysMenus = append(sysMenus, r.menu.toModel(v))
+		menuIds = append(menuIds, v.ID)
 	}
-	sysRole.ID = g.ID
-	return r.data.DB(ctx).Model(&sysRole).Association("Menus").Replace(sysMenus)
+	bizMenus, _ := r.menu.ListByIDs(ctx, menuIds...)
+	rules := []Policies{}
+	for _, v := range bizMenus {
+		rules = append(rules, Policies{ID: v.ID, Resource: v.ApiResource})
+	}
+	return r.data.InTx(ctx, func(ctx context.Context) error {
+		sysRole.ID = g.ID
+		err := r.data.DB(ctx).Model(&sysRole).Association("Menus").Replace(sysMenus)
+		if err != nil {
+			return err
+		}
+		return r.data.RoleSetPolicies(ctx, r.data.CtxAuthUser(ctx).GetDomain(), g.GetID(), rules...)
+	})
+}
+
+// 获取指定角色部门列表
+func (r *RoleRepo) ListDeptByIDs(ctx context.Context, ids ...uint) ([]*biz.Dept, error) {
+	sysDepts, bizDepts := []*SysDept{}, []*biz.Dept{}
+	result := r.data.DBD(ctx).Joins("right join sys_role_depts on sys_role_depts.sys_dept_id = sys_depts.id").Where("sys_role_depts.sys_role_id", ids).Find(&sysDepts)
+	if err := result.Error; err != nil {
+		return nil, err
+	}
+	for _, d := range sysDepts {
+		bizDepts = append(bizDepts, r.dept.toBiz(d))
+	}
+	return bizDepts, nil
+}
+
+func (r *RoleRepo) ListMenuIDByIDs(ctx context.Context, ids ...uint) []uint {
+	var roleMenuIds []uint
+	result := r.data.DB(ctx).Table("sys_role_menus").Where("sys_role_id", ids).Pluck("sys_menu_id", &roleMenuIds)
+	err := result.Error
+	if err != nil {
+		r.log.Error(err)
+		return nil
+	}
+	return roleMenuIds
 }
 
 // 获取指定角色菜单列表
 func (r *RoleRepo) ListMenuByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu, error) {
-	var roleMenuIds []uint
-	result := r.data.DB(ctx).Debug().Table("sys_role_menus").Where("sys_role_id", ids).Pluck("sys_menu_id", &roleMenuIds)
-	if err := result.Error; err != nil {
+	roleMenuIds := r.ListMenuIDByIDs(ctx, ids...)
+	bizAllMenus, err := r.menu.ListAll(ctx)
+	if err != nil {
+		r.log.Error(err)
 		return nil, err
 	}
-	bizAllMenus, err := r.menu.ListAll(ctx)
 	bizMenus := make([]*biz.Menu, 0, len(roleMenuIds))
 	for _, menu := range bizAllMenus {
 		for _, menuId := range roleMenuIds {
@@ -206,30 +249,14 @@ func (r *RoleRepo) ListMenuByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu,
 	return bizMenus, err
 }
 
-// 获取指定角色部门列表
-func (r *RoleRepo) ListDeptByIDs(ctx context.Context, ids ...uint) ([]*biz.Dept, error) {
-	sysDepts, bizDepts := []*SysDept{}, []*biz.Dept{}
-	result := r.data.DBD(ctx).Joins("right join sys_role_depts on sys_role_depts.sys_dept_id = sys_depts.id").Where("sys_role_depts.sys_role_id", ids).Find(&sysDepts)
-	if err := result.Error; err != nil {
-		return nil, err
-	}
-	deptRepo := r.dept
-	for _, d := range sysDepts {
-		bizDepts = append(bizDepts, deptRepo.toBiz(d))
-	}
-
-	return bizDepts, nil
-}
-
-// 获取指定角色菜单列表-返回父级菜单
+// ListMenuAndParentByIDs
 func (r *RoleRepo) ListMenuAndParentByIDs(ctx context.Context, ids ...uint) ([]*biz.Menu, error) {
-	var roleMenuIds []uint
-	result := r.data.DB(ctx).Debug().Table("sys_role_menus").Where("sys_role_id", ids).Pluck("sys_menu_id", &roleMenuIds)
-	if err := result.Error; err != nil {
+	bizAllMenus, err := r.menu.ListAll(ctx)
+	if err != nil {
+		r.log.Error(err)
 		return nil, err
 	}
-	bizAllMenus, _ := r.menu.ListAll(ctx)
-	return menuRecursiveParent(bizAllMenus, roleMenuIds...), nil
+	return menuRecursiveParent(bizAllMenus, r.ListMenuIDByIDs(ctx, ids...)...), nil
 }
 
 // 绑定角色部门

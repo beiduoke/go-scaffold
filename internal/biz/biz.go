@@ -3,7 +3,6 @@ package biz
 import (
 	"context"
 
-	"github.com/casbin/casbin/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
 )
@@ -35,8 +34,6 @@ type Biz struct {
 	// 逻辑事务操作
 	tm Transaction
 	// 公共
-	// 权限认证
-	enforcer casbin.IEnforcer
 	// 领域数据
 	domainRepo DomainRepo
 	// 权限数据
@@ -45,11 +42,10 @@ type Biz struct {
 	userRepo UserRepo
 }
 
-func NewBiz(logger log.Logger, tm Transaction, enforcer casbin.IEnforcer, domainRepo DomainRepo, roleRepo RoleRepo, userRepo UserRepo) *Biz {
+func NewBiz(logger log.Logger, tm Transaction, domainRepo DomainRepo, roleRepo RoleRepo, userRepo UserRepo) *Biz {
 	return &Biz{
 		log:        log.NewHelper(log.With(logger, "module", "biz/initialize")),
 		tm:         tm,
-		enforcer:   enforcer,
 		domainRepo: domainRepo,
 		roleRepo:   roleRepo,
 		userRepo:   userRepo,

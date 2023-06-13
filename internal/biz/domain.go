@@ -182,18 +182,12 @@ func (uc *DomainUsecase) GetName(ctx context.Context, g *Domain) (*Domain, error
 // Delete 根据领域ID删除领域
 func (uc *DomainUsecase) Delete(ctx context.Context, g *Domain) error {
 	uc.log.WithContext(ctx).Debugf("DeleteDomain: %v", g)
-	return uc.biz.tm.InTx(ctx, func(ctx context.Context) error {
-		if err := uc.biz.domainRepo.Delete(ctx, g); err != nil {
-			return err
-		}
-		_, err := uc.biz.enforcer.DeleteRole(g.GetID())
-		return err
-	})
+	return uc.biz.domainRepo.Delete(ctx, g)
 }
 
 // HandleMenu 绑定菜单
 func (uc *DomainUsecase) HandleMenu(ctx context.Context, g *Domain) error {
-	uc.log.WithContext(ctx).Debugf("HandleMenu: %v", g)
+	// uc.log.WithContext(ctx).Debugf("HandleMenu: %v", g)
 	return uc.biz.domainRepo.HandleMenu(ctx, g)
 }
 

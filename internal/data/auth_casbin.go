@@ -7,6 +7,7 @@ import (
 	"github.com/beiduoke/go-scaffold/pkg/auth/authz"
 	authzCasbin "github.com/beiduoke/go-scaffold/pkg/auth/authz/casbin"
 	stdcasbin "github.com/casbin/casbin/v2"
+	"github.com/casbin/casbin/v2/constant"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
@@ -76,11 +77,11 @@ func NewAuthEnforcer(model model.Model, adapter persist.Adapter, watcher persist
 	if err != nil {
 		log.Fatalf("failed casbin enforcer %v", err)
 	}
+	enforcer.SetFieldIndex("p", constant.DomainIndex, 3)
 	err = enforcer.SetWatcher(watcher)
 	if err != nil {
 		log.Fatalf("failed casbin watcher %v", err)
 	}
-
 	return enforcer
 }
 

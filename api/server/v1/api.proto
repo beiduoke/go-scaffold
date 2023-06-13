@@ -1172,7 +1172,7 @@ message Role {
 	optional api.protobuf.RoleDeptCheckStrictly dept_check_strictly = 10; 
   optional api.protobuf.RoleState state = 11;
   optional string remarks = 12;
-  repeated uint64 menus = 13;
+  repeated uint64 menu_ids = 13;
 }
 
 // 请求 - 列表角色
@@ -1202,7 +1202,7 @@ message CreateRoleReq {
 	optional api.protobuf.RoleDeptCheckStrictly dept_check_strictly = 7 [(validate.rules).enum = {defined_only: true, not_in: [0]}]; 
   api.protobuf.RoleState state = 8 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
   optional string remarks = 9 [(validate.rules).string = {min_len: 1, max_len: 1000}];
-  repeated uint64 menus = 10 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+  repeated uint64 menu_ids = 10 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
 }
 
 // 回应 - 创建角色
@@ -1226,7 +1226,7 @@ message UpdateRoleReq {
     optional api.protobuf.RoleDeptCheckStrictly dept_check_strictly = 7 [(validate.rules).enum = {defined_only: true, not_in: [0]}]; 
     api.protobuf.RoleState state = 8 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
     optional string remarks = 9 [(validate.rules).string = {min_len: 1, max_len: 1000}];
-    repeated uint64 menus = 10 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+    repeated uint64 menu_ids = 10 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
   }
   Data data = 2;
 }

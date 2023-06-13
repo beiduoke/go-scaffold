@@ -43,7 +43,7 @@ func wireApp(confServer *conf.Server, auth *conf.Auth, confData *conf.Data, syst
 	authenticator := data.NewAuthenticator(auth, logger)
 	postRepo := data.NewPostRepo(logger, dataData)
 	userRepo := data.NewUserRepo(logger, dataData, auth, authenticator, domainRepo, roleRepo, postRepo, menuRepo, deptRepo)
-	bizBiz := biz.NewBiz(logger, transaction, iEnforcer, domainRepo, roleRepo, userRepo)
+	bizBiz := biz.NewBiz(logger, transaction, domainRepo, roleRepo, userRepo)
 	authUsecase := biz.NewAuthUsecase(logger, bizBiz, authenticator)
 	userUsecase := biz.NewUserUsecase(logger, bizBiz, auth)
 	domainUsecase := biz.NewDomainUsecase(logger, bizBiz)

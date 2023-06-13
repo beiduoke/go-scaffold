@@ -89,6 +89,7 @@ func (r *MenuRepo) Save(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 
 func (r *MenuRepo) Update(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 	d := r.toModel(g)
+	r.log.Debug("这里发生变化", g.ApiResource)
 	result := r.data.DB(ctx).Model(&SysMenu{}).Not(g.ID).Where("name", g.Name).Pluck("id", nil)
 	if result.RowsAffected > 0 {
 		return nil, errors.New("duplicate name")
@@ -103,7 +104,7 @@ func (r *MenuRepo) Update(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 
 func (r *MenuRepo) FindByName(ctx context.Context, s string) (*biz.Menu, error) {
 	menu := SysMenu{}
-	result := r.data.DB(ctx).Preload("Parameters").Preload("Buttons").Last(&menu, "name = ?", s)
+	result := r.data.DB(ctx).Last(&menu, "name = ?", s)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -112,7 +113,7 @@ func (r *MenuRepo) FindByName(ctx context.Context, s string) (*biz.Menu, error) 
 
 func (r *MenuRepo) FindByID(ctx context.Context, id uint) (*biz.Menu, error) {
 	menu := SysMenu{}
-	result := r.data.DB(ctx).Preload("Parameters").Preload("Buttons").Last(&menu, id)
+	result := r.data.DB(ctx).Last(&menu, id)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -146,7 +147,7 @@ func (r *MenuRepo) ListByName(ctx context.Context, name string) ([]*biz.Menu, er
 }
 
 func (r *MenuRepo) Delete(ctx context.Context, g *biz.Menu) error {
-	result := r.data.DB(ctx).Select("Parameters", "Buttons").Delete(r.toModel(g))
+	result := r.data.DB(ctx).Delete(r.toModel(g))
 	if err := result.Error; err != nil {
 		return err
 	}
@@ -155,6 +156,15 @@ func (r *MenuRepo) Delete(ctx context.Context, g *biz.Menu) error {
 
 func (r *MenuRepo) ListAll(ctx context.Context) (menus []*biz.Menu, err error) {
 	return r.ListAllCache(ctx), nil
+}
+
+func (r *MenuRepo) ListAllIDs(ctx context.Context) []uint {
+	bizAllMenus := r.ListAllCache(ctx)
+	menuIds := make([]uint, 0, len(bizAllMenus))
+	for _, v := range bizAllMenus {
+		menuIds = append(menuIds, v.ID)
+	}
+	return menuIds
 }
 
 func (r *MenuRepo) ListPage(ctx context.Context, paging *pagination.Pagination) (menus []*biz.Menu, total int64) {
@@ -214,8 +224,12 @@ func menuRecursiveParent(menus []*biz.Menu, ids ...uint) []*biz.Menu {
 				break
 			}
 		}
+		_, ok := mid[v.ID]
+		if ok {
+			continue
+		}
 		for _, id := range ids {
-			if _, o := mid[v.ID]; v.ID == id && !o {
+			if v.ID == id {
 				mid[v.ID] = v.ID
 				result = append(result, v)
 				for _, m := range menuRecursiveParent(menus, v.ParentID) {
