@@ -87,19 +87,33 @@ func (r *MenuRepo) Save(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
 	return bizMenu, result.Error
 }
 
-func (r *MenuRepo) Update(ctx context.Context, g *biz.Menu) (*biz.Menu, error) {
+func (r *MenuRepo) Update(ctx context.Context, g *biz.Menu) (bizMenu *biz.Menu, err error) {
 	d := r.toModel(g)
-	r.log.Debug("这里发生变化", g.ApiResource)
 	result := r.data.DB(ctx).Model(&SysMenu{}).Not(g.ID).Where("name", g.Name).Pluck("id", nil)
 	if result.RowsAffected > 0 {
 		return nil, errors.New("duplicate name")
 	}
-	result = r.data.DB(ctx).Model(d).Omit("CreatedAt").Updates(d)
-	bizMenu := r.toBiz(d)
-	if result.Error == nil {
-		result.Error = r.SetCache(ctx, bizMenu)
+
+	// 判断是否更新角色策略
+	beforeMenu := SysMenu{}
+	result = r.data.DB(ctx).Select("ApiResource").Last(&beforeMenu, g.ID)
+	if result.RowsAffected > 0 && beforeMenu.ApiResource != d.ApiResource {
+		resultErr := r.data.RoleUpdatePolicyResource(ctx, beforeMenu.ApiResource, d.ApiResource)
+		if resultErr != nil {
+			r.log.Error(resultErr)
+		}
 	}
-	return bizMenu, result.Error
+
+	err = r.data.InTx(ctx, func(ctx context.Context) error {
+		result := r.data.DB(ctx).Model(d).Omit("CreatedAt").Updates(d)
+		if result.Error != nil {
+			return err
+		}
+		bizMenu := r.toBiz(d)
+		return r.SetCache(ctx, bizMenu)
+	})
+
+	return bizMenu, err
 }
 
 func (r *MenuRepo) FindByName(ctx context.Context, s string) (*biz.Menu, error) {
@@ -150,6 +164,15 @@ func (r *MenuRepo) Delete(ctx context.Context, g *biz.Menu) error {
 	result := r.data.DB(ctx).Delete(r.toModel(g))
 	if err := result.Error; err != nil {
 		return err
+	}
+	// 判断是否删除角色策略
+	sysMenu := SysMenu{}
+	result = r.data.DB(ctx).Unscoped().Select("ApiResource").Last(&sysMenu, g.ID)
+	if result.RowsAffected > 0 && sysMenu.ApiResource != "" {
+		resultErr := r.data.RoleDeletePolicyResource(ctx, sysMenu.ApiResource)
+		if resultErr != nil {
+			r.log.Error(resultErr)
+		}
 	}
 	return r.DeleteCache(ctx, g.GetID())
 }

@@ -140,7 +140,7 @@ func (r *DomainRepo) Delete(ctx context.Context, g *biz.Domain) error {
 		if err := result.Error; err != nil {
 			return err
 		}
-		_, err := r.data.enforcer.DeleteRole(g.GetID())
+		_, err := r.data.enforcer.DeleteDomains(g.GetID())
 		return err
 	})
 }

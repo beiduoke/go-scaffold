@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 	"gorm.io/gorm/clause"
@@ -132,7 +133,10 @@ func (r *RoleRepo) Delete(ctx context.Context, g *biz.Role) error {
 		if err := result.Error; err != nil {
 			return err
 		}
-		_, err := r.data.enforcer.DeleteRole(g.GetID())
+		success, err := r.data.enforcer.DeleteRole(g.GetID())
+		if success {
+			_, err = r.data.enforcer.DeletePermission(g.GetID())
+		}
 		return err
 	})
 }
@@ -185,15 +189,23 @@ func (r *RoleRepo) ListPage(ctx context.Context, paging *pagination.Pagination) 
 
 // 处理角色菜单
 func (r *RoleRepo) HandleMenu(ctx context.Context, g *biz.Role) error {
-	menuIds, sysRole, sysMenus := make([]uint, 0, len(g.Menus)), SysRole{}, make([]*SysMenu, 0)
-	for _, v := range g.Menus {
-		sysMenus = append(sysMenus, r.menu.toModel(v))
-		menuIds = append(menuIds, v.ID)
-	}
-	bizMenus, _ := r.menu.ListByIDs(ctx, menuIds...)
-	rules := []Policies{}
-	for _, v := range bizMenus {
-		rules = append(rules, Policies{ID: v.ID, Resource: v.ApiResource})
+	var (
+		menuIds  = make([]uint, 0)
+		sysRole  = SysRole{}
+		sysMenus = make([]*SysMenu, 0)
+		policies = make([]Policy, 0)
+	)
+	if len(g.Menus) > 0 {
+		for _, v := range g.Menus {
+			sysMenus = append(sysMenus, r.menu.toModel(v))
+			menuIds = append(menuIds, v.ID)
+		}
+		bizMenus, _ := r.menu.ListByIDs(ctx, menuIds...)
+		for _, v := range bizMenus {
+			if v.ApiResource != "" {
+				policies = append(policies, Policy{ID: convert.UnitToString(v.ID), Resource: v.ApiResource})
+			}
+		}
 	}
 	return r.data.InTx(ctx, func(ctx context.Context) error {
 		sysRole.ID = g.ID
@@ -201,7 +213,8 @@ func (r *RoleRepo) HandleMenu(ctx context.Context, g *biz.Role) error {
 		if err != nil {
 			return err
 		}
-		return r.data.RoleSetPolicies(ctx, r.data.CtxAuthUser(ctx).GetDomain(), g.GetID(), rules...)
+		err = r.data.RoleSetPolicy(ctx, r.data.CtxAuthUser(ctx).GetDomain(), g.GetID(), policies...)
+		return err
 	})
 }
 
