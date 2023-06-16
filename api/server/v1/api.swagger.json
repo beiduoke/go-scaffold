@@ -2838,16 +2838,6 @@
       "default": "MENU_LINK_TYPE_UNSPECIFIED",
       "title": "菜单链接类型"
     },
-    "protobufMenuParameterType": {
-      "type": "string",
-      "enum": [
-        "MENU_PARAMETER_TYPE_UNSPECIFIED",
-        "MENU_PARAMETER_TYPE_PARAMS",
-        "MENU_PARAMETER_TYPE_QUERY"
-      ],
-      "default": "MENU_PARAMETER_TYPE_UNSPECIFIED",
-      "title": "菜单参数类型"
-    },
     "protobufMenuType": {
       "type": "string",
       "enum": [
@@ -3016,18 +3006,6 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/serverv1Menu"
-          }
-        },
-        "parameters": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1MenuParameter"
-          }
-        },
-        "buttons": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1MenuButton"
           }
         },
         "apiResource": {
@@ -3291,18 +3269,6 @@
         },
         "linkType": {
           "$ref": "#/definitions/protobufMenuLinkType"
-        },
-        "parameters": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1MenuParameter"
-          }
-        },
-        "buttons": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1MenuButton"
-          }
         },
         "apiResource": {
           "type": "string"
@@ -4343,31 +4309,6 @@
       },
       "title": "回应 - 退出登录"
     },
-    "v1MenuButton": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "remarks": {
-          "type": "string"
-        }
-      }
-    },
-    "v1MenuParameter": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "$ref": "#/definitions/protobufMenuParameterType"
-        },
-        "name": {
-          "type": "string"
-        },
-        "value": {
-          "type": "string"
-        }
-      }
-    },
     "v1MenuRouter": {
       "type": "object",
       "properties": {
@@ -4872,18 +4813,6 @@
         },
         "linkType": {
           "$ref": "#/definitions/protobufMenuLinkType"
-        },
-        "parameters": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1MenuParameter"
-          }
-        },
-        "buttons": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1MenuButton"
-          }
         },
         "apiResource": {
           "type": "string"

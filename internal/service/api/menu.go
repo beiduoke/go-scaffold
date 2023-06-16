@@ -109,8 +109,6 @@ func TransformMenu(data *biz.Menu) *v1.Menu {
 		IsAffix:     (*protobuf.MenuAffix)(&data.IsAffix),
 		LinkType:    (*protobuf.MenuLinkType)(&data.LinkType),
 		Children:    make([]*v1.Menu, 0),
-		Parameters:  make([]*v1.MenuParameter, 0),
-		Buttons:     make([]*v1.MenuButton, 0),
 		ApiResource: &data.ApiResource,
 	}
 }

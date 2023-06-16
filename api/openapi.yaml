@@ -1746,14 +1746,6 @@ components:
                 linkType:
                     type: integer
                     format: enum
-                parameters:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.server.v1.MenuParameter'
-                buttons:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.server.v1.MenuButton'
                 apiResource:
                     type: string
             description: 请求 - 创建菜单
@@ -2546,34 +2538,9 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.server.v1.Menu'
-                parameters:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.server.v1.MenuParameter'
-                buttons:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.server.v1.MenuButton'
                 apiResource:
                     type: string
             description: 菜单模块
-        api.server.v1.MenuButton:
-            type: object
-            properties:
-                name:
-                    type: string
-                remarks:
-                    type: string
-        api.server.v1.MenuParameter:
-            type: object
-            properties:
-                type:
-                    type: integer
-                    format: enum
-                name:
-                    type: string
-                value:
-                    type: string
         api.server.v1.MenuRouter:
             type: object
             properties:
@@ -2969,14 +2936,6 @@ components:
                 linkType:
                     type: integer
                     format: enum
-                parameters:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.server.v1.MenuParameter'
-                buttons:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.server.v1.MenuButton'
                 apiResource:
                     type: string
         api.server.v1.UpdatePostReply:

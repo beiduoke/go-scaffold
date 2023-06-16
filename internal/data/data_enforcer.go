@@ -6,7 +6,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-type Policy struct {
+type CasbinPolicy struct {
 	// 策略ID
 	ID string
 	// 策略资源
@@ -15,8 +15,8 @@ type Policy struct {
 	Action string
 }
 
-// AddCasbinPolicy 角色策略设置
-func (d *Data) RoleSetPolicy(ctx context.Context, domainId string, roleId string, rule ...Policy) error {
+// RoleSetPolicy 角色策略设置
+func (d *Data) CasbinRoleSetPolicy(ctx context.Context, domainId string, roleId string, rule ...CasbinPolicy) error {
 	var (
 		rulePolicy  = make([][]string, 0, len(rule))
 		mapResource = make(map[string]string)
@@ -45,7 +45,7 @@ func (d *Data) RoleSetPolicy(ctx context.Context, domainId string, roleId string
 }
 
 // RoleUpdatePolicyResource 角色策略资源更新
-func (d *Data) RoleUpdatePolicyResource(ctx context.Context, oldResource string, newResource string) error {
+func (d *Data) CasbinRoleUpdatePolicyResource(ctx context.Context, oldResource string, newResource string) error {
 	// 策略ID查询策略列表
 	oldPolicies := d.enforcer.GetFilteredPolicy(1, oldResource)
 	newPolicies := make([][]string, 0, len(oldPolicies))
@@ -58,8 +58,25 @@ func (d *Data) RoleUpdatePolicyResource(ctx context.Context, oldResource string,
 }
 
 // RoleDeletePolicyResource 角色策略资源删除
-func (d *Data) RoleDeletePolicyResource(ctx context.Context, resource string) error {
+func (d *Data) CasbinRoleDeletePolicyResource(ctx context.Context, resource string) error {
 	// 批量修改策略资源
 	_, err := d.enforcer.DeletePermission(resource)
+	return err
+}
+
+// UserSetRole 用户设置角色
+func (d *Data) CasbinUserSetRole(ctx context.Context, domainId string, userId string, roleId ...string) error {
+	_, err := d.enforcer.DeleteRolesForUserInDomain(userId, domainId)
+	if err != nil {
+		return err
+	}
+	if len(roleId) == 0 {
+		return nil
+	}
+	ruleRoles := make([][]string, 0, len(roleId))
+	for _, r := range roleId {
+		ruleRoles = append(ruleRoles, []string{userId, r, domainId})
+	}
+	_, err = d.enforcer.AddGroupingPolicies(ruleRoles)
 	return err
 }

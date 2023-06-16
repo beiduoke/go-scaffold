@@ -16,30 +16,29 @@ import (
 
 // User is a User model.
 type User struct {
-	CreatedAt       time.Time         `json:"createdAt,omitempty" form:"createdAt"`
-	UpdatedAt       time.Time         `json:"updatedAt,omitempty" form:"updatedAt"`
-	ID              uint              `json:"id,omitempty" form:"id"`
-	Name            string            `json:"name,omitempty" form:"name"`
-	Avatar          string            `json:"avatar,omitempty" form:"avatar"`
-	NickName        string            `json:"nickName,omitempty" form:"nickName"`
-	RealName        string            `json:"realName,omitempty" form:"realName"`
-	Password        string            `json:"-,omitempty" form:"-,omitempty"`
-	Birthday        *time.Time        `json:"birthday,omitempty" form:"birthday"`
-	Gender          int32             `json:"gender,omitempty" form:"gender"`
-	Phone           string            `json:"phone,omitempty" form:"phone"`
-	Email           string            `json:"email,omitempty" form:"email"`
-	State           int32             `json:"state,omitempty" form:"state"`
-	Remarks         string            `json:"remarks,omitempty" form:"remarks"`
-	DeptID          uint              `json:"deptId,omitempty" form:"deptId"`
-	Dept            *Dept             `json:"dept,omitempty" form:"dept"`
-	DomainID        uint              `json:"domainId,omitempty" form:"domainId"`
-	Domain          *Domain           `json:"domain,omitempty" form:"domain"`
-	Roles           []*Role           `json:"roles,omitempty" form:"roles"`
-	Posts           []*Post           `json:"posts,omitempty" form:"posts"`
-	DomainRoleUsers []*DomainRoleUser `json:"domainRoleUsers,omitempty" form:"domainRoleUsers"`
-	LastUseRoleID   uint              `json:"lastUseRoleId,omitempty" form:"lastUseRoleId"`
-	LastLoginAt     *time.Time        `json:"lastLoginAt,omitempty" form:"lastLoginAt"`
-	LastUseRole     *Role             `json:"lastUseRole,omitempty" form:"lastUseRole"`
+	CreatedAt     time.Time  `json:"createdAt,omitempty" form:"createdAt"`
+	UpdatedAt     time.Time  `json:"updatedAt,omitempty" form:"updatedAt"`
+	ID            uint       `json:"id,omitempty" form:"id"`
+	Name          string     `json:"name,omitempty" form:"name"`
+	Avatar        string     `json:"avatar,omitempty" form:"avatar"`
+	NickName      string     `json:"nickName,omitempty" form:"nickName"`
+	RealName      string     `json:"realName,omitempty" form:"realName"`
+	Password      string     `json:"-,omitempty" form:"-,omitempty"`
+	Birthday      *time.Time `json:"birthday,omitempty" form:"birthday"`
+	Gender        int32      `json:"gender,omitempty" form:"gender"`
+	Phone         string     `json:"phone,omitempty" form:"phone"`
+	Email         string     `json:"email,omitempty" form:"email"`
+	State         int32      `json:"state,omitempty" form:"state"`
+	Remarks       string     `json:"remarks,omitempty" form:"remarks"`
+	DeptID        uint       `json:"deptId,omitempty" form:"deptId"`
+	Dept          *Dept      `json:"dept,omitempty" form:"dept"`
+	DomainID      uint       `json:"domainId,omitempty" form:"domainId"`
+	Domain        *Domain    `json:"domain,omitempty" form:"domain"`
+	Roles         []*Role    `json:"roles,omitempty" form:"roles"`
+	Posts         []*Post    `json:"posts,omitempty" form:"posts"`
+	LastUseRoleID uint       `json:"lastUseRoleId,omitempty" form:"lastUseRoleId"`
+	LastLoginAt   *time.Time `json:"lastLoginAt,omitempty" form:"lastLoginAt"`
+	LastUseRole   *Role      `json:"lastUseRole,omitempty" form:"lastUseRole"`
 }
 
 func (g User) GetID() string {
@@ -77,8 +76,6 @@ type UserRepo interface {
 	ListPage(context.Context, *pagination.Pagination) ([]*User, int64)
 	// 用户关联
 	ListRoles(context.Context, *User) ([]*Role, error)
-	// 用户领域权限操作
-	HandleRole(context.Context, *User) error
 }
 
 // UserUsecase is a User usecase.
@@ -110,24 +107,7 @@ func (uc *UserUsecase) Create(ctx context.Context, g *User) (user *User, err err
 	if g.State <= 0 {
 		g.State = int32(pb.UserState_USER_STATE_ACTIVE)
 	}
-	err = uc.biz.tm.InTx(ctx, func(ctx context.Context) error {
-		if user, err = uc.biz.userRepo.Save(ctx, g); err != nil {
-			return err
-		}
-		return uc.biz.userRepo.HandleRole(ctx, g)
-	})
-	return user, err
-}
-
-// HandleRole 绑定领域权限
-func (uc *UserUsecase) HandleRole(ctx context.Context, g *User) error {
-	uc.log.WithContext(ctx).Debugf("HandleRole: %v", g)
-	roles := g.Roles
-	if len(roles) <= 0 {
-		return errors.New("权限未指定")
-	}
-
-	return uc.biz.userRepo.HandleRole(ctx, g)
+	return uc.biz.userRepo.Save(ctx, g)
 }
 
 // Update 修改用户
@@ -139,7 +119,7 @@ func (uc *UserUsecase) Update(ctx context.Context, g *User) error {
 		return errors.New("用户未注册")
 	}
 
-	if user.Name != g.Name && g.Name != "" {
+	if g.Name != "" && user.Name != g.Name {
 		name, _ := uc.biz.userRepo.FindByName(ctx, g.Name)
 		if name != nil {
 			return errors.New("用户名已存在")
@@ -153,7 +133,7 @@ func (uc *UserUsecase) Update(ctx context.Context, g *User) error {
 		}
 	}
 
-	if user.Email != g.Email {
+	if g.Email != "" && user.Email != g.Email {
 		phone, _ := uc.biz.userRepo.FindByEmail(ctx, g.Email)
 		if phone != nil {
 			return errors.New("邮箱已存在")
@@ -171,16 +151,7 @@ func (uc *UserUsecase) Update(ctx context.Context, g *User) error {
 	if g.State <= 0 {
 		g.State = int32(pb.UserState_USER_STATE_ACTIVE)
 	}
-	// 新数据合并到源数据
-	// if err := mergo.Merge(user, *g, mergo.WithOverride); err != nil {
-	// 	return errors.Errorf("数据合并失败：%v", err)
-	// }
-	err := uc.biz.tm.InTx(ctx, func(ctx context.Context) error {
-		if _, err := uc.biz.userRepo.Update(ctx, g); err != nil {
-			return err
-		}
-		return uc.biz.userRepo.HandleRole(ctx, g)
-	})
+	_, err := uc.biz.userRepo.Update(ctx, g)
 	return err
 }
 

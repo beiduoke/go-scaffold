@@ -139,7 +139,6 @@ func (s *ApiService) UpdateUser(ctx context.Context, in *v1.UpdateUserReq) (*v1.
 		Avatar:   v.GetAvatar(),
 		NickName: v.GetNickName(),
 		RealName: v.GetRealName(),
-		Password: v.GetPassword(),
 		Gender:   int32(v.GetGender()),
 		Phone:    v.GetPhone(),
 		Email:    v.GetEmail(),

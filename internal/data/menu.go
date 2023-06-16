@@ -98,7 +98,7 @@ func (r *MenuRepo) Update(ctx context.Context, g *biz.Menu) (bizMenu *biz.Menu, 
 	beforeMenu := SysMenu{}
 	result = r.data.DB(ctx).Select("ApiResource").Last(&beforeMenu, g.ID)
 	if result.RowsAffected > 0 && beforeMenu.ApiResource != d.ApiResource {
-		resultErr := r.data.RoleUpdatePolicyResource(ctx, beforeMenu.ApiResource, d.ApiResource)
+		resultErr := r.data.CasbinRoleUpdatePolicyResource(ctx, beforeMenu.ApiResource, d.ApiResource)
 		if resultErr != nil {
 			r.log.Error(resultErr)
 		}
@@ -169,7 +169,7 @@ func (r *MenuRepo) Delete(ctx context.Context, g *biz.Menu) error {
 	sysMenu := SysMenu{}
 	result = r.data.DB(ctx).Unscoped().Select("ApiResource").Last(&sysMenu, g.ID)
 	if result.RowsAffected > 0 && sysMenu.ApiResource != "" {
-		resultErr := r.data.RoleDeletePolicyResource(ctx, sysMenu.ApiResource)
+		resultErr := r.data.CasbinRoleDeletePolicyResource(ctx, sysMenu.ApiResource)
 		if resultErr != nil {
 			r.log.Error(resultErr)
 		}

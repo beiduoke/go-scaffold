@@ -1470,20 +1470,7 @@ message Menu {
   optional api.protobuf.MenuAffix is_affix = 16;
   optional api.protobuf.MenuLinkType link_type = 17;
   repeated Menu children = 18;
-  repeated MenuParameter parameters = 19;
-  repeated MenuButton buttons = 20;
-  optional string api_resource = 21;
-}
-
-message MenuButton {
-  string name = 1;
-  string remarks = 2;
-}
-
-message MenuParameter {
-  api.protobuf.MenuParameterType type = 1;
-  string name = 2;
-  string value = 3;
+  optional string api_resource = 19;
 }
 
 // 请求 - 列表菜单
@@ -1518,9 +1505,7 @@ message CreateMenuReq {
   optional string link_url = 13 [(validate.rules).string = {min_len: 0, max_len: 100}];
   optional api.protobuf.MenuAffix is_affix = 14 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
   optional api.protobuf.MenuLinkType link_type = 15 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-  repeated MenuParameter parameters = 16;
-  repeated MenuButton buttons = 17;
-  optional string api_resource = 18 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  optional string api_resource = 16 [(validate.rules).string = {min_len: 1, max_len: 100}];
 }
 
 // 回应 - 创建菜单
@@ -1549,9 +1534,7 @@ message UpdateMenuReq {
     optional string link_url = 13 [(validate.rules).string = {min_len: 0, max_len: 100}];
     optional api.protobuf.MenuAffix is_affix = 14 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
     optional api.protobuf.MenuLinkType link_type = 15 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
-    repeated MenuParameter parameters = 16;
-    repeated MenuButton buttons = 17;
-    optional string api_resource = 18 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    optional string api_resource = 16 [(validate.rules).string = {min_len: 1, max_len: 100}];
   }
   Data data = 2;
 }

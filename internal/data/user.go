@@ -9,6 +9,7 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	auth "github.com/beiduoke/go-scaffold/pkg/auth/authn"
+	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/crypto"
 	"github.com/beiduoke/go-scaffold/pkg/util/ip"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
@@ -80,12 +81,24 @@ func (r *UserRepo) toBiz(d *SysUser) *biz.User {
 		return nil
 	}
 	u := &biz.User{
-		CreatedAt: d.CreatedAt, UpdatedAt: d.UpdatedAt, ID: d.ID,
-		Avatar: d.Avatar, Name: d.Name, NickName: d.NickName,
-		RealName: d.RealName, Password: d.Password, Birthday: d.Birthday,
-		Gender: d.Gender, Phone: d.Phone, Email: d.Email,
-		State: d.State, DeptID: d.DeptID, DomainID: d.DomainID,
-		Dept: r.dept.toBiz(d.Dept),
+		CreatedAt:     d.CreatedAt,
+		UpdatedAt:     d.UpdatedAt,
+		ID:            d.ID,
+		Name:          d.Name,
+		Avatar:        d.Avatar,
+		NickName:      d.NickName,
+		RealName:      d.RealName,
+		Password:      d.Password,
+		Birthday:      d.Birthday,
+		Gender:        d.Gender,
+		Phone:         d.Phone,
+		Email:         d.Email,
+		State:         d.State,
+		Remarks:       d.Remarks,
+		DeptID:        d.DeptID,
+		DomainID:      d.DomainID,
+		LastUseRoleID: d.LastUseRoleID,
+		LastLoginAt:   d.LastLoginAt,
 	}
 	for _, v := range d.Roles {
 		u.Roles = append(u.Roles, r.role.toBiz(&v))
@@ -93,34 +106,57 @@ func (r *UserRepo) toBiz(d *SysUser) *biz.User {
 	for _, v := range d.Posts {
 		u.Posts = append(u.Posts, r.post.toBiz(&v))
 	}
+	if d.Dept != nil {
+		u.Dept = r.dept.toBiz(d.Dept)
+	}
+	if d.LastUseRole != nil {
+		u.LastUseRole = r.role.toBiz(d.LastUseRole)
+	}
+	if d.Domain != nil {
+		u.Domain = r.domain.toBiz(d.Domain)
+	}
 	return u
 }
 
-func (r *UserRepo) Save(ctx context.Context, g *biz.User) (*biz.User, error) {
+func (r *UserRepo) Save(ctx context.Context, g *biz.User) (bizUser *biz.User, err error) {
 	d := r.toModel(g)
 	d.DomainID = r.data.CtxDomainID(ctx)
 	// d.ID = uint(r.data.sf.Generate())
-	result := r.data.DB(ctx).Create(d).Error
-	return r.toBiz(d), result
+	err = r.data.InTx(ctx, func(ctx context.Context) error {
+		result := r.data.DB(ctx).Create(d)
+		if err = result.Error; err != nil {
+			return err
+		}
+		roleIds := make([]string, 0, len(g.Roles))
+		for _, v := range d.Roles {
+			roleIds = append(roleIds, convert.UnitToString(v.ID))
+		}
+		return r.data.CasbinUserSetRole(ctx, r.data.CtxAuthUser(ctx).GetDomain(), g.GetID(), roleIds...)
+	})
+	return bizUser, err
 }
 
 func (r *UserRepo) Update(ctx context.Context, g *biz.User) (*biz.User, error) {
 	d := r.toModel(g)
-	err := r.data.DB(ctx).Transaction(func(tx *gorm.DB) error {
+	err := r.data.InTx(ctx, func(ctx context.Context) error {
 		userModel := *d
-		err := tx.Model(&userModel).Association("Roles").Clear()
+		err := r.data.DB(ctx).Model(&userModel).Association("Roles").Clear()
 		if err != nil {
 			return err
 		}
-		err = tx.Model(&userModel).Association("Posts").Clear()
+		err = r.data.DB(ctx).Model(&userModel).Association("Posts").Clear()
 		if err != nil {
 			return err
 		}
-		result := tx.Model(d).Scopes(DBScopesOmitUpdate()).Updates(d)
+		result := r.data.DB(ctx).Model(d).Select("*").Scopes(DBScopesOmitUpdate("LastUseRoleID", "LastLoginAt", "LastLoginIP", "Password", "PasswordSalt")).Updates(d)
 		if err := result.Error; err != nil {
 			return err
 		}
-		return nil
+		roleIds := make([]string, 0, len(g.Roles))
+		for _, v := range d.Roles {
+			roleIds = append(roleIds, convert.UnitToString(v.ID))
+		}
+		return r.data.CasbinUserSetRole(ctx, r.data.CtxAuthUser(ctx).GetDomain(), g.GetID(), roleIds...)
 	})
 	return r.toBiz(d), err
 }
@@ -276,7 +312,7 @@ func (r *UserRepo) ListByEmail(ctx context.Context, s string) ([]*biz.User, erro
 // HandleDomainRole 绑定权限
 func (r *UserRepo) HandleRole(ctx context.Context, g *biz.User) error {
 	sysUser := r.toModel(g)
-	err := r.data.DB(ctx).Model(&sysUser).Association("Roles").Replace(&sysUser.Roles)
+	err := r.data.DB(ctx).Model(&sysUser).Debug().Association("Roles").Replace(&sysUser.Roles)
 	if err != nil {
 		return err
 	}
