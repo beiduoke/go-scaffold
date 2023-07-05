@@ -28,7 +28,7 @@ func TransformRole(data *biz.Role) *v1.Role {
 		ParentId:      uint64(data.ParentID),
 		DefaultRouter: &data.DefaultRouter,
 		Sort:          &data.Sort,
-		State:         (*protobuf.RoleState)(&data.State),
+		State:         &data.State,
 		Remarks:       &data.Remarks,
 		MenuIds:       menuIds,
 	}
@@ -193,8 +193,8 @@ func (s *ApiService) GetRoleDataScope(ctx context.Context, in *v1.GetRoleDataSco
 		deptCustoms = append(deptCustoms, uint64(v.ID))
 	}
 	return &v1.GetRoleDataScopeReply{
-		Scope:             protobuf.RoleDataScope(role.DataScope),
-		DeptCheckStrictly: (*protobuf.RoleDeptCheckStrictly)(&role.DeptCheckStrictly),
+		Scope:             role.DataScope,
+		DeptCheckStrictly: &role.DeptCheckStrictly,
 		DeptCustoms:       deptCustoms,
 	}, nil
 }
@@ -202,7 +202,7 @@ func (s *ApiService) GetRoleDataScope(ctx context.Context, in *v1.GetRoleDataSco
 // HandleRoleDataScope 处理角色数据
 func (s *ApiService) HandleRoleDataScope(ctx context.Context, in *v1.HandleRoleDataScopeReq) (*v1.HandleRoleDataScopeReply, error) {
 	var depts []*biz.Dept
-	if in.Data.GetScope() == protobuf.RoleDataScope_ROLE_DATA_SCOPE_DEPT_CUSTOM {
+	if in.Data.GetScope() == int32(protobuf.RoleDataScope_ROLE_DATA_SCOPE_DEPT_CUSTOM) {
 		inDeptCustoms := in.GetData().GetDeptCustoms()
 		deptIds := make([]uint, 0, len(inDeptCustoms))
 		for _, v := range inDeptCustoms {

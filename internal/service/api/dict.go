@@ -23,7 +23,7 @@ func TransformDict(data *biz.Dict) *v1.Dict {
 		Name:      data.Name,
 		Type:      data.Type,
 		Sort:      &data.Sort,
-		State:     (*protobuf.DictState)(&data.State),
+		State:     &data.State,
 		Remarks:   &data.Remarks,
 	}
 }
@@ -129,7 +129,7 @@ func TransformDictData(data *biz.DictData) *v1.DictData {
 		CssClass:  new(string),
 		Sort:      &data.Sort,
 		Remarks:   &data.Remarks,
-		State:     (*protobuf.DictDataState)(&data.State),
+		State:     &data.State,
 	}
 }
 

@@ -20,7 +20,7 @@ func TransformPost(data *biz.Post) *v1.Post {
 		Name:      data.Name,
 		Code:      &data.Code,
 		Sort:      &data.Sort,
-		State:     (*protobuf.PostState)(&data.State),
+		State:     &data.State,
 		CreatedAt: timestamppb.New(data.CreatedAt),
 		UpdatedAt: timestamppb.New(data.UpdatedAt),
 		Remarks:   &data.Remarks,
@@ -29,7 +29,13 @@ func TransformPost(data *biz.Post) *v1.Post {
 
 // ListPost 列表-岗位
 func (s *ApiService) ListPost(ctx context.Context, in *v1.ListPostReq) (*v1.ListPostReply, error) {
-	results, total := s.postCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize())))
+	results, total := s.postCase.ListPage(ctx, pagination.NewPagination(
+		pagination.WithPage(in.GetPage()),
+		pagination.WithPageSize(in.GetPageSize()),
+		pagination.WithQuery(map[string]interface{}{
+			// "name": in.GetName(),
+		}),
+	))
 	items := make([]*v1.Post, 0, len(results))
 	for _, v := range results {
 		items = append(items, TransformPost(v))

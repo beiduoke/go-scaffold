@@ -29,7 +29,7 @@ func TransformDept(data *biz.Dept) *v1.Dept {
 		ParentId:  &pid,
 		Sort:      &data.Sort,
 		Remarks:   &data.Remarks,
-		State:     (*protobuf.DeptState)(&data.State),
+		State:     &data.State,
 		Children:  []*v1.Dept{},
 	}
 }

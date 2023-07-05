@@ -1,0 +1,11 @@
+# 配置protoc生成规则
+version: v1
+managed:
+  enabled: false
+plugins:
+  # generate openapi v2 yaml doc
+  - name: openapi
+    out: ../docs/server
+    opt:
+      - naming=json
+      - paths=source_relative

@@ -32,11 +32,11 @@ func TransformUser(data *biz.User) *v1.User {
 		Avatar:    &data.Avatar,
 		NickName:  &data.NickName,
 		RealName:  &data.RealName,
-		Gender:    (*protobuf.UserGender)(&data.Gender),
+		Gender:    &data.Gender,
 		Birthday:  &birthday,
 		Phone:     &data.Phone,
 		Email:     &data.Email,
-		State:     (*protobuf.UserState)(&data.State),
+		State:     &data.State,
 	}
 }
 
@@ -225,11 +225,11 @@ func (s *ApiService) GetUserInfo(ctx context.Context, in *emptypb.Empty) (*v1.Ge
 			}
 			return ""
 		}(),
-		Gender: protobuf.UserGender(user.Gender),
+		Gender: user.Gender,
 		Phone:  user.Phone,
 		Email:  user.Email,
 		Avatar: user.Avatar,
-		State:  protobuf.UserState(user.State),
+		State:  user.State,
 		Roles: func(roles []*biz.Role) (userRoles []*v1.Role) {
 			for _, v := range roles {
 				userRoles = append(userRoles, &v1.Role{

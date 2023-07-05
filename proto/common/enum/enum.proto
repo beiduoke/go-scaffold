@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package common.enum;
+
+option go_package = "github.com/beiduoke/go-scaffold/api/common/enum;enum";
+option java_multiple_files = true;
+option java_package = "dev.beiduoke.api.protobuf";
+option java_outer_classname = "EnumProto";
+
+// 启用状态
+enum Enable {
+  ENABLE_UNSPECIFIED = 0;
+  YES = 1;
+  NO = 2;
+}
+
+// 通用排序
+enum Sort {
+  SORT_UNSPECIFIED = 0;
+  DESC = 1;
+  ASC = 2;
+}
+
+// 通用状态
+enum State {
+  STATE_UNSPECIFIED = 0;
+  ACTIVE = 1;
+  INACTIVE = 2;
+  BANNED = 3;
+}
+
+// 开关
+enum Switch {
+  Switch_UNSPECIFIED = 0;
+  OPEN = 1;
+  CLOSE = 2;
+}

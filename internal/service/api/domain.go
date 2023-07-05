@@ -30,7 +30,7 @@ func TransformDomain(data *biz.Domain) *v1.Domain {
 		Pic:         &data.Pic,
 		Keywords:    &data.Keywords,
 		Description: &data.Description,
-		State:       (*protobuf.DomainState)(&data.State),
+		State:       &data.State,
 		Remarks:     &data.Remarks,
 		Children:    make([]*v1.Domain, 0),
 	}
