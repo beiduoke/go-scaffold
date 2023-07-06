@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 
-	"github.com/beiduoke/go-scaffold/api/protobuf"
 	v1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/pkg/constant"
@@ -71,7 +70,7 @@ func (s *ApiService) CreateRole(ctx context.Context, in *v1.CreateRoleReq) (*v1.
 		}
 	}
 
-	data, _ := anypb.New(&protobuf.DataProto{
+	data, _ := anypb.New(&v1.Result{
 		Id: uint64(role.ID),
 	})
 	return &v1.CreateRoleReply{
@@ -202,7 +201,7 @@ func (s *ApiService) GetRoleDataScope(ctx context.Context, in *v1.GetRoleDataSco
 // HandleRoleDataScope 处理角色数据
 func (s *ApiService) HandleRoleDataScope(ctx context.Context, in *v1.HandleRoleDataScopeReq) (*v1.HandleRoleDataScopeReply, error) {
 	var depts []*biz.Dept
-	if in.Data.GetScope() == int32(protobuf.RoleDataScope_ROLE_DATA_SCOPE_DEPT_CUSTOM) {
+	if in.Data.GetScope() == int32(v1.RoleDataScope_ROLE_DATA_SCOPE_DEPT_CUSTOM) {
 		inDeptCustoms := in.GetData().GetDeptCustoms()
 		deptIds := make([]uint, 0, len(inDeptCustoms))
 		for _, v := range inDeptCustoms {

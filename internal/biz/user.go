@@ -7,7 +7,6 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/pkg/errors"
 
-	pb "github.com/beiduoke/go-scaffold/api/protobuf"
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
@@ -104,9 +103,6 @@ func (uc *UserUsecase) Create(ctx context.Context, g *User) (user *User, err err
 		}
 		g.Password = password
 	}
-	if g.State <= 0 {
-		g.State = int32(pb.UserState_USER_STATE_ACTIVE)
-	}
 	return uc.biz.userRepo.Save(ctx, g)
 }
 
@@ -146,10 +142,6 @@ func (uc *UserUsecase) Update(ctx context.Context, g *User) error {
 			return errors.Errorf("密码加密失败：%v", err)
 		}
 		g.Password = password
-	}
-
-	if g.State <= 0 {
-		g.State = int32(pb.UserState_USER_STATE_ACTIVE)
 	}
 	_, err := uc.biz.userRepo.Update(ctx, g)
 	return err

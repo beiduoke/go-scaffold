@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package common.enum;
+package enum;
 
 option go_package = "github.com/beiduoke/go-scaffold/api/common/enum;enum";
 option java_multiple_files = true;

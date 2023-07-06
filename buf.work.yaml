@@ -1,4 +1,3 @@
 version: v1
 directories:
-  - proto/server
-  - proto/third_party
+  - proto

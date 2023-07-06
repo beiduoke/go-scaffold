@@ -5,26 +5,26 @@ managed:
 plugins:
   # generate go struct code
   - name: go
-    out: ./api/server
+    out: ./api
     opt: paths=source_relative
   # generate grpc service code
   - name: go-grpc
-    out: ./api/server
+    out: ./api
     opt:
       - paths=source_relative
   # generate rest service code
   - name: go-http
-    out: ./api/server
+    out: ./api
     opt:
       - paths=source_relative
   # generate kratos errors code
   - name: go-errors
-    out: ./api/server
+    out: ./api
     opt:
       - paths=source_relative
   # generate message validator code
   - name: validate
-    out: ./api/server
+    out: ./api
     opt:
       - paths=source_relative
       - lang=go

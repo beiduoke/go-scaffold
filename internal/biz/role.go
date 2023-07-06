@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	pb "github.com/beiduoke/go-scaffold/api/protobuf"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
@@ -94,9 +93,6 @@ func (uc *RoleUsecase) Update(ctx context.Context, g *Role) error {
 		}
 	}
 
-	if g.State <= 0 {
-		g.State = int32(pb.RoleState_ROLE_STATE_ACTIVE)
-	}
 	// 新数据合并到源数据
 	// if err := mergo.Merge(role, *g, mergo.WithOverwriteWithEmptyValue); err != nil {
 	// 	return errors.Errorf("数据合并失败：%v", err)
@@ -112,10 +108,6 @@ func (uc *RoleUsecase) UpdateState(ctx context.Context, g *Role) error {
 	role, _ := uc.biz.roleRepo.FindByID(ctx, g.ID)
 	if role == nil {
 		return errors.New("角色未不存在")
-	}
-
-	if g.State <= 0 {
-		g.State = int32(pb.RoleState_ROLE_STATE_ACTIVE)
 	}
 
 	role.State = g.State
@@ -175,7 +167,7 @@ func (uc *RoleUsecase) GetDataScopeByID(ctx context.Context, g *Role) (*Role, er
 	if err != nil {
 		return nil, err
 	}
-	if role.DataScope == int32(pb.RoleDataScope_ROLE_DATA_SCOPE_DEPT_CUSTOM) {
+	if role.DataScope == 5 {
 		role.Depts, _ = uc.biz.roleRepo.ListDeptByIDs(ctx, role.ID)
 	}
 	return role, err
@@ -193,7 +185,7 @@ func (uc *RoleUsecase) HandleDataScope(ctx context.Context, g *Role) error {
 	if err != nil {
 		return err
 	}
-	if g.DataScope == int32(pb.RoleDataScope_ROLE_DATA_SCOPE_DEPT_CUSTOM) && len(g.Depts) > 0 {
+	if g.DataScope == 5 && len(g.Depts) > 0 {
 		return uc.biz.roleRepo.HandleDept(ctx, g)
 	}
 	return err

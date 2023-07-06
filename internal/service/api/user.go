@@ -5,7 +5,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/beiduoke/go-scaffold/api/protobuf"
 	v1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/pkg/constant"
@@ -116,7 +115,7 @@ func (s *ApiService) CreateUser(ctx context.Context, in *v1.CreateUserReq) (*v1.
 	if err != nil {
 		return nil, v1.ErrorUserCreateFail("用户创建失败: %v", err.Error())
 	}
-	data, _ := anypb.New(&protobuf.DataProto{
+	data, _ := anypb.New(&v1.Result{
 		Id: uint64(user.ID),
 	})
 	return &v1.CreateUserReply{
@@ -267,7 +266,7 @@ func (s *ApiService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.List
 	}
 	treeData := make([]*v1.MenuRouter, 0)
 	for _, v := range roleMenus {
-		if v.Type == int32(protobuf.MenuType_MENU_TYPE_ABILITY) {
+		if v.Type == int32(v1.MenuType_MENU_TYPE_ABILITY) {
 			continue
 		}
 		treeData = append(treeData, TransformMenuRouter(v))

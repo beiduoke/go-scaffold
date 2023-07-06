@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 
-	"github.com/beiduoke/go-scaffold/api/protobuf"
 	v1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/pkg/constant"
@@ -52,7 +51,7 @@ func (s *ApiService) CreateDict(ctx context.Context, in *v1.CreateDictReq) (*v1.
 		return nil, v1.ErrorDictCreateFail("字典创建失败: %v", err.Error())
 	}
 
-	data, _ := anypb.New(&protobuf.DataProto{
+	data, _ := anypb.New(&v1.Result{
 		Id: uint64(role.ID),
 	})
 	return &v1.CreateDictReply{
@@ -160,7 +159,7 @@ func (s *ApiService) CreateDictData(ctx context.Context, in *v1.CreateDictDataRe
 		return nil, v1.ErrorDictDataCreateFail("字典创建失败: %v", err.Error())
 	}
 
-	data, _ := anypb.New(&protobuf.DataProto{
+	data, _ := anypb.New(&v1.Result{
 		Id: uint64(role.ID),
 	})
 	return &v1.CreateDictDataReply{

@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	pb "github.com/beiduoke/go-scaffold/api/protobuf"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
@@ -117,11 +116,6 @@ func (uc *DomainUsecase) Update(ctx context.Context, g *Domain) error {
 			return errors.New("领域名已存在")
 		}
 	}
-
-	if g.State <= 0 {
-		g.State = int32(pb.DomainState_DOMAIN_STATE_ACTIVE)
-	}
-
 	// 新数据合并到源数据
 	if err := mergo.Merge(domain, *g, mergo.WithOverride); err != nil {
 		return errors.Errorf("数据合并失败：%v", err)
@@ -138,10 +132,6 @@ func (uc *DomainUsecase) UpdateState(ctx context.Context, g *Domain) error {
 	domain, _ := uc.biz.domainRepo.FindByID(ctx, g.ID)
 	if domain == nil {
 		return errors.New("领域不存在")
-	}
-
-	if g.State <= 0 {
-		g.State = int32(pb.DomainState_DOMAIN_STATE_ACTIVE)
 	}
 
 	domain.State = g.State

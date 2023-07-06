@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package api.server.v1;
 
+import "gnostic/openapi/v3/annotations.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
@@ -48,6 +49,14 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 			}
 		};
   };
+};
+
+option (gnostic.openapi.v3.document) = {
+  info: {
+    title: "单体框架系统";
+    description: "脚手架系统";
+    version: "1.0";
+  }
 };
 
 // The greeting service definition.
@@ -610,7 +619,11 @@ service Api {
   }
 }
 
-
+// 通用返回
+message Result {
+  uint64 id = 1;
+  map<string, string> data = 2;
+}
 
 // 性别
 enum Gender {

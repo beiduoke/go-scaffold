@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	pb "github.com/beiduoke/go-scaffold/api/protobuf"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/pkg/errors"
@@ -108,10 +107,6 @@ func (uc *DictUsecase) Update(ctx context.Context, g *Dict) error {
 		}
 	}
 
-	if g.State <= 0 {
-		g.State = int32(pb.DictState_DICT_STATE_ACTIVE)
-	}
-
 	fmt.Printf("%s", g.Remarks)
 	_, err := uc.repo.Update(ctx, g)
 	return err
@@ -124,10 +119,6 @@ func (uc *DictUsecase) UpdateState(ctx context.Context, g *Dict) error {
 	post, _ := uc.repo.FindByID(ctx, g.ID)
 	if post == nil {
 		return errors.New("字典不存在")
-	}
-
-	if g.State <= 0 {
-		g.State = int32(pb.DictState_DICT_STATE_ACTIVE)
 	}
 
 	post.State = g.State
@@ -192,10 +183,6 @@ func (uc *DictUsecase) DataUpdate(ctx context.Context, g *DictData) error {
 		}
 	}
 
-	if g.State <= 0 {
-		g.State = int32(pb.DictDataState_DICT_DATA_STATE_ACTIVE)
-	}
-
 	fmt.Printf("%s", g.Remarks)
 	_, err := uc.repo.DataUpdate(ctx, g)
 	return err
@@ -208,10 +195,6 @@ func (uc *DictUsecase) DataUpdateState(ctx context.Context, g *DictData) error {
 	post, _ := uc.repo.DataFindByID(ctx, g.ID)
 	if post == nil {
 		return errors.New("字典不存在")
-	}
-
-	if g.State <= 0 {
-		g.State = int32(pb.DictDataState_DICT_DATA_STATE_ACTIVE)
 	}
 
 	post.State = g.State

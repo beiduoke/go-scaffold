@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package common.conf;
+package conf;
 
 option go_package = "github.com/beiduoke/go-scaffold/api/common/conf;conf";
 

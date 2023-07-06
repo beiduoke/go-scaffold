@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 
-	"github.com/beiduoke/go-scaffold/api/protobuf"
 	v1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/pkg/constant"
@@ -57,7 +56,7 @@ func (s *ApiService) CreatePost(ctx context.Context, in *v1.CreatePostReq) (*v1.
 	if err != nil {
 		return nil, v1.ErrorPostCreateFail("岗位创建失败: %v", err.Error())
 	}
-	data, _ := anypb.New(&protobuf.DataProto{
+	data, _ := anypb.New(&v1.Result{
 		Id: uint64(user.ID),
 	})
 	return &v1.CreatePostReply{

@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/beiduoke/go-scaffold/api/protobuf"
+	"github.com/beiduoke/go-scaffold/api/common/enum"
 	v1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/pkg/constant"
@@ -38,7 +38,7 @@ func TransformMenuRouter(menu *biz.Menu) *v1.MenuRouter {
 	}
 
 	// 是否隐藏
-	hidden := (menu.IsHidden == int32(protobuf.MenuHidden_MENU_HIDDEN_YES))
+	hidden := (menu.IsHidden == int32(enum.Enable_YES))
 	if hidden {
 		router.Meta.HideMenu = &hidden
 	}
@@ -58,19 +58,19 @@ func TransformMenuRouter(menu *biz.Menu) *v1.MenuRouter {
 		router.Meta.CurrentActiveMenu = &currentActiveMenu
 	}
 	// 菜单是否固定 tab
-	if affix := menu.IsAffix == int32(protobuf.MenuAffix_MENU_AFFIX_YES); affix {
+	if affix := menu.IsAffix == int32(enum.Enable_YES); affix {
 		router.Meta.Affix = &affix
 	}
 	// 忽略缓存
-	if cache := menu.IsCache == int32(protobuf.MenuCache_MENU_CACHE_NO); cache {
-		router.Meta.IgnoreKeepAlive = &cache
+	if ignoreCache := menu.IsCache == int32(enum.Enable_YES); !ignoreCache {
+		router.Meta.IgnoreKeepAlive = &ignoreCache
 	}
 
 	// 判断菜单外链类型
 	switch menu.LinkType {
-	case int32(protobuf.MenuLinkType_MENU_LINK_TYPE_BLANK):
+	case int32(v1.MenuLinkType_MENU_LINK_TYPE_BLANK):
 		router.Path = menu.LinkUrl
-	case int32(protobuf.MenuLinkType_MENU_LINK_TYPE_IFRAME):
+	case int32(v1.MenuLinkType_MENU_LINK_TYPE_IFRAME):
 		router.Meta.FrameSrc = &menu.LinkUrl
 	default:
 		router.Meta.FrameSrc = nil
@@ -175,7 +175,7 @@ func (s *ApiService) CreateMenu(ctx context.Context, in *v1.CreateMenuReq) (*v1.
 	if err != nil {
 		return nil, v1.ErrorMenuCreateFail("菜单创建失败: %v", err.Error())
 	}
-	data, _ := anypb.New(&protobuf.DataProto{
+	data, _ := anypb.New(&v1.Result{
 		Id: uint64(user.ID),
 	})
 	return &v1.CreateMenuReply{
