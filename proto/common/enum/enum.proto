@@ -10,28 +10,28 @@ option java_outer_classname = "EnumProto";
 // 启用状态
 enum Enable {
   ENABLE_UNSPECIFIED = 0;
-  YES = 1;
-  NO = 2;
+  ENABLE_YES = 1;
+  ENABLE_NO = 2;
 }
 
 // 通用排序
 enum Sort {
   SORT_UNSPECIFIED = 0;
-  DESC = 1;
-  ASC = 2;
+  SORT_DESC = 1;
+  SORT_ASC = 2;
 }
 
 // 通用状态
 enum State {
   STATE_UNSPECIFIED = 0;
-  ACTIVE = 1;
-  INACTIVE = 2;
-  BANNED = 3;
+  STATE_ACTIVE = 1;
+  STATE_INACTIVE = 2;
+  STATE_BANNED = 3;
 }
 
 // 开关
 enum Switch {
-  Switch_UNSPECIFIED = 0;
-  OPEN = 1;
-  CLOSE = 2;
+  SWITCH_UNSPECIFIED = 0;
+  SWITCH_OPEN = 1;
+  SWITCH_CLOSE = 2;
 }

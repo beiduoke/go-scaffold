@@ -21870,7 +21870,7 @@ func (m *ListUserRoleMenuTreeReply_Deprecated_MenuMeta) validate(all bool) error
 
 	// no validation rules for IgnoreRoute
 
-	// no validation rules for HidePathForChildren
+	// no validation rules for HidePathforChildren
 
 	if len(errors) > 0 {
 		return ListUserRoleMenuTreeReply_Deprecated_MenuMetaMultiError(errors)

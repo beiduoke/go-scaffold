@@ -5,7 +5,7 @@ managed:
 plugins:
   # generate openapi v2 yaml doc
   - name: openapi
-    out: ../docs/server
+    out: api/docs/server
     opt:
       - naming=json
       - paths=source_relative

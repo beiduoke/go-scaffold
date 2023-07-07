@@ -10,29 +10,17 @@ import "google/protobuf/any.proto";
 import "validate/validate.proto";
 // import "protobuf/enum.proto";
 // import "protobuf/struct.proto";
-import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "github.com/beiduoke/go-scaffold/api/server/v1;v1";
 option java_multiple_files = true;
 option java_package = "dev.kratos.api.server.v1";
 option java_outer_classname = "serverProtoV1";
 
-option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
-  security_definitions: {
-    security: {
-      key: "apiKey";
-      value: {
-        name: "Authorization";
-        description: "jwt 无状态";
-        type: 2;
-        in: 2;
-        flow: 2;
-      }
-    }
-  };
-	info: {
-		title: "Scaffold API";
-		version: "1.0";
+option (gnostic.openapi.v3.document) = {
+  info: {
+    title: "Scaffold API";
+    description: "脚手架系统";
+    version: "1.0";
 		contact: {
 			name: "基础架构";
 			url: "https://github.com/grpc-ecosystem/grpc-gateway";
@@ -42,20 +30,6 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 			name: "BSD 3-Clause License";
 			url: "https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt";
 		};
-		extensions: {
-			key: "x-something-something";
-			value: {
-				string_value: "yadda";
-			}
-		};
-  };
-};
-
-option (gnostic.openapi.v3.document) = {
-  info: {
-    title: "单体框架系统";
-    description: "脚手架系统";
-    version: "1.0";
   }
 };
 
@@ -68,31 +42,6 @@ service Api {
       body: "*"
       additional_bindings {
         get: "/v1/auth/logout"
-      }
-    };
-    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      external_docs: {
-        url: "https://github.com/grpc-ecosystem/grpc-gateway";
-        description: "SayHello Query";
-      }
-      security: {
-          security_requirement: {
-              key: "ResourceKeyAuth";
-              value: {}
-          }
-          security_requirement: {
-              key: "OAuth2";
-              value: {
-                  scope: "read";
-                  scope: "write";
-              }
-          }
-      }
-      extensions: {
-          key: "x-irreversible";
-          value: {
-              bool_value: true;
-          }
       }
     };
   }
@@ -628,8 +577,8 @@ message Result {
 // 性别
 enum Gender {
   GENDER_UNSPECIFIED = 0;
-  MAN = 1;
-  WOMAN = 2;
+  GENDER_MAN = 1;
+  GENDER_WOMAN = 2;
 }
 
 // 菜单类型
@@ -743,7 +692,7 @@ message User {
   optional string phone = 8;
   optional string email = 9;
   optional string avatar = 10;
-  optional int32 state = 11;
+  optional int32 state = 11 [(gnostic.openapi.v3.property) = {description: "状态"}];
   optional google.protobuf.Timestamp created_at = 12;
   optional google.protobuf.Timestamp updated_at = 13;
   optional uint64 dept_id = 14;
@@ -765,7 +714,14 @@ message GetUserInfoReply {
   string phone = 8;
   string email = 9;
   string avatar = 10;
-  int32 state = 11;
+  int32 state = 11 [(gnostic.openapi.v3.property) = {
+    description: "用户状态"
+    default: {string: "ON"}
+    enum: [
+      {yaml: "ON"}, 
+      {yaml: "OFF"}
+    ]
+  }];
 }
 
 // 回应 - 用户概况详情
@@ -811,46 +767,46 @@ message ListUserRoleMenuTreeReply_Deprecated {
     // 路由title  一般必填
     string title = 1;
     // 动态路由可打开Tab页数
-    int32 dynamicLevel = 2;
+    int32 dynamic_level = 2;
     // 动态路由的实际Path, 即去除路由的动态部分;
-    string realPath = 3;;
+    string real_path = 3;;
     // 是否忽略KeepAlive缓存
-    bool ignoreKeepAlive = 4;
+    bool ignore_keep_alive = 4;
     // 是否固定标签
     bool affix = 5;
     // 图标，也是菜单图标
     string icon = 6;
     // 内嵌iframe的地址
-    string frameSrc = 7;
+    string frame_src = 7;
     // 指定该路由切换的动画名
-    string transitionName = 8;
+    string transition_name = 8;
     // 隐藏该路由在面包屑上面的显示
-    bool hideBreadcrumb = 9;
+    bool hide_breadcrumb = 9;
     // 如果该路由会携带参数，且需要在tab页上面显示。则需要设置为true
-    bool carryParam = 10;
+    bool carry_param = 10;
     // 隐藏所有子菜单
-    bool hideChildrenInMenu = 11;
+    bool hide_children_in_menu = 11;
     // 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
-    string currentActiveMenu = 12;
+    string current_active_menu = 12;
     // 当前路由不再标签页显示
-    bool hideTab = 13;
+    bool hide_tab = 13;
     // 当前路由不再菜单显示
-    bool hideMenu = 14;
+    bool hide_menu = 14;
     // 菜单排序，只对第一级有效
-    int32 orderNo = 15;
+    int32 order_no = 15;
     // 忽略路由。用于在ROUTE_MAPPING以及BACK权限模式下，生成对应的菜单而忽略路由。2.5.3以上版本有效
-    bool ignoreRoute = 16;
+    bool ignore_route = 16;
     // 是否在子级菜单的完整path中忽略本级path。2.5.3以上版本有效
-    bool hidePathForChildren = 17;
+    bool hide_pathfor_children = 17;
   }
   message Menu {
     string name = 1;
     string path = 2;
     string component = 3;
     string redirect = 4;
-    string fullPath = 5;
+    string full_path = 5;
     string alias = 6;
-    bool caseSensitive = 7;
+    bool case_sensitive = 7;
     MenuMeta meta = 8;
     repeated Menu children = 9;
   }
@@ -864,19 +820,19 @@ message MenuRouter {
     // 路由title  一般必填
     string title = 1;
     // 是否忽略KeepAlive缓存
-    optional bool ignoreKeepAlive = 4;
+    optional bool ignore_keep_alive = 4;
     // 图标，也是菜单图标
     optional string icon = 6;
     // 内嵌iframe的地址
-    optional string frameSrc = 7;
+    optional string frame_src = 7;
     // 隐藏该路由在面包屑上面的显示
-    optional bool hideBreadcrumb = 9;
+    optional bool hide_breadcrumb = 9;
     // 当前路由不再菜单显示
-    optional bool hideMenu = 14;
+    optional bool hide_menu = 14;
     // 菜单排序，只对第一级有效
-    optional int32 orderNo = 15;
+    optional int32 order_no = 15;
     // 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
-    optional string currentActiveMenu = 12;
+    optional string current_active_menu = 12;
     // 固定菜单在tab栏
     optional bool affix = 13;
   }

@@ -3,8 +3,15 @@
 
 openapi: 3.0.3
 info:
-    title: 单体框架系统
+    title: Scaffold API
     description: 脚手架系统
+    contact:
+        name: 基础架构
+        url: https://github.com/grpc-ecosystem/grpc-gateway
+        email: none@example.com
+    license:
+        name: BSD 3-Clause License
+        url: https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt
     version: "1.0"
 paths:
     /v1/auth/emailLogin/{domain}:
@@ -2180,7 +2187,12 @@ components:
                 avatar:
                     type: string
                 state:
+                    enum:
+                        - ON
+                        - OFF
                     type: integer
+                    default: ON
+                    description: 用户状态
                     format: int32
             description: 回应 - 用户概况详情
         api.server.v1.GetUserProfileReply:
@@ -3130,6 +3142,7 @@ components:
                     type: string
                 state:
                     type: integer
+                    description: 状态
                     format: int32
                 createdAt:
                     type: string

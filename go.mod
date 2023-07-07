@@ -21,6 +21,7 @@ require (
 	github.com/go-kratos/kratos/contrib/config/nacos/v2 v2.0.0-20230201021226-239121155d0f
 	github.com/go-kratos/swagger-api v1.0.1
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/google/gnostic v0.6.9
 	github.com/gorilla/handlers v1.5.1
 	github.com/hashicorp/consul/api v1.18.0
 	github.com/iancoleman/strcase v0.2.0
@@ -52,7 +53,6 @@ require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
-	github.com/google/gnostic v0.6.9 // indirect
 	github.com/google/subcommands v1.0.1 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-hclog v1.2.0 // indirect
@@ -124,7 +124,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.15.0
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.15.0 // indirect
 	github.com/imdario/mergo v0.3.13
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect

@@ -1,18 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Scaffold API",
-    "version": "1.0",
-    "contact": {
-      "name": "基础架构",
-      "url": "https://github.com/grpc-ecosystem/grpc-gateway",
-      "email": "none@example.com"
-    },
-    "license": {
-      "name": "BSD 3-Clause License",
-      "url": "https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt"
-    },
-    "x-something-something": "yadda"
+    "title": "server/v1/api.proto",
+    "version": "version not set"
   },
   "tags": [
     {
@@ -126,21 +116,7 @@
         },
         "tags": [
           "Api"
-        ],
-        "security": [
-          {
-            "OAuth2": [
-              "read",
-              "write"
-            ],
-            "ResourceKeyAuth": []
-          }
-        ],
-        "externalDocs": {
-          "description": "SayHello Query",
-          "url": "https://github.com/grpc-ecosystem/grpc-gateway"
-        },
-        "x-irreversible": true
+        ]
       },
       "post": {
         "summary": "登出",
@@ -172,21 +148,7 @@
         ],
         "tags": [
           "Api"
-        ],
-        "security": [
-          {
-            "OAuth2": [
-              "read",
-              "write"
-            ],
-            "ResourceKeyAuth": []
-          }
-        ],
-        "externalDocs": {
-          "description": "SayHello Query",
-          "url": "https://github.com/grpc-ecosystem/grpc-gateway"
-        },
-        "x-irreversible": true
+        ]
       }
     },
     "/v1/auth/register/{domain}": {
@@ -5016,15 +4978,6 @@
         }
       },
       "title": "用户模块"
-    }
-  },
-  "securityDefinitions": {
-    "apiKey": {
-      "type": "apiKey",
-      "description": "jwt 无状态",
-      "name": "Authorization",
-      "in": "header",
-      "flow": "password"
     }
   }
 }

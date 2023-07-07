@@ -57,66 +57,11 @@ config:
 .PHONY: api
 # generate api proto
 api:
-	protoc --proto_path=./api \
-	       --proto_path=./third_party \
- 	       --go_out=paths=source_relative:./api \
-         --go-errors_out=paths=source_relative:./api \
- 	       --go-http_out=paths=source_relative:./api \
- 	       --go-grpc_out=paths=source_relative:./api \
-         --validate_out=paths=source_relative,lang=go:./api \
-	       --openapi_out=fq_schema_naming=true,default_response=false:./api \
-	       --openapiv2_out=./api \
-	       --openapiv2_opt=logtostderr=true \
-	       --openapiv2_opt=json_names_for_fields=true \
-	       $(API_PROTO_FILES)
-
-.PHONY: grpc
-# generate grpc proto
-grpc:
-	protoc --proto_path=./api \
-	       --proto_path=./third_party \
- 	       --go_out=paths=source_relative:./api \
- 	       --go-grpc_out=paths=source_relative:./api \
-	       $(API_PROTO_FILES)
-
-.PHONY: http
-# generate http proto
-http:
-	protoc --proto_path=./api \
-	       --proto_path=./third_party \
- 	       --go_out=paths=source_relative:./api \
- 	       --go-http_out=paths=source_relative:./api \
-	       $(API_PROTO_FILES)
-
-.PHONY: validate
-# generate validate proto
-validate:
-	protoc --proto_path=./api \
-	       --proto_path=./third_party \
- 	       --go_out=paths=source_relative:./api \
-         --validate_out=paths=source_relative,lang=go:./api \
-	       $(API_PROTO_FILES)
-
-.PHONY: errors
-# generate api proto
-errors:
-	protoc --proto_path=./api \
-	       --proto_path=./third_party \
- 	       --go_out=paths=source_relative:./api \
-         --go-errors_out=paths=source_relative:./api \
-	       $(API_PROTO_FILES)
-
+	buf generate
+# generate OpenAPI v3 doc
 .PHONY: openapi
-# generate api proto
 openapi:
-	protoc --proto_path=./api \
-	       --proto_path=./third_party \
- 	       --go_out=paths=source_relative:./api \
-	       --openapi_out=fq_schema_naming=true,default_response=false:./api \
-	       --openapiv2_out=./api \
-	       --openapiv2_opt=logtostderr=true \
-	       --openapiv2_opt=json_names_for_fields=true \
-	       $(API_PROTO_FILES)
+	buf generate --path proto/server/v1 --template proto/server/v1/buf.openapi.gen.yaml
 
 .PHONY: build
 # build
