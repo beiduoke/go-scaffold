@@ -38,7 +38,7 @@ func TransformMenuRouter(menu *biz.Menu) *v1.MenuRouter {
 	}
 
 	// 是否隐藏
-	hidden := (menu.IsHidden == int32(enum.Enable_YES))
+	hidden := (menu.IsHidden == int32(enum.Enable_ENABLE_YES))
 	if hidden {
 		router.Meta.HideMenu = &hidden
 	}
@@ -58,11 +58,11 @@ func TransformMenuRouter(menu *biz.Menu) *v1.MenuRouter {
 		router.Meta.CurrentActiveMenu = &currentActiveMenu
 	}
 	// 菜单是否固定 tab
-	if affix := menu.IsAffix == int32(enum.Enable_YES); affix {
+	if affix := menu.IsAffix == int32(enum.Enable_ENABLE_YES); affix {
 		router.Meta.Affix = &affix
 	}
 	// 忽略缓存
-	if ignoreCache := menu.IsCache == int32(enum.Enable_YES); !ignoreCache {
+	if ignoreCache := menu.IsCache == int32(enum.Enable_ENABLE_YES); !ignoreCache {
 		router.Meta.IgnoreKeepAlive = &ignoreCache
 	}
 
