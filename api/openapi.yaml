@@ -244,6 +244,32 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.server.v1.DeleteDeptReply'
+    /v1/depts/{id}/state:
+        put:
+            tags:
+                - Api
+            description: 更新指定ID角色状态
+            operationId: Api_UpdateDeptState
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.server.v1.UpdateDeptStateReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.server.v1.UpdateDeptStateReply'
     /v1/depts/{id}/trees:
         get:
             tags:
@@ -2730,7 +2756,7 @@ components:
                     $ref: '#/components/schemas/google.protobuf.Any'
                 type:
                     type: string
-            description: 回应 - 创建部门
+            description: 回应 - 修改部门
         api.server.v1.UpdateDeptReq_Data:
             type: object
             properties:
@@ -2747,6 +2773,25 @@ components:
                     format: int32
                 remarks:
                     type: string
+        api.server.v1.UpdateDeptStateReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/google.protobuf.Any'
+                type:
+                    type: string
+            description: 回应 - 创建部门-状态
+        api.server.v1.UpdateDeptStateReq_Data:
+            type: object
+            properties:
+                state:
+                    type: integer
+                    format: int32
         api.server.v1.UpdateDictDataReply:
             type: object
             properties:

@@ -113,6 +113,22 @@ func (s *ApiService) UpdateDept(ctx context.Context, in *v1.UpdateDeptReq) (*v1.
 	}, nil
 }
 
+// UpdateDeptState 修改部门-状态
+func (s *ApiService) UpdateDeptState(ctx context.Context, in *v1.UpdateDeptStateReq) (*v1.UpdateDeptStateReply, error) {
+	v := in.GetData()
+	err := s.deptCase.UpdateState(ctx, &biz.Dept{
+		ID:    uint(in.GetId()),
+		State: int32(v.GetState()),
+	})
+	if err != nil {
+		return nil, v1.ErrorDeptUpdateFail("岗位状态修改失败: %v", err.Error())
+	}
+	return &v1.UpdateDeptStateReply{
+		Type:    constant.HandleType_success.String(),
+		Message: "修改成功",
+	}, nil
+}
+
 // GetDept 获取部门角色
 func (s *ApiService) GetDept(ctx context.Context, in *v1.GetDeptReq) (*v1.Dept, error) {
 	dept, err := s.deptCase.GetID(ctx, &biz.Dept{ID: uint(in.GetId())})

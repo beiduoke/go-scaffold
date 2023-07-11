@@ -82,6 +82,20 @@ func (uc *DeptUsecase) Update(ctx context.Context, g *Dept) error {
 	return err
 }
 
+// UpdateState 修改状态
+func (uc *DeptUsecase) UpdateState(ctx context.Context, g *Dept) error {
+	uc.log.WithContext(ctx).Debugf("UpdateDeptState: %v", g)
+
+	post, _ := uc.repo.FindByID(ctx, g.ID)
+	if post == nil {
+		return errors.New("岗位不存在")
+	}
+
+	post.State = g.State
+	_, err := uc.repo.Update(ctx, post)
+	return err
+}
+
 // List 部门列表全部
 func (uc *DeptUsecase) ListAll(ctx context.Context) ([]*Dept, int64) {
 	uc.log.WithContext(ctx).Debugf("ListAll")

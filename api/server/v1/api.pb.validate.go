@@ -10839,1777 +10839,6 @@ var _ interface {
 	ErrorName() string
 } = HandleRoleDataScopeReplyValidationError{}
 
-// Validate checks the field values on ListRoleResourceReq with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListRoleResourceReq) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ListRoleResourceReq with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ListRoleResourceReqMultiError, or nil if none found.
-func (m *ListRoleResourceReq) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ListRoleResourceReq) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	if len(errors) > 0 {
-		return ListRoleResourceReqMultiError(errors)
-	}
-
-	return nil
-}
-
-// ListRoleResourceReqMultiError is an error wrapping multiple validation
-// errors returned by ListRoleResourceReq.ValidateAll() if the designated
-// constraints aren't met.
-type ListRoleResourceReqMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ListRoleResourceReqMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ListRoleResourceReqMultiError) AllErrors() []error { return m }
-
-// ListRoleResourceReqValidationError is the validation error returned by
-// ListRoleResourceReq.Validate if the designated constraints aren't met.
-type ListRoleResourceReqValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ListRoleResourceReqValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ListRoleResourceReqValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ListRoleResourceReqValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ListRoleResourceReqValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ListRoleResourceReqValidationError) ErrorName() string {
-	return "ListRoleResourceReqValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ListRoleResourceReqValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sListRoleResourceReq.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ListRoleResourceReqValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ListRoleResourceReqValidationError{}
-
-// Validate checks the field values on ListRoleResourceReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListRoleResourceReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ListRoleResourceReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ListRoleResourceReplyMultiError, or nil if none found.
-func (m *ListRoleResourceReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ListRoleResourceReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	for idx, item := range m.GetItems() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ListRoleResourceReplyValidationError{
-						field:  fmt.Sprintf("Items[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ListRoleResourceReplyValidationError{
-						field:  fmt.Sprintf("Items[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return ListRoleResourceReplyValidationError{
-					field:  fmt.Sprintf("Items[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if m.Total != nil {
-		// no validation rules for Total
-	}
-
-	if len(errors) > 0 {
-		return ListRoleResourceReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// ListRoleResourceReplyMultiError is an error wrapping multiple validation
-// errors returned by ListRoleResourceReply.ValidateAll() if the designated
-// constraints aren't met.
-type ListRoleResourceReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ListRoleResourceReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ListRoleResourceReplyMultiError) AllErrors() []error { return m }
-
-// ListRoleResourceReplyValidationError is the validation error returned by
-// ListRoleResourceReply.Validate if the designated constraints aren't met.
-type ListRoleResourceReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ListRoleResourceReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ListRoleResourceReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ListRoleResourceReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ListRoleResourceReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ListRoleResourceReplyValidationError) ErrorName() string {
-	return "ListRoleResourceReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ListRoleResourceReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sListRoleResourceReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ListRoleResourceReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ListRoleResourceReplyValidationError{}
-
-// Validate checks the field values on Resource with the rules defined in the
-// proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *Resource) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on Resource with the rules defined in
-// the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in ResourceMultiError, or nil
-// if none found.
-func (m *Resource) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *Resource) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	// no validation rules for Name
-
-	if m.CreatedAt != nil {
-
-		if all {
-			switch v := interface{}(m.GetCreatedAt()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ResourceValidationError{
-						field:  "CreatedAt",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ResourceValidationError{
-						field:  "CreatedAt",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetCreatedAt()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return ResourceValidationError{
-					field:  "CreatedAt",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if m.UpdatedAt != nil {
-
-		if all {
-			switch v := interface{}(m.GetUpdatedAt()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ResourceValidationError{
-						field:  "UpdatedAt",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ResourceValidationError{
-						field:  "UpdatedAt",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetUpdatedAt()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return ResourceValidationError{
-					field:  "UpdatedAt",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if m.Path != nil {
-		// no validation rules for Path
-	}
-
-	if m.Method != nil {
-		// no validation rules for Method
-	}
-
-	if m.Group != nil {
-		// no validation rules for Group
-	}
-
-	if m.Description != nil {
-		// no validation rules for Description
-	}
-
-	if m.Operation != nil {
-		// no validation rules for Operation
-	}
-
-	if len(errors) > 0 {
-		return ResourceMultiError(errors)
-	}
-
-	return nil
-}
-
-// ResourceMultiError is an error wrapping multiple validation errors returned
-// by Resource.ValidateAll() if the designated constraints aren't met.
-type ResourceMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ResourceMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ResourceMultiError) AllErrors() []error { return m }
-
-// ResourceValidationError is the validation error returned by
-// Resource.Validate if the designated constraints aren't met.
-type ResourceValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ResourceValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ResourceValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ResourceValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ResourceValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ResourceValidationError) ErrorName() string { return "ResourceValidationError" }
-
-// Error satisfies the builtin error interface
-func (e ResourceValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sResource.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ResourceValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ResourceValidationError{}
-
-// Validate checks the field values on ListResourceReq with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *ListResourceReq) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ListResourceReq with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ListResourceReqMultiError, or nil if none found.
-func (m *ListResourceReq) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ListResourceReq) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.Nopaging != nil {
-		// no validation rules for Nopaging
-	}
-
-	if m.Page != nil {
-		// no validation rules for Page
-	}
-
-	if m.PageSize != nil {
-		// no validation rules for PageSize
-	}
-
-	if len(errors) > 0 {
-		return ListResourceReqMultiError(errors)
-	}
-
-	return nil
-}
-
-// ListResourceReqMultiError is an error wrapping multiple validation errors
-// returned by ListResourceReq.ValidateAll() if the designated constraints
-// aren't met.
-type ListResourceReqMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ListResourceReqMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ListResourceReqMultiError) AllErrors() []error { return m }
-
-// ListResourceReqValidationError is the validation error returned by
-// ListResourceReq.Validate if the designated constraints aren't met.
-type ListResourceReqValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ListResourceReqValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ListResourceReqValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ListResourceReqValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ListResourceReqValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ListResourceReqValidationError) ErrorName() string { return "ListResourceReqValidationError" }
-
-// Error satisfies the builtin error interface
-func (e ListResourceReqValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sListResourceReq.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ListResourceReqValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ListResourceReqValidationError{}
-
-// Validate checks the field values on ListResourceReply with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *ListResourceReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ListResourceReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ListResourceReplyMultiError, or nil if none found.
-func (m *ListResourceReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ListResourceReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Total
-
-	for idx, item := range m.GetItems() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ListResourceReplyValidationError{
-						field:  fmt.Sprintf("Items[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ListResourceReplyValidationError{
-						field:  fmt.Sprintf("Items[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return ListResourceReplyValidationError{
-					field:  fmt.Sprintf("Items[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return ListResourceReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// ListResourceReplyMultiError is an error wrapping multiple validation errors
-// returned by ListResourceReply.ValidateAll() if the designated constraints
-// aren't met.
-type ListResourceReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ListResourceReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ListResourceReplyMultiError) AllErrors() []error { return m }
-
-// ListResourceReplyValidationError is the validation error returned by
-// ListResourceReply.Validate if the designated constraints aren't met.
-type ListResourceReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ListResourceReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ListResourceReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ListResourceReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ListResourceReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ListResourceReplyValidationError) ErrorName() string {
-	return "ListResourceReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ListResourceReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sListResourceReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ListResourceReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ListResourceReplyValidationError{}
-
-// Validate checks the field values on ListResourceGroupReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListResourceGroupReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ListResourceGroupReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ListResourceGroupReplyMultiError, or nil if none found.
-func (m *ListResourceGroupReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ListResourceGroupReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.Total != nil {
-		// no validation rules for Total
-	}
-
-	if len(errors) > 0 {
-		return ListResourceGroupReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// ListResourceGroupReplyMultiError is an error wrapping multiple validation
-// errors returned by ListResourceGroupReply.ValidateAll() if the designated
-// constraints aren't met.
-type ListResourceGroupReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ListResourceGroupReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ListResourceGroupReplyMultiError) AllErrors() []error { return m }
-
-// ListResourceGroupReplyValidationError is the validation error returned by
-// ListResourceGroupReply.Validate if the designated constraints aren't met.
-type ListResourceGroupReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ListResourceGroupReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ListResourceGroupReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ListResourceGroupReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ListResourceGroupReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ListResourceGroupReplyValidationError) ErrorName() string {
-	return "ListResourceGroupReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ListResourceGroupReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sListResourceGroupReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ListResourceGroupReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ListResourceGroupReplyValidationError{}
-
-// Validate checks the field values on CreateResourceReq with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *CreateResourceReq) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on CreateResourceReq with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// CreateResourceReqMultiError, or nil if none found.
-func (m *CreateResourceReq) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *CreateResourceReq) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
-		err := CreateResourceReqValidationError{
-			field:  "Name",
-			reason: "value length must be between 1 and 10 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if l := utf8.RuneCountInString(m.GetPath()); l < 1 || l > 100 {
-		err := CreateResourceReqValidationError{
-			field:  "Path",
-			reason: "value length must be between 1 and 100 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := _CreateResourceReq_Method_InLookup[m.GetMethod()]; !ok {
-		err := CreateResourceReqValidationError{
-			field:  "Method",
-			reason: "value must be in list [* GET POST HEAD PUT PATCH DELETE OPTIONS CONNECT TRACE]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if m.Group != nil {
-
-		if l := utf8.RuneCountInString(m.GetGroup()); l < 0 || l > 100 {
-			err := CreateResourceReqValidationError{
-				field:  "Group",
-				reason: "value length must be between 0 and 100 runes, inclusive",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.Description != nil {
-
-		if l := utf8.RuneCountInString(m.GetDescription()); l < 0 || l > 1000 {
-			err := CreateResourceReqValidationError{
-				field:  "Description",
-				reason: "value length must be between 0 and 1000 runes, inclusive",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.Operation != nil {
-
-		if l := utf8.RuneCountInString(m.GetOperation()); l < 0 || l > 100 {
-			err := CreateResourceReqValidationError{
-				field:  "Operation",
-				reason: "value length must be between 0 and 100 runes, inclusive",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return CreateResourceReqMultiError(errors)
-	}
-
-	return nil
-}
-
-// CreateResourceReqMultiError is an error wrapping multiple validation errors
-// returned by CreateResourceReq.ValidateAll() if the designated constraints
-// aren't met.
-type CreateResourceReqMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m CreateResourceReqMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m CreateResourceReqMultiError) AllErrors() []error { return m }
-
-// CreateResourceReqValidationError is the validation error returned by
-// CreateResourceReq.Validate if the designated constraints aren't met.
-type CreateResourceReqValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e CreateResourceReqValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e CreateResourceReqValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e CreateResourceReqValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e CreateResourceReqValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e CreateResourceReqValidationError) ErrorName() string {
-	return "CreateResourceReqValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e CreateResourceReqValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sCreateResourceReq.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = CreateResourceReqValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = CreateResourceReqValidationError{}
-
-var _CreateResourceReq_Method_InLookup = map[string]struct{}{
-	"*":       {},
-	"GET":     {},
-	"POST":    {},
-	"HEAD":    {},
-	"PUT":     {},
-	"PATCH":   {},
-	"DELETE":  {},
-	"OPTIONS": {},
-	"CONNECT": {},
-	"TRACE":   {},
-}
-
-// Validate checks the field values on CreateResourceReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *CreateResourceReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on CreateResourceReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// CreateResourceReplyMultiError, or nil if none found.
-func (m *CreateResourceReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *CreateResourceReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Code
-
-	// no validation rules for Message
-
-	// no validation rules for Type
-
-	if m.Result != nil {
-
-		if all {
-			switch v := interface{}(m.GetResult()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, CreateResourceReplyValidationError{
-						field:  "Result",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, CreateResourceReplyValidationError{
-						field:  "Result",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return CreateResourceReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return CreateResourceReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// CreateResourceReplyMultiError is an error wrapping multiple validation
-// errors returned by CreateResourceReply.ValidateAll() if the designated
-// constraints aren't met.
-type CreateResourceReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m CreateResourceReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m CreateResourceReplyMultiError) AllErrors() []error { return m }
-
-// CreateResourceReplyValidationError is the validation error returned by
-// CreateResourceReply.Validate if the designated constraints aren't met.
-type CreateResourceReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e CreateResourceReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e CreateResourceReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e CreateResourceReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e CreateResourceReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e CreateResourceReplyValidationError) ErrorName() string {
-	return "CreateResourceReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e CreateResourceReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sCreateResourceReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = CreateResourceReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = CreateResourceReplyValidationError{}
-
-// Validate checks the field values on UpdateResourceReq with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *UpdateResourceReq) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on UpdateResourceReq with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// UpdateResourceReqMultiError, or nil if none found.
-func (m *UpdateResourceReq) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *UpdateResourceReq) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetId() <= 0 {
-		err := UpdateResourceReqValidationError{
-			field:  "Id",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if all {
-		switch v := interface{}(m.GetData()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UpdateResourceReqValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, UpdateResourceReqValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UpdateResourceReqValidationError{
-				field:  "Data",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if len(errors) > 0 {
-		return UpdateResourceReqMultiError(errors)
-	}
-
-	return nil
-}
-
-// UpdateResourceReqMultiError is an error wrapping multiple validation errors
-// returned by UpdateResourceReq.ValidateAll() if the designated constraints
-// aren't met.
-type UpdateResourceReqMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m UpdateResourceReqMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m UpdateResourceReqMultiError) AllErrors() []error { return m }
-
-// UpdateResourceReqValidationError is the validation error returned by
-// UpdateResourceReq.Validate if the designated constraints aren't met.
-type UpdateResourceReqValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e UpdateResourceReqValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e UpdateResourceReqValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e UpdateResourceReqValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e UpdateResourceReqValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e UpdateResourceReqValidationError) ErrorName() string {
-	return "UpdateResourceReqValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e UpdateResourceReqValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sUpdateResourceReq.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = UpdateResourceReqValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = UpdateResourceReqValidationError{}
-
-// Validate checks the field values on UpdateResourceReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *UpdateResourceReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on UpdateResourceReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// UpdateResourceReplyMultiError, or nil if none found.
-func (m *UpdateResourceReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *UpdateResourceReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Code
-
-	// no validation rules for Message
-
-	// no validation rules for Type
-
-	if m.Result != nil {
-
-		if all {
-			switch v := interface{}(m.GetResult()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, UpdateResourceReplyValidationError{
-						field:  "Result",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, UpdateResourceReplyValidationError{
-						field:  "Result",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return UpdateResourceReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return UpdateResourceReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// UpdateResourceReplyMultiError is an error wrapping multiple validation
-// errors returned by UpdateResourceReply.ValidateAll() if the designated
-// constraints aren't met.
-type UpdateResourceReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m UpdateResourceReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m UpdateResourceReplyMultiError) AllErrors() []error { return m }
-
-// UpdateResourceReplyValidationError is the validation error returned by
-// UpdateResourceReply.Validate if the designated constraints aren't met.
-type UpdateResourceReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e UpdateResourceReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e UpdateResourceReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e UpdateResourceReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e UpdateResourceReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e UpdateResourceReplyValidationError) ErrorName() string {
-	return "UpdateResourceReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e UpdateResourceReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sUpdateResourceReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = UpdateResourceReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = UpdateResourceReplyValidationError{}
-
-// Validate checks the field values on GetResourceReq with the rules defined in
-// the proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *GetResourceReq) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on GetResourceReq with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in GetResourceReqMultiError,
-// or nil if none found.
-func (m *GetResourceReq) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *GetResourceReq) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetId() <= 0 {
-		err := GetResourceReqValidationError{
-			field:  "Id",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if len(errors) > 0 {
-		return GetResourceReqMultiError(errors)
-	}
-
-	return nil
-}
-
-// GetResourceReqMultiError is an error wrapping multiple validation errors
-// returned by GetResourceReq.ValidateAll() if the designated constraints
-// aren't met.
-type GetResourceReqMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m GetResourceReqMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m GetResourceReqMultiError) AllErrors() []error { return m }
-
-// GetResourceReqValidationError is the validation error returned by
-// GetResourceReq.Validate if the designated constraints aren't met.
-type GetResourceReqValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e GetResourceReqValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e GetResourceReqValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e GetResourceReqValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e GetResourceReqValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e GetResourceReqValidationError) ErrorName() string { return "GetResourceReqValidationError" }
-
-// Error satisfies the builtin error interface
-func (e GetResourceReqValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sGetResourceReq.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = GetResourceReqValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = GetResourceReqValidationError{}
-
-// Validate checks the field values on DeleteResourceReq with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *DeleteResourceReq) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on DeleteResourceReq with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// DeleteResourceReqMultiError, or nil if none found.
-func (m *DeleteResourceReq) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *DeleteResourceReq) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetId() <= 0 {
-		err := DeleteResourceReqValidationError{
-			field:  "Id",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if len(errors) > 0 {
-		return DeleteResourceReqMultiError(errors)
-	}
-
-	return nil
-}
-
-// DeleteResourceReqMultiError is an error wrapping multiple validation errors
-// returned by DeleteResourceReq.ValidateAll() if the designated constraints
-// aren't met.
-type DeleteResourceReqMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m DeleteResourceReqMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m DeleteResourceReqMultiError) AllErrors() []error { return m }
-
-// DeleteResourceReqValidationError is the validation error returned by
-// DeleteResourceReq.Validate if the designated constraints aren't met.
-type DeleteResourceReqValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e DeleteResourceReqValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e DeleteResourceReqValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e DeleteResourceReqValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e DeleteResourceReqValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e DeleteResourceReqValidationError) ErrorName() string {
-	return "DeleteResourceReqValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e DeleteResourceReqValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sDeleteResourceReq.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = DeleteResourceReqValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = DeleteResourceReqValidationError{}
-
-// Validate checks the field values on DeleteResourceReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *DeleteResourceReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on DeleteResourceReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// DeleteResourceReplyMultiError, or nil if none found.
-func (m *DeleteResourceReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *DeleteResourceReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Code
-
-	// no validation rules for Message
-
-	// no validation rules for Type
-
-	if m.Result != nil {
-
-		if all {
-			switch v := interface{}(m.GetResult()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, DeleteResourceReplyValidationError{
-						field:  "Result",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, DeleteResourceReplyValidationError{
-						field:  "Result",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return DeleteResourceReplyValidationError{
-					field:  "Result",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return DeleteResourceReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// DeleteResourceReplyMultiError is an error wrapping multiple validation
-// errors returned by DeleteResourceReply.ValidateAll() if the designated
-// constraints aren't met.
-type DeleteResourceReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m DeleteResourceReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m DeleteResourceReplyMultiError) AllErrors() []error { return m }
-
-// DeleteResourceReplyValidationError is the validation error returned by
-// DeleteResourceReply.Validate if the designated constraints aren't met.
-type DeleteResourceReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e DeleteResourceReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e DeleteResourceReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e DeleteResourceReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e DeleteResourceReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e DeleteResourceReplyValidationError) ErrorName() string {
-	return "DeleteResourceReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e DeleteResourceReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sDeleteResourceReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = DeleteResourceReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = DeleteResourceReplyValidationError{}
-
 // Validate checks the field values on Menu with the rules defined in the proto
 // definition for this message. If any rules are violated, the first error
 // encountered is returned, or nil if there are no violations.
@@ -15622,6 +13851,289 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = UpdateDeptReplyValidationError{}
+
+// Validate checks the field values on UpdateDeptStateReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateDeptStateReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateDeptStateReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateDeptStateReqMultiError, or nil if none found.
+func (m *UpdateDeptStateReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateDeptStateReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := UpdateDeptStateReqValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UpdateDeptStateReqValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UpdateDeptStateReqValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateDeptStateReqValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return UpdateDeptStateReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateDeptStateReqMultiError is an error wrapping multiple validation errors
+// returned by UpdateDeptStateReq.ValidateAll() if the designated constraints
+// aren't met.
+type UpdateDeptStateReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateDeptStateReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateDeptStateReqMultiError) AllErrors() []error { return m }
+
+// UpdateDeptStateReqValidationError is the validation error returned by
+// UpdateDeptStateReq.Validate if the designated constraints aren't met.
+type UpdateDeptStateReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateDeptStateReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateDeptStateReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateDeptStateReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateDeptStateReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateDeptStateReqValidationError) ErrorName() string {
+	return "UpdateDeptStateReqValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateDeptStateReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateDeptStateReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateDeptStateReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateDeptStateReqValidationError{}
+
+// Validate checks the field values on UpdateDeptStateReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateDeptStateReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateDeptStateReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateDeptStateReplyMultiError, or nil if none found.
+func (m *UpdateDeptStateReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateDeptStateReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Code
+
+	// no validation rules for Message
+
+	// no validation rules for Type
+
+	if m.Result != nil {
+
+		if all {
+			switch v := interface{}(m.GetResult()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UpdateDeptStateReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UpdateDeptStateReplyValidationError{
+						field:  "Result",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetResult()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UpdateDeptStateReplyValidationError{
+					field:  "Result",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return UpdateDeptStateReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateDeptStateReplyMultiError is an error wrapping multiple validation
+// errors returned by UpdateDeptStateReply.ValidateAll() if the designated
+// constraints aren't met.
+type UpdateDeptStateReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateDeptStateReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateDeptStateReplyMultiError) AllErrors() []error { return m }
+
+// UpdateDeptStateReplyValidationError is the validation error returned by
+// UpdateDeptStateReply.Validate if the designated constraints aren't met.
+type UpdateDeptStateReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateDeptStateReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateDeptStateReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateDeptStateReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateDeptStateReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateDeptStateReplyValidationError) ErrorName() string {
+	return "UpdateDeptStateReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateDeptStateReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateDeptStateReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateDeptStateReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateDeptStateReplyValidationError{}
 
 // Validate checks the field values on GetDeptReq with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
@@ -23871,199 +22383,6 @@ var _ interface {
 	ErrorName() string
 } = HandleRoleDataScopeReq_DataScopeValidationError{}
 
-// Validate checks the field values on UpdateResourceReq_Data with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *UpdateResourceReq_Data) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on UpdateResourceReq_Data with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// UpdateResourceReq_DataMultiError, or nil if none found.
-func (m *UpdateResourceReq_Data) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *UpdateResourceReq_Data) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
-		err := UpdateResourceReq_DataValidationError{
-			field:  "Name",
-			reason: "value length must be between 1 and 10 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if l := utf8.RuneCountInString(m.GetPath()); l < 1 || l > 100 {
-		err := UpdateResourceReq_DataValidationError{
-			field:  "Path",
-			reason: "value length must be between 1 and 100 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := _UpdateResourceReq_Data_Method_InLookup[m.GetMethod()]; !ok {
-		err := UpdateResourceReq_DataValidationError{
-			field:  "Method",
-			reason: "value must be in list [* GET POST HEAD PUT PATCH DELETE OPTIONS CONNECT TRACE]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if m.Group != nil {
-
-		if l := utf8.RuneCountInString(m.GetGroup()); l < 0 || l > 100 {
-			err := UpdateResourceReq_DataValidationError{
-				field:  "Group",
-				reason: "value length must be between 0 and 100 runes, inclusive",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.Description != nil {
-
-		if l := utf8.RuneCountInString(m.GetDescription()); l < 0 || l > 1000 {
-			err := UpdateResourceReq_DataValidationError{
-				field:  "Description",
-				reason: "value length must be between 0 and 1000 runes, inclusive",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.Operation != nil {
-
-		if l := utf8.RuneCountInString(m.GetOperation()); l < 0 || l > 100 {
-			err := UpdateResourceReq_DataValidationError{
-				field:  "Operation",
-				reason: "value length must be between 0 and 100 runes, inclusive",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return UpdateResourceReq_DataMultiError(errors)
-	}
-
-	return nil
-}
-
-// UpdateResourceReq_DataMultiError is an error wrapping multiple validation
-// errors returned by UpdateResourceReq_Data.ValidateAll() if the designated
-// constraints aren't met.
-type UpdateResourceReq_DataMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m UpdateResourceReq_DataMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m UpdateResourceReq_DataMultiError) AllErrors() []error { return m }
-
-// UpdateResourceReq_DataValidationError is the validation error returned by
-// UpdateResourceReq_Data.Validate if the designated constraints aren't met.
-type UpdateResourceReq_DataValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e UpdateResourceReq_DataValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e UpdateResourceReq_DataValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e UpdateResourceReq_DataValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e UpdateResourceReq_DataValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e UpdateResourceReq_DataValidationError) ErrorName() string {
-	return "UpdateResourceReq_DataValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e UpdateResourceReq_DataValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sUpdateResourceReq_Data.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = UpdateResourceReq_DataValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = UpdateResourceReq_DataValidationError{}
-
-var _UpdateResourceReq_Data_Method_InLookup = map[string]struct{}{
-	"*":       {},
-	"GET":     {},
-	"POST":    {},
-	"HEAD":    {},
-	"PUT":     {},
-	"PATCH":   {},
-	"DELETE":  {},
-	"OPTIONS": {},
-	"CONNECT": {},
-	"TRACE":   {},
-}
-
 // Validate checks the field values on UpdateMenuReq_Data with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -24539,6 +22858,123 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = UpdateDeptReq_DataValidationError{}
+
+// Validate checks the field values on UpdateDeptStateReq_Data with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateDeptStateReq_Data) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateDeptStateReq_Data with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateDeptStateReq_DataMultiError, or nil if none found.
+func (m *UpdateDeptStateReq_Data) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateDeptStateReq_Data) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.State != nil {
+
+		if m.GetState() < 0 {
+			err := UpdateDeptStateReq_DataValidationError{
+				field:  "State",
+				reason: "value must be greater than or equal to 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return UpdateDeptStateReq_DataMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateDeptStateReq_DataMultiError is an error wrapping multiple validation
+// errors returned by UpdateDeptStateReq_Data.ValidateAll() if the designated
+// constraints aren't met.
+type UpdateDeptStateReq_DataMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateDeptStateReq_DataMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateDeptStateReq_DataMultiError) AllErrors() []error { return m }
+
+// UpdateDeptStateReq_DataValidationError is the validation error returned by
+// UpdateDeptStateReq_Data.Validate if the designated constraints aren't met.
+type UpdateDeptStateReq_DataValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateDeptStateReq_DataValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateDeptStateReq_DataValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateDeptStateReq_DataValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateDeptStateReq_DataValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateDeptStateReq_DataValidationError) ErrorName() string {
+	return "UpdateDeptStateReq_DataValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateDeptStateReq_DataValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateDeptStateReq_Data.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateDeptStateReq_DataValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateDeptStateReq_DataValidationError{}
 
 // Validate checks the field values on UpdatePostReq_Data with the rules
 // defined in the proto definition for this message. If any rules are

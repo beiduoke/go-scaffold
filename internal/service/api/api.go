@@ -4,7 +4,6 @@ import (
 	v1 "github.com/beiduoke/go-scaffold/api/server/v1"
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/conf"
-	"github.com/beiduoke/go-scaffold/internal/pkg/websocket"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
@@ -30,7 +29,6 @@ type ApiService struct {
 	v1.UnimplementedApiServer
 	ac  *conf.Auth
 	log *log.Helper
-	ws  *websocket.WebsocketService
 	// dig        *dig.Container
 	authCase   *biz.AuthUsecase
 	userCase   *biz.UserUsecase
@@ -46,7 +44,6 @@ type ApiService struct {
 func NewApiService(
 	logger log.Logger,
 	ac *conf.Auth,
-	ws *websocket.WebsocketService,
 	authCase *biz.AuthUsecase,
 	userCase *biz.UserUsecase,
 	domainCase *biz.DomainUsecase,
@@ -60,7 +57,6 @@ func NewApiService(
 	return &ApiService{
 		log:        l,
 		ac:         ac,
-		ws:         ws,
 		authCase:   authCase,
 		userCase:   userCase,
 		domainCase: domainCase,

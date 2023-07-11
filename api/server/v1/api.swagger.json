@@ -410,6 +410,46 @@
         ]
       }
     },
+    "/v1/depts/{id}/state": {
+      "put": {
+        "summary": "更新指定ID角色状态",
+        "operationId": "Api_UpdateDeptState",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateDeptStateReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1UpdateDeptStateReqData"
+            }
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
     "/v1/depts/{id}/trees": {
       "get": {
         "summary": "获取全部部门树形",
@@ -4336,7 +4376,7 @@
           "type": "string"
         }
       },
-      "title": "回应 - 创建部门"
+      "title": "回应 - 修改部门"
     },
     "v1UpdateDeptReqData": {
       "type": "object",
@@ -4358,6 +4398,34 @@
         },
         "remarks": {
           "type": "string"
+        }
+      }
+    },
+    "v1UpdateDeptStateReply": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/googleprotobufAny"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "title": "回应 - 创建部门-状态"
+    },
+    "v1UpdateDeptStateReqData": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },

@@ -10,7 +10,6 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	"github.com/beiduoke/go-scaffold/internal/conf"
 	"github.com/beiduoke/go-scaffold/internal/data"
-	"github.com/beiduoke/go-scaffold/internal/pkg/websocket"
 	"github.com/beiduoke/go-scaffold/internal/server"
 	"github.com/beiduoke/go-scaffold/internal/service/api"
 	"github.com/go-kratos/kratos/v2"
@@ -21,7 +20,6 @@ import (
 
 // wireApp init kratos application.
 func wireApp(confServer *conf.Server, auth *conf.Auth, confData *conf.Data, system *conf.System, logger log.Logger) (*kratos.App, func(), error) {
-	websocketService := websocket.NewWebsocketService(logger)
 	v := data.NewModelMigrate()
 	db := data.NewDB(confData, logger, v)
 	client := data.NewRDB(confData, logger)
@@ -53,15 +51,14 @@ func wireApp(confServer *conf.Server, auth *conf.Auth, confData *conf.Data, syst
 	postUsecase := biz.NewPostUsecase(logger, bizBiz, postRepo)
 	dictRepo := data.NewDictRepo(logger, dataData)
 	dictUsecase := biz.NewDictUsecase(logger, bizBiz, dictRepo)
-	apiService := api.NewApiService(logger, auth, websocketService, authUsecase, userUsecase, domainUsecase, roleUsecase, menuUsecase, deptUsecase, postUsecase, dictUsecase)
+	apiService := api.NewApiService(logger, auth, authUsecase, userUsecase, domainUsecase, roleUsecase, menuUsecase, deptUsecase, postUsecase, dictUsecase)
 	grpcServer := server.NewGRPCServer(confServer, auth, apiService, logger)
 	authorized := data.NewAuthCasbin(logger, iEnforcer)
 	securityUserCreator := data.NewSecurityUser(logger, dataData, userRepo)
 	middleware := server.NewAuthMiddleware(auth, authenticator, authorized, securityUserCreator)
 	serverOption := server.NewMiddleware(logger, middleware)
 	httpServer := server.NewHTTPServer(confServer, apiService, serverOption)
-	websocketServer := server.NewWebsocketServer(confServer, logger, websocketService)
-	app := newApp(logger, grpcServer, httpServer, websocketServer)
+	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()
 	}, nil

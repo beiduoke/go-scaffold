@@ -417,6 +417,15 @@ service Api {
     };
   }
 
+  
+  // 更新指定ID角色状态
+  rpc UpdateDeptState (UpdateDeptStateReq) returns (UpdateDeptStateReply) {
+    option (google.api.http) = {
+      put: "/v1/depts/{id}/state"
+      body: "data"
+    };
+  }
+
   // 删除部门
   rpc DeleteDept (DeleteDeptReq) returns (DeleteDeptReply) {
     option (google.api.http) = {
@@ -1349,111 +1358,6 @@ message HandleRoleDataScopeReply {
   string type = 4;
 }
 
-// 请求 - 获取角色资源
-message ListRoleResourceReq {
-  uint64 id = 1;
-}
-
-// 回应 - 获取角色资源
-message ListRoleResourceReply {
-  optional int64 total = 1;
-  repeated Resource items = 2;
-}
-
-// 资源模块
-message Resource {
-  optional google.protobuf.Timestamp created_at = 1;
-  optional google.protobuf.Timestamp updated_at = 2;
-  uint64 id = 3;
-  string name = 4;
-  optional string path = 5;
-  optional string method = 6;
-  optional string group = 7;
-  optional string description = 8;
-  optional string operation = 9;
-}
-
-// 请求 - 列表部门
-message ListResourceReq {
-  // 是否不分页
-  optional bool nopaging = 1;
-  // 当前页
-  optional int32 page = 2;
-  // 每一页的行数
-  optional int32 page_size = 3;
-}
-
-// 回应 - 列表部门
-message ListResourceReply {
-  int64 total = 1;
-  repeated Resource items = 2;
-}
-
-
-// 回应 - 创建资源
-message ListResourceGroupReply {
-  repeated string items = 1;
-  optional int64 total = 2;
-}
-
-// 请求 - 创建资源
-message CreateResourceReq {
-  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
-  string path = 2 [(validate.rules).string = {min_len: 1, max_len: 100}];
-  string method = 3 [(validate.rules).string = {in: ["*", "GET", "POST", "HEAD", "PUT", "PATCH", "DELETE", "OPTIONS", "CONNECT", "TRACE"]}];
-  optional string group = 4 [(validate.rules).string = {min_len: 0, max_len: 100}];
-  optional string description = 5 [(validate.rules).string = {min_len: 0, max_len: 1000}];
-  optional string operation = 6 [(validate.rules).string = {min_len: 0, max_len: 100}];
-}
-
-// 回应 - 创建资源
-message CreateResourceReply {
-  int32 code = 1;
-  string message = 2;
-  optional google.protobuf.Any result = 3;
-  string type = 4;
-}
-
-// 请求 - 修改资源
-message UpdateResourceReq {
-  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
-  message Data {
-    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
-    string path = 2 [(validate.rules).string = {min_len: 1, max_len: 100}];
-    string method = 3 [(validate.rules).string = {in: ["*", "GET", "POST", "HEAD", "PUT", "PATCH", "DELETE", "OPTIONS", "CONNECT", "TRACE"]}];
-    optional string group = 4 [(validate.rules).string = {min_len: 0, max_len: 100}];
-    optional string description = 5 [(validate.rules).string = {min_len: 0, max_len: 1000}];
-    optional string operation = 6 [(validate.rules).string = {min_len: 0, max_len: 100}];
-  }
-  Data data = 2;
-}
-
-// 回应 - 创建资源
-message UpdateResourceReply {
-  int32 code = 1;
-  string message = 2;
-  optional google.protobuf.Any result = 3;
-  string type = 4;
-}
-
-// 请求 - 获取资源
-message GetResourceReq {
-  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
-}
-
-// 请求 - 删除资源
-message DeleteResourceReq {
-  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
-}
-
-// 回应 - 删除资源
-message DeleteResourceReply {
-  int32 code = 1;
-  string message = 2;
-  optional google.protobuf.Any result = 3;
-  string type = 4;
-}
-
 // 菜单模块
 message Menu {
   optional google.protobuf.Timestamp created_at = 1;
@@ -1647,8 +1551,25 @@ message UpdateDeptReq {
   Data data = 2;
 }
 
-// 回应 - 创建部门
+// 回应 - 修改部门
 message UpdateDeptReply {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 修改部门-状态
+message UpdateDeptStateReq {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    optional int32 state = 1 [(validate.rules).int32.gte = 0];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建部门-状态
+message UpdateDeptStateReply {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
