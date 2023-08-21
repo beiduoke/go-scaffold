@@ -1,0 +1,37 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "casbin",
+    srcs = [
+        "adapter.go",
+        "casbin.go",
+        "options.go",
+        "rule.go",
+    ],
+    embedsrcs = [
+        "model/abac.conf",
+        "model/acl.conf",
+        "model/rbac.conf",
+        "model/rbac_with_domains.conf",
+        "model/restfull.conf",
+        "model/restfull_with_role.conf",
+    ],
+    importpath = "github.com/beiduoke/go-scaffold/pkg/auth/authz/casbin",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/auth/authz",
+        "@com_github_casbin_casbin_v2//:casbin",
+        "@com_github_casbin_casbin_v2//model",
+        "@com_github_casbin_casbin_v2//persist",
+    ],
+)
+
+go_test(
+    name = "casbin_test",
+    srcs = ["casbin_test.go"],
+    embed = [":casbin"],
+    deps = [
+        "//pkg/auth/authz",
+        "@com_github_stretchr_testify//assert",
+    ],
+)

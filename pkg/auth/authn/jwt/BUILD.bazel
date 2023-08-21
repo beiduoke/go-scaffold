@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "jwt",
+    srcs = ["jwt.go"],
+    importpath = "github.com/beiduoke/go-scaffold/pkg/auth/authn/jwt",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/auth/authn",
+        "@com_github_golang_jwt_jwt_v4//:jwt",
+    ],
+)

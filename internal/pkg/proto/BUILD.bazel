@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "proto",
+    srcs = [
+        "any.go",
+        "tree.go",
+    ],
+    importpath = "github.com/beiduoke/go-scaffold/internal/pkg/proto",
+    visibility = ["//:__subpackages__"],
+)
+
+go_test(
+    name = "proto_test",
+    srcs = ["tree_test.go"],
+    embed = [":proto"],
+)

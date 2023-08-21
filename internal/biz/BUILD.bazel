@@ -1,0 +1,30 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "biz",
+    srcs = [
+        "auth.go",
+        "auth_sms.go",
+        "biz.go",
+        "dept.go",
+        "dict.go",
+        "domain.go",
+        "menu.go",
+        "post.go",
+        "role.go",
+        "user.go",
+    ],
+    importpath = "github.com/beiduoke/go-scaffold/internal/biz",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/conf",
+        "//pkg/auth/authn",
+        "//pkg/util/convert",
+        "//pkg/util/pagination",
+        "@com_github_go_kratos_kratos_v2//log",
+        "@com_github_google_wire//:wire",
+        "@com_github_imdario_mergo//:mergo",
+        "@com_github_pkg_errors//:errors",
+        "@com_github_zzsds_go_tools//pkg/password",
+    ],
+)

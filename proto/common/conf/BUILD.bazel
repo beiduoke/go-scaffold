@@ -1,0 +1,49 @@
+load("@rules_proto//proto:defs.bzl", "proto_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
+
+proto_library(
+    name = "conf_proto",
+    srcs = [
+        "bootstrap.proto",
+        "client.proto",
+        "config.proto",
+        "data.proto",
+        "logger.proto",
+        "middleware.proto",
+        "oss.proto",
+        "registry.proto",
+        "server.proto",
+        "tracer.proto",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//common/conf:conf_proto",
+        "@com_google_protobuf//:duration_proto",
+    ],
+)
+
+go_proto_library(
+    name = "conf_go_proto",
+    importpath = "github.com/beiduoke/go-scaffold/api/common/conf",
+    proto = ":conf_proto",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//common/conf:client_proto",
+        "//common/conf:config_proto",
+        "//common/conf:data_proto",
+        "//common/conf:logger_proto",
+        "//common/conf:middleware_proto",
+        "//common/conf:oss_proto",
+        "//common/conf:registry_proto",
+        "//common/conf:server_proto",
+        "//common/conf:tracer_proto",
+    ],
+)
+
+go_library(
+    name = "conf",
+    embed = [":conf_go_proto"],
+    importpath = "github.com/beiduoke/go-scaffold/api/common/conf",
+    visibility = ["//visibility:public"],
+)

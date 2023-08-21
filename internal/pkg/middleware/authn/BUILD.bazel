@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "authn",
+    srcs = [
+        "authn.go",
+        "client.go",
+        "options.go",
+    ],
+    importpath = "github.com/beiduoke/go-scaffold/internal/pkg/middleware/authn",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//pkg/auth/authn",
+        "//pkg/auth/authz",
+        "//third_party/errors",
+        "@com_github_go_kratos_kratos_v2//log",
+        "@com_github_go_kratos_kratos_v2//middleware",
+        "@org_golang_google_grpc//status",
+    ],
+)

@@ -1,0 +1,8 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "redis",
+    srcs = ["redis.go"],
+    importpath = "github.com/beiduoke/go-scaffold/pkg/sso/redis",
+    visibility = ["//visibility:public"],
+)

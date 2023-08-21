@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "api",
+    srcs = [
+        "api.go",
+        "auth.go",
+        "dept.go",
+        "dict.go",
+        "domain.go",
+        "menu.go",
+        "post.go",
+        "role.go",
+        "user.go",
+    ],
+    importpath = "github.com/beiduoke/go-scaffold/internal/service/api",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/biz",
+        "//internal/conf",
+        "//internal/pkg/constant",
+        "//internal/pkg/middleware/localize",
+        "//internal/pkg/proto",
+        "//pkg/util/convert",
+        "//pkg/util/pagination",
+        "@com_github_go_kratos_kratos_v2//log",
+        "@com_github_nicksnyder_go_i18n_v2//i18n",
+        "@org_golang_google_protobuf//types/known/anypb",
+        "@org_golang_google_protobuf//types/known/emptypb",
+        "@org_golang_google_protobuf//types/known/timestamppb",
+    ],
+)

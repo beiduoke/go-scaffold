@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "authz",
+    srcs = [
+        "authz.go",
+        "options.go",
+    ],
+    importpath = "github.com/beiduoke/go-scaffold/internal/pkg/middleware/authz",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//pkg/auth/authz",
+        "//third_party/errors",
+        "@com_github_go_kratos_kratos_v2//middleware",
+    ],
+)
+
+go_test(
+    name = "authz_test",
+    srcs = ["authz_test.go"],
+    embed = [":authz"],
+    deps = [
+        "//pkg/auth/authz",
+        "//pkg/auth/authz/casbin",
+        "@com_github_go_kratos_kratos_v2//middleware",
+        "@com_github_go_kratos_kratos_v2//transport",
+        "@com_github_stretchr_testify//assert",
+    ],
+)

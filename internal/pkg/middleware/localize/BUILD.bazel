@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "localize",
+    srcs = ["localize.go"],
+    importpath = "github.com/beiduoke/go-scaffold/internal/pkg/middleware/localize",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "@com_github_burntsushi_toml//:toml",
+        "@com_github_go_kratos_kratos_v2//middleware",
+        "@com_github_go_kratos_kratos_v2//transport",
+        "@com_github_go_kratos_kratos_v2//transport/http",
+        "@com_github_nicksnyder_go_i18n_v2//i18n",
+        "@org_golang_x_text//language",
+    ],
+)

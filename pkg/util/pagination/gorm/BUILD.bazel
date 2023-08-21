@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "gorm",
+    srcs = ["gorm.go"],
+    importpath = "github.com/beiduoke/go-scaffold/pkg/util/pagination/gorm",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/util/pagination",
+        "@com_github_iancoleman_strcase//:strcase",
+    ],
+)

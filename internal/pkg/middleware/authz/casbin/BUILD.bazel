@@ -1,0 +1,36 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "casbin",
+    srcs = ["server.go"],
+    importpath = "github.com/beiduoke/go-scaffold/internal/pkg/middleware/authz/casbin",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//pkg/auth/authn",
+        "//third_party/errors",
+        "@com_github_casbin_casbin_v2//:casbin",
+        "@com_github_casbin_casbin_v2//model",
+        "@com_github_casbin_casbin_v2//persist",
+        "@com_github_casbin_casbin_v2//persist/file-adapter",
+        "@com_github_go_kratos_kratos_v2//middleware",
+    ],
+)
+
+go_test(
+    name = "casbin_test",
+    srcs = ["server_test.go"],
+    embed = [":casbin"],
+    deps = [
+        "//pkg/auth/authn",
+        "@com_github_casbin_casbin_v2//:casbin",
+        "@com_github_casbin_casbin_v2//model",
+        "@com_github_casbin_casbin_v2//persist",
+        "@com_github_casbin_casbin_v2//persist/file-adapter",
+        "@com_github_go_kratos_kratos_v2//middleware",
+        "@com_github_go_kratos_kratos_v2//middleware/auth/jwt",
+        "@com_github_go_kratos_kratos_v2//transport",
+        "@com_github_golang_jwt_jwt_v4//:jwt",
+        "@com_github_pkg_errors//:errors",
+        "@com_github_stretchr_testify//assert",
+    ],
+)

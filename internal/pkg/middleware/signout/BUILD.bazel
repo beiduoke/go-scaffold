@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "signout",
+    srcs = ["signout.go"],
+    importpath = "github.com/beiduoke/go-scaffold/internal/pkg/middleware/signout",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "@com_github_go_kratos_kratos_v2//middleware",
+        "@com_github_go_kratos_kratos_v2//transport",
+    ],
+)

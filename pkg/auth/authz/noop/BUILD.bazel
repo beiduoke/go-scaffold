@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "noop",
+    srcs = ["noop.go"],
+    importpath = "github.com/beiduoke/go-scaffold/pkg/auth/authz/noop",
+    visibility = ["//visibility:public"],
+    deps = ["//pkg/auth/authz"],
+)

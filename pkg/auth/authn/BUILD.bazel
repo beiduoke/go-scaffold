@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "authn",
+    srcs = [
+        "authn.go",
+        "claims.go",
+        "errors.go",
+        "options.go",
+    ],
+    importpath = "github.com/beiduoke/go-scaffold/pkg/auth/authn",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_github_golang_jwt_jwt_v4//:jwt",
+        "@org_golang_google_grpc//codes",
+        "@org_golang_google_grpc//status",
+    ],
+)

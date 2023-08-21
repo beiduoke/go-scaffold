@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "server",
+    srcs = [
+        "api.pb.go",
+        "api.pb.validate.go",
+        "api_grpc.pb.go",
+        "api_http.pb.go",
+        "error_reason.pb.go",
+        "error_reason.pb.validate.go",
+        "error_reason_errors.pb.go",
+    ],
+    importpath = "github.com/beiduoke/go-scaffold/api/server/v1",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//third_party/errors",
+        "//third_party/gnostic/openapi/v3:openapiv3",
+        "//third_party/validate",
+        "@com_github_go_kratos_kratos_v2//transport/http",
+        "@com_github_go_kratos_kratos_v2//transport/http/binding",
+        "@org_golang_google_genproto_googleapis_api//annotations",
+        "@org_golang_google_grpc//:go_default_library",
+        "@org_golang_google_grpc//codes",
+        "@org_golang_google_grpc//status",
+        "@org_golang_google_protobuf//reflect/protoreflect",
+        "@org_golang_google_protobuf//runtime/protoimpl",
+        "@org_golang_google_protobuf//types/known/anypb",
+        "@org_golang_google_protobuf//types/known/emptypb",
+        "@org_golang_google_protobuf//types/known/timestamppb",
+    ],
+)
