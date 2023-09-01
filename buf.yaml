@@ -1,14 +1,7 @@
 version: v1
-build:
-  excludes:
-    - errors
-    - google
-    - validate
 breaking:
   use:
     - FILE
 lint:
   use:
     - DEFAULT
-  ignore:
-    - third_party

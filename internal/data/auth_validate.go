@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/beiduoke/go-scaffold/internal/conf"
+	"github.com/beiduoke/go-scaffold/api/common/conf"
 	"github.com/beiduoke/go-scaffold/pkg/auth/authn"
 	"github.com/beiduoke/go-scaffold/pkg/auth/authn/jwt"
 	"github.com/go-kratos/kratos/v2/log"
@@ -13,11 +13,12 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func NewAuthenticator(ac *conf.Auth, logger log.Logger) authn.Authenticator {
+// NewAuthenticator 创建认证器
+func NewAuthenticator(cfg *conf.Bootstrap, logger log.Logger) authn.Authenticator {
 	log := log.NewHelper(log.With(logger, "module", "data/authenticator"))
-	conf := ac.GetJwt()
+	conf := cfg.Server.Rest.Middleware.Auth
 	authenticator, err := jwt.NewAuthenticator(
-		jwt.WithSecretKey(conf.GetSecretKey()),
+		jwt.WithSecretKey(conf.GetKey()),
 		jwt.WithParseContext(parseContextTokenCall(conf.GetHeader(), conf.GetScheme())),
 		jwt.WithExpiresAt(conf.GetExpiresTime().AsDuration()),
 	)

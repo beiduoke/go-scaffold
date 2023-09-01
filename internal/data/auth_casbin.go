@@ -17,10 +17,30 @@ import (
 	"gorm.io/gorm"
 )
 
+const modelText = `
+[request_definition]
+r = sub, obj, act, dom
+
+[policy_definition]
+p = sub, obj, act, dom
+
+[role_definition]
+g = _, _, _
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = g(r.sub, p.sub, r.dom) && r.dom == p.dom && r.obj == p.obj && r.act == p.act || (r.sub == "1" && r.dom == "1")
+`
+
 // NewAuthModel 模型
 func NewAuthModel(ac *conf.Auth, logger log.Logger) model.Model {
 	log := log.NewHelper(log.With(logger, "module", "data/authCasbinModel"))
-	m, err := model.NewModelFromFile(ac.Casbin.GetModelPath())
+	m, err := model.NewModelFromString(modelText)
+	if ac.Casbin.GetModelPath() != "" {
+		m, err = model.NewModelFromFile(ac.Casbin.GetModelPath())
+	}
 	if err != nil {
 		log.Fatalf("failed casbin model connection %v", err)
 	}

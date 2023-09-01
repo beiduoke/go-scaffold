@@ -3,11 +3,13 @@ package data
 import (
 	"context"
 
+	"github.com/beiduoke/go-scaffold/api/common/conf"
 	"github.com/beiduoke/go-scaffold/internal/biz"
-	"github.com/beiduoke/go-scaffold/internal/conf"
+	"github.com/beiduoke/go-scaffold/pkg/bootstrap"
 	"github.com/bwmarrin/snowflake"
 	"github.com/casbin/casbin/v2"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/google/wire"
 	"github.com/meilisearch/meilisearch-go"
 	"github.com/redis/go-redis/v9"
@@ -20,8 +22,8 @@ import (
 // ProviderSet is data providers.
 var ProviderSet = wire.NewSet(
 	// 基础配置
-	NewDB,
-	NewRDB,
+	NewGormClient,
+	NewRedisClient,
 	NewSDB,
 	NewSnowflake,
 	NewModelMigrate,
@@ -134,11 +136,11 @@ func (d *Data) DBD(ctx context.Context) *gorm.DB {
 	return db
 }
 
-// NewDB gorm Connecting to a Database
-func NewDB(conf *conf.Data, logger log.Logger, migrates []interface{}) *gorm.DB {
-	log := log.NewHelper(log.With(logger, "module", "data/gorm"))
-	db, err := gorm.Open(mysql.Open(conf.Database.Source), &gorm.Config{
-		Logger:         gormLogger.Default.LogMode(gormLogger.LogLevel(conf.Database.LogLevel)),
+// NewGormClient 创建数据库客户端
+func NewGormClient(cfg *conf.Bootstrap, logger log.Logger, models []interface{}) *gorm.DB {
+	l := log.NewHelper(log.With(logger, "module", "gorm/data/service"))
+	db, err := gorm.Open(mysql.Open(cfg.Data.Database.Source), &gorm.Config{
+		Logger:         gormLogger.Default,
 		NamingStrategy: schema.NamingStrategy{
 			// TablePrefix: "scaffold_", // table name prefix, table for `User` would be `t_users`
 		},
@@ -146,28 +148,25 @@ func NewDB(conf *conf.Data, logger log.Logger, migrates []interface{}) *gorm.DB 
 		SkipDefaultTransaction:                   true,
 	})
 	if err != nil {
-		log.Fatalf("failed opening connection to mysql: %v", err)
+		l.Fatalf("failed opening connection to mysql: %v", err)
 	}
-	if err := db.AutoMigrate(migrates...); err != nil {
-		log.Fatal(err)
+	if cfg.Data.Database.Migrate {
+		if err := db.AutoMigrate(models...); err != nil {
+			l.Fatal(err)
+		}
 	}
 	return db
 }
 
-func NewRDB(conf *conf.Data, logger log.Logger) *redis.Client {
-	log := log.NewHelper(log.With(logger, "module", "data/redis"))
-	rdb := redis.NewClient(&redis.Options{
-		Network:      conf.GetRedis().GetNetwork(),
-		Addr:         conf.GetRedis().GetAddr(),
-		Password:     conf.GetRedis().GetPassword(),
-		ReadTimeout:  conf.GetRedis().ReadTimeout.AsDuration(),
-		WriteTimeout: conf.GetRedis().WriteTimeout.AsDuration(),
-	})
-	err := rdb.Ping(context.Background()).Err()
-	if err != nil {
-		log.Fatalf("failed opening connection to redis %v", err)
-	}
-	return rdb
+// NewRedisClient 创建Redis客户端
+func NewRedisClient(cfg *conf.Bootstrap, logger log.Logger) *redis.Client {
+	l := log.NewHelper(log.With(logger, "module", "redis/data/service"))
+	return bootstrap.NewRedisClient(cfg, l)
+}
+
+// NewDiscovery 创建服务发现客户端
+func NewDiscovery(cfg *conf.Bootstrap) registry.Discovery {
+	return bootstrap.NewConsulRegistry(cfg.Registry)
 }
 
 func NewSDB(conf *conf.Data, logger log.Logger) *meilisearch.Client {

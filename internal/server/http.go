@@ -3,8 +3,8 @@ package server
 import (
 	"context"
 
+	"github.com/beiduoke/go-scaffold/api/common/conf"
 	serverv1 "github.com/beiduoke/go-scaffold/api/server/v1"
-	"github.com/beiduoke/go-scaffold/internal/conf"
 	authnM "github.com/beiduoke/go-scaffold/internal/pkg/middleware/authn"
 	authzM "github.com/beiduoke/go-scaffold/internal/pkg/middleware/authz"
 	"github.com/beiduoke/go-scaffold/internal/pkg/middleware/localize"
@@ -13,6 +13,7 @@ import (
 	"github.com/beiduoke/go-scaffold/internal/service/api"
 	authn "github.com/beiduoke/go-scaffold/pkg/auth/authn"
 	"github.com/beiduoke/go-scaffold/pkg/auth/authz"
+	"github.com/beiduoke/go-scaffold/pkg/bootstrap"
 
 	// gormadapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/google/wire"
@@ -29,7 +30,6 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/validate"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/go-kratos/swagger-api/openapiv2"
-	"github.com/gorilla/handlers"
 )
 
 // ProviderSet is server providers.
@@ -52,7 +52,7 @@ func NewWhiteListMatcher() selector.MatchFunc {
 	}
 }
 
-func NewAuthMiddleware(ac *conf.Auth, authenticator authn.Authenticator, authorized authz.Authorized, creator authn.SecurityUserCreator) middleware.Middleware {
+func NewAuthMiddleware(authenticator authn.Authenticator, authorized authz.Authorized, creator authn.SecurityUserCreator) middleware.Middleware {
 	// jwtV4.NewWithClaims(jwtV4.SigningMethodHS256, jwtV4.RegisteredClaims{})
 	return selector.Server(
 		// 认证
@@ -68,37 +68,25 @@ func NewAuthMiddleware(ac *conf.Auth, authenticator authn.Authenticator, authori
 }
 
 // NewMiddleware 创建中间件
-func NewMiddleware(logger log.Logger, authMiddleware middleware.Middleware) http.ServerOption {
-	return http.Middleware(
+func NewMiddleware(logger log.Logger, authMiddleware middleware.Middleware) []middleware.Middleware {
+	var ms = []middleware.Middleware{
 		recovery.Recovery(),
-		tracing.Server(),
 		logging.Server(logger),
+		tracing.Server(),
 		localize.I18N(),
 		validate.Validator(),
 		authMiddleware,
-	)
+	}
+	ms = append(ms, authMiddleware)
+	return ms
 }
 
 // NewHTTPServer new a HTTP server.
-func NewHTTPServer(c *conf.Server, as *api.ApiService, middleware http.ServerOption) *http.Server {
-	var opts = []http.ServerOption{
-		middleware,
-		http.Filter(handlers.CORS(
-			handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization", "X-Domain-Code"}),
-			handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"}),
-			handlers.AllowedOrigins([]string{"*"}),
-		)),
-	}
-	if c.Http.Network != "" {
-		opts = append(opts, http.Network(c.Http.Network))
-	}
-	if c.Http.Addr != "" {
-		opts = append(opts, http.Address(c.Http.Addr))
-	}
-	if c.Http.Timeout != nil {
-		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
-	}
-	srv := http.NewServer(opts...)
+func NewHTTPServer(
+	cfg *conf.Bootstrap, logger log.Logger,
+	authenticator authn.Authenticator, authorized authz.Authorized, securityUser authn.SecurityUserCreator,
+	as *api.ApiService, middleware http.ServerOption) *http.Server {
+	srv := bootstrap.CreateRestServer(cfg, NewMiddleware(logger, NewAuthMiddleware(authenticator, authorized, securityUser))...)
 
 	openAPIhandler := openapiv2.NewHandler(openapiv2.WithGeneratorOptions(generator.UseJSONNamesForFields(true), generator.EnumsAsInts(false)))
 	srv.HandlePrefix("/q/", openAPIhandler)

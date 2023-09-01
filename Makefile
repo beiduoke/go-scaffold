@@ -58,6 +58,7 @@ config:
 # generate api proto
 api:
 	buf generate
+	
 # generate OpenAPI v3 doc
 .PHONY: openapi
 openapi:

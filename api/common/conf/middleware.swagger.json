@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "common/enum/enum.proto",
+    "title": "common/conf/middleware.proto",
     "version": "version not set"
   },
   "consumes": [

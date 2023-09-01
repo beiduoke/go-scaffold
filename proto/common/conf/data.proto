@@ -26,6 +26,14 @@ message Data {
     google.protobuf.Duration write_timeout = 7; // 写入超时时间
   }
 
+  
+  message Meilisearch {
+    string host = 1;
+    string api_key = 2;
+    google.protobuf.Duration timeout = 3;
+  }
+
   Database database = 1;  // 数据库
   Redis redis = 2;  // Redis
+  Meilisearch meilisearch = 3; // 搜索引擎
 }

@@ -154,6 +154,64 @@ func (m *Middleware) validate(all bool) error {
 		}
 	}
 
+	if all {
+		switch v := interface{}(m.GetAuthorizer()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, MiddlewareValidationError{
+					field:  "Authorizer",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, MiddlewareValidationError{
+					field:  "Authorizer",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetAuthorizer()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return MiddlewareValidationError{
+				field:  "Authorizer",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetLocalize()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, MiddlewareValidationError{
+					field:  "Localize",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, MiddlewareValidationError{
+					field:  "Localize",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetLocalize()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return MiddlewareValidationError{
+				field:  "Localize",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	if len(errors) > 0 {
 		return MiddlewareMultiError(errors)
 	}
@@ -256,6 +314,41 @@ func (m *Middleware_Auth) validate(all bool) error {
 	// no validation rules for Method
 
 	// no validation rules for Key
+
+	// no validation rules for Header
+
+	// no validation rules for Scheme
+
+	// no validation rules for Multipoint
+
+	if all {
+		switch v := interface{}(m.GetExpiresTime()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, Middleware_AuthValidationError{
+					field:  "ExpiresTime",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, Middleware_AuthValidationError{
+					field:  "ExpiresTime",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetExpiresTime()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return Middleware_AuthValidationError{
+				field:  "ExpiresTime",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return Middleware_AuthMultiError(errors)
@@ -548,3 +641,347 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = Middleware_MetricsValidationError{}
+
+// Validate checks the field values on Middleware_Localize with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *Middleware_Localize) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on Middleware_Localize with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// Middleware_LocalizeMultiError, or nil if none found.
+func (m *Middleware_Localize) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *Middleware_Localize) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Default
+
+	if len(errors) > 0 {
+		return Middleware_LocalizeMultiError(errors)
+	}
+
+	return nil
+}
+
+// Middleware_LocalizeMultiError is an error wrapping multiple validation
+// errors returned by Middleware_Localize.ValidateAll() if the designated
+// constraints aren't met.
+type Middleware_LocalizeMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m Middleware_LocalizeMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m Middleware_LocalizeMultiError) AllErrors() []error { return m }
+
+// Middleware_LocalizeValidationError is the validation error returned by
+// Middleware_Localize.Validate if the designated constraints aren't met.
+type Middleware_LocalizeValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e Middleware_LocalizeValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e Middleware_LocalizeValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e Middleware_LocalizeValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e Middleware_LocalizeValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e Middleware_LocalizeValidationError) ErrorName() string {
+	return "Middleware_LocalizeValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e Middleware_LocalizeValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sMiddleware_Localize.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = Middleware_LocalizeValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = Middleware_LocalizeValidationError{}
+
+// Validate checks the field values on Middleware_Authorizer with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *Middleware_Authorizer) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on Middleware_Authorizer with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// Middleware_AuthorizerMultiError, or nil if none found.
+func (m *Middleware_Authorizer) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *Middleware_Authorizer) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Type
+
+	if all {
+		switch v := interface{}(m.GetCasbin()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, Middleware_AuthorizerValidationError{
+					field:  "Casbin",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, Middleware_AuthorizerValidationError{
+					field:  "Casbin",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetCasbin()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return Middleware_AuthorizerValidationError{
+				field:  "Casbin",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return Middleware_AuthorizerMultiError(errors)
+	}
+
+	return nil
+}
+
+// Middleware_AuthorizerMultiError is an error wrapping multiple validation
+// errors returned by Middleware_Authorizer.ValidateAll() if the designated
+// constraints aren't met.
+type Middleware_AuthorizerMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m Middleware_AuthorizerMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m Middleware_AuthorizerMultiError) AllErrors() []error { return m }
+
+// Middleware_AuthorizerValidationError is the validation error returned by
+// Middleware_Authorizer.Validate if the designated constraints aren't met.
+type Middleware_AuthorizerValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e Middleware_AuthorizerValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e Middleware_AuthorizerValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e Middleware_AuthorizerValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e Middleware_AuthorizerValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e Middleware_AuthorizerValidationError) ErrorName() string {
+	return "Middleware_AuthorizerValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e Middleware_AuthorizerValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sMiddleware_Authorizer.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = Middleware_AuthorizerValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = Middleware_AuthorizerValidationError{}
+
+// Validate checks the field values on Middleware_Authorizer_Casbin with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *Middleware_Authorizer_Casbin) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on Middleware_Authorizer_Casbin with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// Middleware_Authorizer_CasbinMultiError, or nil if none found.
+func (m *Middleware_Authorizer_Casbin) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *Middleware_Authorizer_Casbin) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for ModelPath
+
+	// no validation rules for PolicyPath
+
+	if len(errors) > 0 {
+		return Middleware_Authorizer_CasbinMultiError(errors)
+	}
+
+	return nil
+}
+
+// Middleware_Authorizer_CasbinMultiError is an error wrapping multiple
+// validation errors returned by Middleware_Authorizer_Casbin.ValidateAll() if
+// the designated constraints aren't met.
+type Middleware_Authorizer_CasbinMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m Middleware_Authorizer_CasbinMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m Middleware_Authorizer_CasbinMultiError) AllErrors() []error { return m }
+
+// Middleware_Authorizer_CasbinValidationError is the validation error returned
+// by Middleware_Authorizer_Casbin.Validate if the designated constraints
+// aren't met.
+type Middleware_Authorizer_CasbinValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e Middleware_Authorizer_CasbinValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e Middleware_Authorizer_CasbinValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e Middleware_Authorizer_CasbinValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e Middleware_Authorizer_CasbinValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e Middleware_Authorizer_CasbinValidationError) ErrorName() string {
+	return "Middleware_Authorizer_CasbinValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e Middleware_Authorizer_CasbinValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sMiddleware_Authorizer_Casbin.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = Middleware_Authorizer_CasbinValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = Middleware_Authorizer_CasbinValidationError{}
