@@ -9,8 +9,8 @@ import "common/conf/middleware.proto";
 
 // 客户端
 message Client {
-  // REST
-  message REST {
+  // HTTP
+  message HTTP {
     google.protobuf.Duration timeout = 1; // 超时时间
     Middleware middleware = 2;
   }
@@ -21,6 +21,6 @@ message Client {
     Middleware middleware = 2;
   }
 
-  REST rest = 1;  // REST服务
+  HTTP rest = 1;  // HTTP服务
   GRPC grpc = 2;  // gRPC服务
 }

@@ -1,9 +1,9 @@
-package data
+package bootstrap
 
 import (
 	"context"
 
-	"github.com/beiduoke/go-scaffold/internal/conf"
+	"github.com/beiduoke/go-scaffold/api/common/conf"
 	"github.com/beiduoke/go-scaffold/pkg/auth/authz"
 	authzCasbin "github.com/beiduoke/go-scaffold/pkg/auth/authz/casbin"
 	stdcasbin "github.com/casbin/casbin/v2"
@@ -14,7 +14,6 @@ import (
 	rediswatcher "github.com/casbin/redis-watcher/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-redis/redis/v8"
-	"gorm.io/gorm"
 )
 
 const modelText = `
@@ -34,12 +33,13 @@ e = some(where (p.eft == allow))
 m = g(r.sub, p.sub, r.dom) && r.dom == p.dom && r.obj == p.obj && r.act == p.act || (r.sub == "1" && r.dom == "1")
 `
 
-// NewAuthModel 模型
-func NewAuthModel(ac *conf.Auth, logger log.Logger) model.Model {
-	log := log.NewHelper(log.With(logger, "module", "data/authCasbinModel"))
+// NewAuthzCasbinModel 模型
+func NewAuthzCasbinModel(cfg *conf.Bootstrap, logger log.Logger) model.Model {
+	log := log.NewHelper(log.With(logger, "module", "casbin/data/authCasbinModel"))
+	authz := cfg.Server.Http.Middleware.Authorizer.GetCasbin()
 	m, err := model.NewModelFromString(modelText)
-	if ac.Casbin.GetModelPath() != "" {
-		m, err = model.NewModelFromFile(ac.Casbin.GetModelPath())
+	if authz.GetModelPath() != "" {
+		m, err = model.NewModelFromFile(authz.GetModelPath())
 	}
 	if err != nil {
 		log.Fatalf("failed casbin model connection %v", err)
@@ -47,31 +47,26 @@ func NewAuthModel(ac *conf.Auth, logger log.Logger) model.Model {
 	return m
 }
 
-// NewAuthAdapter 适配器
-func NewAuthAdapter(db *gorm.DB, ac *conf.Auth, logger log.Logger) (adapter persist.Adapter) {
-	log := log.NewHelper(log.With(logger, "module", "data/authCasbinAdapter"))
+// NewAuthzCasbinGormAdapter 适配器
+func NewAuthzCasbinGormAdapter(cfg *conf.Bootstrap, logger log.Logger) (adapter persist.Adapter) {
+	log := log.NewHelper(log.With(logger, "module", "casbin/data/authCasbinAdapter"))
 	// gormadapter "github.com/casbin/gorm-adapter/v3"
-	adapter, err := gormadapter.NewAdapterByDBUseTableName(db, "sys", "casbin_rules")
+	adapter, err := gormadapter.NewAdapterByDBUseTableName(NewGormClient(cfg, log), "sys", "casbin_rules")
 	log.Info("initialization gorm adapter ")
 	if err != nil {
 		log.Fatalf("failed gorm casbin adapters connection %v", err)
 	}
-	// 优先使用gorm进行存储
-	// file 适配器
-	// fileadapter "github.com/casbin/casbin/v2/persist/file-adapter"
-	// adapter = fileadapter.NewAdapter(ac.Casbin.PolicyPath)
-	// log.Info("initialization file adapter ")
 	return adapter
 }
 
-// NewWatcher 监视器
-func NewWatcher(conf *conf.Data, logger log.Logger) persist.Watcher {
-	log := log.NewHelper(log.With(logger, "module", "data/authCasbinWatcher"))
+// NewAuthzCasbinWatcher 监视器
+func NewAuthzCasbinWatcher(cfg *conf.Bootstrap, logger log.Logger) persist.Watcher {
+	log := log.NewHelper(log.With(logger, "module", "casbin/data/authCasbinWatcher"))
 	// rediswatcher "github.com/casbin/redis-watcher/v2"
-	w, err := rediswatcher.NewWatcher(conf.GetRedis().GetAddr(), rediswatcher.WatcherOptions{
+	w, err := rediswatcher.NewWatcher(cfg.Data.GetRedis().GetAddr(), rediswatcher.WatcherOptions{
 		Options: redis.Options{
-			Network:  conf.GetRedis().GetNetwork(),
-			Password: conf.GetRedis().GetPassword(),
+			Network:  cfg.Data.GetRedis().GetNetwork(),
+			Password: cfg.Data.GetRedis().GetPassword(),
 		},
 		Channel: "/casbin",
 		// Only exists in test, generally be true
@@ -88,9 +83,9 @@ func NewWatcher(conf *conf.Data, logger log.Logger) persist.Watcher {
 	return w
 }
 
-// NewAuthEnforcer 执行器
-func NewAuthEnforcer(model model.Model, adapter persist.Adapter, watcher persist.Watcher, logger log.Logger) stdcasbin.IEnforcer {
-	log := log.NewHelper(log.With(logger, "module", "data/authCasbinEnforcer"))
+// NewAuthzCasbinEnforcer 执行器
+func NewAuthzCasbinEnforcer(model model.Model, adapter persist.Adapter, watcher persist.Watcher, logger log.Logger) *stdcasbin.SyncedEnforcer {
+	log := log.NewHelper(log.With(logger, "module", "casbin/data/authCasbinEnforcer"))
 	// enforcer, err := stdcasbin.NewEnforcer(model, adapter)
 	// enforcer, err := stdcasbin.NewCachedEnforcer(model, adapter)
 	enforcer, err := stdcasbin.NewSyncedEnforcer(model, adapter)
@@ -105,9 +100,9 @@ func NewAuthEnforcer(model model.Model, adapter persist.Adapter, watcher persist
 	return enforcer
 }
 
-// NewAuthCasbin casbin认证
-func NewAuthCasbin(logger log.Logger, enforcer stdcasbin.IEnforcer) authz.Authorized {
-	log := log.NewHelper(log.With(logger, "module", "data/authCasbin"))
+// NewAuthzCasbin casbin认证
+func NewAuthzCasbin(enforcer *stdcasbin.SyncedEnforcer, logger log.Logger) authz.Authorized {
+	log := log.NewHelper(log.With(logger, "module", "casbin/data/authCasbin"))
 	authorized, err := authzCasbin.NewAuthorized(context.Background(), authzCasbin.WithEnforcer(enforcer))
 	if err != nil {
 		log.Fatalf("failed casbin authorized %v", err)

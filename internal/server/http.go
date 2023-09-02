@@ -14,6 +14,7 @@ import (
 	authn "github.com/beiduoke/go-scaffold/pkg/auth/authn"
 	"github.com/beiduoke/go-scaffold/pkg/auth/authz"
 	"github.com/beiduoke/go-scaffold/pkg/bootstrap"
+	"github.com/casbin/casbin/v2"
 
 	// gormadapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/google/wire"
@@ -33,7 +34,15 @@ import (
 )
 
 // ProviderSet is server providers.
-var ProviderHttp = wire.NewSet(NewMiddleware, NewAuthMiddleware)
+var ProviderHttp = wire.NewSet(
+	NewMiddleware,
+	// 认证中间件
+	NewAuthMiddleware,
+	// 认证器
+	NewAuthenticator,
+	//  鉴权器
+	NewAuthorized,
+)
 
 // NewWhiteListMatcher 创建jwt白名单
 func NewWhiteListMatcher() selector.MatchFunc {
@@ -52,6 +61,16 @@ func NewWhiteListMatcher() selector.MatchFunc {
 	}
 }
 
+// NewAuthenticator 创建认证
+func NewAuthenticator(cfg *conf.Bootstrap, logger log.Logger) authn.Authenticator {
+	return bootstrap.NewJwtAuthenticator(cfg, logger)
+}
+
+// NewAuthorized 创建鉴权
+func NewAuthorized(enforcer *casbin.SyncedEnforcer, logger log.Logger) authz.Authorized {
+	return bootstrap.NewAuthzCasbin(enforcer, logger)
+}
+
 func NewAuthMiddleware(authenticator authn.Authenticator, authorized authz.Authorized, creator authn.SecurityUserCreator) middleware.Middleware {
 	// jwtV4.NewWithClaims(jwtV4.SigningMethodHS256, jwtV4.RegisteredClaims{})
 	return selector.Server(
@@ -68,25 +87,23 @@ func NewAuthMiddleware(authenticator authn.Authenticator, authorized authz.Autho
 }
 
 // NewMiddleware 创建中间件
-func NewMiddleware(logger log.Logger, authMiddleware middleware.Middleware) []middleware.Middleware {
+func NewMiddleware(logger log.Logger, middle middleware.Middleware) []middleware.Middleware {
 	var ms = []middleware.Middleware{
 		recovery.Recovery(),
 		logging.Server(logger),
 		tracing.Server(),
 		localize.I18N(),
 		validate.Validator(),
-		authMiddleware,
 	}
-	ms = append(ms, authMiddleware)
+	ms = append(ms, middle)
 	return ms
 }
 
 // NewHTTPServer new a HTTP server.
 func NewHTTPServer(
 	cfg *conf.Bootstrap, logger log.Logger,
-	authenticator authn.Authenticator, authorized authz.Authorized, securityUser authn.SecurityUserCreator,
-	as *api.ApiService, middleware http.ServerOption) *http.Server {
-	srv := bootstrap.CreateRestServer(cfg, NewMiddleware(logger, NewAuthMiddleware(authenticator, authorized, securityUser))...)
+	as *api.ApiService, ms []middleware.Middleware) *http.Server {
+	srv := bootstrap.CreateHttpServer(cfg, ms...)
 
 	openAPIhandler := openapiv2.NewHandler(openapiv2.WithGeneratorOptions(generator.UseJSONNamesForFields(true), generator.EnumsAsInts(false)))
 	srv.HandlePrefix("/q/", openAPIhandler)

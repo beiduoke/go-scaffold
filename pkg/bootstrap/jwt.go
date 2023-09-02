@@ -1,4 +1,4 @@
-package data
+package bootstrap
 
 import (
 	"context"
@@ -13,13 +13,13 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// NewAuthenticator 创建认证器
-func NewAuthenticator(cfg *conf.Bootstrap, logger log.Logger) authn.Authenticator {
-	log := log.NewHelper(log.With(logger, "module", "data/authenticator"))
-	conf := cfg.Server.Rest.Middleware.Auth
+// NewJwtAuthenticator Jwt创建认证器
+func NewJwtAuthenticator(cfg *conf.Bootstrap, logger log.Logger) authn.Authenticator {
+	log := log.NewHelper(log.With(logger, "module", "jwt/data/authenticator"))
+	conf := cfg.Server.Http.Middleware.Auth
 	authenticator, err := jwt.NewAuthenticator(
 		jwt.WithSecretKey(conf.GetKey()),
-		jwt.WithParseContext(parseContextTokenCall(conf.GetHeader(), conf.GetScheme())),
+		jwt.WithParseContext(jwtParseContextTokenCall(conf.GetHeader(), conf.GetScheme())),
 		jwt.WithExpiresAt(conf.GetExpiresTime().AsDuration()),
 	)
 	if err != nil {
@@ -28,7 +28,7 @@ func NewAuthenticator(cfg *conf.Bootstrap, logger log.Logger) authn.Authenticato
 	return authenticator
 }
 
-func parseContextTokenCall(headerField string, scheme string) func(context.Context) (string, error) {
+func jwtParseContextTokenCall(headerField string, scheme string) func(context.Context) (string, error) {
 	return func(ctx context.Context) (string, error) {
 		if header, ok := transport.FromServerContext(ctx); ok {
 			authorize := header.RequestHeader().Get(headerField)

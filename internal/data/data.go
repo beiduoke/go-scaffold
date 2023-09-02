@@ -13,31 +13,29 @@ import (
 	"github.com/google/wire"
 	"github.com/meilisearch/meilisearch-go"
 	"github.com/redis/go-redis/v9"
-	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	gormLogger "gorm.io/gorm/logger"
-	"gorm.io/gorm/schema"
 )
 
 // ProviderSet is data providers.
 var ProviderSet = wire.NewSet(
-	// 基础配置
+	// 数据库客户端
 	NewGormClient,
+	// redis客户端
 	NewRedisClient,
-	NewSDB,
+	// 搜索引擎客户端
+	NewMeilisearchClient,
+	// 雪花ID生成器
 	NewSnowflake,
+	// 数据迁移
 	NewModelMigrate,
+	// 数据集成器··
 	NewData,
+	// 事物
 	NewTransaction,
-	// 认证
-	NewAuthenticator,
+	// 认证解析器
 	NewSecurityUser,
-	// 鉴权
-	NewAuthModel,
-	NewAuthAdapter,
-	NewWatcher,
-	NewAuthEnforcer,
-	NewAuthCasbin,
+	// casbin鉴权客户端
+	NewAuthzCasbinClient,
 	// 数据操作
 	NewDomainRepo,
 	NewRoleRepo,
@@ -71,7 +69,7 @@ func NewTransaction(d *Data) biz.Transaction {
 }
 
 type ConfigOptions struct {
-	system *conf.System
+	base *conf.Base
 }
 
 // Data .
@@ -86,9 +84,9 @@ type Data struct {
 }
 
 // NewData .
-func NewData(db *gorm.DB, rdb *redis.Client, sdb *meilisearch.Client, enforcer casbin.IEnforcer, sf *snowflake.Node, logger log.Logger, systemConf *conf.System) (*Data, func(), error) {
+func NewData(cfg *conf.Bootstrap, db *gorm.DB, rdb *redis.Client, sdb *meilisearch.Client, enforcer *casbin.SyncedEnforcer, sf *snowflake.Node, logger log.Logger) (*Data, func(), error) {
 	l := log.NewHelper(log.With(logger, "module", "data/initialize"))
-	d := &Data{db: db, rdb: rdb, sdb: sdb, log: l, sf: sf, enforcer: enforcer.(*casbin.SyncedEnforcer), conf: ConfigOptions{system: systemConf}}
+	d := &Data{db: db, rdb: rdb, sdb: sdb, log: l, sf: sf, enforcer: enforcer, conf: ConfigOptions{base: cfg.GetBase()}}
 	return d, func() {
 		l.Info("closing db")
 		sql, err := db.DB()
@@ -139,23 +137,7 @@ func (d *Data) DBD(ctx context.Context) *gorm.DB {
 // NewGormClient 创建数据库客户端
 func NewGormClient(cfg *conf.Bootstrap, logger log.Logger, models []interface{}) *gorm.DB {
 	l := log.NewHelper(log.With(logger, "module", "gorm/data/service"))
-	db, err := gorm.Open(mysql.Open(cfg.Data.Database.Source), &gorm.Config{
-		Logger:         gormLogger.Default,
-		NamingStrategy: schema.NamingStrategy{
-			// TablePrefix: "scaffold_", // table name prefix, table for `User` would be `t_users`
-		},
-		DisableForeignKeyConstraintWhenMigrating: true,
-		SkipDefaultTransaction:                   true,
-	})
-	if err != nil {
-		l.Fatalf("failed opening connection to mysql: %v", err)
-	}
-	if cfg.Data.Database.Migrate {
-		if err := db.AutoMigrate(models...); err != nil {
-			l.Fatal(err)
-		}
-	}
-	return db
+	return bootstrap.NewGormClient(cfg, l, models...)
 }
 
 // NewRedisClient 创建Redis客户端
@@ -164,22 +146,21 @@ func NewRedisClient(cfg *conf.Bootstrap, logger log.Logger) *redis.Client {
 	return bootstrap.NewRedisClient(cfg, l)
 }
 
-// NewDiscovery 创建服务发现客户端
-func NewDiscovery(cfg *conf.Bootstrap) registry.Discovery {
-	return bootstrap.NewConsulRegistry(cfg.Registry)
+// NewMeilisearchClient 创建Meilisearch客户端
+func NewMeilisearchClient(cfg *conf.Bootstrap, logger log.Logger) *meilisearch.Client {
+	l := log.NewHelper(log.With(logger, "module", "meilisearch/data/service"))
+	return bootstrap.NewMeilisearchClient(cfg, l)
 }
 
-func NewSDB(conf *conf.Data, logger log.Logger) *meilisearch.Client {
-	return nil
-	log := log.NewHelper(log.With(logger, "module", "data/meilisearch"))
-	sdb := meilisearch.NewClient(meilisearch.ClientConfig{
-		Host:    conf.GetMeilisearch().GetHost(),
-		APIKey:  conf.GetMeilisearch().ApiKey,
-		Timeout: conf.Meilisearch.Timeout.AsDuration(),
-	})
-	_, err := sdb.Health()
-	if err != nil {
-		log.Fatalf("failed opening connection to redis %v", err)
-	}
-	return sdb
+// NewAuthzCasbinClient 创建Casbin客户端
+func NewAuthzCasbinClient(cfg *conf.Bootstrap, logger log.Logger) *casbin.SyncedEnforcer {
+	log.NewHelper(log.With(logger, "module", "casbin/authz/service"))
+	model, adapter, watcher := bootstrap.NewAuthzCasbinModel(cfg, logger), bootstrap.NewAuthzCasbinGormAdapter(cfg, logger), bootstrap.NewAuthzCasbinWatcher(cfg, logger)
+	return bootstrap.NewAuthzCasbinEnforcer(model, adapter, watcher, logger)
+}
+
+// NewDiscovery 创建服务发现客户端
+func NewDiscovery(cfg *conf.Bootstrap, logger log.Logger) registry.Discovery {
+	log.NewHelper(log.With(logger, "module", "discovery/data/service"))
+	return bootstrap.NewConsulRegistry(cfg.Registry)
 }

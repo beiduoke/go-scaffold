@@ -9,8 +9,8 @@ import "common/conf/middleware.proto";
 
 // 服务器
 message Server {
-  // REST
-  message REST {
+  // HTTP
+  message HTTP {
     message CORS {
       repeated string headers = 1;  //
       repeated string methods = 2;  //
@@ -55,7 +55,7 @@ message Server {
     repeated string addrs = 1;  // 对端网络地址
   }
 
-  REST rest = 1;  // REST服务
+  HTTP http = 1;  // HTTP服务
   GRPC grpc = 2;  // gRPC服务
   Websocket websocket = 3;  // Websocket服务
   Mqtt mqtt = 4;  // MQTT服务

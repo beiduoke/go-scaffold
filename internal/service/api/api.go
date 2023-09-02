@@ -43,7 +43,6 @@ type ApiService struct {
 // NewApiService new a Api service.
 func NewApiService(
 	logger log.Logger,
-	ac *conf.Auth,
 	authCase *biz.AuthUsecase,
 	userCase *biz.UserUsecase,
 	domainCase *biz.DomainUsecase,
@@ -56,7 +55,6 @@ func NewApiService(
 	l := log.NewHelper(log.With(logger, "module", "service/api"))
 	return &ApiService{
 		log:        l,
-		ac:         ac,
 		authCase:   authCase,
 		userCase:   userCase,
 		domainCase: domainCase,

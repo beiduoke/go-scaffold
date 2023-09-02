@@ -6,8 +6,8 @@ import (
 	"sort"
 	"time"
 
+	"github.com/beiduoke/go-scaffold/api/common/conf"
 	"github.com/beiduoke/go-scaffold/internal/biz"
-	"github.com/beiduoke/go-scaffold/internal/conf"
 	auth "github.com/beiduoke/go-scaffold/pkg/auth/authn"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/crypto"
@@ -22,7 +22,7 @@ import (
 var _ biz.UserRepo = (*UserRepo)(nil)
 
 type UserRepo struct {
-	ac            *conf.Auth
+	cfg           *conf.Bootstrap
 	data          *Data
 	log           *log.Helper
 	menu          MenuRepo
@@ -34,9 +34,8 @@ type UserRepo struct {
 }
 
 // NewUserRepo .
-func NewUserRepo(logger log.Logger, data *Data, ac *conf.Auth, authenticator auth.Authenticator, domainRepo biz.DomainRepo, roleRepo biz.RoleRepo, postRepo biz.PostRepo, menuRepo biz.MenuRepo, deptRepo biz.DeptRepo) biz.UserRepo {
+func NewUserRepo(logger log.Logger, cfg *conf.Bootstrap, data *Data, authenticator auth.Authenticator, domainRepo biz.DomainRepo, roleRepo biz.RoleRepo, postRepo biz.PostRepo, menuRepo biz.MenuRepo, deptRepo biz.DeptRepo) biz.UserRepo {
 	return &UserRepo{
-		ac:            ac,
 		data:          data,
 		log:           log.NewHelper(logger),
 		domain:        *(domainRepo.(*DomainRepo)),
@@ -378,7 +377,7 @@ func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, er
 	}
 	// 判断多点登录
 	// 如果已有用户登录设备则踢出，反之
-	if !r.ac.Jwt.GetMultipoint() && r.ExistLoginCache(ctx, sysUser.ID) {
+	if !r.cfg.Server.Http.Middleware.Auth.GetMultipoint() && r.ExistLoginCache(ctx, sysUser.ID) {
 		if err := r.DeleteLoginCache(ctx, sysUser.ID); err != nil {
 			r.log.Errorf("用户登录缓存删除失败 %v", err)
 		}
@@ -421,7 +420,7 @@ func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, er
 			}(),
 			LastLoginAt: &now,
 		},
-		Expiration: r.ac.Jwt.ExpiresTime.AsDuration(),
+		Expiration: r.cfg.Server.Http.Middleware.Auth.ExpiresTime.AsDuration(),
 	}
 	err = r.data.DB(ctx).Model(sysUser).Select("LastLoginAt", "LastLoginIP", "LastUseRoleID").Updates(SysUser{
 		LastLoginAt:   &now,

@@ -108,6 +108,11 @@ func LoadBootstrapConfig(configPath string) *conf.Bootstrap {
 		_ = cfg.Scan(&bc.Oss)
 	}
 
+	if bc.Base == nil {
+		bc.Base = &conf.Base{}
+		_ = cfg.Scan(&bc.Base)
+	}
+
 	return &bc
 }
 

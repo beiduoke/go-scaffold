@@ -57,11 +57,11 @@ func (m *Server) validate(all bool) error {
 	var errors []error
 
 	if all {
-		switch v := interface{}(m.GetRest()).(type) {
+		switch v := interface{}(m.GetHttp()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, ServerValidationError{
-					field:  "Rest",
+					field:  "Http",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -69,16 +69,16 @@ func (m *Server) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, ServerValidationError{
-					field:  "Rest",
+					field:  "Http",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetRest()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetHttp()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return ServerValidationError{
-				field:  "Rest",
+				field:  "Http",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -307,22 +307,22 @@ var _ interface {
 	ErrorName() string
 } = ServerValidationError{}
 
-// Validate checks the field values on Server_REST with the rules defined in
+// Validate checks the field values on Server_HTTP with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *Server_REST) Validate() error {
+func (m *Server_HTTP) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on Server_REST with the rules defined in
+// ValidateAll checks the field values on Server_HTTP with the rules defined in
 // the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in Server_RESTMultiError, or
+// result is a list of violation errors wrapped in Server_HTTPMultiError, or
 // nil if none found.
-func (m *Server_REST) ValidateAll() error {
+func (m *Server_HTTP) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *Server_REST) validate(all bool) error {
+func (m *Server_HTTP) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -337,7 +337,7 @@ func (m *Server_REST) validate(all bool) error {
 		switch v := interface{}(m.GetTimeout()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, Server_RESTValidationError{
+				errors = append(errors, Server_HTTPValidationError{
 					field:  "Timeout",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -345,7 +345,7 @@ func (m *Server_REST) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, Server_RESTValidationError{
+				errors = append(errors, Server_HTTPValidationError{
 					field:  "Timeout",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -354,7 +354,7 @@ func (m *Server_REST) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetTimeout()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return Server_RESTValidationError{
+			return Server_HTTPValidationError{
 				field:  "Timeout",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -366,7 +366,7 @@ func (m *Server_REST) validate(all bool) error {
 		switch v := interface{}(m.GetCors()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, Server_RESTValidationError{
+				errors = append(errors, Server_HTTPValidationError{
 					field:  "Cors",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -374,7 +374,7 @@ func (m *Server_REST) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, Server_RESTValidationError{
+				errors = append(errors, Server_HTTPValidationError{
 					field:  "Cors",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -383,7 +383,7 @@ func (m *Server_REST) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetCors()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return Server_RESTValidationError{
+			return Server_HTTPValidationError{
 				field:  "Cors",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -395,7 +395,7 @@ func (m *Server_REST) validate(all bool) error {
 		switch v := interface{}(m.GetMiddleware()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, Server_RESTValidationError{
+				errors = append(errors, Server_HTTPValidationError{
 					field:  "Middleware",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -403,7 +403,7 @@ func (m *Server_REST) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, Server_RESTValidationError{
+				errors = append(errors, Server_HTTPValidationError{
 					field:  "Middleware",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -412,7 +412,7 @@ func (m *Server_REST) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetMiddleware()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return Server_RESTValidationError{
+			return Server_HTTPValidationError{
 				field:  "Middleware",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -421,18 +421,18 @@ func (m *Server_REST) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return Server_RESTMultiError(errors)
+		return Server_HTTPMultiError(errors)
 	}
 
 	return nil
 }
 
-// Server_RESTMultiError is an error wrapping multiple validation errors
-// returned by Server_REST.ValidateAll() if the designated constraints aren't met.
-type Server_RESTMultiError []error
+// Server_HTTPMultiError is an error wrapping multiple validation errors
+// returned by Server_HTTP.ValidateAll() if the designated constraints aren't met.
+type Server_HTTPMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m Server_RESTMultiError) Error() string {
+func (m Server_HTTPMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -441,11 +441,11 @@ func (m Server_RESTMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m Server_RESTMultiError) AllErrors() []error { return m }
+func (m Server_HTTPMultiError) AllErrors() []error { return m }
 
-// Server_RESTValidationError is the validation error returned by
-// Server_REST.Validate if the designated constraints aren't met.
-type Server_RESTValidationError struct {
+// Server_HTTPValidationError is the validation error returned by
+// Server_HTTP.Validate if the designated constraints aren't met.
+type Server_HTTPValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -453,22 +453,22 @@ type Server_RESTValidationError struct {
 }
 
 // Field function returns field value.
-func (e Server_RESTValidationError) Field() string { return e.field }
+func (e Server_HTTPValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e Server_RESTValidationError) Reason() string { return e.reason }
+func (e Server_HTTPValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e Server_RESTValidationError) Cause() error { return e.cause }
+func (e Server_HTTPValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e Server_RESTValidationError) Key() bool { return e.key }
+func (e Server_HTTPValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e Server_RESTValidationError) ErrorName() string { return "Server_RESTValidationError" }
+func (e Server_HTTPValidationError) ErrorName() string { return "Server_HTTPValidationError" }
 
 // Error satisfies the builtin error interface
-func (e Server_RESTValidationError) Error() string {
+func (e Server_HTTPValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -480,14 +480,14 @@ func (e Server_RESTValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sServer_REST.%s: %s%s",
+		"invalid %sServer_HTTP.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = Server_RESTValidationError{}
+var _ error = Server_HTTPValidationError{}
 
 var _ interface {
 	Field() string
@@ -495,7 +495,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = Server_RESTValidationError{}
+} = Server_HTTPValidationError{}
 
 // Validate checks the field values on Server_GRPC with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
@@ -1093,22 +1093,22 @@ var _ interface {
 	ErrorName() string
 } = Server_RabbitMQValidationError{}
 
-// Validate checks the field values on Server_REST_CORS with the rules defined
+// Validate checks the field values on Server_HTTP_CORS with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
-func (m *Server_REST_CORS) Validate() error {
+func (m *Server_HTTP_CORS) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on Server_REST_CORS with the rules
+// ValidateAll checks the field values on Server_HTTP_CORS with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// Server_REST_CORSMultiError, or nil if none found.
-func (m *Server_REST_CORS) ValidateAll() error {
+// Server_HTTP_CORSMultiError, or nil if none found.
+func (m *Server_HTTP_CORS) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *Server_REST_CORS) validate(all bool) error {
+func (m *Server_HTTP_CORS) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1116,19 +1116,19 @@ func (m *Server_REST_CORS) validate(all bool) error {
 	var errors []error
 
 	if len(errors) > 0 {
-		return Server_REST_CORSMultiError(errors)
+		return Server_HTTP_CORSMultiError(errors)
 	}
 
 	return nil
 }
 
-// Server_REST_CORSMultiError is an error wrapping multiple validation errors
-// returned by Server_REST_CORS.ValidateAll() if the designated constraints
+// Server_HTTP_CORSMultiError is an error wrapping multiple validation errors
+// returned by Server_HTTP_CORS.ValidateAll() if the designated constraints
 // aren't met.
-type Server_REST_CORSMultiError []error
+type Server_HTTP_CORSMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m Server_REST_CORSMultiError) Error() string {
+func (m Server_HTTP_CORSMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1137,11 +1137,11 @@ func (m Server_REST_CORSMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m Server_REST_CORSMultiError) AllErrors() []error { return m }
+func (m Server_HTTP_CORSMultiError) AllErrors() []error { return m }
 
-// Server_REST_CORSValidationError is the validation error returned by
-// Server_REST_CORS.Validate if the designated constraints aren't met.
-type Server_REST_CORSValidationError struct {
+// Server_HTTP_CORSValidationError is the validation error returned by
+// Server_HTTP_CORS.Validate if the designated constraints aren't met.
+type Server_HTTP_CORSValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1149,22 +1149,22 @@ type Server_REST_CORSValidationError struct {
 }
 
 // Field function returns field value.
-func (e Server_REST_CORSValidationError) Field() string { return e.field }
+func (e Server_HTTP_CORSValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e Server_REST_CORSValidationError) Reason() string { return e.reason }
+func (e Server_HTTP_CORSValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e Server_REST_CORSValidationError) Cause() error { return e.cause }
+func (e Server_HTTP_CORSValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e Server_REST_CORSValidationError) Key() bool { return e.key }
+func (e Server_HTTP_CORSValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e Server_REST_CORSValidationError) ErrorName() string { return "Server_REST_CORSValidationError" }
+func (e Server_HTTP_CORSValidationError) ErrorName() string { return "Server_HTTP_CORSValidationError" }
 
 // Error satisfies the builtin error interface
-func (e Server_REST_CORSValidationError) Error() string {
+func (e Server_HTTP_CORSValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1176,14 +1176,14 @@ func (e Server_REST_CORSValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sServer_REST_CORS.%s: %s%s",
+		"invalid %sServer_HTTP_CORS.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = Server_REST_CORSValidationError{}
+var _ error = Server_HTTP_CORSValidationError{}
 
 var _ interface {
 	Field() string
@@ -1191,4 +1191,4 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = Server_REST_CORSValidationError{}
+} = Server_HTTP_CORSValidationError{}

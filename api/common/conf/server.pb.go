@@ -27,7 +27,7 @@ type Server struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Rest      *Server_REST      `protobuf:"bytes,1,opt,name=rest,proto3" json:"rest,omitempty"`           // REST服务
+	Http      *Server_HTTP      `protobuf:"bytes,1,opt,name=http,proto3" json:"http,omitempty"`           // HTTP服务
 	Grpc      *Server_GRPC      `protobuf:"bytes,2,opt,name=grpc,proto3" json:"grpc,omitempty"`           // gRPC服务
 	Websocket *Server_Websocket `protobuf:"bytes,3,opt,name=websocket,proto3" json:"websocket,omitempty"` // Websocket服务
 	Mqtt      *Server_Mqtt      `protobuf:"bytes,4,opt,name=mqtt,proto3" json:"mqtt,omitempty"`           // MQTT服务
@@ -67,9 +67,9 @@ func (*Server) Descriptor() ([]byte, []int) {
 	return file_common_conf_server_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Server) GetRest() *Server_REST {
+func (x *Server) GetHttp() *Server_HTTP {
 	if x != nil {
-		return x.Rest
+		return x.Http
 	}
 	return nil
 }
@@ -109,8 +109,8 @@ func (x *Server) GetRabbitmq() *Server_RabbitMQ {
 	return nil
 }
 
-// REST
-type Server_REST struct {
+// HTTP
+type Server_HTTP struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -118,12 +118,12 @@ type Server_REST struct {
 	Network    string               `protobuf:"bytes,1,opt,name=network,proto3" json:"network,omitempty"`       // 网络
 	Addr       string               `protobuf:"bytes,2,opt,name=addr,proto3" json:"addr,omitempty"`             // 服务监听地址
 	Timeout    *durationpb.Duration `protobuf:"bytes,3,opt,name=timeout,proto3" json:"timeout,omitempty"`       // 超时时间
-	Cors       *Server_REST_CORS    `protobuf:"bytes,4,opt,name=cors,proto3" json:"cors,omitempty"`             // 服务监听地址
+	Cors       *Server_HTTP_CORS    `protobuf:"bytes,4,opt,name=cors,proto3" json:"cors,omitempty"`             // 服务监听地址
 	Middleware *Middleware          `protobuf:"bytes,5,opt,name=middleware,proto3" json:"middleware,omitempty"` // 中间件
 }
 
-func (x *Server_REST) Reset() {
-	*x = Server_REST{}
+func (x *Server_HTTP) Reset() {
+	*x = Server_HTTP{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_common_conf_server_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -131,13 +131,13 @@ func (x *Server_REST) Reset() {
 	}
 }
 
-func (x *Server_REST) String() string {
+func (x *Server_HTTP) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Server_REST) ProtoMessage() {}
+func (*Server_HTTP) ProtoMessage() {}
 
-func (x *Server_REST) ProtoReflect() protoreflect.Message {
+func (x *Server_HTTP) ProtoReflect() protoreflect.Message {
 	mi := &file_common_conf_server_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -149,40 +149,40 @@ func (x *Server_REST) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Server_REST.ProtoReflect.Descriptor instead.
-func (*Server_REST) Descriptor() ([]byte, []int) {
+// Deprecated: Use Server_HTTP.ProtoReflect.Descriptor instead.
+func (*Server_HTTP) Descriptor() ([]byte, []int) {
 	return file_common_conf_server_proto_rawDescGZIP(), []int{0, 0}
 }
 
-func (x *Server_REST) GetNetwork() string {
+func (x *Server_HTTP) GetNetwork() string {
 	if x != nil {
 		return x.Network
 	}
 	return ""
 }
 
-func (x *Server_REST) GetAddr() string {
+func (x *Server_HTTP) GetAddr() string {
 	if x != nil {
 		return x.Addr
 	}
 	return ""
 }
 
-func (x *Server_REST) GetTimeout() *durationpb.Duration {
+func (x *Server_HTTP) GetTimeout() *durationpb.Duration {
 	if x != nil {
 		return x.Timeout
 	}
 	return nil
 }
 
-func (x *Server_REST) GetCors() *Server_REST_CORS {
+func (x *Server_HTTP) GetCors() *Server_HTTP_CORS {
 	if x != nil {
 		return x.Cors
 	}
 	return nil
 }
 
-func (x *Server_REST) GetMiddleware() *Middleware {
+func (x *Server_HTTP) GetMiddleware() *Middleware {
 	if x != nil {
 		return x.Middleware
 	}
@@ -477,7 +477,7 @@ func (x *Server_RabbitMQ) GetAddrs() []string {
 	return nil
 }
 
-type Server_REST_CORS struct {
+type Server_HTTP_CORS struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -487,8 +487,8 @@ type Server_REST_CORS struct {
 	Origins []string `protobuf:"bytes,3,rep,name=origins,proto3" json:"origins,omitempty"` //
 }
 
-func (x *Server_REST_CORS) Reset() {
-	*x = Server_REST_CORS{}
+func (x *Server_HTTP_CORS) Reset() {
+	*x = Server_HTTP_CORS{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_common_conf_server_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -496,13 +496,13 @@ func (x *Server_REST_CORS) Reset() {
 	}
 }
 
-func (x *Server_REST_CORS) String() string {
+func (x *Server_HTTP_CORS) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Server_REST_CORS) ProtoMessage() {}
+func (*Server_HTTP_CORS) ProtoMessage() {}
 
-func (x *Server_REST_CORS) ProtoReflect() protoreflect.Message {
+func (x *Server_HTTP_CORS) ProtoReflect() protoreflect.Message {
 	mi := &file_common_conf_server_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -514,26 +514,26 @@ func (x *Server_REST_CORS) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Server_REST_CORS.ProtoReflect.Descriptor instead.
-func (*Server_REST_CORS) Descriptor() ([]byte, []int) {
+// Deprecated: Use Server_HTTP_CORS.ProtoReflect.Descriptor instead.
+func (*Server_HTTP_CORS) Descriptor() ([]byte, []int) {
 	return file_common_conf_server_proto_rawDescGZIP(), []int{0, 0, 0}
 }
 
-func (x *Server_REST_CORS) GetHeaders() []string {
+func (x *Server_HTTP_CORS) GetHeaders() []string {
 	if x != nil {
 		return x.Headers
 	}
 	return nil
 }
 
-func (x *Server_REST_CORS) GetMethods() []string {
+func (x *Server_HTTP_CORS) GetMethods() []string {
 	if x != nil {
 		return x.Methods
 	}
 	return nil
 }
 
-func (x *Server_REST_CORS) GetOrigins() []string {
+func (x *Server_HTTP_CORS) GetOrigins() []string {
 	if x != nil {
 		return x.Origins
 	}
@@ -549,9 +549,9 @@ var file_common_conf_server_proto_rawDesc = []byte{
 	0x66, 0x2f, 0x64, 0x75, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
 	0x1a, 0x1c, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2f, 0x63, 0x6f, 0x6e, 0x66, 0x2f, 0x6d, 0x69,
 	0x64, 0x64, 0x6c, 0x65, 0x77, 0x61, 0x72, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0xb0,
-	0x07, 0x0a, 0x06, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x12, 0x25, 0x0a, 0x04, 0x72, 0x65, 0x73,
-	0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x63, 0x6f, 0x6e, 0x66, 0x2e, 0x53,
-	0x65, 0x72, 0x76, 0x65, 0x72, 0x2e, 0x52, 0x45, 0x53, 0x54, 0x52, 0x04, 0x72, 0x65, 0x73, 0x74,
+	0x07, 0x0a, 0x06, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x12, 0x25, 0x0a, 0x04, 0x68, 0x74, 0x74,
+	0x70, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x63, 0x6f, 0x6e, 0x66, 0x2e, 0x53,
+	0x65, 0x72, 0x76, 0x65, 0x72, 0x2e, 0x48, 0x54, 0x54, 0x50, 0x52, 0x04, 0x68, 0x74, 0x74, 0x70,
 	0x12, 0x25, 0x0a, 0x04, 0x67, 0x72, 0x70, 0x63, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x11,
 	0x2e, 0x63, 0x6f, 0x6e, 0x66, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x2e, 0x47, 0x52, 0x50,
 	0x43, 0x52, 0x04, 0x67, 0x72, 0x70, 0x63, 0x12, 0x34, 0x0a, 0x09, 0x77, 0x65, 0x62, 0x73, 0x6f,
@@ -566,7 +566,7 @@ var file_common_conf_server_proto_rawDesc = []byte{
 	0x0a, 0x08, 0x72, 0x61, 0x62, 0x62, 0x69, 0x74, 0x6d, 0x71, 0x18, 0x06, 0x20, 0x01, 0x28, 0x0b,
 	0x32, 0x15, 0x2e, 0x63, 0x6f, 0x6e, 0x66, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x2e, 0x52,
 	0x61, 0x62, 0x62, 0x69, 0x74, 0x4d, 0x51, 0x52, 0x08, 0x72, 0x61, 0x62, 0x62, 0x69, 0x74, 0x6d,
-	0x71, 0x1a, 0x9d, 0x02, 0x0a, 0x04, 0x52, 0x45, 0x53, 0x54, 0x12, 0x18, 0x0a, 0x07, 0x6e, 0x65,
+	0x71, 0x1a, 0x9d, 0x02, 0x0a, 0x04, 0x48, 0x54, 0x54, 0x50, 0x12, 0x18, 0x0a, 0x07, 0x6e, 0x65,
 	0x74, 0x77, 0x6f, 0x72, 0x6b, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6e, 0x65, 0x74,
 	0x77, 0x6f, 0x72, 0x6b, 0x12, 0x12, 0x0a, 0x04, 0x61, 0x64, 0x64, 0x72, 0x18, 0x02, 0x20, 0x01,
 	0x28, 0x09, 0x52, 0x04, 0x61, 0x64, 0x64, 0x72, 0x12, 0x33, 0x0a, 0x07, 0x74, 0x69, 0x6d, 0x65,
@@ -574,7 +574,7 @@ var file_common_conf_server_proto_rawDesc = []byte{
 	0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x44, 0x75, 0x72, 0x61,
 	0x74, 0x69, 0x6f, 0x6e, 0x52, 0x07, 0x74, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x12, 0x2a, 0x0a,
 	0x04, 0x63, 0x6f, 0x72, 0x73, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x16, 0x2e, 0x63, 0x6f,
-	0x6e, 0x66, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x2e, 0x52, 0x45, 0x53, 0x54, 0x2e, 0x43,
+	0x6e, 0x66, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x2e, 0x48, 0x54, 0x54, 0x50, 0x2e, 0x43,
 	0x4f, 0x52, 0x53, 0x52, 0x04, 0x63, 0x6f, 0x72, 0x73, 0x12, 0x30, 0x0a, 0x0a, 0x6d, 0x69, 0x64,
 	0x64, 0x6c, 0x65, 0x77, 0x61, 0x72, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x10, 0x2e,
 	0x63, 0x6f, 0x6e, 0x66, 0x2e, 0x4d, 0x69, 0x64, 0x64, 0x6c, 0x65, 0x77, 0x61, 0x72, 0x65, 0x52,
@@ -630,26 +630,26 @@ func file_common_conf_server_proto_rawDescGZIP() []byte {
 var file_common_conf_server_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_common_conf_server_proto_goTypes = []interface{}{
 	(*Server)(nil),              // 0: conf.Server
-	(*Server_REST)(nil),         // 1: conf.Server.REST
+	(*Server_HTTP)(nil),         // 1: conf.Server.HTTP
 	(*Server_GRPC)(nil),         // 2: conf.Server.GRPC
 	(*Server_Websocket)(nil),    // 3: conf.Server.Websocket
 	(*Server_Mqtt)(nil),         // 4: conf.Server.Mqtt
 	(*Server_Kafka)(nil),        // 5: conf.Server.Kafka
 	(*Server_RabbitMQ)(nil),     // 6: conf.Server.RabbitMQ
-	(*Server_REST_CORS)(nil),    // 7: conf.Server.REST.CORS
+	(*Server_HTTP_CORS)(nil),    // 7: conf.Server.HTTP.CORS
 	(*durationpb.Duration)(nil), // 8: google.protobuf.Duration
 	(*Middleware)(nil),          // 9: conf.Middleware
 }
 var file_common_conf_server_proto_depIdxs = []int32{
-	1,  // 0: conf.Server.rest:type_name -> conf.Server.REST
+	1,  // 0: conf.Server.http:type_name -> conf.Server.HTTP
 	2,  // 1: conf.Server.grpc:type_name -> conf.Server.GRPC
 	3,  // 2: conf.Server.websocket:type_name -> conf.Server.Websocket
 	4,  // 3: conf.Server.mqtt:type_name -> conf.Server.Mqtt
 	5,  // 4: conf.Server.kafka:type_name -> conf.Server.Kafka
 	6,  // 5: conf.Server.rabbitmq:type_name -> conf.Server.RabbitMQ
-	8,  // 6: conf.Server.REST.timeout:type_name -> google.protobuf.Duration
-	7,  // 7: conf.Server.REST.cors:type_name -> conf.Server.REST.CORS
-	9,  // 8: conf.Server.REST.middleware:type_name -> conf.Middleware
+	8,  // 6: conf.Server.HTTP.timeout:type_name -> google.protobuf.Duration
+	7,  // 7: conf.Server.HTTP.cors:type_name -> conf.Server.HTTP.CORS
+	9,  // 8: conf.Server.HTTP.middleware:type_name -> conf.Middleware
 	8,  // 9: conf.Server.GRPC.timeout:type_name -> google.protobuf.Duration
 	9,  // 10: conf.Server.GRPC.middleware:type_name -> conf.Middleware
 	8,  // 11: conf.Server.Websocket.timeout:type_name -> google.protobuf.Duration
@@ -680,7 +680,7 @@ func file_common_conf_server_proto_init() {
 			}
 		}
 		file_common_conf_server_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Server_REST); i {
+			switch v := v.(*Server_HTTP); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -752,7 +752,7 @@ func file_common_conf_server_proto_init() {
 			}
 		}
 		file_common_conf_server_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Server_REST_CORS); i {
+			switch v := v.(*Server_HTTP_CORS); i {
 			case 0:
 				return &v.state
 			case 1:

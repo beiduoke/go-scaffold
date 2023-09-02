@@ -7,7 +7,6 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/pkg/errors"
 
-	"github.com/beiduoke/go-scaffold/internal/conf"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/zzsds/go-tools/pkg/password"
@@ -81,12 +80,11 @@ type UserRepo interface {
 type UserUsecase struct {
 	biz *Biz
 	log *log.Helper
-	ac  *conf.Auth
 }
 
 // NewUserUsecase new a User usecase.
-func NewUserUsecase(logger log.Logger, biz *Biz, ac *conf.Auth) *UserUsecase {
-	return &UserUsecase{log: log.NewHelper(logger), ac: ac, biz: biz}
+func NewUserUsecase(logger log.Logger, biz *Biz) *UserUsecase {
+	return &UserUsecase{log: log.NewHelper(logger), biz: biz}
 }
 
 // Create 创建用户

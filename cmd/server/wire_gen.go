@@ -7,29 +7,27 @@
 package main
 
 import (
+	"github.com/beiduoke/go-scaffold/api/common/conf"
 	"github.com/beiduoke/go-scaffold/internal/biz"
-	"github.com/beiduoke/go-scaffold/internal/conf"
 	"github.com/beiduoke/go-scaffold/internal/data"
 	"github.com/beiduoke/go-scaffold/internal/server"
 	"github.com/beiduoke/go-scaffold/internal/service/api"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/registry"
 )
 
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, auth *conf.Auth, confData *conf.Data, system *conf.System, logger log.Logger) (*kratos.App, func(), error) {
+func wireApp(logger log.Logger, registrar registry.Registrar, bootstrap *conf.Bootstrap) (*kratos.App, func(), error) {
 	v := data.NewModelMigrate()
-	db := data.NewDB(confData, logger, v)
-	client := data.NewRDB(confData, logger)
-	meilisearchClient := data.NewSDB(confData, logger)
-	model := data.NewAuthModel(auth, logger)
-	adapter := data.NewAuthAdapter(db, auth, logger)
-	watcher := data.NewWatcher(confData, logger)
-	iEnforcer := data.NewAuthEnforcer(model, adapter, watcher, logger)
+	db := data.NewGormClient(bootstrap, logger, v)
+	client := data.NewRedisClient(bootstrap, logger)
+	meilisearchClient := data.NewMeilisearchClient(bootstrap, logger)
+	syncedEnforcer := data.NewAuthzCasbinClient(bootstrap, logger)
 	node := data.NewSnowflake(logger)
-	dataData, cleanup, err := data.NewData(db, client, meilisearchClient, iEnforcer, node, logger, system)
+	dataData, cleanup, err := data.NewData(bootstrap, db, client, meilisearchClient, syncedEnforcer, node, logger)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -38,12 +36,12 @@ func wireApp(confServer *conf.Server, auth *conf.Auth, confData *conf.Data, syst
 	domainRepo := data.NewDomainRepo(logger, dataData, menuRepo)
 	deptRepo := data.NewDeptRepo(logger, dataData)
 	roleRepo := data.NewRoleRepo(logger, dataData, menuRepo, deptRepo)
-	authenticator := data.NewAuthenticator(auth, logger)
+	authenticator := server.NewAuthenticator(bootstrap, logger)
 	postRepo := data.NewPostRepo(logger, dataData)
-	userRepo := data.NewUserRepo(logger, dataData, auth, authenticator, domainRepo, roleRepo, postRepo, menuRepo, deptRepo)
+	userRepo := data.NewUserRepo(logger, bootstrap, dataData, authenticator, domainRepo, roleRepo, postRepo, menuRepo, deptRepo)
 	bizBiz := biz.NewBiz(logger, transaction, domainRepo, roleRepo, userRepo)
 	authUsecase := biz.NewAuthUsecase(logger, bizBiz, authenticator)
-	userUsecase := biz.NewUserUsecase(logger, bizBiz, auth)
+	userUsecase := biz.NewUserUsecase(logger, bizBiz)
 	domainUsecase := biz.NewDomainUsecase(logger, bizBiz)
 	roleUsecase := biz.NewRoleUsecase(logger, bizBiz)
 	menuUsecase := biz.NewMenuUsecase(logger, bizBiz, menuRepo)
@@ -51,14 +49,14 @@ func wireApp(confServer *conf.Server, auth *conf.Auth, confData *conf.Data, syst
 	postUsecase := biz.NewPostUsecase(logger, bizBiz, postRepo)
 	dictRepo := data.NewDictRepo(logger, dataData)
 	dictUsecase := biz.NewDictUsecase(logger, bizBiz, dictRepo)
-	apiService := api.NewApiService(logger, auth, authUsecase, userUsecase, domainUsecase, roleUsecase, menuUsecase, deptUsecase, postUsecase, dictUsecase)
-	grpcServer := server.NewGRPCServer(confServer, auth, apiService, logger)
-	authorized := data.NewAuthCasbin(logger, iEnforcer)
+	apiService := api.NewApiService(logger, authUsecase, userUsecase, domainUsecase, roleUsecase, menuUsecase, deptUsecase, postUsecase, dictUsecase)
+	grpcServer := server.NewGRPCServer(bootstrap, apiService, logger)
+	authorized := server.NewAuthorized(syncedEnforcer, logger)
 	securityUserCreator := data.NewSecurityUser(logger, dataData, userRepo)
-	middleware := server.NewAuthMiddleware(auth, authenticator, authorized, securityUserCreator)
-	serverOption := server.NewMiddleware(logger, middleware)
-	httpServer := server.NewHTTPServer(confServer, apiService, serverOption)
-	app := newApp(logger, grpcServer, httpServer)
+	middleware := server.NewAuthMiddleware(authenticator, authorized, securityUserCreator)
+	v2 := server.NewMiddleware(logger, middleware)
+	httpServer := server.NewHTTPServer(bootstrap, logger, apiService, v2)
+	app := newApp(logger, registrar, grpcServer, httpServer)
 	return app, func() {
 		cleanup()
 	}, nil
