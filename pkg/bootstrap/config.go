@@ -2,7 +2,6 @@ package bootstrap
 
 import (
 	"os"
-	"path/filepath"
 	"strings"
 
 	"google.golang.org/grpc"
@@ -29,10 +28,6 @@ import (
 
 	// apollo
 	apolloKratos "github.com/go-kratos/kratos/contrib/config/apollo/v2"
-
-	// kubernetes
-	k8sKratos "github.com/go-kratos/kratos/contrib/config/kubernetes/v2"
-	k8sUtil "k8s.io/client-go/util/homedir"
 
 	"github.com/beiduoke/go-scaffold/api/common/conf"
 )
@@ -163,13 +158,12 @@ func LoadRemoteConfigSourceConfigs(configPath string) (error, *conf.RemoteConfig
 type ConfigType string
 
 const (
-	ConfigTypeLocalFile  ConfigType = "file"
-	ConfigTypeNacos      ConfigType = "nacos"
-	ConfigTypeConsul     ConfigType = "consul"
-	ConfigTypeEtcd       ConfigType = "etcd"
-	ConfigTypeApollo     ConfigType = "apollo"
-	ConfigTypeKubernetes ConfigType = "kubernetes"
-	ConfigTypePolaris    ConfigType = "polaris"
+	ConfigTypeLocalFile ConfigType = "file"
+	ConfigTypeNacos     ConfigType = "nacos"
+	ConfigTypeConsul    ConfigType = "consul"
+	ConfigTypeEtcd      ConfigType = "etcd"
+	ConfigTypeApollo    ConfigType = "apollo"
+	ConfigTypePolaris   ConfigType = "polaris"
 )
 
 // NewRemoteConfigSource 创建一个远程配置源
@@ -187,8 +181,6 @@ func NewRemoteConfigSource(c *conf.RemoteConfig) config.Source {
 		return NewEtcdConfigSource(c)
 	case ConfigTypeApollo:
 		return NewApolloConfigSource(c)
-	case ConfigTypeKubernetes:
-		return NewKubernetesConfigSource(c)
 	case ConfigTypePolaris:
 		return NewPolarisConfigSource(c)
 	}
@@ -292,16 +284,6 @@ func NewApolloConfigSource(c *conf.RemoteConfig) config.Source {
 		apolloKratos.WithNamespace(c.Apollo.Namespace),
 		apolloKratos.WithSecret(c.Apollo.Secret),
 		apolloKratos.WithEnableBackup(),
-	)
-	return source
-}
-
-// NewKubernetesConfigSource 创建一个远程配置源 - Kubernetes
-func NewKubernetesConfigSource(c *conf.RemoteConfig) config.Source {
-	source := k8sKratos.NewSource(
-		k8sKratos.Namespace(c.Kubernetes.Namespace),
-		k8sKratos.LabelSelector(""),
-		k8sKratos.KubeConfig(filepath.Join(k8sUtil.HomeDir(), ".kube", "config")),
 	)
 	return source
 }

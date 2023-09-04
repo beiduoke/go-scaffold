@@ -2,13 +2,36 @@ server:
   http:
     addr: 0.0.0.0:8011
     timeout: 1s
+    cors:
+      headers:
+        - "X-Requested-With"
+        - "Content-Type"
+        - "Authorization"
+      methods:
+        - "GET"
+        - "POST"
+        - "PUT"
+        - "DELETE"
+        - "HEAD"
+        - "OPTIONS"
+      origins:
+        - "*"
+    middleware:
+      auth:
+        method: "HS256"
+        key: "some_api_key"
+      casbin: 
+        model_path: ../../configs/casbin/rbac_with_domains.conf
+        policy_path: ../../configs/casbin/policy.csv
   grpc:
     addr: 0.0.0.0:9011
     timeout: 1s
+    middleware:
   websocket:
     addr: 0.0.0.0:7011
     timeout: 1s
     path: /
+    middleware:
 data:
   database:
     driver: mysql
@@ -23,17 +46,7 @@ data:
     host: http://127.0.0.1:7700
     api_key: '123456'
     timeout: 0.2s
-auth:
-  jwt:
-    secret_key: some_jwt_sign_key
-    expires_time: 864000s
-    header: Authorization
-    scheme: Bearer
-    multipoint: false
-  casbin: 
-    model_path: ../../configs/casbin/rbac_with_domains.conf
-    policy_path: ../../configs/casbin/policy.csv
-system:
-  super_admin:
+base:
+  admin:
     domain_id: 1
     user_id: 1

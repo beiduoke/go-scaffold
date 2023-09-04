@@ -27,7 +27,7 @@ type Client struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Rest *Client_REST `protobuf:"bytes,1,opt,name=rest,proto3" json:"rest,omitempty"` // REST服务
+	Rest *Client_HTTP `protobuf:"bytes,1,opt,name=rest,proto3" json:"rest,omitempty"` // HTTP服务
 	Grpc *Client_GRPC `protobuf:"bytes,2,opt,name=grpc,proto3" json:"grpc,omitempty"` // gRPC服务
 }
 
@@ -63,7 +63,7 @@ func (*Client) Descriptor() ([]byte, []int) {
 	return file_common_conf_client_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Client) GetRest() *Client_REST {
+func (x *Client) GetRest() *Client_HTTP {
 	if x != nil {
 		return x.Rest
 	}
@@ -77,8 +77,8 @@ func (x *Client) GetGrpc() *Client_GRPC {
 	return nil
 }
 
-// REST
-type Client_REST struct {
+// HTTP
+type Client_HTTP struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -87,8 +87,8 @@ type Client_REST struct {
 	Middleware *Middleware          `protobuf:"bytes,2,opt,name=middleware,proto3" json:"middleware,omitempty"`
 }
 
-func (x *Client_REST) Reset() {
-	*x = Client_REST{}
+func (x *Client_HTTP) Reset() {
+	*x = Client_HTTP{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_common_conf_client_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -96,13 +96,13 @@ func (x *Client_REST) Reset() {
 	}
 }
 
-func (x *Client_REST) String() string {
+func (x *Client_HTTP) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Client_REST) ProtoMessage() {}
+func (*Client_HTTP) ProtoMessage() {}
 
-func (x *Client_REST) ProtoReflect() protoreflect.Message {
+func (x *Client_HTTP) ProtoReflect() protoreflect.Message {
 	mi := &file_common_conf_client_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -114,19 +114,19 @@ func (x *Client_REST) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Client_REST.ProtoReflect.Descriptor instead.
-func (*Client_REST) Descriptor() ([]byte, []int) {
+// Deprecated: Use Client_HTTP.ProtoReflect.Descriptor instead.
+func (*Client_HTTP) Descriptor() ([]byte, []int) {
 	return file_common_conf_client_proto_rawDescGZIP(), []int{0, 0}
 }
 
-func (x *Client_REST) GetTimeout() *durationpb.Duration {
+func (x *Client_HTTP) GetTimeout() *durationpb.Duration {
 	if x != nil {
 		return x.Timeout
 	}
 	return nil
 }
 
-func (x *Client_REST) GetMiddleware() *Middleware {
+func (x *Client_HTTP) GetMiddleware() *Middleware {
 	if x != nil {
 		return x.Middleware
 	}
@@ -200,10 +200,10 @@ var file_common_conf_client_proto_rawDesc = []byte{
 	0x64, 0x64, 0x6c, 0x65, 0x77, 0x61, 0x72, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0xb4,
 	0x02, 0x0a, 0x06, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x12, 0x25, 0x0a, 0x04, 0x72, 0x65, 0x73,
 	0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x63, 0x6f, 0x6e, 0x66, 0x2e, 0x43,
-	0x6c, 0x69, 0x65, 0x6e, 0x74, 0x2e, 0x52, 0x45, 0x53, 0x54, 0x52, 0x04, 0x72, 0x65, 0x73, 0x74,
+	0x6c, 0x69, 0x65, 0x6e, 0x74, 0x2e, 0x48, 0x54, 0x54, 0x50, 0x52, 0x04, 0x72, 0x65, 0x73, 0x74,
 	0x12, 0x25, 0x0a, 0x04, 0x67, 0x72, 0x70, 0x63, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x11,
 	0x2e, 0x63, 0x6f, 0x6e, 0x66, 0x2e, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x2e, 0x47, 0x52, 0x50,
-	0x43, 0x52, 0x04, 0x67, 0x72, 0x70, 0x63, 0x1a, 0x6d, 0x0a, 0x04, 0x52, 0x45, 0x53, 0x54, 0x12,
+	0x43, 0x52, 0x04, 0x67, 0x72, 0x70, 0x63, 0x1a, 0x6d, 0x0a, 0x04, 0x48, 0x54, 0x54, 0x50, 0x12,
 	0x33, 0x0a, 0x07, 0x74, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b,
 	0x32, 0x19, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
 	0x75, 0x66, 0x2e, 0x44, 0x75, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x07, 0x74, 0x69, 0x6d,
@@ -239,16 +239,16 @@ func file_common_conf_client_proto_rawDescGZIP() []byte {
 var file_common_conf_client_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_common_conf_client_proto_goTypes = []interface{}{
 	(*Client)(nil),              // 0: conf.Client
-	(*Client_REST)(nil),         // 1: conf.Client.REST
+	(*Client_HTTP)(nil),         // 1: conf.Client.HTTP
 	(*Client_GRPC)(nil),         // 2: conf.Client.GRPC
 	(*durationpb.Duration)(nil), // 3: google.protobuf.Duration
 	(*Middleware)(nil),          // 4: conf.Middleware
 }
 var file_common_conf_client_proto_depIdxs = []int32{
-	1, // 0: conf.Client.rest:type_name -> conf.Client.REST
+	1, // 0: conf.Client.rest:type_name -> conf.Client.HTTP
 	2, // 1: conf.Client.grpc:type_name -> conf.Client.GRPC
-	3, // 2: conf.Client.REST.timeout:type_name -> google.protobuf.Duration
-	4, // 3: conf.Client.REST.middleware:type_name -> conf.Middleware
+	3, // 2: conf.Client.HTTP.timeout:type_name -> google.protobuf.Duration
+	4, // 3: conf.Client.HTTP.middleware:type_name -> conf.Middleware
 	3, // 4: conf.Client.GRPC.timeout:type_name -> google.protobuf.Duration
 	4, // 5: conf.Client.GRPC.middleware:type_name -> conf.Middleware
 	6, // [6:6] is the sub-list for method output_type
@@ -278,7 +278,7 @@ func file_common_conf_client_proto_init() {
 			}
 		}
 		file_common_conf_client_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Client_REST); i {
+			switch v := v.(*Client_HTTP); i {
 			case 0:
 				return &v.state
 			case 1:

@@ -191,22 +191,22 @@ var _ interface {
 	ErrorName() string
 } = ClientValidationError{}
 
-// Validate checks the field values on Client_REST with the rules defined in
+// Validate checks the field values on Client_HTTP with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *Client_REST) Validate() error {
+func (m *Client_HTTP) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on Client_REST with the rules defined in
+// ValidateAll checks the field values on Client_HTTP with the rules defined in
 // the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in Client_RESTMultiError, or
+// result is a list of violation errors wrapped in Client_HTTPMultiError, or
 // nil if none found.
-func (m *Client_REST) ValidateAll() error {
+func (m *Client_HTTP) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *Client_REST) validate(all bool) error {
+func (m *Client_HTTP) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -217,7 +217,7 @@ func (m *Client_REST) validate(all bool) error {
 		switch v := interface{}(m.GetTimeout()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, Client_RESTValidationError{
+				errors = append(errors, Client_HTTPValidationError{
 					field:  "Timeout",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -225,7 +225,7 @@ func (m *Client_REST) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, Client_RESTValidationError{
+				errors = append(errors, Client_HTTPValidationError{
 					field:  "Timeout",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -234,7 +234,7 @@ func (m *Client_REST) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetTimeout()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return Client_RESTValidationError{
+			return Client_HTTPValidationError{
 				field:  "Timeout",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -246,7 +246,7 @@ func (m *Client_REST) validate(all bool) error {
 		switch v := interface{}(m.GetMiddleware()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, Client_RESTValidationError{
+				errors = append(errors, Client_HTTPValidationError{
 					field:  "Middleware",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -254,7 +254,7 @@ func (m *Client_REST) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, Client_RESTValidationError{
+				errors = append(errors, Client_HTTPValidationError{
 					field:  "Middleware",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -263,7 +263,7 @@ func (m *Client_REST) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetMiddleware()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return Client_RESTValidationError{
+			return Client_HTTPValidationError{
 				field:  "Middleware",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -272,18 +272,18 @@ func (m *Client_REST) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return Client_RESTMultiError(errors)
+		return Client_HTTPMultiError(errors)
 	}
 
 	return nil
 }
 
-// Client_RESTMultiError is an error wrapping multiple validation errors
-// returned by Client_REST.ValidateAll() if the designated constraints aren't met.
-type Client_RESTMultiError []error
+// Client_HTTPMultiError is an error wrapping multiple validation errors
+// returned by Client_HTTP.ValidateAll() if the designated constraints aren't met.
+type Client_HTTPMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m Client_RESTMultiError) Error() string {
+func (m Client_HTTPMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -292,11 +292,11 @@ func (m Client_RESTMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m Client_RESTMultiError) AllErrors() []error { return m }
+func (m Client_HTTPMultiError) AllErrors() []error { return m }
 
-// Client_RESTValidationError is the validation error returned by
-// Client_REST.Validate if the designated constraints aren't met.
-type Client_RESTValidationError struct {
+// Client_HTTPValidationError is the validation error returned by
+// Client_HTTP.Validate if the designated constraints aren't met.
+type Client_HTTPValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -304,22 +304,22 @@ type Client_RESTValidationError struct {
 }
 
 // Field function returns field value.
-func (e Client_RESTValidationError) Field() string { return e.field }
+func (e Client_HTTPValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e Client_RESTValidationError) Reason() string { return e.reason }
+func (e Client_HTTPValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e Client_RESTValidationError) Cause() error { return e.cause }
+func (e Client_HTTPValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e Client_RESTValidationError) Key() bool { return e.key }
+func (e Client_HTTPValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e Client_RESTValidationError) ErrorName() string { return "Client_RESTValidationError" }
+func (e Client_HTTPValidationError) ErrorName() string { return "Client_HTTPValidationError" }
 
 // Error satisfies the builtin error interface
-func (e Client_RESTValidationError) Error() string {
+func (e Client_HTTPValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -331,14 +331,14 @@ func (e Client_RESTValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sClient_REST.%s: %s%s",
+		"invalid %sClient_HTTP.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = Client_RESTValidationError{}
+var _ error = Client_HTTPValidationError{}
 
 var _ interface {
 	Field() string
@@ -346,7 +346,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = Client_RESTValidationError{}
+} = Client_HTTPValidationError{}
 
 // Validate checks the field values on Client_GRPC with the rules defined in
 // the proto definition for this message. If any rules are violated, the first

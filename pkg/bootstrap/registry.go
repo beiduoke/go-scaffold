@@ -1,8 +1,6 @@
 package bootstrap
 
 import (
-	"path/filepath"
-
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/registry"
 
@@ -28,11 +26,6 @@ import (
 	"github.com/go-zookeeper/zk"
 
 	// kubernetes
-	k8sRegistry "github.com/go-kratos/kratos/contrib/registry/kubernetes/v2"
-	k8s "k8s.io/client-go/kubernetes"
-	k8sRest "k8s.io/client-go/rest"
-	k8sTools "k8s.io/client-go/tools/clientcmd"
-	k8sUtil "k8s.io/client-go/util/homedir"
 
 	// servicecomb
 	servicecombClient "github.com/go-chassis/sc-client"
@@ -69,8 +62,6 @@ func NewRegistry(cfg *conf.Registry) registry.Registrar {
 		return NewZooKeeperRegistry(cfg)
 	case RegistryTypeNacos:
 		return NewNacosRegistry(cfg)
-	case RegistryTypeKubernetes:
-		return NewKubernetesRegistry(cfg)
 	case RegistryTypeEureka:
 		return NewEurekaRegistry(cfg)
 	case RegistryTypePolaris:
@@ -97,8 +88,6 @@ func NewDiscovery(cfg *conf.Registry) registry.Discovery {
 		return NewZooKeeperRegistry(cfg)
 	case RegistryTypeNacos:
 		return NewNacosRegistry(cfg)
-	case RegistryTypeKubernetes:
-		return NewKubernetesRegistry(cfg)
 	case RegistryTypeEureka:
 		return NewEurekaRegistry(cfg)
 	case RegistryTypePolaris:
@@ -188,30 +177,6 @@ func NewNacosRegistry(c *conf.Registry) *nacosKratos.Registry {
 	}
 
 	reg := nacosKratos.New(cli)
-
-	return reg
-}
-
-// NewKubernetesRegistry 创建一个注册发现客户端 - Kubernetes
-func NewKubernetesRegistry(_ *conf.Registry) *k8sRegistry.Registry {
-	restConfig, err := k8sRest.InClusterConfig()
-	if err != nil {
-		home := k8sUtil.HomeDir()
-		kubeConfig := filepath.Join(home, ".kube", "config")
-		restConfig, err = k8sTools.BuildConfigFromFlags("", kubeConfig)
-		if err != nil {
-			log.Fatal(err)
-			return nil
-		}
-	}
-
-	clientSet, err := k8s.NewForConfig(restConfig)
-	if err != nil {
-		log.Fatal(err)
-		return nil
-	}
-
-	reg := k8sRegistry.NewRegistry(clientSet)
 
 	return reg
 }

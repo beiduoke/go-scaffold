@@ -42,12 +42,6 @@ func TestNewZooKeeperRegistry(t *testing.T) {
 	assert.Nil(t, reg)
 }
 
-func TestNewKubernetesRegistry(t *testing.T) {
-	var cfg conf.Registry
-	reg := NewKubernetesRegistry(&cfg)
-	assert.Nil(t, reg)
-}
-
 func TestNewEurekaRegistry(t *testing.T) {
 	var cfg conf.Registry
 	cfg.Eureka.Endpoints = []string{"https://127.0.0.1:18761"}

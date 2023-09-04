@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"os"
 
 	"github.com/beiduoke/go-scaffold/pkg/bootstrap"
@@ -10,16 +9,6 @@ import (
 	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
-)
-
-// go build -ldflags "-X main.Version=x.y.z"
-var (
-	// Name is the name of the compiled software.
-	Name string
-	// Version is the version of the compiled software.
-	Version string
-	// flagconf is the config flag.
-	flagconf string
 )
 
 var (
@@ -31,16 +20,12 @@ var (
 	)
 )
 
-func init() {
-	flag.StringVar(&flagconf, "conf", "../../configs", "config path, eg: -conf config.yaml")
-}
-
 func newApp(logger log.Logger, rr registry.Registrar, gs *grpc.Server, hs *http.Server) *kratos.App {
 	return kratos.New(
-		kratos.ID(id),
-		kratos.Name(Name),
-		kratos.Version(Version),
-		kratos.Metadata(map[string]string{}),
+		kratos.ID(Service.GetInstanceId()),
+		kratos.Name(Service.Name),
+		kratos.Version(Service.Version),
+		kratos.Metadata(Service.Metadata),
 		kratos.Logger(logger),
 		kratos.Server(
 			gs,
