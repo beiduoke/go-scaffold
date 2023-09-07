@@ -14,7 +14,6 @@ import (
 	authn "github.com/beiduoke/go-scaffold/pkg/auth/authn"
 	"github.com/beiduoke/go-scaffold/pkg/auth/authz"
 	"github.com/beiduoke/go-scaffold/pkg/bootstrap"
-	"github.com/casbin/casbin/v2"
 
 	// gormadapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/google/wire"
@@ -38,10 +37,6 @@ var ProviderHttp = wire.NewSet(
 	NewMiddleware,
 	// 认证中间件
 	NewAuthMiddleware,
-	// 认证器
-	NewAuthenticator,
-	//  鉴权器
-	NewAuthorized,
 )
 
 // NewWhiteListMatcher 创建jwt白名单
@@ -59,16 +54,6 @@ func NewWhiteListMatcher() selector.MatchFunc {
 		}
 		return true
 	}
-}
-
-// NewAuthenticator 创建认证
-func NewAuthenticator(cfg *conf.Bootstrap, logger log.Logger) authn.Authenticator {
-	return bootstrap.NewJwtAuthenticator(cfg, logger)
-}
-
-// NewAuthorized 创建鉴权
-func NewAuthorized(enforcer *casbin.SyncedEnforcer, logger log.Logger) authz.Authorized {
-	return bootstrap.NewAuthzCasbin(enforcer, logger)
 }
 
 func NewAuthMiddleware(authenticator authn.Authenticator, authorized authz.Authorized, creator authn.SecurityUserCreator) middleware.Middleware {

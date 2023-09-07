@@ -1,6 +1,6 @@
 module github.com/beiduoke/go-scaffold
 
-go 1.21
+go 1.19
 
 require (
 	github.com/go-kratos/kratos/v2 v2.7.0
@@ -10,7 +10,7 @@ require (
 )
 
 require (
-	github.com/BurntSushi/toml v1.0.0
+	github.com/BurntSushi/toml v1.1.0
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/casbin/casbin/v2 v2.77.1
 	github.com/casbin/gorm-adapter/v3 v3.19.0
@@ -19,21 +19,7 @@ require (
 	github.com/go-chassis/sc-client v0.7.0
 	github.com/go-kratos/aegis v0.2.0
 	github.com/go-kratos/grpc-gateway/v2 v2.5.1-0.20210811062259-c92d36e434b1
-	github.com/go-kratos/kratos/contrib/config/apollo/v2 v2.0.0-20230830131453-6c026bce56a9
-	github.com/go-kratos/kratos/contrib/config/consul/v2 v2.0.0-20230830131453-6c026bce56a9
-	github.com/go-kratos/kratos/contrib/config/etcd/v2 v2.0.0-20230830131453-6c026bce56a9
-	github.com/go-kratos/kratos/contrib/config/nacos/v2 v2.0.0-20230830131453-6c026bce56a9
-	github.com/go-kratos/kratos/contrib/log/aliyun/v2 v2.0.0-20230830131453-6c026bce56a9
-	github.com/go-kratos/kratos/contrib/log/fluent/v2 v2.0.0-20230830131453-6c026bce56a9
-	github.com/go-kratos/kratos/contrib/log/logrus/v2 v2.0.0-20230830131453-6c026bce56a9
-	github.com/go-kratos/kratos/contrib/log/tencent/v2 v2.0.0-20230830131453-6c026bce56a9
-	github.com/go-kratos/kratos/contrib/log/zap/v2 v2.0.0-20230830131453-6c026bce56a9
-	github.com/go-kratos/kratos/contrib/registry/consul/v2 v2.0.0-20230830131453-6c026bce56a9
-	github.com/go-kratos/kratos/contrib/registry/etcd/v2 v2.0.0-20230830131453-6c026bce56a9
-	github.com/go-kratos/kratos/contrib/registry/eureka/v2 v2.0.0-20230830131453-6c026bce56a9
-	github.com/go-kratos/kratos/contrib/registry/nacos/v2 v2.0.0-20230830131453-6c026bce56a9
 	github.com/go-kratos/kratos/contrib/registry/servicecomb/v2 v2.0.0-20230830131453-6c026bce56a9
-	github.com/go-kratos/kratos/contrib/registry/zookeeper/v2 v2.0.0-20230830131453-6c026bce56a9
 	github.com/go-kratos/swagger-api v1.0.1
 	github.com/go-zookeeper/zk v1.0.3
 	github.com/golang-jwt/jwt/v4 v4.5.0
@@ -68,6 +54,23 @@ require (
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gorm.io/driver/mysql v1.5.1
 	gorm.io/gorm v1.25.2
+)
+
+require (
+	github.com/go-kratos/kratos/contrib/config/apollo/v2 v2.0.0-20230830131453-6c026bce56a9
+	github.com/go-kratos/kratos/contrib/config/consul/v2 v2.0.0-20230830131453-6c026bce56a9
+	github.com/go-kratos/kratos/contrib/config/etcd/v2 v2.0.0-20230830131453-6c026bce56a9
+	github.com/go-kratos/kratos/contrib/config/nacos/v2 v2.0.0-20230830131453-6c026bce56a9
+	github.com/go-kratos/kratos/contrib/log/aliyun/v2 v2.0.0-20230830131453-6c026bce56a9
+	github.com/go-kratos/kratos/contrib/log/fluent/v2 v2.0.0-20230830131453-6c026bce56a9
+	github.com/go-kratos/kratos/contrib/log/logrus/v2 v2.0.0-20230830131453-6c026bce56a9
+	github.com/go-kratos/kratos/contrib/log/tencent/v2 v2.0.0-20230830131453-6c026bce56a9
+	github.com/go-kratos/kratos/contrib/log/zap/v2 v2.0.0-20230830131453-6c026bce56a9
+	github.com/go-kratos/kratos/contrib/registry/consul/v2 v2.0.0-20230830131453-6c026bce56a9
+	github.com/go-kratos/kratos/contrib/registry/etcd/v2 v2.0.0-20230830131453-6c026bce56a9
+	github.com/go-kratos/kratos/contrib/registry/eureka/v2 v2.0.0-20230830131453-6c026bce56a9
+	github.com/go-kratos/kratos/contrib/registry/nacos/v2 v2.0.0-20230830131453-6c026bce56a9
+	github.com/go-kratos/kratos/contrib/registry/zookeeper/v2 v2.0.0-20230830131453-6c026bce56a9
 )
 
 require (

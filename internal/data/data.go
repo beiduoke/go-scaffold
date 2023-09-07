@@ -5,6 +5,8 @@ import (
 
 	"github.com/beiduoke/go-scaffold/api/common/conf"
 	"github.com/beiduoke/go-scaffold/internal/biz"
+	"github.com/beiduoke/go-scaffold/pkg/auth/authn"
+	"github.com/beiduoke/go-scaffold/pkg/auth/authz"
 	"github.com/beiduoke/go-scaffold/pkg/bootstrap"
 	"github.com/bwmarrin/snowflake"
 	"github.com/casbin/casbin/v2"
@@ -34,8 +36,12 @@ var ProviderSet = wire.NewSet(
 	NewTransaction,
 	// 认证解析器
 	NewSecurityUser,
+	// 认证器
+	NewAuthenticator,
 	// casbin鉴权客户端
 	NewAuthzCasbinClient,
+	//  鉴权器
+	NewAuthorized,
 	// 数据操作
 	NewDomainRepo,
 	NewRoleRepo,
@@ -74,7 +80,7 @@ type ConfigOptions struct {
 
 // Data .
 type Data struct {
-	conf     ConfigOptions
+	cfg      *conf.Bootstrap
 	log      *log.Helper
 	db       *gorm.DB
 	rdb      *redis.Client
@@ -86,7 +92,7 @@ type Data struct {
 // NewData .
 func NewData(cfg *conf.Bootstrap, db *gorm.DB, rdb *redis.Client, sdb *meilisearch.Client, enforcer *casbin.SyncedEnforcer, sf *snowflake.Node, logger log.Logger) (*Data, func(), error) {
 	l := log.NewHelper(log.With(logger, "module", "data/initialize"))
-	d := &Data{db: db, rdb: rdb, sdb: sdb, log: l, sf: sf, enforcer: enforcer, conf: ConfigOptions{base: cfg.GetBase()}}
+	d := &Data{db: db, rdb: rdb, sdb: sdb, log: l, sf: sf, enforcer: enforcer, cfg: cfg}
 	return d, func() {
 		l.Info("closing db")
 		sql, err := db.DB()
@@ -152,6 +158,17 @@ func NewMeilisearchClient(cfg *conf.Bootstrap, logger log.Logger) *meilisearch.C
 	return bootstrap.NewMeilisearchClient(cfg, l)
 }
 
+// NewDiscovery 创建服务发现客户端
+func NewDiscovery(cfg *conf.Bootstrap, logger log.Logger) registry.Discovery {
+	log.NewHelper(log.With(logger, "module", "discovery/data/service"))
+	return bootstrap.NewConsulRegistry(cfg.Registry)
+}
+
+// NewAuthenticator 创建认证
+func NewAuthenticator(cfg *conf.Bootstrap, logger log.Logger) authn.Authenticator {
+	return bootstrap.NewJwtAuthenticator(cfg, logger)
+}
+
 // NewAuthzCasbinClient 创建Casbin客户端
 func NewAuthzCasbinClient(cfg *conf.Bootstrap, logger log.Logger) *casbin.SyncedEnforcer {
 	log.NewHelper(log.With(logger, "module", "casbin/authz/service"))
@@ -159,8 +176,7 @@ func NewAuthzCasbinClient(cfg *conf.Bootstrap, logger log.Logger) *casbin.Synced
 	return bootstrap.NewAuthzCasbinEnforcer(model, adapter, watcher, logger)
 }
 
-// NewDiscovery 创建服务发现客户端
-func NewDiscovery(cfg *conf.Bootstrap, logger log.Logger) registry.Discovery {
-	log.NewHelper(log.With(logger, "module", "discovery/data/service"))
-	return bootstrap.NewConsulRegistry(cfg.Registry)
+// NewAuthorized 创建鉴权
+func NewAuthorized(enforcer *casbin.SyncedEnforcer, logger log.Logger) authz.Authorized {
+	return bootstrap.NewAuthzCasbin(enforcer, logger)
 }

@@ -20,6 +20,10 @@ server:
       auth:
         method: "HS256"
         key: "some_api_key"
+        header: "Authorization"
+        scheme: "Bearer"
+        multipoint: false
+        expires_time: 86000s
       casbin: 
         model_path: ../../configs/casbin/rbac_with_domains.conf
         policy_path: ../../configs/casbin/policy.csv

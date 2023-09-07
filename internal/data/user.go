@@ -6,7 +6,6 @@ import (
 	"sort"
 	"time"
 
-	"github.com/beiduoke/go-scaffold/api/common/conf"
 	"github.com/beiduoke/go-scaffold/internal/biz"
 	auth "github.com/beiduoke/go-scaffold/pkg/auth/authn"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
@@ -22,7 +21,6 @@ import (
 var _ biz.UserRepo = (*UserRepo)(nil)
 
 type UserRepo struct {
-	cfg           *conf.Bootstrap
 	data          *Data
 	log           *log.Helper
 	menu          MenuRepo
@@ -34,7 +32,7 @@ type UserRepo struct {
 }
 
 // NewUserRepo .
-func NewUserRepo(logger log.Logger, cfg *conf.Bootstrap, data *Data, authenticator auth.Authenticator, domainRepo biz.DomainRepo, roleRepo biz.RoleRepo, postRepo biz.PostRepo, menuRepo biz.MenuRepo, deptRepo biz.DeptRepo) biz.UserRepo {
+func NewUserRepo(logger log.Logger, data *Data, authenticator auth.Authenticator, domainRepo biz.DomainRepo, roleRepo biz.RoleRepo, postRepo biz.PostRepo, menuRepo biz.MenuRepo, deptRepo biz.DeptRepo) biz.UserRepo {
 	return &UserRepo{
 		data:          data,
 		log:           log.NewHelper(logger),
@@ -377,7 +375,7 @@ func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, er
 	}
 	// 判断多点登录
 	// 如果已有用户登录设备则踢出，反之
-	if !r.cfg.Server.Http.Middleware.Auth.GetMultipoint() && r.ExistLoginCache(ctx, sysUser.ID) {
+	if !r.data.cfg.Server.Http.Middleware.Auth.GetMultipoint() && r.ExistLoginCache(ctx, sysUser.ID) {
 		if err := r.DeleteLoginCache(ctx, sysUser.ID); err != nil {
 			r.log.Errorf("用户登录缓存删除失败 %v", err)
 		}
@@ -420,7 +418,7 @@ func (r *UserRepo) Login(ctx context.Context, g *biz.User) (*biz.LoginResult, er
 			}(),
 			LastLoginAt: &now,
 		},
-		Expiration: r.cfg.Server.Http.Middleware.Auth.ExpiresTime.AsDuration(),
+		Expiration: r.data.cfg.Server.Http.Middleware.Auth.ExpiresTime.AsDuration(),
 	}
 	err = r.data.DB(ctx).Model(sysUser).Select("LastLoginAt", "LastLoginIP", "LastUseRoleID").Updates(SysUser{
 		LastLoginAt:   &now,

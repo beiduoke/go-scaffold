@@ -9,7 +9,7 @@ import (
 
 // HasSystemSuperAdmin 是否为系统超级管理员
 func (d *Data) HasSystemSuperAdmin(ctx context.Context) bool {
-	superAdminConfig := d.conf.base.GetAdmin()
+	superAdminConfig := d.cfg.Base.GetAdmin()
 	if d.CtxDomainID(ctx) == uint(superAdminConfig.GetDomainId()) &&
 		d.CtxUserID(ctx) == uint(superAdminConfig.GetUserId()) {
 		return true
