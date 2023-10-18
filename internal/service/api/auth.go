@@ -34,6 +34,7 @@ var (
 // Logout 退出登录
 func (s *ApiService) Logout(ctx context.Context, in *emptypb.Empty) (*v1.LogoutReply, error) {
 	err := s.authCase.Logout(ctx)
+
 	if err != nil {
 		return nil, err
 	}

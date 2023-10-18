@@ -3,9 +3,9 @@ GOPATH:=$(shell go env GOPATH)
 VERSION=$(shell git describe --tags --always)
 
 # 指定日期-默认当前日期
-DATE=$(shell date "+%Y%m%d")
+DATE:=$(shell date "+%Y%m%d")
 # 指定时间-默认当前时间
-DATETIME=$(shell date "+%Y%m%d%H%M%S")
+DATETIME:=$(shell date "+%Y%m%d%H%M%S")
 
 ifeq ($(GOHOSTOS), windows-old)
 	#the `find.exe` is different from `find` in bash/shell.
@@ -26,7 +26,15 @@ mysqldump:
 	@echo '--创建当前日期目录--'
 	@mkdir -p ./resouces/backup/${DATE}
 	@echo '--执行备份命令--'
-	docker exec -i mysql57 bash -c 'exec mysqldump -uroot -p"123456" --databases go_scaffold' > ./resouces/backup/${DATE}/go_scaffold.sql
+	docker exec -i mysql57 bash -c 'exec mysqldump -uroot -p"$$MYSQL_ROOT_PASSWORD" --databases go_scaffold' > ./resouces/backup/${DATE}/go_scaffold.sql
+
+.PHONY: mysqlimport
+mysqlimport:
+	@echo '------------------指定时间恢复---------------------'
+	@echo '--获取日期目录--'
+	@echo './resouces/backup/${DATE}'
+	@echo '--执行恢复命令--'
+	docker exec -i mysql57 bash -c 'exec mysql -uroot -p"$$MYSQL_ROOT_PASSWORD"' < ./resouces/backup/${DATE}/go_scaffold.sql
 
 .PHONY: run
 # generate internal proto

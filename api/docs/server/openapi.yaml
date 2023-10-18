@@ -1028,7 +1028,9 @@ paths:
         get:
             tags:
                 - Api
-            description: "菜单模块\r\n 列表菜单"
+            description: |-
+                菜单模块
+                 列表菜单
             operationId: Api_ListMenu
             parameters:
                 - name: nopaging
@@ -1376,7 +1378,9 @@ paths:
         get:
             tags:
                 - Api
-            description: "角色模块\r\n 列表角色"
+            description: |-
+                角色模块
+                 列表角色
             operationId: Api_ListRole
             parameters:
                 - name: nopaging
@@ -1790,7 +1794,9 @@ paths:
         get:
             tags:
                 - Api
-            description: "User 用户模块\r\n 当前登录用户概述"
+            description: |-
+                User 用户模块
+                 当前登录用户概述
             operationId: Api_GetUserInfo
             responses:
                 "200":
