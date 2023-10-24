@@ -1,0 +1,3661 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Scaffold API
+    description: 脚手架系统
+    contact:
+        name: 基础架构
+        url: https://github.com/grpc-ecosystem/grpc-gateway
+        email: none@example.com
+    license:
+        name: BSD 3-Clause License
+        url: https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt
+    version: "1.0"
+paths:
+    /v1/auth/emailLogin/{domain}:
+        post:
+            tags:
+                - AdminService
+            description: 邮件登陆
+            operationId: AdminService_EmailLogin
+            parameters:
+                - name: domain
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/EmailLoginReq_Auth'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/LoginReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/auth/login/{domain}:
+        post:
+            tags:
+                - AdminService
+            description: 密码登陆
+            operationId: AdminService_Login
+            parameters:
+                - name: domain
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/LoginReq_Auth'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/LoginReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/auth/logout:
+        post:
+            tags:
+                - AdminService
+            description: 登出
+            operationId: AdminService_Logout
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/LogoutReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/auth/register/{domain}:
+        post:
+            tags:
+                - AdminService
+            description: 注册
+            operationId: AdminService_Register
+            parameters:
+                - name: domain
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RegisterReq_Auth'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RegisterReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/auth/smsLogin/{domain}:
+        post:
+            tags:
+                - AdminService
+            description: 短信登陆
+            operationId: AdminService_SmsLogin
+            parameters:
+                - name: domain
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SmsLoginReq_Auth'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/LoginReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/depts:
+        get:
+            tags:
+                - AdminService
+            description: 列表部门
+            operationId: AdminService_ListDept
+            parameters:
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
+                - name: page
+                  in: query
+                  description: 当前页
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  description: 每一页的行数
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListDeptReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - AdminService
+            description: 创建部门
+            operationId: AdminService_CreateDept
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateDeptReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateDeptReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/depts/{id}:
+        get:
+            tags:
+                - AdminService
+            description: 获取部门
+            operationId: AdminService_GetDept
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Dept'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - AdminService
+            description: 修改部门
+            operationId: AdminService_UpdateDept
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateDeptReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateDeptReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - AdminService
+            description: 删除部门
+            operationId: AdminService_DeleteDept
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteDeptReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/depts/{id}/state:
+        put:
+            tags:
+                - AdminService
+            description: 更新指定ID角色状态
+            operationId: AdminService_UpdateDeptState
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateDeptStateReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateDeptStateReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/depts/{id}/trees:
+        get:
+            tags:
+                - AdminService
+            description: 获取全部部门树形
+            operationId: AdminService_ListDeptTree
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListDeptTreeReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/dictData:
+        get:
+            tags:
+                - AdminService
+            description: 列表字典数据
+            operationId: AdminService_ListDictData
+            parameters:
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
+                - name: page
+                  in: query
+                  description: 当前页
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  description: 每一页的行数
+                  schema:
+                    type: integer
+                    format: int32
+                - name: dictType
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListDictDataReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - AdminService
+            description: 创建字典数据
+            operationId: AdminService_CreateDictData
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateDictDataReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateDictDataReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/dictData/{id}:
+        get:
+            tags:
+                - AdminService
+            description: 获取字典数据
+            operationId: AdminService_GetDictData
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DictData'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - AdminService
+            description: 修改字典数据
+            operationId: AdminService_UpdateDictData
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateDictDataReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateDictDataReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - AdminService
+            description: 删除字典数据
+            operationId: AdminService_DeleteDictData
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteDictDataReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/dictData/{id}/state:
+        put:
+            tags:
+                - AdminService
+            description: 设置字典数据状态
+            operationId: AdminService_UpdateDictDataState
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateDictDataStateReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateDictDataStateReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/dicts:
+        get:
+            tags:
+                - AdminService
+            description: 列表字典
+            operationId: AdminService_ListDict
+            parameters:
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
+                - name: page
+                  in: query
+                  description: 当前页
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  description: 每一页的行数
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListDictReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - AdminService
+            description: 创建字典
+            operationId: AdminService_CreateDict
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateDictReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateDictReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/dicts/{id}:
+        get:
+            tags:
+                - AdminService
+            description: 获取字典
+            operationId: AdminService_GetDict
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Dict'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - AdminService
+            description: 修改字典
+            operationId: AdminService_UpdateDict
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateDictReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateDictReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - AdminService
+            description: 删除字典
+            operationId: AdminService_DeleteDict
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteDictReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/dicts/{id}/state:
+        put:
+            tags:
+                - AdminService
+            description: 设置字典状态
+            operationId: AdminService_UpdateDictState
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateDictStateReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateDictStateReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/domains:
+        get:
+            tags:
+                - AdminService
+            description: 列表领域
+            operationId: AdminService_ListDomain
+            parameters:
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
+                - name: page
+                  in: query
+                  description: 当前页
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  description: 每一页的行数
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListDomainReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - AdminService
+            description: 创建领域
+            operationId: AdminService_CreateDomain
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateDomainReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateDomainReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/domains/{code}/code:
+        get:
+            tags:
+                - AdminService
+            description: 获取领域
+            operationId: AdminService_GetDomainCode
+            parameters:
+                - name: code
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Domain'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/domains/{id}:
+        get:
+            tags:
+                - AdminService
+            description: 获取领域
+            operationId: AdminService_GetDomain
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Domain'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - AdminService
+            description: 修改领域
+            operationId: AdminService_UpdateDomain
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateDomainReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateDomainReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - AdminService
+            description: 删除领域
+            operationId: AdminService_DeleteDomain
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteDomainReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/domains/{id}/menus:
+        get:
+            tags:
+                - AdminService
+            description: 获取角色菜单
+            operationId: AdminService_ListDomainMenu
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListDomainMenuReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - AdminService
+            description: 处理角色菜单
+            operationId: AdminService_HandleDomainMenu
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/HandleDomainMenuReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/HandleDomainMenuReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/domains/{id}/state:
+        put:
+            tags:
+                - AdminService
+            description: 设置领域状态
+            operationId: AdminService_UpdateDomainState
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateDomainStateReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateDomainStateReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/domains/{id}/trees:
+        get:
+            tags:
+                - AdminService
+            description: 获取领域树形列表
+            operationId: AdminService_ListDomainTree
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListDomainTreeReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/domains/{name}/name:
+        get:
+            tags:
+                - AdminService
+            description: 获取领域
+            operationId: AdminService_GetDomainName
+            parameters:
+                - name: name
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Domain'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/menus:
+        get:
+            tags:
+                - AdminService
+            description: "菜单模块\r\n 列表菜单"
+            operationId: AdminService_ListMenu
+            parameters:
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
+                - name: page
+                  in: query
+                  description: 当前页
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  description: 每一页的行数
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListMenuReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - AdminService
+            description: 创建菜单
+            operationId: AdminService_CreateMenu
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateMenuReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateMenuReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/menus/{id}:
+        get:
+            tags:
+                - AdminService
+            description: 获取菜单
+            operationId: AdminService_GetMenu
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Menu'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - AdminService
+            description: 修改菜单
+            operationId: AdminService_UpdateMenu
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateMenuReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateMenuReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - AdminService
+            description: 删除菜单
+            operationId: AdminService_DeleteMenu
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteMenuReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/menus/{id}/trees:
+        get:
+            tags:
+                - AdminService
+            description: 获取树形菜单
+            operationId: AdminService_ListMenuTree
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListMenuTreeReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/posts:
+        get:
+            tags:
+                - AdminService
+            description: 列表岗位
+            operationId: AdminService_ListPost
+            parameters:
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
+                - name: page
+                  in: query
+                  description: 当前页
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  description: 每一页的行数
+                  schema:
+                    type: integer
+                    format: int32
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListPostReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - AdminService
+            description: 创建岗位
+            operationId: AdminService_CreatePost
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreatePostReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreatePostReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/posts/{id}:
+        get:
+            tags:
+                - AdminService
+            description: 获取岗位
+            operationId: AdminService_GetPost
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Post'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - AdminService
+            description: 修改岗位
+            operationId: AdminService_UpdatePost
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdatePostReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdatePostReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - AdminService
+            description: 删除岗位
+            operationId: AdminService_DeletePost
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeletePostReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/posts/{id}/state:
+        put:
+            tags:
+                - AdminService
+            description: 设置岗位状态
+            operationId: AdminService_UpdatePostState
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdatePostStateReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdatePostStateReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/roles:
+        get:
+            tags:
+                - AdminService
+            description: "角色模块\r\n 列表角色"
+            operationId: AdminService_ListRole
+            parameters:
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
+                - name: page
+                  in: query
+                  description: 当前页
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  description: 每一页的行数
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListRoleReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - AdminService
+            description: 创建角色
+            operationId: AdminService_CreateRole
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateRoleReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateRoleReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/roles/{id}:
+        get:
+            tags:
+                - AdminService
+            description: 获取指定ID角色
+            operationId: AdminService_GetRole
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Role'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - AdminService
+            description: 修改指定ID角色
+            operationId: AdminService_UpdateRole
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateRoleReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateRoleReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - AdminService
+            description: 删除指定ID角色
+            operationId: AdminService_DeleteRole
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteRoleReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/roles/{id}/dataScopes:
+        get:
+            tags:
+                - AdminService
+            description: 获取指定ID角色数据范围
+            operationId: AdminService_GetRoleDataScope
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetRoleDataScopeReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - AdminService
+            description: 处理指定ID角色数据范围
+            operationId: AdminService_HandleRoleDataScope
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/HandleRoleDataScopeReq_DataScope'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/HandleRoleDataScopeReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/roles/{id}/depts:
+        get:
+            tags:
+                - AdminService
+            description: 获取指定ID角色部门
+            operationId: AdminService_ListRoleDept
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListRoleDeptReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/roles/{id}/menus:
+        get:
+            tags:
+                - AdminService
+            description: 获取指定ID角色菜单
+            operationId: AdminService_ListRoleMenu
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListRoleMenuReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - AdminService
+            description: 处理指定ID角色菜单
+            operationId: AdminService_HandleRoleMenu
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/HandleRoleMenuReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/HandleRoleMenuReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/roles/{id}/state:
+        put:
+            tags:
+                - AdminService
+            description: 更新指定ID角色状态
+            operationId: AdminService_UpdateRoleState
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateRoleStateReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateRoleStateReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/users:
+        get:
+            tags:
+                - AdminService
+            description: 列表用户
+            operationId: AdminService_ListUser
+            parameters:
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
+                - name: page
+                  in: query
+                  description: 当前页
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  description: 每一页的行数
+                  schema:
+                    type: integer
+                    format: int32
+                - name: deptId
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: nickName
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListUserReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - AdminService
+            description: 创建用户
+            operationId: AdminService_CreateUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateUserReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateUserReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/users/existName:
+        post:
+            tags:
+                - AdminService
+            description: 验证用户名是否存在
+            operationId: AdminService_ExistUserName
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ExistUserNameReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ExistUserNameReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/users/info:
+        get:
+            tags:
+                - AdminService
+            description: "User 用户模块\r\n 当前登录用户概述"
+            operationId: AdminService_GetUserInfo
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetUserInfoReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/users/menus/trees:
+        get:
+            tags:
+                - AdminService
+            description: 获取角色菜单路由树形列表
+            operationId: AdminService_ListUserRoleMenuTree
+            parameters:
+                - name: roleId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint64
+                - name: menuParentId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListUserRoleMenuTreeReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/users/permissions:
+        get:
+            tags:
+                - AdminService
+            description: 获取角色权限列表
+            operationId: AdminService_ListUserRolePermission
+            parameters:
+                - name: roleId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListUserRolePermissionReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/users/profiles:
+        get:
+            tags:
+                - AdminService
+            description: 当前登录用户概述
+            operationId: AdminService_GetUserProfile
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetUserProfileReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/users/roles:
+        get:
+            tags:
+                - AdminService
+            description: 当前登录用户拥有角色
+            operationId: AdminService_ListUserRole
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListUserRoleReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/users/routers/trees:
+        get:
+            tags:
+                - AdminService
+            description: 获取角色菜单路由树形列表
+            operationId: AdminService_ListUserRoleMenuRouterTree
+            parameters:
+                - name: roleId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint64
+                - name: menuParentId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListUserRoleMenuRouterTreeReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/users/{id}:
+        get:
+            tags:
+                - AdminService
+            description: 获取用户
+            operationId: AdminService_GetUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/User'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - AdminService
+            description: 修改用户
+            operationId: AdminService_UpdateUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateUserReq_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateUserReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - AdminService
+            description: 删除用户
+            operationId: AdminService_DeleteUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteUserReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+components:
+    schemas:
+        CreateDeptReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 创建部门
+        CreateDeptReq:
+            type: object
+            properties:
+                name:
+                    type: string
+                parentId:
+                    type: integer
+                    format: uint64
+                sort:
+                    type: integer
+                    format: int32
+                state:
+                    type: integer
+                    format: int32
+                remarks:
+                    type: string
+            description: 请求 - 创建部门
+        CreateDictDataReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 创建字典数据
+        CreateDictDataReq:
+            type: object
+            properties:
+                label:
+                    type: string
+                value:
+                    type: string
+                dictType:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                state:
+                    type: integer
+                    format: int32
+                remarks:
+                    type: string
+                colorType:
+                    type: string
+                cssClass:
+                    type: string
+            description: 请求 - 创建字典数据
+        CreateDictReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 创建字典
+        CreateDictReq:
+            type: object
+            properties:
+                name:
+                    type: string
+                type:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                state:
+                    type: integer
+                    format: int32
+                remarks:
+                    type: string
+            description: 请求 - 创建字典
+        CreateDomainReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 创建领域
+        CreateDomainReq:
+            type: object
+            properties:
+                name:
+                    type: string
+                parentId:
+                    type: integer
+                    format: uint64
+                sort:
+                    type: integer
+                    format: int32
+                alias:
+                    type: string
+                logo:
+                    type: string
+                pic:
+                    type: string
+                keywords:
+                    type: string
+                description:
+                    type: string
+                state:
+                    type: integer
+                    format: int32
+                remarks:
+                    type: string
+            description: 请求 - 创建领域
+        CreateMenuReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 创建菜单
+        CreateMenuReq:
+            type: object
+            properties:
+                name:
+                    type: string
+                type:
+                    type: integer
+                    format: int32
+                parentId:
+                    type: integer
+                    format: uint64
+                path:
+                    type: string
+                isHidden:
+                    type: integer
+                    format: int32
+                component:
+                    type: string
+                permission:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                icon:
+                    type: string
+                title:
+                    type: string
+                isCache:
+                    type: integer
+                    format: int32
+                linkUrl:
+                    type: string
+                isAffix:
+                    type: integer
+                    format: int32
+                linkType:
+                    type: integer
+                    format: int32
+                apiResource:
+                    type: string
+            description: 请求 - 创建菜单
+        CreatePostReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 创建岗位
+        CreatePostReq:
+            type: object
+            properties:
+                name:
+                    type: string
+                code:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                state:
+                    type: integer
+                    format: int32
+                remarks:
+                    type: string
+            description: 请求 - 创建岗位
+        CreateRoleReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 创建角色
+        CreateRoleReq:
+            type: object
+            properties:
+                name:
+                    type: string
+                parentId:
+                    type: integer
+                    format: uint64
+                defaultRouter:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                dataScope:
+                    type: integer
+                    format: int32
+                menuCheckStrictly:
+                    type: integer
+                    format: int32
+                deptCheckStrictly:
+                    type: integer
+                    format: int32
+                state:
+                    type: integer
+                    format: int32
+                remarks:
+                    type: string
+                menuIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
+            description: 请求 - 创建角色
+        CreateUserReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 创建用户
+        CreateUserReq:
+            type: object
+            properties:
+                name:
+                    type: string
+                avatar:
+                    type: string
+                password:
+                    type: string
+                nickName:
+                    type: string
+                realName:
+                    type: string
+                birthday:
+                    type: string
+                gender:
+                    type: integer
+                    format: int32
+                phone:
+                    type: string
+                email:
+                    type: string
+                state:
+                    type: integer
+                    format: int32
+                deptId:
+                    type: integer
+                    format: uint64
+                postIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
+                roleIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
+                remarks:
+                    type: string
+            description: 请求 - 创建用户
+        DeleteDeptReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 删除部门
+        DeleteDictDataReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 删除字典数据
+        DeleteDictReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 删除字典
+        DeleteDomainReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 删除领域
+        DeleteMenuReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 删除菜单
+        DeletePostReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 删除岗位
+        DeleteRoleReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 删除角色
+        DeleteUserReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 删除用户
+        Dept:
+            type: object
+            properties:
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                id:
+                    type: integer
+                    format: uint64
+                name:
+                    type: string
+                parentId:
+                    type: integer
+                    format: uint64
+                sort:
+                    type: integer
+                    format: int32
+                remarks:
+                    type: string
+                state:
+                    type: integer
+                    format: int32
+                children:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Dept'
+            description: 部门模块
+        Dict:
+            type: object
+            properties:
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                id:
+                    type: integer
+                    format: uint64
+                name:
+                    type: string
+                type:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                remarks:
+                    type: string
+                state:
+                    type: integer
+                    format: int32
+            description: 字典模块
+        DictData:
+            type: object
+            properties:
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                id:
+                    type: integer
+                    format: uint64
+                label:
+                    type: string
+                value:
+                    type: string
+                dictType:
+                    type: string
+                colorType:
+                    type: string
+                cssClass:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                remarks:
+                    type: string
+                state:
+                    type: integer
+                    format: int32
+            description: 字典数据模块
+        Domain:
+            type: object
+            properties:
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                id:
+                    type: integer
+                    format: uint64
+                name:
+                    type: string
+                parentId:
+                    type: integer
+                    format: uint64
+                code:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                alias:
+                    type: string
+                logo:
+                    type: string
+                pic:
+                    type: string
+                keywords:
+                    type: string
+                description:
+                    type: string
+                state:
+                    type: integer
+                    format: int32
+                remarks:
+                    type: string
+                children:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Domain'
+            description: 领域模块
+        EmailLoginReq_Auth:
+            type: object
+            properties:
+                email:
+                    type: string
+                code:
+                    type: string
+        ExistUserNameReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 验证用户是否存在
+        ExistUserNameReq:
+            type: object
+            properties:
+                name:
+                    type: string
+            description: 请求 - 验证用户是否存在
+        GetRoleDataScopeReply:
+            type: object
+            properties:
+                scope:
+                    type: integer
+                    format: int32
+                deptCheckStrictly:
+                    type: integer
+                    format: int32
+                deptCustoms:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
+            description: 回应 - 角色菜单数据范围
+        GetUserInfoReply:
+            type: object
+            properties:
+                roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Role'
+                name:
+                    type: string
+                nickName:
+                    type: string
+                realName:
+                    type: string
+                birthday:
+                    type: string
+                gender:
+                    type: integer
+                    format: int32
+                phone:
+                    type: string
+                email:
+                    type: string
+                avatar:
+                    type: string
+                state:
+                    enum:
+                        - ON
+                        - OFF
+                    type: integer
+                    default: ON
+                    description: 用户状态
+                    format: int32
+            description: 回应 - 用户概况详情
+        GetUserProfileReply:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/User'
+                roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Role'
+            description: 回应 - 用户概况详情
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        HandleDomainMenuReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 处理领域菜单
+        HandleDomainMenuReq_Data:
+            type: object
+            properties:
+                menuIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
+        HandleRoleDataScopeReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 处理角色数据
+        HandleRoleDataScopeReq_DataScope:
+            type: object
+            properties:
+                scope:
+                    type: integer
+                    format: int32
+                deptCheckStrictly:
+                    type: integer
+                    format: int32
+                deptCustoms:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
+        HandleRoleMenuReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 处理角色菜单
+        HandleRoleMenuReq_Data:
+            type: object
+            properties:
+                menuIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
+        ListDeptReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int64
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Dept'
+            description: 回应 - 列表部门
+        ListDeptTreeReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Dept'
+                total:
+                    type: integer
+                    format: int64
+            description: 回应 - 获取树形部门
+        ListDictDataReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int64
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/DictData'
+            description: 回应 - 列表字典数据
+        ListDictReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int64
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Dict'
+            description: 回应 - 列表字典
+        ListDomainMenuReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Menu'
+                total:
+                    type: integer
+                    format: int64
+            description: 回应 - 获取领域菜单
+        ListDomainReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int64
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Domain'
+            description: 回应 - 列表领域
+        ListDomainTreeReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Domain'
+                total:
+                    type: integer
+                    format: int64
+            description: 回应 - 列表领域
+        ListMenuReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int64
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Menu'
+            description: 回应 - 列表菜单
+        ListMenuTreeReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Menu'
+                total:
+                    type: integer
+                    format: int64
+            description: 回应 - 获取树形菜单
+        ListPostReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int64
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Post'
+            description: 回应 - 列表岗位
+        ListRoleDeptReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int64
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Dept'
+            description: 回应 - 获取角色菜单（未使用）
+        ListRoleMenuReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Menu'
+                total:
+                    type: integer
+                    format: int64
+            description: 回应 - 获取角色菜单
+        ListRoleReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int64
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Role'
+            description: 回应 - 列表角色
+        ListUserReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int64
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/User'
+            description: 回应 - 列表用户
+        ListUserRoleMenuRouterTreeReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/MenuRouter'
+                total:
+                    type: integer
+                    format: int64
+            description: 回应 - 获取用户角色菜单路由列表-树形
+        ListUserRoleMenuTreeReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Menu'
+                total:
+                    type: integer
+                    format: int64
+            description: 回应 - 获取用户角色列表
+        ListUserRolePermissionReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        type: string
+                total:
+                    type: integer
+                    format: int64
+            description: 回应 - 获取用户角色列表
+        ListUserRoleReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Role'
+                total:
+                    type: integer
+                    format: int64
+            description: 回应 - 用户角色
+        LoginReply:
+            type: object
+            properties:
+                token:
+                    type: string
+                    description: 登录token
+                expireTime:
+                    type: string
+                    description: 过期时间
+                    format: date-time
+            description: 回应 - 登录
+        LoginReq_Auth:
+            type: object
+            properties:
+                account:
+                    type: string
+                password:
+                    type: string
+        LogoutReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 退出登录
+        Menu:
+            type: object
+            properties:
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                id:
+                    type: integer
+                    format: uint64
+                name:
+                    type: string
+                type:
+                    type: integer
+                    format: int32
+                parentId:
+                    type: integer
+                    format: uint64
+                path:
+                    type: string
+                isHidden:
+                    type: integer
+                    format: int32
+                component:
+                    type: string
+                permission:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                icon:
+                    type: string
+                title:
+                    type: string
+                isCache:
+                    type: integer
+                    format: int32
+                linkUrl:
+                    type: string
+                isAffix:
+                    type: integer
+                    format: int32
+                linkType:
+                    type: integer
+                    format: int32
+                children:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Menu'
+                apiResource:
+                    type: string
+            description: 菜单模块
+        MenuRouter:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: 路由名称
+                path:
+                    type: string
+                    description: 路由地址
+                component:
+                    type: string
+                    description: 路由组件
+                redirect:
+                    type: string
+                    description: 路由重定向
+                meta:
+                    $ref: '#/components/schemas/MenuRouter_Meta'
+                children:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/MenuRouter'
+                    description: 路由子集
+                id:
+                    type: integer
+                    description: 路由ID
+                    format: uint64
+                parentId:
+                    type: integer
+                    description: 路由父级
+                    format: uint64
+            description: 路由菜单
+        MenuRouter_Meta:
+            type: object
+            properties:
+                title:
+                    type: string
+                    description: 路由title  一般必填
+                ignoreKeepAlive:
+                    type: boolean
+                    description: 是否忽略KeepAlive缓存
+                icon:
+                    type: string
+                    description: 图标，也是菜单图标
+                frameSrc:
+                    type: string
+                    description: 内嵌iframe的地址
+                hideBreadcrumb:
+                    type: boolean
+                    description: 隐藏该路由在面包屑上面的显示
+                hideMenu:
+                    type: boolean
+                    description: 当前路由不再菜单显示
+                orderNo:
+                    type: integer
+                    description: 菜单排序，只对第一级有效
+                    format: int32
+                currentActiveMenu:
+                    type: string
+                    description: 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
+                affix:
+                    type: boolean
+                    description: 固定菜单在tab栏
+        Post:
+            type: object
+            properties:
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                id:
+                    type: integer
+                    format: uint64
+                name:
+                    type: string
+                code:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                remarks:
+                    type: string
+                state:
+                    type: integer
+                    format: int32
+            description: 岗位模块
+        RegisterReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 注册
+        RegisterReq_Auth:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: 用户名
+                password:
+                    type: string
+                    description: 密码
+                phone:
+                    type: string
+                    description: 电话
+        Role:
+            type: object
+            properties:
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                id:
+                    type: integer
+                    format: uint64
+                name:
+                    type: string
+                parentId:
+                    type: integer
+                    format: uint64
+                defaultRouter:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                dataScope:
+                    type: integer
+                    format: int32
+                menuCheckStrictly:
+                    type: integer
+                    format: int32
+                deptCheckStrictly:
+                    type: integer
+                    format: int32
+                state:
+                    type: integer
+                    format: int32
+                remarks:
+                    type: string
+                menuIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
+            description: 角色模块
+        SmsLoginReq_Auth:
+            type: object
+            properties:
+                phone:
+                    type: string
+                code:
+                    type: string
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UpdateDeptReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 修改部门
+        UpdateDeptReq_Data:
+            type: object
+            properties:
+                name:
+                    type: string
+                parentId:
+                    type: integer
+                    format: uint64
+                sort:
+                    type: integer
+                    format: int32
+                state:
+                    type: integer
+                    format: int32
+                remarks:
+                    type: string
+        UpdateDeptStateReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 创建部门-状态
+        UpdateDeptStateReq_Data:
+            type: object
+            properties:
+                state:
+                    type: integer
+                    format: int32
+        UpdateDictDataReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 创建字典数据
+        UpdateDictDataReq_Data:
+            type: object
+            properties:
+                label:
+                    type: string
+                value:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                state:
+                    type: integer
+                    format: int32
+                remarks:
+                    type: string
+                colorType:
+                    type: string
+                cssClass:
+                    type: string
+        UpdateDictDataStateReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 创建字典数据-状态
+        UpdateDictDataStateReq_Data:
+            type: object
+            properties:
+                state:
+                    type: integer
+                    format: int32
+        UpdateDictReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 创建字典
+        UpdateDictReq_Data:
+            type: object
+            properties:
+                name:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                state:
+                    type: integer
+                    format: int32
+                remarks:
+                    type: string
+        UpdateDictStateReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 创建字典-状态
+        UpdateDictStateReq_Data:
+            type: object
+            properties:
+                state:
+                    type: integer
+                    format: int32
+        UpdateDomainReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 创建领域
+        UpdateDomainReq_Data:
+            type: object
+            properties:
+                name:
+                    type: string
+                parentId:
+                    type: integer
+                    format: uint64
+                sort:
+                    type: integer
+                    format: int32
+                alias:
+                    type: string
+                logo:
+                    type: string
+                pic:
+                    type: string
+                keywords:
+                    type: string
+                description:
+                    type: string
+                state:
+                    type: integer
+                    format: int32
+                remarks:
+                    type: string
+        UpdateDomainStateReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 创建领域-状态
+        UpdateDomainStateReq_Data:
+            type: object
+            properties:
+                state:
+                    type: integer
+                    format: int32
+        UpdateMenuReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 创建菜单
+        UpdateMenuReq_Data:
+            type: object
+            properties:
+                name:
+                    type: string
+                type:
+                    type: integer
+                    format: int32
+                parentId:
+                    type: integer
+                    format: uint64
+                path:
+                    type: string
+                isHidden:
+                    type: integer
+                    format: int32
+                component:
+                    type: string
+                permission:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                icon:
+                    type: string
+                title:
+                    type: string
+                isCache:
+                    type: integer
+                    format: int32
+                linkUrl:
+                    type: string
+                isAffix:
+                    type: integer
+                    format: int32
+                linkType:
+                    type: integer
+                    format: int32
+                apiResource:
+                    type: string
+        UpdatePostReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 创建岗位
+        UpdatePostReq_Data:
+            type: object
+            properties:
+                name:
+                    type: string
+                code:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                state:
+                    type: integer
+                    format: int32
+                remarks:
+                    type: string
+        UpdatePostStateReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 创建岗位-状态
+        UpdatePostStateReq_Data:
+            type: object
+            properties:
+                state:
+                    type: integer
+                    format: int32
+        UpdateRoleReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 创建角色
+        UpdateRoleReq_Data:
+            type: object
+            properties:
+                name:
+                    type: string
+                parentId:
+                    type: integer
+                    format: uint64
+                defaultRouter:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+                dataScope:
+                    type: integer
+                    format: int32
+                menuCheckStrictly:
+                    type: integer
+                    format: int32
+                deptCheckStrictly:
+                    type: integer
+                    format: int32
+                state:
+                    type: integer
+                    format: int32
+                remarks:
+                    type: string
+                menuIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
+        UpdateRoleStateReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 创建角色
+        UpdateRoleStateReq_Data:
+            type: object
+            properties:
+                state:
+                    type: integer
+                    format: int32
+        UpdateUserReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                result:
+                    $ref: '#/components/schemas/GoogleProtobufAny'
+                type:
+                    type: string
+            description: 回应 - 修改用户
+        UpdateUserReq_Data:
+            type: object
+            properties:
+                name:
+                    type: string
+                password:
+                    type: string
+                nickName:
+                    type: string
+                realName:
+                    type: string
+                birthday:
+                    type: string
+                    description: x must be less than the Unix Epoch
+                gender:
+                    type: integer
+                    format: int32
+                phone:
+                    type: string
+                email:
+                    type: string
+                state:
+                    type: integer
+                    format: int32
+                avatar:
+                    type: string
+                roleIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
+                postIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
+                deptId:
+                    type: integer
+                    format: uint64
+        User:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint64
+                name:
+                    type: string
+                nickName:
+                    type: string
+                realName:
+                    type: string
+                birthday:
+                    type: string
+                gender:
+                    type: integer
+                    format: int32
+                phone:
+                    type: string
+                email:
+                    type: string
+                avatar:
+                    type: string
+                state:
+                    type: integer
+                    description: 状态
+                    format: int32
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                deptId:
+                    type: integer
+                    format: uint64
+                postIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
+                roleIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint64
+                dept:
+                    $ref: '#/components/schemas/Dept'
+                roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Role'
+                posts:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Post'
+            description: 用户模块
+tags:
+    - name: AdminService
