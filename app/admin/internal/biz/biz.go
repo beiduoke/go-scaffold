@@ -34,7 +34,7 @@ type Biz struct {
 	// 逻辑事务操作
 	tm Transaction
 	// 公共
-	// 领域数据
+	// 租户数据
 	domainRepo DomainRepo
 	// 权限数据
 	roleRepo RoleRepo

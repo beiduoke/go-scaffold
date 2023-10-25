@@ -11,7 +11,6 @@ import (
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"google.golang.org/protobuf/types/known/anypb"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -39,7 +38,7 @@ func TransformUser(data *biz.User) *v1.User {
 }
 
 // ListUser 列表用户
-func (s *AdminService) ListUser(ctx context.Context, in *v1.ListUserReq) (*v1.ListUserReply, error) {
+func (s *AdminService) ListUser(ctx context.Context, in *v1.ListUserRequest) (*v1.ListUserResponse, error) {
 	results, total := s.userCase.ListPage(ctx, pagination.NewPagination(
 		pagination.WithPage(in.GetPage()),
 		pagination.WithPageSize(in.GetPageSize()),
@@ -54,7 +53,7 @@ func (s *AdminService) ListUser(ctx context.Context, in *v1.ListUserReq) (*v1.Li
 		}),
 		pagination.WithOrderBy(map[string]bool{"id": true}),
 	))
-	return &v1.ListUserReply{
+	return &v1.ListUserResponse{
 		Total: total,
 		Items: convert.ArrayToAny(results, func(v *biz.User) *v1.User {
 			user := TransformUser(v)
@@ -77,7 +76,7 @@ func (s *AdminService) ListUser(ctx context.Context, in *v1.ListUserReq) (*v1.Li
 }
 
 // CreateUser 创建用户
-func (s *AdminService) CreateUser(ctx context.Context, in *v1.CreateUserReq) (*v1.CreateUserReply, error) {
+func (s *AdminService) CreateUser(ctx context.Context, in *v1.CreateUserRequest) (*v1.CreateUserResponse, error) {
 	var birthday *time.Time
 	if in.GetBirthday() != "" {
 		day, err := time.Parse("2006-01-02", in.GetBirthday())
@@ -117,7 +116,7 @@ func (s *AdminService) CreateUser(ctx context.Context, in *v1.CreateUserReq) (*v
 	data, _ := anypb.New(&v1.Result{
 		Id: uint64(user.ID),
 	})
-	return &v1.CreateUserReply{
+	return &v1.CreateUserResponse{
 		Type:    constant.HandleType_success.String(),
 		Message: "创建成功",
 		Result:  data,
@@ -125,7 +124,7 @@ func (s *AdminService) CreateUser(ctx context.Context, in *v1.CreateUserReq) (*v
 }
 
 // UpdateUser 修改用户
-func (s *AdminService) UpdateUser(ctx context.Context, in *v1.UpdateUserReq) (*v1.UpdateUserReply, error) {
+func (s *AdminService) UpdateUser(ctx context.Context, in *v1.UpdateUserRequest) (*v1.UpdateUserResponse, error) {
 	id := in.GetId()
 	if id <= 0 {
 		return nil, v1.ErrorUserIdNull("修改用户ID不能为空")
@@ -166,14 +165,14 @@ func (s *AdminService) UpdateUser(ctx context.Context, in *v1.UpdateUserReq) (*v
 	if err != nil {
 		return nil, v1.ErrorUserUpdateFail("用户修改失败 %v", err)
 	}
-	return &v1.UpdateUserReply{
+	return &v1.UpdateUserResponse{
 		Type:    constant.HandleType_success.String(),
 		Message: "修改成功",
 	}, nil
 }
 
 // GetUser 获取用户
-func (s *AdminService) GetUser(ctx context.Context, in *v1.GetUserReq) (*v1.User, error) {
+func (s *AdminService) GetUser(ctx context.Context, in *v1.GetUserRequest) (*v1.User, error) {
 	user, err := s.userCase.GetID(ctx, &biz.User{ID: uint(in.GetId())})
 	if err != nil {
 		return nil, v1.ErrorUserNotFound("用户未找到")
@@ -182,18 +181,18 @@ func (s *AdminService) GetUser(ctx context.Context, in *v1.GetUserReq) (*v1.User
 }
 
 // DeleteUser 删除用户
-func (s *AdminService) DeleteUser(ctx context.Context, in *v1.DeleteUserReq) (*v1.DeleteUserReply, error) {
+func (s *AdminService) DeleteUser(ctx context.Context, in *v1.DeleteUserRequest) (*v1.DeleteUserResponse, error) {
 	if err := s.userCase.Delete(ctx, &biz.User{ID: uint(in.GetId())}); err != nil {
 		return nil, v1.ErrorUserDeleteFail("用户删除失败：%v", err)
 	}
-	return &v1.DeleteUserReply{
+	return &v1.DeleteUserResponse{
 		Type:    constant.HandleType_success.String(),
 		Message: "删除成功",
 	}, nil
 }
 
 // ExistUserName 用户名是否存在
-func (s *AdminService) ExistUserName(ctx context.Context, in *v1.ExistUserNameReq) (*v1.ExistUserNameReply, error) {
+func (s *AdminService) ExistUserName(ctx context.Context, in *v1.ExistUserNameRequest) (*v1.ExistUserNameResponse, error) {
 	user, _ := s.userCase.GetName(ctx, &biz.User{Name: in.GetName()})
 	handleType, message := constant.HandleType_error.String(), "用户不存在"
 	if user != nil && user.ID > 0 {
@@ -201,19 +200,19 @@ func (s *AdminService) ExistUserName(ctx context.Context, in *v1.ExistUserNameRe
 		message = "用户存在"
 	}
 
-	return &v1.ExistUserNameReply{
+	return &v1.ExistUserNameResponse{
 		Type:    handleType,
 		Message: message,
 	}, nil
 }
 
 // GetUserInfo 用户详情
-func (s *AdminService) GetUserInfo(ctx context.Context, in *emptypb.Empty) (*v1.GetUserInfoReply, error) {
+func (s *AdminService) GetUserInfo(ctx context.Context, in *v1.GetUserInfoRequest) (*v1.GetUserInfoResponse, error) {
 	user, err := s.userCase.AccessInfo(ctx)
 	if err != nil {
 		return nil, v1.ErrorUserNotFound("用户查询失败 %v", err)
 	}
-	return &v1.GetUserInfoReply{
+	return &v1.GetUserInfoResponse{
 		Name:     user.Name,
 		NickName: user.NickName,
 		RealName: user.RealName,
@@ -243,7 +242,7 @@ func (s *AdminService) GetUserInfo(ctx context.Context, in *emptypb.Empty) (*v1.
 }
 
 // ListUserRole 用户角色
-func (s *AdminService) ListUserRole(ctx context.Context, in *emptypb.Empty) (*v1.ListUserRoleReply, error) {
+func (s *AdminService) ListUserRole(ctx context.Context, in *v1.ListUserRoleRequest) (*v1.ListUserRoleResponse, error) {
 	roleModels, err := s.userCase.AccessRoles(ctx)
 	if err != nil {
 		return nil, v1.ErrorUserRoleFindFail("用户角色失败 %v", err)
@@ -252,13 +251,13 @@ func (s *AdminService) ListUserRole(ctx context.Context, in *emptypb.Empty) (*v1
 	for _, v := range roleModels {
 		roles = append(roles, TransformRole(v))
 	}
-	return &v1.ListUserRoleReply{
+	return &v1.ListUserRoleResponse{
 		Items: roles,
 	}, nil
 }
 
 // 获取角色菜单路由树形列表
-func (s *AdminService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.ListUserRoleMenuRouterTreeReq) (*v1.ListUserRoleMenuRouterTreeReply, error) {
+func (s *AdminService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.ListUserRoleMenuRouterTreeRequest) (*v1.ListUserRoleMenuRouterTreeResponse, error) {
 	roleMenus, err := s.userCase.AccessRoleMenus(ctx)
 	if err != nil {
 		s.log.Debugf("用户菜单查询失败 %v", err)
@@ -287,21 +286,21 @@ func (s *AdminService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.Li
 		t.Children = append(t.Children, ts...)
 		return nil
 	})
-	return &v1.ListUserRoleMenuRouterTreeReply{
+	return &v1.ListUserRoleMenuRouterTreeResponse{
 		Items: items,
 	}, nil
 }
 
 // 获取角色权限列表
-func (s *AdminService) ListUserRolePermission(ctx context.Context, in *v1.ListUserRolePermissionReq) (*v1.ListUserRolePermissionReply, error) {
+func (s *AdminService) ListUserRolePermission(ctx context.Context, in *v1.ListUserRolePermissionRequest) (*v1.ListUserRolePermissionResponse, error) {
 	menuModels, _ := s.userCase.AccessRolePermissions(ctx)
-	return &v1.ListUserRolePermissionReply{
+	return &v1.ListUserRolePermissionResponse{
 		Items: convert.ArrayUnique(menuModels),
 	}, nil
 }
 
 // 获取角色菜单树形列表
-func (s *AdminService) ListUserRoleMenuTree(ctx context.Context, in *v1.ListUserRoleMenuTreeReq) (*v1.ListUserRoleMenuTreeReply, error) {
+func (s *AdminService) ListUserRoleMenuTree(ctx context.Context, in *v1.ListUserRoleMenuTreeRequest) (*v1.ListUserRoleMenuTreeResponse, error) {
 	results, err := s.userCase.AccessRoleMenus(ctx)
 	if err != nil {
 		s.log.Debugf("用户菜单查询失败 %v", err)
@@ -310,7 +309,7 @@ func (s *AdminService) ListUserRoleMenuTree(ctx context.Context, in *v1.ListUser
 	for _, v := range results {
 		treeData = append(treeData, TransformMenu(v))
 	}
-	return &v1.ListUserRoleMenuTreeReply{
+	return &v1.ListUserRoleMenuTreeResponse{
 		Items: convert.ToTree(treeData, in.GetMenuParentId(), func(t *v1.Menu, ts ...*v1.Menu) error {
 			t.Children = append(t.Children, ts...)
 			return nil

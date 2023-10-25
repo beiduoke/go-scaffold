@@ -46,7 +46,7 @@ func (tr *myTransport) RequestHeader() transport.Header {
 	return tr.reqHeader
 }
 
-func (tr *myTransport) ReplyHeader() transport.Header {
+func (tr *myTransport) ResponseHeader() transport.Header {
 	return nil
 }
 

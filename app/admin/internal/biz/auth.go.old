@@ -102,7 +102,7 @@ func (ac *AuthUsecaseOld) Login(ctx context.Context, g *User) (*AuthClaims, erro
 func (ac *AuthUsecaseOld) LoginNamePassword(ctx context.Context, domainCode string, g *User) (*AuthClaims, error) {
 	domain, err := ac.biz.domainRepo.FindByCode(ctx, domainCode)
 	if err != nil {
-		return nil, errors.New("领域查询失败")
+		return nil, errors.New("租户查询失败")
 	}
 	u, err := ac.biz.userRepo.FindByName(ctx, g.Name)
 	if err != nil {
@@ -157,7 +157,7 @@ func (ac *AuthUsecaseOld) RegisterNamePassword(ctx context.Context, domainCode s
 	ac.log.WithContext(ctx).Debugf("NamePasswordRegister: %v", g.Name)
 	domain, err := ac.biz.domainRepo.FindByCode(ctx, domainCode)
 	if err != nil {
-		return nil, errors.New("领域查询失败")
+		return nil, errors.New("租户查询失败")
 	}
 	userUsecase := &UserUsecase{ac.biz, ac.log, ac.ac}
 	g, err = userUsecase.Create(ctx, g)

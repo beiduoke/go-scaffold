@@ -3,7 +3,7 @@ package server
 import (
 	"context"
 
-	serverv1 "github.com/beiduoke/go-scaffold/api/admin/v1"
+	v1 "github.com/beiduoke/go-scaffold/api/admin/v1"
 	"github.com/beiduoke/go-scaffold/api/common/conf"
 	authnM "github.com/beiduoke/go-scaffold/app/admin/internal/pkg/middleware/authn"
 	authzM "github.com/beiduoke/go-scaffold/app/admin/internal/pkg/middleware/authz"
@@ -42,12 +42,13 @@ var ProviderHttp = wire.NewSet(
 // NewWhiteListMatcher 创建jwt白名单
 func NewWhiteListMatcher() selector.MatchFunc {
 	whiteList := make(map[string]struct{})
-	whiteList["/api.server.v1.Api/Register"] = struct{}{}
-	whiteList["/api.server.v1.Api/Login"] = struct{}{}
-	whiteList["/api.server.v1.Api/SmsLogin"] = struct{}{}
-	whiteList["/api.server.v1.Api/EmailLogin"] = struct{}{}
-	whiteList["/api.server.v1.Api/GetDomainCode"] = struct{}{}
-	whiteList["/api.server.v1.Api/GetDomainName"] = struct{}{}
+
+	whiteList[v1.OperationAdminServiceRegister] = struct{}{}
+	whiteList[v1.OperationAdminServiceLogin] = struct{}{}
+	whiteList[v1.OperationAdminServiceSmsLogin] = struct{}{}
+	whiteList[v1.OperationAdminServiceEmailLogin] = struct{}{}
+	whiteList[v1.OperationAdminServiceGetDomainCode] = struct{}{}
+	whiteList[v1.OperationAdminServiceGetDomainName] = struct{}{}
 	return func(ctx context.Context, operation string) bool {
 		if _, ok := whiteList[operation]; ok {
 			return false
@@ -93,6 +94,6 @@ func NewHTTPServer(
 	openAPIhandler := openapiv2.NewHandler(openapiv2.WithGeneratorOptions(generator.UseJSONNamesForFields(true), generator.EnumsAsInts(false)))
 	srv.HandlePrefix("/q/", openAPIhandler)
 
-	serverv1.RegisterAdminServiceHTTPServer(srv, as)
+	v1.RegisterAdminServiceHTTPServer(srv, as)
 	return srv
 }

@@ -9,7 +9,6 @@ import (
 	"github.com/beiduoke/go-scaffold/app/admin/internal/pkg/constant"
 	"github.com/beiduoke/go-scaffold/app/admin/internal/pkg/middleware/localize"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -32,20 +31,20 @@ var (
 )
 
 // Logout 退出登录
-func (s *AdminService) Logout(ctx context.Context, in *emptypb.Empty) (*v1.LogoutReply, error) {
+func (s *AdminService) Logout(ctx context.Context, in *v1.LogoutRequest) (*v1.LogoutResponse, error) {
 	err := s.authCase.Logout(ctx)
 
 	if err != nil {
 		return nil, err
 	}
-	return &v1.LogoutReply{
+	return &v1.LogoutResponse{
 		Type:    constant.HandleType_success.String(),
 		Message: "退出成功",
 	}, nil
 }
 
 // Login 密码登录
-func (s *AdminService) Login(ctx context.Context, in *v1.LoginReq) (*v1.LoginReply, error) {
+func (s *AdminService) Login(ctx context.Context, in *v1.LoginRequest) (*v1.LoginResponse, error) {
 	req := in.GetAuth()
 	if in.GetDomain() == "" {
 		return nil, v1.ErrorUserRegisterFail("租户不能为空")
@@ -58,14 +57,14 @@ func (s *AdminService) Login(ctx context.Context, in *v1.LoginReq) (*v1.LoginRep
 	if result.ExpiresAt != nil {
 		expiresAt = *result.ExpiresAt
 	}
-	return &v1.LoginReply{
+	return &v1.LoginResponse{
 		Token:      result.Token,
 		ExpireTime: timestamppb.New(expiresAt),
-	}, nil
+	}, err
 }
 
 // Register 租户注册
-func (s *AdminService) Register(ctx context.Context, in *v1.RegisterReq) (*v1.RegisterReply, error) {
+func (s *AdminService) Register(ctx context.Context, in *v1.RegisterRequest) (*v1.RegisterResponse, error) {
 	req := in.GetAuth()
 	if in.GetDomain() == "" {
 		return nil, v1.ErrorUserRegisterFail("租户不能为空")
@@ -98,7 +97,7 @@ func (s *AdminService) Register(ctx context.Context, in *v1.RegisterReq) (*v1.Re
 		return nil, err
 	}
 
-	return &v1.RegisterReply{
+	return &v1.RegisterResponse{
 		Type:    constant.HandleType_success.String(),
 		Message: "注册成功",
 	}, nil

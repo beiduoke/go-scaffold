@@ -23,7 +23,7 @@ func NewBusModelMigrate() []interface{} {
 // 	return
 // }
 
-// SysDemo 领域
+// SysDemo 租户
 type BusDemo struct {
 	DomainModel
 	Name    string `gorm:"type:varchar(255);column:name;not null;comment:名称;"`

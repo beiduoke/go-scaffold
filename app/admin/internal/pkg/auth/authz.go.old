@@ -208,7 +208,7 @@ func (su *SecurityUser) ParseAccessJwtToken(claims jwtV4.Claims) error {
 	if ok {
 		su.Subject = str.(string)
 	}
-	// 领域
+	// 租户
 	str, ok = mc[ClaimDomain]
 	if ok {
 		su.Domain = str.(string)

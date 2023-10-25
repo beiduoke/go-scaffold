@@ -16,17 +16,17 @@ const (
 
 var _ Cache[*biz.Domain] = (*DomainRepo)(nil)
 
-// SetCache 设置领域缓存
+// SetCache 设置租户缓存
 func (r *DomainRepo) SetCache(ctx context.Context, g *biz.Domain) error {
 	dataStr, err := json.Marshal(g)
 	if err != nil {
-		r.log.Errorf("领域缓存失败 %v", err)
+		r.log.Errorf("租户缓存失败 %v", err)
 		return err
 	}
 	return r.data.rdb.HSet(ctx, cacheHashKeyDomain, convert.UnitToString(g.ID), dataStr).Err()
 }
 
-// GetCache 获取领域缓存
+// GetCache 获取租户缓存
 func (r *DomainRepo) GetCache(ctx context.Context, key string) (bizDomain *biz.Domain) {
 	dataStr, err := r.data.rdb.HGet(ctx, cacheHashKeyDomain, key).Result()
 	if err != nil {
@@ -38,7 +38,7 @@ func (r *DomainRepo) GetCache(ctx context.Context, key string) (bizDomain *biz.D
 	return bizDomain
 }
 
-// DeleteCache 获取领域缓存
+// DeleteCache 获取租户缓存
 func (r *DomainRepo) DeleteCache(ctx context.Context, key string) error {
 	return r.data.rdb.HDel(ctx, cacheHashKeyDomain, key).Err()
 }
@@ -51,7 +51,7 @@ func (r *DomainRepo) ListAllCache(ctx context.Context) (bizDomains []*biz.Domain
 			bizDomain := biz.Domain{}
 			err := json.Unmarshal([]byte(v), &bizDomain)
 			if err != nil {
-				r.log.Errorf("领域缓存反序列失败 %v", err)
+				r.log.Errorf("租户缓存反序列失败 %v", err)
 				continue
 			}
 			bizDomains = append(bizDomains, &bizDomain)
@@ -61,20 +61,20 @@ func (r *DomainRepo) ListAllCache(ctx context.Context) (bizDomains []*biz.Domain
 
 	result := r.data.DB(ctx).Find(&bizDomains)
 	if result.Error != nil && !errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		r.log.Errorf("领域查询失败 %v", result.Error)
+		r.log.Errorf("租户查询失败 %v", result.Error)
 		return nil
 	}
 	domainMap := make(map[string]string)
 	for _, v := range bizDomains {
 		menuStr, err := json.Marshal(v)
 		if err != nil {
-			r.log.Errorf("领域缓存序列化失败 %v", err)
+			r.log.Errorf("租户缓存序列化失败 %v", err)
 			continue
 		}
 		domainMap[convert.UnitToString(v.ID)] = string(menuStr)
 	}
 	if err := r.data.rdb.HSet(ctx, cacheHashKeyDomain, domainMap).Err(); err != nil {
-		r.log.Errorf("领域缓存失败 %v", err)
+		r.log.Errorf("租户缓存失败 %v", err)
 	}
 	return bizDomains
 }

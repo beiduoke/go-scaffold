@@ -36,7 +36,7 @@ option (gnostic.openapi.v3.document) = {
 // The greeting service definition.
 service AdminService {
   // 登出
-  rpc Logout (google.protobuf.Empty) returns (LogoutReply) {
+  rpc Logout (LogoutRequest) returns (LogoutResponse) {
     option (google.api.http) = {
       post: "/v1/auth/logout"
       body: "*"
@@ -47,7 +47,7 @@ service AdminService {
   }
 
   // 密码登陆
-  rpc Login (LoginReq) returns (LoginReply) {
+  rpc Login (LoginRequest) returns (LoginResponse) {
     option (google.api.http) = {
       post: "/v1/auth/login/{domain}"
       body: "auth"
@@ -55,7 +55,7 @@ service AdminService {
   }
 
   // 注册
-  rpc Register (RegisterReq) returns (RegisterReply) {
+  rpc Register (RegisterRequest) returns (RegisterResponse) {
     option (google.api.http) = {
       post: "/v1/auth/register/{domain}"
       body: "auth"
@@ -63,7 +63,7 @@ service AdminService {
   }
 
   // 短信登陆
-  rpc SmsLogin (SmsLoginReq) returns (LoginReply) {
+  rpc SmsLogin (SmsLoginRequest) returns (SmsLoginResponse) {
     option (google.api.http) = {
       post: "/v1/auth/smsLogin/{domain}"
       body: "auth"
@@ -71,7 +71,7 @@ service AdminService {
   }
 
   // 邮件登陆
-  rpc EmailLogin (EmailLoginReq) returns (LoginReply) {
+  rpc EmailLogin (EmailLoginRequest) returns (EmailLoginResponse) {
     option (google.api.http) = {
       post: "/v1/auth/emailLogin/{domain}"
       body: "auth"
@@ -80,28 +80,28 @@ service AdminService {
 
   // User 用户模块
   // 当前登录用户概述
-  rpc GetUserInfo (google.protobuf.Empty) returns (GetUserInfoReply) {
+  rpc GetUserInfo (GetUserInfoRequest) returns (GetUserInfoResponse) {
     option (google.api.http) = {
       get: "/v1/users/info"
     };
   }
 
   // 当前登录用户概述
-  rpc GetUserProfile (google.protobuf.Empty) returns (GetUserProfileReply) {
+  rpc GetUserProfile (GetUserProfileRequest) returns (GetUserProfileResponse) {
     option (google.api.http) = {
       get: "/v1/users/profiles"
     };
   }
 
   // 当前登录用户拥有角色
-  rpc ListUserRole (google.protobuf.Empty) returns (ListUserRoleReply) {
+  rpc ListUserRole (ListUserRoleRequest) returns (ListUserRoleResponse) {
     option (google.api.http) = {
       get: "/v1/users/roles"
     };
   }
 
   // 获取角色菜单路由树形列表
-  rpc ListUserRoleMenuRouterTree (ListUserRoleMenuRouterTreeReq) returns (ListUserRoleMenuRouterTreeReply) {
+  rpc ListUserRoleMenuRouterTree (ListUserRoleMenuRouterTreeRequest) returns (ListUserRoleMenuRouterTreeResponse) {
     option (google.api.http) = {
       get: "/v1/users/routers/trees"
       additional_bindings {
@@ -111,7 +111,7 @@ service AdminService {
   }
   
   // 获取角色菜单路由树形列表
-  rpc ListUserRoleMenuTree (ListUserRoleMenuTreeReq) returns (ListUserRoleMenuTreeReply) {
+  rpc ListUserRoleMenuTree (ListUserRoleMenuTreeRequest) returns (ListUserRoleMenuTreeResponse) {
     option (google.api.http) = {
       get: "/v1/users/menus/trees"
       additional_bindings {
@@ -121,7 +121,7 @@ service AdminService {
   }
 
   // 获取角色权限列表
-  rpc ListUserRolePermission (ListUserRolePermissionReq) returns (ListUserRolePermissionReply) {
+  rpc ListUserRolePermission (ListUserRolePermissionRequest) returns (ListUserRolePermissionResponse) {
     option (google.api.http) = {
       get: "/v1/users/permissions"
       additional_bindings {
@@ -131,14 +131,14 @@ service AdminService {
   }
 
   // 列表用户
-  rpc ListUser (ListUserReq) returns (ListUserReply) {
+  rpc ListUser (ListUserRequest) returns (ListUserResponse) {
     option (google.api.http) = {
       get: "/v1/users"
     };
   }
 
   // 创建用户
-  rpc CreateUser (CreateUserReq) returns (CreateUserReply) {
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {
     option (google.api.http) = {
       post: "/v1/users"
       body: "*"
@@ -146,14 +146,14 @@ service AdminService {
   }
 
   // 获取用户
-  rpc GetUser (GetUserReq) returns (User) {
+  rpc GetUser (GetUserRequest) returns (User) {
     option (google.api.http) = {
       get: "/v1/users/{id}"
     };
   }
 
   // 修改用户
-  rpc UpdateUser (UpdateUserReq) returns (UpdateUserReply) {
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse) {
     option (google.api.http) = {
       put: "/v1/users/{id}"
       body: "data"
@@ -161,29 +161,29 @@ service AdminService {
   }
 
   // 删除用户
-  rpc DeleteUser (DeleteUserReq) returns (DeleteUserReply) {
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse) {
     option (google.api.http) = {
       delete: "/v1/users/{id}"
     };
   }
 
   // 验证用户名是否存在
-  rpc ExistUserName (ExistUserNameReq) returns (ExistUserNameReply) {
+  rpc ExistUserName (ExistUserNameRequest) returns (ExistUserNameResponse) {
     option (google.api.http) = {
       post: "/v1/users/existName"
       body: "*"
     };
   }
 
-  // 列表领域
-  rpc ListDomain (ListDomainReq) returns (ListDomainReply) {
+  // 列表租户
+  rpc ListDomain (ListDomainRequest) returns (ListDomainResponse) {
     option (google.api.http) = {
       get: "/v1/domains"
     };
   }
 
-  // 获取领域树形列表
-  rpc ListDomainTree (ListDomainTreeReq) returns (ListDomainTreeReply) {
+  // 获取租户树形列表
+  rpc ListDomainTree (ListDomainTreeRequest) returns (ListDomainTreeResponse) {
     option (google.api.http) = {
       get: "/v1/domains/{id}/trees"
       additional_bindings {
@@ -192,52 +192,52 @@ service AdminService {
     };
   }
 
-  // 创建领域
-  rpc CreateDomain (CreateDomainReq) returns (CreateDomainReply) {
+  // 创建租户
+  rpc CreateDomain (CreateDomainRequest) returns (CreateDomainResponse) {
     option (google.api.http) = {
       post: "/v1/domains"
       body: "*"
     };
   }
 
-  // 获取领域
-  rpc GetDomain (GetDomainReq) returns (Domain) {
+  // 获取租户
+  rpc GetDomain (GetDomainRequest) returns (Domain) {
     option (google.api.http) = {
       get: "/v1/domains/{id}"
     };
   }
 
-  // 获取领域
-  rpc GetDomainCode (GetDomainCodeReq) returns (Domain) {
+  // 获取租户
+  rpc GetDomainCode (GetDomainCodeRequest) returns (Domain) {
     option (google.api.http) = {
       get: "/v1/domains/{code}/code"
     };
   }
 
-  // 获取领域
-  rpc GetDomainName (GetDomainNameReq) returns (Domain) {
+  // 获取租户
+  rpc GetDomainName (GetDomainNameRequest) returns (Domain) {
     option (google.api.http) = {
       get: "/v1/domains/{name}/name"
     };
   }
 
-  // 修改领域
-  rpc UpdateDomain (UpdateDomainReq) returns (UpdateDomainReply) {
+  // 修改租户
+  rpc UpdateDomain (UpdateDomainRequest) returns (UpdateDomainResponse) {
     option (google.api.http) = {
       put: "/v1/domains/{id}"
       body: "data"
     };
   }
 
-  // 删除领域
-  rpc DeleteDomain (DeleteDomainReq) returns (DeleteDomainReply) {
+  // 删除租户
+  rpc DeleteDomain (DeleteDomainRequest) returns (DeleteDomainResponse) {
     option (google.api.http) = {
       delete: "/v1/domains/{id}"
     };
   }
   
-  // 设置领域状态
-  rpc UpdateDomainState (UpdateDomainStateReq) returns (UpdateDomainStateReply) {
+  // 设置租户状态
+  rpc UpdateDomainState (UpdateDomainStateRequest) returns (UpdateDomainStateResponse) {
     option (google.api.http) = {
       put: "/v1/domains/{id}/state"
       body: "data"
@@ -245,14 +245,14 @@ service AdminService {
   }
   
   // 获取角色菜单
-  rpc ListDomainMenu (ListDomainMenuReq) returns (ListDomainMenuReply) {
+  rpc ListDomainMenu (ListDomainMenuRequest) returns (ListDomainMenuResponse) {
     option (google.api.http) = {
       get: "/v1/domains/{id}/menus"
     };
   }
 
   // 处理角色菜单
-  rpc HandleDomainMenu (HandleDomainMenuReq) returns (HandleDomainMenuReply) {
+  rpc HandleDomainMenu (HandleDomainMenuRequest) returns (HandleDomainMenuResponse) {
     option (google.api.http) = {
       post: "/v1/domains/{id}/menus"
       body: "data"
@@ -261,14 +261,14 @@ service AdminService {
 
   // 角色模块
   // 列表角色
-  rpc ListRole (ListRoleReq) returns (ListRoleReply) {
+  rpc ListRole (ListRoleRequest) returns (ListRoleResponse) {
     option (google.api.http) = {
       get: "/v1/roles"
     };
   }
 
   // 创建角色
-  rpc CreateRole (CreateRoleReq) returns (CreateRoleReply) {
+  rpc CreateRole (CreateRoleRequest) returns (CreateRoleResponse) {
     option (google.api.http) = {
       post: "/v1/roles"
       body: "*"
@@ -276,14 +276,14 @@ service AdminService {
   }
 
   // 获取指定ID角色
-  rpc GetRole (GetRoleReq) returns (Role) {
+  rpc GetRole (GetRoleRequest) returns (Role) {
     option (google.api.http) = {
       get: "/v1/roles/{id}"
     };
   }
 
   // 修改指定ID角色
-  rpc UpdateRole (UpdateRoleReq) returns (UpdateRoleReply) {
+  rpc UpdateRole (UpdateRoleRequest) returns (UpdateRoleResponse) {
     option (google.api.http) = {
       put: "/v1/roles/{id}"
       body: "data"
@@ -291,7 +291,7 @@ service AdminService {
   }
 
   // 更新指定ID角色状态
-  rpc UpdateRoleState (UpdateRoleStateReq) returns (UpdateRoleStateReply) {
+  rpc UpdateRoleState (UpdateRoleStateRequest) returns (UpdateRoleStateResponse) {
     option (google.api.http) = {
       put: "/v1/roles/{id}/state"
       body: "data"
@@ -299,21 +299,21 @@ service AdminService {
   }
 
   // 删除指定ID角色
-  rpc DeleteRole (DeleteRoleReq) returns (DeleteRoleReply) {
+  rpc DeleteRole (DeleteRoleRequest) returns (DeleteRoleResponse) {
     option (google.api.http) = {
       delete: "/v1/roles/{id}"
     };
   }
 
   // 获取指定ID角色菜单
-  rpc ListRoleMenu (ListRoleMenuReq) returns (ListRoleMenuReply) {
+  rpc ListRoleMenu (ListRoleMenuRequest) returns (ListRoleMenuResponse) {
     option (google.api.http) = {
       get: "/v1/roles/{id}/menus"
     };
   }
 
   // 处理指定ID角色菜单
-  rpc HandleRoleMenu (HandleRoleMenuReq) returns (HandleRoleMenuReply) {
+  rpc HandleRoleMenu (HandleRoleMenuRequest) returns (HandleRoleMenuResponse) {
     option (google.api.http) = {
       post: "/v1/roles/{id}/menus"
       body: "data"
@@ -321,21 +321,21 @@ service AdminService {
   }
 
   // 获取指定ID角色部门
-  rpc ListRoleDept (ListRoleDeptReq) returns (ListRoleDeptReply) {
+  rpc ListRoleDept (ListRoleDeptRequest) returns (ListRoleDeptResponse) {
     option (google.api.http) = {
       get: "/v1/roles/{id}/depts"
     };
   }
 
   // 获取指定ID角色数据范围
-  rpc GetRoleDataScope (GetRoleDataScopeReq) returns (GetRoleDataScopeReply) {
+  rpc GetRoleDataScope (GetRoleDataScopeRequest) returns (GetRoleDataScopeResponse) {
     option (google.api.http) = {
       get: "/v1/roles/{id}/dataScopes"
     };
   }
 
   // 处理指定ID角色数据范围
-  rpc HandleRoleDataScope (HandleRoleDataScopeReq) returns (HandleRoleDataScopeReply) {
+  rpc HandleRoleDataScope (HandleRoleDataScopeRequest) returns (HandleRoleDataScopeResponse) {
     option (google.api.http) = {
       post: "/v1/roles/{id}/dataScopes"
       body: "data"
@@ -344,14 +344,14 @@ service AdminService {
 
   // 菜单模块
   // 列表菜单
-  rpc ListMenu (ListMenuReq) returns (ListMenuReply) {
+  rpc ListMenu (ListMenuRequest) returns (ListMenuResponse) {
     option (google.api.http) = {
       get: "/v1/menus"
     };
   }
 
   // 创建菜单
-  rpc CreateMenu (CreateMenuReq) returns (CreateMenuReply) {
+  rpc CreateMenu (CreateMenuRequest) returns (CreateMenuResponse) {
     option (google.api.http) = {
       post: "/v1/menus"
       body: "*"
@@ -359,21 +359,21 @@ service AdminService {
   }
 
   // 获取树形菜单
-  rpc ListMenuTree (ListMenuTreeReq) returns (ListMenuTreeReply) {
+  rpc ListMenuTree (ListMenuTreeRequest) returns (ListMenuTreeResponse) {
     option (google.api.http) = {
       get: "/v1/menus/{id}/trees"
     };
   }
 
   // 获取菜单
-  rpc GetMenu (GetMenuReq) returns (Menu) {
+  rpc GetMenu (GetMenuRequest) returns (Menu) {
     option (google.api.http) = {
       get: "/v1/menus/{id}"
     };
   }
 
   // 修改菜单
-  rpc UpdateMenu (UpdateMenuReq) returns (UpdateMenuReply) {
+  rpc UpdateMenu (UpdateMenuRequest) returns (UpdateMenuResponse) {
     option (google.api.http) = {
       put: "/v1/menus/{id}"
       body: "data"
@@ -381,21 +381,21 @@ service AdminService {
   }
 
   // 删除菜单
-  rpc DeleteMenu (DeleteMenuReq) returns (DeleteMenuReply) {
+  rpc DeleteMenu (DeleteMenuRequest) returns (DeleteMenuResponse) {
     option (google.api.http) = {
       delete: "/v1/menus/{id}"
     };
   }
 
   // 列表部门
-  rpc ListDept (ListDeptReq) returns (ListDeptReply) {
+  rpc ListDept (ListDeptRequest) returns (ListDeptResponse) {
     option (google.api.http) = {
       get: "/v1/depts"
     };
   }
 
   // 创建部门
-  rpc CreateDept (CreateDeptReq) returns (CreateDeptReply) {
+  rpc CreateDept (CreateDeptRequest) returns (CreateDeptResponse) {
     option (google.api.http) = {
       post: "/v1/depts"
       body: "*"
@@ -403,14 +403,14 @@ service AdminService {
   }
 
   // 获取部门
-  rpc GetDept (GetDeptReq) returns (Dept) {
+  rpc GetDept (GetDeptRequest) returns (Dept) {
     option (google.api.http) = {
       get: "/v1/depts/{id}"
     };
   }
 
   // 修改部门
-  rpc UpdateDept (UpdateDeptReq) returns (UpdateDeptReply) {
+  rpc UpdateDept (UpdateDeptRequest) returns (UpdateDeptResponse) {
     option (google.api.http) = {
       put: "/v1/depts/{id}"
       body: "data"
@@ -419,7 +419,7 @@ service AdminService {
 
   
   // 更新指定ID角色状态
-  rpc UpdateDeptState (UpdateDeptStateReq) returns (UpdateDeptStateReply) {
+  rpc UpdateDeptState (UpdateDeptStateRequest) returns (UpdateDeptStateResponse) {
     option (google.api.http) = {
       put: "/v1/depts/{id}/state"
       body: "data"
@@ -427,28 +427,28 @@ service AdminService {
   }
 
   // 删除部门
-  rpc DeleteDept (DeleteDeptReq) returns (DeleteDeptReply) {
+  rpc DeleteDept (DeleteDeptRequest) returns (DeleteDeptResponse) {
     option (google.api.http) = {
       delete: "/v1/depts/{id}"
     };
   }
 
   // 获取全部部门树形
-  rpc ListDeptTree (ListDeptTreeReq) returns (ListDeptTreeReply) {
+  rpc ListDeptTree (ListDeptTreeRequest) returns (ListDeptTreeResponse) {
     option (google.api.http) = {
       get: "/v1/depts/{id}/trees"
     };
   }
 
   // 列表岗位
-  rpc ListPost (ListPostReq) returns (ListPostReply) {
+  rpc ListPost (ListPostRequest) returns (ListPostResponse) {
     option (google.api.http) = {
       get: "/v1/posts"
     };
   }
 
   // 创建岗位
-  rpc CreatePost (CreatePostReq) returns (CreatePostReply) {
+  rpc CreatePost (CreatePostRequest) returns (CreatePostResponse) {
     option (google.api.http) = {
       post: "/v1/posts"
       body: "*"
@@ -456,14 +456,14 @@ service AdminService {
   }
 
   // 获取岗位
-  rpc GetPost (GetPostReq) returns (Post) {
+  rpc GetPost (GetPostRequest) returns (Post) {
     option (google.api.http) = {
       get: "/v1/posts/{id}"
     };
   }
 
   // 修改岗位
-  rpc UpdatePost (UpdatePostReq) returns (UpdatePostReply) {
+  rpc UpdatePost (UpdatePostRequest) returns (UpdatePostResponse) {
     option (google.api.http) = {
       put: "/v1/posts/{id}"
       body: "data"
@@ -471,14 +471,14 @@ service AdminService {
   }
 
   // 删除岗位
-  rpc DeletePost (DeletePostReq) returns (DeletePostReply) {
+  rpc DeletePost (DeletePostRequest) returns (DeletePostResponse) {
     option (google.api.http) = {
       delete: "/v1/posts/{id}"
     };
   }
 
   // 设置岗位状态
-  rpc UpdatePostState (UpdatePostStateReq) returns (UpdatePostStateReply) {
+  rpc UpdatePostState (UpdatePostStateRequest) returns (UpdatePostStateResponse) {
     option (google.api.http) = {
       put: "/v1/posts/{id}/state"
       body: "data"
@@ -486,14 +486,14 @@ service AdminService {
   }
 
   // 列表字典
-  rpc ListDict (ListDictReq) returns (ListDictReply) {
+  rpc ListDict (ListDictRequest) returns (ListDictResponse) {
     option (google.api.http) = {
       get: "/v1/dicts"
     };
   }
 
   // 创建字典
-  rpc CreateDict (CreateDictReq) returns (CreateDictReply) {
+  rpc CreateDict (CreateDictRequest) returns (CreateDictResponse) {
     option (google.api.http) = {
       post: "/v1/dicts"
       body: "*"
@@ -501,14 +501,14 @@ service AdminService {
   }
 
   // 获取字典
-  rpc GetDict (GetDictReq) returns (Dict) {
+  rpc GetDict (GetDictRequest) returns (Dict) {
     option (google.api.http) = {
       get: "/v1/dicts/{id}"
     };
   }
 
   // 修改字典
-  rpc UpdateDict (UpdateDictReq) returns (UpdateDictReply) {
+  rpc UpdateDict (UpdateDictRequest) returns (UpdateDictResponse) {
     option (google.api.http) = {
       put: "/v1/dicts/{id}"
       body: "data"
@@ -516,14 +516,14 @@ service AdminService {
   }
 
   // 删除字典
-  rpc DeleteDict (DeleteDictReq) returns (DeleteDictReply) {
+  rpc DeleteDict (DeleteDictRequest) returns (DeleteDictResponse) {
     option (google.api.http) = {
       delete: "/v1/dicts/{id}"
     };
   }
 
   // 设置字典状态
-  rpc UpdateDictState (UpdateDictStateReq) returns (UpdateDictStateReply) {
+  rpc UpdateDictState (UpdateDictStateRequest) returns (UpdateDictStateResponse) {
     option (google.api.http) = {
       put: "/v1/dicts/{id}/state"
       body: "data"
@@ -532,14 +532,14 @@ service AdminService {
 
   
   // 列表字典数据
-  rpc ListDictData (ListDictDataReq) returns (ListDictDataReply) {
+  rpc ListDictData (ListDictDataRequest) returns (ListDictDataResponse) {
     option (google.api.http) = {
       get: "/v1/dictData"
     };
   }
 
   // 创建字典数据
-  rpc CreateDictData (CreateDictDataReq) returns (CreateDictDataReply) {
+  rpc CreateDictData (CreateDictDataRequest) returns (CreateDictDataResponse) {
     option (google.api.http) = {
       post: "/v1/dictData"
       body: "*"
@@ -547,14 +547,14 @@ service AdminService {
   }
 
   // 获取字典数据
-  rpc GetDictData (GetDictDataReq) returns (DictData) {
+  rpc GetDictData (GetDictDataRequest) returns (DictData) {
     option (google.api.http) = {
       get: "/v1/dictData/{id}"
     };
   }
 
   // 修改字典数据
-  rpc UpdateDictData (UpdateDictDataReq) returns (UpdateDictDataReply) {
+  rpc UpdateDictData (UpdateDictDataRequest) returns (UpdateDictDataResponse) {
     option (google.api.http) = {
       put: "/v1/dictData/{id}"
       body: "data"
@@ -562,19 +562,67 @@ service AdminService {
   }
 
   // 删除字典数据
-  rpc DeleteDictData (DeleteDictDataReq) returns (DeleteDictDataReply) {
+  rpc DeleteDictData (DeleteDictDataRequest) returns (DeleteDictDataResponse) {
     option (google.api.http) = {
       delete: "/v1/dictData/{id}"
     };
   }
 
   // 设置字典数据状态
-  rpc UpdateDictDataState (UpdateDictDataStateReq) returns (UpdateDictDataStateReply) {
+  rpc UpdateDictDataState (UpdateDictDataStateRequest) returns (UpdateDictDataStateResponse) {
     option (google.api.http) = {
       put: "/v1/dictData/{id}/state"
       body: "data"
     };
   }
+
+  
+  // 列表租户套餐
+  rpc ListDomainPackage (ListDomainPackageRequest) returns (ListDomainPackageResponse) {
+    option (google.api.http) = {
+      get: "/v1/depts"
+    };
+  }
+
+  // 创建租户套餐
+  rpc CreateDomainPackage (CreateDomainPackageRequest) returns (CreateDomainPackageResponse) {
+    option (google.api.http) = {
+      post: "/v1/domainPackage"
+      body: "*"
+    };
+  }
+
+  // 获取租户套餐
+  rpc GetDomainPackage (GetDomainPackageRequest) returns (DomainPackage) {
+    option (google.api.http) = {
+      get: "/v1/domainPackage/{id}"
+    };
+  }
+
+  // 修改租户套餐
+  rpc UpdateDomainPackage (UpdateDomainPackageRequest) returns (UpdateDomainPackageResponse) {
+    option (google.api.http) = {
+      put: "/v1/domainPackage/{id}"
+      body: "data"
+    };
+  }
+
+  
+  // 更新指定ID套餐状态
+  rpc UpdateDomainPackageState (UpdateDomainPackageStateRequest) returns (UpdateDomainPackageStateResponse) {
+    option (google.api.http) = {
+      put: "/v1/domainPackage/{id}/state"
+      body: "data"
+    };
+  }
+
+  // 删除租户套餐
+  rpc DeleteDomainPackage (DeleteDomainPackageRequest) returns (DeleteDomainPackageResponse) {
+    option (google.api.http) = {
+      delete: "/v1/domainPackage/{id}"
+    };
+  }
+
 }
 
 // 通用返回
@@ -617,25 +665,47 @@ enum RoleDataScope {
 }
 
 // 回应 - 登录
-message LoginReply {
-  // 登录token
+message LoginResponse {
+  // 访问token
   string token = 1;
+  // 刷新token
+  string refresh_token = 2;
   // 过期时间
-  google.protobuf.Timestamp expire_time = 2;
+  google.protobuf.Timestamp expire_time = 3;
+}
+
+// 回应 - 短信登录
+message SmsLoginResponse {
+  // 访问token
+  string token = 1;
+  // 刷新token
+  string refresh_token = 2;
+  // 过期时间
+  google.protobuf.Timestamp expire_time = 3;
+}
+
+// 回应 - 邮箱登录
+message EmailLoginResponse {
+  // 访问token
+  string token = 1;
+  // 刷新token
+  string refresh_token = 2;
+  // 过期时间
+  google.protobuf.Timestamp expire_time = 3;
 }
 
 // 回应 - 注册
-message RegisterReply {
+message RegisterResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
   string type = 4;
 }
 
-message LogoutReq {}
+message LogoutRequest {}
 
 // 回应 - 退出登录
-message LogoutReply {
+message LogoutResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -643,7 +713,7 @@ message LogoutReply {
 }
 
 // 请求 - 密码登录
-message LoginReq {
+message LoginRequest {
   message Auth {
     string account = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
     string password = 2 [(validate.rules).string = {min_len: 6, max_len: 28}];
@@ -654,7 +724,7 @@ message LoginReq {
 }
 
 // 请求 - 短信登录
-message SmsLoginReq {
+message SmsLoginRequest {
   message Auth {
     string phone = 1 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
     string code = 2 [(validate.rules).string.pattern = "^[0-9]{6}$"];
@@ -666,7 +736,7 @@ message SmsLoginReq {
 }
 
 // 请求 - 邮件登录
-message EmailLoginReq {
+message EmailLoginRequest {
   message Auth {
     string email = 1 [(validate.rules).string.email = true];
     string code = 2 [(validate.rules).string.pattern = "^[0-9]{4,6}$"];
@@ -678,7 +748,7 @@ message EmailLoginReq {
 }
 
 // 请求 - 注册
-message RegisterReq {
+message RegisterRequest {
   message Auth {
     // 用户名
     string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
@@ -714,8 +784,11 @@ message User {
   repeated Post posts = 19;
 }
 
-// 回应 - 用户概况详情
-message GetUserInfoReply {
+// 请求 - 用户详情
+message GetUserInfoRequest {}
+
+// 回应 - 用户详情
+message GetUserInfoResponse {
   repeated Role roles = 1;
   string name = 2;
   string nick_name = 4;
@@ -735,20 +808,27 @@ message GetUserInfoReply {
   }];
 }
 
+// 请求 - 用户概况详情
+message GetUserProfileRequest {}
+
 // 回应 - 用户概况详情
-message GetUserProfileReply {
+message GetUserProfileResponse {
   User user = 1;
   repeated Role roles = 2;
 }
 
+
+// 请求 - 用户角色
+message ListUserRoleRequest {}
+
 // 回应 - 用户角色
-message ListUserRoleReply {
+message ListUserRoleResponse {
   repeated Role items = 1;
   optional int64 total = 2;
 }
 
 // 请求 - 列表用户
-message ListUserReq {
+message ListUserRequest {
   // 是否不分页
   optional bool nopaging = 1;
   // 当前页
@@ -761,19 +841,19 @@ message ListUserReq {
 }
 
 // 回应 - 列表用户
-message ListUserReply {
+message ListUserResponse {
   int64 total = 1;
   repeated User items = 2;
 }
 
 // 请求 - 获取用户角色菜单树形
-message ListUserRoleMenuRouterTreeReq {
+message ListUserRoleMenuRouterTreeRequest {
   uint64 role_id = 1 [(validate.rules).uint64 = {gte: 0}];
   optional uint64 menu_parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
 }
 
 // 回应 - 获取用户角色菜单树形 Deprecated
-message ListUserRoleMenuTreeReply_Deprecated {
+message ListUserRoleMenuTreeResponseDeprecated {
   message MenuMeta {
     // 路由title  一般必填
     string title = 1;
@@ -866,36 +946,36 @@ message MenuRouter {
 }
 
 // 回应 - 获取用户角色菜单路由列表-树形
-message ListUserRoleMenuRouterTreeReply {
+message ListUserRoleMenuRouterTreeResponse {
   repeated MenuRouter items = 1;
   optional int64 total = 2;
 }
 
 // 请求 - 获取用户角色菜单列表-树形
-message ListUserRoleMenuTreeReq {
+message ListUserRoleMenuTreeRequest {
   uint64 role_id = 1 [(validate.rules).uint64 = {gte: 0}];
   optional uint64 menu_parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
 }
 
 // 回应 - 获取用户角色列表
-message ListUserRoleMenuTreeReply {
+message ListUserRoleMenuTreeResponse {
   repeated Menu items = 1;
   optional int64 total = 2;
 }
 
 // 请求 - 获取用户角色列表
-message ListUserRolePermissionReq {
+message ListUserRolePermissionRequest {
   uint64 role_id = 1 [(validate.rules).uint64 = {gte: 0}];
 }
 
 // 回应 - 获取用户角色列表
-message ListUserRolePermissionReply {
+message ListUserRolePermissionResponse {
   repeated string items = 1;
   optional int64 total = 2;
 }
 
 // 请求 - 创建用户
-message CreateUserReq {
+message CreateUserRequest {
   string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
   optional string avatar = 2;
   optional string password = 3 [(validate.rules).string = {min_len: 6, max_len: 28}];
@@ -913,7 +993,7 @@ message CreateUserReq {
 }
 
 // 回应 - 创建用户
-message CreateUserReply {
+message CreateUserResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -921,7 +1001,7 @@ message CreateUserReply {
 }
 
 // 请求 - 绑定用户权限
-message HandleUserRoleReq {
+message HandleUserRoleRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     uint64 domain_id = 2 [(validate.rules).uint64 = {gt: 0}]; 
@@ -931,7 +1011,7 @@ message HandleUserRoleReq {
 }
 
 // 回应 - 绑定用户权限
-message HandleUserRoleReply {
+message HandleUserRoleResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -939,17 +1019,17 @@ message HandleUserRoleReply {
 }
 
 // 请求 - 获取用户
-message GetUserReq {
+message GetUserRequest {
   uint64 id = 1  [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 请求 - 删除用户
-message DeleteUserReq {
+message DeleteUserRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 删除用户
-message DeleteUserReply {
+message DeleteUserResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -957,7 +1037,7 @@ message DeleteUserReply {
 }
 
 // 请求 - 修改用户
-message UpdateUserReq {
+message UpdateUserRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     string name = 2 [(validate.rules).string = {min_len: 1, max_len: 10}];
@@ -979,7 +1059,7 @@ message UpdateUserReq {
 }
 
 // 回应 - 修改用户
-message UpdateUserReply {
+message UpdateUserResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -987,18 +1067,18 @@ message UpdateUserReply {
 }
 
 // 回应 - 获取用户菜单
-message UserMenuTreeReply {
+message UserMenuTreeResponse {
   repeated MenuTree items = 1;
   optional int64 total = 2;
 }
 
 // 请求 - 验证用户是否存在
-message ExistUserNameReq {
+message ExistUserNameRequest {
   string name = 1;
 }
 
 // 回应 - 验证用户是否存在
-message ExistUserNameReply {
+message ExistUserNameResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1006,7 +1086,7 @@ message ExistUserNameReply {
 }
 
 
-// 领域模块
+// 租户模块
 message Domain {
   optional google.protobuf.Timestamp created_at = 1;
   optional google.protobuf.Timestamp updated_at = 2;
@@ -1025,8 +1105,8 @@ message Domain {
   repeated Domain children = 15;
 }
 
-// 请求 - 列表领域
-message ListDomainReq {
+// 请求 - 列表租户
+message ListDomainRequest {
   // 是否不分页
   optional bool nopaging = 1;
   // 当前页
@@ -1035,25 +1115,25 @@ message ListDomainReq {
   optional int32 page_size = 3;
 }
 
-// 回应 - 列表领域
-message ListDomainReply {
+// 回应 - 列表租户
+message ListDomainResponse {
   int64 total = 1;
   repeated Domain items = 2;
 }
 
-// 请求 - 列表领域
-message ListDomainTreeReq {
+// 请求 - 列表租户
+message ListDomainTreeRequest {
   uint64 id = 1;
 }
 
-// 回应 - 列表领域
-message ListDomainTreeReply {
+// 回应 - 列表租户
+message ListDomainTreeResponse {
   repeated Domain items = 1;
   optional int64 total = 2;
 }
 
-// 请求 - 创建领域
-message CreateDomainReq {
+// 请求 - 创建租户
+message CreateDomainRequest {
   string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
   optional uint64 parent_id = 2;
   optional int32 sort = 3;
@@ -1066,16 +1146,16 @@ message CreateDomainReq {
   optional string remarks = 10;
 }
 
-// 回应 - 创建领域
-message CreateDomainReply {
+// 回应 - 创建租户
+message CreateDomainResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
   string type = 4;
 }
 
-// 请求 - 修改领域
-message UpdateDomainReq {
+// 请求 - 修改租户
+message UpdateDomainRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
@@ -1092,16 +1172,16 @@ message UpdateDomainReq {
   Data data = 2;
 }
 
-// 回应 - 创建领域
-message UpdateDomainReply {
+// 回应 - 创建租户
+message UpdateDomainResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
   string type = 4;
 }
 
-// 请求 - 修改领域-状态
-message UpdateDomainStateReq {
+// 请求 - 修改租户-状态
+message UpdateDomainStateRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     optional int32 state = 1 [(validate.rules).int32.gte = 0];
@@ -1109,55 +1189,55 @@ message UpdateDomainStateReq {
   Data data = 2;
 }
 
-// 回应 - 创建领域-状态
-message UpdateDomainStateReply {
+// 回应 - 创建租户-状态
+message UpdateDomainStateResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
   string type = 4;
 }
 
-// 请求 - 获取领域
-message GetDomainReq {
+// 请求 - 获取租户
+message GetDomainRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
-// 请求 - 获取领域Code
-message GetDomainCodeReq {
+// 请求 - 获取租户Code
+message GetDomainCodeRequest {
   string code = 1 [(validate.rules).string.len = 19];
 }
 
-// 请求 - 获取领域Name
-message GetDomainNameReq {
+// 请求 - 获取租户Name
+message GetDomainNameRequest {
   string name = 1 [(validate.rules).string = {min_len: 2, max_len: 20}];
 }
 
-// 请求 - 删除领域
-message DeleteDomainReq {
+// 请求 - 删除租户
+message DeleteDomainRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
-// 回应 - 删除领域
-message DeleteDomainReply {
+// 回应 - 删除租户
+message DeleteDomainResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
   string type = 4;
 }
 
-// 请求 - 获取领域菜单
-message ListDomainMenuReq {
+// 请求 - 获取租户菜单
+message ListDomainMenuRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
-// 回应 - 获取领域菜单
-message ListDomainMenuReply {
+// 回应 - 获取租户菜单
+message ListDomainMenuResponse {
   repeated Menu items = 1;
   optional int64 total = 2;
 }
 
-// 请求 - 处理领域菜单
-message HandleDomainMenuReq {
+// 请求 - 处理租户菜单
+message HandleDomainMenuRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     repeated uint64 menu_ids = 10 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
@@ -1165,8 +1245,8 @@ message HandleDomainMenuReq {
   Data data = 2;
 }
 
-// 回应 - 处理领域菜单
-message HandleDomainMenuReply {
+// 回应 - 处理租户菜单
+message HandleDomainMenuResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1191,7 +1271,7 @@ message Role {
 }
 
 // 请求 - 列表角色
-message ListRoleReq {
+message ListRoleRequest {
   // 是否不分页
   optional bool nopaging = 1;
   // 当前页
@@ -1201,13 +1281,13 @@ message ListRoleReq {
 }
 
 // 回应 - 列表角色
-message ListRoleReply {
+message ListRoleResponse {
   int64 total = 1;
   repeated Role items = 2;
 }
 
 // 请求 - 创建角色
-message CreateRoleReq {
+message CreateRoleRequest {
   string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
   uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
   optional string default_router = 3 [(validate.rules).string = {min_len: 1, max_len: 100}];
@@ -1221,7 +1301,7 @@ message CreateRoleReq {
 }
 
 // 回应 - 创建角色
-message CreateRoleReply {
+message CreateRoleResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1229,7 +1309,7 @@ message CreateRoleReply {
 }
 
 // 请求 - 修改角色
-message UpdateRoleReq {
+message UpdateRoleRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
@@ -1247,7 +1327,7 @@ message UpdateRoleReq {
 }
 
 // 回应 - 创建角色
-message UpdateRoleReply {
+message UpdateRoleResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1255,7 +1335,7 @@ message UpdateRoleReply {
 }
 
 // 请求 - 修改角色
-message UpdateRoleStateReq {
+message UpdateRoleStateRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     int32 state = 1 [(validate.rules).int32.gte = 0];
@@ -1264,7 +1344,7 @@ message UpdateRoleStateReq {
 }
 
 // 回应 - 创建角色
-message UpdateRoleStateReply {
+message UpdateRoleStateResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1272,17 +1352,17 @@ message UpdateRoleStateReply {
 }
 
 // 请求 - 获取角色
-message GetRoleReq {
+message GetRoleRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 请求 - 删除角色
-message DeleteRoleReq {
+message DeleteRoleRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 删除角色
-message DeleteRoleReply {
+message DeleteRoleResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1290,18 +1370,18 @@ message DeleteRoleReply {
 }
 
 // 请求 - 获取角色菜单
-message ListRoleMenuReq {
+message ListRoleMenuRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 获取角色菜单
-message ListRoleMenuReply {
+message ListRoleMenuResponse {
   repeated Menu items = 1;
   optional int64 total = 2;
 }
 
 // 请求 - 处理角色菜单
-message HandleRoleMenuReq {
+message HandleRoleMenuRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     repeated uint64 menu_ids = 10 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
@@ -1310,7 +1390,7 @@ message HandleRoleMenuReq {
 }
 
 // 回应 - 处理角色菜单
-message HandleRoleMenuReply {
+message HandleRoleMenuResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1318,31 +1398,31 @@ message HandleRoleMenuReply {
 }
 
 // 请求 - 获取角色菜单
-message ListRoleDeptReq {
+message ListRoleDeptRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 获取角色菜单（未使用）
-message ListRoleDeptReply {
+message ListRoleDeptResponse {
   optional int64 total = 1;
   repeated Dept items = 2;
 }
 
 
 // 请求 - 获取角色数据权限
-message GetRoleDataScopeReq {
+message GetRoleDataScopeRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 角色菜单数据范围
-message GetRoleDataScopeReply {
+message GetRoleDataScopeResponse {
   int32 scope = 1;
   optional int32 dept_check_strictly = 2;
   repeated uint64 dept_customs = 3;
 }
 
 // 请求 - 处理角色数据范围
-message HandleRoleDataScopeReq {
+message HandleRoleDataScopeRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message DataScope {
     int32 scope = 1 [(validate.rules).int32.gte = 0];
@@ -1353,7 +1433,7 @@ message HandleRoleDataScopeReq {
 }
 
 // 回应 - 处理角色数据
-message HandleRoleDataScopeReply {
+message HandleRoleDataScopeResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1384,7 +1464,7 @@ message Menu {
 }
 
 // 请求 - 列表菜单
-message ListMenuReq {
+message ListMenuRequest {
   // 是否不分页
   optional bool nopaging = 1;
   // 当前页
@@ -1394,13 +1474,13 @@ message ListMenuReq {
 }
 
 // 回应 - 列表菜单
-message ListMenuReply {
+message ListMenuResponse {
   int64 total = 1;
   repeated Menu items = 2;
 }
 
 // 请求 - 创建菜单
-message CreateMenuReq {
+message CreateMenuRequest {
   optional string name = 1 [(validate.rules).string = {min_len: 1, max_len: 50}];
   int32 type = 2 [(validate.rules).int32.gte = 0];
   uint64 parent_id = 4 [(validate.rules).uint64 = {gte: 0}];
@@ -1419,7 +1499,7 @@ message CreateMenuReq {
 }
 
 // 回应 - 创建菜单
-message CreateMenuReply {
+message CreateMenuResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1427,7 +1507,7 @@ message CreateMenuReply {
 }
 
 // 请求 - 修改菜单
-message UpdateMenuReq {
+message UpdateMenuRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     optional string name = 1 [(validate.rules).string = {min_len: 1, max_len: 50}];
@@ -1450,7 +1530,7 @@ message UpdateMenuReq {
 }
 
 // 回应 - 创建菜单
-message UpdateMenuReply {
+message UpdateMenuResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1458,17 +1538,17 @@ message UpdateMenuReply {
 }
 
 // 请求 - 获取菜单
-message GetMenuReq {
+message GetMenuRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 请求 - 删除菜单
-message DeleteMenuReq {
+message DeleteMenuRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 删除菜单
-message DeleteMenuReply {
+message DeleteMenuResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1484,12 +1564,12 @@ message MenuTree {
 }
 
 // 请求 - 获取树形菜单
-message ListMenuTreeReq {
+message ListMenuTreeRequest {
   uint64 id = 1;
 }
 
 // 回应 - 获取树形菜单
-message ListMenuTreeReply {
+message ListMenuTreeResponse {
   repeated Menu items = 1;
   optional int64 total = 2;
 }
@@ -1508,7 +1588,7 @@ message Dept {
 }
 
 // 请求 - 列表部门
-message ListDeptReq {
+message ListDeptRequest {
   // 是否不分页
   optional bool nopaging = 1;
   // 当前页
@@ -1518,13 +1598,13 @@ message ListDeptReq {
 }
 
 // 回应 - 列表部门
-message ListDeptReply {
+message ListDeptResponse {
   int64 total = 1;
   repeated Dept items = 2;
 }
 
 // 请求 - 创建部门
-message CreateDeptReq {
+message CreateDeptRequest {
   string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
   uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
   int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
@@ -1533,7 +1613,7 @@ message CreateDeptReq {
 }
 
 // 回应 - 创建部门
-message CreateDeptReply {
+message CreateDeptResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1541,7 +1621,7 @@ message CreateDeptReply {
 }
 
 // 请求 - 修改部门
-message UpdateDeptReq {
+message UpdateDeptRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
@@ -1554,7 +1634,7 @@ message UpdateDeptReq {
 }
 
 // 回应 - 修改部门
-message UpdateDeptReply {
+message UpdateDeptResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1562,7 +1642,7 @@ message UpdateDeptReply {
 }
 
 // 请求 - 修改部门-状态
-message UpdateDeptStateReq {
+message UpdateDeptStateRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     optional int32 state = 1 [(validate.rules).int32.gte = 0];
@@ -1571,7 +1651,7 @@ message UpdateDeptStateReq {
 }
 
 // 回应 - 创建部门-状态
-message UpdateDeptStateReply {
+message UpdateDeptStateResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1579,17 +1659,17 @@ message UpdateDeptStateReply {
 }
 
 // 请求 - 获取部门
-message GetDeptReq {
+message GetDeptRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 请求 - 删除部门
-message DeleteDeptReq {
+message DeleteDeptRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 删除部门
-message DeleteDeptReply {
+message DeleteDeptResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1597,12 +1677,12 @@ message DeleteDeptReply {
 }
 
 // 请求 - 获取树形部门
-message ListDeptTreeReq {
+message ListDeptTreeRequest {
   uint64 id = 1;
 }
 
 // 回应 - 获取树形部门
-message ListDeptTreeReply {
+message ListDeptTreeResponse {
   repeated Dept items = 1;
   optional int64 total = 2;
 }
@@ -1620,7 +1700,7 @@ message Post {
 }
 
 // 请求 - 列表岗位
-message ListPostReq {
+message ListPostRequest {
   // 是否不分页
   optional bool nopaging = 1;
   // 当前页
@@ -1632,13 +1712,13 @@ message ListPostReq {
 }
 
 // 回应 - 列表岗位
-message ListPostReply {
+message ListPostResponse {
   int64 total = 1;
   repeated Post items = 2;
 }
 
 // 请求 - 创建岗位
-message CreatePostReq {
+message CreatePostRequest {
   string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
   optional string code = 2 [(validate.rules).string = {min_len: 1, max_len: 10}];
   int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
@@ -1647,7 +1727,7 @@ message CreatePostReq {
 }
 
 // 回应 - 创建岗位
-message CreatePostReply {
+message CreatePostResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1655,7 +1735,7 @@ message CreatePostReply {
 }
 
 // 请求 - 修改岗位
-message UpdatePostReq {
+message UpdatePostRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
@@ -1668,7 +1748,7 @@ message UpdatePostReq {
 }
 
 // 回应 - 创建岗位
-message UpdatePostReply {
+message UpdatePostResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1676,17 +1756,17 @@ message UpdatePostReply {
 }
 
 // 请求 - 获取岗位
-message GetPostReq {
+message GetPostRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 请求 - 删除岗位
-message DeletePostReq {
+message DeletePostRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 删除岗位
-message DeletePostReply {
+message DeletePostResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1694,7 +1774,7 @@ message DeletePostReply {
 }
 
 // 请求 - 修改岗位-状态
-message UpdatePostStateReq {
+message UpdatePostStateRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     optional int32 state = 1 [(validate.rules).int32.gte = 0];
@@ -1703,7 +1783,7 @@ message UpdatePostStateReq {
 }
 
 // 回应 - 创建岗位-状态
-message UpdatePostStateReply {
+message UpdatePostStateResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1723,7 +1803,7 @@ message Dict {
 }
 
 // 请求 - 列表字典
-message ListDictReq {
+message ListDictRequest {
   // 是否不分页
   optional bool nopaging = 1;
   // 当前页
@@ -1733,13 +1813,13 @@ message ListDictReq {
 }
 
 // 回应 - 列表字典
-message ListDictReply {
+message ListDictResponse {
   int64 total = 1;
   repeated Dict items = 2;
 }
 
 // 请求 - 创建字典
-message CreateDictReq {
+message CreateDictRequest {
   string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
   string type = 2 [(validate.rules).string = {min_len: 1, max_len: 50}];
   int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
@@ -1748,7 +1828,7 @@ message CreateDictReq {
 }
 
 // 回应 - 创建字典
-message CreateDictReply {
+message CreateDictResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1756,7 +1836,7 @@ message CreateDictReply {
 }
 
 // 请求 - 修改字典
-message UpdateDictReq {
+message UpdateDictRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
@@ -1768,7 +1848,7 @@ message UpdateDictReq {
 }
 
 // 回应 - 创建字典
-message UpdateDictReply {
+message UpdateDictResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1776,17 +1856,17 @@ message UpdateDictReply {
 }
 
 // 请求 - 获取字典
-message GetDictReq {
+message GetDictRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 请求 - 删除字典
-message DeleteDictReq {
+message DeleteDictRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 删除字典
-message DeleteDictReply {
+message DeleteDictResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1794,7 +1874,7 @@ message DeleteDictReply {
 }
 
 // 请求 - 修改字典-状态
-message UpdateDictStateReq {
+message UpdateDictStateRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     optional int32 state = 1 [(validate.rules).int32.gte = 0];
@@ -1803,7 +1883,7 @@ message UpdateDictStateReq {
 }
 
 // 回应 - 创建字典-状态
-message UpdateDictStateReply {
+message UpdateDictStateResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1826,7 +1906,7 @@ message DictData {
 }
 
 // 请求 - 列表字典数据
-message ListDictDataReq {
+message ListDictDataRequest {
   // 是否不分页
   optional bool nopaging = 1;
   // 当前页
@@ -1837,13 +1917,13 @@ message ListDictDataReq {
 }
 
 // 回应 - 列表字典数据
-message ListDictDataReply {
+message ListDictDataResponse {
   int64 total = 1;
   repeated DictData items = 2;
 }
 
 // 请求 - 创建字典数据
-message CreateDictDataReq {
+message CreateDictDataRequest {
   string label = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
   string value = 2 [(validate.rules).string = {min_len: 1, max_len: 10}];
   string dict_type = 3 [(validate.rules).string = {min_len: 1, max_len: 50}];
@@ -1855,7 +1935,7 @@ message CreateDictDataReq {
 }
 
 // 回应 - 创建字典数据
-message CreateDictDataReply {
+message CreateDictDataResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1863,7 +1943,7 @@ message CreateDictDataReply {
 }
 
 // 请求 - 修改字典数据
-message UpdateDictDataReq {
+message UpdateDictDataRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     string label = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
@@ -1878,7 +1958,7 @@ message UpdateDictDataReq {
 }
 
 // 回应 - 创建字典数据
-message UpdateDictDataReply {
+message UpdateDictDataResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1886,17 +1966,17 @@ message UpdateDictDataReply {
 }
 
 // 请求 - 获取字典数据
-message GetDictDataReq {
+message GetDictDataRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 请求 - 删除字典数据
-message DeleteDictDataReq {
+message DeleteDictDataRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
 }
 
 // 回应 - 删除字典数据
-message DeleteDictDataReply {
+message DeleteDictDataResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;
@@ -1904,7 +1984,7 @@ message DeleteDictDataReply {
 }
 
 // 请求 - 修改字典数据-状态
-message UpdateDictDataStateReq {
+message UpdateDictDataStateRequest {
   uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
   message Data {
     optional int32 state = 1 [(validate.rules).int32.gte = 0];
@@ -1913,7 +1993,111 @@ message UpdateDictDataStateReq {
 }
 
 // 回应 - 创建字典数据-状态
-message UpdateDictDataStateReply {
+message UpdateDictDataStateResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+
+// 租户套餐模块
+message DomainPackage {
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
+  uint64 id = 3;
+  string name = 4;
+  repeated uint64 menu_ids = 5;
+  optional int32 sort = 6;
+  optional string remarks = 7;
+  optional int32 state = 8;
+}
+
+// 请求 - 列表租户套餐
+message ListDomainPackageRequest {
+  // 是否不分页
+  optional bool nopaging = 1;
+  // 当前页
+  optional int32 page = 2;
+  // 每一页的行数
+  optional int32 page_size = 3;
+  optional string name = 4;
+
+}
+
+// 回应 - 列表租户套餐
+message ListDomainPackageResponse {
+  int64 total = 1;
+  repeated DomainPackage items = 2;
+}
+
+// 请求 - 创建租户套餐
+message CreateDomainPackageRequest {
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  repeated uint64 menu_ids = 2 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+  int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
+  int32 state = 4 [(validate.rules).int32.gte = 0];
+  optional string remarks = 5 [(validate.rules).string = {min_len: 0, max_len: 1000}];
+}
+
+// 回应 - 创建租户套餐
+message CreateDomainPackageResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 修改租户套餐
+message UpdateDomainPackageRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    repeated uint64 menu_ids = 2 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+    int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
+    int32 state = 4 [(validate.rules).int32.gte = 0];
+    string remarks = 5 [(validate.rules).string = {min_len: 0, max_len: 1000}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建租户套餐
+message UpdateDomainPackageResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 获取租户套餐
+message GetDomainPackageRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 请求 - 删除租户套餐
+message DeleteDomainPackageRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 删除租户套餐
+message DeleteDomainPackageResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 修改租户套餐-状态
+message UpdateDomainPackageStateRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    optional int32 state = 1 [(validate.rules).int32.gte = 0];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建租户套餐-状态
+message UpdateDomainPackageStateResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;

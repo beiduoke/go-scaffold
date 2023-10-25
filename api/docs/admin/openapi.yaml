@@ -720,7 +720,7 @@ paths:
         get:
             tags:
                 - AdminService
-            description: 列表领域
+            description: 列表租户
             operationId: AdminService_ListDomain
             parameters:
                 - name: nopaging
@@ -756,7 +756,7 @@ paths:
         post:
             tags:
                 - AdminService
-            description: 创建领域
+            description: 创建租户
             operationId: AdminService_CreateDomain
             requestBody:
                 content:
@@ -781,7 +781,7 @@ paths:
         get:
             tags:
                 - AdminService
-            description: 获取领域
+            description: 获取租户
             operationId: AdminService_GetDomainCode
             parameters:
                 - name: code
@@ -806,7 +806,7 @@ paths:
         get:
             tags:
                 - AdminService
-            description: 获取领域
+            description: 获取租户
             operationId: AdminService_GetDomain
             parameters:
                 - name: id
@@ -831,7 +831,7 @@ paths:
         put:
             tags:
                 - AdminService
-            description: 修改领域
+            description: 修改租户
             operationId: AdminService_UpdateDomain
             parameters:
                 - name: id
@@ -862,7 +862,7 @@ paths:
         delete:
             tags:
                 - AdminService
-            description: 删除领域
+            description: 删除租户
             operationId: AdminService_DeleteDomain
             parameters:
                 - name: id
@@ -945,7 +945,7 @@ paths:
         put:
             tags:
                 - AdminService
-            description: 设置领域状态
+            description: 设置租户状态
             operationId: AdminService_UpdateDomainState
             parameters:
                 - name: id
@@ -977,7 +977,7 @@ paths:
         get:
             tags:
                 - AdminService
-            description: 获取领域树形列表
+            description: 获取租户树形列表
             operationId: AdminService_ListDomainTree
             parameters:
                 - name: id
@@ -1003,7 +1003,7 @@ paths:
         get:
             tags:
                 - AdminService
-            description: 获取领域
+            description: 获取租户
             operationId: AdminService_GetDomainName
             parameters:
                 - name: name
@@ -2118,7 +2118,7 @@ components:
                     $ref: '#/components/schemas/GoogleProtobufAny'
                 type:
                     type: string
-            description: 回应 - 创建领域
+            description: 回应 - 创建租户
         CreateDomainReq:
             type: object
             properties:
@@ -2145,7 +2145,7 @@ components:
                     format: int32
                 remarks:
                     type: string
-            description: 请求 - 创建领域
+            description: 请求 - 创建租户
         CreateMenuReply:
             type: object
             properties:
@@ -2380,7 +2380,7 @@ components:
                     $ref: '#/components/schemas/GoogleProtobufAny'
                 type:
                     type: string
-            description: 回应 - 删除领域
+            description: 回应 - 删除租户
         DeleteMenuReply:
             type: object
             properties:
@@ -2560,7 +2560,7 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/Domain'
-            description: 领域模块
+            description: 租户模块
         EmailLoginReq_Auth:
             type: object
             properties:
@@ -2665,7 +2665,7 @@ components:
                     $ref: '#/components/schemas/GoogleProtobufAny'
                 type:
                     type: string
-            description: 回应 - 处理领域菜单
+            description: 回应 - 处理租户菜单
         HandleDomainMenuReq_Data:
             type: object
             properties:
@@ -2776,7 +2776,7 @@ components:
                 total:
                     type: integer
                     format: int64
-            description: 回应 - 获取领域菜单
+            description: 回应 - 获取租户菜单
         ListDomainReply:
             type: object
             properties:
@@ -2787,7 +2787,7 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/Domain'
-            description: 回应 - 列表领域
+            description: 回应 - 列表租户
         ListDomainTreeReply:
             type: object
             properties:
@@ -2798,7 +2798,7 @@ components:
                 total:
                     type: integer
                     format: int64
-            description: 回应 - 列表领域
+            description: 回应 - 列表租户
         ListMenuReply:
             type: object
             properties:
@@ -3338,7 +3338,7 @@ components:
                     $ref: '#/components/schemas/GoogleProtobufAny'
                 type:
                     type: string
-            description: 回应 - 创建领域
+            description: 回应 - 创建租户
         UpdateDomainReq_Data:
             type: object
             properties:
@@ -3377,7 +3377,7 @@ components:
                     $ref: '#/components/schemas/GoogleProtobufAny'
                 type:
                     type: string
-            description: 回应 - 创建领域-状态
+            description: 回应 - 创建租户-状态
         UpdateDomainStateReq_Data:
             type: object
             properties:

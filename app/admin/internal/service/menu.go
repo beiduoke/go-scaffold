@@ -127,13 +127,13 @@ func TreeMenu(menus []*biz.Menu, pid uint) []*v1.Menu {
 }
 
 // ListMenuTree 列表菜单-树形
-func (s *AdminService) ListMenuTree(ctx context.Context, in *v1.ListMenuTreeReq) (*v1.ListMenuTreeReply, error) {
+func (s *AdminService) ListMenuTree(ctx context.Context, in *v1.ListMenuTreeRequest) (*v1.ListMenuTreeResponse, error) {
 	results, total := s.menuCase.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithOrderBy(map[string]bool{"sort": false, "id": true})))
 	treeData := make([]*v1.Menu, 0)
 	for _, v := range results {
 		treeData = append(treeData, TransformMenu(v))
 	}
-	return &v1.ListMenuTreeReply{
+	return &v1.ListMenuTreeResponse{
 		Items: convert.ToTree(treeData, in.GetId(), func(t *v1.Menu, ts ...*v1.Menu) error {
 			t.Children = append(t.Children, ts...)
 			return nil
@@ -143,9 +143,9 @@ func (s *AdminService) ListMenuTree(ctx context.Context, in *v1.ListMenuTreeReq)
 }
 
 // ListMenu 列表菜单
-func (s *AdminService) ListMenu(ctx context.Context, in *v1.ListMenuReq) (*v1.ListMenuReply, error) {
+func (s *AdminService) ListMenu(ctx context.Context, in *v1.ListMenuRequest) (*v1.ListMenuResponse, error) {
 	results, total := s.menuCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize())))
-	return &v1.ListMenuReply{
+	return &v1.ListMenuResponse{
 		Total: total,
 		Items: convert.ArrayToAny(results, func(t *biz.Menu) *v1.Menu {
 			return TransformMenu(t)
@@ -154,7 +154,7 @@ func (s *AdminService) ListMenu(ctx context.Context, in *v1.ListMenuReq) (*v1.Li
 }
 
 // CreateMenu 创建菜单
-func (s *AdminService) CreateMenu(ctx context.Context, in *v1.CreateMenuReq) (*v1.CreateMenuReply, error) {
+func (s *AdminService) CreateMenu(ctx context.Context, in *v1.CreateMenuRequest) (*v1.CreateMenuResponse, error) {
 	user, err := s.menuCase.Create(ctx, &biz.Menu{
 		Name:        in.GetName(),
 		Type:        int32(in.GetType()),
@@ -178,7 +178,7 @@ func (s *AdminService) CreateMenu(ctx context.Context, in *v1.CreateMenuReq) (*v
 	data, _ := anypb.New(&v1.Result{
 		Id: uint64(user.ID),
 	})
-	return &v1.CreateMenuReply{
+	return &v1.CreateMenuResponse{
 		Type:    constant.HandleType_success.String(),
 		Message: "创建成功",
 		Result:  data,
@@ -186,7 +186,7 @@ func (s *AdminService) CreateMenu(ctx context.Context, in *v1.CreateMenuReq) (*v
 }
 
 // UpdateMenu 创建菜单
-func (s *AdminService) UpdateMenu(ctx context.Context, in *v1.UpdateMenuReq) (*v1.UpdateMenuReply, error) {
+func (s *AdminService) UpdateMenu(ctx context.Context, in *v1.UpdateMenuRequest) (*v1.UpdateMenuResponse, error) {
 	v := in.GetData()
 	err := s.menuCase.Update(ctx, &biz.Menu{
 		ID:          uint(in.GetId()),
@@ -209,14 +209,14 @@ func (s *AdminService) UpdateMenu(ctx context.Context, in *v1.UpdateMenuReq) (*v
 	if err != nil {
 		return nil, v1.ErrorMenuUpdateFail("菜单修改失败: %v", err.Error())
 	}
-	return &v1.UpdateMenuReply{
+	return &v1.UpdateMenuResponse{
 		Type:    constant.HandleType_success.String(),
 		Message: "修改成功",
 	}, nil
 }
 
 // GetMenu 获取菜单
-func (s *AdminService) GetMenu(ctx context.Context, in *v1.GetMenuReq) (*v1.Menu, error) {
+func (s *AdminService) GetMenu(ctx context.Context, in *v1.GetMenuRequest) (*v1.Menu, error) {
 	bizMenu, err := s.menuCase.GetID(ctx, &biz.Menu{ID: uint(in.GetId())})
 	if err != nil {
 		return nil, v1.ErrorMenuNotFound("菜单未找到")
@@ -225,11 +225,11 @@ func (s *AdminService) GetMenu(ctx context.Context, in *v1.GetMenuReq) (*v1.Menu
 }
 
 // DeleteMenu 删除菜单
-func (s *AdminService) DeleteMenu(ctx context.Context, in *v1.DeleteMenuReq) (*v1.DeleteMenuReply, error) {
+func (s *AdminService) DeleteMenu(ctx context.Context, in *v1.DeleteMenuRequest) (*v1.DeleteMenuResponse, error) {
 	if err := s.menuCase.Delete(ctx, &biz.Menu{ID: uint(in.GetId())}); err != nil {
 		return nil, v1.ErrorMenuDeleteFail("菜单删除失败：%v", err)
 	}
-	return &v1.DeleteMenuReply{
+	return &v1.DeleteMenuResponse{
 		Type:    constant.HandleType_success.String(),
 		Message: "删除成功",
 	}, nil

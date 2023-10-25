@@ -8,9 +8,10 @@ import (
 
 func NewSysModelMigrate() []interface{} {
 	return []interface{}{
-		&SysDomain{},
-		&SysUser{},
 		&SysApiOperationLog{},
+		&SysDomain{},
+		&SysDomainPackage{},
+		&SysUser{},
 		&SysMenu{},
 		&SysRole{},
 		&SysDept{},
@@ -36,7 +37,7 @@ type DomainModel struct {
 	UpdatedAt time.Time      `gorm:"comment:修改时间;"`
 	Updater   string         `gorm:"type:varchar(64);column:updater;not null;default:'';comment:更新者;"`
 	DeletedAt gorm.DeletedAt `gorm:"index;comment:删除时间;"`
-	DomainID  uint           `gorm:"type:bigint(20);column:domain_id;not null;default:0;index:idx_domain_id_data;comment:领域ID;"`
+	DomainID  uint           `gorm:"type:bigint(20);column:domain_id;not null;default:0;index:idx_domain_id_data;comment:租户ID;"`
 	Domain    *SysDomain     `gorm:"foreignKey:DomainID"`
 }
 
@@ -57,26 +58,28 @@ type DomainModel struct {
 // 	return
 // }
 
-// SysDomain 领域
+// SysDomain 租户
 type SysDomain struct {
 	Model
-	ParentID    uint       `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
-	SuperUserID uint       `gorm:"type:bigint(20);column:super_user_id;not null;default:0;comment:超级用户ID"`
-	Name        string     `gorm:"type:varchar(255);column:name;not null;comment:领域名称;"`
-	Code        string     `gorm:"type:varchar(100);column:code;not null;index;comment:领域编码;"`
-	Alias       string     `gorm:"type:varchar(255);column:alias;not null;default:'';comment:领域别名;"`
-	Keywords    string     `gorm:"type:varchar(255);column:keywords;not null;default:'';comment:领域关键字;"`
-	Logo        string     `gorm:"type:varchar(255);column:logo;not null;default:'';comment:领域LOGO;"`
-	Pic         string     `gorm:"type:varchar(255);column:pic;not null;default:'';comment:领域主图;"`
-	Description string     `gorm:"type:text;column:description;comment:描述"`
-	Sort        int32      `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
-	State       int32      `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
-	Remarks     string     `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
-	Menus       []SysMenu  `gorm:"many2many:sys_domain_menus;"`
-	SuperUser   *SysUser   `gorm:"foreignKey:SuperUserID"`
-	Parent      *SysDomain `gorm:"foreignKey:ParentID"`
-	Users       []SysUser  `gorm:"-"`
-	Roles       []SysRole  `gorm:"-"`
+	ParentID    uint              `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
+	SuperUserID uint              `gorm:"type:bigint(20);column:super_user_id;not null;default:0;comment:超级用户ID"`
+	PackageID   uint              `gorm:"type:bigint(20);column:package_id;not null;comment:超级用户ID"`
+	Name        string            `gorm:"type:varchar(255);column:name;not null;comment:租户名称;"`
+	Code        string            `gorm:"type:varchar(100);column:code;not null;index;comment:租户编码;"`
+	Alias       string            `gorm:"type:varchar(255);column:alias;not null;default:'';comment:租户别名;"`
+	Keywords    string            `gorm:"type:varchar(255);column:keywords;not null;default:'';comment:租户关键字;"`
+	Logo        string            `gorm:"type:varchar(255);column:logo;not null;default:'';comment:租户LOGO;"`
+	Pic         string            `gorm:"type:varchar(255);column:pic;not null;default:'';comment:租户主图;"`
+	Description string            `gorm:"type:text;column:description;comment:描述"`
+	Sort        int32             `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
+	State       int32             `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:状态 0 未指定  1 启用 2 停用;"`
+	Remarks     string            `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
+	Menus       []SysMenu         `gorm:"many2many:sys_domain_menus;"`
+	SuperUser   *SysUser          `gorm:"foreignKey:SuperUserID"`
+	Parent      *SysDomain        `gorm:"foreignKey:ParentID"`
+	Package     *SysDomainPackage `gorm:"foreignKey:PackageID"`
+	Users       []SysUser         `gorm:"-"`
+	Roles       []SysRole         `gorm:"-"`
 }
 
 // User 用户
@@ -127,25 +130,25 @@ type SysRole struct {
 // SysMenu 菜单
 type SysMenu struct {
 	Model
-	ParentID    uint        `gorm:"type:bigint(20);column:parent_id;not null;default:0;index;comment:父菜单ID"`
-	Type        int32       `gorm:"type:tinyint(1);column:type;not null;default:1;uniqueIndex:idx_menu_type_name;comment:菜单类型 0 无指定 1 目录 2 菜单 3 功能(按钮等);"`
-	Title       string      `gorm:"type:varchar(255);column:title;not null;comment:菜单标题"`
-	Name        string      `gorm:"type:varchar(255);column:name;not null;default:'';uniqueIndex:idx_menu_type_name;comment:菜单/路由名称;"`
-	Path        string      `gorm:"type:varchar(255);column:path;not null;default:'';comment:路由地址"`
-	Redirect    string      `gorm:"type:varchar(255);column:redirect;not null;default:'';comment:重定向地址"`
-	Component   string      `gorm:"type:varchar(255);column:component;not null;default:'';comment:组件路径"`
-	Permission  string      `gorm:"type:varchar(255);column:permission;not null;default:'';comment:权限标识"`
-	Icon        string      `gorm:"type:varchar(255);column:icon;not null;default:'';comment:图标"`
-	Sort        int32       `gorm:"type:int(10);column:sort;not null;default:10;comment:排序标记"`
-	IsHidden    int32       `gorm:"type:tinyint(1);column:is_hidden;not null;default:1;comment:是否隐藏 0 无指定 1 是 2 否"`
-	IsCache     int32       `gorm:"type:tinyint(1);column:is_cache;not null;default:1;comment:是否缓存 0 无指定 1 是 2 否"`
-	IsAffix     int32       `gorm:"type:tinyint(1);column:is_affix;not null;default:1;comment:是否固定 0 无指定 1 是 2 否"`
-	LinkType    int32       `gorm:"type:tinyint(1);column:link_type;not null;default:1;comment:外链类型  0 无指定 1 无 2 内嵌 3 跳转"`
-	LinkUrl     string      `gorm:"type:varchar(255);column:link_url;not null;default:'';comment:链接地址"`
-	ApiResource string      `gorm:"type:varchar(255);column:api_resource;not null;default:'';comment:接口资源"`
-	Remarks     string      `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
-	Roles       []SysRole   `gorm:"many2many:sys_role_menus;"`
-	Domains     []SysDomain `gorm:"many2many:sys_domain_menus;"`
+	ParentID       uint               `gorm:"type:bigint(20);column:parent_id;not null;default:0;index;comment:父菜单ID"`
+	Type           int32              `gorm:"type:tinyint(1);column:type;not null;default:1;uniqueIndex:idx_menu_type_name;comment:菜单类型 0 无指定 1 目录 2 菜单 3 功能(按钮等);"`
+	Title          string             `gorm:"type:varchar(255);column:title;not null;comment:菜单标题"`
+	Name           string             `gorm:"type:varchar(255);column:name;not null;default:'';uniqueIndex:idx_menu_type_name;comment:菜单/路由名称;"`
+	Path           string             `gorm:"type:varchar(255);column:path;not null;default:'';comment:路由地址"`
+	Redirect       string             `gorm:"type:varchar(255);column:redirect;not null;default:'';comment:重定向地址"`
+	Component      string             `gorm:"type:varchar(255);column:component;not null;default:'';comment:组件路径"`
+	Permission     string             `gorm:"type:varchar(255);column:permission;not null;default:'';comment:权限标识"`
+	Icon           string             `gorm:"type:varchar(255);column:icon;not null;default:'';comment:图标"`
+	Sort           int32              `gorm:"type:int(10);column:sort;not null;default:10;comment:排序标记"`
+	IsHidden       int32              `gorm:"type:tinyint(1);column:is_hidden;not null;default:1;comment:是否隐藏 0 无指定 1 是 2 否"`
+	IsCache        int32              `gorm:"type:tinyint(1);column:is_cache;not null;default:1;comment:是否缓存 0 无指定 1 是 2 否"`
+	IsAffix        int32              `gorm:"type:tinyint(1);column:is_affix;not null;default:1;comment:是否固定 0 无指定 1 是 2 否"`
+	LinkType       int32              `gorm:"type:tinyint(1);column:link_type;not null;default:1;comment:外链类型  0 无指定 1 无 2 内嵌 3 跳转"`
+	LinkUrl        string             `gorm:"type:varchar(255);column:link_url;not null;default:'';comment:链接地址"`
+	ApiResource    string             `gorm:"type:varchar(255);column:api_resource;not null;default:'';comment:接口资源"`
+	Remarks        string             `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
+	Roles          []SysRole          `gorm:"many2many:sys_role_menus;"`
+	DomainPackages []SysDomainPackage `gorm:"many2many:sys_domain_package_menus;"`
 }
 
 // SysDept 部门
@@ -219,4 +222,14 @@ type SysDictData struct {
 	State     int32    `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:字典状态 0 未指定  1 启用 2 停用;"`
 	Remarks   string   `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
 	SysDict   *SysDict `gorm:"foreignKey:Type;references:DictType"`
+}
+
+// DomainPackage 租户套餐
+type SysDomainPackage struct {
+	Model
+	Name    string    `gorm:"type:varchar(255);column:name;not null;comment:套餐名称;"`
+	Sort    int32     `gorm:"type:int(10);column:sort;not null;default:100;comment:排序"`
+	State   int32     `gorm:"type:tinyint(1);column:state;not null;default:1;index;comment:套餐状态 0 未指定  1 启用 2 停用;"`
+	Remarks string    `gorm:"type:varchar(255);column:remarks;not null;default:'';comment:备注;"`
+	Menus   []SysMenu `gorm:"many2many:sys_domain_package_menus;"`
 }

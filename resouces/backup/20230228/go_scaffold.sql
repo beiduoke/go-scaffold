@@ -35,7 +35,7 @@ CREATE TABLE `sys_api_operation_logs` (
   `created_at` datetime(3) DEFAULT NULL COMMENT '创建时间',
   `updated_at` datetime(3) DEFAULT NULL COMMENT '修改时间',
   `deleted_at` datetime(3) DEFAULT NULL COMMENT '删除时间',
-  `domain_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '领域ID',
+  `domain_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '租户ID',
   `ip` varchar(100) NOT NULL COMMENT '请求ip',
   `method` varchar(255) NOT NULL COMMENT '请求方法',
   `path` varchar(255) NOT NULL COMMENT '请求路径',
@@ -104,7 +104,7 @@ CREATE TABLE `sys_depts` (
   `created_at` datetime(3) DEFAULT NULL COMMENT '创建时间',
   `updated_at` datetime(3) DEFAULT NULL COMMENT '修改时间',
   `deleted_at` datetime(3) DEFAULT NULL COMMENT '删除时间',
-  `domain_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '领域ID',
+  `domain_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '租户ID',
   `name` varchar(255) NOT NULL COMMENT '资源名称',
   `ancestors` varchar(100) NOT NULL DEFAULT '0' COMMENT '祖级列表',
   `parent_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '父角色ID',
@@ -165,14 +165,14 @@ CREATE TABLE `sys_domains` (
   `created_at` datetime(3) DEFAULT NULL COMMENT '创建时间',
   `updated_at` datetime(3) DEFAULT NULL COMMENT '修改时间',
   `deleted_at` datetime(3) DEFAULT NULL COMMENT '删除时间',
-  `name` varchar(255) NOT NULL COMMENT '领域名称',
+  `name` varchar(255) NOT NULL COMMENT '租户名称',
   `parent_id` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '父角色ID',
-  `code` varchar(100) NOT NULL COMMENT '领域编码',
+  `code` varchar(100) NOT NULL COMMENT '租户编码',
   `sort` int(10) NOT NULL DEFAULT '100' COMMENT '排序',
-  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '领域标题',
-  `logo` varchar(255) NOT NULL DEFAULT '' COMMENT '领域LOGO',
-  `pic` varchar(255) NOT NULL DEFAULT '' COMMENT '领域主图',
-  `keywords` varchar(255) NOT NULL DEFAULT '' COMMENT '领域关键字',
+  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '租户标题',
+  `logo` varchar(255) NOT NULL DEFAULT '' COMMENT '租户LOGO',
+  `pic` varchar(255) NOT NULL DEFAULT '' COMMENT '租户主图',
+  `keywords` varchar(255) NOT NULL DEFAULT '' COMMENT '租户关键字',
   `description` text COMMENT '描述',
   `state` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 0 未指定  1 启用 2 停用',
   `remarks` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
@@ -328,7 +328,7 @@ CREATE TABLE `sys_posts` (
   `created_at` datetime(3) DEFAULT NULL COMMENT '创建时间',
   `updated_at` datetime(3) DEFAULT NULL COMMENT '修改时间',
   `deleted_at` datetime(3) DEFAULT NULL COMMENT '删除时间',
-  `domain_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '领域ID',
+  `domain_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '租户ID',
   `name` varchar(255) NOT NULL COMMENT '岗位名称',
   `sort` int(10) NOT NULL DEFAULT '100' COMMENT '排序',
   `state` tinyint(1) NOT NULL DEFAULT '1' COMMENT '岗位状态 0 未指定  1 启用 2 停用',
@@ -382,7 +382,7 @@ CREATE TABLE `sys_resources` (
 
 LOCK TABLES `sys_resources` WRITE;
 /*!40000 ALTER TABLE `sys_resources` DISABLE KEYS */;
-INSERT INTO `sys_resources` VALUES (1,'2022-11-05 07:38:29.503','2022-12-24 07:03:25.647',NULL,'资源列表','/api.admin.v1.Admin/ListResource','*','/v1/admin/resources','默认','',''),(2,'2022-12-24 07:02:54.516','2022-12-24 07:30:14.589',NULL,'菜单列表','/api.admin.v1.Admin/ListMenu','*','/v1/admin/menus','默认','',''),(3,'2022-12-24 07:32:38.919','2022-12-24 07:33:01.874',NULL,'领域列表','/api.admin.v1.Admin/ListDomain','*','/v1/admin/domains','领域','','');
+INSERT INTO `sys_resources` VALUES (1,'2022-11-05 07:38:29.503','2022-12-24 07:03:25.647',NULL,'资源列表','/api.admin.v1.Admin/ListResource','*','/v1/admin/resources','默认','',''),(2,'2022-12-24 07:02:54.516','2022-12-24 07:30:14.589',NULL,'菜单列表','/api.admin.v1.Admin/ListMenu','*','/v1/admin/menus','默认','',''),(3,'2022-12-24 07:32:38.919','2022-12-24 07:33:01.874',NULL,'租户列表','/api.admin.v1.Admin/ListDomain','*','/v1/admin/domains','租户','','');
 /*!40000 ALTER TABLE `sys_resources` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -494,7 +494,7 @@ CREATE TABLE `sys_roles` (
   `created_at` datetime(3) DEFAULT NULL COMMENT '创建时间',
   `updated_at` datetime(3) DEFAULT NULL COMMENT '修改时间',
   `deleted_at` datetime(3) DEFAULT NULL COMMENT '删除时间',
-  `domain_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '领域ID',
+  `domain_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '租户ID',
   `name` varchar(255) NOT NULL COMMENT '角色名称',
   `parent_id` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '父角色ID',
   `default_router` varchar(255) NOT NULL DEFAULT '/dashboard' COMMENT '默认路由',
@@ -556,7 +556,7 @@ CREATE TABLE `sys_users` (
   `created_at` datetime(3) DEFAULT NULL COMMENT '创建时间',
   `updated_at` datetime(3) DEFAULT NULL COMMENT '修改时间',
   `deleted_at` datetime(3) DEFAULT NULL COMMENT '删除时间',
-  `domain_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '领域ID',
+  `domain_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '租户ID',
   `avatar` varchar(255) NOT NULL DEFAULT '' COMMENT '头像',
   `name` varchar(255) NOT NULL COMMENT '用户名称',
   `nick_name` varchar(255) NOT NULL DEFAULT '' COMMENT '昵称',

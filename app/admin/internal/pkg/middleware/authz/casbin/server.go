@@ -189,7 +189,7 @@ func Server(opts ...Option) middleware.Middleware {
 				allowed, err = o.enforcer.Enforce(securityUser.GetSubject(), securityUser.GetObject(), securityUser.GetAction())
 			}
 			// fmt.Printf("权限：%s \n", securityUser.GetSubject())
-			// fmt.Printf("领域：%s \n", securityUser.GetDomain())
+			// fmt.Printf("租户：%s \n", securityUser.GetDomain())
 			// fmt.Printf("资源：%s \n", securityUser.GetObject())
 			// fmt.Printf("方法：%s \n", securityUser.GetAction())
 			// fmt.Printf("允许访问 %t \n", allowed)

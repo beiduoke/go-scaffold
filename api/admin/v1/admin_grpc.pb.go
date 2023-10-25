@@ -11,7 +11,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -90,6 +89,12 @@ const (
 	AdminService_UpdateDictData_FullMethodName             = "/admin.v1.AdminService/UpdateDictData"
 	AdminService_DeleteDictData_FullMethodName             = "/admin.v1.AdminService/DeleteDictData"
 	AdminService_UpdateDictDataState_FullMethodName        = "/admin.v1.AdminService/UpdateDictDataState"
+	AdminService_ListDomainPackage_FullMethodName          = "/admin.v1.AdminService/ListDomainPackage"
+	AdminService_CreateDomainPackage_FullMethodName        = "/admin.v1.AdminService/CreateDomainPackage"
+	AdminService_GetDomainPackage_FullMethodName           = "/admin.v1.AdminService/GetDomainPackage"
+	AdminService_UpdateDomainPackage_FullMethodName        = "/admin.v1.AdminService/UpdateDomainPackage"
+	AdminService_UpdateDomainPackageState_FullMethodName   = "/admin.v1.AdminService/UpdateDomainPackageState"
+	AdminService_DeleteDomainPackage_FullMethodName        = "/admin.v1.AdminService/DeleteDomainPackage"
 )
 
 // AdminServiceClient is the client API for AdminService service.
@@ -97,148 +102,160 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AdminServiceClient interface {
 	// 登出
-	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*LogoutReply, error)
+	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
 	// 密码登陆
-	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginReply, error)
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	// 注册
-	Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterReply, error)
+	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	// 短信登陆
-	SmsLogin(ctx context.Context, in *SmsLoginReq, opts ...grpc.CallOption) (*LoginReply, error)
+	SmsLogin(ctx context.Context, in *SmsLoginRequest, opts ...grpc.CallOption) (*SmsLoginResponse, error)
 	// 邮件登陆
-	EmailLogin(ctx context.Context, in *EmailLoginReq, opts ...grpc.CallOption) (*LoginReply, error)
+	EmailLogin(ctx context.Context, in *EmailLoginRequest, opts ...grpc.CallOption) (*EmailLoginResponse, error)
 	// User 用户模块
 	// 当前登录用户概述
-	GetUserInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserInfoReply, error)
+	GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
 	// 当前登录用户概述
-	GetUserProfile(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserProfileReply, error)
+	GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*GetUserProfileResponse, error)
 	// 当前登录用户拥有角色
-	ListUserRole(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserRoleReply, error)
+	ListUserRole(ctx context.Context, in *ListUserRoleRequest, opts ...grpc.CallOption) (*ListUserRoleResponse, error)
 	// 获取角色菜单路由树形列表
-	ListUserRoleMenuRouterTree(ctx context.Context, in *ListUserRoleMenuRouterTreeReq, opts ...grpc.CallOption) (*ListUserRoleMenuRouterTreeReply, error)
+	ListUserRoleMenuRouterTree(ctx context.Context, in *ListUserRoleMenuRouterTreeRequest, opts ...grpc.CallOption) (*ListUserRoleMenuRouterTreeResponse, error)
 	// 获取角色菜单路由树形列表
-	ListUserRoleMenuTree(ctx context.Context, in *ListUserRoleMenuTreeReq, opts ...grpc.CallOption) (*ListUserRoleMenuTreeReply, error)
+	ListUserRoleMenuTree(ctx context.Context, in *ListUserRoleMenuTreeRequest, opts ...grpc.CallOption) (*ListUserRoleMenuTreeResponse, error)
 	// 获取角色权限列表
-	ListUserRolePermission(ctx context.Context, in *ListUserRolePermissionReq, opts ...grpc.CallOption) (*ListUserRolePermissionReply, error)
+	ListUserRolePermission(ctx context.Context, in *ListUserRolePermissionRequest, opts ...grpc.CallOption) (*ListUserRolePermissionResponse, error)
 	// 列表用户
-	ListUser(ctx context.Context, in *ListUserReq, opts ...grpc.CallOption) (*ListUserReply, error)
+	ListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserResponse, error)
 	// 创建用户
-	CreateUser(ctx context.Context, in *CreateUserReq, opts ...grpc.CallOption) (*CreateUserReply, error)
+	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	// 获取用户
-	GetUser(ctx context.Context, in *GetUserReq, opts ...grpc.CallOption) (*User, error)
+	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*User, error)
 	// 修改用户
-	UpdateUser(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*UpdateUserReply, error)
+	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 	// 删除用户
-	DeleteUser(ctx context.Context, in *DeleteUserReq, opts ...grpc.CallOption) (*DeleteUserReply, error)
+	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
 	// 验证用户名是否存在
-	ExistUserName(ctx context.Context, in *ExistUserNameReq, opts ...grpc.CallOption) (*ExistUserNameReply, error)
-	// 列表领域
-	ListDomain(ctx context.Context, in *ListDomainReq, opts ...grpc.CallOption) (*ListDomainReply, error)
-	// 获取领域树形列表
-	ListDomainTree(ctx context.Context, in *ListDomainTreeReq, opts ...grpc.CallOption) (*ListDomainTreeReply, error)
-	// 创建领域
-	CreateDomain(ctx context.Context, in *CreateDomainReq, opts ...grpc.CallOption) (*CreateDomainReply, error)
-	// 获取领域
-	GetDomain(ctx context.Context, in *GetDomainReq, opts ...grpc.CallOption) (*Domain, error)
-	// 获取领域
-	GetDomainCode(ctx context.Context, in *GetDomainCodeReq, opts ...grpc.CallOption) (*Domain, error)
-	// 获取领域
-	GetDomainName(ctx context.Context, in *GetDomainNameReq, opts ...grpc.CallOption) (*Domain, error)
-	// 修改领域
-	UpdateDomain(ctx context.Context, in *UpdateDomainReq, opts ...grpc.CallOption) (*UpdateDomainReply, error)
-	// 删除领域
-	DeleteDomain(ctx context.Context, in *DeleteDomainReq, opts ...grpc.CallOption) (*DeleteDomainReply, error)
-	// 设置领域状态
-	UpdateDomainState(ctx context.Context, in *UpdateDomainStateReq, opts ...grpc.CallOption) (*UpdateDomainStateReply, error)
+	ExistUserName(ctx context.Context, in *ExistUserNameRequest, opts ...grpc.CallOption) (*ExistUserNameResponse, error)
+	// 列表租户
+	ListDomain(ctx context.Context, in *ListDomainRequest, opts ...grpc.CallOption) (*ListDomainResponse, error)
+	// 获取租户树形列表
+	ListDomainTree(ctx context.Context, in *ListDomainTreeRequest, opts ...grpc.CallOption) (*ListDomainTreeResponse, error)
+	// 创建租户
+	CreateDomain(ctx context.Context, in *CreateDomainRequest, opts ...grpc.CallOption) (*CreateDomainResponse, error)
+	// 获取租户
+	GetDomain(ctx context.Context, in *GetDomainRequest, opts ...grpc.CallOption) (*Domain, error)
+	// 获取租户
+	GetDomainCode(ctx context.Context, in *GetDomainCodeRequest, opts ...grpc.CallOption) (*Domain, error)
+	// 获取租户
+	GetDomainName(ctx context.Context, in *GetDomainNameRequest, opts ...grpc.CallOption) (*Domain, error)
+	// 修改租户
+	UpdateDomain(ctx context.Context, in *UpdateDomainRequest, opts ...grpc.CallOption) (*UpdateDomainResponse, error)
+	// 删除租户
+	DeleteDomain(ctx context.Context, in *DeleteDomainRequest, opts ...grpc.CallOption) (*DeleteDomainResponse, error)
+	// 设置租户状态
+	UpdateDomainState(ctx context.Context, in *UpdateDomainStateRequest, opts ...grpc.CallOption) (*UpdateDomainStateResponse, error)
 	// 获取角色菜单
-	ListDomainMenu(ctx context.Context, in *ListDomainMenuReq, opts ...grpc.CallOption) (*ListDomainMenuReply, error)
+	ListDomainMenu(ctx context.Context, in *ListDomainMenuRequest, opts ...grpc.CallOption) (*ListDomainMenuResponse, error)
 	// 处理角色菜单
-	HandleDomainMenu(ctx context.Context, in *HandleDomainMenuReq, opts ...grpc.CallOption) (*HandleDomainMenuReply, error)
+	HandleDomainMenu(ctx context.Context, in *HandleDomainMenuRequest, opts ...grpc.CallOption) (*HandleDomainMenuResponse, error)
 	// 角色模块
 	// 列表角色
-	ListRole(ctx context.Context, in *ListRoleReq, opts ...grpc.CallOption) (*ListRoleReply, error)
+	ListRole(ctx context.Context, in *ListRoleRequest, opts ...grpc.CallOption) (*ListRoleResponse, error)
 	// 创建角色
-	CreateRole(ctx context.Context, in *CreateRoleReq, opts ...grpc.CallOption) (*CreateRoleReply, error)
+	CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...grpc.CallOption) (*CreateRoleResponse, error)
 	// 获取指定ID角色
-	GetRole(ctx context.Context, in *GetRoleReq, opts ...grpc.CallOption) (*Role, error)
+	GetRole(ctx context.Context, in *GetRoleRequest, opts ...grpc.CallOption) (*Role, error)
 	// 修改指定ID角色
-	UpdateRole(ctx context.Context, in *UpdateRoleReq, opts ...grpc.CallOption) (*UpdateRoleReply, error)
+	UpdateRole(ctx context.Context, in *UpdateRoleRequest, opts ...grpc.CallOption) (*UpdateRoleResponse, error)
 	// 更新指定ID角色状态
-	UpdateRoleState(ctx context.Context, in *UpdateRoleStateReq, opts ...grpc.CallOption) (*UpdateRoleStateReply, error)
+	UpdateRoleState(ctx context.Context, in *UpdateRoleStateRequest, opts ...grpc.CallOption) (*UpdateRoleStateResponse, error)
 	// 删除指定ID角色
-	DeleteRole(ctx context.Context, in *DeleteRoleReq, opts ...grpc.CallOption) (*DeleteRoleReply, error)
+	DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*DeleteRoleResponse, error)
 	// 获取指定ID角色菜单
-	ListRoleMenu(ctx context.Context, in *ListRoleMenuReq, opts ...grpc.CallOption) (*ListRoleMenuReply, error)
+	ListRoleMenu(ctx context.Context, in *ListRoleMenuRequest, opts ...grpc.CallOption) (*ListRoleMenuResponse, error)
 	// 处理指定ID角色菜单
-	HandleRoleMenu(ctx context.Context, in *HandleRoleMenuReq, opts ...grpc.CallOption) (*HandleRoleMenuReply, error)
+	HandleRoleMenu(ctx context.Context, in *HandleRoleMenuRequest, opts ...grpc.CallOption) (*HandleRoleMenuResponse, error)
 	// 获取指定ID角色部门
-	ListRoleDept(ctx context.Context, in *ListRoleDeptReq, opts ...grpc.CallOption) (*ListRoleDeptReply, error)
+	ListRoleDept(ctx context.Context, in *ListRoleDeptRequest, opts ...grpc.CallOption) (*ListRoleDeptResponse, error)
 	// 获取指定ID角色数据范围
-	GetRoleDataScope(ctx context.Context, in *GetRoleDataScopeReq, opts ...grpc.CallOption) (*GetRoleDataScopeReply, error)
+	GetRoleDataScope(ctx context.Context, in *GetRoleDataScopeRequest, opts ...grpc.CallOption) (*GetRoleDataScopeResponse, error)
 	// 处理指定ID角色数据范围
-	HandleRoleDataScope(ctx context.Context, in *HandleRoleDataScopeReq, opts ...grpc.CallOption) (*HandleRoleDataScopeReply, error)
+	HandleRoleDataScope(ctx context.Context, in *HandleRoleDataScopeRequest, opts ...grpc.CallOption) (*HandleRoleDataScopeResponse, error)
 	// 菜单模块
 	// 列表菜单
-	ListMenu(ctx context.Context, in *ListMenuReq, opts ...grpc.CallOption) (*ListMenuReply, error)
+	ListMenu(ctx context.Context, in *ListMenuRequest, opts ...grpc.CallOption) (*ListMenuResponse, error)
 	// 创建菜单
-	CreateMenu(ctx context.Context, in *CreateMenuReq, opts ...grpc.CallOption) (*CreateMenuReply, error)
+	CreateMenu(ctx context.Context, in *CreateMenuRequest, opts ...grpc.CallOption) (*CreateMenuResponse, error)
 	// 获取树形菜单
-	ListMenuTree(ctx context.Context, in *ListMenuTreeReq, opts ...grpc.CallOption) (*ListMenuTreeReply, error)
+	ListMenuTree(ctx context.Context, in *ListMenuTreeRequest, opts ...grpc.CallOption) (*ListMenuTreeResponse, error)
 	// 获取菜单
-	GetMenu(ctx context.Context, in *GetMenuReq, opts ...grpc.CallOption) (*Menu, error)
+	GetMenu(ctx context.Context, in *GetMenuRequest, opts ...grpc.CallOption) (*Menu, error)
 	// 修改菜单
-	UpdateMenu(ctx context.Context, in *UpdateMenuReq, opts ...grpc.CallOption) (*UpdateMenuReply, error)
+	UpdateMenu(ctx context.Context, in *UpdateMenuRequest, opts ...grpc.CallOption) (*UpdateMenuResponse, error)
 	// 删除菜单
-	DeleteMenu(ctx context.Context, in *DeleteMenuReq, opts ...grpc.CallOption) (*DeleteMenuReply, error)
+	DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...grpc.CallOption) (*DeleteMenuResponse, error)
 	// 列表部门
-	ListDept(ctx context.Context, in *ListDeptReq, opts ...grpc.CallOption) (*ListDeptReply, error)
+	ListDept(ctx context.Context, in *ListDeptRequest, opts ...grpc.CallOption) (*ListDeptResponse, error)
 	// 创建部门
-	CreateDept(ctx context.Context, in *CreateDeptReq, opts ...grpc.CallOption) (*CreateDeptReply, error)
+	CreateDept(ctx context.Context, in *CreateDeptRequest, opts ...grpc.CallOption) (*CreateDeptResponse, error)
 	// 获取部门
-	GetDept(ctx context.Context, in *GetDeptReq, opts ...grpc.CallOption) (*Dept, error)
+	GetDept(ctx context.Context, in *GetDeptRequest, opts ...grpc.CallOption) (*Dept, error)
 	// 修改部门
-	UpdateDept(ctx context.Context, in *UpdateDeptReq, opts ...grpc.CallOption) (*UpdateDeptReply, error)
+	UpdateDept(ctx context.Context, in *UpdateDeptRequest, opts ...grpc.CallOption) (*UpdateDeptResponse, error)
 	// 更新指定ID角色状态
-	UpdateDeptState(ctx context.Context, in *UpdateDeptStateReq, opts ...grpc.CallOption) (*UpdateDeptStateReply, error)
+	UpdateDeptState(ctx context.Context, in *UpdateDeptStateRequest, opts ...grpc.CallOption) (*UpdateDeptStateResponse, error)
 	// 删除部门
-	DeleteDept(ctx context.Context, in *DeleteDeptReq, opts ...grpc.CallOption) (*DeleteDeptReply, error)
+	DeleteDept(ctx context.Context, in *DeleteDeptRequest, opts ...grpc.CallOption) (*DeleteDeptResponse, error)
 	// 获取全部部门树形
-	ListDeptTree(ctx context.Context, in *ListDeptTreeReq, opts ...grpc.CallOption) (*ListDeptTreeReply, error)
+	ListDeptTree(ctx context.Context, in *ListDeptTreeRequest, opts ...grpc.CallOption) (*ListDeptTreeResponse, error)
 	// 列表岗位
-	ListPost(ctx context.Context, in *ListPostReq, opts ...grpc.CallOption) (*ListPostReply, error)
+	ListPost(ctx context.Context, in *ListPostRequest, opts ...grpc.CallOption) (*ListPostResponse, error)
 	// 创建岗位
-	CreatePost(ctx context.Context, in *CreatePostReq, opts ...grpc.CallOption) (*CreatePostReply, error)
+	CreatePost(ctx context.Context, in *CreatePostRequest, opts ...grpc.CallOption) (*CreatePostResponse, error)
 	// 获取岗位
-	GetPost(ctx context.Context, in *GetPostReq, opts ...grpc.CallOption) (*Post, error)
+	GetPost(ctx context.Context, in *GetPostRequest, opts ...grpc.CallOption) (*Post, error)
 	// 修改岗位
-	UpdatePost(ctx context.Context, in *UpdatePostReq, opts ...grpc.CallOption) (*UpdatePostReply, error)
+	UpdatePost(ctx context.Context, in *UpdatePostRequest, opts ...grpc.CallOption) (*UpdatePostResponse, error)
 	// 删除岗位
-	DeletePost(ctx context.Context, in *DeletePostReq, opts ...grpc.CallOption) (*DeletePostReply, error)
+	DeletePost(ctx context.Context, in *DeletePostRequest, opts ...grpc.CallOption) (*DeletePostResponse, error)
 	// 设置岗位状态
-	UpdatePostState(ctx context.Context, in *UpdatePostStateReq, opts ...grpc.CallOption) (*UpdatePostStateReply, error)
+	UpdatePostState(ctx context.Context, in *UpdatePostStateRequest, opts ...grpc.CallOption) (*UpdatePostStateResponse, error)
 	// 列表字典
-	ListDict(ctx context.Context, in *ListDictReq, opts ...grpc.CallOption) (*ListDictReply, error)
+	ListDict(ctx context.Context, in *ListDictRequest, opts ...grpc.CallOption) (*ListDictResponse, error)
 	// 创建字典
-	CreateDict(ctx context.Context, in *CreateDictReq, opts ...grpc.CallOption) (*CreateDictReply, error)
+	CreateDict(ctx context.Context, in *CreateDictRequest, opts ...grpc.CallOption) (*CreateDictResponse, error)
 	// 获取字典
-	GetDict(ctx context.Context, in *GetDictReq, opts ...grpc.CallOption) (*Dict, error)
+	GetDict(ctx context.Context, in *GetDictRequest, opts ...grpc.CallOption) (*Dict, error)
 	// 修改字典
-	UpdateDict(ctx context.Context, in *UpdateDictReq, opts ...grpc.CallOption) (*UpdateDictReply, error)
+	UpdateDict(ctx context.Context, in *UpdateDictRequest, opts ...grpc.CallOption) (*UpdateDictResponse, error)
 	// 删除字典
-	DeleteDict(ctx context.Context, in *DeleteDictReq, opts ...grpc.CallOption) (*DeleteDictReply, error)
+	DeleteDict(ctx context.Context, in *DeleteDictRequest, opts ...grpc.CallOption) (*DeleteDictResponse, error)
 	// 设置字典状态
-	UpdateDictState(ctx context.Context, in *UpdateDictStateReq, opts ...grpc.CallOption) (*UpdateDictStateReply, error)
+	UpdateDictState(ctx context.Context, in *UpdateDictStateRequest, opts ...grpc.CallOption) (*UpdateDictStateResponse, error)
 	// 列表字典数据
-	ListDictData(ctx context.Context, in *ListDictDataReq, opts ...grpc.CallOption) (*ListDictDataReply, error)
+	ListDictData(ctx context.Context, in *ListDictDataRequest, opts ...grpc.CallOption) (*ListDictDataResponse, error)
 	// 创建字典数据
-	CreateDictData(ctx context.Context, in *CreateDictDataReq, opts ...grpc.CallOption) (*CreateDictDataReply, error)
+	CreateDictData(ctx context.Context, in *CreateDictDataRequest, opts ...grpc.CallOption) (*CreateDictDataResponse, error)
 	// 获取字典数据
-	GetDictData(ctx context.Context, in *GetDictDataReq, opts ...grpc.CallOption) (*DictData, error)
+	GetDictData(ctx context.Context, in *GetDictDataRequest, opts ...grpc.CallOption) (*DictData, error)
 	// 修改字典数据
-	UpdateDictData(ctx context.Context, in *UpdateDictDataReq, opts ...grpc.CallOption) (*UpdateDictDataReply, error)
+	UpdateDictData(ctx context.Context, in *UpdateDictDataRequest, opts ...grpc.CallOption) (*UpdateDictDataResponse, error)
 	// 删除字典数据
-	DeleteDictData(ctx context.Context, in *DeleteDictDataReq, opts ...grpc.CallOption) (*DeleteDictDataReply, error)
+	DeleteDictData(ctx context.Context, in *DeleteDictDataRequest, opts ...grpc.CallOption) (*DeleteDictDataResponse, error)
 	// 设置字典数据状态
-	UpdateDictDataState(ctx context.Context, in *UpdateDictDataStateReq, opts ...grpc.CallOption) (*UpdateDictDataStateReply, error)
+	UpdateDictDataState(ctx context.Context, in *UpdateDictDataStateRequest, opts ...grpc.CallOption) (*UpdateDictDataStateResponse, error)
+	// 列表租户套餐
+	ListDomainPackage(ctx context.Context, in *ListDomainPackageRequest, opts ...grpc.CallOption) (*ListDomainPackageResponse, error)
+	// 创建租户套餐
+	CreateDomainPackage(ctx context.Context, in *CreateDomainPackageRequest, opts ...grpc.CallOption) (*CreateDomainPackageResponse, error)
+	// 获取租户套餐
+	GetDomainPackage(ctx context.Context, in *GetDomainPackageRequest, opts ...grpc.CallOption) (*DomainPackage, error)
+	// 修改租户套餐
+	UpdateDomainPackage(ctx context.Context, in *UpdateDomainPackageRequest, opts ...grpc.CallOption) (*UpdateDomainPackageResponse, error)
+	// 更新指定ID套餐状态
+	UpdateDomainPackageState(ctx context.Context, in *UpdateDomainPackageStateRequest, opts ...grpc.CallOption) (*UpdateDomainPackageStateResponse, error)
+	// 删除租户套餐
+	DeleteDomainPackage(ctx context.Context, in *DeleteDomainPackageRequest, opts ...grpc.CallOption) (*DeleteDomainPackageResponse, error)
 }
 
 type adminServiceClient struct {
@@ -249,8 +266,8 @@ func NewAdminServiceClient(cc grpc.ClientConnInterface) AdminServiceClient {
 	return &adminServiceClient{cc}
 }
 
-func (c *adminServiceClient) Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*LogoutReply, error) {
-	out := new(LogoutReply)
+func (c *adminServiceClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error) {
+	out := new(LogoutResponse)
 	err := c.cc.Invoke(ctx, AdminService_Logout_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -258,8 +275,8 @@ func (c *adminServiceClient) Logout(ctx context.Context, in *emptypb.Empty, opts
 	return out, nil
 }
 
-func (c *adminServiceClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginReply, error) {
-	out := new(LoginReply)
+func (c *adminServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+	out := new(LoginResponse)
 	err := c.cc.Invoke(ctx, AdminService_Login_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -267,8 +284,8 @@ func (c *adminServiceClient) Login(ctx context.Context, in *LoginReq, opts ...gr
 	return out, nil
 }
 
-func (c *adminServiceClient) Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterReply, error) {
-	out := new(RegisterReply)
+func (c *adminServiceClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
+	out := new(RegisterResponse)
 	err := c.cc.Invoke(ctx, AdminService_Register_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -276,8 +293,8 @@ func (c *adminServiceClient) Register(ctx context.Context, in *RegisterReq, opts
 	return out, nil
 }
 
-func (c *adminServiceClient) SmsLogin(ctx context.Context, in *SmsLoginReq, opts ...grpc.CallOption) (*LoginReply, error) {
-	out := new(LoginReply)
+func (c *adminServiceClient) SmsLogin(ctx context.Context, in *SmsLoginRequest, opts ...grpc.CallOption) (*SmsLoginResponse, error) {
+	out := new(SmsLoginResponse)
 	err := c.cc.Invoke(ctx, AdminService_SmsLogin_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -285,8 +302,8 @@ func (c *adminServiceClient) SmsLogin(ctx context.Context, in *SmsLoginReq, opts
 	return out, nil
 }
 
-func (c *adminServiceClient) EmailLogin(ctx context.Context, in *EmailLoginReq, opts ...grpc.CallOption) (*LoginReply, error) {
-	out := new(LoginReply)
+func (c *adminServiceClient) EmailLogin(ctx context.Context, in *EmailLoginRequest, opts ...grpc.CallOption) (*EmailLoginResponse, error) {
+	out := new(EmailLoginResponse)
 	err := c.cc.Invoke(ctx, AdminService_EmailLogin_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -294,8 +311,8 @@ func (c *adminServiceClient) EmailLogin(ctx context.Context, in *EmailLoginReq, 
 	return out, nil
 }
 
-func (c *adminServiceClient) GetUserInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserInfoReply, error) {
-	out := new(GetUserInfoReply)
+func (c *adminServiceClient) GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error) {
+	out := new(GetUserInfoResponse)
 	err := c.cc.Invoke(ctx, AdminService_GetUserInfo_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -303,8 +320,8 @@ func (c *adminServiceClient) GetUserInfo(ctx context.Context, in *emptypb.Empty,
 	return out, nil
 }
 
-func (c *adminServiceClient) GetUserProfile(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserProfileReply, error) {
-	out := new(GetUserProfileReply)
+func (c *adminServiceClient) GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*GetUserProfileResponse, error) {
+	out := new(GetUserProfileResponse)
 	err := c.cc.Invoke(ctx, AdminService_GetUserProfile_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -312,8 +329,8 @@ func (c *adminServiceClient) GetUserProfile(ctx context.Context, in *emptypb.Emp
 	return out, nil
 }
 
-func (c *adminServiceClient) ListUserRole(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserRoleReply, error) {
-	out := new(ListUserRoleReply)
+func (c *adminServiceClient) ListUserRole(ctx context.Context, in *ListUserRoleRequest, opts ...grpc.CallOption) (*ListUserRoleResponse, error) {
+	out := new(ListUserRoleResponse)
 	err := c.cc.Invoke(ctx, AdminService_ListUserRole_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -321,8 +338,8 @@ func (c *adminServiceClient) ListUserRole(ctx context.Context, in *emptypb.Empty
 	return out, nil
 }
 
-func (c *adminServiceClient) ListUserRoleMenuRouterTree(ctx context.Context, in *ListUserRoleMenuRouterTreeReq, opts ...grpc.CallOption) (*ListUserRoleMenuRouterTreeReply, error) {
-	out := new(ListUserRoleMenuRouterTreeReply)
+func (c *adminServiceClient) ListUserRoleMenuRouterTree(ctx context.Context, in *ListUserRoleMenuRouterTreeRequest, opts ...grpc.CallOption) (*ListUserRoleMenuRouterTreeResponse, error) {
+	out := new(ListUserRoleMenuRouterTreeResponse)
 	err := c.cc.Invoke(ctx, AdminService_ListUserRoleMenuRouterTree_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -330,8 +347,8 @@ func (c *adminServiceClient) ListUserRoleMenuRouterTree(ctx context.Context, in 
 	return out, nil
 }
 
-func (c *adminServiceClient) ListUserRoleMenuTree(ctx context.Context, in *ListUserRoleMenuTreeReq, opts ...grpc.CallOption) (*ListUserRoleMenuTreeReply, error) {
-	out := new(ListUserRoleMenuTreeReply)
+func (c *adminServiceClient) ListUserRoleMenuTree(ctx context.Context, in *ListUserRoleMenuTreeRequest, opts ...grpc.CallOption) (*ListUserRoleMenuTreeResponse, error) {
+	out := new(ListUserRoleMenuTreeResponse)
 	err := c.cc.Invoke(ctx, AdminService_ListUserRoleMenuTree_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -339,8 +356,8 @@ func (c *adminServiceClient) ListUserRoleMenuTree(ctx context.Context, in *ListU
 	return out, nil
 }
 
-func (c *adminServiceClient) ListUserRolePermission(ctx context.Context, in *ListUserRolePermissionReq, opts ...grpc.CallOption) (*ListUserRolePermissionReply, error) {
-	out := new(ListUserRolePermissionReply)
+func (c *adminServiceClient) ListUserRolePermission(ctx context.Context, in *ListUserRolePermissionRequest, opts ...grpc.CallOption) (*ListUserRolePermissionResponse, error) {
+	out := new(ListUserRolePermissionResponse)
 	err := c.cc.Invoke(ctx, AdminService_ListUserRolePermission_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -348,8 +365,8 @@ func (c *adminServiceClient) ListUserRolePermission(ctx context.Context, in *Lis
 	return out, nil
 }
 
-func (c *adminServiceClient) ListUser(ctx context.Context, in *ListUserReq, opts ...grpc.CallOption) (*ListUserReply, error) {
-	out := new(ListUserReply)
+func (c *adminServiceClient) ListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserResponse, error) {
+	out := new(ListUserResponse)
 	err := c.cc.Invoke(ctx, AdminService_ListUser_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -357,8 +374,8 @@ func (c *adminServiceClient) ListUser(ctx context.Context, in *ListUserReq, opts
 	return out, nil
 }
 
-func (c *adminServiceClient) CreateUser(ctx context.Context, in *CreateUserReq, opts ...grpc.CallOption) (*CreateUserReply, error) {
-	out := new(CreateUserReply)
+func (c *adminServiceClient) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error) {
+	out := new(CreateUserResponse)
 	err := c.cc.Invoke(ctx, AdminService_CreateUser_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -366,7 +383,7 @@ func (c *adminServiceClient) CreateUser(ctx context.Context, in *CreateUserReq, 
 	return out, nil
 }
 
-func (c *adminServiceClient) GetUser(ctx context.Context, in *GetUserReq, opts ...grpc.CallOption) (*User, error) {
+func (c *adminServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*User, error) {
 	out := new(User)
 	err := c.cc.Invoke(ctx, AdminService_GetUser_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -375,8 +392,8 @@ func (c *adminServiceClient) GetUser(ctx context.Context, in *GetUserReq, opts .
 	return out, nil
 }
 
-func (c *adminServiceClient) UpdateUser(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*UpdateUserReply, error) {
-	out := new(UpdateUserReply)
+func (c *adminServiceClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error) {
+	out := new(UpdateUserResponse)
 	err := c.cc.Invoke(ctx, AdminService_UpdateUser_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -384,8 +401,8 @@ func (c *adminServiceClient) UpdateUser(ctx context.Context, in *UpdateUserReq, 
 	return out, nil
 }
 
-func (c *adminServiceClient) DeleteUser(ctx context.Context, in *DeleteUserReq, opts ...grpc.CallOption) (*DeleteUserReply, error) {
-	out := new(DeleteUserReply)
+func (c *adminServiceClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error) {
+	out := new(DeleteUserResponse)
 	err := c.cc.Invoke(ctx, AdminService_DeleteUser_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -393,8 +410,8 @@ func (c *adminServiceClient) DeleteUser(ctx context.Context, in *DeleteUserReq, 
 	return out, nil
 }
 
-func (c *adminServiceClient) ExistUserName(ctx context.Context, in *ExistUserNameReq, opts ...grpc.CallOption) (*ExistUserNameReply, error) {
-	out := new(ExistUserNameReply)
+func (c *adminServiceClient) ExistUserName(ctx context.Context, in *ExistUserNameRequest, opts ...grpc.CallOption) (*ExistUserNameResponse, error) {
+	out := new(ExistUserNameResponse)
 	err := c.cc.Invoke(ctx, AdminService_ExistUserName_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -402,8 +419,8 @@ func (c *adminServiceClient) ExistUserName(ctx context.Context, in *ExistUserNam
 	return out, nil
 }
 
-func (c *adminServiceClient) ListDomain(ctx context.Context, in *ListDomainReq, opts ...grpc.CallOption) (*ListDomainReply, error) {
-	out := new(ListDomainReply)
+func (c *adminServiceClient) ListDomain(ctx context.Context, in *ListDomainRequest, opts ...grpc.CallOption) (*ListDomainResponse, error) {
+	out := new(ListDomainResponse)
 	err := c.cc.Invoke(ctx, AdminService_ListDomain_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -411,8 +428,8 @@ func (c *adminServiceClient) ListDomain(ctx context.Context, in *ListDomainReq, 
 	return out, nil
 }
 
-func (c *adminServiceClient) ListDomainTree(ctx context.Context, in *ListDomainTreeReq, opts ...grpc.CallOption) (*ListDomainTreeReply, error) {
-	out := new(ListDomainTreeReply)
+func (c *adminServiceClient) ListDomainTree(ctx context.Context, in *ListDomainTreeRequest, opts ...grpc.CallOption) (*ListDomainTreeResponse, error) {
+	out := new(ListDomainTreeResponse)
 	err := c.cc.Invoke(ctx, AdminService_ListDomainTree_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -420,8 +437,8 @@ func (c *adminServiceClient) ListDomainTree(ctx context.Context, in *ListDomainT
 	return out, nil
 }
 
-func (c *adminServiceClient) CreateDomain(ctx context.Context, in *CreateDomainReq, opts ...grpc.CallOption) (*CreateDomainReply, error) {
-	out := new(CreateDomainReply)
+func (c *adminServiceClient) CreateDomain(ctx context.Context, in *CreateDomainRequest, opts ...grpc.CallOption) (*CreateDomainResponse, error) {
+	out := new(CreateDomainResponse)
 	err := c.cc.Invoke(ctx, AdminService_CreateDomain_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -429,7 +446,7 @@ func (c *adminServiceClient) CreateDomain(ctx context.Context, in *CreateDomainR
 	return out, nil
 }
 
-func (c *adminServiceClient) GetDomain(ctx context.Context, in *GetDomainReq, opts ...grpc.CallOption) (*Domain, error) {
+func (c *adminServiceClient) GetDomain(ctx context.Context, in *GetDomainRequest, opts ...grpc.CallOption) (*Domain, error) {
 	out := new(Domain)
 	err := c.cc.Invoke(ctx, AdminService_GetDomain_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -438,7 +455,7 @@ func (c *adminServiceClient) GetDomain(ctx context.Context, in *GetDomainReq, op
 	return out, nil
 }
 
-func (c *adminServiceClient) GetDomainCode(ctx context.Context, in *GetDomainCodeReq, opts ...grpc.CallOption) (*Domain, error) {
+func (c *adminServiceClient) GetDomainCode(ctx context.Context, in *GetDomainCodeRequest, opts ...grpc.CallOption) (*Domain, error) {
 	out := new(Domain)
 	err := c.cc.Invoke(ctx, AdminService_GetDomainCode_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -447,7 +464,7 @@ func (c *adminServiceClient) GetDomainCode(ctx context.Context, in *GetDomainCod
 	return out, nil
 }
 
-func (c *adminServiceClient) GetDomainName(ctx context.Context, in *GetDomainNameReq, opts ...grpc.CallOption) (*Domain, error) {
+func (c *adminServiceClient) GetDomainName(ctx context.Context, in *GetDomainNameRequest, opts ...grpc.CallOption) (*Domain, error) {
 	out := new(Domain)
 	err := c.cc.Invoke(ctx, AdminService_GetDomainName_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -456,8 +473,8 @@ func (c *adminServiceClient) GetDomainName(ctx context.Context, in *GetDomainNam
 	return out, nil
 }
 
-func (c *adminServiceClient) UpdateDomain(ctx context.Context, in *UpdateDomainReq, opts ...grpc.CallOption) (*UpdateDomainReply, error) {
-	out := new(UpdateDomainReply)
+func (c *adminServiceClient) UpdateDomain(ctx context.Context, in *UpdateDomainRequest, opts ...grpc.CallOption) (*UpdateDomainResponse, error) {
+	out := new(UpdateDomainResponse)
 	err := c.cc.Invoke(ctx, AdminService_UpdateDomain_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -465,8 +482,8 @@ func (c *adminServiceClient) UpdateDomain(ctx context.Context, in *UpdateDomainR
 	return out, nil
 }
 
-func (c *adminServiceClient) DeleteDomain(ctx context.Context, in *DeleteDomainReq, opts ...grpc.CallOption) (*DeleteDomainReply, error) {
-	out := new(DeleteDomainReply)
+func (c *adminServiceClient) DeleteDomain(ctx context.Context, in *DeleteDomainRequest, opts ...grpc.CallOption) (*DeleteDomainResponse, error) {
+	out := new(DeleteDomainResponse)
 	err := c.cc.Invoke(ctx, AdminService_DeleteDomain_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -474,8 +491,8 @@ func (c *adminServiceClient) DeleteDomain(ctx context.Context, in *DeleteDomainR
 	return out, nil
 }
 
-func (c *adminServiceClient) UpdateDomainState(ctx context.Context, in *UpdateDomainStateReq, opts ...grpc.CallOption) (*UpdateDomainStateReply, error) {
-	out := new(UpdateDomainStateReply)
+func (c *adminServiceClient) UpdateDomainState(ctx context.Context, in *UpdateDomainStateRequest, opts ...grpc.CallOption) (*UpdateDomainStateResponse, error) {
+	out := new(UpdateDomainStateResponse)
 	err := c.cc.Invoke(ctx, AdminService_UpdateDomainState_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -483,8 +500,8 @@ func (c *adminServiceClient) UpdateDomainState(ctx context.Context, in *UpdateDo
 	return out, nil
 }
 
-func (c *adminServiceClient) ListDomainMenu(ctx context.Context, in *ListDomainMenuReq, opts ...grpc.CallOption) (*ListDomainMenuReply, error) {
-	out := new(ListDomainMenuReply)
+func (c *adminServiceClient) ListDomainMenu(ctx context.Context, in *ListDomainMenuRequest, opts ...grpc.CallOption) (*ListDomainMenuResponse, error) {
+	out := new(ListDomainMenuResponse)
 	err := c.cc.Invoke(ctx, AdminService_ListDomainMenu_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -492,8 +509,8 @@ func (c *adminServiceClient) ListDomainMenu(ctx context.Context, in *ListDomainM
 	return out, nil
 }
 
-func (c *adminServiceClient) HandleDomainMenu(ctx context.Context, in *HandleDomainMenuReq, opts ...grpc.CallOption) (*HandleDomainMenuReply, error) {
-	out := new(HandleDomainMenuReply)
+func (c *adminServiceClient) HandleDomainMenu(ctx context.Context, in *HandleDomainMenuRequest, opts ...grpc.CallOption) (*HandleDomainMenuResponse, error) {
+	out := new(HandleDomainMenuResponse)
 	err := c.cc.Invoke(ctx, AdminService_HandleDomainMenu_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -501,8 +518,8 @@ func (c *adminServiceClient) HandleDomainMenu(ctx context.Context, in *HandleDom
 	return out, nil
 }
 
-func (c *adminServiceClient) ListRole(ctx context.Context, in *ListRoleReq, opts ...grpc.CallOption) (*ListRoleReply, error) {
-	out := new(ListRoleReply)
+func (c *adminServiceClient) ListRole(ctx context.Context, in *ListRoleRequest, opts ...grpc.CallOption) (*ListRoleResponse, error) {
+	out := new(ListRoleResponse)
 	err := c.cc.Invoke(ctx, AdminService_ListRole_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -510,8 +527,8 @@ func (c *adminServiceClient) ListRole(ctx context.Context, in *ListRoleReq, opts
 	return out, nil
 }
 
-func (c *adminServiceClient) CreateRole(ctx context.Context, in *CreateRoleReq, opts ...grpc.CallOption) (*CreateRoleReply, error) {
-	out := new(CreateRoleReply)
+func (c *adminServiceClient) CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...grpc.CallOption) (*CreateRoleResponse, error) {
+	out := new(CreateRoleResponse)
 	err := c.cc.Invoke(ctx, AdminService_CreateRole_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -519,7 +536,7 @@ func (c *adminServiceClient) CreateRole(ctx context.Context, in *CreateRoleReq, 
 	return out, nil
 }
 
-func (c *adminServiceClient) GetRole(ctx context.Context, in *GetRoleReq, opts ...grpc.CallOption) (*Role, error) {
+func (c *adminServiceClient) GetRole(ctx context.Context, in *GetRoleRequest, opts ...grpc.CallOption) (*Role, error) {
 	out := new(Role)
 	err := c.cc.Invoke(ctx, AdminService_GetRole_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -528,8 +545,8 @@ func (c *adminServiceClient) GetRole(ctx context.Context, in *GetRoleReq, opts .
 	return out, nil
 }
 
-func (c *adminServiceClient) UpdateRole(ctx context.Context, in *UpdateRoleReq, opts ...grpc.CallOption) (*UpdateRoleReply, error) {
-	out := new(UpdateRoleReply)
+func (c *adminServiceClient) UpdateRole(ctx context.Context, in *UpdateRoleRequest, opts ...grpc.CallOption) (*UpdateRoleResponse, error) {
+	out := new(UpdateRoleResponse)
 	err := c.cc.Invoke(ctx, AdminService_UpdateRole_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -537,8 +554,8 @@ func (c *adminServiceClient) UpdateRole(ctx context.Context, in *UpdateRoleReq, 
 	return out, nil
 }
 
-func (c *adminServiceClient) UpdateRoleState(ctx context.Context, in *UpdateRoleStateReq, opts ...grpc.CallOption) (*UpdateRoleStateReply, error) {
-	out := new(UpdateRoleStateReply)
+func (c *adminServiceClient) UpdateRoleState(ctx context.Context, in *UpdateRoleStateRequest, opts ...grpc.CallOption) (*UpdateRoleStateResponse, error) {
+	out := new(UpdateRoleStateResponse)
 	err := c.cc.Invoke(ctx, AdminService_UpdateRoleState_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -546,8 +563,8 @@ func (c *adminServiceClient) UpdateRoleState(ctx context.Context, in *UpdateRole
 	return out, nil
 }
 
-func (c *adminServiceClient) DeleteRole(ctx context.Context, in *DeleteRoleReq, opts ...grpc.CallOption) (*DeleteRoleReply, error) {
-	out := new(DeleteRoleReply)
+func (c *adminServiceClient) DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*DeleteRoleResponse, error) {
+	out := new(DeleteRoleResponse)
 	err := c.cc.Invoke(ctx, AdminService_DeleteRole_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -555,8 +572,8 @@ func (c *adminServiceClient) DeleteRole(ctx context.Context, in *DeleteRoleReq, 
 	return out, nil
 }
 
-func (c *adminServiceClient) ListRoleMenu(ctx context.Context, in *ListRoleMenuReq, opts ...grpc.CallOption) (*ListRoleMenuReply, error) {
-	out := new(ListRoleMenuReply)
+func (c *adminServiceClient) ListRoleMenu(ctx context.Context, in *ListRoleMenuRequest, opts ...grpc.CallOption) (*ListRoleMenuResponse, error) {
+	out := new(ListRoleMenuResponse)
 	err := c.cc.Invoke(ctx, AdminService_ListRoleMenu_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -564,8 +581,8 @@ func (c *adminServiceClient) ListRoleMenu(ctx context.Context, in *ListRoleMenuR
 	return out, nil
 }
 
-func (c *adminServiceClient) HandleRoleMenu(ctx context.Context, in *HandleRoleMenuReq, opts ...grpc.CallOption) (*HandleRoleMenuReply, error) {
-	out := new(HandleRoleMenuReply)
+func (c *adminServiceClient) HandleRoleMenu(ctx context.Context, in *HandleRoleMenuRequest, opts ...grpc.CallOption) (*HandleRoleMenuResponse, error) {
+	out := new(HandleRoleMenuResponse)
 	err := c.cc.Invoke(ctx, AdminService_HandleRoleMenu_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -573,8 +590,8 @@ func (c *adminServiceClient) HandleRoleMenu(ctx context.Context, in *HandleRoleM
 	return out, nil
 }
 
-func (c *adminServiceClient) ListRoleDept(ctx context.Context, in *ListRoleDeptReq, opts ...grpc.CallOption) (*ListRoleDeptReply, error) {
-	out := new(ListRoleDeptReply)
+func (c *adminServiceClient) ListRoleDept(ctx context.Context, in *ListRoleDeptRequest, opts ...grpc.CallOption) (*ListRoleDeptResponse, error) {
+	out := new(ListRoleDeptResponse)
 	err := c.cc.Invoke(ctx, AdminService_ListRoleDept_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -582,8 +599,8 @@ func (c *adminServiceClient) ListRoleDept(ctx context.Context, in *ListRoleDeptR
 	return out, nil
 }
 
-func (c *adminServiceClient) GetRoleDataScope(ctx context.Context, in *GetRoleDataScopeReq, opts ...grpc.CallOption) (*GetRoleDataScopeReply, error) {
-	out := new(GetRoleDataScopeReply)
+func (c *adminServiceClient) GetRoleDataScope(ctx context.Context, in *GetRoleDataScopeRequest, opts ...grpc.CallOption) (*GetRoleDataScopeResponse, error) {
+	out := new(GetRoleDataScopeResponse)
 	err := c.cc.Invoke(ctx, AdminService_GetRoleDataScope_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -591,8 +608,8 @@ func (c *adminServiceClient) GetRoleDataScope(ctx context.Context, in *GetRoleDa
 	return out, nil
 }
 
-func (c *adminServiceClient) HandleRoleDataScope(ctx context.Context, in *HandleRoleDataScopeReq, opts ...grpc.CallOption) (*HandleRoleDataScopeReply, error) {
-	out := new(HandleRoleDataScopeReply)
+func (c *adminServiceClient) HandleRoleDataScope(ctx context.Context, in *HandleRoleDataScopeRequest, opts ...grpc.CallOption) (*HandleRoleDataScopeResponse, error) {
+	out := new(HandleRoleDataScopeResponse)
 	err := c.cc.Invoke(ctx, AdminService_HandleRoleDataScope_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -600,8 +617,8 @@ func (c *adminServiceClient) HandleRoleDataScope(ctx context.Context, in *Handle
 	return out, nil
 }
 
-func (c *adminServiceClient) ListMenu(ctx context.Context, in *ListMenuReq, opts ...grpc.CallOption) (*ListMenuReply, error) {
-	out := new(ListMenuReply)
+func (c *adminServiceClient) ListMenu(ctx context.Context, in *ListMenuRequest, opts ...grpc.CallOption) (*ListMenuResponse, error) {
+	out := new(ListMenuResponse)
 	err := c.cc.Invoke(ctx, AdminService_ListMenu_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -609,8 +626,8 @@ func (c *adminServiceClient) ListMenu(ctx context.Context, in *ListMenuReq, opts
 	return out, nil
 }
 
-func (c *adminServiceClient) CreateMenu(ctx context.Context, in *CreateMenuReq, opts ...grpc.CallOption) (*CreateMenuReply, error) {
-	out := new(CreateMenuReply)
+func (c *adminServiceClient) CreateMenu(ctx context.Context, in *CreateMenuRequest, opts ...grpc.CallOption) (*CreateMenuResponse, error) {
+	out := new(CreateMenuResponse)
 	err := c.cc.Invoke(ctx, AdminService_CreateMenu_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -618,8 +635,8 @@ func (c *adminServiceClient) CreateMenu(ctx context.Context, in *CreateMenuReq, 
 	return out, nil
 }
 
-func (c *adminServiceClient) ListMenuTree(ctx context.Context, in *ListMenuTreeReq, opts ...grpc.CallOption) (*ListMenuTreeReply, error) {
-	out := new(ListMenuTreeReply)
+func (c *adminServiceClient) ListMenuTree(ctx context.Context, in *ListMenuTreeRequest, opts ...grpc.CallOption) (*ListMenuTreeResponse, error) {
+	out := new(ListMenuTreeResponse)
 	err := c.cc.Invoke(ctx, AdminService_ListMenuTree_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -627,7 +644,7 @@ func (c *adminServiceClient) ListMenuTree(ctx context.Context, in *ListMenuTreeR
 	return out, nil
 }
 
-func (c *adminServiceClient) GetMenu(ctx context.Context, in *GetMenuReq, opts ...grpc.CallOption) (*Menu, error) {
+func (c *adminServiceClient) GetMenu(ctx context.Context, in *GetMenuRequest, opts ...grpc.CallOption) (*Menu, error) {
 	out := new(Menu)
 	err := c.cc.Invoke(ctx, AdminService_GetMenu_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -636,8 +653,8 @@ func (c *adminServiceClient) GetMenu(ctx context.Context, in *GetMenuReq, opts .
 	return out, nil
 }
 
-func (c *adminServiceClient) UpdateMenu(ctx context.Context, in *UpdateMenuReq, opts ...grpc.CallOption) (*UpdateMenuReply, error) {
-	out := new(UpdateMenuReply)
+func (c *adminServiceClient) UpdateMenu(ctx context.Context, in *UpdateMenuRequest, opts ...grpc.CallOption) (*UpdateMenuResponse, error) {
+	out := new(UpdateMenuResponse)
 	err := c.cc.Invoke(ctx, AdminService_UpdateMenu_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -645,8 +662,8 @@ func (c *adminServiceClient) UpdateMenu(ctx context.Context, in *UpdateMenuReq, 
 	return out, nil
 }
 
-func (c *adminServiceClient) DeleteMenu(ctx context.Context, in *DeleteMenuReq, opts ...grpc.CallOption) (*DeleteMenuReply, error) {
-	out := new(DeleteMenuReply)
+func (c *adminServiceClient) DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...grpc.CallOption) (*DeleteMenuResponse, error) {
+	out := new(DeleteMenuResponse)
 	err := c.cc.Invoke(ctx, AdminService_DeleteMenu_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -654,8 +671,8 @@ func (c *adminServiceClient) DeleteMenu(ctx context.Context, in *DeleteMenuReq, 
 	return out, nil
 }
 
-func (c *adminServiceClient) ListDept(ctx context.Context, in *ListDeptReq, opts ...grpc.CallOption) (*ListDeptReply, error) {
-	out := new(ListDeptReply)
+func (c *adminServiceClient) ListDept(ctx context.Context, in *ListDeptRequest, opts ...grpc.CallOption) (*ListDeptResponse, error) {
+	out := new(ListDeptResponse)
 	err := c.cc.Invoke(ctx, AdminService_ListDept_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -663,8 +680,8 @@ func (c *adminServiceClient) ListDept(ctx context.Context, in *ListDeptReq, opts
 	return out, nil
 }
 
-func (c *adminServiceClient) CreateDept(ctx context.Context, in *CreateDeptReq, opts ...grpc.CallOption) (*CreateDeptReply, error) {
-	out := new(CreateDeptReply)
+func (c *adminServiceClient) CreateDept(ctx context.Context, in *CreateDeptRequest, opts ...grpc.CallOption) (*CreateDeptResponse, error) {
+	out := new(CreateDeptResponse)
 	err := c.cc.Invoke(ctx, AdminService_CreateDept_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -672,7 +689,7 @@ func (c *adminServiceClient) CreateDept(ctx context.Context, in *CreateDeptReq, 
 	return out, nil
 }
 
-func (c *adminServiceClient) GetDept(ctx context.Context, in *GetDeptReq, opts ...grpc.CallOption) (*Dept, error) {
+func (c *adminServiceClient) GetDept(ctx context.Context, in *GetDeptRequest, opts ...grpc.CallOption) (*Dept, error) {
 	out := new(Dept)
 	err := c.cc.Invoke(ctx, AdminService_GetDept_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -681,8 +698,8 @@ func (c *adminServiceClient) GetDept(ctx context.Context, in *GetDeptReq, opts .
 	return out, nil
 }
 
-func (c *adminServiceClient) UpdateDept(ctx context.Context, in *UpdateDeptReq, opts ...grpc.CallOption) (*UpdateDeptReply, error) {
-	out := new(UpdateDeptReply)
+func (c *adminServiceClient) UpdateDept(ctx context.Context, in *UpdateDeptRequest, opts ...grpc.CallOption) (*UpdateDeptResponse, error) {
+	out := new(UpdateDeptResponse)
 	err := c.cc.Invoke(ctx, AdminService_UpdateDept_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -690,8 +707,8 @@ func (c *adminServiceClient) UpdateDept(ctx context.Context, in *UpdateDeptReq, 
 	return out, nil
 }
 
-func (c *adminServiceClient) UpdateDeptState(ctx context.Context, in *UpdateDeptStateReq, opts ...grpc.CallOption) (*UpdateDeptStateReply, error) {
-	out := new(UpdateDeptStateReply)
+func (c *adminServiceClient) UpdateDeptState(ctx context.Context, in *UpdateDeptStateRequest, opts ...grpc.CallOption) (*UpdateDeptStateResponse, error) {
+	out := new(UpdateDeptStateResponse)
 	err := c.cc.Invoke(ctx, AdminService_UpdateDeptState_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -699,8 +716,8 @@ func (c *adminServiceClient) UpdateDeptState(ctx context.Context, in *UpdateDept
 	return out, nil
 }
 
-func (c *adminServiceClient) DeleteDept(ctx context.Context, in *DeleteDeptReq, opts ...grpc.CallOption) (*DeleteDeptReply, error) {
-	out := new(DeleteDeptReply)
+func (c *adminServiceClient) DeleteDept(ctx context.Context, in *DeleteDeptRequest, opts ...grpc.CallOption) (*DeleteDeptResponse, error) {
+	out := new(DeleteDeptResponse)
 	err := c.cc.Invoke(ctx, AdminService_DeleteDept_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -708,8 +725,8 @@ func (c *adminServiceClient) DeleteDept(ctx context.Context, in *DeleteDeptReq, 
 	return out, nil
 }
 
-func (c *adminServiceClient) ListDeptTree(ctx context.Context, in *ListDeptTreeReq, opts ...grpc.CallOption) (*ListDeptTreeReply, error) {
-	out := new(ListDeptTreeReply)
+func (c *adminServiceClient) ListDeptTree(ctx context.Context, in *ListDeptTreeRequest, opts ...grpc.CallOption) (*ListDeptTreeResponse, error) {
+	out := new(ListDeptTreeResponse)
 	err := c.cc.Invoke(ctx, AdminService_ListDeptTree_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -717,8 +734,8 @@ func (c *adminServiceClient) ListDeptTree(ctx context.Context, in *ListDeptTreeR
 	return out, nil
 }
 
-func (c *adminServiceClient) ListPost(ctx context.Context, in *ListPostReq, opts ...grpc.CallOption) (*ListPostReply, error) {
-	out := new(ListPostReply)
+func (c *adminServiceClient) ListPost(ctx context.Context, in *ListPostRequest, opts ...grpc.CallOption) (*ListPostResponse, error) {
+	out := new(ListPostResponse)
 	err := c.cc.Invoke(ctx, AdminService_ListPost_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -726,8 +743,8 @@ func (c *adminServiceClient) ListPost(ctx context.Context, in *ListPostReq, opts
 	return out, nil
 }
 
-func (c *adminServiceClient) CreatePost(ctx context.Context, in *CreatePostReq, opts ...grpc.CallOption) (*CreatePostReply, error) {
-	out := new(CreatePostReply)
+func (c *adminServiceClient) CreatePost(ctx context.Context, in *CreatePostRequest, opts ...grpc.CallOption) (*CreatePostResponse, error) {
+	out := new(CreatePostResponse)
 	err := c.cc.Invoke(ctx, AdminService_CreatePost_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -735,7 +752,7 @@ func (c *adminServiceClient) CreatePost(ctx context.Context, in *CreatePostReq, 
 	return out, nil
 }
 
-func (c *adminServiceClient) GetPost(ctx context.Context, in *GetPostReq, opts ...grpc.CallOption) (*Post, error) {
+func (c *adminServiceClient) GetPost(ctx context.Context, in *GetPostRequest, opts ...grpc.CallOption) (*Post, error) {
 	out := new(Post)
 	err := c.cc.Invoke(ctx, AdminService_GetPost_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -744,8 +761,8 @@ func (c *adminServiceClient) GetPost(ctx context.Context, in *GetPostReq, opts .
 	return out, nil
 }
 
-func (c *adminServiceClient) UpdatePost(ctx context.Context, in *UpdatePostReq, opts ...grpc.CallOption) (*UpdatePostReply, error) {
-	out := new(UpdatePostReply)
+func (c *adminServiceClient) UpdatePost(ctx context.Context, in *UpdatePostRequest, opts ...grpc.CallOption) (*UpdatePostResponse, error) {
+	out := new(UpdatePostResponse)
 	err := c.cc.Invoke(ctx, AdminService_UpdatePost_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -753,8 +770,8 @@ func (c *adminServiceClient) UpdatePost(ctx context.Context, in *UpdatePostReq, 
 	return out, nil
 }
 
-func (c *adminServiceClient) DeletePost(ctx context.Context, in *DeletePostReq, opts ...grpc.CallOption) (*DeletePostReply, error) {
-	out := new(DeletePostReply)
+func (c *adminServiceClient) DeletePost(ctx context.Context, in *DeletePostRequest, opts ...grpc.CallOption) (*DeletePostResponse, error) {
+	out := new(DeletePostResponse)
 	err := c.cc.Invoke(ctx, AdminService_DeletePost_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -762,8 +779,8 @@ func (c *adminServiceClient) DeletePost(ctx context.Context, in *DeletePostReq, 
 	return out, nil
 }
 
-func (c *adminServiceClient) UpdatePostState(ctx context.Context, in *UpdatePostStateReq, opts ...grpc.CallOption) (*UpdatePostStateReply, error) {
-	out := new(UpdatePostStateReply)
+func (c *adminServiceClient) UpdatePostState(ctx context.Context, in *UpdatePostStateRequest, opts ...grpc.CallOption) (*UpdatePostStateResponse, error) {
+	out := new(UpdatePostStateResponse)
 	err := c.cc.Invoke(ctx, AdminService_UpdatePostState_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -771,8 +788,8 @@ func (c *adminServiceClient) UpdatePostState(ctx context.Context, in *UpdatePost
 	return out, nil
 }
 
-func (c *adminServiceClient) ListDict(ctx context.Context, in *ListDictReq, opts ...grpc.CallOption) (*ListDictReply, error) {
-	out := new(ListDictReply)
+func (c *adminServiceClient) ListDict(ctx context.Context, in *ListDictRequest, opts ...grpc.CallOption) (*ListDictResponse, error) {
+	out := new(ListDictResponse)
 	err := c.cc.Invoke(ctx, AdminService_ListDict_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -780,8 +797,8 @@ func (c *adminServiceClient) ListDict(ctx context.Context, in *ListDictReq, opts
 	return out, nil
 }
 
-func (c *adminServiceClient) CreateDict(ctx context.Context, in *CreateDictReq, opts ...grpc.CallOption) (*CreateDictReply, error) {
-	out := new(CreateDictReply)
+func (c *adminServiceClient) CreateDict(ctx context.Context, in *CreateDictRequest, opts ...grpc.CallOption) (*CreateDictResponse, error) {
+	out := new(CreateDictResponse)
 	err := c.cc.Invoke(ctx, AdminService_CreateDict_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -789,7 +806,7 @@ func (c *adminServiceClient) CreateDict(ctx context.Context, in *CreateDictReq, 
 	return out, nil
 }
 
-func (c *adminServiceClient) GetDict(ctx context.Context, in *GetDictReq, opts ...grpc.CallOption) (*Dict, error) {
+func (c *adminServiceClient) GetDict(ctx context.Context, in *GetDictRequest, opts ...grpc.CallOption) (*Dict, error) {
 	out := new(Dict)
 	err := c.cc.Invoke(ctx, AdminService_GetDict_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -798,8 +815,8 @@ func (c *adminServiceClient) GetDict(ctx context.Context, in *GetDictReq, opts .
 	return out, nil
 }
 
-func (c *adminServiceClient) UpdateDict(ctx context.Context, in *UpdateDictReq, opts ...grpc.CallOption) (*UpdateDictReply, error) {
-	out := new(UpdateDictReply)
+func (c *adminServiceClient) UpdateDict(ctx context.Context, in *UpdateDictRequest, opts ...grpc.CallOption) (*UpdateDictResponse, error) {
+	out := new(UpdateDictResponse)
 	err := c.cc.Invoke(ctx, AdminService_UpdateDict_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -807,8 +824,8 @@ func (c *adminServiceClient) UpdateDict(ctx context.Context, in *UpdateDictReq, 
 	return out, nil
 }
 
-func (c *adminServiceClient) DeleteDict(ctx context.Context, in *DeleteDictReq, opts ...grpc.CallOption) (*DeleteDictReply, error) {
-	out := new(DeleteDictReply)
+func (c *adminServiceClient) DeleteDict(ctx context.Context, in *DeleteDictRequest, opts ...grpc.CallOption) (*DeleteDictResponse, error) {
+	out := new(DeleteDictResponse)
 	err := c.cc.Invoke(ctx, AdminService_DeleteDict_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -816,8 +833,8 @@ func (c *adminServiceClient) DeleteDict(ctx context.Context, in *DeleteDictReq, 
 	return out, nil
 }
 
-func (c *adminServiceClient) UpdateDictState(ctx context.Context, in *UpdateDictStateReq, opts ...grpc.CallOption) (*UpdateDictStateReply, error) {
-	out := new(UpdateDictStateReply)
+func (c *adminServiceClient) UpdateDictState(ctx context.Context, in *UpdateDictStateRequest, opts ...grpc.CallOption) (*UpdateDictStateResponse, error) {
+	out := new(UpdateDictStateResponse)
 	err := c.cc.Invoke(ctx, AdminService_UpdateDictState_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -825,8 +842,8 @@ func (c *adminServiceClient) UpdateDictState(ctx context.Context, in *UpdateDict
 	return out, nil
 }
 
-func (c *adminServiceClient) ListDictData(ctx context.Context, in *ListDictDataReq, opts ...grpc.CallOption) (*ListDictDataReply, error) {
-	out := new(ListDictDataReply)
+func (c *adminServiceClient) ListDictData(ctx context.Context, in *ListDictDataRequest, opts ...grpc.CallOption) (*ListDictDataResponse, error) {
+	out := new(ListDictDataResponse)
 	err := c.cc.Invoke(ctx, AdminService_ListDictData_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -834,8 +851,8 @@ func (c *adminServiceClient) ListDictData(ctx context.Context, in *ListDictDataR
 	return out, nil
 }
 
-func (c *adminServiceClient) CreateDictData(ctx context.Context, in *CreateDictDataReq, opts ...grpc.CallOption) (*CreateDictDataReply, error) {
-	out := new(CreateDictDataReply)
+func (c *adminServiceClient) CreateDictData(ctx context.Context, in *CreateDictDataRequest, opts ...grpc.CallOption) (*CreateDictDataResponse, error) {
+	out := new(CreateDictDataResponse)
 	err := c.cc.Invoke(ctx, AdminService_CreateDictData_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -843,7 +860,7 @@ func (c *adminServiceClient) CreateDictData(ctx context.Context, in *CreateDictD
 	return out, nil
 }
 
-func (c *adminServiceClient) GetDictData(ctx context.Context, in *GetDictDataReq, opts ...grpc.CallOption) (*DictData, error) {
+func (c *adminServiceClient) GetDictData(ctx context.Context, in *GetDictDataRequest, opts ...grpc.CallOption) (*DictData, error) {
 	out := new(DictData)
 	err := c.cc.Invoke(ctx, AdminService_GetDictData_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -852,8 +869,8 @@ func (c *adminServiceClient) GetDictData(ctx context.Context, in *GetDictDataReq
 	return out, nil
 }
 
-func (c *adminServiceClient) UpdateDictData(ctx context.Context, in *UpdateDictDataReq, opts ...grpc.CallOption) (*UpdateDictDataReply, error) {
-	out := new(UpdateDictDataReply)
+func (c *adminServiceClient) UpdateDictData(ctx context.Context, in *UpdateDictDataRequest, opts ...grpc.CallOption) (*UpdateDictDataResponse, error) {
+	out := new(UpdateDictDataResponse)
 	err := c.cc.Invoke(ctx, AdminService_UpdateDictData_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -861,8 +878,8 @@ func (c *adminServiceClient) UpdateDictData(ctx context.Context, in *UpdateDictD
 	return out, nil
 }
 
-func (c *adminServiceClient) DeleteDictData(ctx context.Context, in *DeleteDictDataReq, opts ...grpc.CallOption) (*DeleteDictDataReply, error) {
-	out := new(DeleteDictDataReply)
+func (c *adminServiceClient) DeleteDictData(ctx context.Context, in *DeleteDictDataRequest, opts ...grpc.CallOption) (*DeleteDictDataResponse, error) {
+	out := new(DeleteDictDataResponse)
 	err := c.cc.Invoke(ctx, AdminService_DeleteDictData_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -870,9 +887,63 @@ func (c *adminServiceClient) DeleteDictData(ctx context.Context, in *DeleteDictD
 	return out, nil
 }
 
-func (c *adminServiceClient) UpdateDictDataState(ctx context.Context, in *UpdateDictDataStateReq, opts ...grpc.CallOption) (*UpdateDictDataStateReply, error) {
-	out := new(UpdateDictDataStateReply)
+func (c *adminServiceClient) UpdateDictDataState(ctx context.Context, in *UpdateDictDataStateRequest, opts ...grpc.CallOption) (*UpdateDictDataStateResponse, error) {
+	out := new(UpdateDictDataStateResponse)
 	err := c.cc.Invoke(ctx, AdminService_UpdateDictDataState_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) ListDomainPackage(ctx context.Context, in *ListDomainPackageRequest, opts ...grpc.CallOption) (*ListDomainPackageResponse, error) {
+	out := new(ListDomainPackageResponse)
+	err := c.cc.Invoke(ctx, AdminService_ListDomainPackage_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) CreateDomainPackage(ctx context.Context, in *CreateDomainPackageRequest, opts ...grpc.CallOption) (*CreateDomainPackageResponse, error) {
+	out := new(CreateDomainPackageResponse)
+	err := c.cc.Invoke(ctx, AdminService_CreateDomainPackage_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetDomainPackage(ctx context.Context, in *GetDomainPackageRequest, opts ...grpc.CallOption) (*DomainPackage, error) {
+	out := new(DomainPackage)
+	err := c.cc.Invoke(ctx, AdminService_GetDomainPackage_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateDomainPackage(ctx context.Context, in *UpdateDomainPackageRequest, opts ...grpc.CallOption) (*UpdateDomainPackageResponse, error) {
+	out := new(UpdateDomainPackageResponse)
+	err := c.cc.Invoke(ctx, AdminService_UpdateDomainPackage_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateDomainPackageState(ctx context.Context, in *UpdateDomainPackageStateRequest, opts ...grpc.CallOption) (*UpdateDomainPackageStateResponse, error) {
+	out := new(UpdateDomainPackageStateResponse)
+	err := c.cc.Invoke(ctx, AdminService_UpdateDomainPackageState_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) DeleteDomainPackage(ctx context.Context, in *DeleteDomainPackageRequest, opts ...grpc.CallOption) (*DeleteDomainPackageResponse, error) {
+	out := new(DeleteDomainPackageResponse)
+	err := c.cc.Invoke(ctx, AdminService_DeleteDomainPackage_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -884,148 +955,160 @@ func (c *adminServiceClient) UpdateDictDataState(ctx context.Context, in *Update
 // for forward compatibility
 type AdminServiceServer interface {
 	// 登出
-	Logout(context.Context, *emptypb.Empty) (*LogoutReply, error)
+	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
 	// 密码登陆
-	Login(context.Context, *LoginReq) (*LoginReply, error)
+	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	// 注册
-	Register(context.Context, *RegisterReq) (*RegisterReply, error)
+	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	// 短信登陆
-	SmsLogin(context.Context, *SmsLoginReq) (*LoginReply, error)
+	SmsLogin(context.Context, *SmsLoginRequest) (*SmsLoginResponse, error)
 	// 邮件登陆
-	EmailLogin(context.Context, *EmailLoginReq) (*LoginReply, error)
+	EmailLogin(context.Context, *EmailLoginRequest) (*EmailLoginResponse, error)
 	// User 用户模块
 	// 当前登录用户概述
-	GetUserInfo(context.Context, *emptypb.Empty) (*GetUserInfoReply, error)
+	GetUserInfo(context.Context, *GetUserInfoRequest) (*GetUserInfoResponse, error)
 	// 当前登录用户概述
-	GetUserProfile(context.Context, *emptypb.Empty) (*GetUserProfileReply, error)
+	GetUserProfile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error)
 	// 当前登录用户拥有角色
-	ListUserRole(context.Context, *emptypb.Empty) (*ListUserRoleReply, error)
+	ListUserRole(context.Context, *ListUserRoleRequest) (*ListUserRoleResponse, error)
 	// 获取角色菜单路由树形列表
-	ListUserRoleMenuRouterTree(context.Context, *ListUserRoleMenuRouterTreeReq) (*ListUserRoleMenuRouterTreeReply, error)
+	ListUserRoleMenuRouterTree(context.Context, *ListUserRoleMenuRouterTreeRequest) (*ListUserRoleMenuRouterTreeResponse, error)
 	// 获取角色菜单路由树形列表
-	ListUserRoleMenuTree(context.Context, *ListUserRoleMenuTreeReq) (*ListUserRoleMenuTreeReply, error)
+	ListUserRoleMenuTree(context.Context, *ListUserRoleMenuTreeRequest) (*ListUserRoleMenuTreeResponse, error)
 	// 获取角色权限列表
-	ListUserRolePermission(context.Context, *ListUserRolePermissionReq) (*ListUserRolePermissionReply, error)
+	ListUserRolePermission(context.Context, *ListUserRolePermissionRequest) (*ListUserRolePermissionResponse, error)
 	// 列表用户
-	ListUser(context.Context, *ListUserReq) (*ListUserReply, error)
+	ListUser(context.Context, *ListUserRequest) (*ListUserResponse, error)
 	// 创建用户
-	CreateUser(context.Context, *CreateUserReq) (*CreateUserReply, error)
+	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	// 获取用户
-	GetUser(context.Context, *GetUserReq) (*User, error)
+	GetUser(context.Context, *GetUserRequest) (*User, error)
 	// 修改用户
-	UpdateUser(context.Context, *UpdateUserReq) (*UpdateUserReply, error)
+	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	// 删除用户
-	DeleteUser(context.Context, *DeleteUserReq) (*DeleteUserReply, error)
+	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
 	// 验证用户名是否存在
-	ExistUserName(context.Context, *ExistUserNameReq) (*ExistUserNameReply, error)
-	// 列表领域
-	ListDomain(context.Context, *ListDomainReq) (*ListDomainReply, error)
-	// 获取领域树形列表
-	ListDomainTree(context.Context, *ListDomainTreeReq) (*ListDomainTreeReply, error)
-	// 创建领域
-	CreateDomain(context.Context, *CreateDomainReq) (*CreateDomainReply, error)
-	// 获取领域
-	GetDomain(context.Context, *GetDomainReq) (*Domain, error)
-	// 获取领域
-	GetDomainCode(context.Context, *GetDomainCodeReq) (*Domain, error)
-	// 获取领域
-	GetDomainName(context.Context, *GetDomainNameReq) (*Domain, error)
-	// 修改领域
-	UpdateDomain(context.Context, *UpdateDomainReq) (*UpdateDomainReply, error)
-	// 删除领域
-	DeleteDomain(context.Context, *DeleteDomainReq) (*DeleteDomainReply, error)
-	// 设置领域状态
-	UpdateDomainState(context.Context, *UpdateDomainStateReq) (*UpdateDomainStateReply, error)
+	ExistUserName(context.Context, *ExistUserNameRequest) (*ExistUserNameResponse, error)
+	// 列表租户
+	ListDomain(context.Context, *ListDomainRequest) (*ListDomainResponse, error)
+	// 获取租户树形列表
+	ListDomainTree(context.Context, *ListDomainTreeRequest) (*ListDomainTreeResponse, error)
+	// 创建租户
+	CreateDomain(context.Context, *CreateDomainRequest) (*CreateDomainResponse, error)
+	// 获取租户
+	GetDomain(context.Context, *GetDomainRequest) (*Domain, error)
+	// 获取租户
+	GetDomainCode(context.Context, *GetDomainCodeRequest) (*Domain, error)
+	// 获取租户
+	GetDomainName(context.Context, *GetDomainNameRequest) (*Domain, error)
+	// 修改租户
+	UpdateDomain(context.Context, *UpdateDomainRequest) (*UpdateDomainResponse, error)
+	// 删除租户
+	DeleteDomain(context.Context, *DeleteDomainRequest) (*DeleteDomainResponse, error)
+	// 设置租户状态
+	UpdateDomainState(context.Context, *UpdateDomainStateRequest) (*UpdateDomainStateResponse, error)
 	// 获取角色菜单
-	ListDomainMenu(context.Context, *ListDomainMenuReq) (*ListDomainMenuReply, error)
+	ListDomainMenu(context.Context, *ListDomainMenuRequest) (*ListDomainMenuResponse, error)
 	// 处理角色菜单
-	HandleDomainMenu(context.Context, *HandleDomainMenuReq) (*HandleDomainMenuReply, error)
+	HandleDomainMenu(context.Context, *HandleDomainMenuRequest) (*HandleDomainMenuResponse, error)
 	// 角色模块
 	// 列表角色
-	ListRole(context.Context, *ListRoleReq) (*ListRoleReply, error)
+	ListRole(context.Context, *ListRoleRequest) (*ListRoleResponse, error)
 	// 创建角色
-	CreateRole(context.Context, *CreateRoleReq) (*CreateRoleReply, error)
+	CreateRole(context.Context, *CreateRoleRequest) (*CreateRoleResponse, error)
 	// 获取指定ID角色
-	GetRole(context.Context, *GetRoleReq) (*Role, error)
+	GetRole(context.Context, *GetRoleRequest) (*Role, error)
 	// 修改指定ID角色
-	UpdateRole(context.Context, *UpdateRoleReq) (*UpdateRoleReply, error)
+	UpdateRole(context.Context, *UpdateRoleRequest) (*UpdateRoleResponse, error)
 	// 更新指定ID角色状态
-	UpdateRoleState(context.Context, *UpdateRoleStateReq) (*UpdateRoleStateReply, error)
+	UpdateRoleState(context.Context, *UpdateRoleStateRequest) (*UpdateRoleStateResponse, error)
 	// 删除指定ID角色
-	DeleteRole(context.Context, *DeleteRoleReq) (*DeleteRoleReply, error)
+	DeleteRole(context.Context, *DeleteRoleRequest) (*DeleteRoleResponse, error)
 	// 获取指定ID角色菜单
-	ListRoleMenu(context.Context, *ListRoleMenuReq) (*ListRoleMenuReply, error)
+	ListRoleMenu(context.Context, *ListRoleMenuRequest) (*ListRoleMenuResponse, error)
 	// 处理指定ID角色菜单
-	HandleRoleMenu(context.Context, *HandleRoleMenuReq) (*HandleRoleMenuReply, error)
+	HandleRoleMenu(context.Context, *HandleRoleMenuRequest) (*HandleRoleMenuResponse, error)
 	// 获取指定ID角色部门
-	ListRoleDept(context.Context, *ListRoleDeptReq) (*ListRoleDeptReply, error)
+	ListRoleDept(context.Context, *ListRoleDeptRequest) (*ListRoleDeptResponse, error)
 	// 获取指定ID角色数据范围
-	GetRoleDataScope(context.Context, *GetRoleDataScopeReq) (*GetRoleDataScopeReply, error)
+	GetRoleDataScope(context.Context, *GetRoleDataScopeRequest) (*GetRoleDataScopeResponse, error)
 	// 处理指定ID角色数据范围
-	HandleRoleDataScope(context.Context, *HandleRoleDataScopeReq) (*HandleRoleDataScopeReply, error)
+	HandleRoleDataScope(context.Context, *HandleRoleDataScopeRequest) (*HandleRoleDataScopeResponse, error)
 	// 菜单模块
 	// 列表菜单
-	ListMenu(context.Context, *ListMenuReq) (*ListMenuReply, error)
+	ListMenu(context.Context, *ListMenuRequest) (*ListMenuResponse, error)
 	// 创建菜单
-	CreateMenu(context.Context, *CreateMenuReq) (*CreateMenuReply, error)
+	CreateMenu(context.Context, *CreateMenuRequest) (*CreateMenuResponse, error)
 	// 获取树形菜单
-	ListMenuTree(context.Context, *ListMenuTreeReq) (*ListMenuTreeReply, error)
+	ListMenuTree(context.Context, *ListMenuTreeRequest) (*ListMenuTreeResponse, error)
 	// 获取菜单
-	GetMenu(context.Context, *GetMenuReq) (*Menu, error)
+	GetMenu(context.Context, *GetMenuRequest) (*Menu, error)
 	// 修改菜单
-	UpdateMenu(context.Context, *UpdateMenuReq) (*UpdateMenuReply, error)
+	UpdateMenu(context.Context, *UpdateMenuRequest) (*UpdateMenuResponse, error)
 	// 删除菜单
-	DeleteMenu(context.Context, *DeleteMenuReq) (*DeleteMenuReply, error)
+	DeleteMenu(context.Context, *DeleteMenuRequest) (*DeleteMenuResponse, error)
 	// 列表部门
-	ListDept(context.Context, *ListDeptReq) (*ListDeptReply, error)
+	ListDept(context.Context, *ListDeptRequest) (*ListDeptResponse, error)
 	// 创建部门
-	CreateDept(context.Context, *CreateDeptReq) (*CreateDeptReply, error)
+	CreateDept(context.Context, *CreateDeptRequest) (*CreateDeptResponse, error)
 	// 获取部门
-	GetDept(context.Context, *GetDeptReq) (*Dept, error)
+	GetDept(context.Context, *GetDeptRequest) (*Dept, error)
 	// 修改部门
-	UpdateDept(context.Context, *UpdateDeptReq) (*UpdateDeptReply, error)
+	UpdateDept(context.Context, *UpdateDeptRequest) (*UpdateDeptResponse, error)
 	// 更新指定ID角色状态
-	UpdateDeptState(context.Context, *UpdateDeptStateReq) (*UpdateDeptStateReply, error)
+	UpdateDeptState(context.Context, *UpdateDeptStateRequest) (*UpdateDeptStateResponse, error)
 	// 删除部门
-	DeleteDept(context.Context, *DeleteDeptReq) (*DeleteDeptReply, error)
+	DeleteDept(context.Context, *DeleteDeptRequest) (*DeleteDeptResponse, error)
 	// 获取全部部门树形
-	ListDeptTree(context.Context, *ListDeptTreeReq) (*ListDeptTreeReply, error)
+	ListDeptTree(context.Context, *ListDeptTreeRequest) (*ListDeptTreeResponse, error)
 	// 列表岗位
-	ListPost(context.Context, *ListPostReq) (*ListPostReply, error)
+	ListPost(context.Context, *ListPostRequest) (*ListPostResponse, error)
 	// 创建岗位
-	CreatePost(context.Context, *CreatePostReq) (*CreatePostReply, error)
+	CreatePost(context.Context, *CreatePostRequest) (*CreatePostResponse, error)
 	// 获取岗位
-	GetPost(context.Context, *GetPostReq) (*Post, error)
+	GetPost(context.Context, *GetPostRequest) (*Post, error)
 	// 修改岗位
-	UpdatePost(context.Context, *UpdatePostReq) (*UpdatePostReply, error)
+	UpdatePost(context.Context, *UpdatePostRequest) (*UpdatePostResponse, error)
 	// 删除岗位
-	DeletePost(context.Context, *DeletePostReq) (*DeletePostReply, error)
+	DeletePost(context.Context, *DeletePostRequest) (*DeletePostResponse, error)
 	// 设置岗位状态
-	UpdatePostState(context.Context, *UpdatePostStateReq) (*UpdatePostStateReply, error)
+	UpdatePostState(context.Context, *UpdatePostStateRequest) (*UpdatePostStateResponse, error)
 	// 列表字典
-	ListDict(context.Context, *ListDictReq) (*ListDictReply, error)
+	ListDict(context.Context, *ListDictRequest) (*ListDictResponse, error)
 	// 创建字典
-	CreateDict(context.Context, *CreateDictReq) (*CreateDictReply, error)
+	CreateDict(context.Context, *CreateDictRequest) (*CreateDictResponse, error)
 	// 获取字典
-	GetDict(context.Context, *GetDictReq) (*Dict, error)
+	GetDict(context.Context, *GetDictRequest) (*Dict, error)
 	// 修改字典
-	UpdateDict(context.Context, *UpdateDictReq) (*UpdateDictReply, error)
+	UpdateDict(context.Context, *UpdateDictRequest) (*UpdateDictResponse, error)
 	// 删除字典
-	DeleteDict(context.Context, *DeleteDictReq) (*DeleteDictReply, error)
+	DeleteDict(context.Context, *DeleteDictRequest) (*DeleteDictResponse, error)
 	// 设置字典状态
-	UpdateDictState(context.Context, *UpdateDictStateReq) (*UpdateDictStateReply, error)
+	UpdateDictState(context.Context, *UpdateDictStateRequest) (*UpdateDictStateResponse, error)
 	// 列表字典数据
-	ListDictData(context.Context, *ListDictDataReq) (*ListDictDataReply, error)
+	ListDictData(context.Context, *ListDictDataRequest) (*ListDictDataResponse, error)
 	// 创建字典数据
-	CreateDictData(context.Context, *CreateDictDataReq) (*CreateDictDataReply, error)
+	CreateDictData(context.Context, *CreateDictDataRequest) (*CreateDictDataResponse, error)
 	// 获取字典数据
-	GetDictData(context.Context, *GetDictDataReq) (*DictData, error)
+	GetDictData(context.Context, *GetDictDataRequest) (*DictData, error)
 	// 修改字典数据
-	UpdateDictData(context.Context, *UpdateDictDataReq) (*UpdateDictDataReply, error)
+	UpdateDictData(context.Context, *UpdateDictDataRequest) (*UpdateDictDataResponse, error)
 	// 删除字典数据
-	DeleteDictData(context.Context, *DeleteDictDataReq) (*DeleteDictDataReply, error)
+	DeleteDictData(context.Context, *DeleteDictDataRequest) (*DeleteDictDataResponse, error)
 	// 设置字典数据状态
-	UpdateDictDataState(context.Context, *UpdateDictDataStateReq) (*UpdateDictDataStateReply, error)
+	UpdateDictDataState(context.Context, *UpdateDictDataStateRequest) (*UpdateDictDataStateResponse, error)
+	// 列表租户套餐
+	ListDomainPackage(context.Context, *ListDomainPackageRequest) (*ListDomainPackageResponse, error)
+	// 创建租户套餐
+	CreateDomainPackage(context.Context, *CreateDomainPackageRequest) (*CreateDomainPackageResponse, error)
+	// 获取租户套餐
+	GetDomainPackage(context.Context, *GetDomainPackageRequest) (*DomainPackage, error)
+	// 修改租户套餐
+	UpdateDomainPackage(context.Context, *UpdateDomainPackageRequest) (*UpdateDomainPackageResponse, error)
+	// 更新指定ID套餐状态
+	UpdateDomainPackageState(context.Context, *UpdateDomainPackageStateRequest) (*UpdateDomainPackageStateResponse, error)
+	// 删除租户套餐
+	DeleteDomainPackage(context.Context, *DeleteDomainPackageRequest) (*DeleteDomainPackageResponse, error)
 	mustEmbedUnimplementedAdminServiceServer()
 }
 
@@ -1033,215 +1116,233 @@ type AdminServiceServer interface {
 type UnimplementedAdminServiceServer struct {
 }
 
-func (UnimplementedAdminServiceServer) Logout(context.Context, *emptypb.Empty) (*LogoutReply, error) {
+func (UnimplementedAdminServiceServer) Logout(context.Context, *LogoutRequest) (*LogoutResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
 }
-func (UnimplementedAdminServiceServer) Login(context.Context, *LoginReq) (*LoginReply, error) {
+func (UnimplementedAdminServiceServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedAdminServiceServer) Register(context.Context, *RegisterReq) (*RegisterReply, error) {
+func (UnimplementedAdminServiceServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
-func (UnimplementedAdminServiceServer) SmsLogin(context.Context, *SmsLoginReq) (*LoginReply, error) {
+func (UnimplementedAdminServiceServer) SmsLogin(context.Context, *SmsLoginRequest) (*SmsLoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SmsLogin not implemented")
 }
-func (UnimplementedAdminServiceServer) EmailLogin(context.Context, *EmailLoginReq) (*LoginReply, error) {
+func (UnimplementedAdminServiceServer) EmailLogin(context.Context, *EmailLoginRequest) (*EmailLoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EmailLogin not implemented")
 }
-func (UnimplementedAdminServiceServer) GetUserInfo(context.Context, *emptypb.Empty) (*GetUserInfoReply, error) {
+func (UnimplementedAdminServiceServer) GetUserInfo(context.Context, *GetUserInfoRequest) (*GetUserInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfo not implemented")
 }
-func (UnimplementedAdminServiceServer) GetUserProfile(context.Context, *emptypb.Empty) (*GetUserProfileReply, error) {
+func (UnimplementedAdminServiceServer) GetUserProfile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserProfile not implemented")
 }
-func (UnimplementedAdminServiceServer) ListUserRole(context.Context, *emptypb.Empty) (*ListUserRoleReply, error) {
+func (UnimplementedAdminServiceServer) ListUserRole(context.Context, *ListUserRoleRequest) (*ListUserRoleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUserRole not implemented")
 }
-func (UnimplementedAdminServiceServer) ListUserRoleMenuRouterTree(context.Context, *ListUserRoleMenuRouterTreeReq) (*ListUserRoleMenuRouterTreeReply, error) {
+func (UnimplementedAdminServiceServer) ListUserRoleMenuRouterTree(context.Context, *ListUserRoleMenuRouterTreeRequest) (*ListUserRoleMenuRouterTreeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUserRoleMenuRouterTree not implemented")
 }
-func (UnimplementedAdminServiceServer) ListUserRoleMenuTree(context.Context, *ListUserRoleMenuTreeReq) (*ListUserRoleMenuTreeReply, error) {
+func (UnimplementedAdminServiceServer) ListUserRoleMenuTree(context.Context, *ListUserRoleMenuTreeRequest) (*ListUserRoleMenuTreeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUserRoleMenuTree not implemented")
 }
-func (UnimplementedAdminServiceServer) ListUserRolePermission(context.Context, *ListUserRolePermissionReq) (*ListUserRolePermissionReply, error) {
+func (UnimplementedAdminServiceServer) ListUserRolePermission(context.Context, *ListUserRolePermissionRequest) (*ListUserRolePermissionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUserRolePermission not implemented")
 }
-func (UnimplementedAdminServiceServer) ListUser(context.Context, *ListUserReq) (*ListUserReply, error) {
+func (UnimplementedAdminServiceServer) ListUser(context.Context, *ListUserRequest) (*ListUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUser not implemented")
 }
-func (UnimplementedAdminServiceServer) CreateUser(context.Context, *CreateUserReq) (*CreateUserReply, error) {
+func (UnimplementedAdminServiceServer) CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
 }
-func (UnimplementedAdminServiceServer) GetUser(context.Context, *GetUserReq) (*User, error) {
+func (UnimplementedAdminServiceServer) GetUser(context.Context, *GetUserRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
-func (UnimplementedAdminServiceServer) UpdateUser(context.Context, *UpdateUserReq) (*UpdateUserReply, error) {
+func (UnimplementedAdminServiceServer) UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
-func (UnimplementedAdminServiceServer) DeleteUser(context.Context, *DeleteUserReq) (*DeleteUserReply, error) {
+func (UnimplementedAdminServiceServer) DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
 }
-func (UnimplementedAdminServiceServer) ExistUserName(context.Context, *ExistUserNameReq) (*ExistUserNameReply, error) {
+func (UnimplementedAdminServiceServer) ExistUserName(context.Context, *ExistUserNameRequest) (*ExistUserNameResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ExistUserName not implemented")
 }
-func (UnimplementedAdminServiceServer) ListDomain(context.Context, *ListDomainReq) (*ListDomainReply, error) {
+func (UnimplementedAdminServiceServer) ListDomain(context.Context, *ListDomainRequest) (*ListDomainResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDomain not implemented")
 }
-func (UnimplementedAdminServiceServer) ListDomainTree(context.Context, *ListDomainTreeReq) (*ListDomainTreeReply, error) {
+func (UnimplementedAdminServiceServer) ListDomainTree(context.Context, *ListDomainTreeRequest) (*ListDomainTreeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDomainTree not implemented")
 }
-func (UnimplementedAdminServiceServer) CreateDomain(context.Context, *CreateDomainReq) (*CreateDomainReply, error) {
+func (UnimplementedAdminServiceServer) CreateDomain(context.Context, *CreateDomainRequest) (*CreateDomainResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateDomain not implemented")
 }
-func (UnimplementedAdminServiceServer) GetDomain(context.Context, *GetDomainReq) (*Domain, error) {
+func (UnimplementedAdminServiceServer) GetDomain(context.Context, *GetDomainRequest) (*Domain, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDomain not implemented")
 }
-func (UnimplementedAdminServiceServer) GetDomainCode(context.Context, *GetDomainCodeReq) (*Domain, error) {
+func (UnimplementedAdminServiceServer) GetDomainCode(context.Context, *GetDomainCodeRequest) (*Domain, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDomainCode not implemented")
 }
-func (UnimplementedAdminServiceServer) GetDomainName(context.Context, *GetDomainNameReq) (*Domain, error) {
+func (UnimplementedAdminServiceServer) GetDomainName(context.Context, *GetDomainNameRequest) (*Domain, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDomainName not implemented")
 }
-func (UnimplementedAdminServiceServer) UpdateDomain(context.Context, *UpdateDomainReq) (*UpdateDomainReply, error) {
+func (UnimplementedAdminServiceServer) UpdateDomain(context.Context, *UpdateDomainRequest) (*UpdateDomainResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDomain not implemented")
 }
-func (UnimplementedAdminServiceServer) DeleteDomain(context.Context, *DeleteDomainReq) (*DeleteDomainReply, error) {
+func (UnimplementedAdminServiceServer) DeleteDomain(context.Context, *DeleteDomainRequest) (*DeleteDomainResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDomain not implemented")
 }
-func (UnimplementedAdminServiceServer) UpdateDomainState(context.Context, *UpdateDomainStateReq) (*UpdateDomainStateReply, error) {
+func (UnimplementedAdminServiceServer) UpdateDomainState(context.Context, *UpdateDomainStateRequest) (*UpdateDomainStateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDomainState not implemented")
 }
-func (UnimplementedAdminServiceServer) ListDomainMenu(context.Context, *ListDomainMenuReq) (*ListDomainMenuReply, error) {
+func (UnimplementedAdminServiceServer) ListDomainMenu(context.Context, *ListDomainMenuRequest) (*ListDomainMenuResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDomainMenu not implemented")
 }
-func (UnimplementedAdminServiceServer) HandleDomainMenu(context.Context, *HandleDomainMenuReq) (*HandleDomainMenuReply, error) {
+func (UnimplementedAdminServiceServer) HandleDomainMenu(context.Context, *HandleDomainMenuRequest) (*HandleDomainMenuResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HandleDomainMenu not implemented")
 }
-func (UnimplementedAdminServiceServer) ListRole(context.Context, *ListRoleReq) (*ListRoleReply, error) {
+func (UnimplementedAdminServiceServer) ListRole(context.Context, *ListRoleRequest) (*ListRoleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRole not implemented")
 }
-func (UnimplementedAdminServiceServer) CreateRole(context.Context, *CreateRoleReq) (*CreateRoleReply, error) {
+func (UnimplementedAdminServiceServer) CreateRole(context.Context, *CreateRoleRequest) (*CreateRoleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateRole not implemented")
 }
-func (UnimplementedAdminServiceServer) GetRole(context.Context, *GetRoleReq) (*Role, error) {
+func (UnimplementedAdminServiceServer) GetRole(context.Context, *GetRoleRequest) (*Role, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRole not implemented")
 }
-func (UnimplementedAdminServiceServer) UpdateRole(context.Context, *UpdateRoleReq) (*UpdateRoleReply, error) {
+func (UnimplementedAdminServiceServer) UpdateRole(context.Context, *UpdateRoleRequest) (*UpdateRoleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateRole not implemented")
 }
-func (UnimplementedAdminServiceServer) UpdateRoleState(context.Context, *UpdateRoleStateReq) (*UpdateRoleStateReply, error) {
+func (UnimplementedAdminServiceServer) UpdateRoleState(context.Context, *UpdateRoleStateRequest) (*UpdateRoleStateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateRoleState not implemented")
 }
-func (UnimplementedAdminServiceServer) DeleteRole(context.Context, *DeleteRoleReq) (*DeleteRoleReply, error) {
+func (UnimplementedAdminServiceServer) DeleteRole(context.Context, *DeleteRoleRequest) (*DeleteRoleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteRole not implemented")
 }
-func (UnimplementedAdminServiceServer) ListRoleMenu(context.Context, *ListRoleMenuReq) (*ListRoleMenuReply, error) {
+func (UnimplementedAdminServiceServer) ListRoleMenu(context.Context, *ListRoleMenuRequest) (*ListRoleMenuResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRoleMenu not implemented")
 }
-func (UnimplementedAdminServiceServer) HandleRoleMenu(context.Context, *HandleRoleMenuReq) (*HandleRoleMenuReply, error) {
+func (UnimplementedAdminServiceServer) HandleRoleMenu(context.Context, *HandleRoleMenuRequest) (*HandleRoleMenuResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HandleRoleMenu not implemented")
 }
-func (UnimplementedAdminServiceServer) ListRoleDept(context.Context, *ListRoleDeptReq) (*ListRoleDeptReply, error) {
+func (UnimplementedAdminServiceServer) ListRoleDept(context.Context, *ListRoleDeptRequest) (*ListRoleDeptResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRoleDept not implemented")
 }
-func (UnimplementedAdminServiceServer) GetRoleDataScope(context.Context, *GetRoleDataScopeReq) (*GetRoleDataScopeReply, error) {
+func (UnimplementedAdminServiceServer) GetRoleDataScope(context.Context, *GetRoleDataScopeRequest) (*GetRoleDataScopeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRoleDataScope not implemented")
 }
-func (UnimplementedAdminServiceServer) HandleRoleDataScope(context.Context, *HandleRoleDataScopeReq) (*HandleRoleDataScopeReply, error) {
+func (UnimplementedAdminServiceServer) HandleRoleDataScope(context.Context, *HandleRoleDataScopeRequest) (*HandleRoleDataScopeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HandleRoleDataScope not implemented")
 }
-func (UnimplementedAdminServiceServer) ListMenu(context.Context, *ListMenuReq) (*ListMenuReply, error) {
+func (UnimplementedAdminServiceServer) ListMenu(context.Context, *ListMenuRequest) (*ListMenuResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMenu not implemented")
 }
-func (UnimplementedAdminServiceServer) CreateMenu(context.Context, *CreateMenuReq) (*CreateMenuReply, error) {
+func (UnimplementedAdminServiceServer) CreateMenu(context.Context, *CreateMenuRequest) (*CreateMenuResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateMenu not implemented")
 }
-func (UnimplementedAdminServiceServer) ListMenuTree(context.Context, *ListMenuTreeReq) (*ListMenuTreeReply, error) {
+func (UnimplementedAdminServiceServer) ListMenuTree(context.Context, *ListMenuTreeRequest) (*ListMenuTreeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMenuTree not implemented")
 }
-func (UnimplementedAdminServiceServer) GetMenu(context.Context, *GetMenuReq) (*Menu, error) {
+func (UnimplementedAdminServiceServer) GetMenu(context.Context, *GetMenuRequest) (*Menu, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMenu not implemented")
 }
-func (UnimplementedAdminServiceServer) UpdateMenu(context.Context, *UpdateMenuReq) (*UpdateMenuReply, error) {
+func (UnimplementedAdminServiceServer) UpdateMenu(context.Context, *UpdateMenuRequest) (*UpdateMenuResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateMenu not implemented")
 }
-func (UnimplementedAdminServiceServer) DeleteMenu(context.Context, *DeleteMenuReq) (*DeleteMenuReply, error) {
+func (UnimplementedAdminServiceServer) DeleteMenu(context.Context, *DeleteMenuRequest) (*DeleteMenuResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteMenu not implemented")
 }
-func (UnimplementedAdminServiceServer) ListDept(context.Context, *ListDeptReq) (*ListDeptReply, error) {
+func (UnimplementedAdminServiceServer) ListDept(context.Context, *ListDeptRequest) (*ListDeptResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDept not implemented")
 }
-func (UnimplementedAdminServiceServer) CreateDept(context.Context, *CreateDeptReq) (*CreateDeptReply, error) {
+func (UnimplementedAdminServiceServer) CreateDept(context.Context, *CreateDeptRequest) (*CreateDeptResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateDept not implemented")
 }
-func (UnimplementedAdminServiceServer) GetDept(context.Context, *GetDeptReq) (*Dept, error) {
+func (UnimplementedAdminServiceServer) GetDept(context.Context, *GetDeptRequest) (*Dept, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDept not implemented")
 }
-func (UnimplementedAdminServiceServer) UpdateDept(context.Context, *UpdateDeptReq) (*UpdateDeptReply, error) {
+func (UnimplementedAdminServiceServer) UpdateDept(context.Context, *UpdateDeptRequest) (*UpdateDeptResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDept not implemented")
 }
-func (UnimplementedAdminServiceServer) UpdateDeptState(context.Context, *UpdateDeptStateReq) (*UpdateDeptStateReply, error) {
+func (UnimplementedAdminServiceServer) UpdateDeptState(context.Context, *UpdateDeptStateRequest) (*UpdateDeptStateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDeptState not implemented")
 }
-func (UnimplementedAdminServiceServer) DeleteDept(context.Context, *DeleteDeptReq) (*DeleteDeptReply, error) {
+func (UnimplementedAdminServiceServer) DeleteDept(context.Context, *DeleteDeptRequest) (*DeleteDeptResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDept not implemented")
 }
-func (UnimplementedAdminServiceServer) ListDeptTree(context.Context, *ListDeptTreeReq) (*ListDeptTreeReply, error) {
+func (UnimplementedAdminServiceServer) ListDeptTree(context.Context, *ListDeptTreeRequest) (*ListDeptTreeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDeptTree not implemented")
 }
-func (UnimplementedAdminServiceServer) ListPost(context.Context, *ListPostReq) (*ListPostReply, error) {
+func (UnimplementedAdminServiceServer) ListPost(context.Context, *ListPostRequest) (*ListPostResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListPost not implemented")
 }
-func (UnimplementedAdminServiceServer) CreatePost(context.Context, *CreatePostReq) (*CreatePostReply, error) {
+func (UnimplementedAdminServiceServer) CreatePost(context.Context, *CreatePostRequest) (*CreatePostResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePost not implemented")
 }
-func (UnimplementedAdminServiceServer) GetPost(context.Context, *GetPostReq) (*Post, error) {
+func (UnimplementedAdminServiceServer) GetPost(context.Context, *GetPostRequest) (*Post, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPost not implemented")
 }
-func (UnimplementedAdminServiceServer) UpdatePost(context.Context, *UpdatePostReq) (*UpdatePostReply, error) {
+func (UnimplementedAdminServiceServer) UpdatePost(context.Context, *UpdatePostRequest) (*UpdatePostResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdatePost not implemented")
 }
-func (UnimplementedAdminServiceServer) DeletePost(context.Context, *DeletePostReq) (*DeletePostReply, error) {
+func (UnimplementedAdminServiceServer) DeletePost(context.Context, *DeletePostRequest) (*DeletePostResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeletePost not implemented")
 }
-func (UnimplementedAdminServiceServer) UpdatePostState(context.Context, *UpdatePostStateReq) (*UpdatePostStateReply, error) {
+func (UnimplementedAdminServiceServer) UpdatePostState(context.Context, *UpdatePostStateRequest) (*UpdatePostStateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdatePostState not implemented")
 }
-func (UnimplementedAdminServiceServer) ListDict(context.Context, *ListDictReq) (*ListDictReply, error) {
+func (UnimplementedAdminServiceServer) ListDict(context.Context, *ListDictRequest) (*ListDictResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDict not implemented")
 }
-func (UnimplementedAdminServiceServer) CreateDict(context.Context, *CreateDictReq) (*CreateDictReply, error) {
+func (UnimplementedAdminServiceServer) CreateDict(context.Context, *CreateDictRequest) (*CreateDictResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateDict not implemented")
 }
-func (UnimplementedAdminServiceServer) GetDict(context.Context, *GetDictReq) (*Dict, error) {
+func (UnimplementedAdminServiceServer) GetDict(context.Context, *GetDictRequest) (*Dict, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDict not implemented")
 }
-func (UnimplementedAdminServiceServer) UpdateDict(context.Context, *UpdateDictReq) (*UpdateDictReply, error) {
+func (UnimplementedAdminServiceServer) UpdateDict(context.Context, *UpdateDictRequest) (*UpdateDictResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDict not implemented")
 }
-func (UnimplementedAdminServiceServer) DeleteDict(context.Context, *DeleteDictReq) (*DeleteDictReply, error) {
+func (UnimplementedAdminServiceServer) DeleteDict(context.Context, *DeleteDictRequest) (*DeleteDictResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDict not implemented")
 }
-func (UnimplementedAdminServiceServer) UpdateDictState(context.Context, *UpdateDictStateReq) (*UpdateDictStateReply, error) {
+func (UnimplementedAdminServiceServer) UpdateDictState(context.Context, *UpdateDictStateRequest) (*UpdateDictStateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDictState not implemented")
 }
-func (UnimplementedAdminServiceServer) ListDictData(context.Context, *ListDictDataReq) (*ListDictDataReply, error) {
+func (UnimplementedAdminServiceServer) ListDictData(context.Context, *ListDictDataRequest) (*ListDictDataResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDictData not implemented")
 }
-func (UnimplementedAdminServiceServer) CreateDictData(context.Context, *CreateDictDataReq) (*CreateDictDataReply, error) {
+func (UnimplementedAdminServiceServer) CreateDictData(context.Context, *CreateDictDataRequest) (*CreateDictDataResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateDictData not implemented")
 }
-func (UnimplementedAdminServiceServer) GetDictData(context.Context, *GetDictDataReq) (*DictData, error) {
+func (UnimplementedAdminServiceServer) GetDictData(context.Context, *GetDictDataRequest) (*DictData, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDictData not implemented")
 }
-func (UnimplementedAdminServiceServer) UpdateDictData(context.Context, *UpdateDictDataReq) (*UpdateDictDataReply, error) {
+func (UnimplementedAdminServiceServer) UpdateDictData(context.Context, *UpdateDictDataRequest) (*UpdateDictDataResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDictData not implemented")
 }
-func (UnimplementedAdminServiceServer) DeleteDictData(context.Context, *DeleteDictDataReq) (*DeleteDictDataReply, error) {
+func (UnimplementedAdminServiceServer) DeleteDictData(context.Context, *DeleteDictDataRequest) (*DeleteDictDataResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDictData not implemented")
 }
-func (UnimplementedAdminServiceServer) UpdateDictDataState(context.Context, *UpdateDictDataStateReq) (*UpdateDictDataStateReply, error) {
+func (UnimplementedAdminServiceServer) UpdateDictDataState(context.Context, *UpdateDictDataStateRequest) (*UpdateDictDataStateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDictDataState not implemented")
+}
+func (UnimplementedAdminServiceServer) ListDomainPackage(context.Context, *ListDomainPackageRequest) (*ListDomainPackageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListDomainPackage not implemented")
+}
+func (UnimplementedAdminServiceServer) CreateDomainPackage(context.Context, *CreateDomainPackageRequest) (*CreateDomainPackageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateDomainPackage not implemented")
+}
+func (UnimplementedAdminServiceServer) GetDomainPackage(context.Context, *GetDomainPackageRequest) (*DomainPackage, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDomainPackage not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateDomainPackage(context.Context, *UpdateDomainPackageRequest) (*UpdateDomainPackageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateDomainPackage not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateDomainPackageState(context.Context, *UpdateDomainPackageStateRequest) (*UpdateDomainPackageStateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateDomainPackageState not implemented")
+}
+func (UnimplementedAdminServiceServer) DeleteDomainPackage(context.Context, *DeleteDomainPackageRequest) (*DeleteDomainPackageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteDomainPackage not implemented")
 }
 func (UnimplementedAdminServiceServer) mustEmbedUnimplementedAdminServiceServer() {}
 
@@ -1257,7 +1358,7 @@ func RegisterAdminServiceServer(s grpc.ServiceRegistrar, srv AdminServiceServer)
 }
 
 func _AdminService_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(LogoutRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1269,13 +1370,13 @@ func _AdminService_Logout_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: AdminService_Logout_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).Logout(ctx, req.(*emptypb.Empty))
+		return srv.(AdminServiceServer).Logout(ctx, req.(*LogoutRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoginReq)
+	in := new(LoginRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1287,13 +1388,13 @@ func _AdminService_Login_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: AdminService_Login_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).Login(ctx, req.(*LoginReq))
+		return srv.(AdminServiceServer).Login(ctx, req.(*LoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegisterReq)
+	in := new(RegisterRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1305,13 +1406,13 @@ func _AdminService_Register_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: AdminService_Register_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).Register(ctx, req.(*RegisterReq))
+		return srv.(AdminServiceServer).Register(ctx, req.(*RegisterRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_SmsLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SmsLoginReq)
+	in := new(SmsLoginRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1323,13 +1424,13 @@ func _AdminService_SmsLogin_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: AdminService_SmsLogin_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).SmsLogin(ctx, req.(*SmsLoginReq))
+		return srv.(AdminServiceServer).SmsLogin(ctx, req.(*SmsLoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_EmailLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(EmailLoginReq)
+	in := new(EmailLoginRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1341,13 +1442,13 @@ func _AdminService_EmailLogin_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: AdminService_EmailLogin_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).EmailLogin(ctx, req.(*EmailLoginReq))
+		return srv.(AdminServiceServer).EmailLogin(ctx, req.(*EmailLoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_GetUserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(GetUserInfoRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1359,13 +1460,13 @@ func _AdminService_GetUserInfo_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: AdminService_GetUserInfo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).GetUserInfo(ctx, req.(*emptypb.Empty))
+		return srv.(AdminServiceServer).GetUserInfo(ctx, req.(*GetUserInfoRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_GetUserProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(GetUserProfileRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1377,13 +1478,13 @@ func _AdminService_GetUserProfile_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: AdminService_GetUserProfile_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).GetUserProfile(ctx, req.(*emptypb.Empty))
+		return srv.(AdminServiceServer).GetUserProfile(ctx, req.(*GetUserProfileRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_ListUserRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ListUserRoleRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1395,13 +1496,13 @@ func _AdminService_ListUserRole_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: AdminService_ListUserRole_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ListUserRole(ctx, req.(*emptypb.Empty))
+		return srv.(AdminServiceServer).ListUserRole(ctx, req.(*ListUserRoleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_ListUserRoleMenuRouterTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListUserRoleMenuRouterTreeReq)
+	in := new(ListUserRoleMenuRouterTreeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1413,13 +1514,13 @@ func _AdminService_ListUserRoleMenuRouterTree_Handler(srv interface{}, ctx conte
 		FullMethod: AdminService_ListUserRoleMenuRouterTree_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ListUserRoleMenuRouterTree(ctx, req.(*ListUserRoleMenuRouterTreeReq))
+		return srv.(AdminServiceServer).ListUserRoleMenuRouterTree(ctx, req.(*ListUserRoleMenuRouterTreeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_ListUserRoleMenuTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListUserRoleMenuTreeReq)
+	in := new(ListUserRoleMenuTreeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1431,13 +1532,13 @@ func _AdminService_ListUserRoleMenuTree_Handler(srv interface{}, ctx context.Con
 		FullMethod: AdminService_ListUserRoleMenuTree_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ListUserRoleMenuTree(ctx, req.(*ListUserRoleMenuTreeReq))
+		return srv.(AdminServiceServer).ListUserRoleMenuTree(ctx, req.(*ListUserRoleMenuTreeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_ListUserRolePermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListUserRolePermissionReq)
+	in := new(ListUserRolePermissionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1449,13 +1550,13 @@ func _AdminService_ListUserRolePermission_Handler(srv interface{}, ctx context.C
 		FullMethod: AdminService_ListUserRolePermission_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ListUserRolePermission(ctx, req.(*ListUserRolePermissionReq))
+		return srv.(AdminServiceServer).ListUserRolePermission(ctx, req.(*ListUserRolePermissionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_ListUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListUserReq)
+	in := new(ListUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1467,13 +1568,13 @@ func _AdminService_ListUser_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: AdminService_ListUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ListUser(ctx, req.(*ListUserReq))
+		return srv.(AdminServiceServer).ListUser(ctx, req.(*ListUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateUserReq)
+	in := new(CreateUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1485,13 +1586,13 @@ func _AdminService_CreateUser_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: AdminService_CreateUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).CreateUser(ctx, req.(*CreateUserReq))
+		return srv.(AdminServiceServer).CreateUser(ctx, req.(*CreateUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserReq)
+	in := new(GetUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1503,13 +1604,13 @@ func _AdminService_GetUser_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: AdminService_GetUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).GetUser(ctx, req.(*GetUserReq))
+		return srv.(AdminServiceServer).GetUser(ctx, req.(*GetUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateUserReq)
+	in := new(UpdateUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1521,13 +1622,13 @@ func _AdminService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: AdminService_UpdateUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).UpdateUser(ctx, req.(*UpdateUserReq))
+		return srv.(AdminServiceServer).UpdateUser(ctx, req.(*UpdateUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteUserReq)
+	in := new(DeleteUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1539,13 +1640,13 @@ func _AdminService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: AdminService_DeleteUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).DeleteUser(ctx, req.(*DeleteUserReq))
+		return srv.(AdminServiceServer).DeleteUser(ctx, req.(*DeleteUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_ExistUserName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ExistUserNameReq)
+	in := new(ExistUserNameRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1557,13 +1658,13 @@ func _AdminService_ExistUserName_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: AdminService_ExistUserName_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ExistUserName(ctx, req.(*ExistUserNameReq))
+		return srv.(AdminServiceServer).ExistUserName(ctx, req.(*ExistUserNameRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_ListDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListDomainReq)
+	in := new(ListDomainRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1575,13 +1676,13 @@ func _AdminService_ListDomain_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: AdminService_ListDomain_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ListDomain(ctx, req.(*ListDomainReq))
+		return srv.(AdminServiceServer).ListDomain(ctx, req.(*ListDomainRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_ListDomainTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListDomainTreeReq)
+	in := new(ListDomainTreeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1593,13 +1694,13 @@ func _AdminService_ListDomainTree_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: AdminService_ListDomainTree_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ListDomainTree(ctx, req.(*ListDomainTreeReq))
+		return srv.(AdminServiceServer).ListDomainTree(ctx, req.(*ListDomainTreeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_CreateDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateDomainReq)
+	in := new(CreateDomainRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1611,13 +1712,13 @@ func _AdminService_CreateDomain_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: AdminService_CreateDomain_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).CreateDomain(ctx, req.(*CreateDomainReq))
+		return srv.(AdminServiceServer).CreateDomain(ctx, req.(*CreateDomainRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_GetDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetDomainReq)
+	in := new(GetDomainRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1629,13 +1730,13 @@ func _AdminService_GetDomain_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: AdminService_GetDomain_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).GetDomain(ctx, req.(*GetDomainReq))
+		return srv.(AdminServiceServer).GetDomain(ctx, req.(*GetDomainRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_GetDomainCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetDomainCodeReq)
+	in := new(GetDomainCodeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1647,13 +1748,13 @@ func _AdminService_GetDomainCode_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: AdminService_GetDomainCode_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).GetDomainCode(ctx, req.(*GetDomainCodeReq))
+		return srv.(AdminServiceServer).GetDomainCode(ctx, req.(*GetDomainCodeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_GetDomainName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetDomainNameReq)
+	in := new(GetDomainNameRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1665,13 +1766,13 @@ func _AdminService_GetDomainName_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: AdminService_GetDomainName_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).GetDomainName(ctx, req.(*GetDomainNameReq))
+		return srv.(AdminServiceServer).GetDomainName(ctx, req.(*GetDomainNameRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_UpdateDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateDomainReq)
+	in := new(UpdateDomainRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1683,13 +1784,13 @@ func _AdminService_UpdateDomain_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: AdminService_UpdateDomain_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).UpdateDomain(ctx, req.(*UpdateDomainReq))
+		return srv.(AdminServiceServer).UpdateDomain(ctx, req.(*UpdateDomainRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_DeleteDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteDomainReq)
+	in := new(DeleteDomainRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1701,13 +1802,13 @@ func _AdminService_DeleteDomain_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: AdminService_DeleteDomain_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).DeleteDomain(ctx, req.(*DeleteDomainReq))
+		return srv.(AdminServiceServer).DeleteDomain(ctx, req.(*DeleteDomainRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_UpdateDomainState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateDomainStateReq)
+	in := new(UpdateDomainStateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1719,13 +1820,13 @@ func _AdminService_UpdateDomainState_Handler(srv interface{}, ctx context.Contex
 		FullMethod: AdminService_UpdateDomainState_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).UpdateDomainState(ctx, req.(*UpdateDomainStateReq))
+		return srv.(AdminServiceServer).UpdateDomainState(ctx, req.(*UpdateDomainStateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_ListDomainMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListDomainMenuReq)
+	in := new(ListDomainMenuRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1737,13 +1838,13 @@ func _AdminService_ListDomainMenu_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: AdminService_ListDomainMenu_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ListDomainMenu(ctx, req.(*ListDomainMenuReq))
+		return srv.(AdminServiceServer).ListDomainMenu(ctx, req.(*ListDomainMenuRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_HandleDomainMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HandleDomainMenuReq)
+	in := new(HandleDomainMenuRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1755,13 +1856,13 @@ func _AdminService_HandleDomainMenu_Handler(srv interface{}, ctx context.Context
 		FullMethod: AdminService_HandleDomainMenu_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).HandleDomainMenu(ctx, req.(*HandleDomainMenuReq))
+		return srv.(AdminServiceServer).HandleDomainMenu(ctx, req.(*HandleDomainMenuRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_ListRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListRoleReq)
+	in := new(ListRoleRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1773,13 +1874,13 @@ func _AdminService_ListRole_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: AdminService_ListRole_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ListRole(ctx, req.(*ListRoleReq))
+		return srv.(AdminServiceServer).ListRole(ctx, req.(*ListRoleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_CreateRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateRoleReq)
+	in := new(CreateRoleRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1791,13 +1892,13 @@ func _AdminService_CreateRole_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: AdminService_CreateRole_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).CreateRole(ctx, req.(*CreateRoleReq))
+		return srv.(AdminServiceServer).CreateRole(ctx, req.(*CreateRoleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_GetRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetRoleReq)
+	in := new(GetRoleRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1809,13 +1910,13 @@ func _AdminService_GetRole_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: AdminService_GetRole_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).GetRole(ctx, req.(*GetRoleReq))
+		return srv.(AdminServiceServer).GetRole(ctx, req.(*GetRoleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_UpdateRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateRoleReq)
+	in := new(UpdateRoleRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1827,13 +1928,13 @@ func _AdminService_UpdateRole_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: AdminService_UpdateRole_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).UpdateRole(ctx, req.(*UpdateRoleReq))
+		return srv.(AdminServiceServer).UpdateRole(ctx, req.(*UpdateRoleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_UpdateRoleState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateRoleStateReq)
+	in := new(UpdateRoleStateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1845,13 +1946,13 @@ func _AdminService_UpdateRoleState_Handler(srv interface{}, ctx context.Context,
 		FullMethod: AdminService_UpdateRoleState_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).UpdateRoleState(ctx, req.(*UpdateRoleStateReq))
+		return srv.(AdminServiceServer).UpdateRoleState(ctx, req.(*UpdateRoleStateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_DeleteRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteRoleReq)
+	in := new(DeleteRoleRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1863,13 +1964,13 @@ func _AdminService_DeleteRole_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: AdminService_DeleteRole_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).DeleteRole(ctx, req.(*DeleteRoleReq))
+		return srv.(AdminServiceServer).DeleteRole(ctx, req.(*DeleteRoleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_ListRoleMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListRoleMenuReq)
+	in := new(ListRoleMenuRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1881,13 +1982,13 @@ func _AdminService_ListRoleMenu_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: AdminService_ListRoleMenu_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ListRoleMenu(ctx, req.(*ListRoleMenuReq))
+		return srv.(AdminServiceServer).ListRoleMenu(ctx, req.(*ListRoleMenuRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_HandleRoleMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HandleRoleMenuReq)
+	in := new(HandleRoleMenuRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1899,13 +2000,13 @@ func _AdminService_HandleRoleMenu_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: AdminService_HandleRoleMenu_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).HandleRoleMenu(ctx, req.(*HandleRoleMenuReq))
+		return srv.(AdminServiceServer).HandleRoleMenu(ctx, req.(*HandleRoleMenuRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_ListRoleDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListRoleDeptReq)
+	in := new(ListRoleDeptRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1917,13 +2018,13 @@ func _AdminService_ListRoleDept_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: AdminService_ListRoleDept_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ListRoleDept(ctx, req.(*ListRoleDeptReq))
+		return srv.(AdminServiceServer).ListRoleDept(ctx, req.(*ListRoleDeptRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_GetRoleDataScope_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetRoleDataScopeReq)
+	in := new(GetRoleDataScopeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1935,13 +2036,13 @@ func _AdminService_GetRoleDataScope_Handler(srv interface{}, ctx context.Context
 		FullMethod: AdminService_GetRoleDataScope_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).GetRoleDataScope(ctx, req.(*GetRoleDataScopeReq))
+		return srv.(AdminServiceServer).GetRoleDataScope(ctx, req.(*GetRoleDataScopeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_HandleRoleDataScope_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HandleRoleDataScopeReq)
+	in := new(HandleRoleDataScopeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1953,13 +2054,13 @@ func _AdminService_HandleRoleDataScope_Handler(srv interface{}, ctx context.Cont
 		FullMethod: AdminService_HandleRoleDataScope_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).HandleRoleDataScope(ctx, req.(*HandleRoleDataScopeReq))
+		return srv.(AdminServiceServer).HandleRoleDataScope(ctx, req.(*HandleRoleDataScopeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_ListMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListMenuReq)
+	in := new(ListMenuRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1971,13 +2072,13 @@ func _AdminService_ListMenu_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: AdminService_ListMenu_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ListMenu(ctx, req.(*ListMenuReq))
+		return srv.(AdminServiceServer).ListMenu(ctx, req.(*ListMenuRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_CreateMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateMenuReq)
+	in := new(CreateMenuRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1989,13 +2090,13 @@ func _AdminService_CreateMenu_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: AdminService_CreateMenu_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).CreateMenu(ctx, req.(*CreateMenuReq))
+		return srv.(AdminServiceServer).CreateMenu(ctx, req.(*CreateMenuRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_ListMenuTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListMenuTreeReq)
+	in := new(ListMenuTreeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2007,13 +2108,13 @@ func _AdminService_ListMenuTree_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: AdminService_ListMenuTree_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ListMenuTree(ctx, req.(*ListMenuTreeReq))
+		return srv.(AdminServiceServer).ListMenuTree(ctx, req.(*ListMenuTreeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_GetMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMenuReq)
+	in := new(GetMenuRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2025,13 +2126,13 @@ func _AdminService_GetMenu_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: AdminService_GetMenu_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).GetMenu(ctx, req.(*GetMenuReq))
+		return srv.(AdminServiceServer).GetMenu(ctx, req.(*GetMenuRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_UpdateMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateMenuReq)
+	in := new(UpdateMenuRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2043,13 +2144,13 @@ func _AdminService_UpdateMenu_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: AdminService_UpdateMenu_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).UpdateMenu(ctx, req.(*UpdateMenuReq))
+		return srv.(AdminServiceServer).UpdateMenu(ctx, req.(*UpdateMenuRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_DeleteMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteMenuReq)
+	in := new(DeleteMenuRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2061,13 +2162,13 @@ func _AdminService_DeleteMenu_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: AdminService_DeleteMenu_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).DeleteMenu(ctx, req.(*DeleteMenuReq))
+		return srv.(AdminServiceServer).DeleteMenu(ctx, req.(*DeleteMenuRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_ListDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListDeptReq)
+	in := new(ListDeptRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2079,13 +2180,13 @@ func _AdminService_ListDept_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: AdminService_ListDept_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ListDept(ctx, req.(*ListDeptReq))
+		return srv.(AdminServiceServer).ListDept(ctx, req.(*ListDeptRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_CreateDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateDeptReq)
+	in := new(CreateDeptRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2097,13 +2198,13 @@ func _AdminService_CreateDept_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: AdminService_CreateDept_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).CreateDept(ctx, req.(*CreateDeptReq))
+		return srv.(AdminServiceServer).CreateDept(ctx, req.(*CreateDeptRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_GetDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetDeptReq)
+	in := new(GetDeptRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2115,13 +2216,13 @@ func _AdminService_GetDept_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: AdminService_GetDept_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).GetDept(ctx, req.(*GetDeptReq))
+		return srv.(AdminServiceServer).GetDept(ctx, req.(*GetDeptRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_UpdateDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateDeptReq)
+	in := new(UpdateDeptRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2133,13 +2234,13 @@ func _AdminService_UpdateDept_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: AdminService_UpdateDept_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).UpdateDept(ctx, req.(*UpdateDeptReq))
+		return srv.(AdminServiceServer).UpdateDept(ctx, req.(*UpdateDeptRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_UpdateDeptState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateDeptStateReq)
+	in := new(UpdateDeptStateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2151,13 +2252,13 @@ func _AdminService_UpdateDeptState_Handler(srv interface{}, ctx context.Context,
 		FullMethod: AdminService_UpdateDeptState_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).UpdateDeptState(ctx, req.(*UpdateDeptStateReq))
+		return srv.(AdminServiceServer).UpdateDeptState(ctx, req.(*UpdateDeptStateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_DeleteDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteDeptReq)
+	in := new(DeleteDeptRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2169,13 +2270,13 @@ func _AdminService_DeleteDept_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: AdminService_DeleteDept_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).DeleteDept(ctx, req.(*DeleteDeptReq))
+		return srv.(AdminServiceServer).DeleteDept(ctx, req.(*DeleteDeptRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_ListDeptTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListDeptTreeReq)
+	in := new(ListDeptTreeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2187,13 +2288,13 @@ func _AdminService_ListDeptTree_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: AdminService_ListDeptTree_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ListDeptTree(ctx, req.(*ListDeptTreeReq))
+		return srv.(AdminServiceServer).ListDeptTree(ctx, req.(*ListDeptTreeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_ListPost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListPostReq)
+	in := new(ListPostRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2205,13 +2306,13 @@ func _AdminService_ListPost_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: AdminService_ListPost_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ListPost(ctx, req.(*ListPostReq))
+		return srv.(AdminServiceServer).ListPost(ctx, req.(*ListPostRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_CreatePost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreatePostReq)
+	in := new(CreatePostRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2223,13 +2324,13 @@ func _AdminService_CreatePost_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: AdminService_CreatePost_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).CreatePost(ctx, req.(*CreatePostReq))
+		return srv.(AdminServiceServer).CreatePost(ctx, req.(*CreatePostRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_GetPost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetPostReq)
+	in := new(GetPostRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2241,13 +2342,13 @@ func _AdminService_GetPost_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: AdminService_GetPost_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).GetPost(ctx, req.(*GetPostReq))
+		return srv.(AdminServiceServer).GetPost(ctx, req.(*GetPostRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_UpdatePost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdatePostReq)
+	in := new(UpdatePostRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2259,13 +2360,13 @@ func _AdminService_UpdatePost_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: AdminService_UpdatePost_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).UpdatePost(ctx, req.(*UpdatePostReq))
+		return srv.(AdminServiceServer).UpdatePost(ctx, req.(*UpdatePostRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_DeletePost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeletePostReq)
+	in := new(DeletePostRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2277,13 +2378,13 @@ func _AdminService_DeletePost_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: AdminService_DeletePost_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).DeletePost(ctx, req.(*DeletePostReq))
+		return srv.(AdminServiceServer).DeletePost(ctx, req.(*DeletePostRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_UpdatePostState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdatePostStateReq)
+	in := new(UpdatePostStateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2295,13 +2396,13 @@ func _AdminService_UpdatePostState_Handler(srv interface{}, ctx context.Context,
 		FullMethod: AdminService_UpdatePostState_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).UpdatePostState(ctx, req.(*UpdatePostStateReq))
+		return srv.(AdminServiceServer).UpdatePostState(ctx, req.(*UpdatePostStateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_ListDict_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListDictReq)
+	in := new(ListDictRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2313,13 +2414,13 @@ func _AdminService_ListDict_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: AdminService_ListDict_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ListDict(ctx, req.(*ListDictReq))
+		return srv.(AdminServiceServer).ListDict(ctx, req.(*ListDictRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_CreateDict_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateDictReq)
+	in := new(CreateDictRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2331,13 +2432,13 @@ func _AdminService_CreateDict_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: AdminService_CreateDict_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).CreateDict(ctx, req.(*CreateDictReq))
+		return srv.(AdminServiceServer).CreateDict(ctx, req.(*CreateDictRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_GetDict_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetDictReq)
+	in := new(GetDictRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2349,13 +2450,13 @@ func _AdminService_GetDict_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: AdminService_GetDict_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).GetDict(ctx, req.(*GetDictReq))
+		return srv.(AdminServiceServer).GetDict(ctx, req.(*GetDictRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_UpdateDict_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateDictReq)
+	in := new(UpdateDictRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2367,13 +2468,13 @@ func _AdminService_UpdateDict_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: AdminService_UpdateDict_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).UpdateDict(ctx, req.(*UpdateDictReq))
+		return srv.(AdminServiceServer).UpdateDict(ctx, req.(*UpdateDictRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_DeleteDict_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteDictReq)
+	in := new(DeleteDictRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2385,13 +2486,13 @@ func _AdminService_DeleteDict_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: AdminService_DeleteDict_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).DeleteDict(ctx, req.(*DeleteDictReq))
+		return srv.(AdminServiceServer).DeleteDict(ctx, req.(*DeleteDictRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_UpdateDictState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateDictStateReq)
+	in := new(UpdateDictStateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2403,13 +2504,13 @@ func _AdminService_UpdateDictState_Handler(srv interface{}, ctx context.Context,
 		FullMethod: AdminService_UpdateDictState_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).UpdateDictState(ctx, req.(*UpdateDictStateReq))
+		return srv.(AdminServiceServer).UpdateDictState(ctx, req.(*UpdateDictStateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_ListDictData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListDictDataReq)
+	in := new(ListDictDataRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2421,13 +2522,13 @@ func _AdminService_ListDictData_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: AdminService_ListDictData_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ListDictData(ctx, req.(*ListDictDataReq))
+		return srv.(AdminServiceServer).ListDictData(ctx, req.(*ListDictDataRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_CreateDictData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateDictDataReq)
+	in := new(CreateDictDataRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2439,13 +2540,13 @@ func _AdminService_CreateDictData_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: AdminService_CreateDictData_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).CreateDictData(ctx, req.(*CreateDictDataReq))
+		return srv.(AdminServiceServer).CreateDictData(ctx, req.(*CreateDictDataRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_GetDictData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetDictDataReq)
+	in := new(GetDictDataRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2457,13 +2558,13 @@ func _AdminService_GetDictData_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: AdminService_GetDictData_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).GetDictData(ctx, req.(*GetDictDataReq))
+		return srv.(AdminServiceServer).GetDictData(ctx, req.(*GetDictDataRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_UpdateDictData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateDictDataReq)
+	in := new(UpdateDictDataRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2475,13 +2576,13 @@ func _AdminService_UpdateDictData_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: AdminService_UpdateDictData_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).UpdateDictData(ctx, req.(*UpdateDictDataReq))
+		return srv.(AdminServiceServer).UpdateDictData(ctx, req.(*UpdateDictDataRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_DeleteDictData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteDictDataReq)
+	in := new(DeleteDictDataRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2493,13 +2594,13 @@ func _AdminService_DeleteDictData_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: AdminService_DeleteDictData_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).DeleteDictData(ctx, req.(*DeleteDictDataReq))
+		return srv.(AdminServiceServer).DeleteDictData(ctx, req.(*DeleteDictDataRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_UpdateDictDataState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateDictDataStateReq)
+	in := new(UpdateDictDataStateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -2511,7 +2612,115 @@ func _AdminService_UpdateDictDataState_Handler(srv interface{}, ctx context.Cont
 		FullMethod: AdminService_UpdateDictDataState_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).UpdateDictDataState(ctx, req.(*UpdateDictDataStateReq))
+		return srv.(AdminServiceServer).UpdateDictDataState(ctx, req.(*UpdateDictDataStateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_ListDomainPackage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListDomainPackageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ListDomainPackage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_ListDomainPackage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ListDomainPackage(ctx, req.(*ListDomainPackageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_CreateDomainPackage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateDomainPackageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).CreateDomainPackage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_CreateDomainPackage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).CreateDomainPackage(ctx, req.(*CreateDomainPackageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetDomainPackage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDomainPackageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetDomainPackage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetDomainPackage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetDomainPackage(ctx, req.(*GetDomainPackageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateDomainPackage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateDomainPackageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateDomainPackage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_UpdateDomainPackage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateDomainPackage(ctx, req.(*UpdateDomainPackageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateDomainPackageState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateDomainPackageStateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateDomainPackageState(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_UpdateDomainPackageState_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateDomainPackageState(ctx, req.(*UpdateDomainPackageStateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_DeleteDomainPackage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteDomainPackageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).DeleteDomainPackage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_DeleteDomainPackage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).DeleteDomainPackage(ctx, req.(*DeleteDomainPackageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2802,6 +3011,30 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateDictDataState",
 			Handler:    _AdminService_UpdateDictDataState_Handler,
+		},
+		{
+			MethodName: "ListDomainPackage",
+			Handler:    _AdminService_ListDomainPackage_Handler,
+		},
+		{
+			MethodName: "CreateDomainPackage",
+			Handler:    _AdminService_CreateDomainPackage_Handler,
+		},
+		{
+			MethodName: "GetDomainPackage",
+			Handler:    _AdminService_GetDomainPackage_Handler,
+		},
+		{
+			MethodName: "UpdateDomainPackage",
+			Handler:    _AdminService_UpdateDomainPackage_Handler,
+		},
+		{
+			MethodName: "UpdateDomainPackageState",
+			Handler:    _AdminService_UpdateDomainPackageState_Handler,
+		},
+		{
+			MethodName: "DeleteDomainPackage",
+			Handler:    _AdminService_DeleteDomainPackage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

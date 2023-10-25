@@ -20,25 +20,43 @@ type DomainRoleUser struct {
 
 // Domain is a Domain model.
 type Domain struct {
-	CreatedAt   time.Time `json:"createdAt,omitempty" form:"createdAt,omitempty"`
-	UpdatedAt   time.Time `json:"updatedAt,omitempty" form:"updatedAt,omitempty"`
-	ID          uint      `json:"id,omitempty" form:"id,omitempty"`
-	ParentID    uint      `json:"parentID,omitempty" form:"parentID,omitempty"`
-	Name        string    `json:"name,omitempty" form:"name,omitempty"`
-	Code        string    `json:"code,omitempty" form:"code,omitempty"`
-	Alias       string    `json:"alias,omitempty" form:"alias,omitempty"`
-	Keywords    string    `json:"keywords,omitempty" form:"keywords,omitempty"`
-	Logo        string    `json:"logo,omitempty" form:"logo,omitempty"`
-	Pic         string    `json:"pic,omitempty" form:"pic,omitempty"`
-	Description string    `json:"description,omitempty" form:"description,omitempty"`
-	Sort        int32     `json:"sort,omitempty" form:"sort,omitempty"`
-	State       int32     `json:"state,omitempty" form:"state,omitempty"`
-	Remarks     string    `json:"remarks,omitempty" form:"remarks,omitempty"`
-	Role        *Role     `json:"role,omitempty" form:"role,omitempty"`
-	Menus       []*Menu   `json:"menus,omitempty" form:"menus,omitempty"`
+	CreatedAt   time.Time      `json:"createdAt,omitempty" form:"createdAt,omitempty"`
+	UpdatedAt   time.Time      `json:"updatedAt,omitempty" form:"updatedAt,omitempty"`
+	ID          uint           `json:"id,omitempty" form:"id,omitempty"`
+	ParentID    uint           `json:"parentId,omitempty" form:"parentId,omitempty"`
+	PackageID   uint           `json:"packageId,omitempty" form:"packageId,omitempty"`
+	Name        string         `json:"name,omitempty" form:"name,omitempty"`
+	Code        string         `json:"code,omitempty" form:"code,omitempty"`
+	Alias       string         `json:"alias,omitempty" form:"alias,omitempty"`
+	Keywords    string         `json:"keywords,omitempty" form:"keywords,omitempty"`
+	Logo        string         `json:"logo,omitempty" form:"logo,omitempty"`
+	Pic         string         `json:"pic,omitempty" form:"pic,omitempty"`
+	Description string         `json:"description,omitempty" form:"description,omitempty"`
+	Sort        int32          `json:"sort,omitempty" form:"sort,omitempty"`
+	State       int32          `json:"state,omitempty" form:"state,omitempty"`
+	Remarks     string         `json:"remarks,omitempty" form:"remarks,omitempty"`
+	Role        *Role          `json:"role,omitempty" form:"role,omitempty"`
+	Menus       []*Menu        `json:"menus,omitempty" form:"menus,omitempty"`
+	Package     *DomainPackage `json:"package,omitempty" form:"package,omitempty"`
 }
 
 func (g Domain) GetID() string {
+	return convert.UnitToString(g.ID)
+}
+
+// DomainPackage is a Post model.
+type DomainPackage struct {
+	CreatedAt time.Time `json:"createdAt,omitempty" form:"createdAt,omitempty"`
+	UpdatedAt time.Time `json:"updatedAt,omitempty" form:"updatedAt,omitempty"`
+	ID        uint      `json:"id,omitempty" form:"id,omitempty"`
+	Menus     []*Menu   `json:"menus,omitempty" form:"menus,omitempty"`
+	Remarks   string    `json:"remarks,omitempty" form:"remarks,omitempty"`
+	Name      string    `json:"name,omitempty" form:"name,omitempty"`
+	Sort      int32     `json:"sort,omitempty" form:"sort,omitempty"`
+	State     int32     `json:"state,omitempty" form:"state,omitempty"`
+}
+
+func (g DomainPackage) GetID() string {
 	return convert.UnitToString(g.ID)
 }
 
@@ -57,16 +75,13 @@ type DomainRepo interface {
 	ListMenuByIDs(context.Context, ...uint) ([]*Menu, error)
 	HandleMenu(context.Context, *Domain) error
 
-	// 领域权限
-	// stdcasbin.IEnforcer
-	// SaveRoleUser 添加领域领域权限
-	// SaveRoleForUserInDomain(context.Context, uint /* userID */, uint /* roleID */, uint /* domainID */) error
-	// GetRoleForUserInDomain 获取领域用户的领域
-	// GetRolesForUserInDomain(context.Context, uint /* userID */, uint /* domainID */) []*Role
-	// GetRolesForUserInDomain 获取具有域内领域的用户
-	// GetUsersForRoleInDomain(context.Context, uint /* roleID */, uint /* domainID */) []*User
-	// DeleteRoleForUserInDomain 域内删除用户的领域域内删除用户的领域
-	// DeleteRoleForUserInDomain(context.Context, uint /* userID */, uint /* domainID */) error
+	// 租户套餐
+	PackageSave(context.Context, *DomainPackage) (*DomainPackage, error)
+	PackageUpdate(context.Context, *DomainPackage) (*DomainPackage, error)
+	PackageFindByID(context.Context, uint) (*DomainPackage, error)
+	PackageDelete(context.Context, *DomainPackage) error
+	PackageListAll(context.Context) ([]*DomainPackage, error)
+	PackageListPage(context.Context, *pagination.Pagination) ([]*DomainPackage, int64)
 }
 
 // DomainUsecase is a Domain usecase.
@@ -95,25 +110,25 @@ func (uc *DomainUsecase) Create(ctx context.Context, g *Domain) (*Domain, error)
 	return g, err
 }
 
-// ListByIDs 获取指定领域ID集合
+// ListByIDs 获取指定租户ID集合
 func (uc *DomainUsecase) ListByIDs(ctx context.Context, id ...uint) (roles []*Domain, err error) {
 	// roles, _ = uc.biz.domainRepo.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
 	return
 }
 
-// Update 修改领域
+// Update 修改租户
 func (uc *DomainUsecase) Update(ctx context.Context, g *Domain) error {
 	uc.log.WithContext(ctx).Debugf("UpdateDomain: %v", g)
 
 	domain, _ := uc.biz.domainRepo.FindByID(ctx, g.ID)
 	if domain == nil {
-		return errors.New("领域未注册")
+		return errors.New("租户未注册")
 	}
 
 	if domain.Name != g.Name && g.Name != "" {
 		name, _ := uc.biz.domainRepo.FindByName(ctx, g.Name)
 		if name != nil {
-			return errors.New("领域名已存在")
+			return errors.New("租户名已存在")
 		}
 	}
 	// 新数据合并到源数据
@@ -125,13 +140,13 @@ func (uc *DomainUsecase) Update(ctx context.Context, g *Domain) error {
 	return err
 }
 
-// UpdateState 修改领域状态
+// UpdateState 修改租户状态
 func (uc *DomainUsecase) UpdateState(ctx context.Context, g *Domain) error {
 	uc.log.WithContext(ctx).Debugf("UpdateDomainState: %v", g)
 
 	domain, _ := uc.biz.domainRepo.FindByID(ctx, g.ID)
 	if domain == nil {
-		return errors.New("领域不存在")
+		return errors.New("租户不存在")
 	}
 
 	domain.State = g.State
@@ -139,37 +154,37 @@ func (uc *DomainUsecase) UpdateState(ctx context.Context, g *Domain) error {
 	return err
 }
 
-// List 领域列表全部
+// List 租户列表全部
 func (uc *DomainUsecase) ListAll(ctx context.Context) ([]*Domain, int64) {
 	uc.log.WithContext(ctx).Debugf("ListAll")
 	return uc.biz.domainRepo.ListPage(ctx, &pagination.Pagination{Nopaging: true, OrderBy: map[string]bool{"sort": true}})
 }
 
-// List 领域列表分页
+// List 租户列表分页
 func (uc *DomainUsecase) ListPage(ctx context.Context, paging *pagination.Pagination) ([]*Domain, int64) {
 	uc.log.WithContext(ctx).Debugf("DomainPage")
 	return uc.biz.domainRepo.ListPage(ctx, paging)
 }
 
-// GetID 根据领域ID领域
+// GetID 根据租户ID租户
 func (uc *DomainUsecase) GetID(ctx context.Context, g *Domain) (*Domain, error) {
 	uc.log.WithContext(ctx).Debugf("GetDomainID: %v", g)
 	return uc.biz.domainRepo.FindByID(ctx, g.ID)
 }
 
-// GetID 根据领域Code领域
+// GetID 根据租户Code租户
 func (uc *DomainUsecase) GetCode(ctx context.Context, g *Domain) (*Domain, error) {
 	uc.log.WithContext(ctx).Debugf("GetDomainCode: %v", g)
 	return uc.biz.domainRepo.FindByCode(ctx, g.Code)
 }
 
-// GetID 根据领域Name领域
+// GetID 根据租户Name租户
 func (uc *DomainUsecase) GetName(ctx context.Context, g *Domain) (*Domain, error) {
 	uc.log.WithContext(ctx).Debugf("GetDomainName: %v", g)
 	return uc.biz.domainRepo.FindByName(ctx, g.Name)
 }
 
-// Delete 根据领域ID删除领域
+// Delete 根据租户ID删除租户
 func (uc *DomainUsecase) Delete(ctx context.Context, g *Domain) error {
 	uc.log.WithContext(ctx).Debugf("DeleteDomain: %v", g)
 	return uc.biz.domainRepo.Delete(ctx, g)
@@ -181,13 +196,13 @@ func (uc *DomainUsecase) HandleMenu(ctx context.Context, g *Domain) error {
 	return uc.biz.domainRepo.HandleMenu(ctx, g)
 }
 
-// HandleMenu 获取领域菜单
+// HandleMenu 获取租户菜单
 func (uc *DomainUsecase) ListMenuByID(ctx context.Context, g *Domain) ([]*Menu, error) {
 	uc.log.WithContext(ctx).Debugf("ListMenuByIDs: %v", g)
 	return uc.biz.domainRepo.ListMenuByIDs(ctx, g.ID)
 }
 
-// GetTree 获取领域树形
+// GetTree 获取租户树形
 func (uc *DomainUsecase) GetTree(ctx context.Context, id uint) []*Domain {
 	uc.log.WithContext(ctx).Debugf("GetTree")
 	menus, _ := uc.biz.domainRepo.ListPage(ctx, &pagination.Pagination{Nopaging: true, OrderBy: map[string]bool{"sort": true}})

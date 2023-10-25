@@ -28,9 +28,9 @@ func TransformDict(data *biz.Dict) *v1.Dict {
 }
 
 // ListDict 列表-字典
-func (s *AdminService) ListDict(ctx context.Context, in *v1.ListDictReq) (*v1.ListDictReply, error) {
+func (s *AdminService) ListDict(ctx context.Context, in *v1.ListDictRequest) (*v1.ListDictResponse, error) {
 	results, total := s.dictCase.ListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize())))
-	return &v1.ListDictReply{
+	return &v1.ListDictResponse{
 		Total: total,
 		Items: convert.ArrayToAny(results, func(v *biz.Dict) *v1.Dict {
 			return TransformDict(v)
@@ -39,7 +39,7 @@ func (s *AdminService) ListDict(ctx context.Context, in *v1.ListDictReq) (*v1.Li
 }
 
 // CreateDict 创建字典
-func (s *AdminService) CreateDict(ctx context.Context, in *v1.CreateDictReq) (*v1.CreateDictReply, error) {
+func (s *AdminService) CreateDict(ctx context.Context, in *v1.CreateDictRequest) (*v1.CreateDictResponse, error) {
 	role, err := s.dictCase.Create(ctx, &biz.Dict{
 		Name:    in.GetName(),
 		Type:    in.GetType(),
@@ -54,7 +54,7 @@ func (s *AdminService) CreateDict(ctx context.Context, in *v1.CreateDictReq) (*v
 	data, _ := anypb.New(&v1.Result{
 		Id: uint64(role.ID),
 	})
-	return &v1.CreateDictReply{
+	return &v1.CreateDictResponse{
 		Type:    constant.HandleType_success.String(),
 		Message: "创建成功",
 		Result:  data,
@@ -62,7 +62,7 @@ func (s *AdminService) CreateDict(ctx context.Context, in *v1.CreateDictReq) (*v
 }
 
 // UpdateDict 修改字典
-func (s *AdminService) UpdateDict(ctx context.Context, in *v1.UpdateDictReq) (*v1.UpdateDictReply, error) {
+func (s *AdminService) UpdateDict(ctx context.Context, in *v1.UpdateDictRequest) (*v1.UpdateDictResponse, error) {
 	v := in.GetData()
 	err := s.dictCase.Update(ctx, &biz.Dict{
 		ID:      uint(in.GetId()),
@@ -74,30 +74,30 @@ func (s *AdminService) UpdateDict(ctx context.Context, in *v1.UpdateDictReq) (*v
 	if err != nil {
 		return nil, v1.ErrorDictUpdateFail("字典修改失败: %v", err.Error())
 	}
-	return &v1.UpdateDictReply{
+	return &v1.UpdateDictResponse{
 		Type:    constant.HandleType_success.String(),
 		Message: "修改成功",
 	}, nil
 }
 
 // UpdateDictState 修改字典-状态
-func (s *AdminService) UpdateDictState(ctx context.Context, in *v1.UpdateDictStateReq) (*v1.UpdateDictStateReply, error) {
+func (s *AdminService) UpdateDictState(ctx context.Context, in *v1.UpdateDictStateRequest) (*v1.UpdateDictStateResponse, error) {
 	v := in.GetData()
 	err := s.dictCase.UpdateState(ctx, &biz.Dict{
 		ID:    uint(in.GetId()),
 		State: int32(v.GetState()),
 	})
 	if err != nil {
-		return nil, v1.ErrorDictUpdateFail("领域状态修改失败: %v", err.Error())
+		return nil, v1.ErrorDictUpdateFail("租户状态修改失败: %v", err.Error())
 	}
-	return &v1.UpdateDictStateReply{
+	return &v1.UpdateDictStateResponse{
 		Message: "修改成功",
 		Type:    constant.HandleType_success.String(),
 	}, nil
 }
 
 // GetDict 获取字典
-func (s *AdminService) GetDict(ctx context.Context, in *v1.GetDictReq) (*v1.Dict, error) {
+func (s *AdminService) GetDict(ctx context.Context, in *v1.GetDictRequest) (*v1.Dict, error) {
 	role, err := s.dictCase.GetID(ctx, &biz.Dict{ID: uint(in.GetId())})
 	if err != nil {
 		return nil, v1.ErrorDictNotFound("字典未找到")
@@ -106,11 +106,11 @@ func (s *AdminService) GetDict(ctx context.Context, in *v1.GetDictReq) (*v1.Dict
 }
 
 // DeleteDict 删除字典
-func (s *AdminService) DeleteDict(ctx context.Context, in *v1.DeleteDictReq) (*v1.DeleteDictReply, error) {
+func (s *AdminService) DeleteDict(ctx context.Context, in *v1.DeleteDictRequest) (*v1.DeleteDictResponse, error) {
 	if err := s.dictCase.Delete(ctx, &biz.Dict{ID: uint(in.GetId())}); err != nil {
 		return nil, v1.ErrorDictDeleteFail("字典删除失败：%v", err)
 	}
-	return &v1.DeleteDictReply{
+	return &v1.DeleteDictResponse{
 		Type:    constant.HandleType_success.String(),
 		Message: "删除成功",
 	}, nil
@@ -133,9 +133,9 @@ func TransformDictData(data *biz.DictData) *v1.DictData {
 }
 
 // ListDictData 列表-字典数据
-func (s *AdminService) ListDictData(ctx context.Context, in *v1.ListDictDataReq) (*v1.ListDictDataReply, error) {
+func (s *AdminService) ListDictData(ctx context.Context, in *v1.ListDictDataRequest) (*v1.ListDictDataResponse, error) {
 	results, total := s.dictCase.DataListPage(ctx, pagination.NewPagination(pagination.WithPage(in.GetPage()), pagination.WithPageSize(in.GetPageSize()), pagination.WithQuery(map[string]interface{}{"dictType": in.GetDictType()})))
-	return &v1.ListDictDataReply{
+	return &v1.ListDictDataResponse{
 		Total: total,
 		Items: convert.ArrayToAny(results, func(v *biz.DictData) *v1.DictData {
 			return TransformDictData(v)
@@ -144,7 +144,7 @@ func (s *AdminService) ListDictData(ctx context.Context, in *v1.ListDictDataReq)
 }
 
 // CreateDictData 创建字典数据
-func (s *AdminService) CreateDictData(ctx context.Context, in *v1.CreateDictDataReq) (*v1.CreateDictDataReply, error) {
+func (s *AdminService) CreateDictData(ctx context.Context, in *v1.CreateDictDataRequest) (*v1.CreateDictDataResponse, error) {
 	role, err := s.dictCase.DataCreate(ctx, &biz.DictData{
 		Label:     in.GetLabel(),
 		Value:     in.GetValue(),
@@ -162,7 +162,7 @@ func (s *AdminService) CreateDictData(ctx context.Context, in *v1.CreateDictData
 	data, _ := anypb.New(&v1.Result{
 		Id: uint64(role.ID),
 	})
-	return &v1.CreateDictDataReply{
+	return &v1.CreateDictDataResponse{
 		Type:    constant.HandleType_success.String(),
 		Message: "创建成功",
 		Result:  data,
@@ -170,7 +170,7 @@ func (s *AdminService) CreateDictData(ctx context.Context, in *v1.CreateDictData
 }
 
 // UpdateDictData 修改字典数据
-func (s *AdminService) UpdateDictData(ctx context.Context, in *v1.UpdateDictDataReq) (*v1.UpdateDictDataReply, error) {
+func (s *AdminService) UpdateDictData(ctx context.Context, in *v1.UpdateDictDataRequest) (*v1.UpdateDictDataResponse, error) {
 	v := in.GetData()
 	err := s.dictCase.DataUpdate(ctx, &biz.DictData{
 		ID:        uint(in.GetId()),
@@ -185,14 +185,14 @@ func (s *AdminService) UpdateDictData(ctx context.Context, in *v1.UpdateDictData
 	if err != nil {
 		return nil, v1.ErrorDictDataUpdateFail("字典修改失败: %v", err.Error())
 	}
-	return &v1.UpdateDictDataReply{
+	return &v1.UpdateDictDataResponse{
 		Type:    constant.HandleType_success.String(),
 		Message: "修改成功",
 	}, nil
 }
 
 // UpdateDictDataState 修改字典数据-状态
-func (s *AdminService) UpdateDictDataState(ctx context.Context, in *v1.UpdateDictDataStateReq) (*v1.UpdateDictDataStateReply, error) {
+func (s *AdminService) UpdateDictDataState(ctx context.Context, in *v1.UpdateDictDataStateRequest) (*v1.UpdateDictDataStateResponse, error) {
 	v := in.GetData()
 	err := s.dictCase.DataUpdateState(ctx, &biz.DictData{
 		ID:    uint(in.GetId()),
@@ -201,14 +201,14 @@ func (s *AdminService) UpdateDictDataState(ctx context.Context, in *v1.UpdateDic
 	if err != nil {
 		return nil, v1.ErrorDictDataUpdateFail("字典数据状态修改失败: %v", err.Error())
 	}
-	return &v1.UpdateDictDataStateReply{
+	return &v1.UpdateDictDataStateResponse{
 		Message: "修改成功",
 		Type:    constant.HandleType_success.String(),
 	}, nil
 }
 
 // GetDictData 获取字典数据
-func (s *AdminService) GetDictData(ctx context.Context, in *v1.GetDictDataReq) (*v1.DictData, error) {
+func (s *AdminService) GetDictData(ctx context.Context, in *v1.GetDictDataRequest) (*v1.DictData, error) {
 	v, err := s.dictCase.DataGetID(ctx, &biz.DictData{ID: uint(in.GetId())})
 	if err != nil {
 		return nil, v1.ErrorDictDataNotFound("字典未找到")
@@ -217,11 +217,11 @@ func (s *AdminService) GetDictData(ctx context.Context, in *v1.GetDictDataReq) (
 }
 
 // DeleteDictData 删除字典数据
-func (s *AdminService) DeleteDictData(ctx context.Context, in *v1.DeleteDictDataReq) (*v1.DeleteDictDataReply, error) {
+func (s *AdminService) DeleteDictData(ctx context.Context, in *v1.DeleteDictDataRequest) (*v1.DeleteDictDataResponse, error) {
 	if err := s.dictCase.DataDelete(ctx, &biz.DictData{ID: uint(in.GetId())}); err != nil {
 		return nil, v1.ErrorDictDeleteFail("字典删除失败：%v", err)
 	}
-	return &v1.DeleteDictDataReply{
+	return &v1.DeleteDictDataResponse{
 		Type:    constant.HandleType_success.String(),
 		Message: "删除成功",
 	}, nil

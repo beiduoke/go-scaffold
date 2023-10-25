@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-// 领域模块
+// 租户模块
 type Domain struct {
 	Id          uint64    `protobuf:"varint,3,opt,name=id,proto3" json:"id,omitempty"`
 	Name        string    `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
