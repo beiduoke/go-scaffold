@@ -59,16 +59,16 @@ clean:
 	@go clean
 	$(if $(IS_WINDOWS), del "coverage.out", rm -f "coverage.out")
 
-# build docker image
+# build docker image../../../
 docker:
 	@docker build -t $(APP_DOCKER_IMAGE) . \
-				  -f ../../.docker/Dockerfile \
+				  -f ../../../.docker/Dockerfile \
 				  --build-arg APP_RELATIVE_PATH=$(APP_RELATIVE_PATH) GRPC_PORT=9000 REST_PORT=8000
 
 # generate config define code
 conf:
 	protoc --proto_path=./internal/conf/ \
-	       --proto_path=../../api/third_party \
+	       --proto_path=../../../api/third_party \
 	       --go_out=paths=source_relative:./internal/conf/ \
 	       ./internal/conf/conf.proto
 
@@ -89,12 +89,12 @@ wire:
 
 # generate protobuf api go code
 api:
-	@cd ../../ && \
+	@cd ../../../ && \
 	buf generate
 
 # generate OpenAPI v3 doc
 openapi:
-	@cd ../../ && \
+	@cd ../../../ && \
 	buf generate --path proto/admin/v1 --template proto/admin/v1/buf.openapi.gen.yaml
 
 # run application

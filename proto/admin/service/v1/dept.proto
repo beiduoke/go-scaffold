@@ -1,0 +1,201 @@
+syntax = "proto3";
+
+package admin.service.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/beiduoke/go-scaffold/api/admin/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.admin.v1";
+option java_outer_classname = "adminProtoV1";
+
+option (gnostic.openapi.v3.document) = {
+  info: {
+    title: "Scaffold Dept API";
+    description: "后台管理脚手架系统-部门服务";
+    version: "1.0";
+		contact: {
+			name: "基础架构";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway";
+			email: "none@example.com";
+		};
+		license: {
+			name: "BSD 3-Clause License";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt";
+		};
+  }
+};
+
+// The greeting service definition.
+service DeptService {
+  // 列表部门
+  rpc ListDept (ListDeptRequest) returns (ListDeptResponse) {
+    option (google.api.http) = {
+      get: "/v1/depts"
+    };
+  }
+
+  // 创建部门
+  rpc CreateDept (CreateDeptRequest) returns (CreateDeptResponse) {
+    option (google.api.http) = {
+      post: "/v1/depts"
+      body: "*"
+    };
+  }
+
+  // 获取部门
+  rpc GetDept (GetDeptRequest) returns (Dept) {
+    option (google.api.http) = {
+      get: "/v1/depts/{id}"
+    };
+  }
+
+  // 修改部门
+  rpc UpdateDept (UpdateDeptRequest) returns (UpdateDeptResponse) {
+    option (google.api.http) = {
+      put: "/v1/depts/{id}"
+      body: "data"
+    };
+  }
+
+  
+  // 更新指定ID角色状态
+  rpc UpdateDeptState (UpdateDeptStateRequest) returns (UpdateDeptStateResponse) {
+    option (google.api.http) = {
+      put: "/v1/depts/{id}/state"
+      body: "data"
+    };
+  }
+
+  // 删除部门
+  rpc DeleteDept (DeleteDeptRequest) returns (DeleteDeptResponse) {
+    option (google.api.http) = {
+      delete: "/v1/depts/{id}"
+    };
+  }
+
+  // 获取全部部门树形
+  rpc ListDeptTree (ListDeptTreeRequest) returns (ListDeptTreeResponse) {
+    option (google.api.http) = {
+      get: "/v1/depts/{id}/trees"
+    };
+  }
+}
+
+// 部门模块
+message Dept {
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
+  uint64 id = 3;
+  string name = 4;
+  optional uint64 parent_id = 5;
+  optional int32 sort = 6;
+  optional string remarks = 7;
+  optional int32 state = 8;
+  repeated Dept children = 9;
+}
+
+// 请求 - 列表部门
+message ListDeptRequest {
+  // 是否不分页
+  optional bool nopaging = 1;
+  // 当前页
+  optional int32 page = 2;
+  // 每一页的行数
+  optional int32 page_size = 3;
+}
+
+// 回应 - 列表部门
+message ListDeptResponse {
+  int64 total = 1;
+  repeated Dept items = 2;
+}
+
+// 请求 - 创建部门
+message CreateDeptRequest {
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
+  int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
+  int32 state = 4 [(validate.rules).int32.gte = 0];
+  optional string remarks = 5 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+}
+
+// 回应 - 创建部门
+message CreateDeptResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 修改部门
+message UpdateDeptRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
+    int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
+    int32 state = 4 [(validate.rules).int32.gte = 0];
+    optional string remarks = 5 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 修改部门
+message UpdateDeptResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 修改部门-状态
+message UpdateDeptStateRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    optional int32 state = 1 [(validate.rules).int32.gte = 0];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建部门-状态
+message UpdateDeptStateResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 获取部门
+message GetDeptRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 请求 - 删除部门
+message DeleteDeptRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 删除部门
+message DeleteDeptResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 获取树形部门
+message ListDeptTreeRequest {
+  uint64 id = 1;
+}
+
+// 回应 - 获取树形部门
+message ListDeptTreeResponse {
+  repeated Dept items = 1;
+  optional int64 total = 2;
+}

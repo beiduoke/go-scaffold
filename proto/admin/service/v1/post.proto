@@ -1,0 +1,185 @@
+syntax = "proto3";
+
+package admin.service.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "validate/validate.proto";
+// import "protobuf/enum.proto";
+// import "protobuf/struct.proto";
+
+option go_package = "github.com/beiduoke/go-scaffold/api/admin/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.admin.v1";
+option java_outer_classname = "adminProtoV1";
+
+option (gnostic.openapi.v3.document) = {
+  info: {
+    title: "Scaffold Post API";
+    description: "后台管理脚手架系统-岗位服务";
+    version: "1.0";
+		contact: {
+			name: "基础架构";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway";
+			email: "none@example.com";
+		};
+		license: {
+			name: "BSD 3-Clause License";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt";
+		};
+  }
+};
+
+// The greeting service definition.
+service PostService {
+  // 列表岗位
+  rpc ListPost (ListPostRequest) returns (ListPostResponse) {
+    option (google.api.http) = {
+      get: "/v1/posts"
+    };
+  }
+
+  // 创建岗位
+  rpc CreatePost (CreatePostRequest) returns (CreatePostResponse) {
+    option (google.api.http) = {
+      post: "/v1/posts"
+      body: "*"
+    };
+  }
+
+  // 获取岗位
+  rpc GetPost (GetPostRequest) returns (Post) {
+    option (google.api.http) = {
+      get: "/v1/posts/{id}"
+    };
+  }
+
+  // 修改岗位
+  rpc UpdatePost (UpdatePostRequest) returns (UpdatePostResponse) {
+    option (google.api.http) = {
+      put: "/v1/posts/{id}"
+      body: "data"
+    };
+  }
+
+  // 删除岗位
+  rpc DeletePost (DeletePostRequest) returns (DeletePostResponse) {
+    option (google.api.http) = {
+      delete: "/v1/posts/{id}"
+    };
+  }
+
+  // 设置岗位状态
+  rpc UpdatePostState (UpdatePostStateRequest) returns (UpdatePostStateResponse) {
+    option (google.api.http) = {
+      put: "/v1/posts/{id}/state"
+      body: "data"
+    };
+  }
+}
+
+// 岗位模块
+message Post {
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
+  uint64 id = 3;
+  string name = 4;
+  optional string code = 5;
+  optional int32 sort = 6;
+  optional string remarks = 7;
+  optional int32 state = 8;
+}
+
+// 请求 - 列表岗位
+message ListPostRequest {
+  // 是否不分页
+  optional bool nopaging = 1;
+  // 当前页
+  optional int32 page = 2;
+  // 每一页的行数
+  optional int32 page_size = 3;
+  optional string name = 4;
+
+}
+
+// 回应 - 列表岗位
+message ListPostResponse {
+  int64 total = 1;
+  repeated Post items = 2;
+}
+
+// 请求 - 创建岗位
+message CreatePostRequest {
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  optional string code = 2 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
+  int32 state = 4 [(validate.rules).int32.gte = 0];
+  optional string remarks = 5 [(validate.rules).string = {min_len: 0, max_len: 1000}];
+}
+
+// 回应 - 创建岗位
+message CreatePostResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 修改岗位
+message UpdatePostRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    optional string code = 2 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
+    int32 state = 4 [(validate.rules).int32.gte = 0];
+    string remarks = 5 [(validate.rules).string = {min_len: 0, max_len: 1000}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建岗位
+message UpdatePostResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 获取岗位
+message GetPostRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 请求 - 删除岗位
+message DeletePostRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 删除岗位
+message DeletePostResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 修改岗位-状态
+message UpdatePostStateRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    optional int32 state = 1 [(validate.rules).int32.gte = 0];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建岗位-状态
+message UpdatePostStateResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}

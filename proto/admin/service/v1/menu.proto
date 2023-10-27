@@ -1,0 +1,241 @@
+syntax = "proto3";
+
+package admin.service.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/beiduoke/go-scaffold/api/admin/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.admin.v1";
+option java_outer_classname = "adminProtoV1";
+
+option (gnostic.openapi.v3.document) = {
+  info: {
+    title: "Scaffold Menu API";
+    description: "后台管理脚手架系统-菜单服务";
+    version: "1.0";
+		contact: {
+			name: "基础架构";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway";
+			email: "none@example.com";
+		};
+		license: {
+			name: "BSD 3-Clause License";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt";
+		};
+  }
+};
+
+// The greeting service definition.
+service MenuService {
+  // 菜单模块
+  // 列表菜单
+  rpc ListMenu (ListMenuRequest) returns (ListMenuResponse) {
+    option (google.api.http) = {
+      get: "/v1/menus"
+    };
+  }
+
+  // 创建菜单
+  rpc CreateMenu (CreateMenuRequest) returns (CreateMenuResponse) {
+    option (google.api.http) = {
+      post: "/v1/menus"
+      body: "*"
+    };
+  }
+
+  // 获取树形菜单
+  rpc ListMenuTree (ListMenuTreeRequest) returns (ListMenuTreeResponse) {
+    option (google.api.http) = {
+      get: "/v1/menus/{id}/trees"
+    };
+  }
+
+  // 获取菜单
+  rpc GetMenu (GetMenuRequest) returns (Menu) {
+    option (google.api.http) = {
+      get: "/v1/menus/{id}"
+    };
+  }
+
+  // 修改菜单
+  rpc UpdateMenu (UpdateMenuRequest) returns (UpdateMenuResponse) {
+    option (google.api.http) = {
+      put: "/v1/menus/{id}"
+      body: "data"
+    };
+  }
+
+  // 删除菜单
+  rpc DeleteMenu (DeleteMenuRequest) returns (DeleteMenuResponse) {
+    option (google.api.http) = {
+      delete: "/v1/menus/{id}"
+    };
+  }
+}
+
+
+// 菜单类型
+enum MenuType {
+  MENU_TYPE_UNSPECIFIED = 0;
+  MENU_TYPE_CATALOGUE = 1;
+  MENU_TYPE_MENU = 2;
+  MENU_TYPE_ABILITY = 3;
+}
+
+// 菜单链接类型
+enum MenuLinkType {
+  MENU_LINK_TYPE_UNSPECIFIED = 0;
+  MENU_LINK_TYPE_NO = 1;
+  MENU_LINK_TYPE_IFRAME = 2;
+  MENU_LINK_TYPE_BLANK = 3;
+}
+
+// 角色数据范围
+enum RoleDataScope {
+  ROLE_DATA_SCOPE_UNSPECIFIED = 0;
+  ROLE_DATA_SCOPE_SELF = 1;
+  ROLE_DATA_SCOPE_ALL = 2;
+  ROLE_DATA_SCOPE_DEPT = 3;
+  ROLE_DATA_SCOPE_DEPT_FOLLOW = 4;
+  ROLE_DATA_SCOPE_DEPT_CUSTOM = 5;
+}
+
+// 菜单模块
+message Menu {
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
+  uint64 id = 3;
+  string name = 4;
+  optional int32 type = 5;
+  uint64 parent_id = 6;
+  optional string path = 7;
+  optional int32 is_hidden = 8;
+  optional string component = 9;
+  optional string permission = 10;
+  optional int32 sort = 11;
+  optional string icon = 12;
+  string title = 13;
+  optional int32 is_cache = 14;
+  optional string link_url = 15;
+  optional int32 is_affix = 16;
+  optional int32 link_type = 17;
+  repeated Menu children = 18;
+  optional string api_resource = 19;
+}
+
+// 请求 - 列表菜单
+message ListMenuRequest {
+  // 是否不分页
+  optional bool nopaging = 1;
+  // 当前页
+  optional int32 page = 2;
+  // 每一页的行数
+  optional int32 page_size = 3;
+}
+
+// 回应 - 列表菜单
+message ListMenuResponse {
+  int64 total = 1;
+  repeated Menu items = 2;
+}
+
+// 请求 - 创建菜单
+message CreateMenuRequest {
+  optional string name = 1 [(validate.rules).string = {min_len: 1, max_len: 50}];
+  int32 type = 2 [(validate.rules).int32.gte = 0];
+  uint64 parent_id = 4 [(validate.rules).uint64 = {gte: 0}];
+  optional string path = 5 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  int32 is_hidden = 6 [(validate.rules).int32.gte = 0];
+  optional string component = 7 [(validate.rules).string = {max_len: 100}];
+  optional string permission = 8 [(validate.rules).string = {max_len: 100}];
+  optional int32 sort = 9 [(validate.rules).int32 = {lt: 100000}];
+  optional string icon = 10 [(validate.rules).string = {min_len: 0, max_len: 100}];
+  string title = 11 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  optional int32 is_cache = 12 [(validate.rules).int32.gte = 0];
+  optional string link_url = 13 [(validate.rules).string = {min_len: 0, max_len: 100}];
+  optional int32 is_affix = 14 [(validate.rules).int32.gte = 0];
+  optional int32 link_type = 15 [(validate.rules).int32.gte = 0];
+  optional string api_resource = 16 [(validate.rules).string = {min_len: 1, max_len: 100}];
+}
+
+// 回应 - 创建菜单
+message CreateMenuResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 修改菜单
+message UpdateMenuRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    optional string name = 1 [(validate.rules).string = {min_len: 1, max_len: 50}];
+    int32 type = 2 [(validate.rules).int32.gte = 0];
+    uint64 parent_id = 4 [(validate.rules).uint64 = {gte: 0}];
+    optional string path = 5 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    optional int32 is_hidden = 6 [(validate.rules).int32.gte = 0];
+    optional string component = 7 [(validate.rules).string = {max_len: 100}];
+    optional string permission = 8 [(validate.rules).string = {max_len: 100}];
+    optional int32 sort = 9 [(validate.rules).int32 = {gte: 0}];
+    optional string icon = 10 [(validate.rules).string = {min_len: 0, max_len: 100}];
+    string title = 11 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    optional int32 is_cache = 12 [(validate.rules).int32.gte = 0];
+    optional string link_url = 13 [(validate.rules).string = {min_len: 0, max_len: 100}];
+    optional int32 is_affix = 14 [(validate.rules).int32.gte = 0];
+    optional int32 link_type = 15 [(validate.rules).int32.gte = 0];
+    optional string api_resource = 16 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建菜单
+message UpdateMenuResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 获取菜单
+message GetMenuRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 请求 - 删除菜单
+message DeleteMenuRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 删除菜单
+message DeleteMenuResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+message MenuTree {
+  uint64 id = 1;
+  string name = 2;
+  string title = 3;
+  uint64 parent_id = 4;
+  repeated MenuTree children = 5;
+}
+
+// 请求 - 获取树形菜单
+message ListMenuTreeRequest {
+  uint64 id = 1;
+}
+
+// 回应 - 获取树形菜单
+message ListMenuTreeResponse {
+  repeated Menu items = 1;
+  optional int64 total = 2;
+}
