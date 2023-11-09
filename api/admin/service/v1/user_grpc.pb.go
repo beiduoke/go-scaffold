@@ -19,18 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	UserService_GetUserInfo_FullMethodName                = "/admin.service.v1.UserService/GetUserInfo"
-	UserService_GetUserProfile_FullMethodName             = "/admin.service.v1.UserService/GetUserProfile"
-	UserService_ListUserRole_FullMethodName               = "/admin.service.v1.UserService/ListUserRole"
-	UserService_ListUserRoleMenuRouterTree_FullMethodName = "/admin.service.v1.UserService/ListUserRoleMenuRouterTree"
-	UserService_ListUserRoleMenuTree_FullMethodName       = "/admin.service.v1.UserService/ListUserRoleMenuTree"
-	UserService_ListUserRolePermission_FullMethodName     = "/admin.service.v1.UserService/ListUserRolePermission"
-	UserService_ListUser_FullMethodName                   = "/admin.service.v1.UserService/ListUser"
-	UserService_CreateUser_FullMethodName                 = "/admin.service.v1.UserService/CreateUser"
-	UserService_GetUser_FullMethodName                    = "/admin.service.v1.UserService/GetUser"
-	UserService_UpdateUser_FullMethodName                 = "/admin.service.v1.UserService/UpdateUser"
-	UserService_DeleteUser_FullMethodName                 = "/admin.service.v1.UserService/DeleteUser"
-	UserService_ExistUserName_FullMethodName              = "/admin.service.v1.UserService/ExistUserName"
+	UserService_ListUser_FullMethodName        = "/admin.service.v1.UserService/ListUser"
+	UserService_CreateUser_FullMethodName      = "/admin.service.v1.UserService/CreateUser"
+	UserService_GetUser_FullMethodName         = "/admin.service.v1.UserService/GetUser"
+	UserService_UpdateUser_FullMethodName      = "/admin.service.v1.UserService/UpdateUser"
+	UserService_DeleteUser_FullMethodName      = "/admin.service.v1.UserService/DeleteUser"
+	UserService_ExistUserByName_FullMethodName = "/admin.service.v1.UserService/ExistUserByName"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -38,18 +32,6 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
 	// User 用户模块
-	// 当前登录用户概述
-	GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
-	// 当前登录用户概述
-	GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*GetUserProfileResponse, error)
-	// 当前登录用户拥有角色
-	ListUserRole(ctx context.Context, in *ListUserRoleRequest, opts ...grpc.CallOption) (*ListUserRoleResponse, error)
-	// 获取角色菜单路由树形列表
-	ListUserRoleMenuRouterTree(ctx context.Context, in *ListUserRoleMenuRouterTreeRequest, opts ...grpc.CallOption) (*ListUserRoleMenuRouterTreeResponse, error)
-	// 获取角色菜单路由树形列表
-	ListUserRoleMenuTree(ctx context.Context, in *ListUserRoleMenuTreeRequest, opts ...grpc.CallOption) (*ListUserRoleMenuTreeResponse, error)
-	// 获取角色权限列表
-	ListUserRolePermission(ctx context.Context, in *ListUserRolePermissionRequest, opts ...grpc.CallOption) (*ListUserRolePermissionResponse, error)
 	// 列表用户
 	ListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserResponse, error)
 	// 创建用户
@@ -61,7 +43,7 @@ type UserServiceClient interface {
 	// 删除用户
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
 	// 验证用户名是否存在
-	ExistUserName(ctx context.Context, in *ExistUserNameRequest, opts ...grpc.CallOption) (*ExistUserNameResponse, error)
+	ExistUserByName(ctx context.Context, in *ExistUserByNameRequest, opts ...grpc.CallOption) (*ExistUserByNameResponse, error)
 }
 
 type userServiceClient struct {
@@ -70,60 +52,6 @@ type userServiceClient struct {
 
 func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 	return &userServiceClient{cc}
-}
-
-func (c *userServiceClient) GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error) {
-	out := new(GetUserInfoResponse)
-	err := c.cc.Invoke(ctx, UserService_GetUserInfo_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*GetUserProfileResponse, error) {
-	out := new(GetUserProfileResponse)
-	err := c.cc.Invoke(ctx, UserService_GetUserProfile_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) ListUserRole(ctx context.Context, in *ListUserRoleRequest, opts ...grpc.CallOption) (*ListUserRoleResponse, error) {
-	out := new(ListUserRoleResponse)
-	err := c.cc.Invoke(ctx, UserService_ListUserRole_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) ListUserRoleMenuRouterTree(ctx context.Context, in *ListUserRoleMenuRouterTreeRequest, opts ...grpc.CallOption) (*ListUserRoleMenuRouterTreeResponse, error) {
-	out := new(ListUserRoleMenuRouterTreeResponse)
-	err := c.cc.Invoke(ctx, UserService_ListUserRoleMenuRouterTree_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) ListUserRoleMenuTree(ctx context.Context, in *ListUserRoleMenuTreeRequest, opts ...grpc.CallOption) (*ListUserRoleMenuTreeResponse, error) {
-	out := new(ListUserRoleMenuTreeResponse)
-	err := c.cc.Invoke(ctx, UserService_ListUserRoleMenuTree_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) ListUserRolePermission(ctx context.Context, in *ListUserRolePermissionRequest, opts ...grpc.CallOption) (*ListUserRolePermissionResponse, error) {
-	out := new(ListUserRolePermissionResponse)
-	err := c.cc.Invoke(ctx, UserService_ListUserRolePermission_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *userServiceClient) ListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserResponse, error) {
@@ -171,9 +99,9 @@ func (c *userServiceClient) DeleteUser(ctx context.Context, in *DeleteUserReques
 	return out, nil
 }
 
-func (c *userServiceClient) ExistUserName(ctx context.Context, in *ExistUserNameRequest, opts ...grpc.CallOption) (*ExistUserNameResponse, error) {
-	out := new(ExistUserNameResponse)
-	err := c.cc.Invoke(ctx, UserService_ExistUserName_FullMethodName, in, out, opts...)
+func (c *userServiceClient) ExistUserByName(ctx context.Context, in *ExistUserByNameRequest, opts ...grpc.CallOption) (*ExistUserByNameResponse, error) {
+	out := new(ExistUserByNameResponse)
+	err := c.cc.Invoke(ctx, UserService_ExistUserByName_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -185,18 +113,6 @@ func (c *userServiceClient) ExistUserName(ctx context.Context, in *ExistUserName
 // for forward compatibility
 type UserServiceServer interface {
 	// User 用户模块
-	// 当前登录用户概述
-	GetUserInfo(context.Context, *GetUserInfoRequest) (*GetUserInfoResponse, error)
-	// 当前登录用户概述
-	GetUserProfile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error)
-	// 当前登录用户拥有角色
-	ListUserRole(context.Context, *ListUserRoleRequest) (*ListUserRoleResponse, error)
-	// 获取角色菜单路由树形列表
-	ListUserRoleMenuRouterTree(context.Context, *ListUserRoleMenuRouterTreeRequest) (*ListUserRoleMenuRouterTreeResponse, error)
-	// 获取角色菜单路由树形列表
-	ListUserRoleMenuTree(context.Context, *ListUserRoleMenuTreeRequest) (*ListUserRoleMenuTreeResponse, error)
-	// 获取角色权限列表
-	ListUserRolePermission(context.Context, *ListUserRolePermissionRequest) (*ListUserRolePermissionResponse, error)
 	// 列表用户
 	ListUser(context.Context, *ListUserRequest) (*ListUserResponse, error)
 	// 创建用户
@@ -208,7 +124,7 @@ type UserServiceServer interface {
 	// 删除用户
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
 	// 验证用户名是否存在
-	ExistUserName(context.Context, *ExistUserNameRequest) (*ExistUserNameResponse, error)
+	ExistUserByName(context.Context, *ExistUserByNameRequest) (*ExistUserByNameResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -216,24 +132,6 @@ type UserServiceServer interface {
 type UnimplementedUserServiceServer struct {
 }
 
-func (UnimplementedUserServiceServer) GetUserInfo(context.Context, *GetUserInfoRequest) (*GetUserInfoResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfo not implemented")
-}
-func (UnimplementedUserServiceServer) GetUserProfile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserProfile not implemented")
-}
-func (UnimplementedUserServiceServer) ListUserRole(context.Context, *ListUserRoleRequest) (*ListUserRoleResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListUserRole not implemented")
-}
-func (UnimplementedUserServiceServer) ListUserRoleMenuRouterTree(context.Context, *ListUserRoleMenuRouterTreeRequest) (*ListUserRoleMenuRouterTreeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListUserRoleMenuRouterTree not implemented")
-}
-func (UnimplementedUserServiceServer) ListUserRoleMenuTree(context.Context, *ListUserRoleMenuTreeRequest) (*ListUserRoleMenuTreeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListUserRoleMenuTree not implemented")
-}
-func (UnimplementedUserServiceServer) ListUserRolePermission(context.Context, *ListUserRolePermissionRequest) (*ListUserRolePermissionResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListUserRolePermission not implemented")
-}
 func (UnimplementedUserServiceServer) ListUser(context.Context, *ListUserRequest) (*ListUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUser not implemented")
 }
@@ -249,8 +147,8 @@ func (UnimplementedUserServiceServer) UpdateUser(context.Context, *UpdateUserReq
 func (UnimplementedUserServiceServer) DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
 }
-func (UnimplementedUserServiceServer) ExistUserName(context.Context, *ExistUserNameRequest) (*ExistUserNameResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ExistUserName not implemented")
+func (UnimplementedUserServiceServer) ExistUserByName(context.Context, *ExistUserByNameRequest) (*ExistUserByNameResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ExistUserByName not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -263,114 +161,6 @@ type UnsafeUserServiceServer interface {
 
 func RegisterUserServiceServer(s grpc.ServiceRegistrar, srv UserServiceServer) {
 	s.RegisterService(&UserService_ServiceDesc, srv)
-}
-
-func _UserService_GetUserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserInfoRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).GetUserInfo(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_GetUserInfo_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetUserInfo(ctx, req.(*GetUserInfoRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_GetUserProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserProfileRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).GetUserProfile(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_GetUserProfile_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetUserProfile(ctx, req.(*GetUserProfileRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_ListUserRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListUserRoleRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).ListUserRole(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_ListUserRole_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).ListUserRole(ctx, req.(*ListUserRoleRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_ListUserRoleMenuRouterTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListUserRoleMenuRouterTreeRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).ListUserRoleMenuRouterTree(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_ListUserRoleMenuRouterTree_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).ListUserRoleMenuRouterTree(ctx, req.(*ListUserRoleMenuRouterTreeRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_ListUserRoleMenuTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListUserRoleMenuTreeRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).ListUserRoleMenuTree(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_ListUserRoleMenuTree_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).ListUserRoleMenuTree(ctx, req.(*ListUserRoleMenuTreeRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_ListUserRolePermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListUserRolePermissionRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).ListUserRolePermission(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_ListUserRolePermission_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).ListUserRolePermission(ctx, req.(*ListUserRolePermissionRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _UserService_ListUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -463,20 +253,20 @@ func _UserService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_ExistUserName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ExistUserNameRequest)
+func _UserService_ExistUserByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ExistUserByNameRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).ExistUserName(ctx, in)
+		return srv.(UserServiceServer).ExistUserByName(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserService_ExistUserName_FullMethodName,
+		FullMethod: UserService_ExistUserByName_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).ExistUserName(ctx, req.(*ExistUserNameRequest))
+		return srv.(UserServiceServer).ExistUserByName(ctx, req.(*ExistUserByNameRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -488,30 +278,6 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "admin.service.v1.UserService",
 	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "GetUserInfo",
-			Handler:    _UserService_GetUserInfo_Handler,
-		},
-		{
-			MethodName: "GetUserProfile",
-			Handler:    _UserService_GetUserProfile_Handler,
-		},
-		{
-			MethodName: "ListUserRole",
-			Handler:    _UserService_ListUserRole_Handler,
-		},
-		{
-			MethodName: "ListUserRoleMenuRouterTree",
-			Handler:    _UserService_ListUserRoleMenuRouterTree_Handler,
-		},
-		{
-			MethodName: "ListUserRoleMenuTree",
-			Handler:    _UserService_ListUserRoleMenuTree_Handler,
-		},
-		{
-			MethodName: "ListUserRolePermission",
-			Handler:    _UserService_ListUserRolePermission_Handler,
-		},
 		{
 			MethodName: "ListUser",
 			Handler:    _UserService_ListUser_Handler,
@@ -533,8 +299,8 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_DeleteUser_Handler,
 		},
 		{
-			MethodName: "ExistUserName",
-			Handler:    _UserService_ExistUserName_Handler,
+			MethodName: "ExistUserByName",
+			Handler:    _UserService_ExistUserByName_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

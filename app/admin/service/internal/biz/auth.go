@@ -18,7 +18,7 @@ type AuthRepo interface {
 	// 用户认证
 	Register(context.Context, *User) error
 	Logout(context.Context) error
-	LoginByPassword(ctx context.Context, access, password string) (*LoginResult, error)
+	LoginByPassword(context.Context, *User) (*LoginResult, error)
 	// 访问用户相关
 	AccessInfo(context.Context) (*User, error)
 	AccessRoles(context.Context) ([]*Role, error)
@@ -38,8 +38,8 @@ func NewAuthUsecase(logger log.Logger, biz *Biz) *AuthUsecase {
 }
 
 // Login 登录-密码登录
-func (ac *AuthUsecase) LoginByPassword(ctx context.Context, access, password string) (*LoginResult, error) {
-	return ac.biz.authRepo.LoginByPassword(ctx, access, password)
+func (ac *AuthUsecase) LoginByPassword(ctx context.Context, g *User) (*LoginResult, error) {
+	return ac.biz.authRepo.LoginByPassword(ctx, g)
 }
 
 // Login 登录-密码登录

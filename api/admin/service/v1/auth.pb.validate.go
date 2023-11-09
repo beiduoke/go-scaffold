@@ -1156,6 +1156,1862 @@ var _ interface {
 	ErrorName() string
 } = LoginByEmailRequestValidationError{}
 
+// Validate checks the field values on GetAuthInfoRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetAuthInfoRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetAuthInfoRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetAuthInfoRequestMultiError, or nil if none found.
+func (m *GetAuthInfoRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetAuthInfoRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return GetAuthInfoRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetAuthInfoRequestMultiError is an error wrapping multiple validation errors
+// returned by GetAuthInfoRequest.ValidateAll() if the designated constraints
+// aren't met.
+type GetAuthInfoRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetAuthInfoRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetAuthInfoRequestMultiError) AllErrors() []error { return m }
+
+// GetAuthInfoRequestValidationError is the validation error returned by
+// GetAuthInfoRequest.Validate if the designated constraints aren't met.
+type GetAuthInfoRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetAuthInfoRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetAuthInfoRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetAuthInfoRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetAuthInfoRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetAuthInfoRequestValidationError) ErrorName() string {
+	return "GetAuthInfoRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetAuthInfoRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetAuthInfoRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetAuthInfoRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetAuthInfoRequestValidationError{}
+
+// Validate checks the field values on GetAuthInfoResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetAuthInfoResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetAuthInfoResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetAuthInfoResponseMultiError, or nil if none found.
+func (m *GetAuthInfoResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetAuthInfoResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetRoles() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GetAuthInfoResponseValidationError{
+						field:  fmt.Sprintf("Roles[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GetAuthInfoResponseValidationError{
+						field:  fmt.Sprintf("Roles[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetAuthInfoResponseValidationError{
+					field:  fmt.Sprintf("Roles[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	// no validation rules for Name
+
+	// no validation rules for NickName
+
+	// no validation rules for RealName
+
+	// no validation rules for Birthday
+
+	// no validation rules for Gender
+
+	// no validation rules for Phone
+
+	// no validation rules for Email
+
+	// no validation rules for Avatar
+
+	// no validation rules for State
+
+	if len(errors) > 0 {
+		return GetAuthInfoResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetAuthInfoResponseMultiError is an error wrapping multiple validation
+// errors returned by GetAuthInfoResponse.ValidateAll() if the designated
+// constraints aren't met.
+type GetAuthInfoResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetAuthInfoResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetAuthInfoResponseMultiError) AllErrors() []error { return m }
+
+// GetAuthInfoResponseValidationError is the validation error returned by
+// GetAuthInfoResponse.Validate if the designated constraints aren't met.
+type GetAuthInfoResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetAuthInfoResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetAuthInfoResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetAuthInfoResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetAuthInfoResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetAuthInfoResponseValidationError) ErrorName() string {
+	return "GetAuthInfoResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetAuthInfoResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetAuthInfoResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetAuthInfoResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetAuthInfoResponseValidationError{}
+
+// Validate checks the field values on GetAuthProfileRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetAuthProfileRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetAuthProfileRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetAuthProfileRequestMultiError, or nil if none found.
+func (m *GetAuthProfileRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetAuthProfileRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return GetAuthProfileRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetAuthProfileRequestMultiError is an error wrapping multiple validation
+// errors returned by GetAuthProfileRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GetAuthProfileRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetAuthProfileRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetAuthProfileRequestMultiError) AllErrors() []error { return m }
+
+// GetAuthProfileRequestValidationError is the validation error returned by
+// GetAuthProfileRequest.Validate if the designated constraints aren't met.
+type GetAuthProfileRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetAuthProfileRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetAuthProfileRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetAuthProfileRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetAuthProfileRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetAuthProfileRequestValidationError) ErrorName() string {
+	return "GetAuthProfileRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetAuthProfileRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetAuthProfileRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetAuthProfileRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetAuthProfileRequestValidationError{}
+
+// Validate checks the field values on GetAuthProfileResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetAuthProfileResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetAuthProfileResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetAuthProfileResponseMultiError, or nil if none found.
+func (m *GetAuthProfileResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetAuthProfileResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetUser()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, GetAuthProfileResponseValidationError{
+					field:  "User",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, GetAuthProfileResponseValidationError{
+					field:  "User",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return GetAuthProfileResponseValidationError{
+				field:  "User",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	for idx, item := range m.GetRoles() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GetAuthProfileResponseValidationError{
+						field:  fmt.Sprintf("Roles[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GetAuthProfileResponseValidationError{
+						field:  fmt.Sprintf("Roles[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetAuthProfileResponseValidationError{
+					field:  fmt.Sprintf("Roles[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return GetAuthProfileResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetAuthProfileResponseMultiError is an error wrapping multiple validation
+// errors returned by GetAuthProfileResponse.ValidateAll() if the designated
+// constraints aren't met.
+type GetAuthProfileResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetAuthProfileResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetAuthProfileResponseMultiError) AllErrors() []error { return m }
+
+// GetAuthProfileResponseValidationError is the validation error returned by
+// GetAuthProfileResponse.Validate if the designated constraints aren't met.
+type GetAuthProfileResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetAuthProfileResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetAuthProfileResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetAuthProfileResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetAuthProfileResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetAuthProfileResponseValidationError) ErrorName() string {
+	return "GetAuthProfileResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetAuthProfileResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetAuthProfileResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetAuthProfileResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetAuthProfileResponseValidationError{}
+
+// Validate checks the field values on ListAuthRoleRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListAuthRoleRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListAuthRoleRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListAuthRoleRequestMultiError, or nil if none found.
+func (m *ListAuthRoleRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListAuthRoleRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return ListAuthRoleRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListAuthRoleRequestMultiError is an error wrapping multiple validation
+// errors returned by ListAuthRoleRequest.ValidateAll() if the designated
+// constraints aren't met.
+type ListAuthRoleRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListAuthRoleRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListAuthRoleRequestMultiError) AllErrors() []error { return m }
+
+// ListAuthRoleRequestValidationError is the validation error returned by
+// ListAuthRoleRequest.Validate if the designated constraints aren't met.
+type ListAuthRoleRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListAuthRoleRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListAuthRoleRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListAuthRoleRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListAuthRoleRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListAuthRoleRequestValidationError) ErrorName() string {
+	return "ListAuthRoleRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListAuthRoleRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListAuthRoleRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListAuthRoleRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListAuthRoleRequestValidationError{}
+
+// Validate checks the field values on ListAuthRoleResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListAuthRoleResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListAuthRoleResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListAuthRoleResponseMultiError, or nil if none found.
+func (m *ListAuthRoleResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListAuthRoleResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetItems() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListAuthRoleResponseValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListAuthRoleResponseValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListAuthRoleResponseValidationError{
+					field:  fmt.Sprintf("Items[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.Total != nil {
+		// no validation rules for Total
+	}
+
+	if len(errors) > 0 {
+		return ListAuthRoleResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListAuthRoleResponseMultiError is an error wrapping multiple validation
+// errors returned by ListAuthRoleResponse.ValidateAll() if the designated
+// constraints aren't met.
+type ListAuthRoleResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListAuthRoleResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListAuthRoleResponseMultiError) AllErrors() []error { return m }
+
+// ListAuthRoleResponseValidationError is the validation error returned by
+// ListAuthRoleResponse.Validate if the designated constraints aren't met.
+type ListAuthRoleResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListAuthRoleResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListAuthRoleResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListAuthRoleResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListAuthRoleResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListAuthRoleResponseValidationError) ErrorName() string {
+	return "ListAuthRoleResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListAuthRoleResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListAuthRoleResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListAuthRoleResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListAuthRoleResponseValidationError{}
+
+// Validate checks the field values on ListAuthRoleMenuRouterTreeRequest with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the first error encountered is returned, or nil if there are
+// no violations.
+func (m *ListAuthRoleMenuRouterTreeRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListAuthRoleMenuRouterTreeRequest
+// with the rules defined in the proto definition for this message. If any
+// rules are violated, the result is a list of violation errors wrapped in
+// ListAuthRoleMenuRouterTreeRequestMultiError, or nil if none found.
+func (m *ListAuthRoleMenuRouterTreeRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListAuthRoleMenuRouterTreeRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetRoleId() < 0 {
+		err := ListAuthRoleMenuRouterTreeRequestValidationError{
+			field:  "RoleId",
+			reason: "value must be greater than or equal to 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.MenuParentId != nil {
+
+		if m.GetMenuParentId() < 0 {
+			err := ListAuthRoleMenuRouterTreeRequestValidationError{
+				field:  "MenuParentId",
+				reason: "value must be greater than or equal to 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListAuthRoleMenuRouterTreeRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListAuthRoleMenuRouterTreeRequestMultiError is an error wrapping multiple
+// validation errors returned by
+// ListAuthRoleMenuRouterTreeRequest.ValidateAll() if the designated
+// constraints aren't met.
+type ListAuthRoleMenuRouterTreeRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListAuthRoleMenuRouterTreeRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListAuthRoleMenuRouterTreeRequestMultiError) AllErrors() []error { return m }
+
+// ListAuthRoleMenuRouterTreeRequestValidationError is the validation error
+// returned by ListAuthRoleMenuRouterTreeRequest.Validate if the designated
+// constraints aren't met.
+type ListAuthRoleMenuRouterTreeRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListAuthRoleMenuRouterTreeRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListAuthRoleMenuRouterTreeRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListAuthRoleMenuRouterTreeRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListAuthRoleMenuRouterTreeRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListAuthRoleMenuRouterTreeRequestValidationError) ErrorName() string {
+	return "ListAuthRoleMenuRouterTreeRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListAuthRoleMenuRouterTreeRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListAuthRoleMenuRouterTreeRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListAuthRoleMenuRouterTreeRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListAuthRoleMenuRouterTreeRequestValidationError{}
+
+// Validate checks the field values on ListAuthRoleMenuTreeResponseDeprecated
+// with the rules defined in the proto definition for this message. If any
+// rules are violated, the first error encountered is returned, or nil if
+// there are no violations.
+func (m *ListAuthRoleMenuTreeResponseDeprecated) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on
+// ListAuthRoleMenuTreeResponseDeprecated with the rules defined in the proto
+// definition for this message. If any rules are violated, the result is a
+// list of violation errors wrapped in
+// ListAuthRoleMenuTreeResponseDeprecatedMultiError, or nil if none found.
+func (m *ListAuthRoleMenuTreeResponseDeprecated) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListAuthRoleMenuTreeResponseDeprecated) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetItems() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListAuthRoleMenuTreeResponseDeprecatedValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListAuthRoleMenuTreeResponseDeprecatedValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListAuthRoleMenuTreeResponseDeprecatedValidationError{
+					field:  fmt.Sprintf("Items[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.Total != nil {
+		// no validation rules for Total
+	}
+
+	if len(errors) > 0 {
+		return ListAuthRoleMenuTreeResponseDeprecatedMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListAuthRoleMenuTreeResponseDeprecatedMultiError is an error wrapping
+// multiple validation errors returned by
+// ListAuthRoleMenuTreeResponseDeprecated.ValidateAll() if the designated
+// constraints aren't met.
+type ListAuthRoleMenuTreeResponseDeprecatedMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListAuthRoleMenuTreeResponseDeprecatedMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListAuthRoleMenuTreeResponseDeprecatedMultiError) AllErrors() []error { return m }
+
+// ListAuthRoleMenuTreeResponseDeprecatedValidationError is the validation
+// error returned by ListAuthRoleMenuTreeResponseDeprecated.Validate if the
+// designated constraints aren't met.
+type ListAuthRoleMenuTreeResponseDeprecatedValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListAuthRoleMenuTreeResponseDeprecatedValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListAuthRoleMenuTreeResponseDeprecatedValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListAuthRoleMenuTreeResponseDeprecatedValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListAuthRoleMenuTreeResponseDeprecatedValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListAuthRoleMenuTreeResponseDeprecatedValidationError) ErrorName() string {
+	return "ListAuthRoleMenuTreeResponseDeprecatedValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListAuthRoleMenuTreeResponseDeprecatedValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListAuthRoleMenuTreeResponseDeprecated.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListAuthRoleMenuTreeResponseDeprecatedValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListAuthRoleMenuTreeResponseDeprecatedValidationError{}
+
+// Validate checks the field values on MenuRouter with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *MenuRouter) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on MenuRouter with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in MenuRouterMultiError, or
+// nil if none found.
+func (m *MenuRouter) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *MenuRouter) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Name
+
+	// no validation rules for Path
+
+	if all {
+		switch v := interface{}(m.GetMeta()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, MenuRouterValidationError{
+					field:  "Meta",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, MenuRouterValidationError{
+					field:  "Meta",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetMeta()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return MenuRouterValidationError{
+				field:  "Meta",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	for idx, item := range m.GetChildren() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, MenuRouterValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, MenuRouterValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return MenuRouterValidationError{
+					field:  fmt.Sprintf("Children[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.Component != nil {
+		// no validation rules for Component
+	}
+
+	if m.Redirect != nil {
+		// no validation rules for Redirect
+	}
+
+	if m.Id != nil {
+		// no validation rules for Id
+	}
+
+	if m.ParentId != nil {
+		// no validation rules for ParentId
+	}
+
+	if len(errors) > 0 {
+		return MenuRouterMultiError(errors)
+	}
+
+	return nil
+}
+
+// MenuRouterMultiError is an error wrapping multiple validation errors
+// returned by MenuRouter.ValidateAll() if the designated constraints aren't met.
+type MenuRouterMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m MenuRouterMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m MenuRouterMultiError) AllErrors() []error { return m }
+
+// MenuRouterValidationError is the validation error returned by
+// MenuRouter.Validate if the designated constraints aren't met.
+type MenuRouterValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e MenuRouterValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e MenuRouterValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e MenuRouterValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e MenuRouterValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e MenuRouterValidationError) ErrorName() string { return "MenuRouterValidationError" }
+
+// Error satisfies the builtin error interface
+func (e MenuRouterValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sMenuRouter.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = MenuRouterValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = MenuRouterValidationError{}
+
+// Validate checks the field values on ListAuthRoleMenuRouterTreeResponse with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the first error encountered is returned, or nil if there are
+// no violations.
+func (m *ListAuthRoleMenuRouterTreeResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListAuthRoleMenuRouterTreeResponse
+// with the rules defined in the proto definition for this message. If any
+// rules are violated, the result is a list of violation errors wrapped in
+// ListAuthRoleMenuRouterTreeResponseMultiError, or nil if none found.
+func (m *ListAuthRoleMenuRouterTreeResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListAuthRoleMenuRouterTreeResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetItems() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListAuthRoleMenuRouterTreeResponseValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListAuthRoleMenuRouterTreeResponseValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListAuthRoleMenuRouterTreeResponseValidationError{
+					field:  fmt.Sprintf("Items[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.Total != nil {
+		// no validation rules for Total
+	}
+
+	if len(errors) > 0 {
+		return ListAuthRoleMenuRouterTreeResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListAuthRoleMenuRouterTreeResponseMultiError is an error wrapping multiple
+// validation errors returned by
+// ListAuthRoleMenuRouterTreeResponse.ValidateAll() if the designated
+// constraints aren't met.
+type ListAuthRoleMenuRouterTreeResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListAuthRoleMenuRouterTreeResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListAuthRoleMenuRouterTreeResponseMultiError) AllErrors() []error { return m }
+
+// ListAuthRoleMenuRouterTreeResponseValidationError is the validation error
+// returned by ListAuthRoleMenuRouterTreeResponse.Validate if the designated
+// constraints aren't met.
+type ListAuthRoleMenuRouterTreeResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListAuthRoleMenuRouterTreeResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListAuthRoleMenuRouterTreeResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListAuthRoleMenuRouterTreeResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListAuthRoleMenuRouterTreeResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListAuthRoleMenuRouterTreeResponseValidationError) ErrorName() string {
+	return "ListAuthRoleMenuRouterTreeResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListAuthRoleMenuRouterTreeResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListAuthRoleMenuRouterTreeResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListAuthRoleMenuRouterTreeResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListAuthRoleMenuRouterTreeResponseValidationError{}
+
+// Validate checks the field values on ListAuthRoleMenuTreeRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListAuthRoleMenuTreeRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListAuthRoleMenuTreeRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListAuthRoleMenuTreeRequestMultiError, or nil if none found.
+func (m *ListAuthRoleMenuTreeRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListAuthRoleMenuTreeRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetRoleId() < 0 {
+		err := ListAuthRoleMenuTreeRequestValidationError{
+			field:  "RoleId",
+			reason: "value must be greater than or equal to 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.MenuParentId != nil {
+
+		if m.GetMenuParentId() < 0 {
+			err := ListAuthRoleMenuTreeRequestValidationError{
+				field:  "MenuParentId",
+				reason: "value must be greater than or equal to 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListAuthRoleMenuTreeRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListAuthRoleMenuTreeRequestMultiError is an error wrapping multiple
+// validation errors returned by ListAuthRoleMenuTreeRequest.ValidateAll() if
+// the designated constraints aren't met.
+type ListAuthRoleMenuTreeRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListAuthRoleMenuTreeRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListAuthRoleMenuTreeRequestMultiError) AllErrors() []error { return m }
+
+// ListAuthRoleMenuTreeRequestValidationError is the validation error returned
+// by ListAuthRoleMenuTreeRequest.Validate if the designated constraints
+// aren't met.
+type ListAuthRoleMenuTreeRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListAuthRoleMenuTreeRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListAuthRoleMenuTreeRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListAuthRoleMenuTreeRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListAuthRoleMenuTreeRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListAuthRoleMenuTreeRequestValidationError) ErrorName() string {
+	return "ListAuthRoleMenuTreeRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListAuthRoleMenuTreeRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListAuthRoleMenuTreeRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListAuthRoleMenuTreeRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListAuthRoleMenuTreeRequestValidationError{}
+
+// Validate checks the field values on ListAuthRoleMenuTreeResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListAuthRoleMenuTreeResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListAuthRoleMenuTreeResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListAuthRoleMenuTreeResponseMultiError, or nil if none found.
+func (m *ListAuthRoleMenuTreeResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListAuthRoleMenuTreeResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetItems() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListAuthRoleMenuTreeResponseValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListAuthRoleMenuTreeResponseValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListAuthRoleMenuTreeResponseValidationError{
+					field:  fmt.Sprintf("Items[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.Total != nil {
+		// no validation rules for Total
+	}
+
+	if len(errors) > 0 {
+		return ListAuthRoleMenuTreeResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListAuthRoleMenuTreeResponseMultiError is an error wrapping multiple
+// validation errors returned by ListAuthRoleMenuTreeResponse.ValidateAll() if
+// the designated constraints aren't met.
+type ListAuthRoleMenuTreeResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListAuthRoleMenuTreeResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListAuthRoleMenuTreeResponseMultiError) AllErrors() []error { return m }
+
+// ListAuthRoleMenuTreeResponseValidationError is the validation error returned
+// by ListAuthRoleMenuTreeResponse.Validate if the designated constraints
+// aren't met.
+type ListAuthRoleMenuTreeResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListAuthRoleMenuTreeResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListAuthRoleMenuTreeResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListAuthRoleMenuTreeResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListAuthRoleMenuTreeResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListAuthRoleMenuTreeResponseValidationError) ErrorName() string {
+	return "ListAuthRoleMenuTreeResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListAuthRoleMenuTreeResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListAuthRoleMenuTreeResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListAuthRoleMenuTreeResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListAuthRoleMenuTreeResponseValidationError{}
+
+// Validate checks the field values on ListAuthRolePermissionRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListAuthRolePermissionRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListAuthRolePermissionRequest with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// ListAuthRolePermissionRequestMultiError, or nil if none found.
+func (m *ListAuthRolePermissionRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListAuthRolePermissionRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetRoleId() < 0 {
+		err := ListAuthRolePermissionRequestValidationError{
+			field:  "RoleId",
+			reason: "value must be greater than or equal to 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return ListAuthRolePermissionRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListAuthRolePermissionRequestMultiError is an error wrapping multiple
+// validation errors returned by ListAuthRolePermissionRequest.ValidateAll()
+// if the designated constraints aren't met.
+type ListAuthRolePermissionRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListAuthRolePermissionRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListAuthRolePermissionRequestMultiError) AllErrors() []error { return m }
+
+// ListAuthRolePermissionRequestValidationError is the validation error
+// returned by ListAuthRolePermissionRequest.Validate if the designated
+// constraints aren't met.
+type ListAuthRolePermissionRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListAuthRolePermissionRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListAuthRolePermissionRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListAuthRolePermissionRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListAuthRolePermissionRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListAuthRolePermissionRequestValidationError) ErrorName() string {
+	return "ListAuthRolePermissionRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListAuthRolePermissionRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListAuthRolePermissionRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListAuthRolePermissionRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListAuthRolePermissionRequestValidationError{}
+
+// Validate checks the field values on ListAuthRolePermissionResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListAuthRolePermissionResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListAuthRolePermissionResponse with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// ListAuthRolePermissionResponseMultiError, or nil if none found.
+func (m *ListAuthRolePermissionResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListAuthRolePermissionResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.Total != nil {
+		// no validation rules for Total
+	}
+
+	if len(errors) > 0 {
+		return ListAuthRolePermissionResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListAuthRolePermissionResponseMultiError is an error wrapping multiple
+// validation errors returned by ListAuthRolePermissionResponse.ValidateAll()
+// if the designated constraints aren't met.
+type ListAuthRolePermissionResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListAuthRolePermissionResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListAuthRolePermissionResponseMultiError) AllErrors() []error { return m }
+
+// ListAuthRolePermissionResponseValidationError is the validation error
+// returned by ListAuthRolePermissionResponse.Validate if the designated
+// constraints aren't met.
+type ListAuthRolePermissionResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListAuthRolePermissionResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListAuthRolePermissionResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListAuthRolePermissionResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListAuthRolePermissionResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListAuthRolePermissionResponseValidationError) ErrorName() string {
+	return "ListAuthRolePermissionResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListAuthRolePermissionResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListAuthRolePermissionResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListAuthRolePermissionResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListAuthRolePermissionResponseValidationError{}
+
 // Validate checks the field values on RegisterRequest_Auth with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1722,3 +3578,465 @@ var _ interface {
 } = LoginByEmailRequest_AuthValidationError{}
 
 var _LoginByEmailRequest_Auth_Code_Pattern = regexp.MustCompile("^[0-9]{4,6}$")
+
+// Validate checks the field values on
+// ListAuthRoleMenuTreeResponseDeprecated_MenuMeta with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *ListAuthRoleMenuTreeResponseDeprecated_MenuMeta) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on
+// ListAuthRoleMenuTreeResponseDeprecated_MenuMeta with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in
+// ListAuthRoleMenuTreeResponseDeprecated_MenuMetaMultiError, or nil if none found.
+func (m *ListAuthRoleMenuTreeResponseDeprecated_MenuMeta) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListAuthRoleMenuTreeResponseDeprecated_MenuMeta) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Title
+
+	// no validation rules for DynamicLevel
+
+	// no validation rules for RealPath
+
+	// no validation rules for IgnoreKeepAlive
+
+	// no validation rules for Affix
+
+	// no validation rules for Icon
+
+	// no validation rules for FrameSrc
+
+	// no validation rules for TransitionName
+
+	// no validation rules for HideBreadcrumb
+
+	// no validation rules for CarryParam
+
+	// no validation rules for HideChildrenInMenu
+
+	// no validation rules for CurrentActiveMenu
+
+	// no validation rules for HideTab
+
+	// no validation rules for HideMenu
+
+	// no validation rules for OrderNo
+
+	// no validation rules for IgnoreRoute
+
+	// no validation rules for HidePathforChildren
+
+	if len(errors) > 0 {
+		return ListAuthRoleMenuTreeResponseDeprecated_MenuMetaMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListAuthRoleMenuTreeResponseDeprecated_MenuMetaMultiError is an error
+// wrapping multiple validation errors returned by
+// ListAuthRoleMenuTreeResponseDeprecated_MenuMeta.ValidateAll() if the
+// designated constraints aren't met.
+type ListAuthRoleMenuTreeResponseDeprecated_MenuMetaMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListAuthRoleMenuTreeResponseDeprecated_MenuMetaMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListAuthRoleMenuTreeResponseDeprecated_MenuMetaMultiError) AllErrors() []error { return m }
+
+// ListAuthRoleMenuTreeResponseDeprecated_MenuMetaValidationError is the
+// validation error returned by
+// ListAuthRoleMenuTreeResponseDeprecated_MenuMeta.Validate if the designated
+// constraints aren't met.
+type ListAuthRoleMenuTreeResponseDeprecated_MenuMetaValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListAuthRoleMenuTreeResponseDeprecated_MenuMetaValidationError) Field() string {
+	return e.field
+}
+
+// Reason function returns reason value.
+func (e ListAuthRoleMenuTreeResponseDeprecated_MenuMetaValidationError) Reason() string {
+	return e.reason
+}
+
+// Cause function returns cause value.
+func (e ListAuthRoleMenuTreeResponseDeprecated_MenuMetaValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListAuthRoleMenuTreeResponseDeprecated_MenuMetaValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListAuthRoleMenuTreeResponseDeprecated_MenuMetaValidationError) ErrorName() string {
+	return "ListAuthRoleMenuTreeResponseDeprecated_MenuMetaValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListAuthRoleMenuTreeResponseDeprecated_MenuMetaValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListAuthRoleMenuTreeResponseDeprecated_MenuMeta.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListAuthRoleMenuTreeResponseDeprecated_MenuMetaValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListAuthRoleMenuTreeResponseDeprecated_MenuMetaValidationError{}
+
+// Validate checks the field values on
+// ListAuthRoleMenuTreeResponseDeprecated_Menu with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *ListAuthRoleMenuTreeResponseDeprecated_Menu) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on
+// ListAuthRoleMenuTreeResponseDeprecated_Menu with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in
+// ListAuthRoleMenuTreeResponseDeprecated_MenuMultiError, or nil if none found.
+func (m *ListAuthRoleMenuTreeResponseDeprecated_Menu) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListAuthRoleMenuTreeResponseDeprecated_Menu) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Name
+
+	// no validation rules for Path
+
+	// no validation rules for Component
+
+	// no validation rules for Redirect
+
+	// no validation rules for FullPath
+
+	// no validation rules for Alias
+
+	// no validation rules for CaseSensitive
+
+	if all {
+		switch v := interface{}(m.GetMeta()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ListAuthRoleMenuTreeResponseDeprecated_MenuValidationError{
+					field:  "Meta",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ListAuthRoleMenuTreeResponseDeprecated_MenuValidationError{
+					field:  "Meta",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetMeta()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ListAuthRoleMenuTreeResponseDeprecated_MenuValidationError{
+				field:  "Meta",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	for idx, item := range m.GetChildren() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListAuthRoleMenuTreeResponseDeprecated_MenuValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListAuthRoleMenuTreeResponseDeprecated_MenuValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListAuthRoleMenuTreeResponseDeprecated_MenuValidationError{
+					field:  fmt.Sprintf("Children[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListAuthRoleMenuTreeResponseDeprecated_MenuMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListAuthRoleMenuTreeResponseDeprecated_MenuMultiError is an error wrapping
+// multiple validation errors returned by
+// ListAuthRoleMenuTreeResponseDeprecated_Menu.ValidateAll() if the designated
+// constraints aren't met.
+type ListAuthRoleMenuTreeResponseDeprecated_MenuMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListAuthRoleMenuTreeResponseDeprecated_MenuMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListAuthRoleMenuTreeResponseDeprecated_MenuMultiError) AllErrors() []error { return m }
+
+// ListAuthRoleMenuTreeResponseDeprecated_MenuValidationError is the validation
+// error returned by ListAuthRoleMenuTreeResponseDeprecated_Menu.Validate if
+// the designated constraints aren't met.
+type ListAuthRoleMenuTreeResponseDeprecated_MenuValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListAuthRoleMenuTreeResponseDeprecated_MenuValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListAuthRoleMenuTreeResponseDeprecated_MenuValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListAuthRoleMenuTreeResponseDeprecated_MenuValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListAuthRoleMenuTreeResponseDeprecated_MenuValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListAuthRoleMenuTreeResponseDeprecated_MenuValidationError) ErrorName() string {
+	return "ListAuthRoleMenuTreeResponseDeprecated_MenuValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListAuthRoleMenuTreeResponseDeprecated_MenuValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListAuthRoleMenuTreeResponseDeprecated_Menu.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListAuthRoleMenuTreeResponseDeprecated_MenuValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListAuthRoleMenuTreeResponseDeprecated_MenuValidationError{}
+
+// Validate checks the field values on MenuRouter_Meta with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *MenuRouter_Meta) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on MenuRouter_Meta with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// MenuRouter_MetaMultiError, or nil if none found.
+func (m *MenuRouter_Meta) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *MenuRouter_Meta) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Title
+
+	if m.IgnoreKeepAlive != nil {
+		// no validation rules for IgnoreKeepAlive
+	}
+
+	if m.Icon != nil {
+		// no validation rules for Icon
+	}
+
+	if m.FrameSrc != nil {
+		// no validation rules for FrameSrc
+	}
+
+	if m.HideBreadcrumb != nil {
+		// no validation rules for HideBreadcrumb
+	}
+
+	if m.HideMenu != nil {
+		// no validation rules for HideMenu
+	}
+
+	if m.OrderNo != nil {
+		// no validation rules for OrderNo
+	}
+
+	if m.CurrentActiveMenu != nil {
+		// no validation rules for CurrentActiveMenu
+	}
+
+	if m.Affix != nil {
+		// no validation rules for Affix
+	}
+
+	if len(errors) > 0 {
+		return MenuRouter_MetaMultiError(errors)
+	}
+
+	return nil
+}
+
+// MenuRouter_MetaMultiError is an error wrapping multiple validation errors
+// returned by MenuRouter_Meta.ValidateAll() if the designated constraints
+// aren't met.
+type MenuRouter_MetaMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m MenuRouter_MetaMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m MenuRouter_MetaMultiError) AllErrors() []error { return m }
+
+// MenuRouter_MetaValidationError is the validation error returned by
+// MenuRouter_Meta.Validate if the designated constraints aren't met.
+type MenuRouter_MetaValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e MenuRouter_MetaValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e MenuRouter_MetaValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e MenuRouter_MetaValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e MenuRouter_MetaValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e MenuRouter_MetaValidationError) ErrorName() string { return "MenuRouter_MetaValidationError" }
+
+// Error satisfies the builtin error interface
+func (e MenuRouter_MetaValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sMenuRouter_Meta.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = MenuRouter_MetaValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = MenuRouter_MetaValidationError{}

@@ -1637,22 +1637,22 @@ var _ interface {
 	ErrorName() string
 } = DeleteMenuResponseValidationError{}
 
-// Validate checks the field values on MenuTree with the rules defined in the
-// proto definition for this message. If any rules are violated, the first
+// Validate checks the field values on MenuTreeSimple with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *MenuTree) Validate() error {
+func (m *MenuTreeSimple) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on MenuTree with the rules defined in
-// the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in MenuTreeMultiError, or nil
-// if none found.
-func (m *MenuTree) ValidateAll() error {
+// ValidateAll checks the field values on MenuTreeSimple with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in MenuTreeSimpleMultiError,
+// or nil if none found.
+func (m *MenuTreeSimple) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *MenuTree) validate(all bool) error {
+func (m *MenuTreeSimple) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1674,7 +1674,7 @@ func (m *MenuTree) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, MenuTreeValidationError{
+					errors = append(errors, MenuTreeSimpleValidationError{
 						field:  fmt.Sprintf("Children[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -1682,7 +1682,7 @@ func (m *MenuTree) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, MenuTreeValidationError{
+					errors = append(errors, MenuTreeSimpleValidationError{
 						field:  fmt.Sprintf("Children[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -1691,7 +1691,7 @@ func (m *MenuTree) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return MenuTreeValidationError{
+				return MenuTreeSimpleValidationError{
 					field:  fmt.Sprintf("Children[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -1702,18 +1702,19 @@ func (m *MenuTree) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return MenuTreeMultiError(errors)
+		return MenuTreeSimpleMultiError(errors)
 	}
 
 	return nil
 }
 
-// MenuTreeMultiError is an error wrapping multiple validation errors returned
-// by MenuTree.ValidateAll() if the designated constraints aren't met.
-type MenuTreeMultiError []error
+// MenuTreeSimpleMultiError is an error wrapping multiple validation errors
+// returned by MenuTreeSimple.ValidateAll() if the designated constraints
+// aren't met.
+type MenuTreeSimpleMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m MenuTreeMultiError) Error() string {
+func (m MenuTreeSimpleMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1722,11 +1723,11 @@ func (m MenuTreeMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m MenuTreeMultiError) AllErrors() []error { return m }
+func (m MenuTreeSimpleMultiError) AllErrors() []error { return m }
 
-// MenuTreeValidationError is the validation error returned by
-// MenuTree.Validate if the designated constraints aren't met.
-type MenuTreeValidationError struct {
+// MenuTreeSimpleValidationError is the validation error returned by
+// MenuTreeSimple.Validate if the designated constraints aren't met.
+type MenuTreeSimpleValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1734,22 +1735,22 @@ type MenuTreeValidationError struct {
 }
 
 // Field function returns field value.
-func (e MenuTreeValidationError) Field() string { return e.field }
+func (e MenuTreeSimpleValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e MenuTreeValidationError) Reason() string { return e.reason }
+func (e MenuTreeSimpleValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e MenuTreeValidationError) Cause() error { return e.cause }
+func (e MenuTreeSimpleValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e MenuTreeValidationError) Key() bool { return e.key }
+func (e MenuTreeSimpleValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e MenuTreeValidationError) ErrorName() string { return "MenuTreeValidationError" }
+func (e MenuTreeSimpleValidationError) ErrorName() string { return "MenuTreeSimpleValidationError" }
 
 // Error satisfies the builtin error interface
-func (e MenuTreeValidationError) Error() string {
+func (e MenuTreeSimpleValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1761,14 +1762,14 @@ func (e MenuTreeValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sMenuTree.%s: %s%s",
+		"invalid %sMenuTreeSimple.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = MenuTreeValidationError{}
+var _ error = MenuTreeSimpleValidationError{}
 
 var _ interface {
 	Field() string
@@ -1776,7 +1777,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = MenuTreeValidationError{}
+} = MenuTreeSimpleValidationError{}
 
 // Validate checks the field values on ListMenuTreeRequest with the rules
 // defined in the proto definition for this message. If any rules are

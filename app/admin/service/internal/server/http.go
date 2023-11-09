@@ -34,7 +34,7 @@ import (
 
 // ProviderSet is server providers.
 var ProviderHttp = wire.NewSet(
-	NewMiddleware,
+	NewHttpMiddleware,
 	// 认证中间件
 	NewAuthMiddleware,
 )
@@ -72,8 +72,8 @@ func NewAuthMiddleware(authenticator authn.Authenticator, authorized authz.Autho
 		Match(NewWhiteListMatcher()).Build()
 }
 
-// NewMiddleware 创建中间件
-func NewMiddleware(logger log.Logger, middle middleware.Middleware) []middleware.Middleware {
+// NewHttpMiddleware 创建中间件
+func NewHttpMiddleware(logger log.Logger, middle middleware.Middleware) []middleware.Middleware {
 	var ms = []middleware.Middleware{
 		recovery.Recovery(),
 		logging.Server(logger),
@@ -88,12 +88,29 @@ func NewMiddleware(logger log.Logger, middle middleware.Middleware) []middleware
 // NewHTTPServer new a HTTP server.
 func NewHTTPServer(
 	cfg *conf.Bootstrap, logger log.Logger,
-	as *service.AuthService, ms []middleware.Middleware) *http.Server {
+	// service
+	authSrv *service.AuthService,
+	userSrv *service.UserService,
+	roleSrv *service.RoleService,
+	domainSrv *service.DomainService,
+	deptSrv *service.DeptService,
+	menuSrv *service.MenuService,
+	postSrv *service.PostService,
+	dictSrv *service.DictService,
+	ms []middleware.Middleware) *http.Server {
 	srv := bootstrap.CreateHttpServer(cfg, ms...)
 
 	openAPIhandler := openapiv2.NewHandler(openapiv2.WithGeneratorOptions(generator.UseJSONNamesForFields(true), generator.EnumsAsInts(false)))
 	srv.HandlePrefix("/q/", openAPIhandler)
 
-	v1.RegisterAuthServiceHTTPServer(srv, as)
+	v1.RegisterAuthServiceHTTPServer(srv, authSrv)
+	v1.RegisterUserServiceHTTPServer(srv, userSrv)
+	v1.RegisterRoleServiceHTTPServer(srv, roleSrv)
+	v1.RegisterDomainServiceHTTPServer(srv, domainSrv)
+	v1.RegisterDeptServiceHTTPServer(srv, deptSrv)
+	v1.RegisterMenuServiceHTTPServer(srv, menuSrv)
+	v1.RegisterPostServiceHTTPServer(srv, postSrv)
+	v1.RegisterDictServiceHTTPServer(srv, dictSrv)
+
 	return srv
 }

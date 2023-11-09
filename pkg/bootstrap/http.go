@@ -15,7 +15,7 @@ import (
 	"github.com/beiduoke/go-scaffold/api/common/conf"
 )
 
-// CreateHttpServer 创建REST服务端
+// CreateHttpServer 创建HTTP服务端
 func CreateHttpServer(cfg *conf.Bootstrap, m ...middleware.Middleware) *kratosHttp.Server {
 	var opts = []kratosHttp.ServerOption{
 		kratosHttp.Filter(handlers.CORS(

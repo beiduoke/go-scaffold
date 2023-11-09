@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-package api.admin.v1;
+package admin.service.v1;
 import "errors/errors.proto";
 
 option go_package = "github.com/beiduoke/go-scaffold/api/admin/service/v1;v1";
 option java_multiple_files = true;
-option java_package = "api.v1";
+option java_package = "dev.kratos.admin.service.v1";
 option objc_class_prefix = "RESOURCEapiV1";
 
 enum ErrorReason {
@@ -23,7 +23,7 @@ enum ErrorReason {
   USER_HANDLE_FAIL = 108;
   USER_HANDLE_ROLE_FAIL = 109;
   USER_DOMAIN_FIND_FAIL = 110;
-  USER_ROLE_FIND_FAIL = 111;
+  AUTH_ROLE_FIND_FAIL = 111;
   DOMAIN_NOT_FOUND = 201;
   DOMAIN_CREATE_FAIL = 202;
   DOMAIN_UPDATE_FAIL = 203;

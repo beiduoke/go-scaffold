@@ -211,8 +211,8 @@ func (s *UserService) DeleteUser(ctx context.Context, in *v1.DeleteUserRequest) 
 	}, nil
 }
 
-// ExistUserName 用户名是否存在
-func (s *UserService) ExistUserName(ctx context.Context, in *v1.ExistUserNameRequest) (*v1.ExistUserNameResponse, error) {
+// ExistUserByName 用户名是否存在
+func (s *UserService) ExistUserByName(ctx context.Context, in *v1.ExistUserByNameRequest) (*v1.ExistUserByNameResponse, error) {
 	user, _ := s.userCase.GetName(ctx, &biz.User{Name: in.GetName()})
 	handleType, message := constant.HandleType_error.String(), "用户不存在"
 	if user != nil && user.ID > 0 {
@@ -220,7 +220,7 @@ func (s *UserService) ExistUserName(ctx context.Context, in *v1.ExistUserNameReq
 		message = "用户存在"
 	}
 
-	return &v1.ExistUserNameResponse{
+	return &v1.ExistUserByNameResponse{
 		Type:    handleType,
 		Message: message,
 	}, nil

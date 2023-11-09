@@ -19,11 +19,17 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	AuthService_Logout_FullMethodName          = "/admin.service.v1.AuthService/Logout"
-	AuthService_Register_FullMethodName        = "/admin.service.v1.AuthService/Register"
-	AuthService_LoginByPassword_FullMethodName = "/admin.service.v1.AuthService/LoginByPassword"
-	AuthService_LoginBySms_FullMethodName      = "/admin.service.v1.AuthService/LoginBySms"
-	AuthService_LoginByEmail_FullMethodName    = "/admin.service.v1.AuthService/LoginByEmail"
+	AuthService_Logout_FullMethodName                     = "/admin.service.v1.AuthService/Logout"
+	AuthService_Register_FullMethodName                   = "/admin.service.v1.AuthService/Register"
+	AuthService_LoginByPassword_FullMethodName            = "/admin.service.v1.AuthService/LoginByPassword"
+	AuthService_LoginBySms_FullMethodName                 = "/admin.service.v1.AuthService/LoginBySms"
+	AuthService_LoginByEmail_FullMethodName               = "/admin.service.v1.AuthService/LoginByEmail"
+	AuthService_GetAuthInfo_FullMethodName                = "/admin.service.v1.AuthService/GetAuthInfo"
+	AuthService_GetAuthProfile_FullMethodName             = "/admin.service.v1.AuthService/GetAuthProfile"
+	AuthService_ListAuthRole_FullMethodName               = "/admin.service.v1.AuthService/ListAuthRole"
+	AuthService_ListAuthRoleMenuRouterTree_FullMethodName = "/admin.service.v1.AuthService/ListAuthRoleMenuRouterTree"
+	AuthService_ListAuthRoleMenuTree_FullMethodName       = "/admin.service.v1.AuthService/ListAuthRoleMenuTree"
+	AuthService_ListAuthRolePermission_FullMethodName     = "/admin.service.v1.AuthService/ListAuthRolePermission"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -40,6 +46,18 @@ type AuthServiceClient interface {
 	LoginBySms(ctx context.Context, in *LoginBySmsRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	// 邮件登陆
 	LoginByEmail(ctx context.Context, in *LoginByEmailRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	// 当前登录用户概述
+	GetAuthInfo(ctx context.Context, in *GetAuthInfoRequest, opts ...grpc.CallOption) (*GetAuthInfoResponse, error)
+	// 当前登录用户概述
+	GetAuthProfile(ctx context.Context, in *GetAuthProfileRequest, opts ...grpc.CallOption) (*GetAuthProfileResponse, error)
+	// 当前登录用户拥有角色
+	ListAuthRole(ctx context.Context, in *ListAuthRoleRequest, opts ...grpc.CallOption) (*ListAuthRoleResponse, error)
+	// 获取角色菜单路由树形列表
+	ListAuthRoleMenuRouterTree(ctx context.Context, in *ListAuthRoleMenuRouterTreeRequest, opts ...grpc.CallOption) (*ListAuthRoleMenuRouterTreeResponse, error)
+	// 获取角色菜单路由树形列表
+	ListAuthRoleMenuTree(ctx context.Context, in *ListAuthRoleMenuTreeRequest, opts ...grpc.CallOption) (*ListAuthRoleMenuTreeResponse, error)
+	// 获取角色权限列表
+	ListAuthRolePermission(ctx context.Context, in *ListAuthRolePermissionRequest, opts ...grpc.CallOption) (*ListAuthRolePermissionResponse, error)
 }
 
 type authServiceClient struct {
@@ -95,6 +113,60 @@ func (c *authServiceClient) LoginByEmail(ctx context.Context, in *LoginByEmailRe
 	return out, nil
 }
 
+func (c *authServiceClient) GetAuthInfo(ctx context.Context, in *GetAuthInfoRequest, opts ...grpc.CallOption) (*GetAuthInfoResponse, error) {
+	out := new(GetAuthInfoResponse)
+	err := c.cc.Invoke(ctx, AuthService_GetAuthInfo_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) GetAuthProfile(ctx context.Context, in *GetAuthProfileRequest, opts ...grpc.CallOption) (*GetAuthProfileResponse, error) {
+	out := new(GetAuthProfileResponse)
+	err := c.cc.Invoke(ctx, AuthService_GetAuthProfile_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) ListAuthRole(ctx context.Context, in *ListAuthRoleRequest, opts ...grpc.CallOption) (*ListAuthRoleResponse, error) {
+	out := new(ListAuthRoleResponse)
+	err := c.cc.Invoke(ctx, AuthService_ListAuthRole_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) ListAuthRoleMenuRouterTree(ctx context.Context, in *ListAuthRoleMenuRouterTreeRequest, opts ...grpc.CallOption) (*ListAuthRoleMenuRouterTreeResponse, error) {
+	out := new(ListAuthRoleMenuRouterTreeResponse)
+	err := c.cc.Invoke(ctx, AuthService_ListAuthRoleMenuRouterTree_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) ListAuthRoleMenuTree(ctx context.Context, in *ListAuthRoleMenuTreeRequest, opts ...grpc.CallOption) (*ListAuthRoleMenuTreeResponse, error) {
+	out := new(ListAuthRoleMenuTreeResponse)
+	err := c.cc.Invoke(ctx, AuthService_ListAuthRoleMenuTree_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) ListAuthRolePermission(ctx context.Context, in *ListAuthRolePermissionRequest, opts ...grpc.CallOption) (*ListAuthRolePermissionResponse, error) {
+	out := new(ListAuthRolePermissionResponse)
+	err := c.cc.Invoke(ctx, AuthService_ListAuthRolePermission_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility
@@ -109,6 +181,18 @@ type AuthServiceServer interface {
 	LoginBySms(context.Context, *LoginBySmsRequest) (*LoginResponse, error)
 	// 邮件登陆
 	LoginByEmail(context.Context, *LoginByEmailRequest) (*LoginResponse, error)
+	// 当前登录用户概述
+	GetAuthInfo(context.Context, *GetAuthInfoRequest) (*GetAuthInfoResponse, error)
+	// 当前登录用户概述
+	GetAuthProfile(context.Context, *GetAuthProfileRequest) (*GetAuthProfileResponse, error)
+	// 当前登录用户拥有角色
+	ListAuthRole(context.Context, *ListAuthRoleRequest) (*ListAuthRoleResponse, error)
+	// 获取角色菜单路由树形列表
+	ListAuthRoleMenuRouterTree(context.Context, *ListAuthRoleMenuRouterTreeRequest) (*ListAuthRoleMenuRouterTreeResponse, error)
+	// 获取角色菜单路由树形列表
+	ListAuthRoleMenuTree(context.Context, *ListAuthRoleMenuTreeRequest) (*ListAuthRoleMenuTreeResponse, error)
+	// 获取角色权限列表
+	ListAuthRolePermission(context.Context, *ListAuthRolePermissionRequest) (*ListAuthRolePermissionResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -130,6 +214,24 @@ func (UnimplementedAuthServiceServer) LoginBySms(context.Context, *LoginBySmsReq
 }
 func (UnimplementedAuthServiceServer) LoginByEmail(context.Context, *LoginByEmailRequest) (*LoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoginByEmail not implemented")
+}
+func (UnimplementedAuthServiceServer) GetAuthInfo(context.Context, *GetAuthInfoRequest) (*GetAuthInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAuthInfo not implemented")
+}
+func (UnimplementedAuthServiceServer) GetAuthProfile(context.Context, *GetAuthProfileRequest) (*GetAuthProfileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAuthProfile not implemented")
+}
+func (UnimplementedAuthServiceServer) ListAuthRole(context.Context, *ListAuthRoleRequest) (*ListAuthRoleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListAuthRole not implemented")
+}
+func (UnimplementedAuthServiceServer) ListAuthRoleMenuRouterTree(context.Context, *ListAuthRoleMenuRouterTreeRequest) (*ListAuthRoleMenuRouterTreeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListAuthRoleMenuRouterTree not implemented")
+}
+func (UnimplementedAuthServiceServer) ListAuthRoleMenuTree(context.Context, *ListAuthRoleMenuTreeRequest) (*ListAuthRoleMenuTreeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListAuthRoleMenuTree not implemented")
+}
+func (UnimplementedAuthServiceServer) ListAuthRolePermission(context.Context, *ListAuthRolePermissionRequest) (*ListAuthRolePermissionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListAuthRolePermission not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -234,6 +336,114 @@ func _AuthService_LoginByEmail_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_GetAuthInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAuthInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).GetAuthInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_GetAuthInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).GetAuthInfo(ctx, req.(*GetAuthInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_GetAuthProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAuthProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).GetAuthProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_GetAuthProfile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).GetAuthProfile(ctx, req.(*GetAuthProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_ListAuthRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAuthRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).ListAuthRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_ListAuthRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).ListAuthRole(ctx, req.(*ListAuthRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_ListAuthRoleMenuRouterTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAuthRoleMenuRouterTreeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).ListAuthRoleMenuRouterTree(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_ListAuthRoleMenuRouterTree_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).ListAuthRoleMenuRouterTree(ctx, req.(*ListAuthRoleMenuRouterTreeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_ListAuthRoleMenuTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAuthRoleMenuTreeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).ListAuthRoleMenuTree(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_ListAuthRoleMenuTree_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).ListAuthRoleMenuTree(ctx, req.(*ListAuthRoleMenuTreeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_ListAuthRolePermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAuthRolePermissionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).ListAuthRolePermission(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_ListAuthRolePermission_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).ListAuthRolePermission(ctx, req.(*ListAuthRolePermissionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -260,6 +470,30 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "LoginByEmail",
 			Handler:    _AuthService_LoginByEmail_Handler,
+		},
+		{
+			MethodName: "GetAuthInfo",
+			Handler:    _AuthService_GetAuthInfo_Handler,
+		},
+		{
+			MethodName: "GetAuthProfile",
+			Handler:    _AuthService_GetAuthProfile_Handler,
+		},
+		{
+			MethodName: "ListAuthRole",
+			Handler:    _AuthService_ListAuthRole_Handler,
+		},
+		{
+			MethodName: "ListAuthRoleMenuRouterTree",
+			Handler:    _AuthService_ListAuthRoleMenuRouterTree_Handler,
+		},
+		{
+			MethodName: "ListAuthRoleMenuTree",
+			Handler:    _AuthService_ListAuthRoleMenuTree_Handler,
+		},
+		{
+			MethodName: "ListAuthRolePermission",
+			Handler:    _AuthService_ListAuthRolePermission_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

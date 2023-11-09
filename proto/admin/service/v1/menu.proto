@@ -221,12 +221,12 @@ message DeleteMenuResponse {
   string type = 4;
 }
 
-message MenuTree {
+message MenuTreeSimple {
   uint64 id = 1;
   string name = 2;
   string title = 3;
   uint64 parent_id = 4;
-  repeated MenuTree children = 5;
+  repeated MenuTreeSimple children = 5;
 }
 
 // 请求 - 获取树形菜单

@@ -19,6 +19,12 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationAuthServiceGetAuthInfo = "/admin.service.v1.AuthService/GetAuthInfo"
+const OperationAuthServiceGetAuthProfile = "/admin.service.v1.AuthService/GetAuthProfile"
+const OperationAuthServiceListAuthRole = "/admin.service.v1.AuthService/ListAuthRole"
+const OperationAuthServiceListAuthRoleMenuRouterTree = "/admin.service.v1.AuthService/ListAuthRoleMenuRouterTree"
+const OperationAuthServiceListAuthRoleMenuTree = "/admin.service.v1.AuthService/ListAuthRoleMenuTree"
+const OperationAuthServiceListAuthRolePermission = "/admin.service.v1.AuthService/ListAuthRolePermission"
 const OperationAuthServiceLoginByEmail = "/admin.service.v1.AuthService/LoginByEmail"
 const OperationAuthServiceLoginByPassword = "/admin.service.v1.AuthService/LoginByPassword"
 const OperationAuthServiceLoginBySms = "/admin.service.v1.AuthService/LoginBySms"
@@ -26,6 +32,18 @@ const OperationAuthServiceLogout = "/admin.service.v1.AuthService/Logout"
 const OperationAuthServiceRegister = "/admin.service.v1.AuthService/Register"
 
 type AuthServiceHTTPServer interface {
+	// GetAuthInfo 当前登录用户概述
+	GetAuthInfo(context.Context, *GetAuthInfoRequest) (*GetAuthInfoResponse, error)
+	// GetAuthProfile 当前登录用户概述
+	GetAuthProfile(context.Context, *GetAuthProfileRequest) (*GetAuthProfileResponse, error)
+	// ListAuthRole 当前登录用户拥有角色
+	ListAuthRole(context.Context, *ListAuthRoleRequest) (*ListAuthRoleResponse, error)
+	// ListAuthRoleMenuRouterTree 获取角色菜单路由树形列表
+	ListAuthRoleMenuRouterTree(context.Context, *ListAuthRoleMenuRouterTreeRequest) (*ListAuthRoleMenuRouterTreeResponse, error)
+	// ListAuthRoleMenuTree 获取角色菜单路由树形列表
+	ListAuthRoleMenuTree(context.Context, *ListAuthRoleMenuTreeRequest) (*ListAuthRoleMenuTreeResponse, error)
+	// ListAuthRolePermission 获取角色权限列表
+	ListAuthRolePermission(context.Context, *ListAuthRolePermissionRequest) (*ListAuthRolePermissionResponse, error)
 	// LoginByEmail 邮件登陆
 	LoginByEmail(context.Context, *LoginByEmailRequest) (*LoginResponse, error)
 	// LoginByPassword 密码登陆
@@ -47,6 +65,15 @@ func RegisterAuthServiceHTTPServer(s *http.Server, srv AuthServiceHTTPServer) {
 	r.POST("/v1/auth/loginByPassword/{domain}", _AuthService_LoginByPassword1_HTTP_Handler(srv))
 	r.POST("/v1/auth/loginBySms/{domain}", _AuthService_LoginBySms0_HTTP_Handler(srv))
 	r.POST("/v1/auth/loginByEmail/{domain}", _AuthService_LoginByEmail0_HTTP_Handler(srv))
+	r.GET("/v1/auth/info", _AuthService_GetAuthInfo0_HTTP_Handler(srv))
+	r.GET("/v1/auth/profiles", _AuthService_GetAuthProfile0_HTTP_Handler(srv))
+	r.GET("/v1/auth/roles", _AuthService_ListAuthRole0_HTTP_Handler(srv))
+	r.GET("/v1/auth/roles/{role_id}/routers/trees", _AuthService_ListAuthRoleMenuRouterTree0_HTTP_Handler(srv))
+	r.GET("/v1/auth/routers/trees", _AuthService_ListAuthRoleMenuRouterTree1_HTTP_Handler(srv))
+	r.GET("/v1/auth/roles/{role_id}/menus/trees", _AuthService_ListAuthRoleMenuTree0_HTTP_Handler(srv))
+	r.GET("/v1/auth/menus/trees", _AuthService_ListAuthRoleMenuTree1_HTTP_Handler(srv))
+	r.GET("/v1/auth/roles/{role_id}/permissions", _AuthService_ListAuthRolePermission0_HTTP_Handler(srv))
+	r.GET("/v1/auth/permissions", _AuthService_ListAuthRolePermission1_HTTP_Handler(srv))
 }
 
 func _AuthService_Logout0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
@@ -215,7 +242,193 @@ func _AuthService_LoginByEmail0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx
 	}
 }
 
+func _AuthService_GetAuthInfo0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetAuthInfoRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthServiceGetAuthInfo)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetAuthInfo(ctx, req.(*GetAuthInfoRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetAuthInfoResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AuthService_GetAuthProfile0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetAuthProfileRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthServiceGetAuthProfile)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetAuthProfile(ctx, req.(*GetAuthProfileRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetAuthProfileResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AuthService_ListAuthRole0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListAuthRoleRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthServiceListAuthRole)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListAuthRole(ctx, req.(*ListAuthRoleRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListAuthRoleResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AuthService_ListAuthRoleMenuRouterTree0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListAuthRoleMenuRouterTreeRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthServiceListAuthRoleMenuRouterTree)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListAuthRoleMenuRouterTree(ctx, req.(*ListAuthRoleMenuRouterTreeRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListAuthRoleMenuRouterTreeResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AuthService_ListAuthRoleMenuRouterTree1_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListAuthRoleMenuRouterTreeRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthServiceListAuthRoleMenuRouterTree)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListAuthRoleMenuRouterTree(ctx, req.(*ListAuthRoleMenuRouterTreeRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListAuthRoleMenuRouterTreeResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AuthService_ListAuthRoleMenuTree0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListAuthRoleMenuTreeRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthServiceListAuthRoleMenuTree)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListAuthRoleMenuTree(ctx, req.(*ListAuthRoleMenuTreeRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListAuthRoleMenuTreeResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AuthService_ListAuthRoleMenuTree1_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListAuthRoleMenuTreeRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthServiceListAuthRoleMenuTree)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListAuthRoleMenuTree(ctx, req.(*ListAuthRoleMenuTreeRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListAuthRoleMenuTreeResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AuthService_ListAuthRolePermission0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListAuthRolePermissionRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthServiceListAuthRolePermission)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListAuthRolePermission(ctx, req.(*ListAuthRolePermissionRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListAuthRolePermissionResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AuthService_ListAuthRolePermission1_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListAuthRolePermissionRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthServiceListAuthRolePermission)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListAuthRolePermission(ctx, req.(*ListAuthRolePermissionRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListAuthRolePermissionResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
 type AuthServiceHTTPClient interface {
+	GetAuthInfo(ctx context.Context, req *GetAuthInfoRequest, opts ...http.CallOption) (rsp *GetAuthInfoResponse, err error)
+	GetAuthProfile(ctx context.Context, req *GetAuthProfileRequest, opts ...http.CallOption) (rsp *GetAuthProfileResponse, err error)
+	ListAuthRole(ctx context.Context, req *ListAuthRoleRequest, opts ...http.CallOption) (rsp *ListAuthRoleResponse, err error)
+	ListAuthRoleMenuRouterTree(ctx context.Context, req *ListAuthRoleMenuRouterTreeRequest, opts ...http.CallOption) (rsp *ListAuthRoleMenuRouterTreeResponse, err error)
+	ListAuthRoleMenuTree(ctx context.Context, req *ListAuthRoleMenuTreeRequest, opts ...http.CallOption) (rsp *ListAuthRoleMenuTreeResponse, err error)
+	ListAuthRolePermission(ctx context.Context, req *ListAuthRolePermissionRequest, opts ...http.CallOption) (rsp *ListAuthRolePermissionResponse, err error)
 	LoginByEmail(ctx context.Context, req *LoginByEmailRequest, opts ...http.CallOption) (rsp *LoginResponse, err error)
 	LoginByPassword(ctx context.Context, req *LoginByPasswordRequest, opts ...http.CallOption) (rsp *LoginResponse, err error)
 	LoginBySms(ctx context.Context, req *LoginBySmsRequest, opts ...http.CallOption) (rsp *LoginResponse, err error)
@@ -229,6 +442,84 @@ type AuthServiceHTTPClientImpl struct {
 
 func NewAuthServiceHTTPClient(client *http.Client) AuthServiceHTTPClient {
 	return &AuthServiceHTTPClientImpl{client}
+}
+
+func (c *AuthServiceHTTPClientImpl) GetAuthInfo(ctx context.Context, in *GetAuthInfoRequest, opts ...http.CallOption) (*GetAuthInfoResponse, error) {
+	var out GetAuthInfoResponse
+	pattern := "/v1/auth/info"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAuthServiceGetAuthInfo))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AuthServiceHTTPClientImpl) GetAuthProfile(ctx context.Context, in *GetAuthProfileRequest, opts ...http.CallOption) (*GetAuthProfileResponse, error) {
+	var out GetAuthProfileResponse
+	pattern := "/v1/auth/profiles"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAuthServiceGetAuthProfile))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AuthServiceHTTPClientImpl) ListAuthRole(ctx context.Context, in *ListAuthRoleRequest, opts ...http.CallOption) (*ListAuthRoleResponse, error) {
+	var out ListAuthRoleResponse
+	pattern := "/v1/auth/roles"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAuthServiceListAuthRole))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AuthServiceHTTPClientImpl) ListAuthRoleMenuRouterTree(ctx context.Context, in *ListAuthRoleMenuRouterTreeRequest, opts ...http.CallOption) (*ListAuthRoleMenuRouterTreeResponse, error) {
+	var out ListAuthRoleMenuRouterTreeResponse
+	pattern := "/v1/auth/routers/trees"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAuthServiceListAuthRoleMenuRouterTree))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AuthServiceHTTPClientImpl) ListAuthRoleMenuTree(ctx context.Context, in *ListAuthRoleMenuTreeRequest, opts ...http.CallOption) (*ListAuthRoleMenuTreeResponse, error) {
+	var out ListAuthRoleMenuTreeResponse
+	pattern := "/v1/auth/menus/trees"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAuthServiceListAuthRoleMenuTree))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AuthServiceHTTPClientImpl) ListAuthRolePermission(ctx context.Context, in *ListAuthRolePermissionRequest, opts ...http.CallOption) (*ListAuthRolePermissionResponse, error) {
+	var out ListAuthRolePermissionResponse
+	pattern := "/v1/auth/permissions"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAuthServiceListAuthRolePermission))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
 }
 
 func (c *AuthServiceHTTPClientImpl) LoginByEmail(ctx context.Context, in *LoginByEmailRequest, opts ...http.CallOption) (*LoginResponse, error) {

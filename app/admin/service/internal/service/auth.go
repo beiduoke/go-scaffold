@@ -7,7 +7,6 @@ import (
 
 	v1 "github.com/beiduoke/go-scaffold/api/admin/service/v1"
 	"github.com/beiduoke/go-scaffold/app/admin/service/internal/biz"
-	"github.com/beiduoke/go-scaffold/app/admin/service/internal/conf"
 	"github.com/beiduoke/go-scaffold/app/admin/service/internal/pkg/constant"
 	"github.com/beiduoke/go-scaffold/app/admin/service/internal/pkg/middleware/localize"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
@@ -21,7 +20,6 @@ var _ v1.AuthServiceServer = (*AuthService)(nil)
 // Service is a  service.
 type AuthService struct {
 	v1.UnimplementedAuthServiceServer
-	ac  *conf.Auth
 	log *log.Helper
 	// dig        *dig.Container
 	authCase *biz.AuthUsecase
@@ -77,7 +75,7 @@ func (s *AuthService) LoginByPassword(ctx context.Context, in *v1.LoginByPasswor
 	if in.GetDomain() == "" {
 		return nil, v1.ErrorUserRegisterFail("租户不能为空")
 	}
-	result, err := s.authCase.LoginByPassword(ctx, req.GetAccount(), req.GetPassword())
+	result, err := s.authCase.LoginByPassword(ctx, &biz.User{Name: req.GetAccount(), Password: req.GetPassword(), Domain: &biz.Domain{Code: in.GetDomain()}})
 	if err != nil {
 		return nil, v1.ErrorUserLoginFail("账号 %s 登录失败：%v", req.GetAccount(), err)
 	}
@@ -86,8 +84,9 @@ func (s *AuthService) LoginByPassword(ctx context.Context, in *v1.LoginByPasswor
 		expiresAt = *result.ExpiresAt
 	}
 	return &v1.LoginResponse{
-		Token:      result.Token,
-		ExpireTime: timestamppb.New(expiresAt),
+		Token:        result.Token,
+		RefreshToken: "",
+		ExpireTime:   timestamppb.New(expiresAt),
 	}, err
 }
 
@@ -131,13 +130,13 @@ func (s *AuthService) Register(ctx context.Context, in *v1.RegisterRequest) (*v1
 	}, nil
 }
 
-// GetUserInfo 用户详情
-func (s *AuthService) GetUserInfo(ctx context.Context, in *v1.GetUserInfoRequest) (*v1.GetUserInfoResponse, error) {
+// GetAuthInfo 用户详情
+func (s *AuthService) GetAuthInfo(ctx context.Context, in *v1.GetAuthInfoRequest) (*v1.GetAuthInfoResponse, error) {
 	user, err := s.authCase.AccessInfo(ctx)
 	if err != nil {
 		return nil, v1.ErrorUserNotFound("用户查询失败 %v", err)
 	}
-	return &v1.GetUserInfoResponse{
+	return &v1.GetAuthInfoResponse{
 		Name:     user.Name,
 		NickName: user.NickName,
 		RealName: user.RealName,
@@ -166,23 +165,23 @@ func (s *AuthService) GetUserInfo(ctx context.Context, in *v1.GetUserInfoRequest
 	}, nil
 }
 
-// ListUserRole 用户角色
-func (s *AuthService) ListUserRole(ctx context.Context, in *v1.ListUserRoleRequest) (*v1.ListUserRoleResponse, error) {
+// ListAuthRole 用户角色
+func (s *AuthService) ListAuthRole(ctx context.Context, in *v1.ListAuthRoleRequest) (*v1.ListAuthRoleResponse, error) {
 	roleModels, err := s.authCase.AccessRoles(ctx)
 	if err != nil {
-		return nil, v1.ErrorUserRoleFindFail("用户角色失败 %v", err)
+		return nil, v1.ErrorAuthRoleFindFail("用户角色失败 %v", err)
 	}
 	roles := make([]*v1.Role, 0, len(roleModels))
 	for _, v := range roleModels {
 		roles = append(roles, TransformRole(v))
 	}
-	return &v1.ListUserRoleResponse{
+	return &v1.ListAuthRoleResponse{
 		Items: roles,
 	}, nil
 }
 
 // 获取角色菜单路由树形列表
-func (s *AuthService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.ListUserRoleMenuRouterTreeRequest) (*v1.ListUserRoleMenuRouterTreeResponse, error) {
+func (s *AuthService) ListAuthRoleMenuRouterTree(ctx context.Context, in *v1.ListAuthRoleMenuRouterTreeRequest) (*v1.ListAuthRoleMenuRouterTreeResponse, error) {
 	roleMenus, err := s.authCase.AccessRoleMenus(ctx)
 	if err != nil {
 		s.log.Debugf("用户菜单查询失败 %v", err)
@@ -211,21 +210,21 @@ func (s *AuthService) ListUserRoleMenuRouterTree(ctx context.Context, in *v1.Lis
 		t.Children = append(t.Children, ts...)
 		return nil
 	})
-	return &v1.ListUserRoleMenuRouterTreeResponse{
+	return &v1.ListAuthRoleMenuRouterTreeResponse{
 		Items: items,
 	}, nil
 }
 
 // 获取角色权限列表
-func (s *AuthService) ListUserRolePermission(ctx context.Context, in *v1.ListUserRolePermissionRequest) (*v1.ListUserRolePermissionResponse, error) {
+func (s *AuthService) ListAuthRolePermission(ctx context.Context, in *v1.ListAuthRolePermissionRequest) (*v1.ListAuthRolePermissionResponse, error) {
 	menuModels, _ := s.authCase.AccessRolePermissions(ctx)
-	return &v1.ListUserRolePermissionResponse{
+	return &v1.ListAuthRolePermissionResponse{
 		Items: convert.ArrayUnique(menuModels),
 	}, nil
 }
 
 // 获取角色菜单树形列表
-func (s *AuthService) ListUserRoleMenuTree(ctx context.Context, in *v1.ListUserRoleMenuTreeRequest) (*v1.ListUserRoleMenuTreeResponse, error) {
+func (s *AuthService) ListAuthRoleMenuTree(ctx context.Context, in *v1.ListAuthRoleMenuTreeRequest) (*v1.ListAuthRoleMenuTreeResponse, error) {
 	results, err := s.authCase.AccessRoleMenus(ctx)
 	if err != nil {
 		s.log.Debugf("用户菜单查询失败 %v", err)
@@ -234,7 +233,7 @@ func (s *AuthService) ListUserRoleMenuTree(ctx context.Context, in *v1.ListUserR
 	for _, v := range results {
 		treeData = append(treeData, TransformMenu(v))
 	}
-	return &v1.ListUserRoleMenuTreeResponse{
+	return &v1.ListAuthRoleMenuTreeResponse{
 		Items: convert.ToTree(treeData, in.GetMenuParentId(), func(t *v1.Menu, ts ...*v1.Menu) error {
 			t.Children = append(t.Children, ts...)
 			return nil

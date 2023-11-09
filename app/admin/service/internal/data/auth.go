@@ -36,15 +36,19 @@ func NewAuthRepo(logger log.Logger, data *Data, authenticator auth.Authenticator
 }
 
 // Login 密码登录
-func (r *AuthRepo) LoginByPassword(ctx context.Context, access, password string) (*biz.LoginResult, error) {
+func (r *AuthRepo) LoginByPassword(ctx context.Context, g *biz.User) (*biz.LoginResult, error) {
 	var (
 		now         = time.Now()
 		sysUser     = SysUser{}
 		sysRoles    = []SysRole{}
 		numSysRoles = 0
 	)
-	domainId := r.data.CtxDomainID(ctx)
-	result := r.data.DB(ctx).Where("domain_id", domainId).Preload("Dept").Preload("Roles").Last(&sysUser, "name = ?", access)
+	domain, err := r.domain.FindByCode(ctx, g.Domain.Code)
+	if err != nil || domain == nil {
+		return nil, err
+	}
+
+	result := r.data.DB(ctx).Where("domain_id", domain.ID).Preload("Dept").Preload("Roles").Last(&sysUser, "name = ?", g.Name)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -52,7 +56,7 @@ func (r *AuthRepo) LoginByPassword(ctx context.Context, access, password string)
 	if numSysRoles == 0 {
 		return nil, errors.New("未指定角色权限")
 	}
-	if !crypto.CheckPasswordHash(password, sysUser.Password) {
+	if !crypto.CheckPasswordHash(g.Password, sysUser.Password) {
 		return nil, errors.New("密码校验失败")
 	}
 

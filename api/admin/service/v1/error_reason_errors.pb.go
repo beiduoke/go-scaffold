@@ -155,16 +155,16 @@ func ErrorUserDomainFindFail(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_USER_DOMAIN_FIND_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
-func IsUserRoleFindFail(err error) bool {
+func IsAuthRoleFindFail(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_USER_ROLE_FIND_FAIL.String() && e.Code == 400
+	return e.Reason == ErrorReason_AUTH_ROLE_FIND_FAIL.String() && e.Code == 400
 }
 
-func ErrorUserRoleFindFail(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_USER_ROLE_FIND_FAIL.String(), fmt.Sprintf(format, args...))
+func ErrorAuthRoleFindFail(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_AUTH_ROLE_FIND_FAIL.String(), fmt.Sprintf(format, args...))
 }
 
 func IsDomainNotFound(err error) bool {
