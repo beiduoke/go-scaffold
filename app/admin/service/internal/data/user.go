@@ -178,7 +178,6 @@ func (r *UserRepo) Delete(ctx context.Context, g *biz.User) error {
 func (r *UserRepo) ListPage(ctx context.Context, paging *pagination.Pagination) (users []*biz.User, total int64) {
 	db := r.data.DBD(ctx).Model(&SysUser{})
 	sysUsers := []*SysUser{}
-
 	// 查询条件
 	if name, ok := paging.Query["name"].(string); ok && name != "" {
 		if name != "" {

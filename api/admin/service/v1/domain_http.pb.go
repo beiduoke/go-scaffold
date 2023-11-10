@@ -88,12 +88,12 @@ func RegisterDomainServiceHTTPServer(s *http.Server, srv DomainServiceHTTPServer
 	r.PUT("/v1/domains/{id}/state", _DomainService_UpdateDomainState0_HTTP_Handler(srv))
 	r.GET("/v1/domains/{id}/menus", _DomainService_ListDomainMenu0_HTTP_Handler(srv))
 	r.POST("/v1/domains/{id}/menus", _DomainService_HandleDomainMenu0_HTTP_Handler(srv))
-	r.GET("/v1/depts", _DomainService_ListDomainPackage0_HTTP_Handler(srv))
-	r.POST("/v1/domainPackage", _DomainService_CreateDomainPackage0_HTTP_Handler(srv))
-	r.GET("/v1/domainPackage/{id}", _DomainService_GetDomainPackage0_HTTP_Handler(srv))
-	r.PUT("/v1/domainPackage/{id}", _DomainService_UpdateDomainPackage0_HTTP_Handler(srv))
-	r.PUT("/v1/domainPackage/{id}/state", _DomainService_UpdateDomainPackageState0_HTTP_Handler(srv))
-	r.DELETE("/v1/domainPackage/{id}", _DomainService_DeleteDomainPackage0_HTTP_Handler(srv))
+	r.GET("/v1/domainPackages", _DomainService_ListDomainPackage0_HTTP_Handler(srv))
+	r.POST("/v1/domainPackages", _DomainService_CreateDomainPackage0_HTTP_Handler(srv))
+	r.GET("/v1/domainPackages/{id}", _DomainService_GetDomainPackage0_HTTP_Handler(srv))
+	r.PUT("/v1/domainPackages/{id}", _DomainService_UpdateDomainPackage0_HTTP_Handler(srv))
+	r.PUT("/v1/domainPackages/{id}/state", _DomainService_UpdateDomainPackageState0_HTTP_Handler(srv))
+	r.DELETE("/v1/domainPackages/{id}", _DomainService_DeleteDomainPackage0_HTTP_Handler(srv))
 }
 
 func _DomainService_ListDomain0_HTTP_Handler(srv DomainServiceHTTPServer) func(ctx http.Context) error {
@@ -541,7 +541,7 @@ func (c *DomainServiceHTTPClientImpl) CreateDomain(ctx context.Context, in *Crea
 
 func (c *DomainServiceHTTPClientImpl) CreateDomainPackage(ctx context.Context, in *CreateDomainPackageRequest, opts ...http.CallOption) (*CreateDomainPackageResponse, error) {
 	var out CreateDomainPackageResponse
-	pattern := "/v1/domainPackage"
+	pattern := "/v1/domainPackages"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationDomainServiceCreateDomainPackage))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -567,7 +567,7 @@ func (c *DomainServiceHTTPClientImpl) DeleteDomain(ctx context.Context, in *Dele
 
 func (c *DomainServiceHTTPClientImpl) DeleteDomainPackage(ctx context.Context, in *DeleteDomainPackageRequest, opts ...http.CallOption) (*DeleteDomainPackageResponse, error) {
 	var out DeleteDomainPackageResponse
-	pattern := "/v1/domainPackage/{id}"
+	pattern := "/v1/domainPackages/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationDomainServiceDeleteDomainPackage))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -619,7 +619,7 @@ func (c *DomainServiceHTTPClientImpl) GetDomainName(ctx context.Context, in *Get
 
 func (c *DomainServiceHTTPClientImpl) GetDomainPackage(ctx context.Context, in *GetDomainPackageRequest, opts ...http.CallOption) (*DomainPackage, error) {
 	var out DomainPackage
-	pattern := "/v1/domainPackage/{id}"
+	pattern := "/v1/domainPackages/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationDomainServiceGetDomainPackage))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -671,7 +671,7 @@ func (c *DomainServiceHTTPClientImpl) ListDomainMenu(ctx context.Context, in *Li
 
 func (c *DomainServiceHTTPClientImpl) ListDomainPackage(ctx context.Context, in *ListDomainPackageRequest, opts ...http.CallOption) (*ListDomainPackageResponse, error) {
 	var out ListDomainPackageResponse
-	pattern := "/v1/depts"
+	pattern := "/v1/domainPackages"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationDomainServiceListDomainPackage))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -710,7 +710,7 @@ func (c *DomainServiceHTTPClientImpl) UpdateDomain(ctx context.Context, in *Upda
 
 func (c *DomainServiceHTTPClientImpl) UpdateDomainPackage(ctx context.Context, in *UpdateDomainPackageRequest, opts ...http.CallOption) (*UpdateDomainPackageResponse, error) {
 	var out UpdateDomainPackageResponse
-	pattern := "/v1/domainPackage/{id}"
+	pattern := "/v1/domainPackages/{id}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationDomainServiceUpdateDomainPackage))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -723,7 +723,7 @@ func (c *DomainServiceHTTPClientImpl) UpdateDomainPackage(ctx context.Context, i
 
 func (c *DomainServiceHTTPClientImpl) UpdateDomainPackageState(ctx context.Context, in *UpdateDomainPackageStateRequest, opts ...http.CallOption) (*UpdateDomainPackageStateResponse, error) {
 	var out UpdateDomainPackageStateResponse
-	pattern := "/v1/domainPackage/{id}/state"
+	pattern := "/v1/domainPackages/{id}/state"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationDomainServiceUpdateDomainPackageState))
 	opts = append(opts, http.PathTemplate(pattern))

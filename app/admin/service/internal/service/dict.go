@@ -6,7 +6,6 @@ import (
 	v1 "github.com/beiduoke/go-scaffold/api/admin/service/v1"
 	"github.com/beiduoke/go-scaffold/api/common"
 	"github.com/beiduoke/go-scaffold/app/admin/service/internal/biz"
-	"github.com/beiduoke/go-scaffold/app/admin/service/internal/conf"
 	"github.com/beiduoke/go-scaffold/app/admin/service/internal/pkg/constant"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
@@ -20,7 +19,6 @@ var _ v1.DictServiceServer = (*DictService)(nil)
 // Service is a  service.
 type DictService struct {
 	v1.UnimplementedDictServiceServer
-	ac       *conf.Auth
 	log      *log.Helper
 	dictCase *biz.DictUsecase
 }
@@ -30,7 +28,7 @@ func NewDictService(
 	logger log.Logger,
 	dictCase *biz.DictUsecase,
 ) *DictService {
-	l := log.NewHelper(log.With(logger, "module", "service"))
+	l := log.NewHelper(log.With(logger, "module", "dict/service/admin-service"))
 	return &DictService{
 		log:      l,
 		dictCase: dictCase,

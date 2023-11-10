@@ -49,11 +49,11 @@ type DomainPackage struct {
 	CreatedAt time.Time `json:"createdAt,omitempty" form:"createdAt,omitempty"`
 	UpdatedAt time.Time `json:"updatedAt,omitempty" form:"updatedAt,omitempty"`
 	ID        uint      `json:"id,omitempty" form:"id,omitempty"`
-	Menus     []*Menu   `json:"menus,omitempty" form:"menus,omitempty"`
-	Remarks   string    `json:"remarks,omitempty" form:"remarks,omitempty"`
-	Name      string    `json:"name,omitempty" form:"name,omitempty"`
 	Sort      int32     `json:"sort,omitempty" form:"sort,omitempty"`
 	State     int32     `json:"state,omitempty" form:"state,omitempty"`
+	Remarks   string    `json:"remarks,omitempty" form:"remarks,omitempty"`
+	Name      string    `json:"name,omitempty" form:"name,omitempty"`
+	Menus     []*Menu   `json:"menus,omitempty" form:"menus,omitempty"`
 }
 
 func (g DomainPackage) GetID() string {
@@ -79,6 +79,7 @@ type DomainRepo interface {
 	PackageSave(context.Context, *DomainPackage) (*DomainPackage, error)
 	PackageUpdate(context.Context, *DomainPackage) (*DomainPackage, error)
 	PackageFindByID(context.Context, uint) (*DomainPackage, error)
+	PackageFindByName(context.Context, string) (*DomainPackage, error)
 	PackageDelete(context.Context, *DomainPackage) error
 	PackageListAll(context.Context) ([]*DomainPackage, error)
 	PackageListPage(context.Context, *pagination.Pagination) ([]*DomainPackage, int64)
@@ -207,4 +208,81 @@ func (uc *DomainUsecase) GetTree(ctx context.Context, id uint) []*Domain {
 	uc.log.WithContext(ctx).Debugf("GetTree")
 	menus, _ := uc.biz.domainRepo.ListPage(ctx, &pagination.Pagination{Nopaging: true, OrderBy: map[string]bool{"sort": true}})
 	return menus
+}
+
+// PackageCreate creates a DomainPackage, and returns the new Domain.
+func (uc *DomainUsecase) PackageCreate(ctx context.Context, g *DomainPackage) (*DomainPackage, error) {
+	uc.log.WithContext(ctx).Debugf("PackageCreate: %v", g.Name)
+	err := uc.biz.tm.InTx(ctx, func(ctx context.Context) error {
+		dp, err := uc.biz.domainRepo.PackageSave(ctx, g)
+		if err != nil {
+			return err
+		}
+
+		g, err = uc.biz.domainRepo.PackageUpdate(ctx, dp)
+		return err
+	})
+	return g, err
+}
+
+// ListByIDs 获取指定租户套餐ID集合
+func (uc *DomainUsecase) PackageListByIDs(ctx context.Context, id ...uint) (roles []*DomainPackage, err error) {
+	// roles, _ = uc.biz.domainRepo.PackageListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithCondition("id in ?", id)))
+	return
+}
+
+// Update 修改租户套餐
+func (uc *DomainUsecase) PackageUpdate(ctx context.Context, g *DomainPackage) error {
+	uc.log.WithContext(ctx).Debugf("PackageUpdate: %v", g)
+
+	dp, _ := uc.biz.domainRepo.PackageFindByID(ctx, g.ID)
+	if dp == nil {
+		return errors.New("租户套餐未注册")
+	}
+
+	if dp.Name != g.Name && g.Name != "" {
+		name, _ := uc.biz.domainRepo.PackageFindByName(ctx, g.Name)
+		if name != nil {
+			return errors.New("租户套餐名已存在")
+		}
+	}
+	// 新数据合并到源数据
+	if err := mergo.Merge(dp, *g, mergo.WithOverride); err != nil {
+		return errors.Errorf("数据合并失败：%v", err)
+	}
+
+	_, err := uc.biz.domainRepo.PackageUpdate(ctx, dp)
+	return err
+}
+
+// UpdateState 修改租户套餐状态
+func (uc *DomainUsecase) PackageUpdateState(ctx context.Context, g *DomainPackage) error {
+	uc.log.WithContext(ctx).Debugf("PackageUpdateState: %v", g)
+
+	dp, _ := uc.biz.domainRepo.PackageFindByID(ctx, g.ID)
+	if dp == nil {
+		return errors.New("租户套餐不存在")
+	}
+
+	dp.State = g.State
+	_, err := uc.biz.domainRepo.PackageUpdate(ctx, dp)
+	return err
+}
+
+// List 租户套餐列表全部
+func (uc *DomainUsecase) PackageListAll(ctx context.Context) ([]*DomainPackage, int64) {
+	uc.log.WithContext(ctx).Debugf("PackageListAll")
+	return uc.biz.domainRepo.PackageListPage(ctx, &pagination.Pagination{Nopaging: true, OrderBy: map[string]bool{"sort": true}})
+}
+
+// List 租户套餐列表分页
+func (uc *DomainUsecase) PackageListPage(ctx context.Context, paging *pagination.Pagination) ([]*DomainPackage, int64) {
+	uc.log.WithContext(ctx).Debugf("PackageListPage")
+	return uc.biz.domainRepo.PackageListPage(ctx, paging)
+}
+
+// Delete 根据租户套餐ID删除租户套餐
+func (uc *DomainUsecase) PackageDelete(ctx context.Context, g *DomainPackage) error {
+	uc.log.WithContext(ctx).Debugf("PackageDelete: %v", g)
+	return uc.biz.domainRepo.PackageDelete(ctx, g)
 }

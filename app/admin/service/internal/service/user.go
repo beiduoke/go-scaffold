@@ -29,7 +29,7 @@ func NewUserService(
 	logger log.Logger,
 	userCase *biz.UserUsecase,
 ) *UserService {
-	l := log.NewHelper(log.With(logger, "module", "service"))
+	l := log.NewHelper(log.With(logger, "module", "user/service/admin-service"))
 	return &UserService{
 		log:      l,
 		userCase: userCase,

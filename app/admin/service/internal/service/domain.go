@@ -6,10 +6,10 @@ import (
 	v1 "github.com/beiduoke/go-scaffold/api/admin/service/v1"
 	"github.com/beiduoke/go-scaffold/api/common"
 	"github.com/beiduoke/go-scaffold/app/admin/service/internal/biz"
-	"github.com/beiduoke/go-scaffold/app/admin/service/internal/conf"
 	"github.com/beiduoke/go-scaffold/app/admin/service/internal/pkg/constant"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
+	"github.com/beiduoke/go-scaffold/pkg/util/trans"
 	"github.com/go-kratos/kratos/v2/log"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -20,7 +20,6 @@ var _ v1.DomainServiceServer = (*DomainService)(nil)
 // Service is a  service.
 type DomainService struct {
 	v1.UnimplementedDomainServiceServer
-	ac         *conf.Auth
 	log        *log.Helper
 	domainCase *biz.DomainUsecase
 }
@@ -30,7 +29,7 @@ func NewDomainService(
 	logger log.Logger,
 	domainCase *biz.DomainUsecase,
 ) *DomainService {
-	l := log.NewHelper(log.With(logger, "module", "service"))
+	l := log.NewHelper(log.With(logger, "module", "domain/service/admin-service"))
 	return &DomainService{
 		log:        l,
 		domainCase: domainCase,
@@ -44,23 +43,24 @@ func TransformDomain(data *biz.Domain) *v1.Domain {
 		Id:          uint64(data.ID),
 		Name:        data.Name,
 		ParentId:    uint64(data.ParentID),
-		Code:        &data.Code,
-		Sort:        &data.Sort,
-		Alias:       &data.Alias,
-		Logo:        &data.Logo,
-		Pic:         &data.Pic,
-		Keywords:    &data.Keywords,
-		Description: &data.Description,
-		State:       &data.State,
-		Remarks:     &data.Remarks,
+		Code:        trans.String(data.Code),
+		Sort:        trans.Int32(data.Sort),
+		Alias:       trans.String(data.Alias),
+		Logo:        trans.String(data.Logo),
+		Pic:         trans.String(data.Pic),
+		Keywords:    trans.String(data.Keywords),
+		Description: trans.String(data.Description),
+		State:       trans.Int32(data.State),
+		Remarks:     trans.String(data.Remarks),
 		Children:    make([]*v1.Domain, 0),
+		PackageId:   uint64(data.PackageID),
+		Package:     TransformDomainPackage(data.Package),
 	}
 }
 
 // GetTreeDomain 列表部门-树形
 func (s *DomainService) ListDomainTree(ctx context.Context, in *v1.ListDomainTreeRequest) (*v1.ListDomainTreeResponse, error) {
 	results, _ := s.domainCase.ListPage(ctx, pagination.NewPagination(pagination.WithNopaging(), pagination.WithOrderBy(map[string]bool{"sort": true})))
-
 	treeData := make([]*v1.Domain, 0)
 	for _, v := range results {
 		treeData = append(treeData, TransformDomain(v))
@@ -98,6 +98,7 @@ func (s *DomainService) CreateDomain(ctx context.Context, in *v1.CreateDomainReq
 		Sort:        in.GetSort(),
 		State:       int32(in.GetState()),
 		Remarks:     in.GetRemarks(),
+		PackageID:   uint(in.GetPackageId()),
 	})
 	if err != nil {
 		return nil, v1.ErrorDomainCreateFail("租户创建失败: %v", err.Error())
@@ -116,11 +117,18 @@ func (s *DomainService) CreateDomain(ctx context.Context, in *v1.CreateDomainReq
 func (s *DomainService) UpdateDomain(ctx context.Context, in *v1.UpdateDomainRequest) (*v1.UpdateDomainResponse, error) {
 	v := in.GetData()
 	err := s.domainCase.Update(ctx, &biz.Domain{
-		ID:       uint(in.GetId()),
-		Name:     v.GetName(),
-		ParentID: uint(v.GetParentId()),
-		Sort:     v.GetSort(),
-		State:    int32(v.GetState()),
+		ID:          uint(in.GetId()),
+		ParentID:    uint(v.GetParentId()),
+		Name:        v.GetName(),
+		Alias:       v.GetAlias(),
+		Keywords:    v.GetKeywords(),
+		Logo:        v.GetLogo(),
+		Pic:         v.GetPic(),
+		Description: v.GetDescription(),
+		Sort:        v.GetSort(),
+		State:       int32(v.GetState()),
+		Remarks:     v.GetRemarks(),
+		PackageID:   uint(v.GetPackageId()),
 	})
 	if err != nil {
 		return nil, v1.ErrorDomainUpdateFail("租户修改失败: %v", err.Error())
@@ -210,5 +218,116 @@ func (s *DomainService) HandleDomainMenu(ctx context.Context, in *v1.HandleDomai
 	return &v1.HandleDomainMenuResponse{
 		Type:    constant.HandleType_success.String(),
 		Message: "处理成功",
+	}, nil
+}
+
+func TransformDomainPackage(data *biz.DomainPackage) *v1.DomainPackage {
+	if data == nil {
+		return nil
+	}
+	return &v1.DomainPackage{
+		CreatedAt: timestamppb.New(data.CreatedAt),
+		UpdatedAt: timestamppb.New(data.UpdatedAt),
+		Id:        uint64(data.ID),
+		Sort:      &data.Sort,
+		State:     &data.State,
+		Remarks:   &data.Remarks,
+		Name:      data.Name,
+		MenuIds: func() (ids []uint64) {
+			for _, menu := range data.Menus {
+				ids = append(ids, uint64(menu.ID))
+			}
+			return ids
+		}(),
+	}
+}
+
+// ListDomainPackage 列表-租户套餐
+func (s *DomainService) ListDomainPackage(ctx context.Context, in *v1.ListDomainPackageRequest) (*v1.ListDomainPackageResponse, error) {
+	results, total := s.domainCase.PackageListPage(ctx, pagination.NewPagination(
+		pagination.WithPage(in.GetPage()),
+		pagination.WithPageSize(in.GetPageSize()),
+		pagination.WithQuery(map[string]interface{}{
+			"name":  in.GetName(),
+			"state": in.GetState(),
+		}),
+	))
+	return &v1.ListDomainPackageResponse{
+		Total: total,
+		Items: convert.ArrayToAny(results, func(t *biz.DomainPackage) *v1.DomainPackage {
+			return TransformDomainPackage(t)
+		}),
+	}, nil
+}
+
+// CreateDomainPackage 创建租户套餐
+func (s *DomainService) CreateDomainPackage(ctx context.Context, in *v1.CreateDomainPackageRequest) (*v1.CreateDomainPackageResponse, error) {
+	user, err := s.domainCase.PackageCreate(ctx, &biz.DomainPackage{
+		Name:    in.GetName(),
+		Sort:    in.GetSort(),
+		State:   int32(in.GetState()),
+		Remarks: in.GetRemarks(),
+	})
+	if err != nil {
+		return nil, v1.ErrorDomainCreateFail("租户套餐创建失败: %v", err.Error())
+	}
+	data, _ := anypb.New(&common.Result{
+		Id: uint64(user.ID),
+	})
+	return &v1.CreateDomainPackageResponse{
+		Type:    constant.HandleType_success.String(),
+		Message: "创建成功",
+		Result:  data,
+	}, nil
+}
+
+// UpdateDomainPackage 修改租户套餐
+func (s *DomainService) UpdateDomainPackage(ctx context.Context, in *v1.UpdateDomainPackageRequest) (*v1.UpdateDomainPackageResponse, error) {
+	v := in.GetData()
+	err := s.domainCase.PackageUpdate(ctx, &biz.DomainPackage{
+		ID:    uint(in.GetId()),
+		Name:  v.GetName(),
+		Sort:  v.GetSort(),
+		State: int32(v.GetState()),
+		Menus: func() (ms []*biz.Menu) {
+			for _, id := range in.Data.GetMenuIds() {
+				ms = append(ms, &biz.Menu{ID: uint(id)})
+			}
+			return ms
+		}(),
+	})
+	if err != nil {
+		return nil, v1.ErrorDomainUpdateFail("租户套餐修改失败: %v", err.Error())
+	}
+	return &v1.UpdateDomainPackageResponse{
+		Type:    constant.HandleType_success.String(),
+		Message: "修改成功",
+	}, nil
+}
+
+// UpdateDomainPackageState 修改租户套餐-状态
+func (s *DomainService) UpdateDomainPackageState(ctx context.Context, in *v1.UpdateDomainPackageStateRequest) (*v1.UpdateDomainPackageStateResponse, error) {
+	v := in.GetData()
+	err := s.domainCase.PackageUpdateState(ctx, &biz.DomainPackage{
+		ID:    uint(in.GetId()),
+		State: int32(v.GetState()),
+	})
+	if err != nil {
+		return nil, v1.ErrorDomainUpdateFail("租户套餐状态修改失败: %v", err.Error())
+	}
+	return &v1.UpdateDomainPackageStateResponse{
+		Type:    constant.HandleType_success.String(),
+		Message: "修改成功",
+	}, nil
+}
+
+// DeleteDomainPackage 删除租户套餐
+func (s *DomainService) DeleteDomainPackage(ctx context.Context, in *v1.DeleteDomainPackageRequest) (*v1.DeleteDomainPackageResponse, error) {
+	if err := s.domainCase.Delete(ctx, &biz.Domain{ID: uint(in.GetId())}); err != nil {
+		return nil, v1.ErrorDomainDeleteFail("租户套餐删除失败：%v", err)
+	}
+	return &v1.DeleteDomainPackageResponse{
+		Type:    constant.HandleType_success.String(),
+		Message: "删除成功",
 	}, nil
 }

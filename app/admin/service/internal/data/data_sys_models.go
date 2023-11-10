@@ -63,7 +63,7 @@ type SysDomain struct {
 	Model
 	ParentID    uint              `gorm:"type:bigint(20);column:parent_id;not null;default:0;comment:父角色ID"`
 	SuperUserID uint              `gorm:"type:bigint(20);column:super_user_id;not null;default:0;comment:超级用户ID"`
-	PackageID   uint              `gorm:"type:bigint(20);column:package_id;not null;comment:超级用户ID"`
+	PackageID   uint              `gorm:"type:bigint(20);column:package_id;not null;comment:租户套餐ID"`
 	Name        string            `gorm:"type:varchar(255);column:name;not null;comment:租户名称;"`
 	Code        string            `gorm:"type:varchar(100);column:code;not null;index;comment:租户编码;"`
 	Alias       string            `gorm:"type:varchar(255);column:alias;not null;default:'';comment:租户别名;"`

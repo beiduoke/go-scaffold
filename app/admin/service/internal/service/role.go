@@ -30,7 +30,7 @@ func NewRoleService(
 	roleCase *biz.RoleUsecase,
 	deptCase *biz.DeptUsecase,
 ) *RoleService {
-	l := log.NewHelper(log.With(logger, "module", "service"))
+	l := log.NewHelper(log.With(logger, "module", "role/service/admin-service"))
 	return &RoleService{
 		log:      l,
 		roleCase: roleCase,

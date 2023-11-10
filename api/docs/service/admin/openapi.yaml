@@ -3,8 +3,8 @@
 
 openapi: 3.0.3
 info:
-    title: Scaffold User API
-    description: 后台管理脚手架系统-用户服务
+    title: Scaffold Domain API
+    description: 后台管理脚手架系统-租户服务
     contact:
         name: 基础架构
         url: https://github.com/grpc-ecosystem/grpc-gateway
@@ -14,6 +14,25 @@ info:
         url: https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt
     version: "1.0"
 paths:
+    /v1/auth/info:
+        get:
+            tags:
+                - AuthService
+            description: 当前登录用户概述
+            operationId: AuthService_GetAuthInfo
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetAuthInfoResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /v1/auth/login/{domain}:
         post:
             tags:
@@ -181,6 +200,77 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /v1/auth/menus/trees:
+        get:
+            tags:
+                - AuthService
+            description: 获取角色菜单路由树形列表
+            operationId: AuthService_ListAuthRoleMenuTree
+            parameters:
+                - name: roleId
+                  in: query
+                  schema:
+                    type: string
+                - name: menuParentId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListAuthRoleMenuTreeResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/auth/permissions:
+        get:
+            tags:
+                - AuthService
+            description: 获取角色权限列表
+            operationId: AuthService_ListAuthRolePermission
+            parameters:
+                - name: roleId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListAuthRolePermissionResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/auth/profiles:
+        get:
+            tags:
+                - AuthService
+            description: 当前登录用户概述
+            operationId: AuthService_GetAuthProfile
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetAuthProfileResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /v1/auth/register/{domain}:
         post:
             tags:
@@ -206,6 +296,136 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/RegisterResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/auth/roles:
+        get:
+            tags:
+                - AuthService
+            description: 当前登录用户拥有角色
+            operationId: AuthService_ListAuthRole
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListAuthRoleResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/auth/roles/{roleId}/menus/trees:
+        get:
+            tags:
+                - AuthService
+            description: 获取角色菜单路由树形列表
+            operationId: AuthService_ListAuthRoleMenuTree
+            parameters:
+                - name: roleId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: menuParentId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListAuthRoleMenuTreeResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/auth/roles/{roleId}/permissions:
+        get:
+            tags:
+                - AuthService
+            description: 获取角色权限列表
+            operationId: AuthService_ListAuthRolePermission
+            parameters:
+                - name: roleId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListAuthRolePermissionResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/auth/roles/{roleId}/routers/trees:
+        get:
+            tags:
+                - AuthService
+            description: 获取角色菜单路由树形列表
+            operationId: AuthService_ListAuthRoleMenuRouterTree
+            parameters:
+                - name: roleId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: menuParentId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListAuthRoleMenuRouterTreeResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/auth/routers/trees:
+        get:
+            tags:
+                - AuthService
+            description: 获取角色菜单路由树形列表
+            operationId: AuthService_ListAuthRoleMenuRouterTree
+            parameters:
+                - name: roleId
+                  in: query
+                  schema:
+                    type: string
+                - name: menuParentId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListAuthRoleMenuRouterTreeResponse'
                 default:
                     description: Default error response
                     content:
@@ -1868,7 +2088,7 @@ paths:
         get:
             tags:
                 - UserService
-            description: 列表用户
+            description: "User 用户模块\r\n 列表用户"
             operationId: UserService_ListUser
             parameters:
                 - name: nopaging
@@ -1938,17 +2158,17 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /v1/users/existName:
+    /v1/users/existByName:
         post:
             tags:
                 - UserService
             description: 验证用户名是否存在
-            operationId: UserService_ExistUserName
+            operationId: UserService_ExistUserByName
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/ExistUserNameRequest'
+                            $ref: '#/components/schemas/ExistUserByNameRequest'
                 required: true
             responses:
                 "200":
@@ -1956,227 +2176,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/ExistUserNameResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /v1/users/info:
-        get:
-            tags:
-                - UserService
-            description: "User 用户模块\r\n 当前登录用户概述"
-            operationId: UserService_GetUserInfo
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/GetUserInfoResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /v1/users/menus/trees:
-        get:
-            tags:
-                - UserService
-            description: 获取角色菜单路由树形列表
-            operationId: UserService_ListUserRoleMenuTree
-            parameters:
-                - name: roleId
-                  in: query
-                  schema:
-                    type: string
-                - name: menuParentId
-                  in: query
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ListUserRoleMenuTreeResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /v1/users/permissions:
-        get:
-            tags:
-                - UserService
-            description: 获取角色权限列表
-            operationId: UserService_ListUserRolePermission
-            parameters:
-                - name: roleId
-                  in: query
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ListUserRolePermissionResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /v1/users/profiles:
-        get:
-            tags:
-                - UserService
-            description: 当前登录用户概述
-            operationId: UserService_GetUserProfile
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/GetUserProfileResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /v1/users/roles:
-        get:
-            tags:
-                - UserService
-            description: 当前登录用户拥有角色
-            operationId: UserService_ListUserRole
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ListUserRoleResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /v1/users/roles/{roleId}/menus/trees:
-        get:
-            tags:
-                - UserService
-            description: 获取角色菜单路由树形列表
-            operationId: UserService_ListUserRoleMenuTree
-            parameters:
-                - name: roleId
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-                - name: menuParentId
-                  in: query
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ListUserRoleMenuTreeResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /v1/users/roles/{roleId}/permissions:
-        get:
-            tags:
-                - UserService
-            description: 获取角色权限列表
-            operationId: UserService_ListUserRolePermission
-            parameters:
-                - name: roleId
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ListUserRolePermissionResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /v1/users/roles/{roleId}/routers/trees:
-        get:
-            tags:
-                - UserService
-            description: 获取角色菜单路由树形列表
-            operationId: UserService_ListUserRoleMenuRouterTree
-            parameters:
-                - name: roleId
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-                - name: menuParentId
-                  in: query
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ListUserRoleMenuRouterTreeResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /v1/users/routers/trees:
-        get:
-            tags:
-                - UserService
-            description: 获取角色菜单路由树形列表
-            operationId: UserService_ListUserRoleMenuRouterTree
-            parameters:
-                - name: roleId
-                  in: query
-                  schema:
-                    type: string
-                - name: menuParentId
-                  in: query
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ListUserRoleMenuRouterTreeResponse'
+                                $ref: '#/components/schemas/ExistUserByNameResponse'
                 default:
                     description: Default error response
                     content:
@@ -2869,13 +2869,13 @@ components:
                     type: integer
                     format: int32
             description: 租户套餐模块
-        ExistUserNameRequest:
+        ExistUserByNameRequest:
             type: object
             properties:
                 name:
                     type: string
             description: 请求 - 验证用户是否存在
-        ExistUserNameResponse:
+        ExistUserByNameResponse:
             type: object
             properties:
                 code:
@@ -2888,21 +2888,7 @@ components:
                 type:
                     type: string
             description: 回应 - 验证用户是否存在
-        GetRoleDataScopeResponse:
-            type: object
-            properties:
-                scope:
-                    type: integer
-                    format: int32
-                deptCheckStrictly:
-                    type: integer
-                    format: int32
-                deptCustoms:
-                    type: array
-                    items:
-                        type: string
-            description: 回应 - 角色菜单数据范围
-        GetUserInfoResponse:
+        GetAuthInfoResponse:
             type: object
             properties:
                 roles:
@@ -2935,7 +2921,7 @@ components:
                     description: 用户状态
                     format: int32
             description: 回应 - 用户详情
-        GetUserProfileResponse:
+        GetAuthProfileResponse:
             type: object
             properties:
                 user:
@@ -2945,6 +2931,20 @@ components:
                     items:
                         $ref: '#/components/schemas/Role'
             description: 回应 - 用户概况详情
+        GetRoleDataScopeResponse:
+            type: object
+            properties:
+                scope:
+                    type: integer
+                    format: int32
+                deptCheckStrictly:
+                    type: integer
+                    format: int32
+                deptCustoms:
+                    type: array
+                    items:
+                        type: string
+            description: 回应 - 角色菜单数据范围
         GoogleProtobufAny:
             type: object
             properties:
@@ -3019,6 +3019,46 @@ components:
                 type:
                     type: string
             description: 回应 - 处理角色菜单
+        ListAuthRoleMenuRouterTreeResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/MenuRouter'
+                total:
+                    type: string
+            description: 回应 - 获取用户角色菜单路由列表-树形
+        ListAuthRoleMenuTreeResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Menu'
+                total:
+                    type: string
+            description: 回应 - 获取用户角色菜单列表-树形
+        ListAuthRolePermissionResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        type: string
+                total:
+                    type: string
+            description: 回应 - 获取用户角色权限列表
+        ListAuthRoleResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Role'
+                total:
+                    type: string
+            description: 回应 - 用户角色
         ListDeptResponse:
             type: object
             properties:
@@ -3169,46 +3209,6 @@ components:
                     items:
                         $ref: '#/components/schemas/User'
             description: 回应 - 列表用户
-        ListUserRoleMenuRouterTreeResponse:
-            type: object
-            properties:
-                items:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/MenuRouter'
-                total:
-                    type: string
-            description: 回应 - 获取用户角色菜单路由列表-树形
-        ListUserRoleMenuTreeResponse:
-            type: object
-            properties:
-                items:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/Menu'
-                total:
-                    type: string
-            description: 回应 - 获取用户角色列表
-        ListUserRolePermissionResponse:
-            type: object
-            properties:
-                items:
-                    type: array
-                    items:
-                        type: string
-                total:
-                    type: string
-            description: 回应 - 获取用户角色列表
-        ListUserRoleResponse:
-            type: object
-            properties:
-                items:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/Role'
-                total:
-                    type: string
-            description: 回应 - 用户角色
         LoginByEmailRequest_Auth:
             type: object
             properties:

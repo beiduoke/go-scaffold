@@ -103,14 +103,14 @@ service DomainService {
     };
   }
   
-  // 获取角色菜单
+  // 获取租户菜单
   rpc ListDomainMenu (ListDomainMenuRequest) returns (ListDomainMenuResponse) {
     option (google.api.http) = {
       get: "/v1/domains/{id}/menus"
     };
   }
 
-  // 处理角色菜单
+  // 处理租户菜单
   rpc HandleDomainMenu (HandleDomainMenuRequest) returns (HandleDomainMenuResponse) {
     option (google.api.http) = {
       post: "/v1/domains/{id}/menus"
@@ -121,14 +121,14 @@ service DomainService {
   // 列表租户套餐
   rpc ListDomainPackage (ListDomainPackageRequest) returns (ListDomainPackageResponse) {
     option (google.api.http) = {
-      get: "/v1/depts"
+      get: "/v1/domainPackages"
     };
   }
 
   // 创建租户套餐
   rpc CreateDomainPackage (CreateDomainPackageRequest) returns (CreateDomainPackageResponse) {
     option (google.api.http) = {
-      post: "/v1/domainPackage"
+      post: "/v1/domainPackages"
       body: "*"
     };
   }
@@ -136,14 +136,14 @@ service DomainService {
   // 获取租户套餐
   rpc GetDomainPackage (GetDomainPackageRequest) returns (DomainPackage) {
     option (google.api.http) = {
-      get: "/v1/domainPackage/{id}"
+      get: "/v1/domainPackages/{id}"
     };
   }
 
   // 修改租户套餐
   rpc UpdateDomainPackage (UpdateDomainPackageRequest) returns (UpdateDomainPackageResponse) {
     option (google.api.http) = {
-      put: "/v1/domainPackage/{id}"
+      put: "/v1/domainPackages/{id}"
       body: "data"
     };
   }
@@ -151,7 +151,7 @@ service DomainService {
   // 更新指定ID套餐状态
   rpc UpdateDomainPackageState (UpdateDomainPackageStateRequest) returns (UpdateDomainPackageStateResponse) {
     option (google.api.http) = {
-      put: "/v1/domainPackage/{id}/state"
+      put: "/v1/domainPackages/{id}/state"
       body: "data"
     };
   }
@@ -159,7 +159,7 @@ service DomainService {
   // 删除租户套餐
   rpc DeleteDomainPackage (DeleteDomainPackageRequest) returns (DeleteDomainPackageResponse) {
     option (google.api.http) = {
-      delete: "/v1/domainPackage/{id}"
+      delete: "/v1/domainPackages/{id}"
     };
   }
 }
@@ -181,6 +181,8 @@ message Domain {
   optional int32 state = 13;
   optional string remarks = 14;
   repeated Domain children = 15;
+  uint64 package_id = 16;
+  optional DomainPackage package = 17;
 }
 
 // 请求 - 列表租户
@@ -222,6 +224,7 @@ message CreateDomainRequest {
   optional string description = 8;
   optional int32 state = 9 [(validate.rules).int32.gte = 0];
   optional string remarks = 10;
+  uint64 package_id = 11;
 }
 
 // 回应 - 创建租户
@@ -246,6 +249,7 @@ message UpdateDomainRequest {
     optional string description = 8;
     optional int32 state = 9 [(validate.rules).int32.gte = 0];
     optional string remarks = 10;
+    uint64 package_id = 11;
   }
   Data data = 2;
 }
@@ -352,6 +356,7 @@ message ListDomainPackageRequest {
   // 每一页的行数
   optional int32 page_size = 3;
   optional string name = 4;
+  optional int32 state = 5;
 
 }
 

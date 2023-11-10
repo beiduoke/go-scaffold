@@ -32,7 +32,7 @@ func NewAuthService(
 	authCase *biz.AuthUsecase,
 	userCase *biz.UserUsecase,
 ) *AuthService {
-	l := log.NewHelper(log.With(logger, "module", "service"))
+	l := log.NewHelper(log.With(logger, "module", "auth/service/admin-service"))
 	return &AuthService{
 		log:      l,
 		authCase: authCase,
@@ -41,7 +41,6 @@ func NewAuthService(
 }
 
 var (
-	domain       = "domain"
 	loginMessage = &i18n.Message{
 		Description: "login",
 		ID:          "Login",

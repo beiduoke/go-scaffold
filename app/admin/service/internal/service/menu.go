@@ -10,7 +10,6 @@ import (
 
 	v1 "github.com/beiduoke/go-scaffold/api/admin/service/v1"
 	"github.com/beiduoke/go-scaffold/app/admin/service/internal/biz"
-	"github.com/beiduoke/go-scaffold/app/admin/service/internal/conf"
 	"github.com/beiduoke/go-scaffold/app/admin/service/internal/pkg/constant"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
@@ -23,7 +22,6 @@ var _ v1.MenuServiceServer = (*MenuService)(nil)
 // Service is a  service.
 type MenuService struct {
 	v1.UnimplementedMenuServiceServer
-	ac       *conf.Auth
 	log      *log.Helper
 	menuCase *biz.MenuUsecase
 }
@@ -33,7 +31,7 @@ func NewMenuService(
 	logger log.Logger,
 	menuCase *biz.MenuUsecase,
 ) *MenuService {
-	l := log.NewHelper(log.With(logger, "module", "service"))
+	l := log.NewHelper(log.With(logger, "module", "menu/service/admin-service"))
 	return &MenuService{
 		log:      l,
 		menuCase: menuCase,

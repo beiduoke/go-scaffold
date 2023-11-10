@@ -6,7 +6,6 @@ import (
 	v1 "github.com/beiduoke/go-scaffold/api/admin/service/v1"
 	"github.com/beiduoke/go-scaffold/api/common"
 	"github.com/beiduoke/go-scaffold/app/admin/service/internal/biz"
-	"github.com/beiduoke/go-scaffold/app/admin/service/internal/conf"
 	"github.com/beiduoke/go-scaffold/app/admin/service/internal/pkg/constant"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
@@ -20,7 +19,6 @@ var _ v1.DeptServiceServer = (*DeptService)(nil)
 // Service is a  service.
 type DeptService struct {
 	v1.UnimplementedDeptServiceServer
-	ac       *conf.Auth
 	log      *log.Helper
 	deptCase *biz.DeptUsecase
 }
@@ -30,7 +28,7 @@ func NewDeptService(
 	logger log.Logger,
 	deptCase *biz.DeptUsecase,
 ) *DeptService {
-	l := log.NewHelper(log.With(logger, "module", "service"))
+	l := log.NewHelper(log.With(logger, "module", "dept/service/admin-service"))
 	return &DeptService{
 		log:      l,
 		deptCase: deptCase,

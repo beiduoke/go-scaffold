@@ -6,7 +6,6 @@ import (
 	v1 "github.com/beiduoke/go-scaffold/api/admin/service/v1"
 	"github.com/beiduoke/go-scaffold/api/common"
 	"github.com/beiduoke/go-scaffold/app/admin/service/internal/biz"
-	"github.com/beiduoke/go-scaffold/app/admin/service/internal/conf"
 	"github.com/beiduoke/go-scaffold/app/admin/service/internal/pkg/constant"
 	"github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/go-kratos/kratos/v2/log"
@@ -19,7 +18,6 @@ var _ v1.PostServiceServer = (*PostService)(nil)
 // Service is a  service.
 type PostService struct {
 	v1.UnimplementedPostServiceServer
-	ac       *conf.Auth
 	log      *log.Helper
 	postCase *biz.PostUsecase
 }
@@ -29,7 +27,7 @@ func NewPostService(
 	logger log.Logger,
 	postCase *biz.PostUsecase,
 ) *PostService {
-	l := log.NewHelper(log.With(logger, "module", "service"))
+	l := log.NewHelper(log.With(logger, "module", "post/service/admin-service"))
 	return &PostService{
 		log:      l,
 		postCase: postCase,

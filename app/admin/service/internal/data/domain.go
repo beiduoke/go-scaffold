@@ -40,6 +40,8 @@ func toDomainModel(d *biz.Domain) *SysDomain {
 		Pic:         d.Pic,
 		Description: d.Description,
 		Remarks:     d.Remarks,
+		PackageID:   d.PackageID,
+		Package:     toDomainPackageModel(d.Package),
 	}
 	sysData.ID = d.ID
 	sysData.CreatedAt = d.CreatedAt
@@ -66,6 +68,8 @@ func toDomainBiz(d *SysDomain) *biz.Domain {
 		Pic:         d.Pic,
 		Description: d.Description,
 		Remarks:     d.Remarks,
+		PackageID:   d.PackageID,
+		Package:     toDomainPackageBiz(d.Package),
 	}
 }
 
@@ -86,7 +90,7 @@ func (r *DomainRepo) Update(ctx context.Context, g *biz.Domain) (*biz.Domain, er
 
 func (r *DomainRepo) FindByID(ctx context.Context, id uint) (*biz.Domain, error) {
 	domain := SysDomain{}
-	result := r.data.DB(ctx).Last(&domain, id)
+	result := r.data.DB(ctx).Preload("Package").Last(&domain, id)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -95,7 +99,7 @@ func (r *DomainRepo) FindByID(ctx context.Context, id uint) (*biz.Domain, error)
 
 func (r *DomainRepo) FindByName(ctx context.Context, s string) (*biz.Domain, error) {
 	domain := SysDomain{}
-	result := r.data.DB(ctx).Last(&domain, "name = ?", s)
+	result := r.data.DB(ctx).Preload("Package").Last(&domain, "name = ?", s)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -104,7 +108,7 @@ func (r *DomainRepo) FindByName(ctx context.Context, s string) (*biz.Domain, err
 
 func (r *DomainRepo) FindByCode(ctx context.Context, code string) (*biz.Domain, error) {
 	sysDomain := &SysDomain{}
-	result := r.data.DB(ctx).Last(sysDomain, "code", code)
+	result := r.data.DB(ctx).Preload("Package").Last(sysDomain, "code", code)
 	return toDomainBiz(sysDomain), result.Error
 }
 
@@ -112,7 +116,7 @@ func (r *DomainRepo) ListByIDs(ctx context.Context, id ...uint) (domains []*biz.
 	db := r.data.DB(ctx).Model(&SysDomain{})
 	sysDomains := []*SysDomain{}
 
-	err = db.Find(&sysDomains).Error
+	err = db.Preload("Package").Find(&sysDomains).Error
 	if err != nil {
 		return domains, err
 	}
@@ -124,7 +128,7 @@ func (r *DomainRepo) ListByIDs(ctx context.Context, id ...uint) (domains []*biz.
 
 func (r *DomainRepo) ListByName(ctx context.Context, name string) ([]*biz.Domain, error) {
 	sysDomains, bizDomains := []*SysDomain{}, []*biz.Domain{}
-	result := r.data.DB(ctx).Find(&sysDomains, "name LIKE ?", "%"+name)
+	result := r.data.DB(ctx).Preload("Package").Find(&sysDomains, "name LIKE ?", "%"+name)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -150,7 +154,7 @@ func (r *DomainRepo) ListAll(ctx context.Context) ([]*biz.Domain, error) {
 }
 
 func (r *DomainRepo) ListPage(ctx context.Context, paging *pagination.Pagination) (domains []*biz.Domain, total int64) {
-	db := r.data.DB(ctx).Model(&SysDomain{})
+	db := r.data.DB(ctx).Model(&SysDomain{}).Debug()
 	sysDomains := []*SysDomain{}
 	// 查询条件
 	if name, ok := paging.Query["name"].(string); ok {
@@ -178,7 +182,7 @@ func (r *DomainRepo) ListPage(ctx context.Context, paging *pagination.Pagination
 		db = db.Count(&total).Offset(pagination.GetPageOffset(paging.Page, paging.PageSize))
 	}
 
-	result := db.Limit(int(paging.PageSize)).Find(&sysDomains)
+	result := db.Limit(int(paging.PageSize)).Preload("Package").Find(&sysDomains)
 	if result.Error != nil {
 		return nil, 0
 	}
