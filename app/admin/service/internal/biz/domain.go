@@ -213,16 +213,7 @@ func (uc *DomainUsecase) GetTree(ctx context.Context, id uint) []*Domain {
 // PackageCreate creates a DomainPackage, and returns the new Domain.
 func (uc *DomainUsecase) PackageCreate(ctx context.Context, g *DomainPackage) (*DomainPackage, error) {
 	uc.log.WithContext(ctx).Debugf("PackageCreate: %v", g.Name)
-	err := uc.biz.tm.InTx(ctx, func(ctx context.Context) error {
-		dp, err := uc.biz.domainRepo.PackageSave(ctx, g)
-		if err != nil {
-			return err
-		}
-
-		g, err = uc.biz.domainRepo.PackageUpdate(ctx, dp)
-		return err
-	})
-	return g, err
+	return uc.biz.domainRepo.PackageSave(ctx, g)
 }
 
 // ListByIDs 获取指定租户套餐ID集合

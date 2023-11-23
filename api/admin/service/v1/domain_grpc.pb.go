@@ -60,9 +60,9 @@ type DomainServiceClient interface {
 	DeleteDomain(ctx context.Context, in *DeleteDomainRequest, opts ...grpc.CallOption) (*DeleteDomainResponse, error)
 	// 设置租户状态
 	UpdateDomainState(ctx context.Context, in *UpdateDomainStateRequest, opts ...grpc.CallOption) (*UpdateDomainStateResponse, error)
-	// 获取角色菜单
+	// 获取租户菜单
 	ListDomainMenu(ctx context.Context, in *ListDomainMenuRequest, opts ...grpc.CallOption) (*ListDomainMenuResponse, error)
-	// 处理角色菜单
+	// 处理租户菜单
 	HandleDomainMenu(ctx context.Context, in *HandleDomainMenuRequest, opts ...grpc.CallOption) (*HandleDomainMenuResponse, error)
 	// 列表租户套餐
 	ListDomainPackage(ctx context.Context, in *ListDomainPackageRequest, opts ...grpc.CallOption) (*ListDomainPackageResponse, error)
@@ -261,9 +261,9 @@ type DomainServiceServer interface {
 	DeleteDomain(context.Context, *DeleteDomainRequest) (*DeleteDomainResponse, error)
 	// 设置租户状态
 	UpdateDomainState(context.Context, *UpdateDomainStateRequest) (*UpdateDomainStateResponse, error)
-	// 获取角色菜单
+	// 获取租户菜单
 	ListDomainMenu(context.Context, *ListDomainMenuRequest) (*ListDomainMenuResponse, error)
-	// 处理角色菜单
+	// 处理租户菜单
 	HandleDomainMenu(context.Context, *HandleDomainMenuRequest) (*HandleDomainMenuResponse, error)
 	// 列表租户套餐
 	ListDomainPackage(context.Context, *ListDomainPackageRequest) (*ListDomainPackageResponse, error)

@@ -267,6 +267,12 @@ func (s *DomainService) CreateDomainPackage(ctx context.Context, in *v1.CreateDo
 		Sort:    in.GetSort(),
 		State:   int32(in.GetState()),
 		Remarks: in.GetRemarks(),
+		Menus: func() (ms []*biz.Menu) {
+			for _, id := range in.GetMenuIds() {
+				ms = append(ms, &biz.Menu{ID: uint(id)})
+			}
+			return ms
+		}(),
 	})
 	if err != nil {
 		return nil, v1.ErrorDomainCreateFail("租户套餐创建失败: %v", err.Error())
@@ -285,10 +291,11 @@ func (s *DomainService) CreateDomainPackage(ctx context.Context, in *v1.CreateDo
 func (s *DomainService) UpdateDomainPackage(ctx context.Context, in *v1.UpdateDomainPackageRequest) (*v1.UpdateDomainPackageResponse, error) {
 	v := in.GetData()
 	err := s.domainCase.PackageUpdate(ctx, &biz.DomainPackage{
-		ID:    uint(in.GetId()),
-		Name:  v.GetName(),
-		Sort:  v.GetSort(),
-		State: int32(v.GetState()),
+		ID:      uint(in.GetId()),
+		Name:    v.GetName(),
+		Sort:    v.GetSort(),
+		State:   int32(v.GetState()),
+		Remarks: v.GetRemarks(),
 		Menus: func() (ms []*biz.Menu) {
 			for _, id := range in.Data.GetMenuIds() {
 				ms = append(ms, &biz.Menu{ID: uint(id)})

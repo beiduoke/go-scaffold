@@ -33,10 +33,10 @@ type MenuServiceHTTPServer interface {
 	DeleteMenu(context.Context, *DeleteMenuRequest) (*DeleteMenuResponse, error)
 	// GetMenu 获取菜单
 	GetMenu(context.Context, *GetMenuRequest) (*Menu, error)
-	// ListMenu 菜单模块
-	// 列表菜单
+	// ListMenu 列表菜单
 	ListMenu(context.Context, *ListMenuRequest) (*ListMenuResponse, error)
-	// ListMenuTree 获取树形菜单
+	// ListMenuTree 菜单模块
+	// 获取树形菜单
 	ListMenuTree(context.Context, *ListMenuTreeRequest) (*ListMenuTreeResponse, error)
 	// UpdateMenu 修改菜单
 	UpdateMenu(context.Context, *UpdateMenuRequest) (*UpdateMenuResponse, error)
@@ -44,12 +44,34 @@ type MenuServiceHTTPServer interface {
 
 func RegisterMenuServiceHTTPServer(s *http.Server, srv MenuServiceHTTPServer) {
 	r := s.Route("/")
+	r.GET("/v1/menus/{id}/trees", _MenuService_ListMenuTree0_HTTP_Handler(srv))
 	r.GET("/v1/menus", _MenuService_ListMenu0_HTTP_Handler(srv))
 	r.POST("/v1/menus", _MenuService_CreateMenu0_HTTP_Handler(srv))
-	r.GET("/v1/menus/{id}/trees", _MenuService_ListMenuTree0_HTTP_Handler(srv))
 	r.GET("/v1/menus/{id}", _MenuService_GetMenu0_HTTP_Handler(srv))
 	r.PUT("/v1/menus/{id}", _MenuService_UpdateMenu0_HTTP_Handler(srv))
 	r.DELETE("/v1/menus/{id}", _MenuService_DeleteMenu0_HTTP_Handler(srv))
+}
+
+func _MenuService_ListMenuTree0_HTTP_Handler(srv MenuServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListMenuTreeRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationMenuServiceListMenuTree)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListMenuTree(ctx, req.(*ListMenuTreeRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListMenuTreeResponse)
+		return ctx.Result(200, reply)
+	}
 }
 
 func _MenuService_ListMenu0_HTTP_Handler(srv MenuServiceHTTPServer) func(ctx http.Context) error {
@@ -89,28 +111,6 @@ func _MenuService_CreateMenu0_HTTP_Handler(srv MenuServiceHTTPServer) func(ctx h
 			return err
 		}
 		reply := out.(*CreateMenuResponse)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _MenuService_ListMenuTree0_HTTP_Handler(srv MenuServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ListMenuTreeRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationMenuServiceListMenuTree)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListMenuTree(ctx, req.(*ListMenuTreeRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListMenuTreeResponse)
 		return ctx.Result(200, reply)
 	}
 }

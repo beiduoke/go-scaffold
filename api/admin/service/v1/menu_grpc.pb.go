@@ -19,9 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
+	MenuService_ListMenuTree_FullMethodName = "/admin.service.v1.MenuService/ListMenuTree"
 	MenuService_ListMenu_FullMethodName     = "/admin.service.v1.MenuService/ListMenu"
 	MenuService_CreateMenu_FullMethodName   = "/admin.service.v1.MenuService/CreateMenu"
-	MenuService_ListMenuTree_FullMethodName = "/admin.service.v1.MenuService/ListMenuTree"
 	MenuService_GetMenu_FullMethodName      = "/admin.service.v1.MenuService/GetMenu"
 	MenuService_UpdateMenu_FullMethodName   = "/admin.service.v1.MenuService/UpdateMenu"
 	MenuService_DeleteMenu_FullMethodName   = "/admin.service.v1.MenuService/DeleteMenu"
@@ -32,12 +32,12 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MenuServiceClient interface {
 	// 菜单模块
+	// 获取树形菜单
+	ListMenuTree(ctx context.Context, in *ListMenuTreeRequest, opts ...grpc.CallOption) (*ListMenuTreeResponse, error)
 	// 列表菜单
 	ListMenu(ctx context.Context, in *ListMenuRequest, opts ...grpc.CallOption) (*ListMenuResponse, error)
 	// 创建菜单
 	CreateMenu(ctx context.Context, in *CreateMenuRequest, opts ...grpc.CallOption) (*CreateMenuResponse, error)
-	// 获取树形菜单
-	ListMenuTree(ctx context.Context, in *ListMenuTreeRequest, opts ...grpc.CallOption) (*ListMenuTreeResponse, error)
 	// 获取菜单
 	GetMenu(ctx context.Context, in *GetMenuRequest, opts ...grpc.CallOption) (*Menu, error)
 	// 修改菜单
@@ -54,6 +54,15 @@ func NewMenuServiceClient(cc grpc.ClientConnInterface) MenuServiceClient {
 	return &menuServiceClient{cc}
 }
 
+func (c *menuServiceClient) ListMenuTree(ctx context.Context, in *ListMenuTreeRequest, opts ...grpc.CallOption) (*ListMenuTreeResponse, error) {
+	out := new(ListMenuTreeResponse)
+	err := c.cc.Invoke(ctx, MenuService_ListMenuTree_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *menuServiceClient) ListMenu(ctx context.Context, in *ListMenuRequest, opts ...grpc.CallOption) (*ListMenuResponse, error) {
 	out := new(ListMenuResponse)
 	err := c.cc.Invoke(ctx, MenuService_ListMenu_FullMethodName, in, out, opts...)
@@ -66,15 +75,6 @@ func (c *menuServiceClient) ListMenu(ctx context.Context, in *ListMenuRequest, o
 func (c *menuServiceClient) CreateMenu(ctx context.Context, in *CreateMenuRequest, opts ...grpc.CallOption) (*CreateMenuResponse, error) {
 	out := new(CreateMenuResponse)
 	err := c.cc.Invoke(ctx, MenuService_CreateMenu_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *menuServiceClient) ListMenuTree(ctx context.Context, in *ListMenuTreeRequest, opts ...grpc.CallOption) (*ListMenuTreeResponse, error) {
-	out := new(ListMenuTreeResponse)
-	err := c.cc.Invoke(ctx, MenuService_ListMenuTree_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -113,12 +113,12 @@ func (c *menuServiceClient) DeleteMenu(ctx context.Context, in *DeleteMenuReques
 // for forward compatibility
 type MenuServiceServer interface {
 	// 菜单模块
+	// 获取树形菜单
+	ListMenuTree(context.Context, *ListMenuTreeRequest) (*ListMenuTreeResponse, error)
 	// 列表菜单
 	ListMenu(context.Context, *ListMenuRequest) (*ListMenuResponse, error)
 	// 创建菜单
 	CreateMenu(context.Context, *CreateMenuRequest) (*CreateMenuResponse, error)
-	// 获取树形菜单
-	ListMenuTree(context.Context, *ListMenuTreeRequest) (*ListMenuTreeResponse, error)
 	// 获取菜单
 	GetMenu(context.Context, *GetMenuRequest) (*Menu, error)
 	// 修改菜单
@@ -132,14 +132,14 @@ type MenuServiceServer interface {
 type UnimplementedMenuServiceServer struct {
 }
 
+func (UnimplementedMenuServiceServer) ListMenuTree(context.Context, *ListMenuTreeRequest) (*ListMenuTreeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListMenuTree not implemented")
+}
 func (UnimplementedMenuServiceServer) ListMenu(context.Context, *ListMenuRequest) (*ListMenuResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMenu not implemented")
 }
 func (UnimplementedMenuServiceServer) CreateMenu(context.Context, *CreateMenuRequest) (*CreateMenuResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateMenu not implemented")
-}
-func (UnimplementedMenuServiceServer) ListMenuTree(context.Context, *ListMenuTreeRequest) (*ListMenuTreeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListMenuTree not implemented")
 }
 func (UnimplementedMenuServiceServer) GetMenu(context.Context, *GetMenuRequest) (*Menu, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMenu not implemented")
@@ -161,6 +161,24 @@ type UnsafeMenuServiceServer interface {
 
 func RegisterMenuServiceServer(s grpc.ServiceRegistrar, srv MenuServiceServer) {
 	s.RegisterService(&MenuService_ServiceDesc, srv)
+}
+
+func _MenuService_ListMenuTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListMenuTreeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MenuServiceServer).ListMenuTree(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MenuService_ListMenuTree_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MenuServiceServer).ListMenuTree(ctx, req.(*ListMenuTreeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _MenuService_ListMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -195,24 +213,6 @@ func _MenuService_CreateMenu_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MenuServiceServer).CreateMenu(ctx, req.(*CreateMenuRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MenuService_ListMenuTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListMenuTreeRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MenuServiceServer).ListMenuTree(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: MenuService_ListMenuTree_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MenuServiceServer).ListMenuTree(ctx, req.(*ListMenuTreeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -279,16 +279,16 @@ var MenuService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*MenuServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "ListMenuTree",
+			Handler:    _MenuService_ListMenuTree_Handler,
+		},
+		{
 			MethodName: "ListMenu",
 			Handler:    _MenuService_ListMenu_Handler,
 		},
 		{
 			MethodName: "CreateMenu",
 			Handler:    _MenuService_CreateMenu_Handler,
-		},
-		{
-			MethodName: "ListMenuTree",
-			Handler:    _MenuService_ListMenuTree_Handler,
 		},
 		{
 			MethodName: "GetMenu",

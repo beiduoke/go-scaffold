@@ -34,6 +34,12 @@ option (gnostic.openapi.v3.document) = {
 // The greeting service definition.
 service MenuService {
   // 菜单模块
+  // 获取树形菜单
+  rpc ListMenuTree (ListMenuTreeRequest) returns (ListMenuTreeResponse) {
+    option (google.api.http) = {
+      get: "/v1/menus/{id}/trees"
+    };
+  }
   // 列表菜单
   rpc ListMenu (ListMenuRequest) returns (ListMenuResponse) {
     option (google.api.http) = {
@@ -46,13 +52,6 @@ service MenuService {
     option (google.api.http) = {
       post: "/v1/menus"
       body: "*"
-    };
-  }
-
-  // 获取树形菜单
-  rpc ListMenuTree (ListMenuTreeRequest) returns (ListMenuTreeResponse) {
-    option (google.api.http) = {
-      get: "/v1/menus/{id}/trees"
     };
   }
 

@@ -54,11 +54,11 @@ type DomainServiceHTTPServer interface {
 	GetDomainName(context.Context, *GetDomainNameRequest) (*Domain, error)
 	// GetDomainPackage 获取租户套餐
 	GetDomainPackage(context.Context, *GetDomainPackageRequest) (*DomainPackage, error)
-	// HandleDomainMenu 处理角色菜单
+	// HandleDomainMenu 处理租户菜单
 	HandleDomainMenu(context.Context, *HandleDomainMenuRequest) (*HandleDomainMenuResponse, error)
 	// ListDomain 列表租户
 	ListDomain(context.Context, *ListDomainRequest) (*ListDomainResponse, error)
-	// ListDomainMenu 获取角色菜单
+	// ListDomainMenu 获取租户菜单
 	ListDomainMenu(context.Context, *ListDomainMenuRequest) (*ListDomainMenuResponse, error)
 	// ListDomainPackage 列表租户套餐
 	ListDomainPackage(context.Context, *ListDomainPackageRequest) (*ListDomainPackageResponse, error)
