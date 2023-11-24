@@ -19,11 +19,10 @@ endif
 APP_VERSION=$(shell git describe --tags --always)
 APP_RELATIVE_PATH=$(shell a=`basename $$PWD` && cd .. && b=`basename $$PWD` && echo $$b/$$a)
 APP_NAME=$(shell echo $(APP_RELATIVE_PATH) | sed -En "s/\//-/p")
-APP_DOCKER_IMAGE=$(shell echo $(APP_NAME) |awk -F '@' '{print "kratos-cms/" $$0 ":0.1.0"}')
+APP_DOCKER_IMAGE=$(shell echo $(APP_NAME) |awk -F '@' '{print "scaffold-admin/" $$0 ":0.1.0"}')
 
 
-.PHONY: init dep vendor build clean docker conf ent wire api openapi run test cover vet lint app
-
+.PHONY:init dep vendor build clean docker gen ent wire api openapi run test cover vet lint app
 # initialize develop environment
 init:
 	@go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
@@ -59,18 +58,14 @@ clean:
 	@go clean
 	$(if $(IS_WINDOWS), del "coverage.out", rm -f "coverage.out")
 
-# build docker image../../../
+# build docker image
 docker:
 	@docker build -t $(APP_DOCKER_IMAGE) . \
 				  -f ../../../.docker/Dockerfile \
 				  --build-arg APP_RELATIVE_PATH=$(APP_RELATIVE_PATH) GRPC_PORT=9000 REST_PORT=8000
 
-# generate config define code
-conf:
-	protoc --proto_path=./internal/conf/ \
-	       --proto_path=../../../api/third_party \
-	       --go_out=paths=source_relative:./internal/conf/ \
-	       ./internal/conf/conf.proto
+# generate code
+gen: ent wire api openapi
 
 # generate ent code
 ent:
@@ -95,10 +90,11 @@ api:
 # generate OpenAPI v3 doc
 openapi:
 	@cd ../../../ && \
-	buf generate --path proto/admin/service/v1 --template proto/admin/service/v1/buf.openapi.gen.yaml
+	buf generate --path api/admin/service/v1 --template proto/admin/service/v1/buf.openapi.gen.yaml && \
+	buf generate --path api/front/service/v1 --template proto/saasdesk/service/v1/buf.openapi.gen.yaml 
 
 # run application
-run:
+run: api openapi
 	@go run ./cmd/server -conf ./configs
 
 # run tests
@@ -118,7 +114,7 @@ lint:
 	@golangci-lint run
 
 # build service app
-app: api wire conf ent build
+app: api wire ent build
 
 # show help
 help:

@@ -396,6 +396,7 @@ func (x *Middleware_Localize) GetDefault() string {
 	return ""
 }
 
+// 鉴权
 type Middleware_Authorizer struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

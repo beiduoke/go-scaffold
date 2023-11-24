@@ -1,0 +1,209 @@
+syntax = "proto3";
+
+package saasdesk.service.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "validate/validate.proto";
+
+import "saasdesk/service/v1/user.proto";
+import "saasdesk/service/v1/role.proto";
+
+option go_package = "github.com/beiduoke/go-scaffold/proto/saasdesk/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "saasdesk.service.v1";
+option java_outer_classname = "saasdeskProtoV1";
+
+option (gnostic.openapi.v3.document) = {
+  info: {
+    title: "Scaffold SAAS Auth API";
+    description: "SAAS平台管理脚手架系统-认证服务";
+    version: "1.0";
+		contact: {
+			name: "SAAS架构";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway";
+			email: "none@example.com";
+		};
+		license: {
+			name: "BSD 3-Clause License";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt";
+		};
+  }
+};
+
+// The greeting service definition.
+service AuthService {
+  // 登出
+  rpc Logout (LogoutRequest) returns (LogoutResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/logout"
+      body: "*"
+      additional_bindings {
+        get: "/v1/auth/logout"
+      }
+    };
+  }
+
+  // 注册
+  rpc Register (RegisterRequest) returns (RegisterResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/register"
+      body: "auth"
+    };
+  }
+
+  // 密码登陆
+  rpc LoginByPassword (LoginByPasswordRequest) returns (LoginResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/loginByPassword/{domain}"
+      body: "auth"
+      additional_bindings {
+        post: "/v1/auth/login/{domain}"
+        body: "auth"
+      }
+    };
+  }
+
+  // 短信登陆
+  rpc LoginBySms (LoginBySmsRequest) returns (LoginResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/loginBySms/{domain}"
+      body: "auth"
+    };
+  }
+
+  // 邮件登陆
+  rpc LoginByEmail (LoginByEmailRequest) returns (LoginResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/loginByEmail/{domain}"
+      body: "auth"
+    };
+  }
+  
+  // 当前登录用户概述
+  rpc GetAuthInfo (GetAuthInfoRequest) returns (GetAuthInfoResponse) {
+    option (google.api.http) = {
+      get: "/v1/auth/info"
+    };
+  }
+
+  // 当前登录用户概述
+  rpc GetAuthProfile (GetAuthProfileRequest) returns (GetAuthProfileResponse) {
+    option (google.api.http) = {
+      get: "/v1/auth/profiles"
+    };
+  }
+}
+
+// 请求 - 注册
+message RegisterRequest {
+  message Auth {
+    // 用户名
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    // 密码
+    string password = 2 [(validate.rules).string = {min_len: 6, max_len: 25}];
+    // 电话
+    string phone = 3 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
+  }
+  // 请求体
+  Auth auth = 1 [(validate.rules).message = {required: true}];
+  string domain = 2 [(validate.rules).string = {min_len: 1, max_len: 20}];
+}
+
+// 回应 - 登录
+message LoginResponse {
+  // 访问token
+  string token = 1;
+  // 刷新token
+  string refresh_token = 2;
+  // 过期时间
+  google.protobuf.Timestamp expire_time = 3;
+}
+
+// 回应 - 注册
+message RegisterResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+message LogoutRequest {}
+
+// 回应 - 退出登录
+message LogoutResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 密码登录
+message LoginByPasswordRequest {
+  message Auth {
+    string account = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    string password = 2 [(validate.rules).string = {min_len: 6, max_len: 28}];
+  }
+  // 请求体
+  Auth auth = 1 [(validate.rules).message = {required: true}];
+  string domain = 2 [(validate.rules).string = {min_len: 1, max_len: 20}];
+}
+
+// 请求 - 短信登录
+message LoginBySmsRequest {
+  message Auth {
+    string phone = 1 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
+    string code = 2 [(validate.rules).string.pattern = "^[0-9]{6}$"];
+  }
+  // 请求体
+  Auth auth = 1 [(validate.rules).message = {required: true}];
+  string domain = 2 [(validate.rules).string = {min_len: 1, max_len: 20}];
+}
+
+// 请求 - 邮件登录
+message LoginByEmailRequest {
+  message Auth {
+    string email = 1 [(validate.rules).string.email = true];
+    string code = 2 [(validate.rules).string.pattern = "^[0-9]{4,6}$"];
+  }
+  // 请求体
+  Auth auth = 1 [(validate.rules).message = {required: true}];
+  string domain = 2 [(validate.rules).string = {min_len: 1, max_len: 20}];
+}
+
+// 请求 - 用户详情
+message GetAuthInfoRequest {}
+
+// 回应 - 用户详情
+message GetAuthInfoResponse {
+  uint64 id = 1;
+  string name = 2;
+  string nick_name = 4;
+  string real_name = 5;
+  string birthday = 6;
+  int32 gender = 7; 
+  string phone = 8;
+  string email = 9;
+  string avatar = 10;
+  int32 state = 11 [(gnostic.openapi.v3.property) = {
+    description: "用户状态"
+    default: {string: "ON"}
+    enum: [
+      {yaml: "ON"}, 
+      {yaml: "OFF"}
+    ]
+  }];
+  repeated saasdesk.service.v1.Role roles = 12;
+}
+
+// 请求 - 用户概况详情
+message GetAuthProfileRequest {}
+
+// 回应 - 用户概况详情
+message GetAuthProfileResponse {
+  saasdesk.service.v1.User user = 1;
+  repeated Role roles = 2;
+}

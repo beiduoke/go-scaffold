@@ -64,6 +64,8 @@ func (m *Tracer) validate(all bool) error {
 
 	// no validation rules for Env
 
+	// no validation rules for Insecure
+
 	if len(errors) > 0 {
 		return TracerMultiError(errors)
 	}

@@ -35,6 +35,7 @@ message Middleware {
     string default = 1;
   }
 
+  // 鉴权
   message Authorizer {
     message Casbin {
       string model_path = 1;

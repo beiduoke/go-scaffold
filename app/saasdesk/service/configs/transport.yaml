@@ -1,0 +1,40 @@
+server:
+  http:
+    addr: 0.0.0.0:8011
+    timeout: 1s
+    cors:
+      headers:
+        - "X-Requested-With"
+        - "Content-Type"
+        - "Authorization"
+      methods:
+        - "GET"
+        - "POST"
+        - "PUT"
+        - "DELETE"
+        - "HEAD"
+        - "OPTIONS"
+      origins:
+        - "*"
+    middleware:
+      auth:
+        method: "HS256"
+        key: "some_api_key"
+        header: "Authorization"
+        scheme: "Bearer"
+        multipoint: false
+        expires_time: 86000s
+      authorizer:
+        type: "casbin"
+        casbin: 
+          model_path: ../../configs/casbin/rbac_with_domains.conf
+          policy_path: ../../configs/casbin/policy.csv
+  grpc:
+    addr: 0.0.0.0:9011
+    timeout: 1s
+    middleware:
+  websocket:
+    addr: 0.0.0.0:7011
+    timeout: 1s
+    path: /
+    middleware:

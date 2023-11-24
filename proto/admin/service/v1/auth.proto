@@ -15,7 +15,7 @@ import "admin/service/v1/role.proto";
 
 option go_package = "github.com/beiduoke/go-scaffold/api/admin/service/v1;v1";
 option java_multiple_files = true;
-option java_package = "dev.kratos.admin.v1";
+option java_package = "admin.service.v1";
 option java_outer_classname = "adminProtoV1";
 
 option (gnostic.openapi.v3.document) = {

@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package saasdesk.service.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/beiduoke/go-scaffold/proto/saasdesk/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "saasdesk.service.v1";
+
+service UserService {
+	rpc UpdateUser (UpdateUserRequest) returns (UpdateUserReply) {
+    option (google.api.http) = {
+      post: "/v1/user"
+      body: "*"
+    };
+  }
+	rpc DeleteUser (DeleteUserRequest) returns (DeleteUserReply);
+	rpc GetUser (GetUserRequest) returns (GetUserReply);
+	rpc ListUser (ListUserRequest) returns (ListUserReply);
+}
+
+message User {
+  uint64 id = 1;
+  string name = 2;
+  optional string nick_name = 4;
+  optional string real_name = 5;
+  optional string birthday = 6;
+  optional int32 gender = 7; 
+  optional string phone = 8;
+  optional string email = 9;
+  optional string avatar = 10;
+  optional int32 state = 11 [(gnostic.openapi.v3.property) = {description: "状态"}];
+  optional google.protobuf.Timestamp created_at = 12;
+  optional google.protobuf.Timestamp updated_at = 13;
+}
+
+message CreateUserRequest {}
+message CreateUserReply {}
+
+message UpdateUserRequest {}
+message UpdateUserReply {}
+
+message DeleteUserRequest {}
+message DeleteUserReply {}
+
+message GetUserRequest {}
+message GetUserReply {}
+
+message ListUserRequest {}
+message ListUserReply {}

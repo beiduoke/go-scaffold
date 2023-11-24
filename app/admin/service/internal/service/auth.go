@@ -7,8 +7,8 @@ import (
 
 	v1 "github.com/beiduoke/go-scaffold/api/admin/service/v1"
 	"github.com/beiduoke/go-scaffold/app/admin/service/internal/biz"
-	"github.com/beiduoke/go-scaffold/app/admin/service/internal/pkg/constant"
-	"github.com/beiduoke/go-scaffold/app/admin/service/internal/pkg/middleware/localize"
+	"github.com/beiduoke/go-scaffold/pkg/constant"
+	"github.com/beiduoke/go-scaffold/pkg/middleware/localize"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/nicksnyder/go-i18n/v2/i18n"

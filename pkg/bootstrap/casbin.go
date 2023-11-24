@@ -10,6 +10,7 @@ import (
 	"github.com/casbin/casbin/v2/constant"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
+	entrapper "github.com/casbin/ent-adapter"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 	rediswatcher "github.com/casbin/redis-watcher/v2"
 	"github.com/go-kratos/kratos/v2/log"
@@ -49,10 +50,21 @@ func NewAuthzCasbinModel(cfg *conf.Bootstrap, logger log.Logger) model.Model {
 
 // NewAuthzCasbinGormAdapter 适配器
 func NewAuthzCasbinGormAdapter(cfg *conf.Bootstrap, logger log.Logger) (adapter persist.Adapter) {
-	log := log.NewHelper(log.With(logger, "module", "casbin/data/authCasbinAdapter"))
+	log := log.NewHelper(log.With(logger, "module", "casbin/data/authCasbinGormAdapter"))
 	// gormadapter "github.com/casbin/gorm-adapter/v3"
 	adapter, err := gormadapter.NewAdapterByDBUseTableName(NewGormClient(cfg, log), "sys", "casbin_rules")
 	log.Info("initialization gorm adapter ")
+	if err != nil {
+		log.Fatalf("failed gorm casbin adapters connection %v", err)
+	}
+	return adapter
+}
+
+// NewAuthzCasbinEntAdapter 适配器
+func NewAuthzCasbinEntAdapter(cfg *conf.Bootstrap, logger log.Logger) (adapter persist.Adapter) {
+	log := log.NewHelper(log.With(logger, "module", "casbin/data/authCasbinEntAdapter"))
+	adapter, err := entrapper.NewAdapter(cfg.Data.Database.Driver, cfg.Data.Database.Source)
+	log.Info("initialization ent adapter ")
 	if err != nil {
 		log.Fatalf("failed gorm casbin adapters connection %v", err)
 	}

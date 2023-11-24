@@ -19,9 +19,10 @@ var (
 		3: "warning",
 	}
 	HandleType_value = map[string]int32{
-		"success": 1,
-		"error":   2,
-		"warning": 3,
+		"unspecified": 0,
+		"success":     1,
+		"error":       2,
+		"warning":     3,
 	}
 )
 

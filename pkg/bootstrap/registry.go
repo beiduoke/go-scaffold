@@ -1,6 +1,8 @@
 package bootstrap
 
 import (
+	"path/filepath"
+
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/registry"
 
@@ -26,6 +28,14 @@ import (
 	"github.com/go-zookeeper/zk"
 
 	// kubernetes
+	k8sRegistry "github.com/go-kratos/kratos/contrib/registry/kubernetes/v2"
+	k8s "k8s.io/client-go/kubernetes"
+	k8sRest "k8s.io/client-go/rest"
+	k8sTools "k8s.io/client-go/tools/clientcmd"
+	k8sUtil "k8s.io/client-go/util/homedir"
+
+	// polaris
+	//polarisKratos "github.com/go-kratos/kratos/contrib/registry/polaris/v2"
 
 	// servicecomb
 	servicecombClient "github.com/go-chassis/sc-client"
@@ -37,14 +47,14 @@ import (
 type RegistryType string
 
 const (
-	RegistryTypeConsul      RegistryType = "consul"
-	RegistryTypeEtcd        RegistryType = "etcd"
-	RegistryTypeZooKeeper   RegistryType = "zookeeper"
-	RegistryTypeNacos       RegistryType = "nacos"
-	RegistryTypeKubernetes  RegistryType = "kubernetes"
-	RegistryTypeEureka      RegistryType = "eureka"
-	RegistryTypePolaris     RegistryType = "polaris"
-	RegistryTypeServicecomb RegistryType = "servicecomb"
+	RegistryTypeConsul    RegistryType = "consul"
+	LoggerTypeEtcd        RegistryType = "etcd"
+	LoggerTypeZooKeeper   RegistryType = "zookeeper"
+	LoggerTypeNacos       RegistryType = "nacos"
+	LoggerTypeKubernetes  RegistryType = "kubernetes"
+	LoggerTypeEureka      RegistryType = "eureka"
+	LoggerTypePolaris     RegistryType = "polaris"
+	LoggerTypeServicecomb RegistryType = "servicecomb"
 )
 
 // NewRegistry 创建一个注册客户端
@@ -56,17 +66,19 @@ func NewRegistry(cfg *conf.Registry) registry.Registrar {
 	switch RegistryType(cfg.Type) {
 	case RegistryTypeConsul:
 		return NewConsulRegistry(cfg)
-	case RegistryTypeEtcd:
+	case LoggerTypeEtcd:
 		return NewEtcdRegistry(cfg)
-	case RegistryTypeZooKeeper:
+	case LoggerTypeZooKeeper:
 		return NewZooKeeperRegistry(cfg)
-	case RegistryTypeNacos:
+	case LoggerTypeNacos:
 		return NewNacosRegistry(cfg)
-	case RegistryTypeEureka:
+	case LoggerTypeKubernetes:
+		return NewKubernetesRegistry(cfg)
+	case LoggerTypeEureka:
 		return NewEurekaRegistry(cfg)
-	case RegistryTypePolaris:
+	case LoggerTypePolaris:
 		return nil
-	case RegistryTypeServicecomb:
+	case LoggerTypeServicecomb:
 		return NewServicecombRegistry(cfg)
 	}
 
@@ -82,17 +94,19 @@ func NewDiscovery(cfg *conf.Registry) registry.Discovery {
 	switch RegistryType(cfg.Type) {
 	case RegistryTypeConsul:
 		return NewConsulRegistry(cfg)
-	case RegistryTypeEtcd:
+	case LoggerTypeEtcd:
 		return NewEtcdRegistry(cfg)
-	case RegistryTypeZooKeeper:
+	case LoggerTypeZooKeeper:
 		return NewZooKeeperRegistry(cfg)
-	case RegistryTypeNacos:
+	case LoggerTypeNacos:
 		return NewNacosRegistry(cfg)
-	case RegistryTypeEureka:
+	case LoggerTypeKubernetes:
+		return NewKubernetesRegistry(cfg)
+	case LoggerTypeEureka:
 		return NewEurekaRegistry(cfg)
-	case RegistryTypePolaris:
+	case LoggerTypePolaris:
 		return nil
-	case RegistryTypeServicecomb:
+	case LoggerTypeServicecomb:
 		return NewServicecombRegistry(cfg)
 	}
 
@@ -181,6 +195,30 @@ func NewNacosRegistry(c *conf.Registry) *nacosKratos.Registry {
 	return reg
 }
 
+// NewKubernetesRegistry 创建一个注册发现客户端 - Kubernetes
+func NewKubernetesRegistry(_ *conf.Registry) *k8sRegistry.Registry {
+	restConfig, err := k8sRest.InClusterConfig()
+	if err != nil {
+		home := k8sUtil.HomeDir()
+		kubeConfig := filepath.Join(home, ".kube", "config")
+		restConfig, err = k8sTools.BuildConfigFromFlags("", kubeConfig)
+		if err != nil {
+			log.Fatal(err)
+			return nil
+		}
+	}
+
+	clientSet, err := k8s.NewForConfig(restConfig)
+	if err != nil {
+		log.Fatal(err)
+		return nil
+	}
+
+	reg := k8sRegistry.NewRegistry(clientSet)
+
+	return reg
+}
+
 // NewEurekaRegistry 创建一个注册发现客户端 - Eureka
 func NewEurekaRegistry(c *conf.Registry) *eurekaKratos.Registry {
 	var opts []eurekaKratos.Option
@@ -199,37 +237,37 @@ func NewEurekaRegistry(c *conf.Registry) *eurekaKratos.Registry {
 
 // NewPolarisRegistry 创建一个注册发现客户端 - Polaris
 //func NewPolarisRegistry(c *conf.Registry) *polarisKratos.Registry {
-//	var err error
+//var err error
 //
-//	var consumer polarisApi.ConsumerAPI
-//	if consumer, err = polarisApi.NewConsumerAPI(); err != nil {
-//		log.Fatalf("fail to create consumerAPI, err is %v", err)
+//var consumer polarisApi.ConsumerAPI
+//if consumer, err = polarisApi.NewConsumerAPI(); err != nil {
+//	log.Fatalf("fail to create consumerAPI, err is %v", err)
+//}
+//
+//var provider polarisApi.ProviderAPI
+//provider = polarisApi.NewProviderAPIByContext(consumer.SDKContext())
+//
+//log.Infof("start to register instances, count %d", c.Polaris.InstanceCount)
+//
+//var resp *polarisModel.InstanceRegisterResponse
+//for i := 0; i < (int)(c.Polaris.InstanceCount); i++ {
+//	registerRequest := &polarisApi.InstanceRegisterRequest{}
+//	registerRequest.Service = c.Polaris.Service
+//	registerRequest.Namespace = c.Polaris.Namespace
+//	registerRequest.Host = c.Polaris.Address
+//	registerRequest.Port = (int)(c.Polaris.Port) + i
+//	registerRequest.ServiceToken = c.Polaris.Token
+//	registerRequest.SetHealthy(true)
+//	if resp, err = provider.RegisterInstance(registerRequest); err != nil {
+//		log.Fatalf("fail to register instance %d, err is %v", i, err)
+//	} else {
+//		log.Infof("register instance %d response: instanceId %s", i, resp.InstanceID)
 //	}
+//}
 //
-//	var provider polarisApi.ProviderAPI
-//	provider = polarisApi.NewProviderAPIByContext(consumer.SDKContext())
+//reg := polarisKratos.NewRegistry(provider, consumer)
 //
-//	log.Infof("start to register instances, count %d", c.Polaris.InstanceCount)
-//
-//	var resp *polarisModel.InstanceRegisterResponse
-//	for i := 0; i < (int)(c.Polaris.InstanceCount); i++ {
-//		registerRequest := &polarisApi.InstanceRegisterRequest{}
-//		registerRequest.Service = c.Polaris.Service
-//		registerRequest.Namespace = c.Polaris.Namespace
-//		registerRequest.Host = c.Polaris.Address
-//		registerRequest.Port = (int)(c.Polaris.Port) + i
-//		registerRequest.ServiceToken = c.Polaris.Token
-//		registerRequest.SetHealthy(true)
-//		if resp, err = provider.RegisterInstance(registerRequest); err != nil {
-//			log.Fatalf("fail to register instance %d, err is %v", i, err)
-//		} else {
-//			log.Infof("register instance %d response: instanceId %s", i, resp.InstanceID)
-//		}
-//	}
-//
-//	reg := polarisKratos.NewRegistry(provider, consumer)
-//
-//	return reg
+//return reg
 //}
 
 // NewServicecombRegistry 创建一个注册发现客户端 - Servicecomb

@@ -21,6 +21,6 @@ message Client {
     Middleware middleware = 2;
   }
 
-  HTTP rest = 1;  // HTTP服务
+  HTTP http = 1;  // HTTP服务
   GRPC grpc = 2;  // gRPC服务
 }

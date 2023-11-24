@@ -22,6 +22,8 @@ message Server {
     google.protobuf.Duration timeout = 3; // 超时时间
     CORS cors = 4;  // 服务监听地址
     Middleware middleware = 5;  // 中间件
+    bool enable_swagger = 6;  // 启用SwaggerUI
+    bool enable_pprof = 7;  // 启用pprof
   }
 
   // gPRC
@@ -37,7 +39,8 @@ message Server {
     string network = 1; // 网络样式：http、https
     string addr = 2;  // 服务监听地址
     string path = 3;  // 路径
-    google.protobuf.Duration timeout = 4; // 超时时间
+    string codec = 4;  // 编解码器: json,xml,yaml...
+    google.protobuf.Duration timeout = 5; // 超时时间
   }
 
   // MQTT

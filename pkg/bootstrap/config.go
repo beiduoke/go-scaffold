@@ -103,6 +103,11 @@ func LoadBootstrapConfig(configPath string) *conf.Bootstrap {
 		_ = cfg.Scan(&bc.Oss)
 	}
 
+	if bc.Notify == nil {
+		bc.Notify = &conf.Notification{}
+		_ = cfg.Scan(&bc.Notify)
+	}
+
 	if bc.Base == nil {
 		bc.Base = &conf.Base{}
 		_ = cfg.Scan(&bc.Base)

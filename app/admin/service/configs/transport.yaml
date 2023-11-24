@@ -38,18 +38,3 @@ server:
     timeout: 1s
     path: /
     middleware:
-data:
-  database:
-    driver: mysql
-    source: root:123456@tcp(127.0.0.1:3306)/go_scaffold?charset=utf8mb4&parseTime=true
-    log_level: 1
-    migrate: true
-  redis:
-    addr: 127.0.0.1:6379
-    password: '123456'
-    read_timeout: 0.2s
-    write_timeout: 0.2s
-  meilisearch:
-    host: http://127.0.0.1:7700
-    api_key: '123456'
-    timeout: 0.2s

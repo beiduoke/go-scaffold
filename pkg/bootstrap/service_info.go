@@ -25,6 +25,6 @@ func (s *ServiceInfo) GetInstanceId() string {
 	return s.Id + "." + s.Name
 }
 
-func (s *ServiceInfo) SetMataData(k, v string) {
+func (s *ServiceInfo) SetMetaData(k, v string) {
 	s.Metadata[k] = v
 }
