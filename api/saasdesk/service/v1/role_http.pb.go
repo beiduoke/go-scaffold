@@ -22,7 +22,7 @@ const _ = http.SupportPackageIsVersion1
 const OperationRoleServiceCreateRole = "/saasdesk.service.v1.RoleService/CreateRole"
 
 type RoleServiceHTTPServer interface {
-	CreateRole(context.Context, *CreateRoleRequest) (*CreateRoleReply, error)
+	CreateRole(context.Context, *CreateRoleRequest) (*CreateRoleResponse, error)
 }
 
 func RegisterRoleServiceHTTPServer(s *http.Server, srv RoleServiceHTTPServer) {
@@ -47,13 +47,13 @@ func _RoleService_CreateRole0_HTTP_Handler(srv RoleServiceHTTPServer) func(ctx h
 		if err != nil {
 			return err
 		}
-		reply := out.(*CreateRoleReply)
+		reply := out.(*CreateRoleResponse)
 		return ctx.Result(200, reply)
 	}
 }
 
 type RoleServiceHTTPClient interface {
-	CreateRole(ctx context.Context, req *CreateRoleRequest, opts ...http.CallOption) (rsp *CreateRoleReply, err error)
+	CreateRole(ctx context.Context, req *CreateRoleRequest, opts ...http.CallOption) (rsp *CreateRoleResponse, err error)
 }
 
 type RoleServiceHTTPClientImpl struct {
@@ -64,8 +64,8 @@ func NewRoleServiceHTTPClient(client *http.Client) RoleServiceHTTPClient {
 	return &RoleServiceHTTPClientImpl{client}
 }
 
-func (c *RoleServiceHTTPClientImpl) CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...http.CallOption) (*CreateRoleReply, error) {
-	var out CreateRoleReply
+func (c *RoleServiceHTTPClientImpl) CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...http.CallOption) (*CreateRoleResponse, error) {
+	var out CreateRoleResponse
 	pattern := "/v1/role"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationRoleServiceCreateRole))

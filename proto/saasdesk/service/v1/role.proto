@@ -14,16 +14,16 @@ option java_multiple_files = true;
 option java_package = "saasdesk.service.v1";
 
 service RoleService {
-	rpc CreateRole (CreateRoleRequest) returns (CreateRoleReply) {
+	rpc CreateRole (CreateRoleRequest) returns (CreateRoleResponse) {
     option (google.api.http) = {
       post: "/v1/role"
       body: "*"
     };
   }
-	rpc UpdateRole (UpdateRoleRequest) returns (UpdateRoleReply);
-	rpc DeleteRole (DeleteRoleRequest) returns (DeleteRoleReply);
-	rpc GetRole (GetRoleRequest) returns (GetRoleReply);
-	rpc ListRole (ListRoleRequest) returns (ListRoleReply);
+	rpc UpdateRole (UpdateRoleRequest) returns (UpdateRoleResponse);
+	rpc DeleteRole (DeleteRoleRequest) returns (DeleteRoleResponse);
+	rpc GetRole (GetRoleRequest) returns (GetRoleResponse);
+	rpc ListRole (ListRoleRequest) returns (ListRoleResponse);
 }
 
 // 角色模块
@@ -42,16 +42,16 @@ message Role {
 }
 
 message CreateRoleRequest {}
-message CreateRoleReply {}
+message CreateRoleResponse {}
 
 message UpdateRoleRequest {}
-message UpdateRoleReply {}
+message UpdateRoleResponse {}
 
 message DeleteRoleRequest {}
-message DeleteRoleReply {}
+message DeleteRoleResponse {}
 
 message GetRoleRequest {}
-message GetRoleReply {}
+message GetRoleResponse {}
 
 message ListRoleRequest {}
-message ListRoleReply {}
+message ListRoleResponse {}

@@ -5,6 +5,7 @@ import (
 
 	"github.com/beiduoke/go-scaffold/api/common/conf"
 	v1 "github.com/beiduoke/go-scaffold/api/saasdesk/service/v1"
+	"github.com/beiduoke/go-scaffold/app/saasdesk/service/cmd/server/assets"
 	"github.com/beiduoke/go-scaffold/app/saasdesk/service/internal/service"
 	authn "github.com/beiduoke/go-scaffold/pkg/auth/authn"
 	"github.com/beiduoke/go-scaffold/pkg/auth/authz"
@@ -14,11 +15,6 @@ import (
 	"github.com/beiduoke/go-scaffold/pkg/middleware/localize"
 	"github.com/beiduoke/go-scaffold/pkg/middleware/multipoint"
 	"github.com/beiduoke/go-scaffold/pkg/middleware/signout"
-
-	// gormadapter "github.com/casbin/gorm-adapter/v3"
-
-	// fileAdapter "github.com/casbin/casbin/v2/persist/file-adapter"
-
 	"github.com/go-kratos/grpc-gateway/v2/protoc-gen-openapiv2/generator"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware"
@@ -29,6 +25,7 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/validate"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/go-kratos/swagger-api/openapiv2"
+	swaggerUI "github.com/tx7do/kratos-swagger-ui"
 )
 
 // NewHTTPServer new a HTTP server.
@@ -46,6 +43,13 @@ func NewHTTPServer(
 	ms := NewHttpMiddleware(logger, authMiddleware)
 	srv := bootstrap.CreateHttpServer(cfg, ms...)
 
+	if cfg.GetServer().GetHttp().GetEnableSwagger() {
+		swaggerUI.RegisterSwaggerUIServerWithOption(
+			srv,
+			swaggerUI.WithTitle("Kratos-saas"),
+			swaggerUI.WithMemoryData(assets.OpenApiData, "yaml"),
+		)
+	}
 	openAPIhandler := openapiv2.NewHandler(openapiv2.WithGeneratorOptions(generator.UseJSONNamesForFields(true), generator.EnumsAsInts(false)))
 	srv.HandlePrefix("/q/", openAPIhandler)
 

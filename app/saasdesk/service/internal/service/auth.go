@@ -4,14 +4,22 @@ import (
 	"context"
 
 	pb "github.com/beiduoke/go-scaffold/api/saasdesk/service/v1"
+	"github.com/beiduoke/go-scaffold/app/saasdesk/service/internal/biz"
+	"github.com/go-kratos/kratos/v2/log"
 )
 
 type AuthService struct {
 	pb.UnimplementedAuthServiceServer
+	log *log.Helper
+	ac  biz.AuthRepo
 }
 
-func NewAuthService() *AuthService {
-	return &AuthService{}
+func NewAuthService(logger log.Logger, ac biz.AuthRepo) *AuthService {
+	l := log.NewHelper(log.With(logger, "module", "auth/service"))
+	return &AuthService{
+		log: l,
+		ac:  ac,
+	}
 }
 
 func (s *AuthService) Logout(ctx context.Context, req *pb.LogoutRequest) (*pb.LogoutResponse, error) {

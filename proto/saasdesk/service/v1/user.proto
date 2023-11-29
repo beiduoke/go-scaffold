@@ -14,15 +14,15 @@ option java_multiple_files = true;
 option java_package = "saasdesk.service.v1";
 
 service UserService {
-	rpc UpdateUser (UpdateUserRequest) returns (UpdateUserReply) {
+	rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse) {
     option (google.api.http) = {
       post: "/v1/user"
       body: "*"
     };
   }
-	rpc DeleteUser (DeleteUserRequest) returns (DeleteUserReply);
-	rpc GetUser (GetUserRequest) returns (GetUserReply);
-	rpc ListUser (ListUserRequest) returns (ListUserReply);
+	rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
+	rpc GetUser (GetUserRequest) returns (GetUserResponse);
+	rpc ListUser (ListUserRequest) returns (ListUserResponse);
 }
 
 message User {
@@ -41,16 +41,16 @@ message User {
 }
 
 message CreateUserRequest {}
-message CreateUserReply {}
+message CreateUserResponse {}
 
 message UpdateUserRequest {}
-message UpdateUserReply {}
+message UpdateUserResponse {}
 
 message DeleteUserRequest {}
-message DeleteUserReply {}
+message DeleteUserResponse {}
 
 message GetUserRequest {}
-message GetUserReply {}
+message GetUserResponse {}
 
 message ListUserRequest {}
-message ListUserReply {}
+message ListUserResponse {}

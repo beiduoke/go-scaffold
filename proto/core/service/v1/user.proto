@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package core.service.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/beiduoke/go-scaffold/proto/core/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "core.service.v1";
+
+service UserService {
+	rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+	rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse);
+	rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
+	rpc GetUser (GetUserRequest) returns (GetUserResponse);
+	rpc ListUser (ListUserRequest) returns (ListUserResponse);
+}
+
+message User {
+  uint64 id = 1;
+  string name = 2;
+  optional string nick_name = 4;
+  optional string real_name = 5;
+  optional string birthday = 6;
+  optional int32 gender = 7; 
+  optional string phone = 8;
+  optional string email = 9;
+  optional string avatar = 10;
+  optional int32 state = 11 [(gnostic.openapi.v3.property) = {description: "状态"}];
+  optional google.protobuf.Timestamp created_at = 12;
+  optional google.protobuf.Timestamp updated_at = 13;
+}
+
+message CreateUserRequest {}
+message CreateUserResponse {}
+
+message UpdateUserRequest {}
+message UpdateUserResponse {}
+
+message DeleteUserRequest {}
+message DeleteUserResponse {}
+
+message GetUserRequest {}
+message GetUserResponse {}
+
+message ListUserRequest {}
+message ListUserResponse {}

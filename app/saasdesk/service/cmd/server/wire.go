@@ -7,7 +7,6 @@ package main
 
 import (
 	"github.com/beiduoke/go-scaffold/api/common/conf"
-	"github.com/beiduoke/go-scaffold/app/saasdesk/service/internal/biz"
 	"github.com/beiduoke/go-scaffold/app/saasdesk/service/internal/data"
 	"github.com/beiduoke/go-scaffold/app/saasdesk/service/internal/server"
 	"github.com/beiduoke/go-scaffold/app/saasdesk/service/internal/service"
@@ -20,5 +19,5 @@ import (
 
 // wireApp init kratos application.
 func wireApp(log.Logger, registry.Registrar, *conf.Bootstrap) (*kratos.App, func(), error) {
-	panic(wire.Build(server.ProviderSet, service.ProviderSet, data.ProviderSet, biz.ProviderSet, newApp))
+	panic(wire.Build(server.ProviderSet, service.ProviderSet, data.ProviderSet, newApp))
 }

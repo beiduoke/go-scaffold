@@ -1,0 +1,10 @@
+server:
+  grpc:
+    addr: 0.0.0.0:9011
+    timeout: 1s
+    middleware:
+  websocket:
+    addr: 0.0.0.0:7011
+    timeout: 1s
+    path: /
+    middleware:

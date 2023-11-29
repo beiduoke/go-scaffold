@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package core.service.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/beiduoke/go-scaffold/proto/core/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "core.service.v1";
+
+service RoleService {
+	rpc CreateRole (CreateRoleRequest) returns (CreateRoleResponse);
+	rpc UpdateRole (UpdateRoleRequest) returns (UpdateRoleResponse);
+	rpc DeleteRole (DeleteRoleRequest) returns (DeleteRoleResponse);
+	rpc GetRole (GetRoleRequest) returns (GetRoleResponse);
+	rpc ListRole (ListRoleRequest) returns (ListRoleResponse);
+}
+
+// 角色模块
+message Role {
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
+  uint64 id = 3;
+  string name = 4;
+  optional string default_router = 6;
+  optional int32 sort = 7;
+	optional int32 data_scope = 8;         
+	optional int32 menu_check_strictly = 9; 
+	optional int32 dept_check_strictly = 10; 
+  optional int32 state = 11;
+  optional string remarks = 12;
+}
+
+message CreateRoleRequest {}
+message CreateRoleResponse {}
+
+message UpdateRoleRequest {}
+message UpdateRoleResponse {}
+
+message DeleteRoleRequest {}
+message DeleteRoleResponse {}
+
+message GetRoleRequest {}
+message GetRoleResponse {}
+
+message ListRoleRequest {}
+message ListRoleResponse {}

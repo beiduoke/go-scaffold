@@ -31,28 +31,31 @@ var ProviderSet = wire.NewSet(
 	NewRedisClient,
 	// 搜索引擎客户端
 	NewMeilisearchClient,
+	// Casbin 鉴权客户端
+	NewAuthzCasbinClient,
 	// 雪花ID生成器
 	NewSnowflake,
 	// 事务管理
 	NewTransaction,
-	// 认证器
+	// 用户安全认证加密
 	NewAuthenticator,
-	// Casbin鉴权客户端
-	NewAuthzCasbinClient,
-	// 鉴权器
-	NewAuthorized,
-	// 用户安全认证
+	// 用户安全认证解析器
 	NewSecurityUser,
+	// 用户身份鉴权器
+	NewAuthorized,
+	// 系统方法
 	// 认证
 	NewAuthRepo,
 	// 用户
 	NewUserRepo,
+	// 角色
+	NewRoleRepo,
 )
 
 // Data .
 type Data struct {
-	cfg      *conf.Bootstrap
 	log      *log.Helper
+	cfg      *conf.Bootstrap
 	db       *ent.Client
 	rdb      *redis.Client
 	sdb      *meilisearch.Client
@@ -61,7 +64,7 @@ type Data struct {
 }
 
 // NewData .
-func NewData(cfg *conf.Bootstrap, db *ent.Client, rdb *redis.Client, sdb *meilisearch.Client, enforcer *casbin.SyncedEnforcer, sf *snowflake.Node, logger log.Logger) (*Data, func(), error) {
+func NewData(logger log.Logger, cfg *conf.Bootstrap, db *ent.Client, rdb *redis.Client, sdb *meilisearch.Client, enforcer *casbin.SyncedEnforcer, sf *snowflake.Node) (*Data, func(), error) {
 	l := log.NewHelper(log.With(logger, "module", "data/initialize"))
 	d := &Data{db: db, rdb: rdb, sdb: sdb, log: l, sf: sf, enforcer: enforcer, cfg: cfg}
 	return d, func() {
@@ -99,7 +102,7 @@ func (d *Data) InTx(ctx context.Context, fn func(ctx context.Context) error) err
 	if err := tx.Commit(); err != nil {
 		return fmt.Errorf("committing transaction: %w", err)
 	}
-	return nil
+	return err
 }
 
 func (d *Data) DB(ctx context.Context) *ent.Client {
@@ -150,7 +153,7 @@ func NewDiscovery(cfg *conf.Bootstrap, logger log.Logger) registry.Discovery {
 	return bootstrap.NewConsulRegistry(cfg.Registry)
 }
 
-// NewAuthenticator 创建认证
+// NewAuthenticator 创建认证加密
 func NewAuthenticator(cfg *conf.Bootstrap, logger log.Logger) authn.Authenticator {
 	log.NewHelper(log.With(logger, "module", "authenticator/data/service"))
 	return bootstrap.NewJwtAuthenticator(cfg, logger)

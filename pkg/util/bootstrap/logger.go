@@ -1,9 +1,10 @@
 package bootstrap
 
 import (
+	"os"
+
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
-	"os"
 )
 
 func NewLoggerProvider(serviceInfo *ServiceInfo) log.Logger {
