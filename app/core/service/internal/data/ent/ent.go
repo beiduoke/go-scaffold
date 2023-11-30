@@ -12,6 +12,10 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/dept"
+	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/menu"
+	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/post"
+	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/role"
 	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/user"
 )
 
@@ -73,6 +77,10 @@ var (
 func checkColumn(table, column string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
+			dept.Table: dept.ValidColumn,
+			menu.Table: menu.ValidColumn,
+			post.Table: post.ValidColumn,
+			role.Table: role.ValidColumn,
 			user.Table: user.ValidColumn,
 		})
 	})

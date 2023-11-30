@@ -3,6 +3,10 @@
 package ent
 
 import (
+	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/dept"
+	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/menu"
+	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/post"
+	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/role"
 	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/user"
 
 	"entgo.io/ent/dialect/sql"
@@ -13,8 +17,76 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 1)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 5)}
 	graph.Nodes[0] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   dept.Table,
+			Columns: dept.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint64,
+				Column: dept.FieldID,
+			},
+		},
+		Type: "Dept",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			dept.FieldCreatedAt: {Type: field.TypeTime, Column: dept.FieldCreatedAt},
+			dept.FieldUpdatedAt: {Type: field.TypeTime, Column: dept.FieldUpdatedAt},
+			dept.FieldDeletedAt: {Type: field.TypeTime, Column: dept.FieldDeletedAt},
+			dept.FieldName:      {Type: field.TypeString, Column: dept.FieldName},
+		},
+	}
+	graph.Nodes[1] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   menu.Table,
+			Columns: menu.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint64,
+				Column: menu.FieldID,
+			},
+		},
+		Type: "Menu",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			menu.FieldCreatedAt: {Type: field.TypeTime, Column: menu.FieldCreatedAt},
+			menu.FieldUpdatedAt: {Type: field.TypeTime, Column: menu.FieldUpdatedAt},
+			menu.FieldDeletedAt: {Type: field.TypeTime, Column: menu.FieldDeletedAt},
+			menu.FieldName:      {Type: field.TypeString, Column: menu.FieldName},
+		},
+	}
+	graph.Nodes[2] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   post.Table,
+			Columns: post.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint64,
+				Column: post.FieldID,
+			},
+		},
+		Type: "Post",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			post.FieldCreatedAt: {Type: field.TypeTime, Column: post.FieldCreatedAt},
+			post.FieldUpdatedAt: {Type: field.TypeTime, Column: post.FieldUpdatedAt},
+			post.FieldDeletedAt: {Type: field.TypeTime, Column: post.FieldDeletedAt},
+			post.FieldName:      {Type: field.TypeString, Column: post.FieldName},
+		},
+	}
+	graph.Nodes[3] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   role.Table,
+			Columns: role.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUint64,
+				Column: role.FieldID,
+			},
+		},
+		Type: "Role",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			role.FieldCreatedAt: {Type: field.TypeTime, Column: role.FieldCreatedAt},
+			role.FieldUpdatedAt: {Type: field.TypeTime, Column: role.FieldUpdatedAt},
+			role.FieldDeletedAt: {Type: field.TypeTime, Column: role.FieldDeletedAt},
+			role.FieldName:      {Type: field.TypeString, Column: role.FieldName},
+		},
+	}
+	graph.Nodes[4] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   user.Table,
 			Columns: user.Columns,
@@ -48,6 +120,246 @@ type predicateAdder interface {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (dq *DeptQuery) addPredicate(pred func(s *sql.Selector)) {
+	dq.predicates = append(dq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the DeptQuery builder.
+func (dq *DeptQuery) Filter() *DeptFilter {
+	return &DeptFilter{config: dq.config, predicateAdder: dq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *DeptMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the DeptMutation builder.
+func (m *DeptMutation) Filter() *DeptFilter {
+	return &DeptFilter{config: m.config, predicateAdder: m}
+}
+
+// DeptFilter provides a generic filtering capability at runtime for DeptQuery.
+type DeptFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *DeptFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[0].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint64 predicate on the id field.
+func (f *DeptFilter) WhereID(p entql.Uint64P) {
+	f.Where(p.Field(dept.FieldID))
+}
+
+// WhereCreatedAt applies the entql time.Time predicate on the created_at field.
+func (f *DeptFilter) WhereCreatedAt(p entql.TimeP) {
+	f.Where(p.Field(dept.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql time.Time predicate on the updated_at field.
+func (f *DeptFilter) WhereUpdatedAt(p entql.TimeP) {
+	f.Where(p.Field(dept.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql time.Time predicate on the deleted_at field.
+func (f *DeptFilter) WhereDeletedAt(p entql.TimeP) {
+	f.Where(p.Field(dept.FieldDeletedAt))
+}
+
+// WhereName applies the entql string predicate on the name field.
+func (f *DeptFilter) WhereName(p entql.StringP) {
+	f.Where(p.Field(dept.FieldName))
+}
+
+// addPredicate implements the predicateAdder interface.
+func (mq *MenuQuery) addPredicate(pred func(s *sql.Selector)) {
+	mq.predicates = append(mq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the MenuQuery builder.
+func (mq *MenuQuery) Filter() *MenuFilter {
+	return &MenuFilter{config: mq.config, predicateAdder: mq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *MenuMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the MenuMutation builder.
+func (m *MenuMutation) Filter() *MenuFilter {
+	return &MenuFilter{config: m.config, predicateAdder: m}
+}
+
+// MenuFilter provides a generic filtering capability at runtime for MenuQuery.
+type MenuFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *MenuFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[1].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint64 predicate on the id field.
+func (f *MenuFilter) WhereID(p entql.Uint64P) {
+	f.Where(p.Field(menu.FieldID))
+}
+
+// WhereCreatedAt applies the entql time.Time predicate on the created_at field.
+func (f *MenuFilter) WhereCreatedAt(p entql.TimeP) {
+	f.Where(p.Field(menu.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql time.Time predicate on the updated_at field.
+func (f *MenuFilter) WhereUpdatedAt(p entql.TimeP) {
+	f.Where(p.Field(menu.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql time.Time predicate on the deleted_at field.
+func (f *MenuFilter) WhereDeletedAt(p entql.TimeP) {
+	f.Where(p.Field(menu.FieldDeletedAt))
+}
+
+// WhereName applies the entql string predicate on the name field.
+func (f *MenuFilter) WhereName(p entql.StringP) {
+	f.Where(p.Field(menu.FieldName))
+}
+
+// addPredicate implements the predicateAdder interface.
+func (pq *PostQuery) addPredicate(pred func(s *sql.Selector)) {
+	pq.predicates = append(pq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the PostQuery builder.
+func (pq *PostQuery) Filter() *PostFilter {
+	return &PostFilter{config: pq.config, predicateAdder: pq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *PostMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the PostMutation builder.
+func (m *PostMutation) Filter() *PostFilter {
+	return &PostFilter{config: m.config, predicateAdder: m}
+}
+
+// PostFilter provides a generic filtering capability at runtime for PostQuery.
+type PostFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *PostFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[2].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint64 predicate on the id field.
+func (f *PostFilter) WhereID(p entql.Uint64P) {
+	f.Where(p.Field(post.FieldID))
+}
+
+// WhereCreatedAt applies the entql time.Time predicate on the created_at field.
+func (f *PostFilter) WhereCreatedAt(p entql.TimeP) {
+	f.Where(p.Field(post.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql time.Time predicate on the updated_at field.
+func (f *PostFilter) WhereUpdatedAt(p entql.TimeP) {
+	f.Where(p.Field(post.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql time.Time predicate on the deleted_at field.
+func (f *PostFilter) WhereDeletedAt(p entql.TimeP) {
+	f.Where(p.Field(post.FieldDeletedAt))
+}
+
+// WhereName applies the entql string predicate on the name field.
+func (f *PostFilter) WhereName(p entql.StringP) {
+	f.Where(p.Field(post.FieldName))
+}
+
+// addPredicate implements the predicateAdder interface.
+func (rq *RoleQuery) addPredicate(pred func(s *sql.Selector)) {
+	rq.predicates = append(rq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the RoleQuery builder.
+func (rq *RoleQuery) Filter() *RoleFilter {
+	return &RoleFilter{config: rq.config, predicateAdder: rq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *RoleMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the RoleMutation builder.
+func (m *RoleMutation) Filter() *RoleFilter {
+	return &RoleFilter{config: m.config, predicateAdder: m}
+}
+
+// RoleFilter provides a generic filtering capability at runtime for RoleQuery.
+type RoleFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *RoleFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[3].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql uint64 predicate on the id field.
+func (f *RoleFilter) WhereID(p entql.Uint64P) {
+	f.Where(p.Field(role.FieldID))
+}
+
+// WhereCreatedAt applies the entql time.Time predicate on the created_at field.
+func (f *RoleFilter) WhereCreatedAt(p entql.TimeP) {
+	f.Where(p.Field(role.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql time.Time predicate on the updated_at field.
+func (f *RoleFilter) WhereUpdatedAt(p entql.TimeP) {
+	f.Where(p.Field(role.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql time.Time predicate on the deleted_at field.
+func (f *RoleFilter) WhereDeletedAt(p entql.TimeP) {
+	f.Where(p.Field(role.FieldDeletedAt))
+}
+
+// WhereName applies the entql string predicate on the name field.
+func (f *RoleFilter) WhereName(p entql.StringP) {
+	f.Where(p.Field(role.FieldName))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (uq *UserQuery) addPredicate(pred func(s *sql.Selector)) {
 	uq.predicates = append(uq.predicates, pred)
 }
@@ -76,7 +388,7 @@ type UserFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *UserFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[0].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[4].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})

@@ -3,6 +3,10 @@
 package ent
 
 import (
+	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/dept"
+	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/menu"
+	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/post"
+	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/role"
 	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/schema"
 	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/user"
 )
@@ -11,6 +15,66 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	deptMixin := schema.Dept{}.Mixin()
+	deptMixinFields0 := deptMixin[0].Fields()
+	_ = deptMixinFields0
+	deptFields := schema.Dept{}.Fields()
+	_ = deptFields
+	// deptDescName is the schema descriptor for name field.
+	deptDescName := deptFields[0].Descriptor()
+	// dept.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	dept.NameValidator = deptDescName.Validators[0].(func(string) error)
+	// deptDescID is the schema descriptor for id field.
+	deptDescID := deptMixinFields0[0].Descriptor()
+	// dept.DefaultID holds the default value on creation for the id field.
+	dept.DefaultID = deptDescID.Default.(func() uint64)
+	// dept.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	dept.IDValidator = deptDescID.Validators[0].(func(uint64) error)
+	menuMixin := schema.Menu{}.Mixin()
+	menuMixinFields0 := menuMixin[0].Fields()
+	_ = menuMixinFields0
+	menuFields := schema.Menu{}.Fields()
+	_ = menuFields
+	// menuDescName is the schema descriptor for name field.
+	menuDescName := menuFields[0].Descriptor()
+	// menu.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	menu.NameValidator = menuDescName.Validators[0].(func(string) error)
+	// menuDescID is the schema descriptor for id field.
+	menuDescID := menuMixinFields0[0].Descriptor()
+	// menu.DefaultID holds the default value on creation for the id field.
+	menu.DefaultID = menuDescID.Default.(func() uint64)
+	// menu.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	menu.IDValidator = menuDescID.Validators[0].(func(uint64) error)
+	postMixin := schema.Post{}.Mixin()
+	postMixinFields0 := postMixin[0].Fields()
+	_ = postMixinFields0
+	postFields := schema.Post{}.Fields()
+	_ = postFields
+	// postDescName is the schema descriptor for name field.
+	postDescName := postFields[0].Descriptor()
+	// post.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	post.NameValidator = postDescName.Validators[0].(func(string) error)
+	// postDescID is the schema descriptor for id field.
+	postDescID := postMixinFields0[0].Descriptor()
+	// post.DefaultID holds the default value on creation for the id field.
+	post.DefaultID = postDescID.Default.(func() uint64)
+	// post.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	post.IDValidator = postDescID.Validators[0].(func(uint64) error)
+	roleMixin := schema.Role{}.Mixin()
+	roleMixinFields0 := roleMixin[0].Fields()
+	_ = roleMixinFields0
+	roleFields := schema.Role{}.Fields()
+	_ = roleFields
+	// roleDescName is the schema descriptor for name field.
+	roleDescName := roleFields[0].Descriptor()
+	// role.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	role.NameValidator = roleDescName.Validators[0].(func(string) error)
+	// roleDescID is the schema descriptor for id field.
+	roleDescID := roleMixinFields0[0].Descriptor()
+	// role.DefaultID holds the default value on creation for the id field.
+	role.DefaultID = roleDescID.Default.(func() uint64)
+	// role.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	role.IDValidator = roleDescID.Validators[0].(func(uint64) error)
 	userMixin := schema.User{}.Mixin()
 	userMixinFields0 := userMixin[0].Fields()
 	_ = userMixinFields0

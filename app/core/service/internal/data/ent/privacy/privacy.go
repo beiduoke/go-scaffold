@@ -111,6 +111,102 @@ func DenyMutationOperationRule(op ent.Op) MutationRule {
 	return OnMutationOperation(rule, op)
 }
 
+// The DeptQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type DeptQueryRuleFunc func(context.Context, *ent.DeptQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f DeptQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.DeptQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.DeptQuery", q)
+}
+
+// The DeptMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type DeptMutationRuleFunc func(context.Context, *ent.DeptMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f DeptMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.DeptMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.DeptMutation", m)
+}
+
+// The MenuQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type MenuQueryRuleFunc func(context.Context, *ent.MenuQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f MenuQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.MenuQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.MenuQuery", q)
+}
+
+// The MenuMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type MenuMutationRuleFunc func(context.Context, *ent.MenuMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f MenuMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.MenuMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.MenuMutation", m)
+}
+
+// The PostQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type PostQueryRuleFunc func(context.Context, *ent.PostQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f PostQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.PostQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.PostQuery", q)
+}
+
+// The PostMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type PostMutationRuleFunc func(context.Context, *ent.PostMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f PostMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.PostMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.PostMutation", m)
+}
+
+// The RoleQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type RoleQueryRuleFunc func(context.Context, *ent.RoleQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f RoleQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.RoleQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.RoleQuery", q)
+}
+
+// The RoleMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type RoleMutationRuleFunc func(context.Context, *ent.RoleMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f RoleMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.RoleMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.RoleMutation", m)
+}
+
 // The UserQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type UserQueryRuleFunc func(context.Context, *ent.UserQuery) error
@@ -170,6 +266,14 @@ var _ QueryMutationRule = FilterFunc(nil)
 
 func queryFilter(q ent.Query) (Filter, error) {
 	switch q := q.(type) {
+	case *ent.DeptQuery:
+		return q.Filter(), nil
+	case *ent.MenuQuery:
+		return q.Filter(), nil
+	case *ent.PostQuery:
+		return q.Filter(), nil
+	case *ent.RoleQuery:
+		return q.Filter(), nil
 	case *ent.UserQuery:
 		return q.Filter(), nil
 	default:
@@ -179,6 +283,14 @@ func queryFilter(q ent.Query) (Filter, error) {
 
 func mutationFilter(m ent.Mutation) (Filter, error) {
 	switch m := m.(type) {
+	case *ent.DeptMutation:
+		return m.Filter(), nil
+	case *ent.MenuMutation:
+		return m.Filter(), nil
+	case *ent.PostMutation:
+		return m.Filter(), nil
+	case *ent.RoleMutation:
+		return m.Filter(), nil
 	case *ent.UserMutation:
 		return m.Filter(), nil
 	default:

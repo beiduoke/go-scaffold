@@ -6,5 +6,17 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
+// Dept is the predicate function for dept builders.
+type Dept func(*sql.Selector)
+
+// Menu is the predicate function for menu builders.
+type Menu func(*sql.Selector)
+
+// Post is the predicate function for post builders.
+type Post func(*sql.Selector)
+
+// Role is the predicate function for role builders.
+type Role func(*sql.Selector)
+
 // User is the predicate function for user builders.
 type User func(*sql.Selector)

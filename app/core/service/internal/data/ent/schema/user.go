@@ -64,7 +64,7 @@ func (User) Fields() []ent.Field {
 		field.String("phone").
 			Comment("手机号").
 			Unique().
-			MaxLen(50).
+			MaxLen(20).
 			NotEmpty().
 			Immutable().
 			Optional().

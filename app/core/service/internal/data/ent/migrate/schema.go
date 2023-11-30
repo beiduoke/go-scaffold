@@ -9,6 +9,94 @@ import (
 )
 
 var (
+	// DeptsColumns holds the columns for the "depts" table.
+	DeptsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint64, Increment: true, Comment: "id", SchemaType: map[string]string{"mysql": "bigint", "postgres": "bigint"}},
+		{Name: "created_at", Type: field.TypeTime, Nullable: true, Comment: "创建时间"},
+		{Name: "updated_at", Type: field.TypeTime, Nullable: true, Comment: "更新时间"},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
+		{Name: "name", Type: field.TypeString, Nullable: true, Size: 128, Comment: "名称"},
+	}
+	// DeptsTable holds the schema information for the "depts" table.
+	DeptsTable = &schema.Table{
+		Name:       "depts",
+		Comment:    "部门表",
+		Columns:    DeptsColumns,
+		PrimaryKey: []*schema.Column{DeptsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "dept_id",
+				Unique:  false,
+				Columns: []*schema.Column{DeptsColumns[0]},
+			},
+		},
+	}
+	// MenusColumns holds the columns for the "menus" table.
+	MenusColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint64, Increment: true, Comment: "id", SchemaType: map[string]string{"mysql": "bigint", "postgres": "bigint"}},
+		{Name: "created_at", Type: field.TypeTime, Nullable: true, Comment: "创建时间"},
+		{Name: "updated_at", Type: field.TypeTime, Nullable: true, Comment: "更新时间"},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
+		{Name: "name", Type: field.TypeString, Nullable: true, Size: 128, Comment: "名称"},
+	}
+	// MenusTable holds the schema information for the "menus" table.
+	MenusTable = &schema.Table{
+		Name:       "menus",
+		Comment:    "菜单表",
+		Columns:    MenusColumns,
+		PrimaryKey: []*schema.Column{MenusColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "menu_id",
+				Unique:  false,
+				Columns: []*schema.Column{MenusColumns[0]},
+			},
+		},
+	}
+	// PostsColumns holds the columns for the "posts" table.
+	PostsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint64, Increment: true, Comment: "id", SchemaType: map[string]string{"mysql": "bigint", "postgres": "bigint"}},
+		{Name: "created_at", Type: field.TypeTime, Nullable: true, Comment: "创建时间"},
+		{Name: "updated_at", Type: field.TypeTime, Nullable: true, Comment: "更新时间"},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
+		{Name: "name", Type: field.TypeString, Nullable: true, Size: 128, Comment: "名称"},
+	}
+	// PostsTable holds the schema information for the "posts" table.
+	PostsTable = &schema.Table{
+		Name:       "posts",
+		Comment:    "岗位表",
+		Columns:    PostsColumns,
+		PrimaryKey: []*schema.Column{PostsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "post_id",
+				Unique:  false,
+				Columns: []*schema.Column{PostsColumns[0]},
+			},
+		},
+	}
+	// RolesColumns holds the columns for the "roles" table.
+	RolesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint64, Increment: true, Comment: "id", SchemaType: map[string]string{"mysql": "bigint", "postgres": "bigint"}},
+		{Name: "created_at", Type: field.TypeTime, Nullable: true, Comment: "创建时间"},
+		{Name: "updated_at", Type: field.TypeTime, Nullable: true, Comment: "更新时间"},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
+		{Name: "name", Type: field.TypeString, Nullable: true, Size: 128, Comment: "名称"},
+	}
+	// RolesTable holds the schema information for the "roles" table.
+	RolesTable = &schema.Table{
+		Name:       "roles",
+		Comment:    "角色表",
+		Columns:    RolesColumns,
+		PrimaryKey: []*schema.Column{RolesColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "role_id",
+				Unique:  false,
+				Columns: []*schema.Column{RolesColumns[0]},
+			},
+		},
+	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint64, Increment: true, Comment: "id", SchemaType: map[string]string{"mysql": "bigint", "postgres": "bigint"}},
@@ -18,7 +106,7 @@ var (
 		{Name: "username", Type: field.TypeString, Unique: true, Nullable: true, Size: 50, Comment: "用户名"},
 		{Name: "password", Type: field.TypeString, Nullable: true, Size: 255, Comment: "密码"},
 		{Name: "nickname", Type: field.TypeString, Nullable: true, Size: 128, Comment: "昵称"},
-		{Name: "phone", Type: field.TypeString, Unique: true, Nullable: true, Size: 50, Comment: "手机号"},
+		{Name: "phone", Type: field.TypeString, Unique: true, Nullable: true, Size: 20, Comment: "手机号"},
 		{Name: "email", Type: field.TypeString, Nullable: true, Size: 127, Comment: "电子邮箱"},
 		{Name: "avatar", Type: field.TypeString, Nullable: true, Size: 1023, Comment: "头像"},
 		{Name: "description", Type: field.TypeString, Nullable: true, Size: 1023, Comment: "个人说明"},
@@ -45,11 +133,31 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		DeptsTable,
+		MenusTable,
+		PostsTable,
+		RolesTable,
 		UsersTable,
 	}
 )
 
 func init() {
+	DeptsTable.Annotation = &entsql.Annotation{
+		Charset:   "utf8mb4",
+		Collation: "utf8mb4_bin",
+	}
+	MenusTable.Annotation = &entsql.Annotation{
+		Charset:   "utf8mb4",
+		Collation: "utf8mb4_bin",
+	}
+	PostsTable.Annotation = &entsql.Annotation{
+		Charset:   "utf8mb4",
+		Collation: "utf8mb4_bin",
+	}
+	RolesTable.Annotation = &entsql.Annotation{
+		Charset:   "utf8mb4",
+		Collation: "utf8mb4_bin",
+	}
 	UsersTable.Annotation = &entsql.Annotation{
 		Charset:   "utf8mb4",
 		Collation: "utf8mb4_bin",
