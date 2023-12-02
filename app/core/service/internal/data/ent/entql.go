@@ -23,7 +23,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			Table:   dept.Table,
 			Columns: dept.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUint64,
+				Type:   field.TypeUint32,
 				Column: dept.FieldID,
 			},
 		},
@@ -40,7 +40,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			Table:   menu.Table,
 			Columns: menu.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUint64,
+				Type:   field.TypeUint32,
 				Column: menu.FieldID,
 			},
 		},
@@ -57,7 +57,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			Table:   post.Table,
 			Columns: post.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUint64,
+				Type:   field.TypeUint32,
 				Column: post.FieldID,
 			},
 		},
@@ -74,7 +74,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			Table:   role.Table,
 			Columns: role.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUint64,
+				Type:   field.TypeUint32,
 				Column: role.FieldID,
 			},
 		},
@@ -154,8 +154,8 @@ func (f *DeptFilter) Where(p entql.P) {
 	})
 }
 
-// WhereID applies the entql uint64 predicate on the id field.
-func (f *DeptFilter) WhereID(p entql.Uint64P) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *DeptFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(dept.FieldID))
 }
 
@@ -214,8 +214,8 @@ func (f *MenuFilter) Where(p entql.P) {
 	})
 }
 
-// WhereID applies the entql uint64 predicate on the id field.
-func (f *MenuFilter) WhereID(p entql.Uint64P) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *MenuFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(menu.FieldID))
 }
 
@@ -274,8 +274,8 @@ func (f *PostFilter) Where(p entql.P) {
 	})
 }
 
-// WhereID applies the entql uint64 predicate on the id field.
-func (f *PostFilter) WhereID(p entql.Uint64P) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *PostFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(post.FieldID))
 }
 
@@ -334,8 +334,8 @@ func (f *RoleFilter) Where(p entql.P) {
 	})
 }
 
-// WhereID applies the entql uint64 predicate on the id field.
-func (f *RoleFilter) WhereID(p entql.Uint64P) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *RoleFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(role.FieldID))
 }
 

@@ -40,7 +40,7 @@ type DeptMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *uint64
+	id            *uint32
 	created_at    *time.Time
 	updated_at    *time.Time
 	deleted_at    *time.Time
@@ -71,7 +71,7 @@ func newDeptMutation(c config, op Op, opts ...deptOption) *DeptMutation {
 }
 
 // withDeptID sets the ID field of the mutation.
-func withDeptID(id uint64) deptOption {
+func withDeptID(id uint32) deptOption {
 	return func(m *DeptMutation) {
 		var (
 			err   error
@@ -123,13 +123,13 @@ func (m DeptMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of Dept entities.
-func (m *DeptMutation) SetID(id uint64) {
+func (m *DeptMutation) SetID(id uint32) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *DeptMutation) ID() (id uint64, exists bool) {
+func (m *DeptMutation) ID() (id uint32, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -140,12 +140,12 @@ func (m *DeptMutation) ID() (id uint64, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *DeptMutation) IDs(ctx context.Context) ([]uint64, error) {
+func (m *DeptMutation) IDs(ctx context.Context) ([]uint32, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []uint64{id}, nil
+			return []uint32{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -613,7 +613,7 @@ type MenuMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *uint64
+	id            *uint32
 	created_at    *time.Time
 	updated_at    *time.Time
 	deleted_at    *time.Time
@@ -644,7 +644,7 @@ func newMenuMutation(c config, op Op, opts ...menuOption) *MenuMutation {
 }
 
 // withMenuID sets the ID field of the mutation.
-func withMenuID(id uint64) menuOption {
+func withMenuID(id uint32) menuOption {
 	return func(m *MenuMutation) {
 		var (
 			err   error
@@ -696,13 +696,13 @@ func (m MenuMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of Menu entities.
-func (m *MenuMutation) SetID(id uint64) {
+func (m *MenuMutation) SetID(id uint32) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *MenuMutation) ID() (id uint64, exists bool) {
+func (m *MenuMutation) ID() (id uint32, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -713,12 +713,12 @@ func (m *MenuMutation) ID() (id uint64, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *MenuMutation) IDs(ctx context.Context) ([]uint64, error) {
+func (m *MenuMutation) IDs(ctx context.Context) ([]uint32, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []uint64{id}, nil
+			return []uint32{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -1186,7 +1186,7 @@ type PostMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *uint64
+	id            *uint32
 	created_at    *time.Time
 	updated_at    *time.Time
 	deleted_at    *time.Time
@@ -1217,7 +1217,7 @@ func newPostMutation(c config, op Op, opts ...postOption) *PostMutation {
 }
 
 // withPostID sets the ID field of the mutation.
-func withPostID(id uint64) postOption {
+func withPostID(id uint32) postOption {
 	return func(m *PostMutation) {
 		var (
 			err   error
@@ -1269,13 +1269,13 @@ func (m PostMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of Post entities.
-func (m *PostMutation) SetID(id uint64) {
+func (m *PostMutation) SetID(id uint32) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *PostMutation) ID() (id uint64, exists bool) {
+func (m *PostMutation) ID() (id uint32, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -1286,12 +1286,12 @@ func (m *PostMutation) ID() (id uint64, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *PostMutation) IDs(ctx context.Context) ([]uint64, error) {
+func (m *PostMutation) IDs(ctx context.Context) ([]uint32, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []uint64{id}, nil
+			return []uint32{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -1759,7 +1759,7 @@ type RoleMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *uint64
+	id            *uint32
 	created_at    *time.Time
 	updated_at    *time.Time
 	deleted_at    *time.Time
@@ -1790,7 +1790,7 @@ func newRoleMutation(c config, op Op, opts ...roleOption) *RoleMutation {
 }
 
 // withRoleID sets the ID field of the mutation.
-func withRoleID(id uint64) roleOption {
+func withRoleID(id uint32) roleOption {
 	return func(m *RoleMutation) {
 		var (
 			err   error
@@ -1842,13 +1842,13 @@ func (m RoleMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of Role entities.
-func (m *RoleMutation) SetID(id uint64) {
+func (m *RoleMutation) SetID(id uint32) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *RoleMutation) ID() (id uint64, exists bool) {
+func (m *RoleMutation) ID() (id uint32, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -1859,12 +1859,12 @@ func (m *RoleMutation) ID() (id uint64, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *RoleMutation) IDs(ctx context.Context) ([]uint64, error) {
+func (m *RoleMutation) IDs(ctx context.Context) ([]uint32, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []uint64{id}, nil
+			return []uint32{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):

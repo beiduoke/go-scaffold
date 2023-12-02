@@ -27,7 +27,7 @@ func (Post) Annotations() []schema.Annotation {
 // Mixin of the Post.
 func (Post) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		mixin.SnowflackId{},
+		mixin.AutoIncrementId{},
 		mixin.TimeAt{},
 	}
 }

@@ -11,7 +11,7 @@ import (
 var (
 	// DeptsColumns holds the columns for the "depts" table.
 	DeptsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUint64, Increment: true, Comment: "id", SchemaType: map[string]string{"mysql": "bigint", "postgres": "bigint"}},
+		{Name: "id", Type: field.TypeUint32, Increment: true, Comment: "id", SchemaType: map[string]string{"mysql": "int", "postgres": "serial"}},
 		{Name: "created_at", Type: field.TypeTime, Nullable: true, Comment: "创建时间"},
 		{Name: "updated_at", Type: field.TypeTime, Nullable: true, Comment: "更新时间"},
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
@@ -33,7 +33,7 @@ var (
 	}
 	// MenusColumns holds the columns for the "menus" table.
 	MenusColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUint64, Increment: true, Comment: "id", SchemaType: map[string]string{"mysql": "bigint", "postgres": "bigint"}},
+		{Name: "id", Type: field.TypeUint32, Increment: true, Comment: "id", SchemaType: map[string]string{"mysql": "int", "postgres": "serial"}},
 		{Name: "created_at", Type: field.TypeTime, Nullable: true, Comment: "创建时间"},
 		{Name: "updated_at", Type: field.TypeTime, Nullable: true, Comment: "更新时间"},
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
@@ -55,7 +55,7 @@ var (
 	}
 	// PostsColumns holds the columns for the "posts" table.
 	PostsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUint64, Increment: true, Comment: "id", SchemaType: map[string]string{"mysql": "bigint", "postgres": "bigint"}},
+		{Name: "id", Type: field.TypeUint32, Increment: true, Comment: "id", SchemaType: map[string]string{"mysql": "int", "postgres": "serial"}},
 		{Name: "created_at", Type: field.TypeTime, Nullable: true, Comment: "创建时间"},
 		{Name: "updated_at", Type: field.TypeTime, Nullable: true, Comment: "更新时间"},
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
@@ -77,7 +77,7 @@ var (
 	}
 	// RolesColumns holds the columns for the "roles" table.
 	RolesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUint64, Increment: true, Comment: "id", SchemaType: map[string]string{"mysql": "bigint", "postgres": "bigint"}},
+		{Name: "id", Type: field.TypeUint32, Increment: true, Comment: "id", SchemaType: map[string]string{"mysql": "int", "postgres": "serial"}},
 		{Name: "created_at", Type: field.TypeTime, Nullable: true, Comment: "创建时间"},
 		{Name: "updated_at", Type: field.TypeTime, Nullable: true, Comment: "更新时间"},
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},

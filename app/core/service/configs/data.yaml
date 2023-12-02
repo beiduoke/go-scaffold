@@ -2,15 +2,16 @@
 data:
   database:
     driver: mysql
-    source: root:123456@tcp(127.0.0.1:3306)/go_scaffold_saas?charset=utf8mb4&parseTime=true
+    source: root:123456@tcp(127.0.0.1:3306)/go_scaffold_core?charset=utf8mb4&parseTime=true
     migrate: true
-    debug: false
+    debug: true
     max_idle_connections: 25
     max_open_connections: 25
     connection_max_lifetime: 300s
   redis:
     addr: 127.0.0.1:6379
     password: '123456'
+    db: 2
     read_timeout: 0.2s
     write_timeout: 0.2s
   meilisearch:

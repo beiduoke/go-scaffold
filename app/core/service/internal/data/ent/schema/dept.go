@@ -27,7 +27,7 @@ func (Dept) Annotations() []schema.Annotation {
 // Mixin of the Dept.
 func (Dept) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		mixin.SnowflackId{},
+		mixin.AutoIncrementId{},
 		mixin.TimeAt{},
 	}
 }

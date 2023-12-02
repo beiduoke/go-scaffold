@@ -8,6 +8,7 @@ import (
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+	mx "github.com/beiduoke/go-scaffold/pkg/entgo/mixin"
 	"github.com/tx7do/go-utils/entgo/mixin"
 )
 
@@ -32,6 +33,7 @@ func (User) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixin.SnowflackId{},
 		mixin.TimeAt{},
+		mx.PlatformId{},
 	}
 }
 

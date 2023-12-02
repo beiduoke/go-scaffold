@@ -79,16 +79,8 @@ func (pc *PostCreate) SetNillableName(s *string) *PostCreate {
 }
 
 // SetID sets the "id" field.
-func (pc *PostCreate) SetID(u uint64) *PostCreate {
+func (pc *PostCreate) SetID(u uint32) *PostCreate {
 	pc.mutation.SetID(u)
-	return pc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (pc *PostCreate) SetNillableID(u *uint64) *PostCreate {
-	if u != nil {
-		pc.SetID(*u)
-	}
 	return pc
 }
 
@@ -99,7 +91,6 @@ func (pc *PostCreate) Mutation() *PostMutation {
 
 // Save creates the Post in the database.
 func (pc *PostCreate) Save(ctx context.Context) (*Post, error) {
-	pc.defaults()
 	return withHooks(ctx, pc.sqlSave, pc.mutation, pc.hooks)
 }
 
@@ -122,14 +113,6 @@ func (pc *PostCreate) Exec(ctx context.Context) error {
 func (pc *PostCreate) ExecX(ctx context.Context) {
 	if err := pc.Exec(ctx); err != nil {
 		panic(err)
-	}
-}
-
-// defaults sets the default values of the builder before save.
-func (pc *PostCreate) defaults() {
-	if _, ok := pc.mutation.ID(); !ok {
-		v := post.DefaultID()
-		pc.mutation.SetID(v)
 	}
 }
 
@@ -161,7 +144,7 @@ func (pc *PostCreate) sqlSave(ctx context.Context) (*Post, error) {
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = uint64(id)
+		_node.ID = uint32(id)
 	}
 	pc.mutation.id = &_node.ID
 	pc.mutation.done = true
@@ -171,7 +154,7 @@ func (pc *PostCreate) sqlSave(ctx context.Context) (*Post, error) {
 func (pc *PostCreate) createSpec() (*Post, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Post{config: pc.config}
-		_spec = sqlgraph.NewCreateSpec(post.Table, sqlgraph.NewFieldSpec(post.FieldID, field.TypeUint64))
+		_spec = sqlgraph.NewCreateSpec(post.Table, sqlgraph.NewFieldSpec(post.FieldID, field.TypeUint32))
 	)
 	_spec.OnConflict = pc.conflict
 	if id, ok := pc.mutation.ID(); ok {
@@ -430,7 +413,7 @@ func (u *PostUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *PostUpsertOne) ID(ctx context.Context) (id uint64, err error) {
+func (u *PostUpsertOne) ID(ctx context.Context) (id uint32, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -439,7 +422,7 @@ func (u *PostUpsertOne) ID(ctx context.Context) (id uint64, err error) {
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *PostUpsertOne) IDX(ctx context.Context) uint64 {
+func (u *PostUpsertOne) IDX(ctx context.Context) uint32 {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -466,7 +449,6 @@ func (pcb *PostCreateBulk) Save(ctx context.Context) ([]*Post, error) {
 	for i := range pcb.builders {
 		func(i int, root context.Context) {
 			builder := pcb.builders[i]
-			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*PostMutation)
 				if !ok {
@@ -496,7 +478,7 @@ func (pcb *PostCreateBulk) Save(ctx context.Context) ([]*Post, error) {
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = uint64(id)
+					nodes[i].ID = uint32(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

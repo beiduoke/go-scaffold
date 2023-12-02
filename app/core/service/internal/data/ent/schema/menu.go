@@ -27,7 +27,7 @@ func (Menu) Annotations() []schema.Annotation {
 // Mixin of the Menu.
 func (Menu) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		mixin.SnowflackId{},
+		mixin.AutoIncrementId{},
 		mixin.TimeAt{},
 	}
 }

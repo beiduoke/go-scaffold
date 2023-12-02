@@ -82,8 +82,8 @@ func (dq *DeptQuery) FirstX(ctx context.Context) *Dept {
 
 // FirstID returns the first Dept ID from the query.
 // Returns a *NotFoundError when no Dept ID was found.
-func (dq *DeptQuery) FirstID(ctx context.Context) (id uint64, err error) {
-	var ids []uint64
+func (dq *DeptQuery) FirstID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = dq.Limit(1).IDs(setContextOp(ctx, dq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -95,7 +95,7 @@ func (dq *DeptQuery) FirstID(ctx context.Context) (id uint64, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (dq *DeptQuery) FirstIDX(ctx context.Context) uint64 {
+func (dq *DeptQuery) FirstIDX(ctx context.Context) uint32 {
 	id, err := dq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -133,8 +133,8 @@ func (dq *DeptQuery) OnlyX(ctx context.Context) *Dept {
 // OnlyID is like Only, but returns the only Dept ID in the query.
 // Returns a *NotSingularError when more than one Dept ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (dq *DeptQuery) OnlyID(ctx context.Context) (id uint64, err error) {
-	var ids []uint64
+func (dq *DeptQuery) OnlyID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = dq.Limit(2).IDs(setContextOp(ctx, dq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -150,7 +150,7 @@ func (dq *DeptQuery) OnlyID(ctx context.Context) (id uint64, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (dq *DeptQuery) OnlyIDX(ctx context.Context) uint64 {
+func (dq *DeptQuery) OnlyIDX(ctx context.Context) uint32 {
 	id, err := dq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -178,7 +178,7 @@ func (dq *DeptQuery) AllX(ctx context.Context) []*Dept {
 }
 
 // IDs executes the query and returns a list of Dept IDs.
-func (dq *DeptQuery) IDs(ctx context.Context) (ids []uint64, err error) {
+func (dq *DeptQuery) IDs(ctx context.Context) (ids []uint32, err error) {
 	if dq.ctx.Unique == nil && dq.path != nil {
 		dq.Unique(true)
 	}
@@ -190,7 +190,7 @@ func (dq *DeptQuery) IDs(ctx context.Context) (ids []uint64, err error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (dq *DeptQuery) IDsX(ctx context.Context) []uint64 {
+func (dq *DeptQuery) IDsX(ctx context.Context) []uint32 {
 	ids, err := dq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -371,7 +371,7 @@ func (dq *DeptQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (dq *DeptQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(dept.Table, dept.Columns, sqlgraph.NewFieldSpec(dept.FieldID, field.TypeUint64))
+	_spec := sqlgraph.NewQuerySpec(dept.Table, dept.Columns, sqlgraph.NewFieldSpec(dept.FieldID, field.TypeUint32))
 	_spec.From = dq.sql
 	if unique := dq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

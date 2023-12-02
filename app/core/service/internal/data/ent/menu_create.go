@@ -79,16 +79,8 @@ func (mc *MenuCreate) SetNillableName(s *string) *MenuCreate {
 }
 
 // SetID sets the "id" field.
-func (mc *MenuCreate) SetID(u uint64) *MenuCreate {
+func (mc *MenuCreate) SetID(u uint32) *MenuCreate {
 	mc.mutation.SetID(u)
-	return mc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableID(u *uint64) *MenuCreate {
-	if u != nil {
-		mc.SetID(*u)
-	}
 	return mc
 }
 
@@ -99,7 +91,6 @@ func (mc *MenuCreate) Mutation() *MenuMutation {
 
 // Save creates the Menu in the database.
 func (mc *MenuCreate) Save(ctx context.Context) (*Menu, error) {
-	mc.defaults()
 	return withHooks(ctx, mc.sqlSave, mc.mutation, mc.hooks)
 }
 
@@ -122,14 +113,6 @@ func (mc *MenuCreate) Exec(ctx context.Context) error {
 func (mc *MenuCreate) ExecX(ctx context.Context) {
 	if err := mc.Exec(ctx); err != nil {
 		panic(err)
-	}
-}
-
-// defaults sets the default values of the builder before save.
-func (mc *MenuCreate) defaults() {
-	if _, ok := mc.mutation.ID(); !ok {
-		v := menu.DefaultID()
-		mc.mutation.SetID(v)
 	}
 }
 
@@ -161,7 +144,7 @@ func (mc *MenuCreate) sqlSave(ctx context.Context) (*Menu, error) {
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = uint64(id)
+		_node.ID = uint32(id)
 	}
 	mc.mutation.id = &_node.ID
 	mc.mutation.done = true
@@ -171,7 +154,7 @@ func (mc *MenuCreate) sqlSave(ctx context.Context) (*Menu, error) {
 func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Menu{config: mc.config}
-		_spec = sqlgraph.NewCreateSpec(menu.Table, sqlgraph.NewFieldSpec(menu.FieldID, field.TypeUint64))
+		_spec = sqlgraph.NewCreateSpec(menu.Table, sqlgraph.NewFieldSpec(menu.FieldID, field.TypeUint32))
 	)
 	_spec.OnConflict = mc.conflict
 	if id, ok := mc.mutation.ID(); ok {
@@ -430,7 +413,7 @@ func (u *MenuUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *MenuUpsertOne) ID(ctx context.Context) (id uint64, err error) {
+func (u *MenuUpsertOne) ID(ctx context.Context) (id uint32, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -439,7 +422,7 @@ func (u *MenuUpsertOne) ID(ctx context.Context) (id uint64, err error) {
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *MenuUpsertOne) IDX(ctx context.Context) uint64 {
+func (u *MenuUpsertOne) IDX(ctx context.Context) uint32 {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -466,7 +449,6 @@ func (mcb *MenuCreateBulk) Save(ctx context.Context) ([]*Menu, error) {
 	for i := range mcb.builders {
 		func(i int, root context.Context) {
 			builder := mcb.builders[i]
-			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*MenuMutation)
 				if !ok {
@@ -496,7 +478,7 @@ func (mcb *MenuCreateBulk) Save(ctx context.Context) ([]*Menu, error) {
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = uint64(id)
+					nodes[i].ID = uint32(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

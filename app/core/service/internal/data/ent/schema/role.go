@@ -27,7 +27,7 @@ func (Role) Annotations() []schema.Annotation {
 // Mixin of the Role.
 func (Role) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		mixin.SnowflackId{},
+		mixin.AutoIncrementId{},
 		mixin.TimeAt{},
 	}
 }

@@ -38,9 +38,19 @@ func NewEntClient(cfg *conf.Bootstrap, logger log.Logger) *ent.Client {
 		}),
 	)
 
+	if cfg.Data.Database.Debug {
+		client = client.Debug()
+	}
+
 	// 运行数据库迁移工具
 	if cfg.Data.Database.Migrate {
-		if err = client.Schema.Create(context.Background(), migrate.WithForeignKeys(true)); err != nil {
+		if err = client.Schema.Create(
+			context.Background(),
+			migrate.WithForeignKeys(true),
+			migrate.WithDropIndex(true),
+			migrate.WithDropColumn(true),
+			migrate.WithForeignKeys(false),
+		); err != nil {
 			l.Fatalf("failed creating schema resources: %v", err)
 		}
 	}

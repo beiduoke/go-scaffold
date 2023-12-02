@@ -79,16 +79,8 @@ func (dc *DeptCreate) SetNillableName(s *string) *DeptCreate {
 }
 
 // SetID sets the "id" field.
-func (dc *DeptCreate) SetID(u uint64) *DeptCreate {
+func (dc *DeptCreate) SetID(u uint32) *DeptCreate {
 	dc.mutation.SetID(u)
-	return dc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (dc *DeptCreate) SetNillableID(u *uint64) *DeptCreate {
-	if u != nil {
-		dc.SetID(*u)
-	}
 	return dc
 }
 
@@ -99,7 +91,6 @@ func (dc *DeptCreate) Mutation() *DeptMutation {
 
 // Save creates the Dept in the database.
 func (dc *DeptCreate) Save(ctx context.Context) (*Dept, error) {
-	dc.defaults()
 	return withHooks(ctx, dc.sqlSave, dc.mutation, dc.hooks)
 }
 
@@ -122,14 +113,6 @@ func (dc *DeptCreate) Exec(ctx context.Context) error {
 func (dc *DeptCreate) ExecX(ctx context.Context) {
 	if err := dc.Exec(ctx); err != nil {
 		panic(err)
-	}
-}
-
-// defaults sets the default values of the builder before save.
-func (dc *DeptCreate) defaults() {
-	if _, ok := dc.mutation.ID(); !ok {
-		v := dept.DefaultID()
-		dc.mutation.SetID(v)
 	}
 }
 
@@ -161,7 +144,7 @@ func (dc *DeptCreate) sqlSave(ctx context.Context) (*Dept, error) {
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = uint64(id)
+		_node.ID = uint32(id)
 	}
 	dc.mutation.id = &_node.ID
 	dc.mutation.done = true
@@ -171,7 +154,7 @@ func (dc *DeptCreate) sqlSave(ctx context.Context) (*Dept, error) {
 func (dc *DeptCreate) createSpec() (*Dept, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Dept{config: dc.config}
-		_spec = sqlgraph.NewCreateSpec(dept.Table, sqlgraph.NewFieldSpec(dept.FieldID, field.TypeUint64))
+		_spec = sqlgraph.NewCreateSpec(dept.Table, sqlgraph.NewFieldSpec(dept.FieldID, field.TypeUint32))
 	)
 	_spec.OnConflict = dc.conflict
 	if id, ok := dc.mutation.ID(); ok {
@@ -430,7 +413,7 @@ func (u *DeptUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *DeptUpsertOne) ID(ctx context.Context) (id uint64, err error) {
+func (u *DeptUpsertOne) ID(ctx context.Context) (id uint32, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -439,7 +422,7 @@ func (u *DeptUpsertOne) ID(ctx context.Context) (id uint64, err error) {
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *DeptUpsertOne) IDX(ctx context.Context) uint64 {
+func (u *DeptUpsertOne) IDX(ctx context.Context) uint32 {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -466,7 +449,6 @@ func (dcb *DeptCreateBulk) Save(ctx context.Context) ([]*Dept, error) {
 	for i := range dcb.builders {
 		func(i int, root context.Context) {
 			builder := dcb.builders[i]
-			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*DeptMutation)
 				if !ok {
@@ -496,7 +478,7 @@ func (dcb *DeptCreateBulk) Save(ctx context.Context) ([]*Dept, error) {
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = uint64(id)
+					nodes[i].ID = uint32(id)
 				}
 				mutation.done = true
 				return nodes[i], nil
