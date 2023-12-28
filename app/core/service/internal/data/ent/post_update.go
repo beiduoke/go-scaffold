@@ -69,6 +69,27 @@ func (pu *PostUpdate) ClearDeletedAt() *PostUpdate {
 	return pu
 }
 
+// SetPlatformID sets the "platform_id" field.
+func (pu *PostUpdate) SetPlatformID(u uint64) *PostUpdate {
+	pu.mutation.ResetPlatformID()
+	pu.mutation.SetPlatformID(u)
+	return pu
+}
+
+// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
+func (pu *PostUpdate) SetNillablePlatformID(u *uint64) *PostUpdate {
+	if u != nil {
+		pu.SetPlatformID(*u)
+	}
+	return pu
+}
+
+// AddPlatformID adds u to the "platform_id" field.
+func (pu *PostUpdate) AddPlatformID(u int64) *PostUpdate {
+	pu.mutation.AddPlatformID(u)
+	return pu
+}
+
 // SetName sets the "name" field.
 func (pu *PostUpdate) SetName(s string) *PostUpdate {
 	pu.mutation.SetName(s)
@@ -123,6 +144,11 @@ func (pu *PostUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (pu *PostUpdate) check() error {
+	if v, ok := pu.mutation.PlatformID(); ok {
+		if err := post.PlatformIDValidator(v); err != nil {
+			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "Post.platform_id": %w`, err)}
+		}
+	}
 	if v, ok := pu.mutation.Name(); ok {
 		if err := post.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Post.name": %w`, err)}
@@ -163,6 +189,12 @@ func (pu *PostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if pu.mutation.DeletedAtCleared() {
 		_spec.ClearField(post.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := pu.mutation.PlatformID(); ok {
+		_spec.SetField(post.FieldPlatformID, field.TypeUint64, value)
+	}
+	if value, ok := pu.mutation.AddedPlatformID(); ok {
+		_spec.AddField(post.FieldPlatformID, field.TypeUint64, value)
 	}
 	if value, ok := pu.mutation.Name(); ok {
 		_spec.SetField(post.FieldName, field.TypeString, value)
@@ -229,6 +261,27 @@ func (puo *PostUpdateOne) SetNillableDeletedAt(t *time.Time) *PostUpdateOne {
 // ClearDeletedAt clears the value of the "deleted_at" field.
 func (puo *PostUpdateOne) ClearDeletedAt() *PostUpdateOne {
 	puo.mutation.ClearDeletedAt()
+	return puo
+}
+
+// SetPlatformID sets the "platform_id" field.
+func (puo *PostUpdateOne) SetPlatformID(u uint64) *PostUpdateOne {
+	puo.mutation.ResetPlatformID()
+	puo.mutation.SetPlatformID(u)
+	return puo
+}
+
+// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
+func (puo *PostUpdateOne) SetNillablePlatformID(u *uint64) *PostUpdateOne {
+	if u != nil {
+		puo.SetPlatformID(*u)
+	}
+	return puo
+}
+
+// AddPlatformID adds u to the "platform_id" field.
+func (puo *PostUpdateOne) AddPlatformID(u int64) *PostUpdateOne {
+	puo.mutation.AddPlatformID(u)
 	return puo
 }
 
@@ -299,6 +352,11 @@ func (puo *PostUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (puo *PostUpdateOne) check() error {
+	if v, ok := puo.mutation.PlatformID(); ok {
+		if err := post.PlatformIDValidator(v); err != nil {
+			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "Post.platform_id": %w`, err)}
+		}
+	}
 	if v, ok := puo.mutation.Name(); ok {
 		if err := post.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Post.name": %w`, err)}
@@ -356,6 +414,12 @@ func (puo *PostUpdateOne) sqlSave(ctx context.Context) (_node *Post, err error) 
 	}
 	if puo.mutation.DeletedAtCleared() {
 		_spec.ClearField(post.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := puo.mutation.PlatformID(); ok {
+		_spec.SetField(post.FieldPlatformID, field.TypeUint64, value)
+	}
+	if value, ok := puo.mutation.AddedPlatformID(); ok {
+		_spec.AddField(post.FieldPlatformID, field.TypeUint64, value)
 	}
 	if value, ok := puo.mutation.Name(); ok {
 		_spec.SetField(post.FieldName, field.TypeString, value)

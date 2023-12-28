@@ -24,6 +24,8 @@ type User struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 	// 删除时间
 	DeletedAt *time.Time `json:"deleted_at,omitempty"`
+	// 平台ID
+	PlatformID uint64 `json:"platform_id,omitempty"`
 	// 用户名
 	Username *string `json:"username,omitempty"`
 	// 密码
@@ -48,7 +50,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldID:
+		case user.FieldID, user.FieldPlatformID:
 			values[i] = new(sql.NullInt64)
 		case user.FieldUsername, user.FieldPassword, user.FieldNickname, user.FieldPhone, user.FieldEmail, user.FieldAvatar, user.FieldDescription, user.FieldAuthority:
 			values[i] = new(sql.NullString)
@@ -95,6 +97,12 @@ func (u *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				u.DeletedAt = new(time.Time)
 				*u.DeletedAt = value.Time
+			}
+		case user.FieldPlatformID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field platform_id", values[i])
+			} else if value.Valid {
+				u.PlatformID = uint64(value.Int64)
 			}
 		case user.FieldUsername:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -202,6 +210,9 @@ func (u *User) String() string {
 		builder.WriteString("deleted_at=")
 		builder.WriteString(v.Format(time.ANSIC))
 	}
+	builder.WriteString(", ")
+	builder.WriteString("platform_id=")
+	builder.WriteString(fmt.Sprintf("%v", u.PlatformID))
 	builder.WriteString(", ")
 	if v := u.Username; v != nil {
 		builder.WriteString("username=")

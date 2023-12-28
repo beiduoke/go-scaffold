@@ -5,6 +5,7 @@ import (
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
+	mx "github.com/beiduoke/go-scaffold/pkg/entgo/mixin"
 	"github.com/tx7do/go-utils/entgo/mixin"
 )
 
@@ -29,6 +30,10 @@ func (Dept) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixin.AutoIncrementId{},
 		mixin.TimeAt{},
+		mx.PlatformId{},
+		mx.Sort{},
+		mixin.Remark{},
+		mixin.SwitchStatus{},
 	}
 }
 
@@ -40,6 +45,15 @@ func (Dept) Fields() []ent.Field {
 			MaxLen(128).
 			Optional().
 			Nillable(),
+		field.Int32("parent_id").
+			Comment("父级ID").
+			Default(0).
+			Optional().
+			Nillable(),
+		field.Ints("ancestors").
+			Comment("祖级列表").
+			Default([]int{}).
+			Optional(),
 	}
 }
 

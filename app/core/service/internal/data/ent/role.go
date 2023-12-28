@@ -24,6 +24,8 @@ type Role struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 	// 删除时间
 	DeletedAt *time.Time `json:"deleted_at,omitempty"`
+	// 平台ID
+	PlatformID uint64 `json:"platform_id,omitempty"`
 	// 名称
 	Name         *string `json:"name,omitempty"`
 	selectValues sql.SelectValues
@@ -34,7 +36,7 @@ func (*Role) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case role.FieldID:
+		case role.FieldID, role.FieldPlatformID:
 			values[i] = new(sql.NullInt64)
 		case role.FieldName:
 			values[i] = new(sql.NullString)
@@ -81,6 +83,12 @@ func (r *Role) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				r.DeletedAt = new(time.Time)
 				*r.DeletedAt = value.Time
+			}
+		case role.FieldPlatformID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field platform_id", values[i])
+			} else if value.Valid {
+				r.PlatformID = uint64(value.Int64)
 			}
 		case role.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -139,6 +147,9 @@ func (r *Role) String() string {
 		builder.WriteString("deleted_at=")
 		builder.WriteString(v.Format(time.ANSIC))
 	}
+	builder.WriteString(", ")
+	builder.WriteString("platform_id=")
+	builder.WriteString(fmt.Sprintf("%v", r.PlatformID))
 	builder.WriteString(", ")
 	if v := r.Name; v != nil {
 		builder.WriteString("name=")

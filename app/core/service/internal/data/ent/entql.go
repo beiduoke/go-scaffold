@@ -29,10 +29,16 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "Dept",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			dept.FieldCreatedAt: {Type: field.TypeTime, Column: dept.FieldCreatedAt},
-			dept.FieldUpdatedAt: {Type: field.TypeTime, Column: dept.FieldUpdatedAt},
-			dept.FieldDeletedAt: {Type: field.TypeTime, Column: dept.FieldDeletedAt},
-			dept.FieldName:      {Type: field.TypeString, Column: dept.FieldName},
+			dept.FieldCreatedAt:  {Type: field.TypeTime, Column: dept.FieldCreatedAt},
+			dept.FieldUpdatedAt:  {Type: field.TypeTime, Column: dept.FieldUpdatedAt},
+			dept.FieldDeletedAt:  {Type: field.TypeTime, Column: dept.FieldDeletedAt},
+			dept.FieldPlatformID: {Type: field.TypeUint64, Column: dept.FieldPlatformID},
+			dept.FieldSort:       {Type: field.TypeInt32, Column: dept.FieldSort},
+			dept.FieldRemark:     {Type: field.TypeString, Column: dept.FieldRemark},
+			dept.FieldStatus:     {Type: field.TypeEnum, Column: dept.FieldStatus},
+			dept.FieldName:       {Type: field.TypeString, Column: dept.FieldName},
+			dept.FieldParentID:   {Type: field.TypeInt32, Column: dept.FieldParentID},
+			dept.FieldAncestors:  {Type: field.TypeJSON, Column: dept.FieldAncestors},
 		},
 	}
 	graph.Nodes[1] = &sqlgraph.Node{
@@ -46,10 +52,11 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "Menu",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			menu.FieldCreatedAt: {Type: field.TypeTime, Column: menu.FieldCreatedAt},
-			menu.FieldUpdatedAt: {Type: field.TypeTime, Column: menu.FieldUpdatedAt},
-			menu.FieldDeletedAt: {Type: field.TypeTime, Column: menu.FieldDeletedAt},
-			menu.FieldName:      {Type: field.TypeString, Column: menu.FieldName},
+			menu.FieldCreatedAt:  {Type: field.TypeTime, Column: menu.FieldCreatedAt},
+			menu.FieldUpdatedAt:  {Type: field.TypeTime, Column: menu.FieldUpdatedAt},
+			menu.FieldDeletedAt:  {Type: field.TypeTime, Column: menu.FieldDeletedAt},
+			menu.FieldPlatformID: {Type: field.TypeUint64, Column: menu.FieldPlatformID},
+			menu.FieldName:       {Type: field.TypeString, Column: menu.FieldName},
 		},
 	}
 	graph.Nodes[2] = &sqlgraph.Node{
@@ -63,10 +70,11 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "Post",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			post.FieldCreatedAt: {Type: field.TypeTime, Column: post.FieldCreatedAt},
-			post.FieldUpdatedAt: {Type: field.TypeTime, Column: post.FieldUpdatedAt},
-			post.FieldDeletedAt: {Type: field.TypeTime, Column: post.FieldDeletedAt},
-			post.FieldName:      {Type: field.TypeString, Column: post.FieldName},
+			post.FieldCreatedAt:  {Type: field.TypeTime, Column: post.FieldCreatedAt},
+			post.FieldUpdatedAt:  {Type: field.TypeTime, Column: post.FieldUpdatedAt},
+			post.FieldDeletedAt:  {Type: field.TypeTime, Column: post.FieldDeletedAt},
+			post.FieldPlatformID: {Type: field.TypeUint64, Column: post.FieldPlatformID},
+			post.FieldName:       {Type: field.TypeString, Column: post.FieldName},
 		},
 	}
 	graph.Nodes[3] = &sqlgraph.Node{
@@ -80,10 +88,11 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "Role",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			role.FieldCreatedAt: {Type: field.TypeTime, Column: role.FieldCreatedAt},
-			role.FieldUpdatedAt: {Type: field.TypeTime, Column: role.FieldUpdatedAt},
-			role.FieldDeletedAt: {Type: field.TypeTime, Column: role.FieldDeletedAt},
-			role.FieldName:      {Type: field.TypeString, Column: role.FieldName},
+			role.FieldCreatedAt:  {Type: field.TypeTime, Column: role.FieldCreatedAt},
+			role.FieldUpdatedAt:  {Type: field.TypeTime, Column: role.FieldUpdatedAt},
+			role.FieldDeletedAt:  {Type: field.TypeTime, Column: role.FieldDeletedAt},
+			role.FieldPlatformID: {Type: field.TypeUint64, Column: role.FieldPlatformID},
+			role.FieldName:       {Type: field.TypeString, Column: role.FieldName},
 		},
 	}
 	graph.Nodes[4] = &sqlgraph.Node{
@@ -100,6 +109,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			user.FieldCreatedAt:   {Type: field.TypeTime, Column: user.FieldCreatedAt},
 			user.FieldUpdatedAt:   {Type: field.TypeTime, Column: user.FieldUpdatedAt},
 			user.FieldDeletedAt:   {Type: field.TypeTime, Column: user.FieldDeletedAt},
+			user.FieldPlatformID:  {Type: field.TypeUint64, Column: user.FieldPlatformID},
 			user.FieldUsername:    {Type: field.TypeString, Column: user.FieldUsername},
 			user.FieldPassword:    {Type: field.TypeString, Column: user.FieldPassword},
 			user.FieldNickname:    {Type: field.TypeString, Column: user.FieldNickname},
@@ -174,9 +184,39 @@ func (f *DeptFilter) WhereDeletedAt(p entql.TimeP) {
 	f.Where(p.Field(dept.FieldDeletedAt))
 }
 
+// WherePlatformID applies the entql uint64 predicate on the platform_id field.
+func (f *DeptFilter) WherePlatformID(p entql.Uint64P) {
+	f.Where(p.Field(dept.FieldPlatformID))
+}
+
+// WhereSort applies the entql int32 predicate on the sort field.
+func (f *DeptFilter) WhereSort(p entql.Int32P) {
+	f.Where(p.Field(dept.FieldSort))
+}
+
+// WhereRemark applies the entql string predicate on the remark field.
+func (f *DeptFilter) WhereRemark(p entql.StringP) {
+	f.Where(p.Field(dept.FieldRemark))
+}
+
+// WhereStatus applies the entql string predicate on the status field.
+func (f *DeptFilter) WhereStatus(p entql.StringP) {
+	f.Where(p.Field(dept.FieldStatus))
+}
+
 // WhereName applies the entql string predicate on the name field.
 func (f *DeptFilter) WhereName(p entql.StringP) {
 	f.Where(p.Field(dept.FieldName))
+}
+
+// WhereParentID applies the entql int32 predicate on the parent_id field.
+func (f *DeptFilter) WhereParentID(p entql.Int32P) {
+	f.Where(p.Field(dept.FieldParentID))
+}
+
+// WhereAncestors applies the entql json.RawMessage predicate on the ancestors field.
+func (f *DeptFilter) WhereAncestors(p entql.BytesP) {
+	f.Where(p.Field(dept.FieldAncestors))
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -232,6 +272,11 @@ func (f *MenuFilter) WhereUpdatedAt(p entql.TimeP) {
 // WhereDeletedAt applies the entql time.Time predicate on the deleted_at field.
 func (f *MenuFilter) WhereDeletedAt(p entql.TimeP) {
 	f.Where(p.Field(menu.FieldDeletedAt))
+}
+
+// WherePlatformID applies the entql uint64 predicate on the platform_id field.
+func (f *MenuFilter) WherePlatformID(p entql.Uint64P) {
+	f.Where(p.Field(menu.FieldPlatformID))
 }
 
 // WhereName applies the entql string predicate on the name field.
@@ -294,6 +339,11 @@ func (f *PostFilter) WhereDeletedAt(p entql.TimeP) {
 	f.Where(p.Field(post.FieldDeletedAt))
 }
 
+// WherePlatformID applies the entql uint64 predicate on the platform_id field.
+func (f *PostFilter) WherePlatformID(p entql.Uint64P) {
+	f.Where(p.Field(post.FieldPlatformID))
+}
+
 // WhereName applies the entql string predicate on the name field.
 func (f *PostFilter) WhereName(p entql.StringP) {
 	f.Where(p.Field(post.FieldName))
@@ -354,6 +404,11 @@ func (f *RoleFilter) WhereDeletedAt(p entql.TimeP) {
 	f.Where(p.Field(role.FieldDeletedAt))
 }
 
+// WherePlatformID applies the entql uint64 predicate on the platform_id field.
+func (f *RoleFilter) WherePlatformID(p entql.Uint64P) {
+	f.Where(p.Field(role.FieldPlatformID))
+}
+
 // WhereName applies the entql string predicate on the name field.
 func (f *RoleFilter) WhereName(p entql.StringP) {
 	f.Where(p.Field(role.FieldName))
@@ -412,6 +467,11 @@ func (f *UserFilter) WhereUpdatedAt(p entql.TimeP) {
 // WhereDeletedAt applies the entql time.Time predicate on the deleted_at field.
 func (f *UserFilter) WhereDeletedAt(p entql.TimeP) {
 	f.Where(p.Field(user.FieldDeletedAt))
+}
+
+// WherePlatformID applies the entql uint64 predicate on the platform_id field.
+func (f *UserFilter) WherePlatformID(p entql.Uint64P) {
+	f.Where(p.Field(user.FieldPlatformID))
 }
 
 // WhereUsername applies the entql string predicate on the username field.

@@ -64,6 +64,20 @@ func (rc *RoleCreate) SetNillableDeletedAt(t *time.Time) *RoleCreate {
 	return rc
 }
 
+// SetPlatformID sets the "platform_id" field.
+func (rc *RoleCreate) SetPlatformID(u uint64) *RoleCreate {
+	rc.mutation.SetPlatformID(u)
+	return rc
+}
+
+// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
+func (rc *RoleCreate) SetNillablePlatformID(u *uint64) *RoleCreate {
+	if u != nil {
+		rc.SetPlatformID(*u)
+	}
+	return rc
+}
+
 // SetName sets the "name" field.
 func (rc *RoleCreate) SetName(s string) *RoleCreate {
 	rc.mutation.SetName(s)
@@ -91,6 +105,7 @@ func (rc *RoleCreate) Mutation() *RoleMutation {
 
 // Save creates the Role in the database.
 func (rc *RoleCreate) Save(ctx context.Context) (*Role, error) {
+	rc.defaults()
 	return withHooks(ctx, rc.sqlSave, rc.mutation, rc.hooks)
 }
 
@@ -116,8 +131,24 @@ func (rc *RoleCreate) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (rc *RoleCreate) defaults() {
+	if _, ok := rc.mutation.PlatformID(); !ok {
+		v := role.DefaultPlatformID()
+		rc.mutation.SetPlatformID(v)
+	}
+}
+
 // check runs all checks and user-defined validators on the builder.
 func (rc *RoleCreate) check() error {
+	if _, ok := rc.mutation.PlatformID(); !ok {
+		return &ValidationError{Name: "platform_id", err: errors.New(`ent: missing required field "Role.platform_id"`)}
+	}
+	if v, ok := rc.mutation.PlatformID(); ok {
+		if err := role.PlatformIDValidator(v); err != nil {
+			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "Role.platform_id": %w`, err)}
+		}
+	}
 	if v, ok := rc.mutation.Name(); ok {
 		if err := role.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Role.name": %w`, err)}
@@ -172,6 +203,10 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 	if value, ok := rc.mutation.DeletedAt(); ok {
 		_spec.SetField(role.FieldDeletedAt, field.TypeTime, value)
 		_node.DeletedAt = &value
+	}
+	if value, ok := rc.mutation.PlatformID(); ok {
+		_spec.SetField(role.FieldPlatformID, field.TypeUint64, value)
+		_node.PlatformID = value
 	}
 	if value, ok := rc.mutation.Name(); ok {
 		_spec.SetField(role.FieldName, field.TypeString, value)
@@ -262,6 +297,24 @@ func (u *RoleUpsert) UpdateDeletedAt() *RoleUpsert {
 // ClearDeletedAt clears the value of the "deleted_at" field.
 func (u *RoleUpsert) ClearDeletedAt() *RoleUpsert {
 	u.SetNull(role.FieldDeletedAt)
+	return u
+}
+
+// SetPlatformID sets the "platform_id" field.
+func (u *RoleUpsert) SetPlatformID(v uint64) *RoleUpsert {
+	u.Set(role.FieldPlatformID, v)
+	return u
+}
+
+// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
+func (u *RoleUpsert) UpdatePlatformID() *RoleUpsert {
+	u.SetExcluded(role.FieldPlatformID)
+	return u
+}
+
+// AddPlatformID adds v to the "platform_id" field.
+func (u *RoleUpsert) AddPlatformID(v uint64) *RoleUpsert {
+	u.Add(role.FieldPlatformID, v)
 	return u
 }
 
@@ -376,6 +429,27 @@ func (u *RoleUpsertOne) ClearDeletedAt() *RoleUpsertOne {
 	})
 }
 
+// SetPlatformID sets the "platform_id" field.
+func (u *RoleUpsertOne) SetPlatformID(v uint64) *RoleUpsertOne {
+	return u.Update(func(s *RoleUpsert) {
+		s.SetPlatformID(v)
+	})
+}
+
+// AddPlatformID adds v to the "platform_id" field.
+func (u *RoleUpsertOne) AddPlatformID(v uint64) *RoleUpsertOne {
+	return u.Update(func(s *RoleUpsert) {
+		s.AddPlatformID(v)
+	})
+}
+
+// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
+func (u *RoleUpsertOne) UpdatePlatformID() *RoleUpsertOne {
+	return u.Update(func(s *RoleUpsert) {
+		s.UpdatePlatformID()
+	})
+}
+
 // SetName sets the "name" field.
 func (u *RoleUpsertOne) SetName(v string) *RoleUpsertOne {
 	return u.Update(func(s *RoleUpsert) {
@@ -449,6 +523,7 @@ func (rcb *RoleCreateBulk) Save(ctx context.Context) ([]*Role, error) {
 	for i := range rcb.builders {
 		func(i int, root context.Context) {
 			builder := rcb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*RoleMutation)
 				if !ok {
@@ -652,6 +727,27 @@ func (u *RoleUpsertBulk) UpdateDeletedAt() *RoleUpsertBulk {
 func (u *RoleUpsertBulk) ClearDeletedAt() *RoleUpsertBulk {
 	return u.Update(func(s *RoleUpsert) {
 		s.ClearDeletedAt()
+	})
+}
+
+// SetPlatformID sets the "platform_id" field.
+func (u *RoleUpsertBulk) SetPlatformID(v uint64) *RoleUpsertBulk {
+	return u.Update(func(s *RoleUpsert) {
+		s.SetPlatformID(v)
+	})
+}
+
+// AddPlatformID adds v to the "platform_id" field.
+func (u *RoleUpsertBulk) AddPlatformID(v uint64) *RoleUpsertBulk {
+	return u.Update(func(s *RoleUpsert) {
+		s.AddPlatformID(v)
+	})
+}
+
+// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
+func (u *RoleUpsertBulk) UpdatePlatformID() *RoleUpsertBulk {
+	return u.Update(func(s *RoleUpsert) {
+		s.UpdatePlatformID()
 	})
 }
 

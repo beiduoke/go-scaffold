@@ -69,6 +69,27 @@ func (mu *MenuUpdate) ClearDeletedAt() *MenuUpdate {
 	return mu
 }
 
+// SetPlatformID sets the "platform_id" field.
+func (mu *MenuUpdate) SetPlatformID(u uint64) *MenuUpdate {
+	mu.mutation.ResetPlatformID()
+	mu.mutation.SetPlatformID(u)
+	return mu
+}
+
+// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillablePlatformID(u *uint64) *MenuUpdate {
+	if u != nil {
+		mu.SetPlatformID(*u)
+	}
+	return mu
+}
+
+// AddPlatformID adds u to the "platform_id" field.
+func (mu *MenuUpdate) AddPlatformID(u int64) *MenuUpdate {
+	mu.mutation.AddPlatformID(u)
+	return mu
+}
+
 // SetName sets the "name" field.
 func (mu *MenuUpdate) SetName(s string) *MenuUpdate {
 	mu.mutation.SetName(s)
@@ -123,6 +144,11 @@ func (mu *MenuUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (mu *MenuUpdate) check() error {
+	if v, ok := mu.mutation.PlatformID(); ok {
+		if err := menu.PlatformIDValidator(v); err != nil {
+			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "Menu.platform_id": %w`, err)}
+		}
+	}
 	if v, ok := mu.mutation.Name(); ok {
 		if err := menu.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Menu.name": %w`, err)}
@@ -163,6 +189,12 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if mu.mutation.DeletedAtCleared() {
 		_spec.ClearField(menu.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := mu.mutation.PlatformID(); ok {
+		_spec.SetField(menu.FieldPlatformID, field.TypeUint64, value)
+	}
+	if value, ok := mu.mutation.AddedPlatformID(); ok {
+		_spec.AddField(menu.FieldPlatformID, field.TypeUint64, value)
 	}
 	if value, ok := mu.mutation.Name(); ok {
 		_spec.SetField(menu.FieldName, field.TypeString, value)
@@ -229,6 +261,27 @@ func (muo *MenuUpdateOne) SetNillableDeletedAt(t *time.Time) *MenuUpdateOne {
 // ClearDeletedAt clears the value of the "deleted_at" field.
 func (muo *MenuUpdateOne) ClearDeletedAt() *MenuUpdateOne {
 	muo.mutation.ClearDeletedAt()
+	return muo
+}
+
+// SetPlatformID sets the "platform_id" field.
+func (muo *MenuUpdateOne) SetPlatformID(u uint64) *MenuUpdateOne {
+	muo.mutation.ResetPlatformID()
+	muo.mutation.SetPlatformID(u)
+	return muo
+}
+
+// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillablePlatformID(u *uint64) *MenuUpdateOne {
+	if u != nil {
+		muo.SetPlatformID(*u)
+	}
+	return muo
+}
+
+// AddPlatformID adds u to the "platform_id" field.
+func (muo *MenuUpdateOne) AddPlatformID(u int64) *MenuUpdateOne {
+	muo.mutation.AddPlatformID(u)
 	return muo
 }
 
@@ -299,6 +352,11 @@ func (muo *MenuUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (muo *MenuUpdateOne) check() error {
+	if v, ok := muo.mutation.PlatformID(); ok {
+		if err := menu.PlatformIDValidator(v); err != nil {
+			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "Menu.platform_id": %w`, err)}
+		}
+	}
 	if v, ok := muo.mutation.Name(); ok {
 		if err := menu.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Menu.name": %w`, err)}
@@ -356,6 +414,12 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 	}
 	if muo.mutation.DeletedAtCleared() {
 		_spec.ClearField(menu.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := muo.mutation.PlatformID(); ok {
+		_spec.SetField(menu.FieldPlatformID, field.TypeUint64, value)
+	}
+	if value, ok := muo.mutation.AddedPlatformID(); ok {
+		_spec.AddField(menu.FieldPlatformID, field.TypeUint64, value)
 	}
 	if value, ok := muo.mutation.Name(); ok {
 		_spec.SetField(menu.FieldName, field.TypeString, value)

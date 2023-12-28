@@ -69,6 +69,27 @@ func (uu *UserUpdate) ClearDeletedAt() *UserUpdate {
 	return uu
 }
 
+// SetPlatformID sets the "platform_id" field.
+func (uu *UserUpdate) SetPlatformID(u uint64) *UserUpdate {
+	uu.mutation.ResetPlatformID()
+	uu.mutation.SetPlatformID(u)
+	return uu
+}
+
+// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
+func (uu *UserUpdate) SetNillablePlatformID(u *uint64) *UserUpdate {
+	if u != nil {
+		uu.SetPlatformID(*u)
+	}
+	return uu
+}
+
+// AddPlatformID adds u to the "platform_id" field.
+func (uu *UserUpdate) AddPlatformID(u int64) *UserUpdate {
+	uu.mutation.AddPlatformID(u)
+	return uu
+}
+
 // SetPassword sets the "password" field.
 func (uu *UserUpdate) SetPassword(s string) *UserUpdate {
 	uu.mutation.SetPassword(s)
@@ -223,6 +244,11 @@ func (uu *UserUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (uu *UserUpdate) check() error {
+	if v, ok := uu.mutation.PlatformID(); ok {
+		if err := user.PlatformIDValidator(v); err != nil {
+			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "User.platform_id": %w`, err)}
+		}
+	}
 	if v, ok := uu.mutation.Password(); ok {
 		if err := user.PasswordValidator(v); err != nil {
 			return &ValidationError{Name: "password", err: fmt.Errorf(`ent: validator failed for field "User.password": %w`, err)}
@@ -288,6 +314,12 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if uu.mutation.DeletedAtCleared() {
 		_spec.ClearField(user.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := uu.mutation.PlatformID(); ok {
+		_spec.SetField(user.FieldPlatformID, field.TypeUint64, value)
+	}
+	if value, ok := uu.mutation.AddedPlatformID(); ok {
+		_spec.AddField(user.FieldPlatformID, field.TypeUint64, value)
 	}
 	if uu.mutation.UsernameCleared() {
 		_spec.ClearField(user.FieldUsername, field.TypeString)
@@ -390,6 +422,27 @@ func (uuo *UserUpdateOne) SetNillableDeletedAt(t *time.Time) *UserUpdateOne {
 // ClearDeletedAt clears the value of the "deleted_at" field.
 func (uuo *UserUpdateOne) ClearDeletedAt() *UserUpdateOne {
 	uuo.mutation.ClearDeletedAt()
+	return uuo
+}
+
+// SetPlatformID sets the "platform_id" field.
+func (uuo *UserUpdateOne) SetPlatformID(u uint64) *UserUpdateOne {
+	uuo.mutation.ResetPlatformID()
+	uuo.mutation.SetPlatformID(u)
+	return uuo
+}
+
+// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillablePlatformID(u *uint64) *UserUpdateOne {
+	if u != nil {
+		uuo.SetPlatformID(*u)
+	}
+	return uuo
+}
+
+// AddPlatformID adds u to the "platform_id" field.
+func (uuo *UserUpdateOne) AddPlatformID(u int64) *UserUpdateOne {
+	uuo.mutation.AddPlatformID(u)
 	return uuo
 }
 
@@ -560,6 +613,11 @@ func (uuo *UserUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (uuo *UserUpdateOne) check() error {
+	if v, ok := uuo.mutation.PlatformID(); ok {
+		if err := user.PlatformIDValidator(v); err != nil {
+			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "User.platform_id": %w`, err)}
+		}
+	}
 	if v, ok := uuo.mutation.Password(); ok {
 		if err := user.PasswordValidator(v); err != nil {
 			return &ValidationError{Name: "password", err: fmt.Errorf(`ent: validator failed for field "User.password": %w`, err)}
@@ -642,6 +700,12 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	}
 	if uuo.mutation.DeletedAtCleared() {
 		_spec.ClearField(user.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := uuo.mutation.PlatformID(); ok {
+		_spec.SetField(user.FieldPlatformID, field.TypeUint64, value)
+	}
+	if value, ok := uuo.mutation.AddedPlatformID(); ok {
+		_spec.AddField(user.FieldPlatformID, field.TypeUint64, value)
 	}
 	if uuo.mutation.UsernameCleared() {
 		_spec.ClearField(user.FieldUsername, field.TypeString)

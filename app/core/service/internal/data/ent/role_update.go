@@ -69,6 +69,27 @@ func (ru *RoleUpdate) ClearDeletedAt() *RoleUpdate {
 	return ru
 }
 
+// SetPlatformID sets the "platform_id" field.
+func (ru *RoleUpdate) SetPlatformID(u uint64) *RoleUpdate {
+	ru.mutation.ResetPlatformID()
+	ru.mutation.SetPlatformID(u)
+	return ru
+}
+
+// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
+func (ru *RoleUpdate) SetNillablePlatformID(u *uint64) *RoleUpdate {
+	if u != nil {
+		ru.SetPlatformID(*u)
+	}
+	return ru
+}
+
+// AddPlatformID adds u to the "platform_id" field.
+func (ru *RoleUpdate) AddPlatformID(u int64) *RoleUpdate {
+	ru.mutation.AddPlatformID(u)
+	return ru
+}
+
 // SetName sets the "name" field.
 func (ru *RoleUpdate) SetName(s string) *RoleUpdate {
 	ru.mutation.SetName(s)
@@ -123,6 +144,11 @@ func (ru *RoleUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (ru *RoleUpdate) check() error {
+	if v, ok := ru.mutation.PlatformID(); ok {
+		if err := role.PlatformIDValidator(v); err != nil {
+			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "Role.platform_id": %w`, err)}
+		}
+	}
 	if v, ok := ru.mutation.Name(); ok {
 		if err := role.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Role.name": %w`, err)}
@@ -163,6 +189,12 @@ func (ru *RoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if ru.mutation.DeletedAtCleared() {
 		_spec.ClearField(role.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := ru.mutation.PlatformID(); ok {
+		_spec.SetField(role.FieldPlatformID, field.TypeUint64, value)
+	}
+	if value, ok := ru.mutation.AddedPlatformID(); ok {
+		_spec.AddField(role.FieldPlatformID, field.TypeUint64, value)
 	}
 	if value, ok := ru.mutation.Name(); ok {
 		_spec.SetField(role.FieldName, field.TypeString, value)
@@ -229,6 +261,27 @@ func (ruo *RoleUpdateOne) SetNillableDeletedAt(t *time.Time) *RoleUpdateOne {
 // ClearDeletedAt clears the value of the "deleted_at" field.
 func (ruo *RoleUpdateOne) ClearDeletedAt() *RoleUpdateOne {
 	ruo.mutation.ClearDeletedAt()
+	return ruo
+}
+
+// SetPlatformID sets the "platform_id" field.
+func (ruo *RoleUpdateOne) SetPlatformID(u uint64) *RoleUpdateOne {
+	ruo.mutation.ResetPlatformID()
+	ruo.mutation.SetPlatformID(u)
+	return ruo
+}
+
+// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
+func (ruo *RoleUpdateOne) SetNillablePlatformID(u *uint64) *RoleUpdateOne {
+	if u != nil {
+		ruo.SetPlatformID(*u)
+	}
+	return ruo
+}
+
+// AddPlatformID adds u to the "platform_id" field.
+func (ruo *RoleUpdateOne) AddPlatformID(u int64) *RoleUpdateOne {
+	ruo.mutation.AddPlatformID(u)
 	return ruo
 }
 
@@ -299,6 +352,11 @@ func (ruo *RoleUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (ruo *RoleUpdateOne) check() error {
+	if v, ok := ruo.mutation.PlatformID(); ok {
+		if err := role.PlatformIDValidator(v); err != nil {
+			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "Role.platform_id": %w`, err)}
+		}
+	}
 	if v, ok := ruo.mutation.Name(); ok {
 		if err := role.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Role.name": %w`, err)}
@@ -356,6 +414,12 @@ func (ruo *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) 
 	}
 	if ruo.mutation.DeletedAtCleared() {
 		_spec.ClearField(role.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := ruo.mutation.PlatformID(); ok {
+		_spec.SetField(role.FieldPlatformID, field.TypeUint64, value)
+	}
+	if value, ok := ruo.mutation.AddedPlatformID(); ok {
+		_spec.AddField(role.FieldPlatformID, field.TypeUint64, value)
 	}
 	if value, ok := ruo.mutation.Name(); ok {
 		_spec.SetField(role.FieldName, field.TypeString, value)

@@ -38,17 +38,27 @@ const (
 // DeptMutation represents an operation that mutates the Dept nodes in the graph.
 type DeptMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *uint32
-	created_at    *time.Time
-	updated_at    *time.Time
-	deleted_at    *time.Time
-	name          *string
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*Dept, error)
-	predicates    []predicate.Dept
+	op              Op
+	typ             string
+	id              *uint32
+	created_at      *time.Time
+	updated_at      *time.Time
+	deleted_at      *time.Time
+	platform_id     *uint64
+	addplatform_id  *int64
+	sort            *int32
+	addsort         *int32
+	remark          *string
+	status          *dept.Status
+	name            *string
+	parent_id       *int32
+	addparent_id    *int32
+	ancestors       *[]int
+	appendancestors []int
+	clearedFields   map[string]struct{}
+	done            bool
+	oldValue        func(context.Context) (*Dept, error)
+	predicates      []predicate.Dept
 }
 
 var _ ent.Mutation = (*DeptMutation)(nil)
@@ -302,6 +312,230 @@ func (m *DeptMutation) ResetDeletedAt() {
 	delete(m.clearedFields, dept.FieldDeletedAt)
 }
 
+// SetPlatformID sets the "platform_id" field.
+func (m *DeptMutation) SetPlatformID(u uint64) {
+	m.platform_id = &u
+	m.addplatform_id = nil
+}
+
+// PlatformID returns the value of the "platform_id" field in the mutation.
+func (m *DeptMutation) PlatformID() (r uint64, exists bool) {
+	v := m.platform_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPlatformID returns the old "platform_id" field's value of the Dept entity.
+// If the Dept object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DeptMutation) OldPlatformID(ctx context.Context) (v uint64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPlatformID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPlatformID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPlatformID: %w", err)
+	}
+	return oldValue.PlatformID, nil
+}
+
+// AddPlatformID adds u to the "platform_id" field.
+func (m *DeptMutation) AddPlatformID(u int64) {
+	if m.addplatform_id != nil {
+		*m.addplatform_id += u
+	} else {
+		m.addplatform_id = &u
+	}
+}
+
+// AddedPlatformID returns the value that was added to the "platform_id" field in this mutation.
+func (m *DeptMutation) AddedPlatformID() (r int64, exists bool) {
+	v := m.addplatform_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetPlatformID resets all changes to the "platform_id" field.
+func (m *DeptMutation) ResetPlatformID() {
+	m.platform_id = nil
+	m.addplatform_id = nil
+}
+
+// SetSort sets the "sort" field.
+func (m *DeptMutation) SetSort(i int32) {
+	m.sort = &i
+	m.addsort = nil
+}
+
+// Sort returns the value of the "sort" field in the mutation.
+func (m *DeptMutation) Sort() (r int32, exists bool) {
+	v := m.sort
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSort returns the old "sort" field's value of the Dept entity.
+// If the Dept object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DeptMutation) OldSort(ctx context.Context) (v *int32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSort is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSort requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSort: %w", err)
+	}
+	return oldValue.Sort, nil
+}
+
+// AddSort adds i to the "sort" field.
+func (m *DeptMutation) AddSort(i int32) {
+	if m.addsort != nil {
+		*m.addsort += i
+	} else {
+		m.addsort = &i
+	}
+}
+
+// AddedSort returns the value that was added to the "sort" field in this mutation.
+func (m *DeptMutation) AddedSort() (r int32, exists bool) {
+	v := m.addsort
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearSort clears the value of the "sort" field.
+func (m *DeptMutation) ClearSort() {
+	m.sort = nil
+	m.addsort = nil
+	m.clearedFields[dept.FieldSort] = struct{}{}
+}
+
+// SortCleared returns if the "sort" field was cleared in this mutation.
+func (m *DeptMutation) SortCleared() bool {
+	_, ok := m.clearedFields[dept.FieldSort]
+	return ok
+}
+
+// ResetSort resets all changes to the "sort" field.
+func (m *DeptMutation) ResetSort() {
+	m.sort = nil
+	m.addsort = nil
+	delete(m.clearedFields, dept.FieldSort)
+}
+
+// SetRemark sets the "remark" field.
+func (m *DeptMutation) SetRemark(s string) {
+	m.remark = &s
+}
+
+// Remark returns the value of the "remark" field in the mutation.
+func (m *DeptMutation) Remark() (r string, exists bool) {
+	v := m.remark
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRemark returns the old "remark" field's value of the Dept entity.
+// If the Dept object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DeptMutation) OldRemark(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRemark is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRemark requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRemark: %w", err)
+	}
+	return oldValue.Remark, nil
+}
+
+// ClearRemark clears the value of the "remark" field.
+func (m *DeptMutation) ClearRemark() {
+	m.remark = nil
+	m.clearedFields[dept.FieldRemark] = struct{}{}
+}
+
+// RemarkCleared returns if the "remark" field was cleared in this mutation.
+func (m *DeptMutation) RemarkCleared() bool {
+	_, ok := m.clearedFields[dept.FieldRemark]
+	return ok
+}
+
+// ResetRemark resets all changes to the "remark" field.
+func (m *DeptMutation) ResetRemark() {
+	m.remark = nil
+	delete(m.clearedFields, dept.FieldRemark)
+}
+
+// SetStatus sets the "status" field.
+func (m *DeptMutation) SetStatus(d dept.Status) {
+	m.status = &d
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *DeptMutation) Status() (r dept.Status, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the Dept entity.
+// If the Dept object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DeptMutation) OldStatus(ctx context.Context) (v *dept.Status, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// ClearStatus clears the value of the "status" field.
+func (m *DeptMutation) ClearStatus() {
+	m.status = nil
+	m.clearedFields[dept.FieldStatus] = struct{}{}
+}
+
+// StatusCleared returns if the "status" field was cleared in this mutation.
+func (m *DeptMutation) StatusCleared() bool {
+	_, ok := m.clearedFields[dept.FieldStatus]
+	return ok
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *DeptMutation) ResetStatus() {
+	m.status = nil
+	delete(m.clearedFields, dept.FieldStatus)
+}
+
 // SetName sets the "name" field.
 func (m *DeptMutation) SetName(s string) {
 	m.name = &s
@@ -351,6 +585,141 @@ func (m *DeptMutation) ResetName() {
 	delete(m.clearedFields, dept.FieldName)
 }
 
+// SetParentID sets the "parent_id" field.
+func (m *DeptMutation) SetParentID(i int32) {
+	m.parent_id = &i
+	m.addparent_id = nil
+}
+
+// ParentID returns the value of the "parent_id" field in the mutation.
+func (m *DeptMutation) ParentID() (r int32, exists bool) {
+	v := m.parent_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldParentID returns the old "parent_id" field's value of the Dept entity.
+// If the Dept object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DeptMutation) OldParentID(ctx context.Context) (v *int32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldParentID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldParentID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldParentID: %w", err)
+	}
+	return oldValue.ParentID, nil
+}
+
+// AddParentID adds i to the "parent_id" field.
+func (m *DeptMutation) AddParentID(i int32) {
+	if m.addparent_id != nil {
+		*m.addparent_id += i
+	} else {
+		m.addparent_id = &i
+	}
+}
+
+// AddedParentID returns the value that was added to the "parent_id" field in this mutation.
+func (m *DeptMutation) AddedParentID() (r int32, exists bool) {
+	v := m.addparent_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearParentID clears the value of the "parent_id" field.
+func (m *DeptMutation) ClearParentID() {
+	m.parent_id = nil
+	m.addparent_id = nil
+	m.clearedFields[dept.FieldParentID] = struct{}{}
+}
+
+// ParentIDCleared returns if the "parent_id" field was cleared in this mutation.
+func (m *DeptMutation) ParentIDCleared() bool {
+	_, ok := m.clearedFields[dept.FieldParentID]
+	return ok
+}
+
+// ResetParentID resets all changes to the "parent_id" field.
+func (m *DeptMutation) ResetParentID() {
+	m.parent_id = nil
+	m.addparent_id = nil
+	delete(m.clearedFields, dept.FieldParentID)
+}
+
+// SetAncestors sets the "ancestors" field.
+func (m *DeptMutation) SetAncestors(i []int) {
+	m.ancestors = &i
+	m.appendancestors = nil
+}
+
+// Ancestors returns the value of the "ancestors" field in the mutation.
+func (m *DeptMutation) Ancestors() (r []int, exists bool) {
+	v := m.ancestors
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAncestors returns the old "ancestors" field's value of the Dept entity.
+// If the Dept object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DeptMutation) OldAncestors(ctx context.Context) (v []int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAncestors is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAncestors requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAncestors: %w", err)
+	}
+	return oldValue.Ancestors, nil
+}
+
+// AppendAncestors adds i to the "ancestors" field.
+func (m *DeptMutation) AppendAncestors(i []int) {
+	m.appendancestors = append(m.appendancestors, i...)
+}
+
+// AppendedAncestors returns the list of values that were appended to the "ancestors" field in this mutation.
+func (m *DeptMutation) AppendedAncestors() ([]int, bool) {
+	if len(m.appendancestors) == 0 {
+		return nil, false
+	}
+	return m.appendancestors, true
+}
+
+// ClearAncestors clears the value of the "ancestors" field.
+func (m *DeptMutation) ClearAncestors() {
+	m.ancestors = nil
+	m.appendancestors = nil
+	m.clearedFields[dept.FieldAncestors] = struct{}{}
+}
+
+// AncestorsCleared returns if the "ancestors" field was cleared in this mutation.
+func (m *DeptMutation) AncestorsCleared() bool {
+	_, ok := m.clearedFields[dept.FieldAncestors]
+	return ok
+}
+
+// ResetAncestors resets all changes to the "ancestors" field.
+func (m *DeptMutation) ResetAncestors() {
+	m.ancestors = nil
+	m.appendancestors = nil
+	delete(m.clearedFields, dept.FieldAncestors)
+}
+
 // Where appends a list predicates to the DeptMutation builder.
 func (m *DeptMutation) Where(ps ...predicate.Dept) {
 	m.predicates = append(m.predicates, ps...)
@@ -385,7 +754,7 @@ func (m *DeptMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *DeptMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 10)
 	if m.created_at != nil {
 		fields = append(fields, dept.FieldCreatedAt)
 	}
@@ -395,8 +764,26 @@ func (m *DeptMutation) Fields() []string {
 	if m.deleted_at != nil {
 		fields = append(fields, dept.FieldDeletedAt)
 	}
+	if m.platform_id != nil {
+		fields = append(fields, dept.FieldPlatformID)
+	}
+	if m.sort != nil {
+		fields = append(fields, dept.FieldSort)
+	}
+	if m.remark != nil {
+		fields = append(fields, dept.FieldRemark)
+	}
+	if m.status != nil {
+		fields = append(fields, dept.FieldStatus)
+	}
 	if m.name != nil {
 		fields = append(fields, dept.FieldName)
+	}
+	if m.parent_id != nil {
+		fields = append(fields, dept.FieldParentID)
+	}
+	if m.ancestors != nil {
+		fields = append(fields, dept.FieldAncestors)
 	}
 	return fields
 }
@@ -412,8 +799,20 @@ func (m *DeptMutation) Field(name string) (ent.Value, bool) {
 		return m.UpdatedAt()
 	case dept.FieldDeletedAt:
 		return m.DeletedAt()
+	case dept.FieldPlatformID:
+		return m.PlatformID()
+	case dept.FieldSort:
+		return m.Sort()
+	case dept.FieldRemark:
+		return m.Remark()
+	case dept.FieldStatus:
+		return m.Status()
 	case dept.FieldName:
 		return m.Name()
+	case dept.FieldParentID:
+		return m.ParentID()
+	case dept.FieldAncestors:
+		return m.Ancestors()
 	}
 	return nil, false
 }
@@ -429,8 +828,20 @@ func (m *DeptMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldUpdatedAt(ctx)
 	case dept.FieldDeletedAt:
 		return m.OldDeletedAt(ctx)
+	case dept.FieldPlatformID:
+		return m.OldPlatformID(ctx)
+	case dept.FieldSort:
+		return m.OldSort(ctx)
+	case dept.FieldRemark:
+		return m.OldRemark(ctx)
+	case dept.FieldStatus:
+		return m.OldStatus(ctx)
 	case dept.FieldName:
 		return m.OldName(ctx)
+	case dept.FieldParentID:
+		return m.OldParentID(ctx)
+	case dept.FieldAncestors:
+		return m.OldAncestors(ctx)
 	}
 	return nil, fmt.Errorf("unknown Dept field %s", name)
 }
@@ -461,12 +872,54 @@ func (m *DeptMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDeletedAt(v)
 		return nil
+	case dept.FieldPlatformID:
+		v, ok := value.(uint64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPlatformID(v)
+		return nil
+	case dept.FieldSort:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSort(v)
+		return nil
+	case dept.FieldRemark:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRemark(v)
+		return nil
+	case dept.FieldStatus:
+		v, ok := value.(dept.Status)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
+		return nil
 	case dept.FieldName:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetName(v)
+		return nil
+	case dept.FieldParentID:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetParentID(v)
+		return nil
+	case dept.FieldAncestors:
+		v, ok := value.([]int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAncestors(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Dept field %s", name)
@@ -475,13 +928,31 @@ func (m *DeptMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *DeptMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addplatform_id != nil {
+		fields = append(fields, dept.FieldPlatformID)
+	}
+	if m.addsort != nil {
+		fields = append(fields, dept.FieldSort)
+	}
+	if m.addparent_id != nil {
+		fields = append(fields, dept.FieldParentID)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *DeptMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case dept.FieldPlatformID:
+		return m.AddedPlatformID()
+	case dept.FieldSort:
+		return m.AddedSort()
+	case dept.FieldParentID:
+		return m.AddedParentID()
+	}
 	return nil, false
 }
 
@@ -490,6 +961,27 @@ func (m *DeptMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *DeptMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case dept.FieldPlatformID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddPlatformID(v)
+		return nil
+	case dept.FieldSort:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddSort(v)
+		return nil
+	case dept.FieldParentID:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddParentID(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Dept numeric field %s", name)
 }
@@ -507,8 +999,23 @@ func (m *DeptMutation) ClearedFields() []string {
 	if m.FieldCleared(dept.FieldDeletedAt) {
 		fields = append(fields, dept.FieldDeletedAt)
 	}
+	if m.FieldCleared(dept.FieldSort) {
+		fields = append(fields, dept.FieldSort)
+	}
+	if m.FieldCleared(dept.FieldRemark) {
+		fields = append(fields, dept.FieldRemark)
+	}
+	if m.FieldCleared(dept.FieldStatus) {
+		fields = append(fields, dept.FieldStatus)
+	}
 	if m.FieldCleared(dept.FieldName) {
 		fields = append(fields, dept.FieldName)
+	}
+	if m.FieldCleared(dept.FieldParentID) {
+		fields = append(fields, dept.FieldParentID)
+	}
+	if m.FieldCleared(dept.FieldAncestors) {
+		fields = append(fields, dept.FieldAncestors)
 	}
 	return fields
 }
@@ -533,8 +1040,23 @@ func (m *DeptMutation) ClearField(name string) error {
 	case dept.FieldDeletedAt:
 		m.ClearDeletedAt()
 		return nil
+	case dept.FieldSort:
+		m.ClearSort()
+		return nil
+	case dept.FieldRemark:
+		m.ClearRemark()
+		return nil
+	case dept.FieldStatus:
+		m.ClearStatus()
+		return nil
 	case dept.FieldName:
 		m.ClearName()
+		return nil
+	case dept.FieldParentID:
+		m.ClearParentID()
+		return nil
+	case dept.FieldAncestors:
+		m.ClearAncestors()
 		return nil
 	}
 	return fmt.Errorf("unknown Dept nullable field %s", name)
@@ -553,8 +1075,26 @@ func (m *DeptMutation) ResetField(name string) error {
 	case dept.FieldDeletedAt:
 		m.ResetDeletedAt()
 		return nil
+	case dept.FieldPlatformID:
+		m.ResetPlatformID()
+		return nil
+	case dept.FieldSort:
+		m.ResetSort()
+		return nil
+	case dept.FieldRemark:
+		m.ResetRemark()
+		return nil
+	case dept.FieldStatus:
+		m.ResetStatus()
+		return nil
 	case dept.FieldName:
 		m.ResetName()
+		return nil
+	case dept.FieldParentID:
+		m.ResetParentID()
+		return nil
+	case dept.FieldAncestors:
+		m.ResetAncestors()
 		return nil
 	}
 	return fmt.Errorf("unknown Dept field %s", name)
@@ -611,17 +1151,19 @@ func (m *DeptMutation) ResetEdge(name string) error {
 // MenuMutation represents an operation that mutates the Menu nodes in the graph.
 type MenuMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *uint32
-	created_at    *time.Time
-	updated_at    *time.Time
-	deleted_at    *time.Time
-	name          *string
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*Menu, error)
-	predicates    []predicate.Menu
+	op             Op
+	typ            string
+	id             *uint32
+	created_at     *time.Time
+	updated_at     *time.Time
+	deleted_at     *time.Time
+	platform_id    *uint64
+	addplatform_id *int64
+	name           *string
+	clearedFields  map[string]struct{}
+	done           bool
+	oldValue       func(context.Context) (*Menu, error)
+	predicates     []predicate.Menu
 }
 
 var _ ent.Mutation = (*MenuMutation)(nil)
@@ -875,6 +1417,62 @@ func (m *MenuMutation) ResetDeletedAt() {
 	delete(m.clearedFields, menu.FieldDeletedAt)
 }
 
+// SetPlatformID sets the "platform_id" field.
+func (m *MenuMutation) SetPlatformID(u uint64) {
+	m.platform_id = &u
+	m.addplatform_id = nil
+}
+
+// PlatformID returns the value of the "platform_id" field in the mutation.
+func (m *MenuMutation) PlatformID() (r uint64, exists bool) {
+	v := m.platform_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPlatformID returns the old "platform_id" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MenuMutation) OldPlatformID(ctx context.Context) (v uint64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPlatformID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPlatformID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPlatformID: %w", err)
+	}
+	return oldValue.PlatformID, nil
+}
+
+// AddPlatformID adds u to the "platform_id" field.
+func (m *MenuMutation) AddPlatformID(u int64) {
+	if m.addplatform_id != nil {
+		*m.addplatform_id += u
+	} else {
+		m.addplatform_id = &u
+	}
+}
+
+// AddedPlatformID returns the value that was added to the "platform_id" field in this mutation.
+func (m *MenuMutation) AddedPlatformID() (r int64, exists bool) {
+	v := m.addplatform_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetPlatformID resets all changes to the "platform_id" field.
+func (m *MenuMutation) ResetPlatformID() {
+	m.platform_id = nil
+	m.addplatform_id = nil
+}
+
 // SetName sets the "name" field.
 func (m *MenuMutation) SetName(s string) {
 	m.name = &s
@@ -958,7 +1556,7 @@ func (m *MenuMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *MenuMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 5)
 	if m.created_at != nil {
 		fields = append(fields, menu.FieldCreatedAt)
 	}
@@ -967,6 +1565,9 @@ func (m *MenuMutation) Fields() []string {
 	}
 	if m.deleted_at != nil {
 		fields = append(fields, menu.FieldDeletedAt)
+	}
+	if m.platform_id != nil {
+		fields = append(fields, menu.FieldPlatformID)
 	}
 	if m.name != nil {
 		fields = append(fields, menu.FieldName)
@@ -985,6 +1586,8 @@ func (m *MenuMutation) Field(name string) (ent.Value, bool) {
 		return m.UpdatedAt()
 	case menu.FieldDeletedAt:
 		return m.DeletedAt()
+	case menu.FieldPlatformID:
+		return m.PlatformID()
 	case menu.FieldName:
 		return m.Name()
 	}
@@ -1002,6 +1605,8 @@ func (m *MenuMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldUpdatedAt(ctx)
 	case menu.FieldDeletedAt:
 		return m.OldDeletedAt(ctx)
+	case menu.FieldPlatformID:
+		return m.OldPlatformID(ctx)
 	case menu.FieldName:
 		return m.OldName(ctx)
 	}
@@ -1034,6 +1639,13 @@ func (m *MenuMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDeletedAt(v)
 		return nil
+	case menu.FieldPlatformID:
+		v, ok := value.(uint64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPlatformID(v)
+		return nil
 	case menu.FieldName:
 		v, ok := value.(string)
 		if !ok {
@@ -1048,13 +1660,21 @@ func (m *MenuMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *MenuMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addplatform_id != nil {
+		fields = append(fields, menu.FieldPlatformID)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *MenuMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case menu.FieldPlatformID:
+		return m.AddedPlatformID()
+	}
 	return nil, false
 }
 
@@ -1063,6 +1683,13 @@ func (m *MenuMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *MenuMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case menu.FieldPlatformID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddPlatformID(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Menu numeric field %s", name)
 }
@@ -1126,6 +1753,9 @@ func (m *MenuMutation) ResetField(name string) error {
 	case menu.FieldDeletedAt:
 		m.ResetDeletedAt()
 		return nil
+	case menu.FieldPlatformID:
+		m.ResetPlatformID()
+		return nil
 	case menu.FieldName:
 		m.ResetName()
 		return nil
@@ -1184,17 +1814,19 @@ func (m *MenuMutation) ResetEdge(name string) error {
 // PostMutation represents an operation that mutates the Post nodes in the graph.
 type PostMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *uint32
-	created_at    *time.Time
-	updated_at    *time.Time
-	deleted_at    *time.Time
-	name          *string
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*Post, error)
-	predicates    []predicate.Post
+	op             Op
+	typ            string
+	id             *uint32
+	created_at     *time.Time
+	updated_at     *time.Time
+	deleted_at     *time.Time
+	platform_id    *uint64
+	addplatform_id *int64
+	name           *string
+	clearedFields  map[string]struct{}
+	done           bool
+	oldValue       func(context.Context) (*Post, error)
+	predicates     []predicate.Post
 }
 
 var _ ent.Mutation = (*PostMutation)(nil)
@@ -1448,6 +2080,62 @@ func (m *PostMutation) ResetDeletedAt() {
 	delete(m.clearedFields, post.FieldDeletedAt)
 }
 
+// SetPlatformID sets the "platform_id" field.
+func (m *PostMutation) SetPlatformID(u uint64) {
+	m.platform_id = &u
+	m.addplatform_id = nil
+}
+
+// PlatformID returns the value of the "platform_id" field in the mutation.
+func (m *PostMutation) PlatformID() (r uint64, exists bool) {
+	v := m.platform_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPlatformID returns the old "platform_id" field's value of the Post entity.
+// If the Post object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PostMutation) OldPlatformID(ctx context.Context) (v uint64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPlatformID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPlatformID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPlatformID: %w", err)
+	}
+	return oldValue.PlatformID, nil
+}
+
+// AddPlatformID adds u to the "platform_id" field.
+func (m *PostMutation) AddPlatformID(u int64) {
+	if m.addplatform_id != nil {
+		*m.addplatform_id += u
+	} else {
+		m.addplatform_id = &u
+	}
+}
+
+// AddedPlatformID returns the value that was added to the "platform_id" field in this mutation.
+func (m *PostMutation) AddedPlatformID() (r int64, exists bool) {
+	v := m.addplatform_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetPlatformID resets all changes to the "platform_id" field.
+func (m *PostMutation) ResetPlatformID() {
+	m.platform_id = nil
+	m.addplatform_id = nil
+}
+
 // SetName sets the "name" field.
 func (m *PostMutation) SetName(s string) {
 	m.name = &s
@@ -1531,7 +2219,7 @@ func (m *PostMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PostMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 5)
 	if m.created_at != nil {
 		fields = append(fields, post.FieldCreatedAt)
 	}
@@ -1540,6 +2228,9 @@ func (m *PostMutation) Fields() []string {
 	}
 	if m.deleted_at != nil {
 		fields = append(fields, post.FieldDeletedAt)
+	}
+	if m.platform_id != nil {
+		fields = append(fields, post.FieldPlatformID)
 	}
 	if m.name != nil {
 		fields = append(fields, post.FieldName)
@@ -1558,6 +2249,8 @@ func (m *PostMutation) Field(name string) (ent.Value, bool) {
 		return m.UpdatedAt()
 	case post.FieldDeletedAt:
 		return m.DeletedAt()
+	case post.FieldPlatformID:
+		return m.PlatformID()
 	case post.FieldName:
 		return m.Name()
 	}
@@ -1575,6 +2268,8 @@ func (m *PostMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldUpdatedAt(ctx)
 	case post.FieldDeletedAt:
 		return m.OldDeletedAt(ctx)
+	case post.FieldPlatformID:
+		return m.OldPlatformID(ctx)
 	case post.FieldName:
 		return m.OldName(ctx)
 	}
@@ -1607,6 +2302,13 @@ func (m *PostMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDeletedAt(v)
 		return nil
+	case post.FieldPlatformID:
+		v, ok := value.(uint64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPlatformID(v)
+		return nil
 	case post.FieldName:
 		v, ok := value.(string)
 		if !ok {
@@ -1621,13 +2323,21 @@ func (m *PostMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *PostMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addplatform_id != nil {
+		fields = append(fields, post.FieldPlatformID)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *PostMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case post.FieldPlatformID:
+		return m.AddedPlatformID()
+	}
 	return nil, false
 }
 
@@ -1636,6 +2346,13 @@ func (m *PostMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *PostMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case post.FieldPlatformID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddPlatformID(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Post numeric field %s", name)
 }
@@ -1699,6 +2416,9 @@ func (m *PostMutation) ResetField(name string) error {
 	case post.FieldDeletedAt:
 		m.ResetDeletedAt()
 		return nil
+	case post.FieldPlatformID:
+		m.ResetPlatformID()
+		return nil
 	case post.FieldName:
 		m.ResetName()
 		return nil
@@ -1757,17 +2477,19 @@ func (m *PostMutation) ResetEdge(name string) error {
 // RoleMutation represents an operation that mutates the Role nodes in the graph.
 type RoleMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *uint32
-	created_at    *time.Time
-	updated_at    *time.Time
-	deleted_at    *time.Time
-	name          *string
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*Role, error)
-	predicates    []predicate.Role
+	op             Op
+	typ            string
+	id             *uint32
+	created_at     *time.Time
+	updated_at     *time.Time
+	deleted_at     *time.Time
+	platform_id    *uint64
+	addplatform_id *int64
+	name           *string
+	clearedFields  map[string]struct{}
+	done           bool
+	oldValue       func(context.Context) (*Role, error)
+	predicates     []predicate.Role
 }
 
 var _ ent.Mutation = (*RoleMutation)(nil)
@@ -2021,6 +2743,62 @@ func (m *RoleMutation) ResetDeletedAt() {
 	delete(m.clearedFields, role.FieldDeletedAt)
 }
 
+// SetPlatformID sets the "platform_id" field.
+func (m *RoleMutation) SetPlatformID(u uint64) {
+	m.platform_id = &u
+	m.addplatform_id = nil
+}
+
+// PlatformID returns the value of the "platform_id" field in the mutation.
+func (m *RoleMutation) PlatformID() (r uint64, exists bool) {
+	v := m.platform_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPlatformID returns the old "platform_id" field's value of the Role entity.
+// If the Role object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RoleMutation) OldPlatformID(ctx context.Context) (v uint64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPlatformID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPlatformID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPlatformID: %w", err)
+	}
+	return oldValue.PlatformID, nil
+}
+
+// AddPlatformID adds u to the "platform_id" field.
+func (m *RoleMutation) AddPlatformID(u int64) {
+	if m.addplatform_id != nil {
+		*m.addplatform_id += u
+	} else {
+		m.addplatform_id = &u
+	}
+}
+
+// AddedPlatformID returns the value that was added to the "platform_id" field in this mutation.
+func (m *RoleMutation) AddedPlatformID() (r int64, exists bool) {
+	v := m.addplatform_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetPlatformID resets all changes to the "platform_id" field.
+func (m *RoleMutation) ResetPlatformID() {
+	m.platform_id = nil
+	m.addplatform_id = nil
+}
+
 // SetName sets the "name" field.
 func (m *RoleMutation) SetName(s string) {
 	m.name = &s
@@ -2104,7 +2882,7 @@ func (m *RoleMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *RoleMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 5)
 	if m.created_at != nil {
 		fields = append(fields, role.FieldCreatedAt)
 	}
@@ -2113,6 +2891,9 @@ func (m *RoleMutation) Fields() []string {
 	}
 	if m.deleted_at != nil {
 		fields = append(fields, role.FieldDeletedAt)
+	}
+	if m.platform_id != nil {
+		fields = append(fields, role.FieldPlatformID)
 	}
 	if m.name != nil {
 		fields = append(fields, role.FieldName)
@@ -2131,6 +2912,8 @@ func (m *RoleMutation) Field(name string) (ent.Value, bool) {
 		return m.UpdatedAt()
 	case role.FieldDeletedAt:
 		return m.DeletedAt()
+	case role.FieldPlatformID:
+		return m.PlatformID()
 	case role.FieldName:
 		return m.Name()
 	}
@@ -2148,6 +2931,8 @@ func (m *RoleMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldUpdatedAt(ctx)
 	case role.FieldDeletedAt:
 		return m.OldDeletedAt(ctx)
+	case role.FieldPlatformID:
+		return m.OldPlatformID(ctx)
 	case role.FieldName:
 		return m.OldName(ctx)
 	}
@@ -2180,6 +2965,13 @@ func (m *RoleMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDeletedAt(v)
 		return nil
+	case role.FieldPlatformID:
+		v, ok := value.(uint64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPlatformID(v)
+		return nil
 	case role.FieldName:
 		v, ok := value.(string)
 		if !ok {
@@ -2194,13 +2986,21 @@ func (m *RoleMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *RoleMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addplatform_id != nil {
+		fields = append(fields, role.FieldPlatformID)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *RoleMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case role.FieldPlatformID:
+		return m.AddedPlatformID()
+	}
 	return nil, false
 }
 
@@ -2209,6 +3009,13 @@ func (m *RoleMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *RoleMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case role.FieldPlatformID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddPlatformID(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Role numeric field %s", name)
 }
@@ -2272,6 +3079,9 @@ func (m *RoleMutation) ResetField(name string) error {
 	case role.FieldDeletedAt:
 		m.ResetDeletedAt()
 		return nil
+	case role.FieldPlatformID:
+		m.ResetPlatformID()
+		return nil
 	case role.FieldName:
 		m.ResetName()
 		return nil
@@ -2330,24 +3140,26 @@ func (m *RoleMutation) ResetEdge(name string) error {
 // UserMutation represents an operation that mutates the User nodes in the graph.
 type UserMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *uint64
-	created_at    *time.Time
-	updated_at    *time.Time
-	deleted_at    *time.Time
-	username      *string
-	password      *string
-	nickname      *string
-	phone         *string
-	email         *string
-	avatar        *string
-	description   *string
-	authority     *user.Authority
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*User, error)
-	predicates    []predicate.User
+	op             Op
+	typ            string
+	id             *uint64
+	created_at     *time.Time
+	updated_at     *time.Time
+	deleted_at     *time.Time
+	platform_id    *uint64
+	addplatform_id *int64
+	username       *string
+	password       *string
+	nickname       *string
+	phone          *string
+	email          *string
+	avatar         *string
+	description    *string
+	authority      *user.Authority
+	clearedFields  map[string]struct{}
+	done           bool
+	oldValue       func(context.Context) (*User, error)
+	predicates     []predicate.User
 }
 
 var _ ent.Mutation = (*UserMutation)(nil)
@@ -2599,6 +3411,62 @@ func (m *UserMutation) DeletedAtCleared() bool {
 func (m *UserMutation) ResetDeletedAt() {
 	m.deleted_at = nil
 	delete(m.clearedFields, user.FieldDeletedAt)
+}
+
+// SetPlatformID sets the "platform_id" field.
+func (m *UserMutation) SetPlatformID(u uint64) {
+	m.platform_id = &u
+	m.addplatform_id = nil
+}
+
+// PlatformID returns the value of the "platform_id" field in the mutation.
+func (m *UserMutation) PlatformID() (r uint64, exists bool) {
+	v := m.platform_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPlatformID returns the old "platform_id" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldPlatformID(ctx context.Context) (v uint64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPlatformID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPlatformID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPlatformID: %w", err)
+	}
+	return oldValue.PlatformID, nil
+}
+
+// AddPlatformID adds u to the "platform_id" field.
+func (m *UserMutation) AddPlatformID(u int64) {
+	if m.addplatform_id != nil {
+		*m.addplatform_id += u
+	} else {
+		m.addplatform_id = &u
+	}
+}
+
+// AddedPlatformID returns the value that was added to the "platform_id" field in this mutation.
+func (m *UserMutation) AddedPlatformID() (r int64, exists bool) {
+	v := m.addplatform_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetPlatformID resets all changes to the "platform_id" field.
+func (m *UserMutation) ResetPlatformID() {
+	m.platform_id = nil
+	m.addplatform_id = nil
 }
 
 // SetUsername sets the "username" field.
@@ -3027,7 +3895,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 11)
+	fields := make([]string, 0, 12)
 	if m.created_at != nil {
 		fields = append(fields, user.FieldCreatedAt)
 	}
@@ -3036,6 +3904,9 @@ func (m *UserMutation) Fields() []string {
 	}
 	if m.deleted_at != nil {
 		fields = append(fields, user.FieldDeletedAt)
+	}
+	if m.platform_id != nil {
+		fields = append(fields, user.FieldPlatformID)
 	}
 	if m.username != nil {
 		fields = append(fields, user.FieldUsername)
@@ -3075,6 +3946,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.UpdatedAt()
 	case user.FieldDeletedAt:
 		return m.DeletedAt()
+	case user.FieldPlatformID:
+		return m.PlatformID()
 	case user.FieldUsername:
 		return m.Username()
 	case user.FieldPassword:
@@ -3106,6 +3979,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldUpdatedAt(ctx)
 	case user.FieldDeletedAt:
 		return m.OldDeletedAt(ctx)
+	case user.FieldPlatformID:
+		return m.OldPlatformID(ctx)
 	case user.FieldUsername:
 		return m.OldUsername(ctx)
 	case user.FieldPassword:
@@ -3151,6 +4026,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDeletedAt(v)
+		return nil
+	case user.FieldPlatformID:
+		v, ok := value.(uint64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPlatformID(v)
 		return nil
 	case user.FieldUsername:
 		v, ok := value.(string)
@@ -3215,13 +4097,21 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *UserMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addplatform_id != nil {
+		fields = append(fields, user.FieldPlatformID)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case user.FieldPlatformID:
+		return m.AddedPlatformID()
+	}
 	return nil, false
 }
 
@@ -3230,6 +4120,13 @@ func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *UserMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case user.FieldPlatformID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddPlatformID(v)
+		return nil
 	}
 	return fmt.Errorf("unknown User numeric field %s", name)
 }
@@ -3334,6 +4231,9 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldDeletedAt:
 		m.ResetDeletedAt()
+		return nil
+	case user.FieldPlatformID:
+		m.ResetPlatformID()
 		return nil
 	case user.FieldUsername:
 		m.ResetUsername()

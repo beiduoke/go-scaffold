@@ -64,6 +64,20 @@ func (uc *UserCreate) SetNillableDeletedAt(t *time.Time) *UserCreate {
 	return uc
 }
 
+// SetPlatformID sets the "platform_id" field.
+func (uc *UserCreate) SetPlatformID(u uint64) *UserCreate {
+	uc.mutation.SetPlatformID(u)
+	return uc
+}
+
+// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
+func (uc *UserCreate) SetNillablePlatformID(u *uint64) *UserCreate {
+	if u != nil {
+		uc.SetPlatformID(*u)
+	}
+	return uc
+}
+
 // SetUsername sets the "username" field.
 func (uc *UserCreate) SetUsername(s string) *UserCreate {
 	uc.mutation.SetUsername(s)
@@ -225,6 +239,10 @@ func (uc *UserCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (uc *UserCreate) defaults() {
+	if _, ok := uc.mutation.PlatformID(); !ok {
+		v := user.DefaultPlatformID()
+		uc.mutation.SetPlatformID(v)
+	}
 	if _, ok := uc.mutation.Authority(); !ok {
 		v := user.DefaultAuthority
 		uc.mutation.SetAuthority(v)
@@ -237,6 +255,14 @@ func (uc *UserCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (uc *UserCreate) check() error {
+	if _, ok := uc.mutation.PlatformID(); !ok {
+		return &ValidationError{Name: "platform_id", err: errors.New(`ent: missing required field "User.platform_id"`)}
+	}
+	if v, ok := uc.mutation.PlatformID(); ok {
+		if err := user.PlatformIDValidator(v); err != nil {
+			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "User.platform_id": %w`, err)}
+		}
+	}
 	if v, ok := uc.mutation.Username(); ok {
 		if err := user.UsernameValidator(v); err != nil {
 			return &ValidationError{Name: "username", err: fmt.Errorf(`ent: validator failed for field "User.username": %w`, err)}
@@ -326,6 +352,10 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := uc.mutation.DeletedAt(); ok {
 		_spec.SetField(user.FieldDeletedAt, field.TypeTime, value)
 		_node.DeletedAt = &value
+	}
+	if value, ok := uc.mutation.PlatformID(); ok {
+		_spec.SetField(user.FieldPlatformID, field.TypeUint64, value)
+		_node.PlatformID = value
 	}
 	if value, ok := uc.mutation.Username(); ok {
 		_spec.SetField(user.FieldUsername, field.TypeString, value)
@@ -444,6 +474,24 @@ func (u *UserUpsert) UpdateDeletedAt() *UserUpsert {
 // ClearDeletedAt clears the value of the "deleted_at" field.
 func (u *UserUpsert) ClearDeletedAt() *UserUpsert {
 	u.SetNull(user.FieldDeletedAt)
+	return u
+}
+
+// SetPlatformID sets the "platform_id" field.
+func (u *UserUpsert) SetPlatformID(v uint64) *UserUpsert {
+	u.Set(user.FieldPlatformID, v)
+	return u
+}
+
+// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
+func (u *UserUpsert) UpdatePlatformID() *UserUpsert {
+	u.SetExcluded(user.FieldPlatformID)
+	return u
+}
+
+// AddPlatformID adds v to the "platform_id" field.
+func (u *UserUpsert) AddPlatformID(v uint64) *UserUpsert {
+	u.Add(user.FieldPlatformID, v)
 	return u
 }
 
@@ -651,6 +699,27 @@ func (u *UserUpsertOne) UpdateDeletedAt() *UserUpsertOne {
 func (u *UserUpsertOne) ClearDeletedAt() *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
 		s.ClearDeletedAt()
+	})
+}
+
+// SetPlatformID sets the "platform_id" field.
+func (u *UserUpsertOne) SetPlatformID(v uint64) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetPlatformID(v)
+	})
+}
+
+// AddPlatformID adds v to the "platform_id" field.
+func (u *UserUpsertOne) AddPlatformID(v uint64) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.AddPlatformID(v)
+	})
+}
+
+// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdatePlatformID() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdatePlatformID()
 	})
 }
 
@@ -1042,6 +1111,27 @@ func (u *UserUpsertBulk) UpdateDeletedAt() *UserUpsertBulk {
 func (u *UserUpsertBulk) ClearDeletedAt() *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
 		s.ClearDeletedAt()
+	})
+}
+
+// SetPlatformID sets the "platform_id" field.
+func (u *UserUpsertBulk) SetPlatformID(v uint64) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetPlatformID(v)
+	})
+}
+
+// AddPlatformID adds v to the "platform_id" field.
+func (u *UserUpsertBulk) AddPlatformID(v uint64) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.AddPlatformID(v)
+	})
+}
+
+// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdatePlatformID() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdatePlatformID()
 	})
 }
 

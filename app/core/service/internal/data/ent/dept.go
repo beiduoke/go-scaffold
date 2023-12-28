@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -24,8 +25,20 @@ type Dept struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 	// 删除时间
 	DeletedAt *time.Time `json:"deleted_at,omitempty"`
+	// 平台ID
+	PlatformID uint64 `json:"platform_id,omitempty"`
+	// 排序
+	Sort *int32 `json:"sort,omitempty"`
+	// 备注
+	Remark *string `json:"remark,omitempty"`
+	// 状态
+	Status *dept.Status `json:"status,omitempty"`
 	// 名称
-	Name         *string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
+	// 父级ID
+	ParentID *int32 `json:"parent_id,omitempty"`
+	// 祖级列表
+	Ancestors    []int `json:"ancestors,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -34,9 +47,11 @@ func (*Dept) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case dept.FieldID:
+		case dept.FieldAncestors:
+			values[i] = new([]byte)
+		case dept.FieldID, dept.FieldPlatformID, dept.FieldSort, dept.FieldParentID:
 			values[i] = new(sql.NullInt64)
-		case dept.FieldName:
+		case dept.FieldRemark, dept.FieldStatus, dept.FieldName:
 			values[i] = new(sql.NullString)
 		case dept.FieldCreatedAt, dept.FieldUpdatedAt, dept.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
@@ -82,12 +97,54 @@ func (d *Dept) assignValues(columns []string, values []any) error {
 				d.DeletedAt = new(time.Time)
 				*d.DeletedAt = value.Time
 			}
+		case dept.FieldPlatformID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field platform_id", values[i])
+			} else if value.Valid {
+				d.PlatformID = uint64(value.Int64)
+			}
+		case dept.FieldSort:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field sort", values[i])
+			} else if value.Valid {
+				d.Sort = new(int32)
+				*d.Sort = int32(value.Int64)
+			}
+		case dept.FieldRemark:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field remark", values[i])
+			} else if value.Valid {
+				d.Remark = new(string)
+				*d.Remark = value.String
+			}
+		case dept.FieldStatus:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field status", values[i])
+			} else if value.Valid {
+				d.Status = new(dept.Status)
+				*d.Status = dept.Status(value.String)
+			}
 		case dept.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
 				d.Name = new(string)
 				*d.Name = value.String
+			}
+		case dept.FieldParentID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field parent_id", values[i])
+			} else if value.Valid {
+				d.ParentID = new(int32)
+				*d.ParentID = int32(value.Int64)
+			}
+		case dept.FieldAncestors:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field ancestors", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &d.Ancestors); err != nil {
+					return fmt.Errorf("unmarshal field ancestors: %w", err)
+				}
 			}
 		default:
 			d.selectValues.Set(columns[i], values[i])
@@ -140,10 +197,36 @@ func (d *Dept) String() string {
 		builder.WriteString(v.Format(time.ANSIC))
 	}
 	builder.WriteString(", ")
+	builder.WriteString("platform_id=")
+	builder.WriteString(fmt.Sprintf("%v", d.PlatformID))
+	builder.WriteString(", ")
+	if v := d.Sort; v != nil {
+		builder.WriteString("sort=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := d.Remark; v != nil {
+		builder.WriteString("remark=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := d.Status; v != nil {
+		builder.WriteString("status=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
 	if v := d.Name; v != nil {
 		builder.WriteString("name=")
 		builder.WriteString(*v)
 	}
+	builder.WriteString(", ")
+	if v := d.ParentID; v != nil {
+		builder.WriteString("parent_id=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	builder.WriteString("ancestors=")
+	builder.WriteString(fmt.Sprintf("%v", d.Ancestors))
 	builder.WriteByte(')')
 	return builder.String()
 }

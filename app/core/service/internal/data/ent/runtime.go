@@ -18,12 +18,42 @@ func init() {
 	deptMixin := schema.Dept{}.Mixin()
 	deptMixinFields0 := deptMixin[0].Fields()
 	_ = deptMixinFields0
+	deptMixinFields2 := deptMixin[2].Fields()
+	_ = deptMixinFields2
+	deptMixinFields3 := deptMixin[3].Fields()
+	_ = deptMixinFields3
+	deptMixinFields4 := deptMixin[4].Fields()
+	_ = deptMixinFields4
+	deptMixinFields5 := deptMixin[5].Fields()
+	_ = deptMixinFields5
 	deptFields := schema.Dept{}.Fields()
 	_ = deptFields
+	// deptDescPlatformID is the schema descriptor for platform_id field.
+	deptDescPlatformID := deptMixinFields2[0].Descriptor()
+	// dept.DefaultPlatformID holds the default value on creation for the platform_id field.
+	dept.DefaultPlatformID = deptDescPlatformID.Default.(func() uint64)
+	// dept.PlatformIDValidator is a validator for the "platform_id" field. It is called by the builders before save.
+	dept.PlatformIDValidator = deptDescPlatformID.Validators[0].(func(uint64) error)
+	// deptDescSort is the schema descriptor for sort field.
+	deptDescSort := deptMixinFields3[0].Descriptor()
+	// dept.DefaultSort holds the default value on creation for the sort field.
+	dept.DefaultSort = deptDescSort.Default.(int32)
+	// deptDescRemark is the schema descriptor for remark field.
+	deptDescRemark := deptMixinFields4[0].Descriptor()
+	// dept.DefaultRemark holds the default value on creation for the remark field.
+	dept.DefaultRemark = deptDescRemark.Default.(string)
 	// deptDescName is the schema descriptor for name field.
 	deptDescName := deptFields[0].Descriptor()
 	// dept.NameValidator is a validator for the "name" field. It is called by the builders before save.
 	dept.NameValidator = deptDescName.Validators[0].(func(string) error)
+	// deptDescParentID is the schema descriptor for parent_id field.
+	deptDescParentID := deptFields[1].Descriptor()
+	// dept.DefaultParentID holds the default value on creation for the parent_id field.
+	dept.DefaultParentID = deptDescParentID.Default.(int32)
+	// deptDescAncestors is the schema descriptor for ancestors field.
+	deptDescAncestors := deptFields[2].Descriptor()
+	// dept.DefaultAncestors holds the default value on creation for the ancestors field.
+	dept.DefaultAncestors = deptDescAncestors.Default.([]int)
 	// deptDescID is the schema descriptor for id field.
 	deptDescID := deptMixinFields0[0].Descriptor()
 	// dept.IDValidator is a validator for the "id" field. It is called by the builders before save.
@@ -31,8 +61,16 @@ func init() {
 	menuMixin := schema.Menu{}.Mixin()
 	menuMixinFields0 := menuMixin[0].Fields()
 	_ = menuMixinFields0
+	menuMixinFields2 := menuMixin[2].Fields()
+	_ = menuMixinFields2
 	menuFields := schema.Menu{}.Fields()
 	_ = menuFields
+	// menuDescPlatformID is the schema descriptor for platform_id field.
+	menuDescPlatformID := menuMixinFields2[0].Descriptor()
+	// menu.DefaultPlatformID holds the default value on creation for the platform_id field.
+	menu.DefaultPlatformID = menuDescPlatformID.Default.(func() uint64)
+	// menu.PlatformIDValidator is a validator for the "platform_id" field. It is called by the builders before save.
+	menu.PlatformIDValidator = menuDescPlatformID.Validators[0].(func(uint64) error)
 	// menuDescName is the schema descriptor for name field.
 	menuDescName := menuFields[0].Descriptor()
 	// menu.NameValidator is a validator for the "name" field. It is called by the builders before save.
@@ -44,8 +82,16 @@ func init() {
 	postMixin := schema.Post{}.Mixin()
 	postMixinFields0 := postMixin[0].Fields()
 	_ = postMixinFields0
+	postMixinFields2 := postMixin[2].Fields()
+	_ = postMixinFields2
 	postFields := schema.Post{}.Fields()
 	_ = postFields
+	// postDescPlatformID is the schema descriptor for platform_id field.
+	postDescPlatformID := postMixinFields2[0].Descriptor()
+	// post.DefaultPlatformID holds the default value on creation for the platform_id field.
+	post.DefaultPlatformID = postDescPlatformID.Default.(func() uint64)
+	// post.PlatformIDValidator is a validator for the "platform_id" field. It is called by the builders before save.
+	post.PlatformIDValidator = postDescPlatformID.Validators[0].(func(uint64) error)
 	// postDescName is the schema descriptor for name field.
 	postDescName := postFields[0].Descriptor()
 	// post.NameValidator is a validator for the "name" field. It is called by the builders before save.
@@ -57,8 +103,16 @@ func init() {
 	roleMixin := schema.Role{}.Mixin()
 	roleMixinFields0 := roleMixin[0].Fields()
 	_ = roleMixinFields0
+	roleMixinFields2 := roleMixin[2].Fields()
+	_ = roleMixinFields2
 	roleFields := schema.Role{}.Fields()
 	_ = roleFields
+	// roleDescPlatformID is the schema descriptor for platform_id field.
+	roleDescPlatformID := roleMixinFields2[0].Descriptor()
+	// role.DefaultPlatformID holds the default value on creation for the platform_id field.
+	role.DefaultPlatformID = roleDescPlatformID.Default.(func() uint64)
+	// role.PlatformIDValidator is a validator for the "platform_id" field. It is called by the builders before save.
+	role.PlatformIDValidator = roleDescPlatformID.Validators[0].(func(uint64) error)
 	// roleDescName is the schema descriptor for name field.
 	roleDescName := roleFields[0].Descriptor()
 	// role.NameValidator is a validator for the "name" field. It is called by the builders before save.
@@ -70,8 +124,16 @@ func init() {
 	userMixin := schema.User{}.Mixin()
 	userMixinFields0 := userMixin[0].Fields()
 	_ = userMixinFields0
+	userMixinFields2 := userMixin[2].Fields()
+	_ = userMixinFields2
 	userFields := schema.User{}.Fields()
 	_ = userFields
+	// userDescPlatformID is the schema descriptor for platform_id field.
+	userDescPlatformID := userMixinFields2[0].Descriptor()
+	// user.DefaultPlatformID holds the default value on creation for the platform_id field.
+	user.DefaultPlatformID = userDescPlatformID.Default.(func() uint64)
+	// user.PlatformIDValidator is a validator for the "platform_id" field. It is called by the builders before save.
+	user.PlatformIDValidator = userDescPlatformID.Validators[0].(func(uint64) error)
 	// userDescUsername is the schema descriptor for username field.
 	userDescUsername := userFields[0].Descriptor()
 	// user.UsernameValidator is a validator for the "username" field. It is called by the builders before save.

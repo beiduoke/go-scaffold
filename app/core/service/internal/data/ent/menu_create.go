@@ -64,6 +64,20 @@ func (mc *MenuCreate) SetNillableDeletedAt(t *time.Time) *MenuCreate {
 	return mc
 }
 
+// SetPlatformID sets the "platform_id" field.
+func (mc *MenuCreate) SetPlatformID(u uint64) *MenuCreate {
+	mc.mutation.SetPlatformID(u)
+	return mc
+}
+
+// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
+func (mc *MenuCreate) SetNillablePlatformID(u *uint64) *MenuCreate {
+	if u != nil {
+		mc.SetPlatformID(*u)
+	}
+	return mc
+}
+
 // SetName sets the "name" field.
 func (mc *MenuCreate) SetName(s string) *MenuCreate {
 	mc.mutation.SetName(s)
@@ -91,6 +105,7 @@ func (mc *MenuCreate) Mutation() *MenuMutation {
 
 // Save creates the Menu in the database.
 func (mc *MenuCreate) Save(ctx context.Context) (*Menu, error) {
+	mc.defaults()
 	return withHooks(ctx, mc.sqlSave, mc.mutation, mc.hooks)
 }
 
@@ -116,8 +131,24 @@ func (mc *MenuCreate) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (mc *MenuCreate) defaults() {
+	if _, ok := mc.mutation.PlatformID(); !ok {
+		v := menu.DefaultPlatformID()
+		mc.mutation.SetPlatformID(v)
+	}
+}
+
 // check runs all checks and user-defined validators on the builder.
 func (mc *MenuCreate) check() error {
+	if _, ok := mc.mutation.PlatformID(); !ok {
+		return &ValidationError{Name: "platform_id", err: errors.New(`ent: missing required field "Menu.platform_id"`)}
+	}
+	if v, ok := mc.mutation.PlatformID(); ok {
+		if err := menu.PlatformIDValidator(v); err != nil {
+			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "Menu.platform_id": %w`, err)}
+		}
+	}
 	if v, ok := mc.mutation.Name(); ok {
 		if err := menu.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Menu.name": %w`, err)}
@@ -172,6 +203,10 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 	if value, ok := mc.mutation.DeletedAt(); ok {
 		_spec.SetField(menu.FieldDeletedAt, field.TypeTime, value)
 		_node.DeletedAt = &value
+	}
+	if value, ok := mc.mutation.PlatformID(); ok {
+		_spec.SetField(menu.FieldPlatformID, field.TypeUint64, value)
+		_node.PlatformID = value
 	}
 	if value, ok := mc.mutation.Name(); ok {
 		_spec.SetField(menu.FieldName, field.TypeString, value)
@@ -262,6 +297,24 @@ func (u *MenuUpsert) UpdateDeletedAt() *MenuUpsert {
 // ClearDeletedAt clears the value of the "deleted_at" field.
 func (u *MenuUpsert) ClearDeletedAt() *MenuUpsert {
 	u.SetNull(menu.FieldDeletedAt)
+	return u
+}
+
+// SetPlatformID sets the "platform_id" field.
+func (u *MenuUpsert) SetPlatformID(v uint64) *MenuUpsert {
+	u.Set(menu.FieldPlatformID, v)
+	return u
+}
+
+// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
+func (u *MenuUpsert) UpdatePlatformID() *MenuUpsert {
+	u.SetExcluded(menu.FieldPlatformID)
+	return u
+}
+
+// AddPlatformID adds v to the "platform_id" field.
+func (u *MenuUpsert) AddPlatformID(v uint64) *MenuUpsert {
+	u.Add(menu.FieldPlatformID, v)
 	return u
 }
 
@@ -376,6 +429,27 @@ func (u *MenuUpsertOne) ClearDeletedAt() *MenuUpsertOne {
 	})
 }
 
+// SetPlatformID sets the "platform_id" field.
+func (u *MenuUpsertOne) SetPlatformID(v uint64) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetPlatformID(v)
+	})
+}
+
+// AddPlatformID adds v to the "platform_id" field.
+func (u *MenuUpsertOne) AddPlatformID(v uint64) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.AddPlatformID(v)
+	})
+}
+
+// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
+func (u *MenuUpsertOne) UpdatePlatformID() *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdatePlatformID()
+	})
+}
+
 // SetName sets the "name" field.
 func (u *MenuUpsertOne) SetName(v string) *MenuUpsertOne {
 	return u.Update(func(s *MenuUpsert) {
@@ -449,6 +523,7 @@ func (mcb *MenuCreateBulk) Save(ctx context.Context) ([]*Menu, error) {
 	for i := range mcb.builders {
 		func(i int, root context.Context) {
 			builder := mcb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*MenuMutation)
 				if !ok {
@@ -652,6 +727,27 @@ func (u *MenuUpsertBulk) UpdateDeletedAt() *MenuUpsertBulk {
 func (u *MenuUpsertBulk) ClearDeletedAt() *MenuUpsertBulk {
 	return u.Update(func(s *MenuUpsert) {
 		s.ClearDeletedAt()
+	})
+}
+
+// SetPlatformID sets the "platform_id" field.
+func (u *MenuUpsertBulk) SetPlatformID(v uint64) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetPlatformID(v)
+	})
+}
+
+// AddPlatformID adds v to the "platform_id" field.
+func (u *MenuUpsertBulk) AddPlatformID(v uint64) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.AddPlatformID(v)
+	})
+}
+
+// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
+func (u *MenuUpsertBulk) UpdatePlatformID() *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdatePlatformID()
 	})
 }
 

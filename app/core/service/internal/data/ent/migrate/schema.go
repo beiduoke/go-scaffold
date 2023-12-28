@@ -15,7 +15,13 @@ var (
 		{Name: "created_at", Type: field.TypeTime, Nullable: true, Comment: "创建时间"},
 		{Name: "updated_at", Type: field.TypeTime, Nullable: true, Comment: "更新时间"},
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
+		{Name: "platform_id", Type: field.TypeUint64, Comment: "平台ID", SchemaType: map[string]string{"mysql": "bigint", "postgres": "bigint"}},
+		{Name: "sort", Type: field.TypeInt32, Nullable: true, Comment: "排序", Default: 100},
+		{Name: "remark", Type: field.TypeString, Nullable: true, Comment: "备注", Default: ""},
+		{Name: "status", Type: field.TypeEnum, Nullable: true, Comment: "状态", Enums: []string{"OFF", "ON"}, Default: "ON"},
 		{Name: "name", Type: field.TypeString, Nullable: true, Size: 128, Comment: "名称"},
+		{Name: "parent_id", Type: field.TypeInt32, Nullable: true, Comment: "父级ID", Default: 0},
+		{Name: "ancestors", Type: field.TypeJSON, Nullable: true, Comment: "祖级列表"},
 	}
 	// DeptsTable holds the schema information for the "depts" table.
 	DeptsTable = &schema.Table{
@@ -29,6 +35,11 @@ var (
 				Unique:  false,
 				Columns: []*schema.Column{DeptsColumns[0]},
 			},
+			{
+				Name:    "dept_platform_id",
+				Unique:  false,
+				Columns: []*schema.Column{DeptsColumns[4]},
+			},
 		},
 	}
 	// MenusColumns holds the columns for the "menus" table.
@@ -37,6 +48,7 @@ var (
 		{Name: "created_at", Type: field.TypeTime, Nullable: true, Comment: "创建时间"},
 		{Name: "updated_at", Type: field.TypeTime, Nullable: true, Comment: "更新时间"},
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
+		{Name: "platform_id", Type: field.TypeUint64, Comment: "平台ID", SchemaType: map[string]string{"mysql": "bigint", "postgres": "bigint"}},
 		{Name: "name", Type: field.TypeString, Nullable: true, Size: 128, Comment: "名称"},
 	}
 	// MenusTable holds the schema information for the "menus" table.
@@ -51,6 +63,11 @@ var (
 				Unique:  false,
 				Columns: []*schema.Column{MenusColumns[0]},
 			},
+			{
+				Name:    "menu_platform_id",
+				Unique:  false,
+				Columns: []*schema.Column{MenusColumns[4]},
+			},
 		},
 	}
 	// PostsColumns holds the columns for the "posts" table.
@@ -59,6 +76,7 @@ var (
 		{Name: "created_at", Type: field.TypeTime, Nullable: true, Comment: "创建时间"},
 		{Name: "updated_at", Type: field.TypeTime, Nullable: true, Comment: "更新时间"},
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
+		{Name: "platform_id", Type: field.TypeUint64, Comment: "平台ID", SchemaType: map[string]string{"mysql": "bigint", "postgres": "bigint"}},
 		{Name: "name", Type: field.TypeString, Nullable: true, Size: 128, Comment: "名称"},
 	}
 	// PostsTable holds the schema information for the "posts" table.
@@ -73,6 +91,11 @@ var (
 				Unique:  false,
 				Columns: []*schema.Column{PostsColumns[0]},
 			},
+			{
+				Name:    "post_platform_id",
+				Unique:  false,
+				Columns: []*schema.Column{PostsColumns[4]},
+			},
 		},
 	}
 	// RolesColumns holds the columns for the "roles" table.
@@ -81,6 +104,7 @@ var (
 		{Name: "created_at", Type: field.TypeTime, Nullable: true, Comment: "创建时间"},
 		{Name: "updated_at", Type: field.TypeTime, Nullable: true, Comment: "更新时间"},
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
+		{Name: "platform_id", Type: field.TypeUint64, Comment: "平台ID", SchemaType: map[string]string{"mysql": "bigint", "postgres": "bigint"}},
 		{Name: "name", Type: field.TypeString, Nullable: true, Size: 128, Comment: "名称"},
 	}
 	// RolesTable holds the schema information for the "roles" table.
@@ -95,6 +119,11 @@ var (
 				Unique:  false,
 				Columns: []*schema.Column{RolesColumns[0]},
 			},
+			{
+				Name:    "role_platform_id",
+				Unique:  false,
+				Columns: []*schema.Column{RolesColumns[4]},
+			},
 		},
 	}
 	// UsersColumns holds the columns for the "users" table.
@@ -103,6 +132,7 @@ var (
 		{Name: "created_at", Type: field.TypeTime, Nullable: true, Comment: "创建时间"},
 		{Name: "updated_at", Type: field.TypeTime, Nullable: true, Comment: "更新时间"},
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
+		{Name: "platform_id", Type: field.TypeUint64, Comment: "平台ID", SchemaType: map[string]string{"mysql": "bigint", "postgres": "bigint"}},
 		{Name: "username", Type: field.TypeString, Unique: true, Nullable: true, Size: 50, Comment: "用户名"},
 		{Name: "password", Type: field.TypeString, Nullable: true, Size: 255, Comment: "密码"},
 		{Name: "nickname", Type: field.TypeString, Nullable: true, Size: 128, Comment: "昵称"},
@@ -125,9 +155,14 @@ var (
 				Columns: []*schema.Column{UsersColumns[0]},
 			},
 			{
+				Name:    "user_platform_id",
+				Unique:  false,
+				Columns: []*schema.Column{UsersColumns[4]},
+			},
+			{
 				Name:    "user_phone_authority",
 				Unique:  true,
-				Columns: []*schema.Column{UsersColumns[7], UsersColumns[11]},
+				Columns: []*schema.Column{UsersColumns[8], UsersColumns[12]},
 			},
 		},
 	}

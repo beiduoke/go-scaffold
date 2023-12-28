@@ -16,7 +16,7 @@ type PlatformId struct {
 
 func (PlatformId) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int32("platform_id").
+		field.Uint64("platform_id").
 			Comment("平台ID").
 			DefaultFunc(sonyflake.GenerateSonyflake).
 			Positive().

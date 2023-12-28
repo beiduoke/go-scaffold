@@ -64,6 +64,20 @@ func (pc *PostCreate) SetNillableDeletedAt(t *time.Time) *PostCreate {
 	return pc
 }
 
+// SetPlatformID sets the "platform_id" field.
+func (pc *PostCreate) SetPlatformID(u uint64) *PostCreate {
+	pc.mutation.SetPlatformID(u)
+	return pc
+}
+
+// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
+func (pc *PostCreate) SetNillablePlatformID(u *uint64) *PostCreate {
+	if u != nil {
+		pc.SetPlatformID(*u)
+	}
+	return pc
+}
+
 // SetName sets the "name" field.
 func (pc *PostCreate) SetName(s string) *PostCreate {
 	pc.mutation.SetName(s)
@@ -91,6 +105,7 @@ func (pc *PostCreate) Mutation() *PostMutation {
 
 // Save creates the Post in the database.
 func (pc *PostCreate) Save(ctx context.Context) (*Post, error) {
+	pc.defaults()
 	return withHooks(ctx, pc.sqlSave, pc.mutation, pc.hooks)
 }
 
@@ -116,8 +131,24 @@ func (pc *PostCreate) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (pc *PostCreate) defaults() {
+	if _, ok := pc.mutation.PlatformID(); !ok {
+		v := post.DefaultPlatformID()
+		pc.mutation.SetPlatformID(v)
+	}
+}
+
 // check runs all checks and user-defined validators on the builder.
 func (pc *PostCreate) check() error {
+	if _, ok := pc.mutation.PlatformID(); !ok {
+		return &ValidationError{Name: "platform_id", err: errors.New(`ent: missing required field "Post.platform_id"`)}
+	}
+	if v, ok := pc.mutation.PlatformID(); ok {
+		if err := post.PlatformIDValidator(v); err != nil {
+			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "Post.platform_id": %w`, err)}
+		}
+	}
 	if v, ok := pc.mutation.Name(); ok {
 		if err := post.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Post.name": %w`, err)}
@@ -172,6 +203,10 @@ func (pc *PostCreate) createSpec() (*Post, *sqlgraph.CreateSpec) {
 	if value, ok := pc.mutation.DeletedAt(); ok {
 		_spec.SetField(post.FieldDeletedAt, field.TypeTime, value)
 		_node.DeletedAt = &value
+	}
+	if value, ok := pc.mutation.PlatformID(); ok {
+		_spec.SetField(post.FieldPlatformID, field.TypeUint64, value)
+		_node.PlatformID = value
 	}
 	if value, ok := pc.mutation.Name(); ok {
 		_spec.SetField(post.FieldName, field.TypeString, value)
@@ -262,6 +297,24 @@ func (u *PostUpsert) UpdateDeletedAt() *PostUpsert {
 // ClearDeletedAt clears the value of the "deleted_at" field.
 func (u *PostUpsert) ClearDeletedAt() *PostUpsert {
 	u.SetNull(post.FieldDeletedAt)
+	return u
+}
+
+// SetPlatformID sets the "platform_id" field.
+func (u *PostUpsert) SetPlatformID(v uint64) *PostUpsert {
+	u.Set(post.FieldPlatformID, v)
+	return u
+}
+
+// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
+func (u *PostUpsert) UpdatePlatformID() *PostUpsert {
+	u.SetExcluded(post.FieldPlatformID)
+	return u
+}
+
+// AddPlatformID adds v to the "platform_id" field.
+func (u *PostUpsert) AddPlatformID(v uint64) *PostUpsert {
+	u.Add(post.FieldPlatformID, v)
 	return u
 }
 
@@ -376,6 +429,27 @@ func (u *PostUpsertOne) ClearDeletedAt() *PostUpsertOne {
 	})
 }
 
+// SetPlatformID sets the "platform_id" field.
+func (u *PostUpsertOne) SetPlatformID(v uint64) *PostUpsertOne {
+	return u.Update(func(s *PostUpsert) {
+		s.SetPlatformID(v)
+	})
+}
+
+// AddPlatformID adds v to the "platform_id" field.
+func (u *PostUpsertOne) AddPlatformID(v uint64) *PostUpsertOne {
+	return u.Update(func(s *PostUpsert) {
+		s.AddPlatformID(v)
+	})
+}
+
+// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
+func (u *PostUpsertOne) UpdatePlatformID() *PostUpsertOne {
+	return u.Update(func(s *PostUpsert) {
+		s.UpdatePlatformID()
+	})
+}
+
 // SetName sets the "name" field.
 func (u *PostUpsertOne) SetName(v string) *PostUpsertOne {
 	return u.Update(func(s *PostUpsert) {
@@ -449,6 +523,7 @@ func (pcb *PostCreateBulk) Save(ctx context.Context) ([]*Post, error) {
 	for i := range pcb.builders {
 		func(i int, root context.Context) {
 			builder := pcb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*PostMutation)
 				if !ok {
@@ -652,6 +727,27 @@ func (u *PostUpsertBulk) UpdateDeletedAt() *PostUpsertBulk {
 func (u *PostUpsertBulk) ClearDeletedAt() *PostUpsertBulk {
 	return u.Update(func(s *PostUpsert) {
 		s.ClearDeletedAt()
+	})
+}
+
+// SetPlatformID sets the "platform_id" field.
+func (u *PostUpsertBulk) SetPlatformID(v uint64) *PostUpsertBulk {
+	return u.Update(func(s *PostUpsert) {
+		s.SetPlatformID(v)
+	})
+}
+
+// AddPlatformID adds v to the "platform_id" field.
+func (u *PostUpsertBulk) AddPlatformID(v uint64) *PostUpsertBulk {
+	return u.Update(func(s *PostUpsert) {
+		s.AddPlatformID(v)
+	})
+}
+
+// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
+func (u *PostUpsertBulk) UpdatePlatformID() *PostUpsertBulk {
+	return u.Update(func(s *PostUpsert) {
+		s.UpdatePlatformID()
 	})
 }
 
