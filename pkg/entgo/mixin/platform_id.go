@@ -7,7 +7,7 @@ import (
 	"entgo.io/ent/schema/index"
 	"entgo.io/ent/schema/mixin"
 
-	"github.com/tx7do/go-utils/sonyflake"
+	"github.com/beiduoke/go-scaffold/pkg/util/id/snowflake"
 )
 
 type PlatformId struct {
@@ -18,7 +18,7 @@ func (PlatformId) Fields() []ent.Field {
 	return []ent.Field{
 		field.Uint64("platform_id").
 			Comment("平台ID").
-			DefaultFunc(sonyflake.GenerateSonyflake).
+			DefaultFunc(uint64(snowflake.NewFlake(1).Generate())).
 			Positive().
 			StructTag(`json:"platform_id,omitempty"`).
 			SchemaType(map[string]string{

@@ -75,10 +75,6 @@ func NewTransaction(d *Data) biz.Transaction {
 	return d
 }
 
-type ConfigOptions struct {
-	base *conf.Base
-}
-
 // Data .
 type Data struct {
 	cfg      *conf.Bootstrap

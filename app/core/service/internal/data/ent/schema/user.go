@@ -9,7 +9,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 	mx "github.com/beiduoke/go-scaffold/pkg/entgo/mixin"
-	"github.com/tx7do/go-utils/entgo/mixin"
 )
 
 // User holds the schema definition for the User entity.
@@ -31,9 +30,7 @@ func (User) Annotations() []schema.Annotation {
 // Mixin of the User.
 func (User) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		mixin.SnowflackId{},
-		mixin.TimeAt{},
-		mx.PlatformId{},
+		mx.Common{},
 	}
 }
 
