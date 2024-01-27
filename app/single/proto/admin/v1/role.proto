@@ -1,0 +1,309 @@
+syntax = "proto3";
+
+package admin.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "validate/validate.proto";
+
+import "admin/v1/menu.proto";
+import "admin/v1/dept.proto";
+
+option go_package = "github.com/beiduoke/go-scaffold-single/api/admin/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.admin.v1";
+option java_outer_classname = "adminProtoV1";
+
+option (gnostic.openapi.v3.document) = {
+  info: {
+    title: "Scaffold Role API";
+    description: "后台管理脚手架系统-角色服务";
+    version: "1.0";
+		contact: {
+			name: "基础架构";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway";
+			email: "none@example.com";
+		};
+		license: {
+			name: "BSD 3-Clause License";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt";
+		};
+  }
+};
+
+// The greeting service definition.
+service RoleService {
+  
+  // 角色模块
+  // 列表角色
+  rpc ListRole (ListRoleRequest) returns (ListRoleResponse) {
+    option (google.api.http) = {
+      get: "/v1/roles"
+    };
+  }
+
+  // 创建角色
+  rpc CreateRole (CreateRoleRequest) returns (CreateRoleResponse) {
+    option (google.api.http) = {
+      post: "/v1/roles"
+      body: "*"
+    };
+  }
+
+  // 获取指定ID角色
+  rpc GetRole (GetRoleRequest) returns (Role) {
+    option (google.api.http) = {
+      get: "/v1/roles/{id}"
+    };
+  }
+
+  // 修改指定ID角色
+  rpc UpdateRole (UpdateRoleRequest) returns (UpdateRoleResponse) {
+    option (google.api.http) = {
+      put: "/v1/roles/{id}"
+      body: "data"
+    };
+  }
+
+  // 更新指定ID角色状态
+  rpc UpdateRoleState (UpdateRoleStateRequest) returns (UpdateRoleStateResponse) {
+    option (google.api.http) = {
+      put: "/v1/roles/{id}/state"
+      body: "data"
+    };
+  }
+
+  // 删除指定ID角色
+  rpc DeleteRole (DeleteRoleRequest) returns (DeleteRoleResponse) {
+    option (google.api.http) = {
+      delete: "/v1/roles/{id}"
+    };
+  }
+
+  // 获取指定ID角色菜单
+  rpc ListRoleMenu (ListRoleMenuRequest) returns (ListRoleMenuResponse) {
+    option (google.api.http) = {
+      get: "/v1/roles/{id}/menus"
+    };
+  }
+
+  // 处理指定ID角色菜单
+  rpc HandleRoleMenu (HandleRoleMenuRequest) returns (HandleRoleMenuResponse) {
+    option (google.api.http) = {
+      post: "/v1/roles/{id}/menus"
+      body: "data"
+    };
+  }
+
+  // 获取指定ID角色部门
+  rpc ListRoleDept (ListRoleDeptRequest) returns (ListRoleDeptResponse) {
+    option (google.api.http) = {
+      get: "/v1/roles/{id}/depts"
+    };
+  }
+
+  // 获取指定ID角色数据范围
+  rpc GetRoleDataScope (GetRoleDataScopeRequest) returns (GetRoleDataScopeResponse) {
+    option (google.api.http) = {
+      get: "/v1/roles/{id}/dataScopes"
+    };
+  }
+
+  // 处理指定ID角色数据范围
+  rpc HandleRoleDataScope (HandleRoleDataScopeRequest) returns (HandleRoleDataScopeResponse) {
+    option (google.api.http) = {
+      post: "/v1/roles/{id}/dataScopes"
+      body: "data"
+    };
+  }
+}
+
+// 角色模块
+message Role {
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
+  uint64 id = 3;
+  string name = 4;
+  uint64 parent_id = 5;
+  optional string default_router = 6;
+  optional int32 sort = 7;
+	optional int32 data_scope = 8;         
+	optional int32 menu_check_strictly = 9; 
+	optional int32 dept_check_strictly = 10; 
+  optional int32 state = 11;
+  optional string remarks = 12;
+  repeated uint64 menu_ids = 13;
+}
+
+// 请求 - 列表角色
+message ListRoleRequest {
+  // 是否不分页
+  optional bool nopaging = 1;
+  // 当前页
+  optional int32 page = 2;
+  // 每一页的行数
+  optional int32 page_size = 3;
+}
+
+// 回应 - 列表角色
+message ListRoleResponse {
+  int64 total = 1;
+  repeated Role items = 2;
+}
+
+// 请求 - 创建角色
+message CreateRoleRequest {
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
+  optional string default_router = 3 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  optional int32 sort = 4 [(validate.rules).int32 = {gte: 0}];
+	optional int32 data_scope = 5 [(validate.rules).int32.gte = 0];
+	optional int32 menu_check_strictly = 6 [(validate.rules).int32.gte = 0];
+	optional int32 dept_check_strictly = 7 [(validate.rules).int32.gte = 0];
+  int32 state = 8 [(validate.rules).int32.gte = 0];
+  optional string remarks = 9 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+  repeated uint64 menu_ids = 10 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+}
+
+// 回应 - 创建角色
+message CreateRoleResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 修改角色
+message UpdateRoleRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    uint64 parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
+    optional string default_router = 3 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    optional int32 sort = 4 [(validate.rules).int32 = {gte: 0}];
+    optional int32 data_scope = 5 [(validate.rules).int32.gte = 0];  
+    optional int32 menu_check_strictly = 6 [(validate.rules).int32.gte = 0];
+    optional int32 dept_check_strictly = 7 [(validate.rules).int32.gte = 0];
+    int32 state = 8 [(validate.rules).int32.gte = 0];
+    optional string remarks = 9 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+    repeated uint64 menu_ids = 10 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建角色
+message UpdateRoleResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 修改角色
+message UpdateRoleStateRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    int32 state = 1 [(validate.rules).int32.gte = 0];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建角色
+message UpdateRoleStateResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 获取角色
+message GetRoleRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 请求 - 删除角色
+message DeleteRoleRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 删除角色
+message DeleteRoleResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 获取角色菜单
+message ListRoleMenuRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 获取角色菜单
+message ListRoleMenuResponse {
+  repeated admin.v1.Menu items = 1;
+  optional int64 total = 2;
+}
+
+// 请求 - 处理角色菜单
+message HandleRoleMenuRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    repeated uint64 menu_ids = 10 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 处理角色菜单
+message HandleRoleMenuResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 获取角色菜单
+message ListRoleDeptRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 获取角色菜单（未使用）
+message ListRoleDeptResponse {
+  optional int64 total = 1;
+  repeated admin.v1.Dept items = 2;
+}
+
+
+// 请求 - 获取角色数据权限
+message GetRoleDataScopeRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 角色菜单数据范围
+message GetRoleDataScopeResponse {
+  int32 scope = 1;
+  optional int32 dept_check_strictly = 2;
+  repeated uint64 dept_customs = 3;
+}
+
+// 请求 - 处理角色数据范围
+message HandleRoleDataScopeRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message DataScope {
+    int32 scope = 1 [(validate.rules).int32.gte = 0];
+    optional int32 dept_check_strictly = 2 [(validate.rules).int32.gte = 0];
+    repeated uint64 dept_customs = 3 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+  }
+  DataScope data = 2;
+}
+
+// 回应 - 处理角色数据
+message HandleRoleDataScopeResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}

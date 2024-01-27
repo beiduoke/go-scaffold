@@ -1,0 +1,338 @@
+syntax = "proto3";
+
+package admin.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "validate/validate.proto";
+// import "protobuf/enum.proto";
+// import "protobuf/struct.proto";
+
+option go_package = "github.com/beiduoke/go-scaffold-single/api/admin/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.admin.v1";
+option java_outer_classname = "adminProtoV1";
+
+option (gnostic.openapi.v3.document) = {
+  info: {
+    title: "Scaffold Dict API";
+    description: "后台管理脚手架系统-字典服务";
+    version: "1.0";
+		contact: {
+			name: "基础架构";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway";
+			email: "none@example.com";
+		};
+		license: {
+			name: "BSD 3-Clause License";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt";
+		};
+  }
+};
+
+// The greeting service definition.
+service DictService {
+  // 列表字典
+  rpc ListDict (ListDictRequest) returns (ListDictResponse) {
+    option (google.api.http) = {
+      get: "/v1/dicts"
+    };
+  }
+
+  // 创建字典
+  rpc CreateDict (CreateDictRequest) returns (CreateDictResponse) {
+    option (google.api.http) = {
+      post: "/v1/dicts"
+      body: "*"
+    };
+  }
+
+  // 获取字典
+  rpc GetDict (GetDictRequest) returns (Dict) {
+    option (google.api.http) = {
+      get: "/v1/dicts/{id}"
+    };
+  }
+
+  // 修改字典
+  rpc UpdateDict (UpdateDictRequest) returns (UpdateDictResponse) {
+    option (google.api.http) = {
+      put: "/v1/dicts/{id}"
+      body: "data"
+    };
+  }
+
+  // 删除字典
+  rpc DeleteDict (DeleteDictRequest) returns (DeleteDictResponse) {
+    option (google.api.http) = {
+      delete: "/v1/dicts/{id}"
+    };
+  }
+
+  // 设置字典状态
+  rpc UpdateDictState (UpdateDictStateRequest) returns (UpdateDictStateResponse) {
+    option (google.api.http) = {
+      put: "/v1/dicts/{id}/state"
+      body: "data"
+    };
+  }
+
+  
+  // 列表字典数据
+  rpc ListDictData (ListDictDataRequest) returns (ListDictDataResponse) {
+    option (google.api.http) = {
+      get: "/v1/dictData"
+    };
+  }
+
+  // 创建字典数据
+  rpc CreateDictData (CreateDictDataRequest) returns (CreateDictDataResponse) {
+    option (google.api.http) = {
+      post: "/v1/dictData"
+      body: "*"
+    };
+  }
+
+  // 获取字典数据
+  rpc GetDictData (GetDictDataRequest) returns (DictData) {
+    option (google.api.http) = {
+      get: "/v1/dictData/{id}"
+    };
+  }
+
+  // 修改字典数据
+  rpc UpdateDictData (UpdateDictDataRequest) returns (UpdateDictDataResponse) {
+    option (google.api.http) = {
+      put: "/v1/dictData/{id}"
+      body: "data"
+    };
+  }
+
+  // 删除字典数据
+  rpc DeleteDictData (DeleteDictDataRequest) returns (DeleteDictDataResponse) {
+    option (google.api.http) = {
+      delete: "/v1/dictData/{id}"
+    };
+  }
+
+  // 设置字典数据状态
+  rpc UpdateDictDataState (UpdateDictDataStateRequest) returns (UpdateDictDataStateResponse) {
+    option (google.api.http) = {
+      put: "/v1/dictData/{id}/state"
+      body: "data"
+    };
+  }
+}
+
+// 字典模块
+message Dict {
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
+  uint64 id = 3;
+  string name = 4;
+  string type = 5;
+  optional int32 sort = 6;
+  optional string remarks = 7;
+  optional int32 state = 8;
+}
+
+// 请求 - 列表字典
+message ListDictRequest {
+  // 是否不分页
+  optional bool nopaging = 1;
+  // 当前页
+  optional int32 page = 2;
+  // 每一页的行数
+  optional int32 page_size = 3;
+}
+
+// 回应 - 列表字典
+message ListDictResponse {
+  int64 total = 1;
+  repeated Dict items = 2;
+}
+
+// 请求 - 创建字典
+message CreateDictRequest {
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  string type = 2 [(validate.rules).string = {min_len: 1, max_len: 50}];
+  int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
+  int32 state = 4 [(validate.rules).int32.gte = 0];
+  optional string remarks = 5 [(validate.rules).string = {min_len: 0, max_len: 1000}];
+}
+
+// 回应 - 创建字典
+message CreateDictResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 修改字典
+message UpdateDictRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
+    int32 state = 4 [(validate.rules).int32.gte = 0];
+    string remarks = 5 [(validate.rules).string = {min_len: 0, max_len: 1000}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建字典
+message UpdateDictResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 获取字典
+message GetDictRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 请求 - 删除字典
+message DeleteDictRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 删除字典
+message DeleteDictResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 修改字典-状态
+message UpdateDictStateRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    optional int32 state = 1 [(validate.rules).int32.gte = 0];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建字典-状态
+message UpdateDictStateResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 字典数据模块
+message DictData {
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
+  uint64 id = 3;
+  string label = 4;
+  string value = 5;
+  string dict_type = 6;
+  optional string color_type = 7;
+  optional string css_class = 8;
+  optional int32 sort = 9;
+  optional string remarks = 10;
+  optional int32 state = 11;
+}
+
+// 请求 - 列表字典数据
+message ListDictDataRequest {
+  // 是否不分页
+  optional bool nopaging = 1;
+  // 当前页
+  optional int32 page = 2;
+  // 每一页的行数
+  optional int32 page_size = 3;
+  optional string dict_type = 4;
+}
+
+// 回应 - 列表字典数据
+message ListDictDataResponse {
+  int64 total = 1;
+  repeated DictData items = 2;
+}
+
+// 请求 - 创建字典数据
+message CreateDictDataRequest {
+  string label = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  string value = 2 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  string dict_type = 3 [(validate.rules).string = {min_len: 1, max_len: 50}];
+  int32 sort = 4 [(validate.rules).int32 = {gte: 0}];
+  int32 state = 5 [(validate.rules).int32.gte = 0];
+  optional string remarks = 6 [(validate.rules).string = {min_len: 0, max_len: 1000}];
+  optional string color_type = 7 [(validate.rules).string = {min_len: 0, max_len: 100}];
+  optional string css_class = 8 [(validate.rules).string = {min_len: 0, max_len: 100}];
+}
+
+// 回应 - 创建字典数据
+message CreateDictDataResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 修改字典数据
+message UpdateDictDataRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    string label = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    string value = 2 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    int32 sort = 4 [(validate.rules).int32 = {gte: 0}];
+    int32 state = 5 [(validate.rules).int32.gte = 0];
+    optional string remarks = 6 [(validate.rules).string = {min_len: 0, max_len: 1000}];
+    optional string color_type = 7 [(validate.rules).string = {min_len: 0, max_len: 100}];
+    optional string css_class = 8 [(validate.rules).string = {min_len: 0, max_len: 100}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建字典数据
+message UpdateDictDataResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 获取字典数据
+message GetDictDataRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 请求 - 删除字典数据
+message DeleteDictDataRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 删除字典数据
+message DeleteDictDataResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 修改字典数据-状态
+message UpdateDictDataStateRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    optional int32 state = 1 [(validate.rules).int32.gte = 0];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建字典数据-状态
+message UpdateDictDataStateResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}

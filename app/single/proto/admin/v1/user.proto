@@ -1,0 +1,231 @@
+syntax = "proto3";
+
+package admin.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "validate/validate.proto";
+
+import "admin/v1/role.proto";
+import "admin/v1/dept.proto";
+import "admin/v1/post.proto";
+
+option go_package = "github.com/beiduoke/go-scaffold-single/api/admin/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.admin.v1";
+option java_outer_classname = "adminProtoV1";
+
+option (gnostic.openapi.v3.document) = {
+  info: {
+    title: "Scaffold User API";
+    description: "后台管理脚手架系统-用户服务";
+    version: "1.0";
+		contact: {
+			name: "基础架构";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway";
+			email: "none@example.com";
+		};
+		license: {
+			name: "BSD 3-Clause License";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt";
+		};
+  }
+};
+
+// The greeting service definition.
+service UserService {
+  // User 用户模块
+  // 列表用户
+  rpc ListUser (ListUserRequest) returns (ListUserResponse) {
+    option (google.api.http) = {
+      get: "/v1/users"
+    };
+  }
+
+  // 创建用户
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {
+    option (google.api.http) = {
+      post: "/v1/users"
+      body: "*"
+    };
+  }
+
+  // 获取用户
+  rpc GetUser (GetUserRequest) returns (User) {
+    option (google.api.http) = {
+      get: "/v1/users/{id}"
+    };
+  }
+
+  // 修改用户
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse) {
+    option (google.api.http) = {
+      put: "/v1/users/{id}"
+      body: "data"
+    };
+  }
+
+  // 删除用户
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse) {
+    option (google.api.http) = {
+      delete: "/v1/users/{id}"
+    };
+  }
+
+  // 验证用户名是否存在
+  rpc ExistUserByName (ExistUserByNameRequest) returns (ExistUserByNameResponse) {
+    option (google.api.http) = {
+      post: "/v1/users/existByName"
+      body: "*"
+    };
+  }
+}
+
+// 用户模块
+message User {
+  uint64 id = 1;
+  string name = 2;
+  optional string nick_name = 4;
+  optional string real_name = 5;
+  optional string birthday = 6;
+  optional int32 gender = 7; 
+  optional string phone = 8;
+  optional string email = 9;
+  optional string avatar = 10;
+  optional int32 state = 11 [(gnostic.openapi.v3.property) = {description: "状态"}];
+  optional google.protobuf.Timestamp created_at = 12;
+  optional google.protobuf.Timestamp updated_at = 13;
+  optional uint64 dept_id = 14;
+  repeated uint64 post_ids = 15;
+  repeated uint64 role_ids = 16;
+  optional admin.v1.Dept dept = 17;
+  repeated admin.v1.Role roles = 18;
+  repeated admin.v1.Post posts = 19;
+}
+
+// 请求 - 列表用户
+message ListUserRequest {
+  // 是否不分页
+  optional bool nopaging = 1;
+  // 当前页
+  optional int32 page = 2;
+  // 每一页的行数
+  optional int32 page_size = 3;
+  optional int32 dept_id = 4;
+  optional string name = 5;
+  optional string nick_name = 6;
+}
+
+// 回应 - 列表用户
+message ListUserResponse {
+  int64 total = 1;
+  repeated User items = 2;
+}
+
+// 请求 - 创建用户
+message CreateUserRequest {
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  optional string avatar = 2;
+  optional string password = 3 [(validate.rules).string = {min_len: 6, max_len: 28}];
+  optional string nick_name = 4 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  optional string real_name = 5 [(validate.rules).string = {min_len: 2, max_len: 10}];
+  optional string birthday = 6 [(validate.rules).string.pattern = "^(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)$"];
+  optional int32 gender = 7 [(validate.rules).int32.gte = 0];
+  string phone = 8 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
+  optional string email = 9 [(validate.rules).string.email = true];
+  int32 state = 10 [(validate.rules).int32.gte = 0];
+  uint64 dept_id = 14 [(validate.rules).uint64 = {gt: 0}];
+  repeated uint64 post_ids = 15 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+  repeated uint64 role_ids = 16 [(validate.rules).repeated = {min_items: 1, unique: true, items: {uint64: {gt: 0}}}];
+  optional string remarks = 17;
+}
+
+// 回应 - 创建用户
+message CreateUserResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 绑定用户权限
+message HandleUserRoleRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    uint64 domain_id = 2 [(validate.rules).uint64 = {gt: 0}]; 
+    repeated uint64 role_ids = 11 [(validate.rules).repeated = {min_items: 1, unique: true, items: {uint64: {gt: 0}}}];
+  }
+  Data data = 3;
+}
+
+// 回应 - 绑定用户权限
+message HandleUserRoleResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 获取用户
+message GetUserRequest {
+  uint64 id = 1  [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 请求 - 删除用户
+message DeleteUserRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 删除用户
+message DeleteUserResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 修改用户
+message UpdateUserRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    string name = 2 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    optional string password = 3 [(validate.rules).string = {min_len: 6, max_len: 28}];
+    optional string nick_name = 4 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    optional string real_name = 5 [(validate.rules).string = {min_len: 2, max_len: 10}];
+    // x must be less than the Unix Epoch
+    optional string birthday = 6 [(validate.rules).string.pattern = "^(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)$"];
+    optional int32 gender = 7 [(validate.rules).int32.gte = 0];
+    string phone = 8 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
+    optional string email = 9 [(validate.rules).string.email = true];
+    int32 state = 10 [(validate.rules).int32.gte = 0];
+    optional string avatar = 11;
+    repeated uint64 role_ids = 12 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+    repeated uint64 post_ids = 13 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+    uint64 dept_id = 14 [(validate.rules).uint64 = {gt: 0}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 修改用户
+message UpdateUserResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 验证用户是否存在
+message ExistUserByNameRequest {
+  string name = 1;
+}
+
+// 回应 - 验证用户是否存在
+message ExistUserByNameResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}

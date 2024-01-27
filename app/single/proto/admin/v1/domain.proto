@@ -1,0 +1,440 @@
+syntax = "proto3";
+
+package admin.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "validate/validate.proto";
+import "admin/v1/menu.proto";
+
+option go_package = "github.com/beiduoke/go-scaffold-single/api/admin/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.admin.v1";
+option java_outer_classname = "adminProtoV1";
+
+option (gnostic.openapi.v3.document) = {
+  info: {
+    title: "Scaffold Domain API";
+    description: "后台管理脚手架系统-租户服务";
+    version: "1.0";
+		contact: {
+			name: "基础架构";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway";
+			email: "none@example.com";
+		};
+		license: {
+			name: "BSD 3-Clause License";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt";
+		};
+  }
+};
+
+// The greeting service definition.
+service DomainService {
+   // 列表租户
+  rpc ListDomain (ListDomainRequest) returns (ListDomainResponse) {
+    option (google.api.http) = {
+      get: "/v1/domains"
+    };
+  }
+
+  // 获取租户树形列表
+  rpc ListDomainTree (ListDomainTreeRequest) returns (ListDomainTreeResponse) {
+    option (google.api.http) = {
+      get: "/v1/domains/{id}/trees"
+      additional_bindings {
+        get: "/v1/domains/trees"
+      }
+    };
+  }
+
+  // 创建租户
+  rpc CreateDomain (CreateDomainRequest) returns (CreateDomainResponse) {
+    option (google.api.http) = {
+      post: "/v1/domains"
+      body: "*"
+    };
+  }
+
+  // 获取租户
+  rpc GetDomain (GetDomainRequest) returns (Domain) {
+    option (google.api.http) = {
+      get: "/v1/domains/{id}"
+    };
+  }
+
+  // 获取租户
+  rpc GetDomainCode (GetDomainCodeRequest) returns (Domain) {
+    option (google.api.http) = {
+      get: "/v1/domains/{code}/code"
+    };
+  }
+
+  // 获取租户
+  rpc GetDomainName (GetDomainNameRequest) returns (Domain) {
+    option (google.api.http) = {
+      get: "/v1/domains/{name}/name"
+    };
+  }
+
+  // 修改租户
+  rpc UpdateDomain (UpdateDomainRequest) returns (UpdateDomainResponse) {
+    option (google.api.http) = {
+      put: "/v1/domains/{id}"
+      body: "data"
+    };
+  }
+
+  // 删除租户
+  rpc DeleteDomain (DeleteDomainRequest) returns (DeleteDomainResponse) {
+    option (google.api.http) = {
+      delete: "/v1/domains/{id}"
+    };
+  }
+  
+  // 设置租户状态
+  rpc UpdateDomainState (UpdateDomainStateRequest) returns (UpdateDomainStateResponse) {
+    option (google.api.http) = {
+      put: "/v1/domains/{id}/state"
+      body: "data"
+    };
+  }
+  
+  // 获取租户菜单
+  rpc ListDomainMenu (ListDomainMenuRequest) returns (ListDomainMenuResponse) {
+    option (google.api.http) = {
+      get: "/v1/domains/{id}/menus"
+    };
+  }
+
+  // 处理租户菜单
+  rpc HandleDomainMenu (HandleDomainMenuRequest) returns (HandleDomainMenuResponse) {
+    option (google.api.http) = {
+      post: "/v1/domains/{id}/menus"
+      body: "data"
+    };
+  }
+  
+  // 列表租户套餐
+  rpc ListDomainPackage (ListDomainPackageRequest) returns (ListDomainPackageResponse) {
+    option (google.api.http) = {
+      get: "/v1/domainPackages"
+    };
+  }
+
+  // 创建租户套餐
+  rpc CreateDomainPackage (CreateDomainPackageRequest) returns (CreateDomainPackageResponse) {
+    option (google.api.http) = {
+      post: "/v1/domainPackages"
+      body: "*"
+    };
+  }
+
+  // 获取租户套餐
+  rpc GetDomainPackage (GetDomainPackageRequest) returns (DomainPackage) {
+    option (google.api.http) = {
+      get: "/v1/domainPackages/{id}"
+    };
+  }
+
+  // 修改租户套餐
+  rpc UpdateDomainPackage (UpdateDomainPackageRequest) returns (UpdateDomainPackageResponse) {
+    option (google.api.http) = {
+      put: "/v1/domainPackages/{id}"
+      body: "data"
+    };
+  }
+
+  // 更新指定ID套餐状态
+  rpc UpdateDomainPackageState (UpdateDomainPackageStateRequest) returns (UpdateDomainPackageStateResponse) {
+    option (google.api.http) = {
+      put: "/v1/domainPackages/{id}/state"
+      body: "data"
+    };
+  }
+
+  // 删除租户套餐
+  rpc DeleteDomainPackage (DeleteDomainPackageRequest) returns (DeleteDomainPackageResponse) {
+    option (google.api.http) = {
+      delete: "/v1/domainPackages/{id}"
+    };
+  }
+}
+
+// 租户模块
+message Domain {
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
+  uint64 id = 3;
+  string name = 4;
+  uint64 parent_id = 5;
+  optional string code = 6;
+  optional int32 sort = 7;
+  optional string alias = 8;
+  optional string logo = 9;
+  optional string pic = 10;
+  optional string keywords = 11;
+  optional string description = 12;
+  optional int32 state = 13;
+  optional string remarks = 14;
+  repeated Domain children = 15;
+  uint64 package_id = 16;
+  optional DomainPackage package = 17;
+}
+
+// 请求 - 列表租户
+message ListDomainRequest {
+  // 是否不分页
+  optional bool nopaging = 1;
+  // 当前页
+  optional int32 page = 2;
+  // 每一页的行数
+  optional int32 page_size = 3;
+}
+
+// 回应 - 列表租户
+message ListDomainResponse {
+  int64 total = 1;
+  repeated Domain items = 2;
+}
+
+// 请求 - 列表租户
+message ListDomainTreeRequest {
+  uint64 id = 1;
+}
+
+// 回应 - 列表租户
+message ListDomainTreeResponse {
+  repeated Domain items = 1;
+  optional int64 total = 2;
+}
+
+// 请求 - 创建租户
+message CreateDomainRequest {
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  optional uint64 parent_id = 2;
+  optional int32 sort = 3;
+  optional string alias = 4 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  optional string logo = 5;
+  optional string pic = 6;
+  optional string keywords = 7;
+  optional string description = 8;
+  optional int32 state = 9 [(validate.rules).int32.gte = 0];
+  optional string remarks = 10;
+  uint64 package_id = 11;
+}
+
+// 回应 - 创建租户
+message CreateDomainResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 修改租户
+message UpdateDomainRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    optional uint64 parent_id = 2;
+    optional int32 sort = 3;
+    optional string alias = 4 [(validate.rules).string = {min_len: 1, max_len: 100}];
+    optional string logo = 5;
+    optional string pic = 6;
+    optional string keywords = 7;
+    optional string description = 8;
+    optional int32 state = 9 [(validate.rules).int32.gte = 0];
+    optional string remarks = 10;
+    uint64 package_id = 11;
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建租户
+message UpdateDomainResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 修改租户-状态
+message UpdateDomainStateRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    optional int32 state = 1 [(validate.rules).int32.gte = 0];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建租户-状态
+message UpdateDomainStateResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 获取租户
+message GetDomainRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 请求 - 获取租户Code
+message GetDomainCodeRequest {
+  string code = 1 [(validate.rules).string.len = 19];
+}
+
+// 请求 - 获取租户Name
+message GetDomainNameRequest {
+  string name = 1 [(validate.rules).string = {min_len: 2, max_len: 20}];
+}
+
+// 请求 - 删除租户
+message DeleteDomainRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 删除租户
+message DeleteDomainResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 获取租户菜单
+message ListDomainMenuRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 获取租户菜单
+message ListDomainMenuResponse {
+  repeated admin.v1.Menu items = 1;
+  optional int64 total = 2;
+}
+
+// 请求 - 处理租户菜单
+message HandleDomainMenuRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    repeated uint64 menu_ids = 10 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 处理租户菜单
+message HandleDomainMenuResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 租户套餐模块
+message DomainPackage {
+  optional google.protobuf.Timestamp created_at = 1;
+  optional google.protobuf.Timestamp updated_at = 2;
+  uint64 id = 3;
+  string name = 4;
+  repeated uint64 menu_ids = 5;
+  optional int32 sort = 6;
+  optional string remarks = 7;
+  optional int32 state = 8;
+}
+
+// 请求 - 列表租户套餐
+message ListDomainPackageRequest {
+  // 是否不分页
+  optional bool nopaging = 1;
+  // 当前页
+  optional int32 page = 2;
+  // 每一页的行数
+  optional int32 page_size = 3;
+  optional string name = 4;
+  optional int32 state = 5;
+
+}
+
+// 回应 - 列表租户套餐
+message ListDomainPackageResponse {
+  int64 total = 1;
+  repeated DomainPackage items = 2;
+}
+
+// 请求 - 创建租户套餐
+message CreateDomainPackageRequest {
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+  repeated uint64 menu_ids = 2 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+  int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
+  int32 state = 4 [(validate.rules).int32.gte = 0];
+  optional string remarks = 5 [(validate.rules).string = {min_len: 0, max_len: 1000}];
+}
+
+// 回应 - 创建租户套餐
+message CreateDomainPackageResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 修改租户套餐
+message UpdateDomainPackageRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    repeated uint64 menu_ids = 2 [(validate.rules).repeated = {min_items: 0, unique: true, items: {uint64: {gt: 0}}}];
+    int32 sort = 3 [(validate.rules).int32 = {gte: 0}];
+    int32 state = 4 [(validate.rules).int32.gte = 0];
+    string remarks = 5 [(validate.rules).string = {min_len: 0, max_len: 1000}];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建租户套餐
+message UpdateDomainPackageResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 获取租户套餐
+message GetDomainPackageRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 请求 - 删除租户套餐
+message DeleteDomainPackageRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// 回应 - 删除租户套餐
+message DeleteDomainPackageResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 修改租户套餐-状态
+message UpdateDomainPackageStateRequest {
+  uint64 id = 1 [(validate.rules).uint64 = {gt: 0}];
+  message Data {
+    optional int32 state = 1 [(validate.rules).int32.gte = 0];
+  }
+  Data data = 2;
+}
+
+// 回应 - 创建租户套餐-状态
+message UpdateDomainPackageStateResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}

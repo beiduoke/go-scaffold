@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package common;
+option go_package = "github.com/beiduoke/go-scaffold-single/api/common;common";
+
+
+// 通用返回
+message Result {
+  uint64 id = 1;
+  map<string, string> data = 2;
+}

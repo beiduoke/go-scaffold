@@ -1,0 +1,385 @@
+syntax = "proto3";
+
+package admin.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "validate/validate.proto";
+
+import "admin/v1/menu.proto";
+import "admin/v1/user.proto";
+import "admin/v1/role.proto";
+
+option go_package = "github.com/beiduoke/go-scaffold-single/api/admin/v1;v1";
+option java_multiple_files = true;
+option java_package = "admin.v1";
+option java_outer_classname = "adminProtoV1";
+
+option (gnostic.openapi.v3.document) = {
+  info: {
+    title: "Scaffold Auth API";
+    description: "后台管理脚手架系统-认证服务";
+    version: "1.0";
+		contact: {
+			name: "基础架构";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway";
+			email: "none@example.com";
+		};
+		license: {
+			name: "BSD 3-Clause License";
+			url: "https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt";
+		};
+  }
+};
+
+// The greeting service definition.
+service AuthService {
+  // 登出
+  rpc Logout (LogoutRequest) returns (LogoutResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/logout"
+      body: "*"
+      additional_bindings {
+        get: "/v1/auth/logout"
+      }
+    };
+  }
+
+  // 注册
+  rpc Register (RegisterRequest) returns (RegisterResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/register/{domain}"
+      body: "auth"
+    };
+  }
+
+  // 密码登陆
+  rpc LoginByPassword (LoginByPasswordRequest) returns (LoginResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/loginByPassword/{domain}"
+      body: "auth"
+      additional_bindings {
+        post: "/v1/auth/login/{domain}"
+        body: "auth"
+      }
+    };
+  }
+
+  // 短信登陆
+  rpc LoginBySms (LoginBySmsRequest) returns (LoginResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/loginBySms/{domain}"
+      body: "auth"
+    };
+  }
+
+  // 邮件登陆
+  rpc LoginByEmail (LoginByEmailRequest) returns (LoginResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/loginByEmail/{domain}"
+      body: "auth"
+    };
+  }
+  
+  // 当前登录用户概述
+  rpc GetAuthInfo (GetAuthInfoRequest) returns (GetAuthInfoResponse) {
+    option (google.api.http) = {
+      get: "/v1/auth/info"
+    };
+  }
+
+  // 当前登录用户概述
+  rpc GetAuthProfile (GetAuthProfileRequest) returns (GetAuthProfileResponse) {
+    option (google.api.http) = {
+      get: "/v1/auth/profiles"
+    };
+  }
+
+  // 当前登录用户拥有角色
+  rpc ListAuthRole (ListAuthRoleRequest) returns (ListAuthRoleResponse) {
+    option (google.api.http) = {
+      get: "/v1/auth/roles"
+    };
+  }
+  
+  // 获取角色菜单路由树形列表
+  rpc ListAuthRoleMenuRouterTree (ListAuthRoleMenuRouterTreeRequest) returns (ListAuthRoleMenuRouterTreeResponse) {
+    option (google.api.http) = {
+      get: "/v1/auth/routers/trees"
+      additional_bindings {
+        get: "/v1/auth/roles/{role_id}/routers/trees"
+      }
+    };
+  }
+  
+  // 获取角色菜单路由树形列表
+  rpc ListAuthRoleMenuTree (ListAuthRoleMenuTreeRequest) returns (ListAuthRoleMenuTreeResponse) {
+    option (google.api.http) = {
+      get: "/v1/auth/menus/trees"
+      additional_bindings {
+        get: "/v1/auth/roles/{role_id}/menus/trees"
+      }
+    };
+  }
+
+  // 获取角色权限列表
+  rpc ListAuthRolePermission (ListAuthRolePermissionRequest) returns (ListAuthRolePermissionResponse) {
+    option (google.api.http) = {
+      get: "/v1/auth/permissions"
+      additional_bindings {
+        get: "/v1/auth/roles/{role_id}/permissions"
+      }
+    };
+  }
+
+}
+
+// 请求 - 注册
+message RegisterRequest {
+  message Auth {
+    // 用户名
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    // 密码
+    string password = 2 [(validate.rules).string = {min_len: 6, max_len: 25}];
+    // 电话
+    string phone = 3 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
+  }
+  // 请求体
+  Auth auth = 1 [(validate.rules).message = {required: true}];
+  string domain = 2 [(validate.rules).string = {min_len: 1, max_len: 20}];
+}
+
+// 回应 - 登录
+message LoginResponse {
+  // 访问token
+  string token = 1;
+  // 刷新token
+  string refresh_token = 2;
+  // 过期时间
+  google.protobuf.Timestamp expire_time = 3;
+}
+
+// 回应 - 注册
+message RegisterResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+message LogoutRequest {}
+
+// 回应 - 退出登录
+message LogoutResponse {
+  int32 code = 1;
+  string message = 2;
+  optional google.protobuf.Any result = 3;
+  string type = 4;
+}
+
+// 请求 - 密码登录
+message LoginByPasswordRequest {
+  message Auth {
+    string account = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    string password = 2 [(validate.rules).string = {min_len: 6, max_len: 28}];
+  }
+  // 请求体
+  Auth auth = 1 [(validate.rules).message = {required: true}];
+  string domain = 2 [(validate.rules).string = {min_len: 1, max_len: 20}];
+}
+
+// 请求 - 短信登录
+message LoginBySmsRequest {
+  message Auth {
+    string phone = 1 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
+    string code = 2 [(validate.rules).string.pattern = "^[0-9]{6}$"];
+  }
+  // 请求体
+  Auth auth = 1 [(validate.rules).message = {required: true}];
+  string domain = 2 [(validate.rules).string = {min_len: 1, max_len: 20}];
+}
+
+// 请求 - 邮件登录
+message LoginByEmailRequest {
+  message Auth {
+    string email = 1 [(validate.rules).string.email = true];
+    string code = 2 [(validate.rules).string.pattern = "^[0-9]{4,6}$"];
+  }
+  // 请求体
+  Auth auth = 1 [(validate.rules).message = {required: true}];
+  string domain = 2 [(validate.rules).string = {min_len: 1, max_len: 20}];
+}
+
+// 请求 - 用户详情
+message GetAuthInfoRequest {}
+
+// 回应 - 用户详情
+message GetAuthInfoResponse {
+  repeated admin.v1.Role roles = 1;
+  string name = 2;
+  string nick_name = 4;
+  string real_name = 5;
+  string birthday = 6;
+  int32 gender = 7; 
+  string phone = 8;
+  string email = 9;
+  string avatar = 10;
+  int32 state = 11 [(gnostic.openapi.v3.property) = {
+    description: "用户状态"
+    default: {string: "ON"}
+    enum: [
+      {yaml: "ON"}, 
+      {yaml: "OFF"}
+    ]
+  }];
+}
+
+// 请求 - 用户概况详情
+message GetAuthProfileRequest {}
+
+// 回应 - 用户概况详情
+message GetAuthProfileResponse {
+  admin.v1.User user = 1;
+  repeated Role roles = 2;
+}
+
+// 请求 - 用户角色
+message ListAuthRoleRequest {}
+
+// 回应 - 用户角色
+message ListAuthRoleResponse {
+  repeated Role items = 1;
+  optional int64 total = 2;
+}
+
+// 请求 - 获取用户角色菜单树形
+message ListAuthRoleMenuRouterTreeRequest {
+  uint64 role_id = 1 [(validate.rules).uint64 = {gte: 0}];
+  optional uint64 menu_parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
+}
+
+// 回应 - 获取用户角色菜单树形 Deprecated
+message ListAuthRoleMenuTreeResponseDeprecated {
+  message MenuMeta {
+    // 路由title  一般必填
+    string title = 1;
+    // 动态路由可打开Tab页数
+    int32 dynamic_level = 2;
+    // 动态路由的实际Path, 即去除路由的动态部分;
+    string real_path = 3;;
+    // 是否忽略KeepAlive缓存
+    bool ignore_keep_alive = 4;
+    // 是否固定标签
+    bool affix = 5;
+    // 图标，也是菜单图标
+    string icon = 6;
+    // 内嵌iframe的地址
+    string frame_src = 7;
+    // 指定该路由切换的动画名
+    string transition_name = 8;
+    // 隐藏该路由在面包屑上面的显示
+    bool hide_breadcrumb = 9;
+    // 如果该路由会携带参数，且需要在tab页上面显示。则需要设置为true
+    bool carry_param = 10;
+    // 隐藏所有子菜单
+    bool hide_children_in_menu = 11;
+    // 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
+    string current_active_menu = 12;
+    // 当前路由不再标签页显示
+    bool hide_tab = 13;
+    // 当前路由不再菜单显示
+    bool hide_menu = 14;
+    // 菜单排序，只对第一级有效
+    int32 order_no = 15;
+    // 忽略路由。用于在ROUTE_MAPPING以及BACK权限模式下，生成对应的菜单而忽略路由。2.5.3以上版本有效
+    bool ignore_route = 16;
+    // 是否在子级菜单的完整path中忽略本级path。2.5.3以上版本有效
+    bool hide_pathfor_children = 17;
+  }
+
+  message Menu {
+    string name = 1;
+    string path = 2;
+    string component = 3;
+    string redirect = 4;
+    string full_path = 5;
+    string alias = 6;
+    bool case_sensitive = 7;
+    MenuMeta meta = 8;
+    repeated Menu children = 9;
+  }
+  repeated Menu items = 1;
+  optional int64 total = 2;
+}
+
+// 路由菜单
+message MenuRouter {
+  message Meta {
+    // 路由title  一般必填
+    string title = 1;
+    // 是否忽略KeepAlive缓存
+    optional bool ignore_keep_alive = 4;
+    // 图标，也是菜单图标
+    optional string icon = 6;
+    // 内嵌iframe的地址
+    optional string frame_src = 7;
+    // 隐藏该路由在面包屑上面的显示
+    optional bool hide_breadcrumb = 9;
+    // 当前路由不再菜单显示
+    optional bool hide_menu = 14;
+    // 菜单排序，只对第一级有效
+    optional int32 order_no = 15;
+    // 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
+    optional string current_active_menu = 12;
+    // 固定菜单在tab栏
+    optional bool affix = 13;
+  }
+  // 路由名称
+  string name = 1;
+  // 路由地址
+  string path = 2;
+  // 路由组件
+  optional string component = 3;
+  // 路由重定向
+  optional string redirect = 4;
+  // 路由头信息
+  Meta meta = 5;
+  // 路由子集
+  repeated MenuRouter children = 6;
+  // 路由ID
+  optional uint64 id = 7;
+  // 路由父级
+  optional uint64 parent_id = 8;
+}
+
+// 回应 - 获取用户角色菜单路由列表-树形
+message ListAuthRoleMenuRouterTreeResponse {
+  repeated admin.v1.MenuRouter items = 1;
+  optional int64 total = 2;
+}
+
+// 请求 - 获取用户角色菜单列表-树形
+message ListAuthRoleMenuTreeRequest {
+  uint64 role_id = 1 [(validate.rules).uint64 = {gte: 0}];
+  optional uint64 menu_parent_id = 2 [(validate.rules).uint64 = {gte: 0}];
+}
+
+// 回应 - 获取用户角色菜单列表-树形
+message ListAuthRoleMenuTreeResponse {
+  repeated admin.v1.Menu items = 1;
+  optional int64 total = 2;
+}
+
+// 请求 - 获取用户角色权限列表
+message ListAuthRolePermissionRequest {
+  uint64 role_id = 1 [(validate.rules).uint64 = {gte: 0}];
+}
+
+// 回应 - 获取用户角色权限列表
+message ListAuthRolePermissionResponse {
+  repeated string items = 1;
+  optional int64 total = 2;
+}
