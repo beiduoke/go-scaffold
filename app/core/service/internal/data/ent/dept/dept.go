@@ -3,8 +3,6 @@
 package dept
 
 import (
-	"fmt"
-
 	"entgo.io/ent/dialect/sql"
 )
 
@@ -19,14 +17,12 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
 	FieldDeletedAt = "deleted_at"
-	// FieldPlatformID holds the string denoting the platform_id field in the database.
-	FieldPlatformID = "platform_id"
-	// FieldSort holds the string denoting the sort field in the database.
-	FieldSort = "sort"
 	// FieldRemark holds the string denoting the remark field in the database.
 	FieldRemark = "remark"
-	// FieldStatus holds the string denoting the status field in the database.
-	FieldStatus = "status"
+	// FieldSort holds the string denoting the sort field in the database.
+	FieldSort = "sort"
+	// FieldState holds the string denoting the state field in the database.
+	FieldState = "state"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
 	// FieldParentID holds the string denoting the parent_id field in the database.
@@ -43,10 +39,9 @@ var Columns = []string{
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,
-	FieldPlatformID,
-	FieldSort,
 	FieldRemark,
-	FieldStatus,
+	FieldSort,
+	FieldState,
 	FieldName,
 	FieldParentID,
 	FieldAncestors,
@@ -63,14 +58,16 @@ func ValidColumn(column string) bool {
 }
 
 var (
-	// DefaultPlatformID holds the default value on creation for the "platform_id" field.
-	DefaultPlatformID func() uint64
-	// PlatformIDValidator is a validator for the "platform_id" field. It is called by the builders before save.
-	PlatformIDValidator func(uint64) error
-	// DefaultSort holds the default value on creation for the "sort" field.
-	DefaultSort int32
 	// DefaultRemark holds the default value on creation for the "remark" field.
 	DefaultRemark string
+	// DefaultSort holds the default value on creation for the "sort" field.
+	DefaultSort int32
+	// SortValidator is a validator for the "sort" field. It is called by the builders before save.
+	SortValidator func(int32) error
+	// DefaultState holds the default value on creation for the "state" field.
+	DefaultState int32
+	// StateValidator is a validator for the "state" field. It is called by the builders before save.
+	StateValidator func(int32) error
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
 	NameValidator func(string) error
 	// DefaultParentID holds the default value on creation for the "parent_id" field.
@@ -80,32 +77,6 @@ var (
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(uint32) error
 )
-
-// Status defines the type for the "status" enum field.
-type Status string
-
-// StatusON is the default value of the Status enum.
-const DefaultStatus = StatusON
-
-// Status values.
-const (
-	StatusOFF Status = "OFF"
-	StatusON  Status = "ON"
-)
-
-func (s Status) String() string {
-	return string(s)
-}
-
-// StatusValidator is a validator for the "status" field enum values. It is called by the builders before save.
-func StatusValidator(s Status) error {
-	switch s {
-	case StatusOFF, StatusON:
-		return nil
-	default:
-		return fmt.Errorf("dept: invalid enum value for status field: %q", s)
-	}
-}
 
 // OrderOption defines the ordering options for the Dept queries.
 type OrderOption func(*sql.Selector)
@@ -130,9 +101,9 @@ func ByDeletedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDeletedAt, opts...).ToFunc()
 }
 
-// ByPlatformID orders the results by the platform_id field.
-func ByPlatformID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldPlatformID, opts...).ToFunc()
+// ByRemark orders the results by the remark field.
+func ByRemark(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldRemark, opts...).ToFunc()
 }
 
 // BySort orders the results by the sort field.
@@ -140,14 +111,9 @@ func BySort(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldSort, opts...).ToFunc()
 }
 
-// ByRemark orders the results by the remark field.
-func ByRemark(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldRemark, opts...).ToFunc()
-}
-
-// ByStatus orders the results by the status field.
-func ByStatus(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldStatus, opts...).ToFunc()
+// ByState orders the results by the state field.
+func ByState(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldState, opts...).ToFunc()
 }
 
 // ByName orders the results by the name field.

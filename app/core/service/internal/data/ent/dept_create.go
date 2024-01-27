@@ -64,16 +64,16 @@ func (dc *DeptCreate) SetNillableDeletedAt(t *time.Time) *DeptCreate {
 	return dc
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (dc *DeptCreate) SetPlatformID(u uint64) *DeptCreate {
-	dc.mutation.SetPlatformID(u)
+// SetRemark sets the "remark" field.
+func (dc *DeptCreate) SetRemark(s string) *DeptCreate {
+	dc.mutation.SetRemark(s)
 	return dc
 }
 
-// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
-func (dc *DeptCreate) SetNillablePlatformID(u *uint64) *DeptCreate {
-	if u != nil {
-		dc.SetPlatformID(*u)
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (dc *DeptCreate) SetNillableRemark(s *string) *DeptCreate {
+	if s != nil {
+		dc.SetRemark(*s)
 	}
 	return dc
 }
@@ -92,30 +92,16 @@ func (dc *DeptCreate) SetNillableSort(i *int32) *DeptCreate {
 	return dc
 }
 
-// SetRemark sets the "remark" field.
-func (dc *DeptCreate) SetRemark(s string) *DeptCreate {
-	dc.mutation.SetRemark(s)
+// SetState sets the "state" field.
+func (dc *DeptCreate) SetState(i int32) *DeptCreate {
+	dc.mutation.SetState(i)
 	return dc
 }
 
-// SetNillableRemark sets the "remark" field if the given value is not nil.
-func (dc *DeptCreate) SetNillableRemark(s *string) *DeptCreate {
-	if s != nil {
-		dc.SetRemark(*s)
-	}
-	return dc
-}
-
-// SetStatus sets the "status" field.
-func (dc *DeptCreate) SetStatus(d dept.Status) *DeptCreate {
-	dc.mutation.SetStatus(d)
-	return dc
-}
-
-// SetNillableStatus sets the "status" field if the given value is not nil.
-func (dc *DeptCreate) SetNillableStatus(d *dept.Status) *DeptCreate {
-	if d != nil {
-		dc.SetStatus(*d)
+// SetNillableState sets the "state" field if the given value is not nil.
+func (dc *DeptCreate) SetNillableState(i *int32) *DeptCreate {
+	if i != nil {
+		dc.SetState(*i)
 	}
 	return dc
 }
@@ -195,21 +181,17 @@ func (dc *DeptCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (dc *DeptCreate) defaults() {
-	if _, ok := dc.mutation.PlatformID(); !ok {
-		v := dept.DefaultPlatformID()
-		dc.mutation.SetPlatformID(v)
+	if _, ok := dc.mutation.Remark(); !ok {
+		v := dept.DefaultRemark
+		dc.mutation.SetRemark(v)
 	}
 	if _, ok := dc.mutation.Sort(); !ok {
 		v := dept.DefaultSort
 		dc.mutation.SetSort(v)
 	}
-	if _, ok := dc.mutation.Remark(); !ok {
-		v := dept.DefaultRemark
-		dc.mutation.SetRemark(v)
-	}
-	if _, ok := dc.mutation.Status(); !ok {
-		v := dept.DefaultStatus
-		dc.mutation.SetStatus(v)
+	if _, ok := dc.mutation.State(); !ok {
+		v := dept.DefaultState
+		dc.mutation.SetState(v)
 	}
 	if _, ok := dc.mutation.ParentID(); !ok {
 		v := dept.DefaultParentID
@@ -223,17 +205,20 @@ func (dc *DeptCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (dc *DeptCreate) check() error {
-	if _, ok := dc.mutation.PlatformID(); !ok {
-		return &ValidationError{Name: "platform_id", err: errors.New(`ent: missing required field "Dept.platform_id"`)}
+	if _, ok := dc.mutation.Sort(); !ok {
+		return &ValidationError{Name: "sort", err: errors.New(`ent: missing required field "Dept.sort"`)}
 	}
-	if v, ok := dc.mutation.PlatformID(); ok {
-		if err := dept.PlatformIDValidator(v); err != nil {
-			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "Dept.platform_id": %w`, err)}
+	if v, ok := dc.mutation.Sort(); ok {
+		if err := dept.SortValidator(v); err != nil {
+			return &ValidationError{Name: "sort", err: fmt.Errorf(`ent: validator failed for field "Dept.sort": %w`, err)}
 		}
 	}
-	if v, ok := dc.mutation.Status(); ok {
-		if err := dept.StatusValidator(v); err != nil {
-			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Dept.status": %w`, err)}
+	if _, ok := dc.mutation.State(); !ok {
+		return &ValidationError{Name: "state", err: errors.New(`ent: missing required field "Dept.state"`)}
+	}
+	if v, ok := dc.mutation.State(); ok {
+		if err := dept.StateValidator(v); err != nil {
+			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "Dept.state": %w`, err)}
 		}
 	}
 	if v, ok := dc.mutation.Name(); ok {
@@ -291,21 +276,17 @@ func (dc *DeptCreate) createSpec() (*Dept, *sqlgraph.CreateSpec) {
 		_spec.SetField(dept.FieldDeletedAt, field.TypeTime, value)
 		_node.DeletedAt = &value
 	}
-	if value, ok := dc.mutation.PlatformID(); ok {
-		_spec.SetField(dept.FieldPlatformID, field.TypeUint64, value)
-		_node.PlatformID = value
+	if value, ok := dc.mutation.Remark(); ok {
+		_spec.SetField(dept.FieldRemark, field.TypeString, value)
+		_node.Remark = &value
 	}
 	if value, ok := dc.mutation.Sort(); ok {
 		_spec.SetField(dept.FieldSort, field.TypeInt32, value)
 		_node.Sort = &value
 	}
-	if value, ok := dc.mutation.Remark(); ok {
-		_spec.SetField(dept.FieldRemark, field.TypeString, value)
-		_node.Remark = &value
-	}
-	if value, ok := dc.mutation.Status(); ok {
-		_spec.SetField(dept.FieldStatus, field.TypeEnum, value)
-		_node.Status = &value
+	if value, ok := dc.mutation.State(); ok {
+		_spec.SetField(dept.FieldState, field.TypeInt32, value)
+		_node.State = &value
 	}
 	if value, ok := dc.mutation.Name(); ok {
 		_spec.SetField(dept.FieldName, field.TypeString, value)
@@ -407,21 +388,21 @@ func (u *DeptUpsert) ClearDeletedAt() *DeptUpsert {
 	return u
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (u *DeptUpsert) SetPlatformID(v uint64) *DeptUpsert {
-	u.Set(dept.FieldPlatformID, v)
+// SetRemark sets the "remark" field.
+func (u *DeptUpsert) SetRemark(v string) *DeptUpsert {
+	u.Set(dept.FieldRemark, v)
 	return u
 }
 
-// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
-func (u *DeptUpsert) UpdatePlatformID() *DeptUpsert {
-	u.SetExcluded(dept.FieldPlatformID)
+// UpdateRemark sets the "remark" field to the value that was provided on create.
+func (u *DeptUpsert) UpdateRemark() *DeptUpsert {
+	u.SetExcluded(dept.FieldRemark)
 	return u
 }
 
-// AddPlatformID adds v to the "platform_id" field.
-func (u *DeptUpsert) AddPlatformID(v uint64) *DeptUpsert {
-	u.Add(dept.FieldPlatformID, v)
+// ClearRemark clears the value of the "remark" field.
+func (u *DeptUpsert) ClearRemark() *DeptUpsert {
+	u.SetNull(dept.FieldRemark)
 	return u
 }
 
@@ -443,45 +424,21 @@ func (u *DeptUpsert) AddSort(v int32) *DeptUpsert {
 	return u
 }
 
-// ClearSort clears the value of the "sort" field.
-func (u *DeptUpsert) ClearSort() *DeptUpsert {
-	u.SetNull(dept.FieldSort)
+// SetState sets the "state" field.
+func (u *DeptUpsert) SetState(v int32) *DeptUpsert {
+	u.Set(dept.FieldState, v)
 	return u
 }
 
-// SetRemark sets the "remark" field.
-func (u *DeptUpsert) SetRemark(v string) *DeptUpsert {
-	u.Set(dept.FieldRemark, v)
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *DeptUpsert) UpdateState() *DeptUpsert {
+	u.SetExcluded(dept.FieldState)
 	return u
 }
 
-// UpdateRemark sets the "remark" field to the value that was provided on create.
-func (u *DeptUpsert) UpdateRemark() *DeptUpsert {
-	u.SetExcluded(dept.FieldRemark)
-	return u
-}
-
-// ClearRemark clears the value of the "remark" field.
-func (u *DeptUpsert) ClearRemark() *DeptUpsert {
-	u.SetNull(dept.FieldRemark)
-	return u
-}
-
-// SetStatus sets the "status" field.
-func (u *DeptUpsert) SetStatus(v dept.Status) *DeptUpsert {
-	u.Set(dept.FieldStatus, v)
-	return u
-}
-
-// UpdateStatus sets the "status" field to the value that was provided on create.
-func (u *DeptUpsert) UpdateStatus() *DeptUpsert {
-	u.SetExcluded(dept.FieldStatus)
-	return u
-}
-
-// ClearStatus clears the value of the "status" field.
-func (u *DeptUpsert) ClearStatus() *DeptUpsert {
-	u.SetNull(dept.FieldStatus)
+// AddState adds v to the "state" field.
+func (u *DeptUpsert) AddState(v int32) *DeptUpsert {
+	u.Add(dept.FieldState, v)
 	return u
 }
 
@@ -638,24 +595,24 @@ func (u *DeptUpsertOne) ClearDeletedAt() *DeptUpsertOne {
 	})
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (u *DeptUpsertOne) SetPlatformID(v uint64) *DeptUpsertOne {
+// SetRemark sets the "remark" field.
+func (u *DeptUpsertOne) SetRemark(v string) *DeptUpsertOne {
 	return u.Update(func(s *DeptUpsert) {
-		s.SetPlatformID(v)
+		s.SetRemark(v)
 	})
 }
 
-// AddPlatformID adds v to the "platform_id" field.
-func (u *DeptUpsertOne) AddPlatformID(v uint64) *DeptUpsertOne {
+// UpdateRemark sets the "remark" field to the value that was provided on create.
+func (u *DeptUpsertOne) UpdateRemark() *DeptUpsertOne {
 	return u.Update(func(s *DeptUpsert) {
-		s.AddPlatformID(v)
+		s.UpdateRemark()
 	})
 }
 
-// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
-func (u *DeptUpsertOne) UpdatePlatformID() *DeptUpsertOne {
+// ClearRemark clears the value of the "remark" field.
+func (u *DeptUpsertOne) ClearRemark() *DeptUpsertOne {
 	return u.Update(func(s *DeptUpsert) {
-		s.UpdatePlatformID()
+		s.ClearRemark()
 	})
 }
 
@@ -680,52 +637,24 @@ func (u *DeptUpsertOne) UpdateSort() *DeptUpsertOne {
 	})
 }
 
-// ClearSort clears the value of the "sort" field.
-func (u *DeptUpsertOne) ClearSort() *DeptUpsertOne {
+// SetState sets the "state" field.
+func (u *DeptUpsertOne) SetState(v int32) *DeptUpsertOne {
 	return u.Update(func(s *DeptUpsert) {
-		s.ClearSort()
+		s.SetState(v)
 	})
 }
 
-// SetRemark sets the "remark" field.
-func (u *DeptUpsertOne) SetRemark(v string) *DeptUpsertOne {
+// AddState adds v to the "state" field.
+func (u *DeptUpsertOne) AddState(v int32) *DeptUpsertOne {
 	return u.Update(func(s *DeptUpsert) {
-		s.SetRemark(v)
+		s.AddState(v)
 	})
 }
 
-// UpdateRemark sets the "remark" field to the value that was provided on create.
-func (u *DeptUpsertOne) UpdateRemark() *DeptUpsertOne {
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *DeptUpsertOne) UpdateState() *DeptUpsertOne {
 	return u.Update(func(s *DeptUpsert) {
-		s.UpdateRemark()
-	})
-}
-
-// ClearRemark clears the value of the "remark" field.
-func (u *DeptUpsertOne) ClearRemark() *DeptUpsertOne {
-	return u.Update(func(s *DeptUpsert) {
-		s.ClearRemark()
-	})
-}
-
-// SetStatus sets the "status" field.
-func (u *DeptUpsertOne) SetStatus(v dept.Status) *DeptUpsertOne {
-	return u.Update(func(s *DeptUpsert) {
-		s.SetStatus(v)
-	})
-}
-
-// UpdateStatus sets the "status" field to the value that was provided on create.
-func (u *DeptUpsertOne) UpdateStatus() *DeptUpsertOne {
-	return u.Update(func(s *DeptUpsert) {
-		s.UpdateStatus()
-	})
-}
-
-// ClearStatus clears the value of the "status" field.
-func (u *DeptUpsertOne) ClearStatus() *DeptUpsertOne {
-	return u.Update(func(s *DeptUpsert) {
-		s.ClearStatus()
+		s.UpdateState()
 	})
 }
 
@@ -1058,24 +987,24 @@ func (u *DeptUpsertBulk) ClearDeletedAt() *DeptUpsertBulk {
 	})
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (u *DeptUpsertBulk) SetPlatformID(v uint64) *DeptUpsertBulk {
+// SetRemark sets the "remark" field.
+func (u *DeptUpsertBulk) SetRemark(v string) *DeptUpsertBulk {
 	return u.Update(func(s *DeptUpsert) {
-		s.SetPlatformID(v)
+		s.SetRemark(v)
 	})
 }
 
-// AddPlatformID adds v to the "platform_id" field.
-func (u *DeptUpsertBulk) AddPlatformID(v uint64) *DeptUpsertBulk {
+// UpdateRemark sets the "remark" field to the value that was provided on create.
+func (u *DeptUpsertBulk) UpdateRemark() *DeptUpsertBulk {
 	return u.Update(func(s *DeptUpsert) {
-		s.AddPlatformID(v)
+		s.UpdateRemark()
 	})
 }
 
-// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
-func (u *DeptUpsertBulk) UpdatePlatformID() *DeptUpsertBulk {
+// ClearRemark clears the value of the "remark" field.
+func (u *DeptUpsertBulk) ClearRemark() *DeptUpsertBulk {
 	return u.Update(func(s *DeptUpsert) {
-		s.UpdatePlatformID()
+		s.ClearRemark()
 	})
 }
 
@@ -1100,52 +1029,24 @@ func (u *DeptUpsertBulk) UpdateSort() *DeptUpsertBulk {
 	})
 }
 
-// ClearSort clears the value of the "sort" field.
-func (u *DeptUpsertBulk) ClearSort() *DeptUpsertBulk {
+// SetState sets the "state" field.
+func (u *DeptUpsertBulk) SetState(v int32) *DeptUpsertBulk {
 	return u.Update(func(s *DeptUpsert) {
-		s.ClearSort()
+		s.SetState(v)
 	})
 }
 
-// SetRemark sets the "remark" field.
-func (u *DeptUpsertBulk) SetRemark(v string) *DeptUpsertBulk {
+// AddState adds v to the "state" field.
+func (u *DeptUpsertBulk) AddState(v int32) *DeptUpsertBulk {
 	return u.Update(func(s *DeptUpsert) {
-		s.SetRemark(v)
+		s.AddState(v)
 	})
 }
 
-// UpdateRemark sets the "remark" field to the value that was provided on create.
-func (u *DeptUpsertBulk) UpdateRemark() *DeptUpsertBulk {
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *DeptUpsertBulk) UpdateState() *DeptUpsertBulk {
 	return u.Update(func(s *DeptUpsert) {
-		s.UpdateRemark()
-	})
-}
-
-// ClearRemark clears the value of the "remark" field.
-func (u *DeptUpsertBulk) ClearRemark() *DeptUpsertBulk {
-	return u.Update(func(s *DeptUpsert) {
-		s.ClearRemark()
-	})
-}
-
-// SetStatus sets the "status" field.
-func (u *DeptUpsertBulk) SetStatus(v dept.Status) *DeptUpsertBulk {
-	return u.Update(func(s *DeptUpsert) {
-		s.SetStatus(v)
-	})
-}
-
-// UpdateStatus sets the "status" field to the value that was provided on create.
-func (u *DeptUpsertBulk) UpdateStatus() *DeptUpsertBulk {
-	return u.Update(func(s *DeptUpsert) {
-		s.UpdateStatus()
-	})
-}
-
-// ClearStatus clears the value of the "status" field.
-func (u *DeptUpsertBulk) ClearStatus() *DeptUpsertBulk {
-	return u.Update(func(s *DeptUpsert) {
-		s.ClearStatus()
+		s.UpdateState()
 	})
 }
 

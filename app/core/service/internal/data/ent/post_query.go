@@ -21,6 +21,7 @@ type PostQuery struct {
 	order      []post.OrderOption
 	inters     []Interceptor
 	predicates []predicate.Post
+	withFKs    bool
 	modifiers  []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -332,9 +333,13 @@ func (pq *PostQuery) prepareQuery(ctx context.Context) error {
 
 func (pq *PostQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Post, error) {
 	var (
-		nodes = []*Post{}
-		_spec = pq.querySpec()
+		nodes   = []*Post{}
+		withFKs = pq.withFKs
+		_spec   = pq.querySpec()
 	)
+	if withFKs {
+		_spec.Node.Columns = append(_spec.Node.Columns, post.ForeignKeys...)
+	}
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*Post).scanValues(nil, columns)
 	}

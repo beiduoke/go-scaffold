@@ -10,6 +10,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"entgo.io/ent/dialect/sql/sqljson"
 	"entgo.io/ent/schema/field"
 	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/menu"
 	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/predicate"
@@ -69,24 +70,65 @@ func (mu *MenuUpdate) ClearDeletedAt() *MenuUpdate {
 	return mu
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (mu *MenuUpdate) SetPlatformID(u uint64) *MenuUpdate {
-	mu.mutation.ResetPlatformID()
-	mu.mutation.SetPlatformID(u)
+// SetRemark sets the "remark" field.
+func (mu *MenuUpdate) SetRemark(s string) *MenuUpdate {
+	mu.mutation.SetRemark(s)
 	return mu
 }
 
-// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
-func (mu *MenuUpdate) SetNillablePlatformID(u *uint64) *MenuUpdate {
-	if u != nil {
-		mu.SetPlatformID(*u)
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableRemark(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetRemark(*s)
 	}
 	return mu
 }
 
-// AddPlatformID adds u to the "platform_id" field.
-func (mu *MenuUpdate) AddPlatformID(u int64) *MenuUpdate {
-	mu.mutation.AddPlatformID(u)
+// ClearRemark clears the value of the "remark" field.
+func (mu *MenuUpdate) ClearRemark() *MenuUpdate {
+	mu.mutation.ClearRemark()
+	return mu
+}
+
+// SetSort sets the "sort" field.
+func (mu *MenuUpdate) SetSort(i int32) *MenuUpdate {
+	mu.mutation.ResetSort()
+	mu.mutation.SetSort(i)
+	return mu
+}
+
+// SetNillableSort sets the "sort" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableSort(i *int32) *MenuUpdate {
+	if i != nil {
+		mu.SetSort(*i)
+	}
+	return mu
+}
+
+// AddSort adds i to the "sort" field.
+func (mu *MenuUpdate) AddSort(i int32) *MenuUpdate {
+	mu.mutation.AddSort(i)
+	return mu
+}
+
+// SetState sets the "state" field.
+func (mu *MenuUpdate) SetState(i int32) *MenuUpdate {
+	mu.mutation.ResetState()
+	mu.mutation.SetState(i)
+	return mu
+}
+
+// SetNillableState sets the "state" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableState(i *int32) *MenuUpdate {
+	if i != nil {
+		mu.SetState(*i)
+	}
+	return mu
+}
+
+// AddState adds i to the "state" field.
+func (mu *MenuUpdate) AddState(i int32) *MenuUpdate {
+	mu.mutation.AddState(i)
 	return mu
 }
 
@@ -104,15 +146,297 @@ func (mu *MenuUpdate) SetNillableName(s *string) *MenuUpdate {
 	return mu
 }
 
-// ClearName clears the value of the "name" field.
-func (mu *MenuUpdate) ClearName() *MenuUpdate {
-	mu.mutation.ClearName()
+// SetTitle sets the "title" field.
+func (mu *MenuUpdate) SetTitle(s string) *MenuUpdate {
+	mu.mutation.SetTitle(s)
 	return mu
+}
+
+// SetNillableTitle sets the "title" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableTitle(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetTitle(*s)
+	}
+	return mu
+}
+
+// SetParentID sets the "parent_id" field.
+func (mu *MenuUpdate) SetParentID(u uint32) *MenuUpdate {
+	mu.mutation.SetParentID(u)
+	return mu
+}
+
+// SetNillableParentID sets the "parent_id" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableParentID(u *uint32) *MenuUpdate {
+	if u != nil {
+		mu.SetParentID(*u)
+	}
+	return mu
+}
+
+// ClearParentID clears the value of the "parent_id" field.
+func (mu *MenuUpdate) ClearParentID() *MenuUpdate {
+	mu.mutation.ClearParentID()
+	return mu
+}
+
+// SetType sets the "type" field.
+func (mu *MenuUpdate) SetType(i int32) *MenuUpdate {
+	mu.mutation.ResetType()
+	mu.mutation.SetType(i)
+	return mu
+}
+
+// SetNillableType sets the "type" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableType(i *int32) *MenuUpdate {
+	if i != nil {
+		mu.SetType(*i)
+	}
+	return mu
+}
+
+// AddType adds i to the "type" field.
+func (mu *MenuUpdate) AddType(i int32) *MenuUpdate {
+	mu.mutation.AddType(i)
+	return mu
+}
+
+// SetPath sets the "path" field.
+func (mu *MenuUpdate) SetPath(s string) *MenuUpdate {
+	mu.mutation.SetPath(s)
+	return mu
+}
+
+// SetNillablePath sets the "path" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillablePath(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetPath(*s)
+	}
+	return mu
+}
+
+// SetComponent sets the "component" field.
+func (mu *MenuUpdate) SetComponent(s string) *MenuUpdate {
+	mu.mutation.SetComponent(s)
+	return mu
+}
+
+// SetNillableComponent sets the "component" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableComponent(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetComponent(*s)
+	}
+	return mu
+}
+
+// SetIcon sets the "icon" field.
+func (mu *MenuUpdate) SetIcon(s string) *MenuUpdate {
+	mu.mutation.SetIcon(s)
+	return mu
+}
+
+// SetNillableIcon sets the "icon" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableIcon(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetIcon(*s)
+	}
+	return mu
+}
+
+// SetIsExt sets the "is_ext" field.
+func (mu *MenuUpdate) SetIsExt(b bool) *MenuUpdate {
+	mu.mutation.SetIsExt(b)
+	return mu
+}
+
+// SetNillableIsExt sets the "is_ext" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableIsExt(b *bool) *MenuUpdate {
+	if b != nil {
+		mu.SetIsExt(*b)
+	}
+	return mu
+}
+
+// SetExtURL sets the "ext_url" field.
+func (mu *MenuUpdate) SetExtURL(s string) *MenuUpdate {
+	mu.mutation.SetExtURL(s)
+	return mu
+}
+
+// SetNillableExtURL sets the "ext_url" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableExtURL(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetExtURL(*s)
+	}
+	return mu
+}
+
+// SetPermissions sets the "permissions" field.
+func (mu *MenuUpdate) SetPermissions(s []string) *MenuUpdate {
+	mu.mutation.SetPermissions(s)
+	return mu
+}
+
+// AppendPermissions appends s to the "permissions" field.
+func (mu *MenuUpdate) AppendPermissions(s []string) *MenuUpdate {
+	mu.mutation.AppendPermissions(s)
+	return mu
+}
+
+// ClearPermissions clears the value of the "permissions" field.
+func (mu *MenuUpdate) ClearPermissions() *MenuUpdate {
+	mu.mutation.ClearPermissions()
+	return mu
+}
+
+// SetRedirect sets the "redirect" field.
+func (mu *MenuUpdate) SetRedirect(s string) *MenuUpdate {
+	mu.mutation.SetRedirect(s)
+	return mu
+}
+
+// SetNillableRedirect sets the "redirect" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableRedirect(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetRedirect(*s)
+	}
+	return mu
+}
+
+// SetCurrentActiveMenu sets the "current_active_menu" field.
+func (mu *MenuUpdate) SetCurrentActiveMenu(s string) *MenuUpdate {
+	mu.mutation.SetCurrentActiveMenu(s)
+	return mu
+}
+
+// SetNillableCurrentActiveMenu sets the "current_active_menu" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableCurrentActiveMenu(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetCurrentActiveMenu(*s)
+	}
+	return mu
+}
+
+// SetKeepAlive sets the "keep_alive" field.
+func (mu *MenuUpdate) SetKeepAlive(b bool) *MenuUpdate {
+	mu.mutation.SetKeepAlive(b)
+	return mu
+}
+
+// SetNillableKeepAlive sets the "keep_alive" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableKeepAlive(b *bool) *MenuUpdate {
+	if b != nil {
+		mu.SetKeepAlive(*b)
+	}
+	return mu
+}
+
+// SetVisible sets the "visible" field.
+func (mu *MenuUpdate) SetVisible(b bool) *MenuUpdate {
+	mu.mutation.SetVisible(b)
+	return mu
+}
+
+// SetNillableVisible sets the "visible" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableVisible(b *bool) *MenuUpdate {
+	if b != nil {
+		mu.SetVisible(*b)
+	}
+	return mu
+}
+
+// SetHideTab sets the "hide_tab" field.
+func (mu *MenuUpdate) SetHideTab(b bool) *MenuUpdate {
+	mu.mutation.SetHideTab(b)
+	return mu
+}
+
+// SetNillableHideTab sets the "hide_tab" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableHideTab(b *bool) *MenuUpdate {
+	if b != nil {
+		mu.SetHideTab(*b)
+	}
+	return mu
+}
+
+// SetHideMenu sets the "hide_menu" field.
+func (mu *MenuUpdate) SetHideMenu(b bool) *MenuUpdate {
+	mu.mutation.SetHideMenu(b)
+	return mu
+}
+
+// SetNillableHideMenu sets the "hide_menu" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableHideMenu(b *bool) *MenuUpdate {
+	if b != nil {
+		mu.SetHideMenu(*b)
+	}
+	return mu
+}
+
+// SetHideBreadcrumb sets the "hide_breadcrumb" field.
+func (mu *MenuUpdate) SetHideBreadcrumb(b bool) *MenuUpdate {
+	mu.mutation.SetHideBreadcrumb(b)
+	return mu
+}
+
+// SetNillableHideBreadcrumb sets the "hide_breadcrumb" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableHideBreadcrumb(b *bool) *MenuUpdate {
+	if b != nil {
+		mu.SetHideBreadcrumb(*b)
+	}
+	return mu
+}
+
+// SetParent sets the "parent" edge to the Menu entity.
+func (mu *MenuUpdate) SetParent(m *Menu) *MenuUpdate {
+	return mu.SetParentID(m.ID)
+}
+
+// AddChildIDs adds the "children" edge to the Menu entity by IDs.
+func (mu *MenuUpdate) AddChildIDs(ids ...uint32) *MenuUpdate {
+	mu.mutation.AddChildIDs(ids...)
+	return mu
+}
+
+// AddChildren adds the "children" edges to the Menu entity.
+func (mu *MenuUpdate) AddChildren(m ...*Menu) *MenuUpdate {
+	ids := make([]uint32, len(m))
+	for i := range m {
+		ids[i] = m[i].ID
+	}
+	return mu.AddChildIDs(ids...)
 }
 
 // Mutation returns the MenuMutation object of the builder.
 func (mu *MenuUpdate) Mutation() *MenuMutation {
 	return mu.mutation
+}
+
+// ClearParent clears the "parent" edge to the Menu entity.
+func (mu *MenuUpdate) ClearParent() *MenuUpdate {
+	mu.mutation.ClearParent()
+	return mu
+}
+
+// ClearChildren clears all "children" edges to the Menu entity.
+func (mu *MenuUpdate) ClearChildren() *MenuUpdate {
+	mu.mutation.ClearChildren()
+	return mu
+}
+
+// RemoveChildIDs removes the "children" edge to Menu entities by IDs.
+func (mu *MenuUpdate) RemoveChildIDs(ids ...uint32) *MenuUpdate {
+	mu.mutation.RemoveChildIDs(ids...)
+	return mu
+}
+
+// RemoveChildren removes "children" edges to Menu entities.
+func (mu *MenuUpdate) RemoveChildren(m ...*Menu) *MenuUpdate {
+	ids := make([]uint32, len(m))
+	for i := range m {
+		ids[i] = m[i].ID
+	}
+	return mu.RemoveChildIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -144,14 +468,34 @@ func (mu *MenuUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (mu *MenuUpdate) check() error {
-	if v, ok := mu.mutation.PlatformID(); ok {
-		if err := menu.PlatformIDValidator(v); err != nil {
-			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "Menu.platform_id": %w`, err)}
+	if v, ok := mu.mutation.Sort(); ok {
+		if err := menu.SortValidator(v); err != nil {
+			return &ValidationError{Name: "sort", err: fmt.Errorf(`ent: validator failed for field "Menu.sort": %w`, err)}
+		}
+	}
+	if v, ok := mu.mutation.State(); ok {
+		if err := menu.StateValidator(v); err != nil {
+			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "Menu.state": %w`, err)}
 		}
 	}
 	if v, ok := mu.mutation.Name(); ok {
 		if err := menu.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Menu.name": %w`, err)}
+		}
+	}
+	if v, ok := mu.mutation.Title(); ok {
+		if err := menu.TitleValidator(v); err != nil {
+			return &ValidationError{Name: "title", err: fmt.Errorf(`ent: validator failed for field "Menu.title": %w`, err)}
+		}
+	}
+	if v, ok := mu.mutation.Icon(); ok {
+		if err := menu.IconValidator(v); err != nil {
+			return &ValidationError{Name: "icon", err: fmt.Errorf(`ent: validator failed for field "Menu.icon": %w`, err)}
+		}
+	}
+	if v, ok := mu.mutation.ExtURL(); ok {
+		if err := menu.ExtURLValidator(v); err != nil {
+			return &ValidationError{Name: "ext_url", err: fmt.Errorf(`ent: validator failed for field "Menu.ext_url": %w`, err)}
 		}
 	}
 	return nil
@@ -190,17 +534,156 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if mu.mutation.DeletedAtCleared() {
 		_spec.ClearField(menu.FieldDeletedAt, field.TypeTime)
 	}
-	if value, ok := mu.mutation.PlatformID(); ok {
-		_spec.SetField(menu.FieldPlatformID, field.TypeUint64, value)
+	if value, ok := mu.mutation.Remark(); ok {
+		_spec.SetField(menu.FieldRemark, field.TypeString, value)
 	}
-	if value, ok := mu.mutation.AddedPlatformID(); ok {
-		_spec.AddField(menu.FieldPlatformID, field.TypeUint64, value)
+	if mu.mutation.RemarkCleared() {
+		_spec.ClearField(menu.FieldRemark, field.TypeString)
+	}
+	if value, ok := mu.mutation.Sort(); ok {
+		_spec.SetField(menu.FieldSort, field.TypeInt32, value)
+	}
+	if value, ok := mu.mutation.AddedSort(); ok {
+		_spec.AddField(menu.FieldSort, field.TypeInt32, value)
+	}
+	if value, ok := mu.mutation.State(); ok {
+		_spec.SetField(menu.FieldState, field.TypeInt32, value)
+	}
+	if value, ok := mu.mutation.AddedState(); ok {
+		_spec.AddField(menu.FieldState, field.TypeInt32, value)
 	}
 	if value, ok := mu.mutation.Name(); ok {
 		_spec.SetField(menu.FieldName, field.TypeString, value)
 	}
-	if mu.mutation.NameCleared() {
-		_spec.ClearField(menu.FieldName, field.TypeString)
+	if value, ok := mu.mutation.Title(); ok {
+		_spec.SetField(menu.FieldTitle, field.TypeString, value)
+	}
+	if value, ok := mu.mutation.GetType(); ok {
+		_spec.SetField(menu.FieldType, field.TypeInt32, value)
+	}
+	if value, ok := mu.mutation.AddedType(); ok {
+		_spec.AddField(menu.FieldType, field.TypeInt32, value)
+	}
+	if value, ok := mu.mutation.Path(); ok {
+		_spec.SetField(menu.FieldPath, field.TypeString, value)
+	}
+	if value, ok := mu.mutation.Component(); ok {
+		_spec.SetField(menu.FieldComponent, field.TypeString, value)
+	}
+	if value, ok := mu.mutation.Icon(); ok {
+		_spec.SetField(menu.FieldIcon, field.TypeString, value)
+	}
+	if value, ok := mu.mutation.IsExt(); ok {
+		_spec.SetField(menu.FieldIsExt, field.TypeBool, value)
+	}
+	if value, ok := mu.mutation.ExtURL(); ok {
+		_spec.SetField(menu.FieldExtURL, field.TypeString, value)
+	}
+	if value, ok := mu.mutation.Permissions(); ok {
+		_spec.SetField(menu.FieldPermissions, field.TypeJSON, value)
+	}
+	if value, ok := mu.mutation.AppendedPermissions(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, menu.FieldPermissions, value)
+		})
+	}
+	if mu.mutation.PermissionsCleared() {
+		_spec.ClearField(menu.FieldPermissions, field.TypeJSON)
+	}
+	if value, ok := mu.mutation.Redirect(); ok {
+		_spec.SetField(menu.FieldRedirect, field.TypeString, value)
+	}
+	if value, ok := mu.mutation.CurrentActiveMenu(); ok {
+		_spec.SetField(menu.FieldCurrentActiveMenu, field.TypeString, value)
+	}
+	if value, ok := mu.mutation.KeepAlive(); ok {
+		_spec.SetField(menu.FieldKeepAlive, field.TypeBool, value)
+	}
+	if value, ok := mu.mutation.Visible(); ok {
+		_spec.SetField(menu.FieldVisible, field.TypeBool, value)
+	}
+	if value, ok := mu.mutation.HideTab(); ok {
+		_spec.SetField(menu.FieldHideTab, field.TypeBool, value)
+	}
+	if value, ok := mu.mutation.HideMenu(); ok {
+		_spec.SetField(menu.FieldHideMenu, field.TypeBool, value)
+	}
+	if value, ok := mu.mutation.HideBreadcrumb(); ok {
+		_spec.SetField(menu.FieldHideBreadcrumb, field.TypeBool, value)
+	}
+	if mu.mutation.ParentCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   menu.ParentTable,
+			Columns: []string{menu.ParentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeUint32),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := mu.mutation.ParentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   menu.ParentTable,
+			Columns: []string{menu.ParentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if mu.mutation.ChildrenCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   menu.ChildrenTable,
+			Columns: []string{menu.ChildrenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeUint32),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := mu.mutation.RemovedChildrenIDs(); len(nodes) > 0 && !mu.mutation.ChildrenCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   menu.ChildrenTable,
+			Columns: []string{menu.ChildrenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := mu.mutation.ChildrenIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   menu.ChildrenTable,
+			Columns: []string{menu.ChildrenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_spec.AddModifiers(mu.modifiers...)
 	if n, err = sqlgraph.UpdateNodes(ctx, mu.driver, _spec); err != nil {
@@ -264,24 +747,65 @@ func (muo *MenuUpdateOne) ClearDeletedAt() *MenuUpdateOne {
 	return muo
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (muo *MenuUpdateOne) SetPlatformID(u uint64) *MenuUpdateOne {
-	muo.mutation.ResetPlatformID()
-	muo.mutation.SetPlatformID(u)
+// SetRemark sets the "remark" field.
+func (muo *MenuUpdateOne) SetRemark(s string) *MenuUpdateOne {
+	muo.mutation.SetRemark(s)
 	return muo
 }
 
-// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
-func (muo *MenuUpdateOne) SetNillablePlatformID(u *uint64) *MenuUpdateOne {
-	if u != nil {
-		muo.SetPlatformID(*u)
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableRemark(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetRemark(*s)
 	}
 	return muo
 }
 
-// AddPlatformID adds u to the "platform_id" field.
-func (muo *MenuUpdateOne) AddPlatformID(u int64) *MenuUpdateOne {
-	muo.mutation.AddPlatformID(u)
+// ClearRemark clears the value of the "remark" field.
+func (muo *MenuUpdateOne) ClearRemark() *MenuUpdateOne {
+	muo.mutation.ClearRemark()
+	return muo
+}
+
+// SetSort sets the "sort" field.
+func (muo *MenuUpdateOne) SetSort(i int32) *MenuUpdateOne {
+	muo.mutation.ResetSort()
+	muo.mutation.SetSort(i)
+	return muo
+}
+
+// SetNillableSort sets the "sort" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableSort(i *int32) *MenuUpdateOne {
+	if i != nil {
+		muo.SetSort(*i)
+	}
+	return muo
+}
+
+// AddSort adds i to the "sort" field.
+func (muo *MenuUpdateOne) AddSort(i int32) *MenuUpdateOne {
+	muo.mutation.AddSort(i)
+	return muo
+}
+
+// SetState sets the "state" field.
+func (muo *MenuUpdateOne) SetState(i int32) *MenuUpdateOne {
+	muo.mutation.ResetState()
+	muo.mutation.SetState(i)
+	return muo
+}
+
+// SetNillableState sets the "state" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableState(i *int32) *MenuUpdateOne {
+	if i != nil {
+		muo.SetState(*i)
+	}
+	return muo
+}
+
+// AddState adds i to the "state" field.
+func (muo *MenuUpdateOne) AddState(i int32) *MenuUpdateOne {
+	muo.mutation.AddState(i)
 	return muo
 }
 
@@ -299,15 +823,297 @@ func (muo *MenuUpdateOne) SetNillableName(s *string) *MenuUpdateOne {
 	return muo
 }
 
-// ClearName clears the value of the "name" field.
-func (muo *MenuUpdateOne) ClearName() *MenuUpdateOne {
-	muo.mutation.ClearName()
+// SetTitle sets the "title" field.
+func (muo *MenuUpdateOne) SetTitle(s string) *MenuUpdateOne {
+	muo.mutation.SetTitle(s)
 	return muo
+}
+
+// SetNillableTitle sets the "title" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableTitle(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetTitle(*s)
+	}
+	return muo
+}
+
+// SetParentID sets the "parent_id" field.
+func (muo *MenuUpdateOne) SetParentID(u uint32) *MenuUpdateOne {
+	muo.mutation.SetParentID(u)
+	return muo
+}
+
+// SetNillableParentID sets the "parent_id" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableParentID(u *uint32) *MenuUpdateOne {
+	if u != nil {
+		muo.SetParentID(*u)
+	}
+	return muo
+}
+
+// ClearParentID clears the value of the "parent_id" field.
+func (muo *MenuUpdateOne) ClearParentID() *MenuUpdateOne {
+	muo.mutation.ClearParentID()
+	return muo
+}
+
+// SetType sets the "type" field.
+func (muo *MenuUpdateOne) SetType(i int32) *MenuUpdateOne {
+	muo.mutation.ResetType()
+	muo.mutation.SetType(i)
+	return muo
+}
+
+// SetNillableType sets the "type" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableType(i *int32) *MenuUpdateOne {
+	if i != nil {
+		muo.SetType(*i)
+	}
+	return muo
+}
+
+// AddType adds i to the "type" field.
+func (muo *MenuUpdateOne) AddType(i int32) *MenuUpdateOne {
+	muo.mutation.AddType(i)
+	return muo
+}
+
+// SetPath sets the "path" field.
+func (muo *MenuUpdateOne) SetPath(s string) *MenuUpdateOne {
+	muo.mutation.SetPath(s)
+	return muo
+}
+
+// SetNillablePath sets the "path" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillablePath(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetPath(*s)
+	}
+	return muo
+}
+
+// SetComponent sets the "component" field.
+func (muo *MenuUpdateOne) SetComponent(s string) *MenuUpdateOne {
+	muo.mutation.SetComponent(s)
+	return muo
+}
+
+// SetNillableComponent sets the "component" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableComponent(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetComponent(*s)
+	}
+	return muo
+}
+
+// SetIcon sets the "icon" field.
+func (muo *MenuUpdateOne) SetIcon(s string) *MenuUpdateOne {
+	muo.mutation.SetIcon(s)
+	return muo
+}
+
+// SetNillableIcon sets the "icon" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableIcon(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetIcon(*s)
+	}
+	return muo
+}
+
+// SetIsExt sets the "is_ext" field.
+func (muo *MenuUpdateOne) SetIsExt(b bool) *MenuUpdateOne {
+	muo.mutation.SetIsExt(b)
+	return muo
+}
+
+// SetNillableIsExt sets the "is_ext" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableIsExt(b *bool) *MenuUpdateOne {
+	if b != nil {
+		muo.SetIsExt(*b)
+	}
+	return muo
+}
+
+// SetExtURL sets the "ext_url" field.
+func (muo *MenuUpdateOne) SetExtURL(s string) *MenuUpdateOne {
+	muo.mutation.SetExtURL(s)
+	return muo
+}
+
+// SetNillableExtURL sets the "ext_url" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableExtURL(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetExtURL(*s)
+	}
+	return muo
+}
+
+// SetPermissions sets the "permissions" field.
+func (muo *MenuUpdateOne) SetPermissions(s []string) *MenuUpdateOne {
+	muo.mutation.SetPermissions(s)
+	return muo
+}
+
+// AppendPermissions appends s to the "permissions" field.
+func (muo *MenuUpdateOne) AppendPermissions(s []string) *MenuUpdateOne {
+	muo.mutation.AppendPermissions(s)
+	return muo
+}
+
+// ClearPermissions clears the value of the "permissions" field.
+func (muo *MenuUpdateOne) ClearPermissions() *MenuUpdateOne {
+	muo.mutation.ClearPermissions()
+	return muo
+}
+
+// SetRedirect sets the "redirect" field.
+func (muo *MenuUpdateOne) SetRedirect(s string) *MenuUpdateOne {
+	muo.mutation.SetRedirect(s)
+	return muo
+}
+
+// SetNillableRedirect sets the "redirect" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableRedirect(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetRedirect(*s)
+	}
+	return muo
+}
+
+// SetCurrentActiveMenu sets the "current_active_menu" field.
+func (muo *MenuUpdateOne) SetCurrentActiveMenu(s string) *MenuUpdateOne {
+	muo.mutation.SetCurrentActiveMenu(s)
+	return muo
+}
+
+// SetNillableCurrentActiveMenu sets the "current_active_menu" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableCurrentActiveMenu(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetCurrentActiveMenu(*s)
+	}
+	return muo
+}
+
+// SetKeepAlive sets the "keep_alive" field.
+func (muo *MenuUpdateOne) SetKeepAlive(b bool) *MenuUpdateOne {
+	muo.mutation.SetKeepAlive(b)
+	return muo
+}
+
+// SetNillableKeepAlive sets the "keep_alive" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableKeepAlive(b *bool) *MenuUpdateOne {
+	if b != nil {
+		muo.SetKeepAlive(*b)
+	}
+	return muo
+}
+
+// SetVisible sets the "visible" field.
+func (muo *MenuUpdateOne) SetVisible(b bool) *MenuUpdateOne {
+	muo.mutation.SetVisible(b)
+	return muo
+}
+
+// SetNillableVisible sets the "visible" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableVisible(b *bool) *MenuUpdateOne {
+	if b != nil {
+		muo.SetVisible(*b)
+	}
+	return muo
+}
+
+// SetHideTab sets the "hide_tab" field.
+func (muo *MenuUpdateOne) SetHideTab(b bool) *MenuUpdateOne {
+	muo.mutation.SetHideTab(b)
+	return muo
+}
+
+// SetNillableHideTab sets the "hide_tab" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableHideTab(b *bool) *MenuUpdateOne {
+	if b != nil {
+		muo.SetHideTab(*b)
+	}
+	return muo
+}
+
+// SetHideMenu sets the "hide_menu" field.
+func (muo *MenuUpdateOne) SetHideMenu(b bool) *MenuUpdateOne {
+	muo.mutation.SetHideMenu(b)
+	return muo
+}
+
+// SetNillableHideMenu sets the "hide_menu" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableHideMenu(b *bool) *MenuUpdateOne {
+	if b != nil {
+		muo.SetHideMenu(*b)
+	}
+	return muo
+}
+
+// SetHideBreadcrumb sets the "hide_breadcrumb" field.
+func (muo *MenuUpdateOne) SetHideBreadcrumb(b bool) *MenuUpdateOne {
+	muo.mutation.SetHideBreadcrumb(b)
+	return muo
+}
+
+// SetNillableHideBreadcrumb sets the "hide_breadcrumb" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableHideBreadcrumb(b *bool) *MenuUpdateOne {
+	if b != nil {
+		muo.SetHideBreadcrumb(*b)
+	}
+	return muo
+}
+
+// SetParent sets the "parent" edge to the Menu entity.
+func (muo *MenuUpdateOne) SetParent(m *Menu) *MenuUpdateOne {
+	return muo.SetParentID(m.ID)
+}
+
+// AddChildIDs adds the "children" edge to the Menu entity by IDs.
+func (muo *MenuUpdateOne) AddChildIDs(ids ...uint32) *MenuUpdateOne {
+	muo.mutation.AddChildIDs(ids...)
+	return muo
+}
+
+// AddChildren adds the "children" edges to the Menu entity.
+func (muo *MenuUpdateOne) AddChildren(m ...*Menu) *MenuUpdateOne {
+	ids := make([]uint32, len(m))
+	for i := range m {
+		ids[i] = m[i].ID
+	}
+	return muo.AddChildIDs(ids...)
 }
 
 // Mutation returns the MenuMutation object of the builder.
 func (muo *MenuUpdateOne) Mutation() *MenuMutation {
 	return muo.mutation
+}
+
+// ClearParent clears the "parent" edge to the Menu entity.
+func (muo *MenuUpdateOne) ClearParent() *MenuUpdateOne {
+	muo.mutation.ClearParent()
+	return muo
+}
+
+// ClearChildren clears all "children" edges to the Menu entity.
+func (muo *MenuUpdateOne) ClearChildren() *MenuUpdateOne {
+	muo.mutation.ClearChildren()
+	return muo
+}
+
+// RemoveChildIDs removes the "children" edge to Menu entities by IDs.
+func (muo *MenuUpdateOne) RemoveChildIDs(ids ...uint32) *MenuUpdateOne {
+	muo.mutation.RemoveChildIDs(ids...)
+	return muo
+}
+
+// RemoveChildren removes "children" edges to Menu entities.
+func (muo *MenuUpdateOne) RemoveChildren(m ...*Menu) *MenuUpdateOne {
+	ids := make([]uint32, len(m))
+	for i := range m {
+		ids[i] = m[i].ID
+	}
+	return muo.RemoveChildIDs(ids...)
 }
 
 // Where appends a list predicates to the MenuUpdate builder.
@@ -352,14 +1158,34 @@ func (muo *MenuUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (muo *MenuUpdateOne) check() error {
-	if v, ok := muo.mutation.PlatformID(); ok {
-		if err := menu.PlatformIDValidator(v); err != nil {
-			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "Menu.platform_id": %w`, err)}
+	if v, ok := muo.mutation.Sort(); ok {
+		if err := menu.SortValidator(v); err != nil {
+			return &ValidationError{Name: "sort", err: fmt.Errorf(`ent: validator failed for field "Menu.sort": %w`, err)}
+		}
+	}
+	if v, ok := muo.mutation.State(); ok {
+		if err := menu.StateValidator(v); err != nil {
+			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "Menu.state": %w`, err)}
 		}
 	}
 	if v, ok := muo.mutation.Name(); ok {
 		if err := menu.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Menu.name": %w`, err)}
+		}
+	}
+	if v, ok := muo.mutation.Title(); ok {
+		if err := menu.TitleValidator(v); err != nil {
+			return &ValidationError{Name: "title", err: fmt.Errorf(`ent: validator failed for field "Menu.title": %w`, err)}
+		}
+	}
+	if v, ok := muo.mutation.Icon(); ok {
+		if err := menu.IconValidator(v); err != nil {
+			return &ValidationError{Name: "icon", err: fmt.Errorf(`ent: validator failed for field "Menu.icon": %w`, err)}
+		}
+	}
+	if v, ok := muo.mutation.ExtURL(); ok {
+		if err := menu.ExtURLValidator(v); err != nil {
+			return &ValidationError{Name: "ext_url", err: fmt.Errorf(`ent: validator failed for field "Menu.ext_url": %w`, err)}
 		}
 	}
 	return nil
@@ -415,17 +1241,156 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 	if muo.mutation.DeletedAtCleared() {
 		_spec.ClearField(menu.FieldDeletedAt, field.TypeTime)
 	}
-	if value, ok := muo.mutation.PlatformID(); ok {
-		_spec.SetField(menu.FieldPlatformID, field.TypeUint64, value)
+	if value, ok := muo.mutation.Remark(); ok {
+		_spec.SetField(menu.FieldRemark, field.TypeString, value)
 	}
-	if value, ok := muo.mutation.AddedPlatformID(); ok {
-		_spec.AddField(menu.FieldPlatformID, field.TypeUint64, value)
+	if muo.mutation.RemarkCleared() {
+		_spec.ClearField(menu.FieldRemark, field.TypeString)
+	}
+	if value, ok := muo.mutation.Sort(); ok {
+		_spec.SetField(menu.FieldSort, field.TypeInt32, value)
+	}
+	if value, ok := muo.mutation.AddedSort(); ok {
+		_spec.AddField(menu.FieldSort, field.TypeInt32, value)
+	}
+	if value, ok := muo.mutation.State(); ok {
+		_spec.SetField(menu.FieldState, field.TypeInt32, value)
+	}
+	if value, ok := muo.mutation.AddedState(); ok {
+		_spec.AddField(menu.FieldState, field.TypeInt32, value)
 	}
 	if value, ok := muo.mutation.Name(); ok {
 		_spec.SetField(menu.FieldName, field.TypeString, value)
 	}
-	if muo.mutation.NameCleared() {
-		_spec.ClearField(menu.FieldName, field.TypeString)
+	if value, ok := muo.mutation.Title(); ok {
+		_spec.SetField(menu.FieldTitle, field.TypeString, value)
+	}
+	if value, ok := muo.mutation.GetType(); ok {
+		_spec.SetField(menu.FieldType, field.TypeInt32, value)
+	}
+	if value, ok := muo.mutation.AddedType(); ok {
+		_spec.AddField(menu.FieldType, field.TypeInt32, value)
+	}
+	if value, ok := muo.mutation.Path(); ok {
+		_spec.SetField(menu.FieldPath, field.TypeString, value)
+	}
+	if value, ok := muo.mutation.Component(); ok {
+		_spec.SetField(menu.FieldComponent, field.TypeString, value)
+	}
+	if value, ok := muo.mutation.Icon(); ok {
+		_spec.SetField(menu.FieldIcon, field.TypeString, value)
+	}
+	if value, ok := muo.mutation.IsExt(); ok {
+		_spec.SetField(menu.FieldIsExt, field.TypeBool, value)
+	}
+	if value, ok := muo.mutation.ExtURL(); ok {
+		_spec.SetField(menu.FieldExtURL, field.TypeString, value)
+	}
+	if value, ok := muo.mutation.Permissions(); ok {
+		_spec.SetField(menu.FieldPermissions, field.TypeJSON, value)
+	}
+	if value, ok := muo.mutation.AppendedPermissions(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, menu.FieldPermissions, value)
+		})
+	}
+	if muo.mutation.PermissionsCleared() {
+		_spec.ClearField(menu.FieldPermissions, field.TypeJSON)
+	}
+	if value, ok := muo.mutation.Redirect(); ok {
+		_spec.SetField(menu.FieldRedirect, field.TypeString, value)
+	}
+	if value, ok := muo.mutation.CurrentActiveMenu(); ok {
+		_spec.SetField(menu.FieldCurrentActiveMenu, field.TypeString, value)
+	}
+	if value, ok := muo.mutation.KeepAlive(); ok {
+		_spec.SetField(menu.FieldKeepAlive, field.TypeBool, value)
+	}
+	if value, ok := muo.mutation.Visible(); ok {
+		_spec.SetField(menu.FieldVisible, field.TypeBool, value)
+	}
+	if value, ok := muo.mutation.HideTab(); ok {
+		_spec.SetField(menu.FieldHideTab, field.TypeBool, value)
+	}
+	if value, ok := muo.mutation.HideMenu(); ok {
+		_spec.SetField(menu.FieldHideMenu, field.TypeBool, value)
+	}
+	if value, ok := muo.mutation.HideBreadcrumb(); ok {
+		_spec.SetField(menu.FieldHideBreadcrumb, field.TypeBool, value)
+	}
+	if muo.mutation.ParentCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   menu.ParentTable,
+			Columns: []string{menu.ParentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeUint32),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := muo.mutation.ParentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   menu.ParentTable,
+			Columns: []string{menu.ParentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if muo.mutation.ChildrenCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   menu.ChildrenTable,
+			Columns: []string{menu.ChildrenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeUint32),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := muo.mutation.RemovedChildrenIDs(); len(nodes) > 0 && !muo.mutation.ChildrenCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   menu.ChildrenTable,
+			Columns: []string{menu.ChildrenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := muo.mutation.ChildrenIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   menu.ChildrenTable,
+			Columns: []string{menu.ChildrenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_spec.AddModifiers(muo.modifiers...)
 	_node = &Menu{config: muo.config}

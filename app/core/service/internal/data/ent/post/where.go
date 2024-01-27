@@ -69,9 +69,19 @@ func DeletedAt(v time.Time) predicate.Post {
 	return predicate.Post(sql.FieldEQ(FieldDeletedAt, v))
 }
 
-// PlatformID applies equality check predicate on the "platform_id" field. It's identical to PlatformIDEQ.
-func PlatformID(v uint64) predicate.Post {
-	return predicate.Post(sql.FieldEQ(FieldPlatformID, v))
+// Remark applies equality check predicate on the "remark" field. It's identical to RemarkEQ.
+func Remark(v string) predicate.Post {
+	return predicate.Post(sql.FieldEQ(FieldRemark, v))
+}
+
+// Sort applies equality check predicate on the "sort" field. It's identical to SortEQ.
+func Sort(v int32) predicate.Post {
+	return predicate.Post(sql.FieldEQ(FieldSort, v))
+}
+
+// State applies equality check predicate on the "state" field. It's identical to StateEQ.
+func State(v int32) predicate.Post {
+	return predicate.Post(sql.FieldEQ(FieldState, v))
 }
 
 // Name applies equality check predicate on the "name" field. It's identical to NameEQ.
@@ -229,44 +239,159 @@ func DeletedAtNotNil() predicate.Post {
 	return predicate.Post(sql.FieldNotNull(FieldDeletedAt))
 }
 
-// PlatformIDEQ applies the EQ predicate on the "platform_id" field.
-func PlatformIDEQ(v uint64) predicate.Post {
-	return predicate.Post(sql.FieldEQ(FieldPlatformID, v))
+// RemarkEQ applies the EQ predicate on the "remark" field.
+func RemarkEQ(v string) predicate.Post {
+	return predicate.Post(sql.FieldEQ(FieldRemark, v))
 }
 
-// PlatformIDNEQ applies the NEQ predicate on the "platform_id" field.
-func PlatformIDNEQ(v uint64) predicate.Post {
-	return predicate.Post(sql.FieldNEQ(FieldPlatformID, v))
+// RemarkNEQ applies the NEQ predicate on the "remark" field.
+func RemarkNEQ(v string) predicate.Post {
+	return predicate.Post(sql.FieldNEQ(FieldRemark, v))
 }
 
-// PlatformIDIn applies the In predicate on the "platform_id" field.
-func PlatformIDIn(vs ...uint64) predicate.Post {
-	return predicate.Post(sql.FieldIn(FieldPlatformID, vs...))
+// RemarkIn applies the In predicate on the "remark" field.
+func RemarkIn(vs ...string) predicate.Post {
+	return predicate.Post(sql.FieldIn(FieldRemark, vs...))
 }
 
-// PlatformIDNotIn applies the NotIn predicate on the "platform_id" field.
-func PlatformIDNotIn(vs ...uint64) predicate.Post {
-	return predicate.Post(sql.FieldNotIn(FieldPlatformID, vs...))
+// RemarkNotIn applies the NotIn predicate on the "remark" field.
+func RemarkNotIn(vs ...string) predicate.Post {
+	return predicate.Post(sql.FieldNotIn(FieldRemark, vs...))
 }
 
-// PlatformIDGT applies the GT predicate on the "platform_id" field.
-func PlatformIDGT(v uint64) predicate.Post {
-	return predicate.Post(sql.FieldGT(FieldPlatformID, v))
+// RemarkGT applies the GT predicate on the "remark" field.
+func RemarkGT(v string) predicate.Post {
+	return predicate.Post(sql.FieldGT(FieldRemark, v))
 }
 
-// PlatformIDGTE applies the GTE predicate on the "platform_id" field.
-func PlatformIDGTE(v uint64) predicate.Post {
-	return predicate.Post(sql.FieldGTE(FieldPlatformID, v))
+// RemarkGTE applies the GTE predicate on the "remark" field.
+func RemarkGTE(v string) predicate.Post {
+	return predicate.Post(sql.FieldGTE(FieldRemark, v))
 }
 
-// PlatformIDLT applies the LT predicate on the "platform_id" field.
-func PlatformIDLT(v uint64) predicate.Post {
-	return predicate.Post(sql.FieldLT(FieldPlatformID, v))
+// RemarkLT applies the LT predicate on the "remark" field.
+func RemarkLT(v string) predicate.Post {
+	return predicate.Post(sql.FieldLT(FieldRemark, v))
 }
 
-// PlatformIDLTE applies the LTE predicate on the "platform_id" field.
-func PlatformIDLTE(v uint64) predicate.Post {
-	return predicate.Post(sql.FieldLTE(FieldPlatformID, v))
+// RemarkLTE applies the LTE predicate on the "remark" field.
+func RemarkLTE(v string) predicate.Post {
+	return predicate.Post(sql.FieldLTE(FieldRemark, v))
+}
+
+// RemarkContains applies the Contains predicate on the "remark" field.
+func RemarkContains(v string) predicate.Post {
+	return predicate.Post(sql.FieldContains(FieldRemark, v))
+}
+
+// RemarkHasPrefix applies the HasPrefix predicate on the "remark" field.
+func RemarkHasPrefix(v string) predicate.Post {
+	return predicate.Post(sql.FieldHasPrefix(FieldRemark, v))
+}
+
+// RemarkHasSuffix applies the HasSuffix predicate on the "remark" field.
+func RemarkHasSuffix(v string) predicate.Post {
+	return predicate.Post(sql.FieldHasSuffix(FieldRemark, v))
+}
+
+// RemarkIsNil applies the IsNil predicate on the "remark" field.
+func RemarkIsNil() predicate.Post {
+	return predicate.Post(sql.FieldIsNull(FieldRemark))
+}
+
+// RemarkNotNil applies the NotNil predicate on the "remark" field.
+func RemarkNotNil() predicate.Post {
+	return predicate.Post(sql.FieldNotNull(FieldRemark))
+}
+
+// RemarkEqualFold applies the EqualFold predicate on the "remark" field.
+func RemarkEqualFold(v string) predicate.Post {
+	return predicate.Post(sql.FieldEqualFold(FieldRemark, v))
+}
+
+// RemarkContainsFold applies the ContainsFold predicate on the "remark" field.
+func RemarkContainsFold(v string) predicate.Post {
+	return predicate.Post(sql.FieldContainsFold(FieldRemark, v))
+}
+
+// SortEQ applies the EQ predicate on the "sort" field.
+func SortEQ(v int32) predicate.Post {
+	return predicate.Post(sql.FieldEQ(FieldSort, v))
+}
+
+// SortNEQ applies the NEQ predicate on the "sort" field.
+func SortNEQ(v int32) predicate.Post {
+	return predicate.Post(sql.FieldNEQ(FieldSort, v))
+}
+
+// SortIn applies the In predicate on the "sort" field.
+func SortIn(vs ...int32) predicate.Post {
+	return predicate.Post(sql.FieldIn(FieldSort, vs...))
+}
+
+// SortNotIn applies the NotIn predicate on the "sort" field.
+func SortNotIn(vs ...int32) predicate.Post {
+	return predicate.Post(sql.FieldNotIn(FieldSort, vs...))
+}
+
+// SortGT applies the GT predicate on the "sort" field.
+func SortGT(v int32) predicate.Post {
+	return predicate.Post(sql.FieldGT(FieldSort, v))
+}
+
+// SortGTE applies the GTE predicate on the "sort" field.
+func SortGTE(v int32) predicate.Post {
+	return predicate.Post(sql.FieldGTE(FieldSort, v))
+}
+
+// SortLT applies the LT predicate on the "sort" field.
+func SortLT(v int32) predicate.Post {
+	return predicate.Post(sql.FieldLT(FieldSort, v))
+}
+
+// SortLTE applies the LTE predicate on the "sort" field.
+func SortLTE(v int32) predicate.Post {
+	return predicate.Post(sql.FieldLTE(FieldSort, v))
+}
+
+// StateEQ applies the EQ predicate on the "state" field.
+func StateEQ(v int32) predicate.Post {
+	return predicate.Post(sql.FieldEQ(FieldState, v))
+}
+
+// StateNEQ applies the NEQ predicate on the "state" field.
+func StateNEQ(v int32) predicate.Post {
+	return predicate.Post(sql.FieldNEQ(FieldState, v))
+}
+
+// StateIn applies the In predicate on the "state" field.
+func StateIn(vs ...int32) predicate.Post {
+	return predicate.Post(sql.FieldIn(FieldState, vs...))
+}
+
+// StateNotIn applies the NotIn predicate on the "state" field.
+func StateNotIn(vs ...int32) predicate.Post {
+	return predicate.Post(sql.FieldNotIn(FieldState, vs...))
+}
+
+// StateGT applies the GT predicate on the "state" field.
+func StateGT(v int32) predicate.Post {
+	return predicate.Post(sql.FieldGT(FieldState, v))
+}
+
+// StateGTE applies the GTE predicate on the "state" field.
+func StateGTE(v int32) predicate.Post {
+	return predicate.Post(sql.FieldGTE(FieldState, v))
+}
+
+// StateLT applies the LT predicate on the "state" field.
+func StateLT(v int32) predicate.Post {
+	return predicate.Post(sql.FieldLT(FieldState, v))
+}
+
+// StateLTE applies the LTE predicate on the "state" field.
+func StateLTE(v int32) predicate.Post {
+	return predicate.Post(sql.FieldLTE(FieldState, v))
 }
 
 // NameEQ applies the EQ predicate on the "name" field.

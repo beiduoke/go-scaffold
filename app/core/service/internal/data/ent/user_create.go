@@ -11,6 +11,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/post"
+	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/role"
 	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/user"
 )
 
@@ -64,16 +66,44 @@ func (uc *UserCreate) SetNillableDeletedAt(t *time.Time) *UserCreate {
 	return uc
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (uc *UserCreate) SetPlatformID(u uint64) *UserCreate {
-	uc.mutation.SetPlatformID(u)
+// SetRemark sets the "remark" field.
+func (uc *UserCreate) SetRemark(s string) *UserCreate {
+	uc.mutation.SetRemark(s)
 	return uc
 }
 
-// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
-func (uc *UserCreate) SetNillablePlatformID(u *uint64) *UserCreate {
-	if u != nil {
-		uc.SetPlatformID(*u)
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (uc *UserCreate) SetNillableRemark(s *string) *UserCreate {
+	if s != nil {
+		uc.SetRemark(*s)
+	}
+	return uc
+}
+
+// SetSort sets the "sort" field.
+func (uc *UserCreate) SetSort(i int32) *UserCreate {
+	uc.mutation.SetSort(i)
+	return uc
+}
+
+// SetNillableSort sets the "sort" field if the given value is not nil.
+func (uc *UserCreate) SetNillableSort(i *int32) *UserCreate {
+	if i != nil {
+		uc.SetSort(*i)
+	}
+	return uc
+}
+
+// SetState sets the "state" field.
+func (uc *UserCreate) SetState(i int32) *UserCreate {
+	uc.mutation.SetState(i)
+	return uc
+}
+
+// SetNillableState sets the "state" field if the given value is not nil.
+func (uc *UserCreate) SetNillableState(i *int32) *UserCreate {
+	if i != nil {
+		uc.SetState(*i)
 	}
 	return uc
 }
@@ -81,14 +111,6 @@ func (uc *UserCreate) SetNillablePlatformID(u *uint64) *UserCreate {
 // SetUsername sets the "username" field.
 func (uc *UserCreate) SetUsername(s string) *UserCreate {
 	uc.mutation.SetUsername(s)
-	return uc
-}
-
-// SetNillableUsername sets the "username" field if the given value is not nil.
-func (uc *UserCreate) SetNillableUsername(s *string) *UserCreate {
-	if s != nil {
-		uc.SetUsername(*s)
-	}
 	return uc
 }
 
@@ -123,14 +145,6 @@ func (uc *UserCreate) SetNillableNickname(s *string) *UserCreate {
 // SetPhone sets the "phone" field.
 func (uc *UserCreate) SetPhone(s string) *UserCreate {
 	uc.mutation.SetPhone(s)
-	return uc
-}
-
-// SetNillablePhone sets the "phone" field if the given value is not nil.
-func (uc *UserCreate) SetNillablePhone(s *string) *UserCreate {
-	if s != nil {
-		uc.SetPhone(*s)
-	}
 	return uc
 }
 
@@ -177,31 +191,53 @@ func (uc *UserCreate) SetNillableDescription(s *string) *UserCreate {
 }
 
 // SetAuthority sets the "authority" field.
-func (uc *UserCreate) SetAuthority(u user.Authority) *UserCreate {
-	uc.mutation.SetAuthority(u)
+func (uc *UserCreate) SetAuthority(i int8) *UserCreate {
+	uc.mutation.SetAuthority(i)
 	return uc
 }
 
 // SetNillableAuthority sets the "authority" field if the given value is not nil.
-func (uc *UserCreate) SetNillableAuthority(u *user.Authority) *UserCreate {
-	if u != nil {
-		uc.SetAuthority(*u)
+func (uc *UserCreate) SetNillableAuthority(i *int8) *UserCreate {
+	if i != nil {
+		uc.SetAuthority(*i)
 	}
 	return uc
 }
 
 // SetID sets the "id" field.
-func (uc *UserCreate) SetID(u uint64) *UserCreate {
+func (uc *UserCreate) SetID(u uint32) *UserCreate {
 	uc.mutation.SetID(u)
 	return uc
 }
 
-// SetNillableID sets the "id" field if the given value is not nil.
-func (uc *UserCreate) SetNillableID(u *uint64) *UserCreate {
-	if u != nil {
-		uc.SetID(*u)
-	}
+// AddRoleIDs adds the "roles" edge to the Role entity by IDs.
+func (uc *UserCreate) AddRoleIDs(ids ...uint32) *UserCreate {
+	uc.mutation.AddRoleIDs(ids...)
 	return uc
+}
+
+// AddRoles adds the "roles" edges to the Role entity.
+func (uc *UserCreate) AddRoles(r ...*Role) *UserCreate {
+	ids := make([]uint32, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return uc.AddRoleIDs(ids...)
+}
+
+// AddPostIDs adds the "posts" edge to the Post entity by IDs.
+func (uc *UserCreate) AddPostIDs(ids ...uint32) *UserCreate {
+	uc.mutation.AddPostIDs(ids...)
+	return uc
+}
+
+// AddPosts adds the "posts" edges to the Post entity.
+func (uc *UserCreate) AddPosts(p ...*Post) *UserCreate {
+	ids := make([]uint32, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return uc.AddPostIDs(ids...)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -239,68 +275,116 @@ func (uc *UserCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (uc *UserCreate) defaults() {
-	if _, ok := uc.mutation.PlatformID(); !ok {
-		v := user.DefaultPlatformID()
-		uc.mutation.SetPlatformID(v)
+	if _, ok := uc.mutation.Remark(); !ok {
+		v := user.DefaultRemark
+		uc.mutation.SetRemark(v)
+	}
+	if _, ok := uc.mutation.Sort(); !ok {
+		v := user.DefaultSort
+		uc.mutation.SetSort(v)
+	}
+	if _, ok := uc.mutation.State(); !ok {
+		v := user.DefaultState
+		uc.mutation.SetState(v)
+	}
+	if _, ok := uc.mutation.Password(); !ok {
+		v := user.DefaultPassword
+		uc.mutation.SetPassword(v)
+	}
+	if _, ok := uc.mutation.Nickname(); !ok {
+		v := user.DefaultNickname
+		uc.mutation.SetNickname(v)
+	}
+	if _, ok := uc.mutation.Email(); !ok {
+		v := user.DefaultEmail
+		uc.mutation.SetEmail(v)
+	}
+	if _, ok := uc.mutation.Avatar(); !ok {
+		v := user.DefaultAvatar
+		uc.mutation.SetAvatar(v)
+	}
+	if _, ok := uc.mutation.Description(); !ok {
+		v := user.DefaultDescription
+		uc.mutation.SetDescription(v)
 	}
 	if _, ok := uc.mutation.Authority(); !ok {
 		v := user.DefaultAuthority
 		uc.mutation.SetAuthority(v)
 	}
-	if _, ok := uc.mutation.ID(); !ok {
-		v := user.DefaultID()
-		uc.mutation.SetID(v)
-	}
 }
 
 // check runs all checks and user-defined validators on the builder.
 func (uc *UserCreate) check() error {
-	if _, ok := uc.mutation.PlatformID(); !ok {
-		return &ValidationError{Name: "platform_id", err: errors.New(`ent: missing required field "User.platform_id"`)}
+	if _, ok := uc.mutation.Sort(); !ok {
+		return &ValidationError{Name: "sort", err: errors.New(`ent: missing required field "User.sort"`)}
 	}
-	if v, ok := uc.mutation.PlatformID(); ok {
-		if err := user.PlatformIDValidator(v); err != nil {
-			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "User.platform_id": %w`, err)}
+	if v, ok := uc.mutation.Sort(); ok {
+		if err := user.SortValidator(v); err != nil {
+			return &ValidationError{Name: "sort", err: fmt.Errorf(`ent: validator failed for field "User.sort": %w`, err)}
 		}
+	}
+	if _, ok := uc.mutation.State(); !ok {
+		return &ValidationError{Name: "state", err: errors.New(`ent: missing required field "User.state"`)}
+	}
+	if v, ok := uc.mutation.State(); ok {
+		if err := user.StateValidator(v); err != nil {
+			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "User.state": %w`, err)}
+		}
+	}
+	if _, ok := uc.mutation.Username(); !ok {
+		return &ValidationError{Name: "username", err: errors.New(`ent: missing required field "User.username"`)}
 	}
 	if v, ok := uc.mutation.Username(); ok {
 		if err := user.UsernameValidator(v); err != nil {
 			return &ValidationError{Name: "username", err: fmt.Errorf(`ent: validator failed for field "User.username": %w`, err)}
 		}
 	}
+	if _, ok := uc.mutation.Password(); !ok {
+		return &ValidationError{Name: "password", err: errors.New(`ent: missing required field "User.password"`)}
+	}
 	if v, ok := uc.mutation.Password(); ok {
 		if err := user.PasswordValidator(v); err != nil {
 			return &ValidationError{Name: "password", err: fmt.Errorf(`ent: validator failed for field "User.password": %w`, err)}
 		}
+	}
+	if _, ok := uc.mutation.Nickname(); !ok {
+		return &ValidationError{Name: "nickname", err: errors.New(`ent: missing required field "User.nickname"`)}
 	}
 	if v, ok := uc.mutation.Nickname(); ok {
 		if err := user.NicknameValidator(v); err != nil {
 			return &ValidationError{Name: "nickname", err: fmt.Errorf(`ent: validator failed for field "User.nickname": %w`, err)}
 		}
 	}
+	if _, ok := uc.mutation.Phone(); !ok {
+		return &ValidationError{Name: "phone", err: errors.New(`ent: missing required field "User.phone"`)}
+	}
 	if v, ok := uc.mutation.Phone(); ok {
 		if err := user.PhoneValidator(v); err != nil {
 			return &ValidationError{Name: "phone", err: fmt.Errorf(`ent: validator failed for field "User.phone": %w`, err)}
 		}
+	}
+	if _, ok := uc.mutation.Email(); !ok {
+		return &ValidationError{Name: "email", err: errors.New(`ent: missing required field "User.email"`)}
 	}
 	if v, ok := uc.mutation.Email(); ok {
 		if err := user.EmailValidator(v); err != nil {
 			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "User.email": %w`, err)}
 		}
 	}
+	if _, ok := uc.mutation.Avatar(); !ok {
+		return &ValidationError{Name: "avatar", err: errors.New(`ent: missing required field "User.avatar"`)}
+	}
 	if v, ok := uc.mutation.Avatar(); ok {
 		if err := user.AvatarValidator(v); err != nil {
 			return &ValidationError{Name: "avatar", err: fmt.Errorf(`ent: validator failed for field "User.avatar": %w`, err)}
 		}
 	}
+	if _, ok := uc.mutation.Description(); !ok {
+		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "User.description"`)}
+	}
 	if v, ok := uc.mutation.Description(); ok {
 		if err := user.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "User.description": %w`, err)}
-		}
-	}
-	if v, ok := uc.mutation.Authority(); ok {
-		if err := user.AuthorityValidator(v); err != nil {
-			return &ValidationError{Name: "authority", err: fmt.Errorf(`ent: validator failed for field "User.authority": %w`, err)}
 		}
 	}
 	if v, ok := uc.mutation.ID(); ok {
@@ -324,7 +408,7 @@ func (uc *UserCreate) sqlSave(ctx context.Context) (*User, error) {
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = uint64(id)
+		_node.ID = uint32(id)
 	}
 	uc.mutation.id = &_node.ID
 	uc.mutation.done = true
@@ -334,7 +418,7 @@ func (uc *UserCreate) sqlSave(ctx context.Context) (*User, error) {
 func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	var (
 		_node = &User{config: uc.config}
-		_spec = sqlgraph.NewCreateSpec(user.Table, sqlgraph.NewFieldSpec(user.FieldID, field.TypeUint64))
+		_spec = sqlgraph.NewCreateSpec(user.Table, sqlgraph.NewFieldSpec(user.FieldID, field.TypeUint32))
 	)
 	_spec.OnConflict = uc.conflict
 	if id, ok := uc.mutation.ID(); ok {
@@ -353,41 +437,81 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.SetField(user.FieldDeletedAt, field.TypeTime, value)
 		_node.DeletedAt = &value
 	}
-	if value, ok := uc.mutation.PlatformID(); ok {
-		_spec.SetField(user.FieldPlatformID, field.TypeUint64, value)
-		_node.PlatformID = value
+	if value, ok := uc.mutation.Remark(); ok {
+		_spec.SetField(user.FieldRemark, field.TypeString, value)
+		_node.Remark = &value
+	}
+	if value, ok := uc.mutation.Sort(); ok {
+		_spec.SetField(user.FieldSort, field.TypeInt32, value)
+		_node.Sort = &value
+	}
+	if value, ok := uc.mutation.State(); ok {
+		_spec.SetField(user.FieldState, field.TypeInt32, value)
+		_node.State = &value
 	}
 	if value, ok := uc.mutation.Username(); ok {
 		_spec.SetField(user.FieldUsername, field.TypeString, value)
-		_node.Username = &value
+		_node.Username = value
 	}
 	if value, ok := uc.mutation.Password(); ok {
 		_spec.SetField(user.FieldPassword, field.TypeString, value)
-		_node.Password = &value
+		_node.Password = value
 	}
 	if value, ok := uc.mutation.Nickname(); ok {
 		_spec.SetField(user.FieldNickname, field.TypeString, value)
-		_node.Nickname = &value
+		_node.Nickname = value
 	}
 	if value, ok := uc.mutation.Phone(); ok {
 		_spec.SetField(user.FieldPhone, field.TypeString, value)
-		_node.Phone = &value
+		_node.Phone = value
 	}
 	if value, ok := uc.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
-		_node.Email = &value
+		_node.Email = value
 	}
 	if value, ok := uc.mutation.Avatar(); ok {
 		_spec.SetField(user.FieldAvatar, field.TypeString, value)
-		_node.Avatar = &value
+		_node.Avatar = value
 	}
 	if value, ok := uc.mutation.Description(); ok {
 		_spec.SetField(user.FieldDescription, field.TypeString, value)
-		_node.Description = &value
+		_node.Description = value
 	}
 	if value, ok := uc.mutation.Authority(); ok {
-		_spec.SetField(user.FieldAuthority, field.TypeEnum, value)
-		_node.Authority = &value
+		_spec.SetField(user.FieldAuthority, field.TypeInt8, value)
+		_node.Authority = value
+	}
+	if nodes := uc.mutation.RolesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.RolesTable,
+			Columns: user.RolesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := uc.mutation.PostsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.PostsTable,
+			Columns: []string{user.PostsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(post.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }
@@ -477,21 +601,57 @@ func (u *UserUpsert) ClearDeletedAt() *UserUpsert {
 	return u
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (u *UserUpsert) SetPlatformID(v uint64) *UserUpsert {
-	u.Set(user.FieldPlatformID, v)
+// SetRemark sets the "remark" field.
+func (u *UserUpsert) SetRemark(v string) *UserUpsert {
+	u.Set(user.FieldRemark, v)
 	return u
 }
 
-// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
-func (u *UserUpsert) UpdatePlatformID() *UserUpsert {
-	u.SetExcluded(user.FieldPlatformID)
+// UpdateRemark sets the "remark" field to the value that was provided on create.
+func (u *UserUpsert) UpdateRemark() *UserUpsert {
+	u.SetExcluded(user.FieldRemark)
 	return u
 }
 
-// AddPlatformID adds v to the "platform_id" field.
-func (u *UserUpsert) AddPlatformID(v uint64) *UserUpsert {
-	u.Add(user.FieldPlatformID, v)
+// ClearRemark clears the value of the "remark" field.
+func (u *UserUpsert) ClearRemark() *UserUpsert {
+	u.SetNull(user.FieldRemark)
+	return u
+}
+
+// SetSort sets the "sort" field.
+func (u *UserUpsert) SetSort(v int32) *UserUpsert {
+	u.Set(user.FieldSort, v)
+	return u
+}
+
+// UpdateSort sets the "sort" field to the value that was provided on create.
+func (u *UserUpsert) UpdateSort() *UserUpsert {
+	u.SetExcluded(user.FieldSort)
+	return u
+}
+
+// AddSort adds v to the "sort" field.
+func (u *UserUpsert) AddSort(v int32) *UserUpsert {
+	u.Add(user.FieldSort, v)
+	return u
+}
+
+// SetState sets the "state" field.
+func (u *UserUpsert) SetState(v int32) *UserUpsert {
+	u.Set(user.FieldState, v)
+	return u
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *UserUpsert) UpdateState() *UserUpsert {
+	u.SetExcluded(user.FieldState)
+	return u
+}
+
+// AddState adds v to the "state" field.
+func (u *UserUpsert) AddState(v int32) *UserUpsert {
+	u.Add(user.FieldState, v)
 	return u
 }
 
@@ -507,12 +667,6 @@ func (u *UserUpsert) UpdatePassword() *UserUpsert {
 	return u
 }
 
-// ClearPassword clears the value of the "password" field.
-func (u *UserUpsert) ClearPassword() *UserUpsert {
-	u.SetNull(user.FieldPassword)
-	return u
-}
-
 // SetNickname sets the "nickname" field.
 func (u *UserUpsert) SetNickname(v string) *UserUpsert {
 	u.Set(user.FieldNickname, v)
@@ -525,9 +679,15 @@ func (u *UserUpsert) UpdateNickname() *UserUpsert {
 	return u
 }
 
-// ClearNickname clears the value of the "nickname" field.
-func (u *UserUpsert) ClearNickname() *UserUpsert {
-	u.SetNull(user.FieldNickname)
+// SetPhone sets the "phone" field.
+func (u *UserUpsert) SetPhone(v string) *UserUpsert {
+	u.Set(user.FieldPhone, v)
+	return u
+}
+
+// UpdatePhone sets the "phone" field to the value that was provided on create.
+func (u *UserUpsert) UpdatePhone() *UserUpsert {
+	u.SetExcluded(user.FieldPhone)
 	return u
 }
 
@@ -543,12 +703,6 @@ func (u *UserUpsert) UpdateEmail() *UserUpsert {
 	return u
 }
 
-// ClearEmail clears the value of the "email" field.
-func (u *UserUpsert) ClearEmail() *UserUpsert {
-	u.SetNull(user.FieldEmail)
-	return u
-}
-
 // SetAvatar sets the "avatar" field.
 func (u *UserUpsert) SetAvatar(v string) *UserUpsert {
 	u.Set(user.FieldAvatar, v)
@@ -558,12 +712,6 @@ func (u *UserUpsert) SetAvatar(v string) *UserUpsert {
 // UpdateAvatar sets the "avatar" field to the value that was provided on create.
 func (u *UserUpsert) UpdateAvatar() *UserUpsert {
 	u.SetExcluded(user.FieldAvatar)
-	return u
-}
-
-// ClearAvatar clears the value of the "avatar" field.
-func (u *UserUpsert) ClearAvatar() *UserUpsert {
-	u.SetNull(user.FieldAvatar)
 	return u
 }
 
@@ -579,14 +727,8 @@ func (u *UserUpsert) UpdateDescription() *UserUpsert {
 	return u
 }
 
-// ClearDescription clears the value of the "description" field.
-func (u *UserUpsert) ClearDescription() *UserUpsert {
-	u.SetNull(user.FieldDescription)
-	return u
-}
-
 // SetAuthority sets the "authority" field.
-func (u *UserUpsert) SetAuthority(v user.Authority) *UserUpsert {
+func (u *UserUpsert) SetAuthority(v int8) *UserUpsert {
 	u.Set(user.FieldAuthority, v)
 	return u
 }
@@ -594,6 +736,12 @@ func (u *UserUpsert) SetAuthority(v user.Authority) *UserUpsert {
 // UpdateAuthority sets the "authority" field to the value that was provided on create.
 func (u *UserUpsert) UpdateAuthority() *UserUpsert {
 	u.SetExcluded(user.FieldAuthority)
+	return u
+}
+
+// AddAuthority adds v to the "authority" field.
+func (u *UserUpsert) AddAuthority(v int8) *UserUpsert {
+	u.Add(user.FieldAuthority, v)
 	return u
 }
 
@@ -625,9 +773,6 @@ func (u *UserUpsertOne) UpdateNewValues() *UserUpsertOne {
 		}
 		if _, exists := u.create.mutation.Username(); exists {
 			s.SetIgnore(user.FieldUsername)
-		}
-		if _, exists := u.create.mutation.Phone(); exists {
-			s.SetIgnore(user.FieldPhone)
 		}
 	}))
 	return u
@@ -702,24 +847,66 @@ func (u *UserUpsertOne) ClearDeletedAt() *UserUpsertOne {
 	})
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (u *UserUpsertOne) SetPlatformID(v uint64) *UserUpsertOne {
+// SetRemark sets the "remark" field.
+func (u *UserUpsertOne) SetRemark(v string) *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
-		s.SetPlatformID(v)
+		s.SetRemark(v)
 	})
 }
 
-// AddPlatformID adds v to the "platform_id" field.
-func (u *UserUpsertOne) AddPlatformID(v uint64) *UserUpsertOne {
+// UpdateRemark sets the "remark" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateRemark() *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
-		s.AddPlatformID(v)
+		s.UpdateRemark()
 	})
 }
 
-// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
-func (u *UserUpsertOne) UpdatePlatformID() *UserUpsertOne {
+// ClearRemark clears the value of the "remark" field.
+func (u *UserUpsertOne) ClearRemark() *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
-		s.UpdatePlatformID()
+		s.ClearRemark()
+	})
+}
+
+// SetSort sets the "sort" field.
+func (u *UserUpsertOne) SetSort(v int32) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetSort(v)
+	})
+}
+
+// AddSort adds v to the "sort" field.
+func (u *UserUpsertOne) AddSort(v int32) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.AddSort(v)
+	})
+}
+
+// UpdateSort sets the "sort" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateSort() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateSort()
+	})
+}
+
+// SetState sets the "state" field.
+func (u *UserUpsertOne) SetState(v int32) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetState(v)
+	})
+}
+
+// AddState adds v to the "state" field.
+func (u *UserUpsertOne) AddState(v int32) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.AddState(v)
+	})
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateState() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateState()
 	})
 }
 
@@ -737,13 +924,6 @@ func (u *UserUpsertOne) UpdatePassword() *UserUpsertOne {
 	})
 }
 
-// ClearPassword clears the value of the "password" field.
-func (u *UserUpsertOne) ClearPassword() *UserUpsertOne {
-	return u.Update(func(s *UserUpsert) {
-		s.ClearPassword()
-	})
-}
-
 // SetNickname sets the "nickname" field.
 func (u *UserUpsertOne) SetNickname(v string) *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
@@ -758,10 +938,17 @@ func (u *UserUpsertOne) UpdateNickname() *UserUpsertOne {
 	})
 }
 
-// ClearNickname clears the value of the "nickname" field.
-func (u *UserUpsertOne) ClearNickname() *UserUpsertOne {
+// SetPhone sets the "phone" field.
+func (u *UserUpsertOne) SetPhone(v string) *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
-		s.ClearNickname()
+		s.SetPhone(v)
+	})
+}
+
+// UpdatePhone sets the "phone" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdatePhone() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdatePhone()
 	})
 }
 
@@ -779,13 +966,6 @@ func (u *UserUpsertOne) UpdateEmail() *UserUpsertOne {
 	})
 }
 
-// ClearEmail clears the value of the "email" field.
-func (u *UserUpsertOne) ClearEmail() *UserUpsertOne {
-	return u.Update(func(s *UserUpsert) {
-		s.ClearEmail()
-	})
-}
-
 // SetAvatar sets the "avatar" field.
 func (u *UserUpsertOne) SetAvatar(v string) *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
@@ -797,13 +977,6 @@ func (u *UserUpsertOne) SetAvatar(v string) *UserUpsertOne {
 func (u *UserUpsertOne) UpdateAvatar() *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
 		s.UpdateAvatar()
-	})
-}
-
-// ClearAvatar clears the value of the "avatar" field.
-func (u *UserUpsertOne) ClearAvatar() *UserUpsertOne {
-	return u.Update(func(s *UserUpsert) {
-		s.ClearAvatar()
 	})
 }
 
@@ -821,17 +994,17 @@ func (u *UserUpsertOne) UpdateDescription() *UserUpsertOne {
 	})
 }
 
-// ClearDescription clears the value of the "description" field.
-func (u *UserUpsertOne) ClearDescription() *UserUpsertOne {
+// SetAuthority sets the "authority" field.
+func (u *UserUpsertOne) SetAuthority(v int8) *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
-		s.ClearDescription()
+		s.SetAuthority(v)
 	})
 }
 
-// SetAuthority sets the "authority" field.
-func (u *UserUpsertOne) SetAuthority(v user.Authority) *UserUpsertOne {
+// AddAuthority adds v to the "authority" field.
+func (u *UserUpsertOne) AddAuthority(v int8) *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
-		s.SetAuthority(v)
+		s.AddAuthority(v)
 	})
 }
 
@@ -865,7 +1038,7 @@ func (u *UserUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *UserUpsertOne) ID(ctx context.Context) (id uint64, err error) {
+func (u *UserUpsertOne) ID(ctx context.Context) (id uint32, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -874,7 +1047,7 @@ func (u *UserUpsertOne) ID(ctx context.Context) (id uint64, err error) {
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *UserUpsertOne) IDX(ctx context.Context) uint64 {
+func (u *UserUpsertOne) IDX(ctx context.Context) uint32 {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -931,7 +1104,7 @@ func (ucb *UserCreateBulk) Save(ctx context.Context) ([]*User, error) {
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = uint64(id)
+					nodes[i].ID = uint32(id)
 				}
 				mutation.done = true
 				return nodes[i], nil
@@ -1037,9 +1210,6 @@ func (u *UserUpsertBulk) UpdateNewValues() *UserUpsertBulk {
 			if _, exists := b.mutation.Username(); exists {
 				s.SetIgnore(user.FieldUsername)
 			}
-			if _, exists := b.mutation.Phone(); exists {
-				s.SetIgnore(user.FieldPhone)
-			}
 		}
 	}))
 	return u
@@ -1114,24 +1284,66 @@ func (u *UserUpsertBulk) ClearDeletedAt() *UserUpsertBulk {
 	})
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (u *UserUpsertBulk) SetPlatformID(v uint64) *UserUpsertBulk {
+// SetRemark sets the "remark" field.
+func (u *UserUpsertBulk) SetRemark(v string) *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
-		s.SetPlatformID(v)
+		s.SetRemark(v)
 	})
 }
 
-// AddPlatformID adds v to the "platform_id" field.
-func (u *UserUpsertBulk) AddPlatformID(v uint64) *UserUpsertBulk {
+// UpdateRemark sets the "remark" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateRemark() *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
-		s.AddPlatformID(v)
+		s.UpdateRemark()
 	})
 }
 
-// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
-func (u *UserUpsertBulk) UpdatePlatformID() *UserUpsertBulk {
+// ClearRemark clears the value of the "remark" field.
+func (u *UserUpsertBulk) ClearRemark() *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
-		s.UpdatePlatformID()
+		s.ClearRemark()
+	})
+}
+
+// SetSort sets the "sort" field.
+func (u *UserUpsertBulk) SetSort(v int32) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetSort(v)
+	})
+}
+
+// AddSort adds v to the "sort" field.
+func (u *UserUpsertBulk) AddSort(v int32) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.AddSort(v)
+	})
+}
+
+// UpdateSort sets the "sort" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateSort() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateSort()
+	})
+}
+
+// SetState sets the "state" field.
+func (u *UserUpsertBulk) SetState(v int32) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetState(v)
+	})
+}
+
+// AddState adds v to the "state" field.
+func (u *UserUpsertBulk) AddState(v int32) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.AddState(v)
+	})
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateState() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateState()
 	})
 }
 
@@ -1149,13 +1361,6 @@ func (u *UserUpsertBulk) UpdatePassword() *UserUpsertBulk {
 	})
 }
 
-// ClearPassword clears the value of the "password" field.
-func (u *UserUpsertBulk) ClearPassword() *UserUpsertBulk {
-	return u.Update(func(s *UserUpsert) {
-		s.ClearPassword()
-	})
-}
-
 // SetNickname sets the "nickname" field.
 func (u *UserUpsertBulk) SetNickname(v string) *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
@@ -1170,10 +1375,17 @@ func (u *UserUpsertBulk) UpdateNickname() *UserUpsertBulk {
 	})
 }
 
-// ClearNickname clears the value of the "nickname" field.
-func (u *UserUpsertBulk) ClearNickname() *UserUpsertBulk {
+// SetPhone sets the "phone" field.
+func (u *UserUpsertBulk) SetPhone(v string) *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
-		s.ClearNickname()
+		s.SetPhone(v)
+	})
+}
+
+// UpdatePhone sets the "phone" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdatePhone() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdatePhone()
 	})
 }
 
@@ -1191,13 +1403,6 @@ func (u *UserUpsertBulk) UpdateEmail() *UserUpsertBulk {
 	})
 }
 
-// ClearEmail clears the value of the "email" field.
-func (u *UserUpsertBulk) ClearEmail() *UserUpsertBulk {
-	return u.Update(func(s *UserUpsert) {
-		s.ClearEmail()
-	})
-}
-
 // SetAvatar sets the "avatar" field.
 func (u *UserUpsertBulk) SetAvatar(v string) *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
@@ -1209,13 +1414,6 @@ func (u *UserUpsertBulk) SetAvatar(v string) *UserUpsertBulk {
 func (u *UserUpsertBulk) UpdateAvatar() *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
 		s.UpdateAvatar()
-	})
-}
-
-// ClearAvatar clears the value of the "avatar" field.
-func (u *UserUpsertBulk) ClearAvatar() *UserUpsertBulk {
-	return u.Update(func(s *UserUpsert) {
-		s.ClearAvatar()
 	})
 }
 
@@ -1233,17 +1431,17 @@ func (u *UserUpsertBulk) UpdateDescription() *UserUpsertBulk {
 	})
 }
 
-// ClearDescription clears the value of the "description" field.
-func (u *UserUpsertBulk) ClearDescription() *UserUpsertBulk {
+// SetAuthority sets the "authority" field.
+func (u *UserUpsertBulk) SetAuthority(v int8) *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
-		s.ClearDescription()
+		s.SetAuthority(v)
 	})
 }
 
-// SetAuthority sets the "authority" field.
-func (u *UserUpsertBulk) SetAuthority(v user.Authority) *UserUpsertBulk {
+// AddAuthority adds v to the "authority" field.
+func (u *UserUpsertBulk) AddAuthority(v int8) *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
-		s.SetAuthority(v)
+		s.AddAuthority(v)
 	})
 }
 

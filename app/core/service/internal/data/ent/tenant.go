@@ -9,11 +9,11 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/role"
+	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/tenant"
 )
 
-// 角色表
-type Role struct {
+// 租户表
+type Tenant struct {
 	config `json:"-"`
 	// ID of the ent.
 	// id
@@ -30,42 +30,21 @@ type Role struct {
 	Sort *int32 `json:"sort,omitempty"`
 	// 状态
 	State *int32 `json:"state,omitempty"`
-	// 名称
-	Name *string `json:"name,omitempty"`
-	// Edges holds the relations/edges for other nodes in the graph.
-	// The values are being populated by the RoleQuery when eager-loading is set.
-	Edges        RoleEdges `json:"edges"`
+	// Name holds the value of the "name" field.
+	Name         string `json:"name,omitempty"`
 	selectValues sql.SelectValues
 }
 
-// RoleEdges holds the relations/edges for other nodes in the graph.
-type RoleEdges struct {
-	// Users holds the value of the users edge.
-	Users []*User `json:"users,omitempty"`
-	// loadedTypes holds the information for reporting if a
-	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
-}
-
-// UsersOrErr returns the Users value or an error if the edge
-// was not loaded in eager-loading.
-func (e RoleEdges) UsersOrErr() ([]*User, error) {
-	if e.loadedTypes[0] {
-		return e.Users, nil
-	}
-	return nil, &NotLoadedError{edge: "users"}
-}
-
 // scanValues returns the types for scanning values from sql.Rows.
-func (*Role) scanValues(columns []string) ([]any, error) {
+func (*Tenant) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case role.FieldID, role.FieldSort, role.FieldState:
+		case tenant.FieldID, tenant.FieldSort, tenant.FieldState:
 			values[i] = new(sql.NullInt64)
-		case role.FieldRemark, role.FieldName:
+		case tenant.FieldRemark, tenant.FieldName:
 			values[i] = new(sql.NullString)
-		case role.FieldCreatedAt, role.FieldUpdatedAt, role.FieldDeletedAt:
+		case tenant.FieldCreatedAt, tenant.FieldUpdatedAt, tenant.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -75,146 +54,138 @@ func (*Role) scanValues(columns []string) ([]any, error) {
 }
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
-// to the Role fields.
-func (r *Role) assignValues(columns []string, values []any) error {
+// to the Tenant fields.
+func (t *Tenant) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
 	for i := range columns {
 		switch columns[i] {
-		case role.FieldID:
+		case tenant.FieldID:
 			value, ok := values[i].(*sql.NullInt64)
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			r.ID = uint32(value.Int64)
-		case role.FieldCreatedAt:
+			t.ID = uint32(value.Int64)
+		case tenant.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
-				r.CreatedAt = new(time.Time)
-				*r.CreatedAt = value.Time
+				t.CreatedAt = new(time.Time)
+				*t.CreatedAt = value.Time
 			}
-		case role.FieldUpdatedAt:
+		case tenant.FieldUpdatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
-				r.UpdatedAt = new(time.Time)
-				*r.UpdatedAt = value.Time
+				t.UpdatedAt = new(time.Time)
+				*t.UpdatedAt = value.Time
 			}
-		case role.FieldDeletedAt:
+		case tenant.FieldDeletedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
 			} else if value.Valid {
-				r.DeletedAt = new(time.Time)
-				*r.DeletedAt = value.Time
+				t.DeletedAt = new(time.Time)
+				*t.DeletedAt = value.Time
 			}
-		case role.FieldRemark:
+		case tenant.FieldRemark:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field remark", values[i])
 			} else if value.Valid {
-				r.Remark = new(string)
-				*r.Remark = value.String
+				t.Remark = new(string)
+				*t.Remark = value.String
 			}
-		case role.FieldSort:
+		case tenant.FieldSort:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field sort", values[i])
 			} else if value.Valid {
-				r.Sort = new(int32)
-				*r.Sort = int32(value.Int64)
+				t.Sort = new(int32)
+				*t.Sort = int32(value.Int64)
 			}
-		case role.FieldState:
+		case tenant.FieldState:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field state", values[i])
 			} else if value.Valid {
-				r.State = new(int32)
-				*r.State = int32(value.Int64)
+				t.State = new(int32)
+				*t.State = int32(value.Int64)
 			}
-		case role.FieldName:
+		case tenant.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
-				r.Name = new(string)
-				*r.Name = value.String
+				t.Name = value.String
 			}
 		default:
-			r.selectValues.Set(columns[i], values[i])
+			t.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
 }
 
-// Value returns the ent.Value that was dynamically selected and assigned to the Role.
+// Value returns the ent.Value that was dynamically selected and assigned to the Tenant.
 // This includes values selected through modifiers, order, etc.
-func (r *Role) Value(name string) (ent.Value, error) {
-	return r.selectValues.Get(name)
+func (t *Tenant) Value(name string) (ent.Value, error) {
+	return t.selectValues.Get(name)
 }
 
-// QueryUsers queries the "users" edge of the Role entity.
-func (r *Role) QueryUsers() *UserQuery {
-	return NewRoleClient(r.config).QueryUsers(r)
-}
-
-// Update returns a builder for updating this Role.
-// Note that you need to call Role.Unwrap() before calling this method if this Role
+// Update returns a builder for updating this Tenant.
+// Note that you need to call Tenant.Unwrap() before calling this method if this Tenant
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (r *Role) Update() *RoleUpdateOne {
-	return NewRoleClient(r.config).UpdateOne(r)
+func (t *Tenant) Update() *TenantUpdateOne {
+	return NewTenantClient(t.config).UpdateOne(t)
 }
 
-// Unwrap unwraps the Role entity that was returned from a transaction after it was closed,
+// Unwrap unwraps the Tenant entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (r *Role) Unwrap() *Role {
-	_tx, ok := r.config.driver.(*txDriver)
+func (t *Tenant) Unwrap() *Tenant {
+	_tx, ok := t.config.driver.(*txDriver)
 	if !ok {
-		panic("ent: Role is not a transactional entity")
+		panic("ent: Tenant is not a transactional entity")
 	}
-	r.config.driver = _tx.drv
-	return r
+	t.config.driver = _tx.drv
+	return t
 }
 
 // String implements the fmt.Stringer.
-func (r *Role) String() string {
+func (t *Tenant) String() string {
 	var builder strings.Builder
-	builder.WriteString("Role(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", r.ID))
-	if v := r.CreatedAt; v != nil {
+	builder.WriteString("Tenant(")
+	builder.WriteString(fmt.Sprintf("id=%v, ", t.ID))
+	if v := t.CreatedAt; v != nil {
 		builder.WriteString("created_at=")
 		builder.WriteString(v.Format(time.ANSIC))
 	}
 	builder.WriteString(", ")
-	if v := r.UpdatedAt; v != nil {
+	if v := t.UpdatedAt; v != nil {
 		builder.WriteString("updated_at=")
 		builder.WriteString(v.Format(time.ANSIC))
 	}
 	builder.WriteString(", ")
-	if v := r.DeletedAt; v != nil {
+	if v := t.DeletedAt; v != nil {
 		builder.WriteString("deleted_at=")
 		builder.WriteString(v.Format(time.ANSIC))
 	}
 	builder.WriteString(", ")
-	if v := r.Remark; v != nil {
+	if v := t.Remark; v != nil {
 		builder.WriteString("remark=")
 		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")
-	if v := r.Sort; v != nil {
+	if v := t.Sort; v != nil {
 		builder.WriteString("sort=")
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteString(", ")
-	if v := r.State; v != nil {
+	if v := t.State; v != nil {
 		builder.WriteString("state=")
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteString(", ")
-	if v := r.Name; v != nil {
-		builder.WriteString("name=")
-		builder.WriteString(*v)
-	}
+	builder.WriteString("name=")
+	builder.WriteString(t.Name)
 	builder.WriteByte(')')
 	return builder.String()
 }
 
-// Roles is a parsable slice of Role.
-type Roles []*Role
+// Tenants is a parsable slice of Tenant.
+type Tenants []*Tenant

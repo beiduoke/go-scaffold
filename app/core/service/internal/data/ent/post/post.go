@@ -17,8 +17,12 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
 	FieldDeletedAt = "deleted_at"
-	// FieldPlatformID holds the string denoting the platform_id field in the database.
-	FieldPlatformID = "platform_id"
+	// FieldRemark holds the string denoting the remark field in the database.
+	FieldRemark = "remark"
+	// FieldSort holds the string denoting the sort field in the database.
+	FieldSort = "sort"
+	// FieldState holds the string denoting the state field in the database.
+	FieldState = "state"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
 	// Table holds the table name of the post in the database.
@@ -31,8 +35,16 @@ var Columns = []string{
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,
-	FieldPlatformID,
+	FieldRemark,
+	FieldSort,
+	FieldState,
 	FieldName,
+}
+
+// ForeignKeys holds the SQL foreign-keys that are owned by the "posts"
+// table and are not defined as standalone fields in the schema.
+var ForeignKeys = []string{
+	"user_posts",
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -42,14 +54,25 @@ func ValidColumn(column string) bool {
 			return true
 		}
 	}
+	for i := range ForeignKeys {
+		if column == ForeignKeys[i] {
+			return true
+		}
+	}
 	return false
 }
 
 var (
-	// DefaultPlatformID holds the default value on creation for the "platform_id" field.
-	DefaultPlatformID func() uint64
-	// PlatformIDValidator is a validator for the "platform_id" field. It is called by the builders before save.
-	PlatformIDValidator func(uint64) error
+	// DefaultRemark holds the default value on creation for the "remark" field.
+	DefaultRemark string
+	// DefaultSort holds the default value on creation for the "sort" field.
+	DefaultSort int32
+	// SortValidator is a validator for the "sort" field. It is called by the builders before save.
+	SortValidator func(int32) error
+	// DefaultState holds the default value on creation for the "state" field.
+	DefaultState int32
+	// StateValidator is a validator for the "state" field. It is called by the builders before save.
+	StateValidator func(int32) error
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
 	NameValidator func(string) error
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
@@ -79,9 +102,19 @@ func ByDeletedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDeletedAt, opts...).ToFunc()
 }
 
-// ByPlatformID orders the results by the platform_id field.
-func ByPlatformID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldPlatformID, opts...).ToFunc()
+// ByRemark orders the results by the remark field.
+func ByRemark(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldRemark, opts...).ToFunc()
+}
+
+// BySort orders the results by the sort field.
+func BySort(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldSort, opts...).ToFunc()
+}
+
+// ByState orders the results by the state field.
+func ByState(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldState, opts...).ToFunc()
 }
 
 // ByName orders the results by the name field.

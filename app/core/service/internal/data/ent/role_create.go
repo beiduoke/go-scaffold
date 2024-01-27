@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/role"
+	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/user"
 )
 
 // RoleCreate is the builder for creating a Role entity.
@@ -64,16 +65,44 @@ func (rc *RoleCreate) SetNillableDeletedAt(t *time.Time) *RoleCreate {
 	return rc
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (rc *RoleCreate) SetPlatformID(u uint64) *RoleCreate {
-	rc.mutation.SetPlatformID(u)
+// SetRemark sets the "remark" field.
+func (rc *RoleCreate) SetRemark(s string) *RoleCreate {
+	rc.mutation.SetRemark(s)
 	return rc
 }
 
-// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
-func (rc *RoleCreate) SetNillablePlatformID(u *uint64) *RoleCreate {
-	if u != nil {
-		rc.SetPlatformID(*u)
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (rc *RoleCreate) SetNillableRemark(s *string) *RoleCreate {
+	if s != nil {
+		rc.SetRemark(*s)
+	}
+	return rc
+}
+
+// SetSort sets the "sort" field.
+func (rc *RoleCreate) SetSort(i int32) *RoleCreate {
+	rc.mutation.SetSort(i)
+	return rc
+}
+
+// SetNillableSort sets the "sort" field if the given value is not nil.
+func (rc *RoleCreate) SetNillableSort(i *int32) *RoleCreate {
+	if i != nil {
+		rc.SetSort(*i)
+	}
+	return rc
+}
+
+// SetState sets the "state" field.
+func (rc *RoleCreate) SetState(i int32) *RoleCreate {
+	rc.mutation.SetState(i)
+	return rc
+}
+
+// SetNillableState sets the "state" field if the given value is not nil.
+func (rc *RoleCreate) SetNillableState(i *int32) *RoleCreate {
+	if i != nil {
+		rc.SetState(*i)
 	}
 	return rc
 }
@@ -84,18 +113,25 @@ func (rc *RoleCreate) SetName(s string) *RoleCreate {
 	return rc
 }
 
-// SetNillableName sets the "name" field if the given value is not nil.
-func (rc *RoleCreate) SetNillableName(s *string) *RoleCreate {
-	if s != nil {
-		rc.SetName(*s)
-	}
-	return rc
-}
-
 // SetID sets the "id" field.
 func (rc *RoleCreate) SetID(u uint32) *RoleCreate {
 	rc.mutation.SetID(u)
 	return rc
+}
+
+// AddUserIDs adds the "users" edge to the User entity by IDs.
+func (rc *RoleCreate) AddUserIDs(ids ...uint32) *RoleCreate {
+	rc.mutation.AddUserIDs(ids...)
+	return rc
+}
+
+// AddUsers adds the "users" edges to the User entity.
+func (rc *RoleCreate) AddUsers(u ...*User) *RoleCreate {
+	ids := make([]uint32, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return rc.AddUserIDs(ids...)
 }
 
 // Mutation returns the RoleMutation object of the builder.
@@ -133,21 +169,40 @@ func (rc *RoleCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (rc *RoleCreate) defaults() {
-	if _, ok := rc.mutation.PlatformID(); !ok {
-		v := role.DefaultPlatformID()
-		rc.mutation.SetPlatformID(v)
+	if _, ok := rc.mutation.Remark(); !ok {
+		v := role.DefaultRemark
+		rc.mutation.SetRemark(v)
+	}
+	if _, ok := rc.mutation.Sort(); !ok {
+		v := role.DefaultSort
+		rc.mutation.SetSort(v)
+	}
+	if _, ok := rc.mutation.State(); !ok {
+		v := role.DefaultState
+		rc.mutation.SetState(v)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
 func (rc *RoleCreate) check() error {
-	if _, ok := rc.mutation.PlatformID(); !ok {
-		return &ValidationError{Name: "platform_id", err: errors.New(`ent: missing required field "Role.platform_id"`)}
+	if _, ok := rc.mutation.Sort(); !ok {
+		return &ValidationError{Name: "sort", err: errors.New(`ent: missing required field "Role.sort"`)}
 	}
-	if v, ok := rc.mutation.PlatformID(); ok {
-		if err := role.PlatformIDValidator(v); err != nil {
-			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "Role.platform_id": %w`, err)}
+	if v, ok := rc.mutation.Sort(); ok {
+		if err := role.SortValidator(v); err != nil {
+			return &ValidationError{Name: "sort", err: fmt.Errorf(`ent: validator failed for field "Role.sort": %w`, err)}
 		}
+	}
+	if _, ok := rc.mutation.State(); !ok {
+		return &ValidationError{Name: "state", err: errors.New(`ent: missing required field "Role.state"`)}
+	}
+	if v, ok := rc.mutation.State(); ok {
+		if err := role.StateValidator(v); err != nil {
+			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "Role.state": %w`, err)}
+		}
+	}
+	if _, ok := rc.mutation.Name(); !ok {
+		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Role.name"`)}
 	}
 	if v, ok := rc.mutation.Name(); ok {
 		if err := role.NameValidator(v); err != nil {
@@ -204,13 +259,37 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 		_spec.SetField(role.FieldDeletedAt, field.TypeTime, value)
 		_node.DeletedAt = &value
 	}
-	if value, ok := rc.mutation.PlatformID(); ok {
-		_spec.SetField(role.FieldPlatformID, field.TypeUint64, value)
-		_node.PlatformID = value
+	if value, ok := rc.mutation.Remark(); ok {
+		_spec.SetField(role.FieldRemark, field.TypeString, value)
+		_node.Remark = &value
+	}
+	if value, ok := rc.mutation.Sort(); ok {
+		_spec.SetField(role.FieldSort, field.TypeInt32, value)
+		_node.Sort = &value
+	}
+	if value, ok := rc.mutation.State(); ok {
+		_spec.SetField(role.FieldState, field.TypeInt32, value)
+		_node.State = &value
 	}
 	if value, ok := rc.mutation.Name(); ok {
 		_spec.SetField(role.FieldName, field.TypeString, value)
 		_node.Name = &value
+	}
+	if nodes := rc.mutation.UsersIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.UsersTable,
+			Columns: role.UsersPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }
@@ -300,21 +379,57 @@ func (u *RoleUpsert) ClearDeletedAt() *RoleUpsert {
 	return u
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (u *RoleUpsert) SetPlatformID(v uint64) *RoleUpsert {
-	u.Set(role.FieldPlatformID, v)
+// SetRemark sets the "remark" field.
+func (u *RoleUpsert) SetRemark(v string) *RoleUpsert {
+	u.Set(role.FieldRemark, v)
 	return u
 }
 
-// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
-func (u *RoleUpsert) UpdatePlatformID() *RoleUpsert {
-	u.SetExcluded(role.FieldPlatformID)
+// UpdateRemark sets the "remark" field to the value that was provided on create.
+func (u *RoleUpsert) UpdateRemark() *RoleUpsert {
+	u.SetExcluded(role.FieldRemark)
 	return u
 }
 
-// AddPlatformID adds v to the "platform_id" field.
-func (u *RoleUpsert) AddPlatformID(v uint64) *RoleUpsert {
-	u.Add(role.FieldPlatformID, v)
+// ClearRemark clears the value of the "remark" field.
+func (u *RoleUpsert) ClearRemark() *RoleUpsert {
+	u.SetNull(role.FieldRemark)
+	return u
+}
+
+// SetSort sets the "sort" field.
+func (u *RoleUpsert) SetSort(v int32) *RoleUpsert {
+	u.Set(role.FieldSort, v)
+	return u
+}
+
+// UpdateSort sets the "sort" field to the value that was provided on create.
+func (u *RoleUpsert) UpdateSort() *RoleUpsert {
+	u.SetExcluded(role.FieldSort)
+	return u
+}
+
+// AddSort adds v to the "sort" field.
+func (u *RoleUpsert) AddSort(v int32) *RoleUpsert {
+	u.Add(role.FieldSort, v)
+	return u
+}
+
+// SetState sets the "state" field.
+func (u *RoleUpsert) SetState(v int32) *RoleUpsert {
+	u.Set(role.FieldState, v)
+	return u
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *RoleUpsert) UpdateState() *RoleUpsert {
+	u.SetExcluded(role.FieldState)
+	return u
+}
+
+// AddState adds v to the "state" field.
+func (u *RoleUpsert) AddState(v int32) *RoleUpsert {
+	u.Add(role.FieldState, v)
 	return u
 }
 
@@ -327,12 +442,6 @@ func (u *RoleUpsert) SetName(v string) *RoleUpsert {
 // UpdateName sets the "name" field to the value that was provided on create.
 func (u *RoleUpsert) UpdateName() *RoleUpsert {
 	u.SetExcluded(role.FieldName)
-	return u
-}
-
-// ClearName clears the value of the "name" field.
-func (u *RoleUpsert) ClearName() *RoleUpsert {
-	u.SetNull(role.FieldName)
 	return u
 }
 
@@ -429,24 +538,66 @@ func (u *RoleUpsertOne) ClearDeletedAt() *RoleUpsertOne {
 	})
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (u *RoleUpsertOne) SetPlatformID(v uint64) *RoleUpsertOne {
+// SetRemark sets the "remark" field.
+func (u *RoleUpsertOne) SetRemark(v string) *RoleUpsertOne {
 	return u.Update(func(s *RoleUpsert) {
-		s.SetPlatformID(v)
+		s.SetRemark(v)
 	})
 }
 
-// AddPlatformID adds v to the "platform_id" field.
-func (u *RoleUpsertOne) AddPlatformID(v uint64) *RoleUpsertOne {
+// UpdateRemark sets the "remark" field to the value that was provided on create.
+func (u *RoleUpsertOne) UpdateRemark() *RoleUpsertOne {
 	return u.Update(func(s *RoleUpsert) {
-		s.AddPlatformID(v)
+		s.UpdateRemark()
 	})
 }
 
-// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
-func (u *RoleUpsertOne) UpdatePlatformID() *RoleUpsertOne {
+// ClearRemark clears the value of the "remark" field.
+func (u *RoleUpsertOne) ClearRemark() *RoleUpsertOne {
 	return u.Update(func(s *RoleUpsert) {
-		s.UpdatePlatformID()
+		s.ClearRemark()
+	})
+}
+
+// SetSort sets the "sort" field.
+func (u *RoleUpsertOne) SetSort(v int32) *RoleUpsertOne {
+	return u.Update(func(s *RoleUpsert) {
+		s.SetSort(v)
+	})
+}
+
+// AddSort adds v to the "sort" field.
+func (u *RoleUpsertOne) AddSort(v int32) *RoleUpsertOne {
+	return u.Update(func(s *RoleUpsert) {
+		s.AddSort(v)
+	})
+}
+
+// UpdateSort sets the "sort" field to the value that was provided on create.
+func (u *RoleUpsertOne) UpdateSort() *RoleUpsertOne {
+	return u.Update(func(s *RoleUpsert) {
+		s.UpdateSort()
+	})
+}
+
+// SetState sets the "state" field.
+func (u *RoleUpsertOne) SetState(v int32) *RoleUpsertOne {
+	return u.Update(func(s *RoleUpsert) {
+		s.SetState(v)
+	})
+}
+
+// AddState adds v to the "state" field.
+func (u *RoleUpsertOne) AddState(v int32) *RoleUpsertOne {
+	return u.Update(func(s *RoleUpsert) {
+		s.AddState(v)
+	})
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *RoleUpsertOne) UpdateState() *RoleUpsertOne {
+	return u.Update(func(s *RoleUpsert) {
+		s.UpdateState()
 	})
 }
 
@@ -461,13 +612,6 @@ func (u *RoleUpsertOne) SetName(v string) *RoleUpsertOne {
 func (u *RoleUpsertOne) UpdateName() *RoleUpsertOne {
 	return u.Update(func(s *RoleUpsert) {
 		s.UpdateName()
-	})
-}
-
-// ClearName clears the value of the "name" field.
-func (u *RoleUpsertOne) ClearName() *RoleUpsertOne {
-	return u.Update(func(s *RoleUpsert) {
-		s.ClearName()
 	})
 }
 
@@ -730,24 +874,66 @@ func (u *RoleUpsertBulk) ClearDeletedAt() *RoleUpsertBulk {
 	})
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (u *RoleUpsertBulk) SetPlatformID(v uint64) *RoleUpsertBulk {
+// SetRemark sets the "remark" field.
+func (u *RoleUpsertBulk) SetRemark(v string) *RoleUpsertBulk {
 	return u.Update(func(s *RoleUpsert) {
-		s.SetPlatformID(v)
+		s.SetRemark(v)
 	})
 }
 
-// AddPlatformID adds v to the "platform_id" field.
-func (u *RoleUpsertBulk) AddPlatformID(v uint64) *RoleUpsertBulk {
+// UpdateRemark sets the "remark" field to the value that was provided on create.
+func (u *RoleUpsertBulk) UpdateRemark() *RoleUpsertBulk {
 	return u.Update(func(s *RoleUpsert) {
-		s.AddPlatformID(v)
+		s.UpdateRemark()
 	})
 }
 
-// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
-func (u *RoleUpsertBulk) UpdatePlatformID() *RoleUpsertBulk {
+// ClearRemark clears the value of the "remark" field.
+func (u *RoleUpsertBulk) ClearRemark() *RoleUpsertBulk {
 	return u.Update(func(s *RoleUpsert) {
-		s.UpdatePlatformID()
+		s.ClearRemark()
+	})
+}
+
+// SetSort sets the "sort" field.
+func (u *RoleUpsertBulk) SetSort(v int32) *RoleUpsertBulk {
+	return u.Update(func(s *RoleUpsert) {
+		s.SetSort(v)
+	})
+}
+
+// AddSort adds v to the "sort" field.
+func (u *RoleUpsertBulk) AddSort(v int32) *RoleUpsertBulk {
+	return u.Update(func(s *RoleUpsert) {
+		s.AddSort(v)
+	})
+}
+
+// UpdateSort sets the "sort" field to the value that was provided on create.
+func (u *RoleUpsertBulk) UpdateSort() *RoleUpsertBulk {
+	return u.Update(func(s *RoleUpsert) {
+		s.UpdateSort()
+	})
+}
+
+// SetState sets the "state" field.
+func (u *RoleUpsertBulk) SetState(v int32) *RoleUpsertBulk {
+	return u.Update(func(s *RoleUpsert) {
+		s.SetState(v)
+	})
+}
+
+// AddState adds v to the "state" field.
+func (u *RoleUpsertBulk) AddState(v int32) *RoleUpsertBulk {
+	return u.Update(func(s *RoleUpsert) {
+		s.AddState(v)
+	})
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *RoleUpsertBulk) UpdateState() *RoleUpsertBulk {
+	return u.Update(func(s *RoleUpsert) {
+		s.UpdateState()
 	})
 }
 
@@ -762,13 +948,6 @@ func (u *RoleUpsertBulk) SetName(v string) *RoleUpsertBulk {
 func (u *RoleUpsertBulk) UpdateName() *RoleUpsertBulk {
 	return u.Update(func(s *RoleUpsert) {
 		s.UpdateName()
-	})
-}
-
-// ClearName clears the value of the "name" field.
-func (u *RoleUpsertBulk) ClearName() *RoleUpsertBulk {
-	return u.Update(func(s *RoleUpsert) {
-		s.ClearName()
 	})
 }
 

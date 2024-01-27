@@ -4,42 +4,40 @@ import (
 	"regexp"
 
 	"entgo.io/ent"
-	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
-	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 )
 
-// User holds the schema definition for the User entity.
-type User struct {
+// Member holds the schema definition for the Member entity.
+type Member struct {
 	ent.Schema
 }
 
-func (User) Annotations() []schema.Annotation {
+func (Member) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Annotation{
 			Charset:   "utf8mb4",
 			Collation: "utf8mb4_bin",
 		},
 		entsql.WithComments(true),
-		schema.Comment("用户表"),
+		schema.Comment("会员表"),
 	}
 }
 
-// Mixin of the User.
-func (User) Mixin() []ent.Mixin {
+// Mixin of the Member.
+func (Member) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		MixinTop{},
 	}
 }
 
-// Fields of the User.
-func (User) Fields() []ent.Field {
+// Fields of the Member.
+func (Member) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("username").
-			Comment("用户名").
+			Comment("会员名").
 			Unique().
 			MaxLen(50).
 			NotEmpty().
@@ -81,36 +79,23 @@ func (User) Fields() []ent.Field {
 			MaxLen(1023).
 			Default("").
 			NotEmpty(),
-
-		field.Int8("authority").
-			Comment("授权 0 UNSPECIFIED, 1 -> SYS_ADMIN, 2 -> CUSTOMER_USER, 3 -> GUEST_USER, 4 -> REFRESH_TOKEN").
-			// Optional().
-			SchemaType(map[string]string{
-				dialect.MySQL:    "tinyint(2)",
-				dialect.Postgres: "tinyint(2)",
-			}).
-			Default(1).
-			Nillable(),
 	}
 }
 
-// Edges of the User.
-func (User) Edges() []ent.Edge {
-	return []ent.Edge{
-		edge.To("roles", Role.Type),
-		edge.To("posts", Post.Type),
-	}
+// Edges of the Member.
+func (Member) Edges() []ent.Edge {
+	return nil
 }
 
-// Indexes of the User.
-func (User) Indexes() []ent.Index {
+// Indexes of the Member.
+func (Member) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("phone", "authority").Unique(),
+		index.Fields("phone").Unique(),
 	}
 }
 
-// Policy defines the privacy policy of the User.
-func (User) Policy() ent.Policy {
+// Policy defines the privacy policy of the Member.
+func (Member) Policy() ent.Policy {
 	// Privacy policy defined in the BaseMixin and TenantMixin.
 	return nil
 }

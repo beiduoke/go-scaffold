@@ -64,16 +64,44 @@ func (mc *MenuCreate) SetNillableDeletedAt(t *time.Time) *MenuCreate {
 	return mc
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (mc *MenuCreate) SetPlatformID(u uint64) *MenuCreate {
-	mc.mutation.SetPlatformID(u)
+// SetRemark sets the "remark" field.
+func (mc *MenuCreate) SetRemark(s string) *MenuCreate {
+	mc.mutation.SetRemark(s)
 	return mc
 }
 
-// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
-func (mc *MenuCreate) SetNillablePlatformID(u *uint64) *MenuCreate {
-	if u != nil {
-		mc.SetPlatformID(*u)
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableRemark(s *string) *MenuCreate {
+	if s != nil {
+		mc.SetRemark(*s)
+	}
+	return mc
+}
+
+// SetSort sets the "sort" field.
+func (mc *MenuCreate) SetSort(i int32) *MenuCreate {
+	mc.mutation.SetSort(i)
+	return mc
+}
+
+// SetNillableSort sets the "sort" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableSort(i *int32) *MenuCreate {
+	if i != nil {
+		mc.SetSort(*i)
+	}
+	return mc
+}
+
+// SetState sets the "state" field.
+func (mc *MenuCreate) SetState(i int32) *MenuCreate {
+	mc.mutation.SetState(i)
+	return mc
+}
+
+// SetNillableState sets the "state" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableState(i *int32) *MenuCreate {
+	if i != nil {
+		mc.SetState(*i)
 	}
 	return mc
 }
@@ -92,10 +120,246 @@ func (mc *MenuCreate) SetNillableName(s *string) *MenuCreate {
 	return mc
 }
 
+// SetTitle sets the "title" field.
+func (mc *MenuCreate) SetTitle(s string) *MenuCreate {
+	mc.mutation.SetTitle(s)
+	return mc
+}
+
+// SetNillableTitle sets the "title" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableTitle(s *string) *MenuCreate {
+	if s != nil {
+		mc.SetTitle(*s)
+	}
+	return mc
+}
+
+// SetParentID sets the "parent_id" field.
+func (mc *MenuCreate) SetParentID(u uint32) *MenuCreate {
+	mc.mutation.SetParentID(u)
+	return mc
+}
+
+// SetNillableParentID sets the "parent_id" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableParentID(u *uint32) *MenuCreate {
+	if u != nil {
+		mc.SetParentID(*u)
+	}
+	return mc
+}
+
+// SetType sets the "type" field.
+func (mc *MenuCreate) SetType(i int32) *MenuCreate {
+	mc.mutation.SetType(i)
+	return mc
+}
+
+// SetNillableType sets the "type" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableType(i *int32) *MenuCreate {
+	if i != nil {
+		mc.SetType(*i)
+	}
+	return mc
+}
+
+// SetPath sets the "path" field.
+func (mc *MenuCreate) SetPath(s string) *MenuCreate {
+	mc.mutation.SetPath(s)
+	return mc
+}
+
+// SetNillablePath sets the "path" field if the given value is not nil.
+func (mc *MenuCreate) SetNillablePath(s *string) *MenuCreate {
+	if s != nil {
+		mc.SetPath(*s)
+	}
+	return mc
+}
+
+// SetComponent sets the "component" field.
+func (mc *MenuCreate) SetComponent(s string) *MenuCreate {
+	mc.mutation.SetComponent(s)
+	return mc
+}
+
+// SetNillableComponent sets the "component" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableComponent(s *string) *MenuCreate {
+	if s != nil {
+		mc.SetComponent(*s)
+	}
+	return mc
+}
+
+// SetIcon sets the "icon" field.
+func (mc *MenuCreate) SetIcon(s string) *MenuCreate {
+	mc.mutation.SetIcon(s)
+	return mc
+}
+
+// SetNillableIcon sets the "icon" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableIcon(s *string) *MenuCreate {
+	if s != nil {
+		mc.SetIcon(*s)
+	}
+	return mc
+}
+
+// SetIsExt sets the "is_ext" field.
+func (mc *MenuCreate) SetIsExt(b bool) *MenuCreate {
+	mc.mutation.SetIsExt(b)
+	return mc
+}
+
+// SetNillableIsExt sets the "is_ext" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableIsExt(b *bool) *MenuCreate {
+	if b != nil {
+		mc.SetIsExt(*b)
+	}
+	return mc
+}
+
+// SetExtURL sets the "ext_url" field.
+func (mc *MenuCreate) SetExtURL(s string) *MenuCreate {
+	mc.mutation.SetExtURL(s)
+	return mc
+}
+
+// SetNillableExtURL sets the "ext_url" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableExtURL(s *string) *MenuCreate {
+	if s != nil {
+		mc.SetExtURL(*s)
+	}
+	return mc
+}
+
+// SetPermissions sets the "permissions" field.
+func (mc *MenuCreate) SetPermissions(s []string) *MenuCreate {
+	mc.mutation.SetPermissions(s)
+	return mc
+}
+
+// SetRedirect sets the "redirect" field.
+func (mc *MenuCreate) SetRedirect(s string) *MenuCreate {
+	mc.mutation.SetRedirect(s)
+	return mc
+}
+
+// SetNillableRedirect sets the "redirect" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableRedirect(s *string) *MenuCreate {
+	if s != nil {
+		mc.SetRedirect(*s)
+	}
+	return mc
+}
+
+// SetCurrentActiveMenu sets the "current_active_menu" field.
+func (mc *MenuCreate) SetCurrentActiveMenu(s string) *MenuCreate {
+	mc.mutation.SetCurrentActiveMenu(s)
+	return mc
+}
+
+// SetNillableCurrentActiveMenu sets the "current_active_menu" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableCurrentActiveMenu(s *string) *MenuCreate {
+	if s != nil {
+		mc.SetCurrentActiveMenu(*s)
+	}
+	return mc
+}
+
+// SetKeepAlive sets the "keep_alive" field.
+func (mc *MenuCreate) SetKeepAlive(b bool) *MenuCreate {
+	mc.mutation.SetKeepAlive(b)
+	return mc
+}
+
+// SetNillableKeepAlive sets the "keep_alive" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableKeepAlive(b *bool) *MenuCreate {
+	if b != nil {
+		mc.SetKeepAlive(*b)
+	}
+	return mc
+}
+
+// SetVisible sets the "visible" field.
+func (mc *MenuCreate) SetVisible(b bool) *MenuCreate {
+	mc.mutation.SetVisible(b)
+	return mc
+}
+
+// SetNillableVisible sets the "visible" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableVisible(b *bool) *MenuCreate {
+	if b != nil {
+		mc.SetVisible(*b)
+	}
+	return mc
+}
+
+// SetHideTab sets the "hide_tab" field.
+func (mc *MenuCreate) SetHideTab(b bool) *MenuCreate {
+	mc.mutation.SetHideTab(b)
+	return mc
+}
+
+// SetNillableHideTab sets the "hide_tab" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableHideTab(b *bool) *MenuCreate {
+	if b != nil {
+		mc.SetHideTab(*b)
+	}
+	return mc
+}
+
+// SetHideMenu sets the "hide_menu" field.
+func (mc *MenuCreate) SetHideMenu(b bool) *MenuCreate {
+	mc.mutation.SetHideMenu(b)
+	return mc
+}
+
+// SetNillableHideMenu sets the "hide_menu" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableHideMenu(b *bool) *MenuCreate {
+	if b != nil {
+		mc.SetHideMenu(*b)
+	}
+	return mc
+}
+
+// SetHideBreadcrumb sets the "hide_breadcrumb" field.
+func (mc *MenuCreate) SetHideBreadcrumb(b bool) *MenuCreate {
+	mc.mutation.SetHideBreadcrumb(b)
+	return mc
+}
+
+// SetNillableHideBreadcrumb sets the "hide_breadcrumb" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableHideBreadcrumb(b *bool) *MenuCreate {
+	if b != nil {
+		mc.SetHideBreadcrumb(*b)
+	}
+	return mc
+}
+
 // SetID sets the "id" field.
 func (mc *MenuCreate) SetID(u uint32) *MenuCreate {
 	mc.mutation.SetID(u)
 	return mc
+}
+
+// SetParent sets the "parent" edge to the Menu entity.
+func (mc *MenuCreate) SetParent(m *Menu) *MenuCreate {
+	return mc.SetParentID(m.ID)
+}
+
+// AddChildIDs adds the "children" edge to the Menu entity by IDs.
+func (mc *MenuCreate) AddChildIDs(ids ...uint32) *MenuCreate {
+	mc.mutation.AddChildIDs(ids...)
+	return mc
+}
+
+// AddChildren adds the "children" edges to the Menu entity.
+func (mc *MenuCreate) AddChildren(m ...*Menu) *MenuCreate {
+	ids := make([]uint32, len(m))
+	for i := range m {
+		ids[i] = m[i].ID
+	}
+	return mc.AddChildIDs(ids...)
 }
 
 // Mutation returns the MenuMutation object of the builder.
@@ -133,26 +397,170 @@ func (mc *MenuCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (mc *MenuCreate) defaults() {
-	if _, ok := mc.mutation.PlatformID(); !ok {
-		v := menu.DefaultPlatformID()
-		mc.mutation.SetPlatformID(v)
+	if _, ok := mc.mutation.Remark(); !ok {
+		v := menu.DefaultRemark
+		mc.mutation.SetRemark(v)
+	}
+	if _, ok := mc.mutation.Sort(); !ok {
+		v := menu.DefaultSort
+		mc.mutation.SetSort(v)
+	}
+	if _, ok := mc.mutation.State(); !ok {
+		v := menu.DefaultState
+		mc.mutation.SetState(v)
+	}
+	if _, ok := mc.mutation.Name(); !ok {
+		v := menu.DefaultName
+		mc.mutation.SetName(v)
+	}
+	if _, ok := mc.mutation.Title(); !ok {
+		v := menu.DefaultTitle
+		mc.mutation.SetTitle(v)
+	}
+	if _, ok := mc.mutation.ParentID(); !ok {
+		v := menu.DefaultParentID
+		mc.mutation.SetParentID(v)
+	}
+	if _, ok := mc.mutation.GetType(); !ok {
+		v := menu.DefaultType
+		mc.mutation.SetType(v)
+	}
+	if _, ok := mc.mutation.Path(); !ok {
+		v := menu.DefaultPath
+		mc.mutation.SetPath(v)
+	}
+	if _, ok := mc.mutation.Component(); !ok {
+		v := menu.DefaultComponent
+		mc.mutation.SetComponent(v)
+	}
+	if _, ok := mc.mutation.Icon(); !ok {
+		v := menu.DefaultIcon
+		mc.mutation.SetIcon(v)
+	}
+	if _, ok := mc.mutation.IsExt(); !ok {
+		v := menu.DefaultIsExt
+		mc.mutation.SetIsExt(v)
+	}
+	if _, ok := mc.mutation.ExtURL(); !ok {
+		v := menu.DefaultExtURL
+		mc.mutation.SetExtURL(v)
+	}
+	if _, ok := mc.mutation.Permissions(); !ok {
+		v := menu.DefaultPermissions
+		mc.mutation.SetPermissions(v)
+	}
+	if _, ok := mc.mutation.Redirect(); !ok {
+		v := menu.DefaultRedirect
+		mc.mutation.SetRedirect(v)
+	}
+	if _, ok := mc.mutation.CurrentActiveMenu(); !ok {
+		v := menu.DefaultCurrentActiveMenu
+		mc.mutation.SetCurrentActiveMenu(v)
+	}
+	if _, ok := mc.mutation.KeepAlive(); !ok {
+		v := menu.DefaultKeepAlive
+		mc.mutation.SetKeepAlive(v)
+	}
+	if _, ok := mc.mutation.Visible(); !ok {
+		v := menu.DefaultVisible
+		mc.mutation.SetVisible(v)
+	}
+	if _, ok := mc.mutation.HideTab(); !ok {
+		v := menu.DefaultHideTab
+		mc.mutation.SetHideTab(v)
+	}
+	if _, ok := mc.mutation.HideMenu(); !ok {
+		v := menu.DefaultHideMenu
+		mc.mutation.SetHideMenu(v)
+	}
+	if _, ok := mc.mutation.HideBreadcrumb(); !ok {
+		v := menu.DefaultHideBreadcrumb
+		mc.mutation.SetHideBreadcrumb(v)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
 func (mc *MenuCreate) check() error {
-	if _, ok := mc.mutation.PlatformID(); !ok {
-		return &ValidationError{Name: "platform_id", err: errors.New(`ent: missing required field "Menu.platform_id"`)}
+	if _, ok := mc.mutation.Sort(); !ok {
+		return &ValidationError{Name: "sort", err: errors.New(`ent: missing required field "Menu.sort"`)}
 	}
-	if v, ok := mc.mutation.PlatformID(); ok {
-		if err := menu.PlatformIDValidator(v); err != nil {
-			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "Menu.platform_id": %w`, err)}
+	if v, ok := mc.mutation.Sort(); ok {
+		if err := menu.SortValidator(v); err != nil {
+			return &ValidationError{Name: "sort", err: fmt.Errorf(`ent: validator failed for field "Menu.sort": %w`, err)}
 		}
+	}
+	if _, ok := mc.mutation.State(); !ok {
+		return &ValidationError{Name: "state", err: errors.New(`ent: missing required field "Menu.state"`)}
+	}
+	if v, ok := mc.mutation.State(); ok {
+		if err := menu.StateValidator(v); err != nil {
+			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "Menu.state": %w`, err)}
+		}
+	}
+	if _, ok := mc.mutation.Name(); !ok {
+		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Menu.name"`)}
 	}
 	if v, ok := mc.mutation.Name(); ok {
 		if err := menu.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Menu.name": %w`, err)}
 		}
+	}
+	if _, ok := mc.mutation.Title(); !ok {
+		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "Menu.title"`)}
+	}
+	if v, ok := mc.mutation.Title(); ok {
+		if err := menu.TitleValidator(v); err != nil {
+			return &ValidationError{Name: "title", err: fmt.Errorf(`ent: validator failed for field "Menu.title": %w`, err)}
+		}
+	}
+	if _, ok := mc.mutation.GetType(); !ok {
+		return &ValidationError{Name: "type", err: errors.New(`ent: missing required field "Menu.type"`)}
+	}
+	if _, ok := mc.mutation.Path(); !ok {
+		return &ValidationError{Name: "path", err: errors.New(`ent: missing required field "Menu.path"`)}
+	}
+	if _, ok := mc.mutation.Component(); !ok {
+		return &ValidationError{Name: "component", err: errors.New(`ent: missing required field "Menu.component"`)}
+	}
+	if _, ok := mc.mutation.Icon(); !ok {
+		return &ValidationError{Name: "icon", err: errors.New(`ent: missing required field "Menu.icon"`)}
+	}
+	if v, ok := mc.mutation.Icon(); ok {
+		if err := menu.IconValidator(v); err != nil {
+			return &ValidationError{Name: "icon", err: fmt.Errorf(`ent: validator failed for field "Menu.icon": %w`, err)}
+		}
+	}
+	if _, ok := mc.mutation.IsExt(); !ok {
+		return &ValidationError{Name: "is_ext", err: errors.New(`ent: missing required field "Menu.is_ext"`)}
+	}
+	if _, ok := mc.mutation.ExtURL(); !ok {
+		return &ValidationError{Name: "ext_url", err: errors.New(`ent: missing required field "Menu.ext_url"`)}
+	}
+	if v, ok := mc.mutation.ExtURL(); ok {
+		if err := menu.ExtURLValidator(v); err != nil {
+			return &ValidationError{Name: "ext_url", err: fmt.Errorf(`ent: validator failed for field "Menu.ext_url": %w`, err)}
+		}
+	}
+	if _, ok := mc.mutation.Redirect(); !ok {
+		return &ValidationError{Name: "redirect", err: errors.New(`ent: missing required field "Menu.redirect"`)}
+	}
+	if _, ok := mc.mutation.CurrentActiveMenu(); !ok {
+		return &ValidationError{Name: "current_active_menu", err: errors.New(`ent: missing required field "Menu.current_active_menu"`)}
+	}
+	if _, ok := mc.mutation.KeepAlive(); !ok {
+		return &ValidationError{Name: "keep_alive", err: errors.New(`ent: missing required field "Menu.keep_alive"`)}
+	}
+	if _, ok := mc.mutation.Visible(); !ok {
+		return &ValidationError{Name: "visible", err: errors.New(`ent: missing required field "Menu.visible"`)}
+	}
+	if _, ok := mc.mutation.HideTab(); !ok {
+		return &ValidationError{Name: "hide_tab", err: errors.New(`ent: missing required field "Menu.hide_tab"`)}
+	}
+	if _, ok := mc.mutation.HideMenu(); !ok {
+		return &ValidationError{Name: "hide_menu", err: errors.New(`ent: missing required field "Menu.hide_menu"`)}
+	}
+	if _, ok := mc.mutation.HideBreadcrumb(); !ok {
+		return &ValidationError{Name: "hide_breadcrumb", err: errors.New(`ent: missing required field "Menu.hide_breadcrumb"`)}
 	}
 	if v, ok := mc.mutation.ID(); ok {
 		if err := menu.IDValidator(v); err != nil {
@@ -204,13 +612,114 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		_spec.SetField(menu.FieldDeletedAt, field.TypeTime, value)
 		_node.DeletedAt = &value
 	}
-	if value, ok := mc.mutation.PlatformID(); ok {
-		_spec.SetField(menu.FieldPlatformID, field.TypeUint64, value)
-		_node.PlatformID = value
+	if value, ok := mc.mutation.Remark(); ok {
+		_spec.SetField(menu.FieldRemark, field.TypeString, value)
+		_node.Remark = &value
+	}
+	if value, ok := mc.mutation.Sort(); ok {
+		_spec.SetField(menu.FieldSort, field.TypeInt32, value)
+		_node.Sort = &value
+	}
+	if value, ok := mc.mutation.State(); ok {
+		_spec.SetField(menu.FieldState, field.TypeInt32, value)
+		_node.State = &value
 	}
 	if value, ok := mc.mutation.Name(); ok {
 		_spec.SetField(menu.FieldName, field.TypeString, value)
 		_node.Name = &value
+	}
+	if value, ok := mc.mutation.Title(); ok {
+		_spec.SetField(menu.FieldTitle, field.TypeString, value)
+		_node.Title = &value
+	}
+	if value, ok := mc.mutation.GetType(); ok {
+		_spec.SetField(menu.FieldType, field.TypeInt32, value)
+		_node.Type = &value
+	}
+	if value, ok := mc.mutation.Path(); ok {
+		_spec.SetField(menu.FieldPath, field.TypeString, value)
+		_node.Path = &value
+	}
+	if value, ok := mc.mutation.Component(); ok {
+		_spec.SetField(menu.FieldComponent, field.TypeString, value)
+		_node.Component = &value
+	}
+	if value, ok := mc.mutation.Icon(); ok {
+		_spec.SetField(menu.FieldIcon, field.TypeString, value)
+		_node.Icon = &value
+	}
+	if value, ok := mc.mutation.IsExt(); ok {
+		_spec.SetField(menu.FieldIsExt, field.TypeBool, value)
+		_node.IsExt = &value
+	}
+	if value, ok := mc.mutation.ExtURL(); ok {
+		_spec.SetField(menu.FieldExtURL, field.TypeString, value)
+		_node.ExtURL = &value
+	}
+	if value, ok := mc.mutation.Permissions(); ok {
+		_spec.SetField(menu.FieldPermissions, field.TypeJSON, value)
+		_node.Permissions = value
+	}
+	if value, ok := mc.mutation.Redirect(); ok {
+		_spec.SetField(menu.FieldRedirect, field.TypeString, value)
+		_node.Redirect = &value
+	}
+	if value, ok := mc.mutation.CurrentActiveMenu(); ok {
+		_spec.SetField(menu.FieldCurrentActiveMenu, field.TypeString, value)
+		_node.CurrentActiveMenu = &value
+	}
+	if value, ok := mc.mutation.KeepAlive(); ok {
+		_spec.SetField(menu.FieldKeepAlive, field.TypeBool, value)
+		_node.KeepAlive = &value
+	}
+	if value, ok := mc.mutation.Visible(); ok {
+		_spec.SetField(menu.FieldVisible, field.TypeBool, value)
+		_node.Visible = &value
+	}
+	if value, ok := mc.mutation.HideTab(); ok {
+		_spec.SetField(menu.FieldHideTab, field.TypeBool, value)
+		_node.HideTab = &value
+	}
+	if value, ok := mc.mutation.HideMenu(); ok {
+		_spec.SetField(menu.FieldHideMenu, field.TypeBool, value)
+		_node.HideMenu = &value
+	}
+	if value, ok := mc.mutation.HideBreadcrumb(); ok {
+		_spec.SetField(menu.FieldHideBreadcrumb, field.TypeBool, value)
+		_node.HideBreadcrumb = &value
+	}
+	if nodes := mc.mutation.ParentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   menu.ParentTable,
+			Columns: []string{menu.ParentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.ParentID = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := mc.mutation.ChildrenIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   menu.ChildrenTable,
+			Columns: []string{menu.ChildrenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }
@@ -300,21 +809,57 @@ func (u *MenuUpsert) ClearDeletedAt() *MenuUpsert {
 	return u
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (u *MenuUpsert) SetPlatformID(v uint64) *MenuUpsert {
-	u.Set(menu.FieldPlatformID, v)
+// SetRemark sets the "remark" field.
+func (u *MenuUpsert) SetRemark(v string) *MenuUpsert {
+	u.Set(menu.FieldRemark, v)
 	return u
 }
 
-// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
-func (u *MenuUpsert) UpdatePlatformID() *MenuUpsert {
-	u.SetExcluded(menu.FieldPlatformID)
+// UpdateRemark sets the "remark" field to the value that was provided on create.
+func (u *MenuUpsert) UpdateRemark() *MenuUpsert {
+	u.SetExcluded(menu.FieldRemark)
 	return u
 }
 
-// AddPlatformID adds v to the "platform_id" field.
-func (u *MenuUpsert) AddPlatformID(v uint64) *MenuUpsert {
-	u.Add(menu.FieldPlatformID, v)
+// ClearRemark clears the value of the "remark" field.
+func (u *MenuUpsert) ClearRemark() *MenuUpsert {
+	u.SetNull(menu.FieldRemark)
+	return u
+}
+
+// SetSort sets the "sort" field.
+func (u *MenuUpsert) SetSort(v int32) *MenuUpsert {
+	u.Set(menu.FieldSort, v)
+	return u
+}
+
+// UpdateSort sets the "sort" field to the value that was provided on create.
+func (u *MenuUpsert) UpdateSort() *MenuUpsert {
+	u.SetExcluded(menu.FieldSort)
+	return u
+}
+
+// AddSort adds v to the "sort" field.
+func (u *MenuUpsert) AddSort(v int32) *MenuUpsert {
+	u.Add(menu.FieldSort, v)
+	return u
+}
+
+// SetState sets the "state" field.
+func (u *MenuUpsert) SetState(v int32) *MenuUpsert {
+	u.Set(menu.FieldState, v)
+	return u
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *MenuUpsert) UpdateState() *MenuUpsert {
+	u.SetExcluded(menu.FieldState)
+	return u
+}
+
+// AddState adds v to the "state" field.
+func (u *MenuUpsert) AddState(v int32) *MenuUpsert {
+	u.Add(menu.FieldState, v)
 	return u
 }
 
@@ -330,9 +875,213 @@ func (u *MenuUpsert) UpdateName() *MenuUpsert {
 	return u
 }
 
-// ClearName clears the value of the "name" field.
-func (u *MenuUpsert) ClearName() *MenuUpsert {
-	u.SetNull(menu.FieldName)
+// SetTitle sets the "title" field.
+func (u *MenuUpsert) SetTitle(v string) *MenuUpsert {
+	u.Set(menu.FieldTitle, v)
+	return u
+}
+
+// UpdateTitle sets the "title" field to the value that was provided on create.
+func (u *MenuUpsert) UpdateTitle() *MenuUpsert {
+	u.SetExcluded(menu.FieldTitle)
+	return u
+}
+
+// SetParentID sets the "parent_id" field.
+func (u *MenuUpsert) SetParentID(v uint32) *MenuUpsert {
+	u.Set(menu.FieldParentID, v)
+	return u
+}
+
+// UpdateParentID sets the "parent_id" field to the value that was provided on create.
+func (u *MenuUpsert) UpdateParentID() *MenuUpsert {
+	u.SetExcluded(menu.FieldParentID)
+	return u
+}
+
+// ClearParentID clears the value of the "parent_id" field.
+func (u *MenuUpsert) ClearParentID() *MenuUpsert {
+	u.SetNull(menu.FieldParentID)
+	return u
+}
+
+// SetType sets the "type" field.
+func (u *MenuUpsert) SetType(v int32) *MenuUpsert {
+	u.Set(menu.FieldType, v)
+	return u
+}
+
+// UpdateType sets the "type" field to the value that was provided on create.
+func (u *MenuUpsert) UpdateType() *MenuUpsert {
+	u.SetExcluded(menu.FieldType)
+	return u
+}
+
+// AddType adds v to the "type" field.
+func (u *MenuUpsert) AddType(v int32) *MenuUpsert {
+	u.Add(menu.FieldType, v)
+	return u
+}
+
+// SetPath sets the "path" field.
+func (u *MenuUpsert) SetPath(v string) *MenuUpsert {
+	u.Set(menu.FieldPath, v)
+	return u
+}
+
+// UpdatePath sets the "path" field to the value that was provided on create.
+func (u *MenuUpsert) UpdatePath() *MenuUpsert {
+	u.SetExcluded(menu.FieldPath)
+	return u
+}
+
+// SetComponent sets the "component" field.
+func (u *MenuUpsert) SetComponent(v string) *MenuUpsert {
+	u.Set(menu.FieldComponent, v)
+	return u
+}
+
+// UpdateComponent sets the "component" field to the value that was provided on create.
+func (u *MenuUpsert) UpdateComponent() *MenuUpsert {
+	u.SetExcluded(menu.FieldComponent)
+	return u
+}
+
+// SetIcon sets the "icon" field.
+func (u *MenuUpsert) SetIcon(v string) *MenuUpsert {
+	u.Set(menu.FieldIcon, v)
+	return u
+}
+
+// UpdateIcon sets the "icon" field to the value that was provided on create.
+func (u *MenuUpsert) UpdateIcon() *MenuUpsert {
+	u.SetExcluded(menu.FieldIcon)
+	return u
+}
+
+// SetIsExt sets the "is_ext" field.
+func (u *MenuUpsert) SetIsExt(v bool) *MenuUpsert {
+	u.Set(menu.FieldIsExt, v)
+	return u
+}
+
+// UpdateIsExt sets the "is_ext" field to the value that was provided on create.
+func (u *MenuUpsert) UpdateIsExt() *MenuUpsert {
+	u.SetExcluded(menu.FieldIsExt)
+	return u
+}
+
+// SetExtURL sets the "ext_url" field.
+func (u *MenuUpsert) SetExtURL(v string) *MenuUpsert {
+	u.Set(menu.FieldExtURL, v)
+	return u
+}
+
+// UpdateExtURL sets the "ext_url" field to the value that was provided on create.
+func (u *MenuUpsert) UpdateExtURL() *MenuUpsert {
+	u.SetExcluded(menu.FieldExtURL)
+	return u
+}
+
+// SetPermissions sets the "permissions" field.
+func (u *MenuUpsert) SetPermissions(v []string) *MenuUpsert {
+	u.Set(menu.FieldPermissions, v)
+	return u
+}
+
+// UpdatePermissions sets the "permissions" field to the value that was provided on create.
+func (u *MenuUpsert) UpdatePermissions() *MenuUpsert {
+	u.SetExcluded(menu.FieldPermissions)
+	return u
+}
+
+// ClearPermissions clears the value of the "permissions" field.
+func (u *MenuUpsert) ClearPermissions() *MenuUpsert {
+	u.SetNull(menu.FieldPermissions)
+	return u
+}
+
+// SetRedirect sets the "redirect" field.
+func (u *MenuUpsert) SetRedirect(v string) *MenuUpsert {
+	u.Set(menu.FieldRedirect, v)
+	return u
+}
+
+// UpdateRedirect sets the "redirect" field to the value that was provided on create.
+func (u *MenuUpsert) UpdateRedirect() *MenuUpsert {
+	u.SetExcluded(menu.FieldRedirect)
+	return u
+}
+
+// SetCurrentActiveMenu sets the "current_active_menu" field.
+func (u *MenuUpsert) SetCurrentActiveMenu(v string) *MenuUpsert {
+	u.Set(menu.FieldCurrentActiveMenu, v)
+	return u
+}
+
+// UpdateCurrentActiveMenu sets the "current_active_menu" field to the value that was provided on create.
+func (u *MenuUpsert) UpdateCurrentActiveMenu() *MenuUpsert {
+	u.SetExcluded(menu.FieldCurrentActiveMenu)
+	return u
+}
+
+// SetKeepAlive sets the "keep_alive" field.
+func (u *MenuUpsert) SetKeepAlive(v bool) *MenuUpsert {
+	u.Set(menu.FieldKeepAlive, v)
+	return u
+}
+
+// UpdateKeepAlive sets the "keep_alive" field to the value that was provided on create.
+func (u *MenuUpsert) UpdateKeepAlive() *MenuUpsert {
+	u.SetExcluded(menu.FieldKeepAlive)
+	return u
+}
+
+// SetVisible sets the "visible" field.
+func (u *MenuUpsert) SetVisible(v bool) *MenuUpsert {
+	u.Set(menu.FieldVisible, v)
+	return u
+}
+
+// UpdateVisible sets the "visible" field to the value that was provided on create.
+func (u *MenuUpsert) UpdateVisible() *MenuUpsert {
+	u.SetExcluded(menu.FieldVisible)
+	return u
+}
+
+// SetHideTab sets the "hide_tab" field.
+func (u *MenuUpsert) SetHideTab(v bool) *MenuUpsert {
+	u.Set(menu.FieldHideTab, v)
+	return u
+}
+
+// UpdateHideTab sets the "hide_tab" field to the value that was provided on create.
+func (u *MenuUpsert) UpdateHideTab() *MenuUpsert {
+	u.SetExcluded(menu.FieldHideTab)
+	return u
+}
+
+// SetHideMenu sets the "hide_menu" field.
+func (u *MenuUpsert) SetHideMenu(v bool) *MenuUpsert {
+	u.Set(menu.FieldHideMenu, v)
+	return u
+}
+
+// UpdateHideMenu sets the "hide_menu" field to the value that was provided on create.
+func (u *MenuUpsert) UpdateHideMenu() *MenuUpsert {
+	u.SetExcluded(menu.FieldHideMenu)
+	return u
+}
+
+// SetHideBreadcrumb sets the "hide_breadcrumb" field.
+func (u *MenuUpsert) SetHideBreadcrumb(v bool) *MenuUpsert {
+	u.Set(menu.FieldHideBreadcrumb, v)
+	return u
+}
+
+// UpdateHideBreadcrumb sets the "hide_breadcrumb" field to the value that was provided on create.
+func (u *MenuUpsert) UpdateHideBreadcrumb() *MenuUpsert {
+	u.SetExcluded(menu.FieldHideBreadcrumb)
 	return u
 }
 
@@ -429,24 +1178,66 @@ func (u *MenuUpsertOne) ClearDeletedAt() *MenuUpsertOne {
 	})
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (u *MenuUpsertOne) SetPlatformID(v uint64) *MenuUpsertOne {
+// SetRemark sets the "remark" field.
+func (u *MenuUpsertOne) SetRemark(v string) *MenuUpsertOne {
 	return u.Update(func(s *MenuUpsert) {
-		s.SetPlatformID(v)
+		s.SetRemark(v)
 	})
 }
 
-// AddPlatformID adds v to the "platform_id" field.
-func (u *MenuUpsertOne) AddPlatformID(v uint64) *MenuUpsertOne {
+// UpdateRemark sets the "remark" field to the value that was provided on create.
+func (u *MenuUpsertOne) UpdateRemark() *MenuUpsertOne {
 	return u.Update(func(s *MenuUpsert) {
-		s.AddPlatformID(v)
+		s.UpdateRemark()
 	})
 }
 
-// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
-func (u *MenuUpsertOne) UpdatePlatformID() *MenuUpsertOne {
+// ClearRemark clears the value of the "remark" field.
+func (u *MenuUpsertOne) ClearRemark() *MenuUpsertOne {
 	return u.Update(func(s *MenuUpsert) {
-		s.UpdatePlatformID()
+		s.ClearRemark()
+	})
+}
+
+// SetSort sets the "sort" field.
+func (u *MenuUpsertOne) SetSort(v int32) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetSort(v)
+	})
+}
+
+// AddSort adds v to the "sort" field.
+func (u *MenuUpsertOne) AddSort(v int32) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.AddSort(v)
+	})
+}
+
+// UpdateSort sets the "sort" field to the value that was provided on create.
+func (u *MenuUpsertOne) UpdateSort() *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateSort()
+	})
+}
+
+// SetState sets the "state" field.
+func (u *MenuUpsertOne) SetState(v int32) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetState(v)
+	})
+}
+
+// AddState adds v to the "state" field.
+func (u *MenuUpsertOne) AddState(v int32) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.AddState(v)
+	})
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *MenuUpsertOne) UpdateState() *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateState()
 	})
 }
 
@@ -464,10 +1255,248 @@ func (u *MenuUpsertOne) UpdateName() *MenuUpsertOne {
 	})
 }
 
-// ClearName clears the value of the "name" field.
-func (u *MenuUpsertOne) ClearName() *MenuUpsertOne {
+// SetTitle sets the "title" field.
+func (u *MenuUpsertOne) SetTitle(v string) *MenuUpsertOne {
 	return u.Update(func(s *MenuUpsert) {
-		s.ClearName()
+		s.SetTitle(v)
+	})
+}
+
+// UpdateTitle sets the "title" field to the value that was provided on create.
+func (u *MenuUpsertOne) UpdateTitle() *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateTitle()
+	})
+}
+
+// SetParentID sets the "parent_id" field.
+func (u *MenuUpsertOne) SetParentID(v uint32) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetParentID(v)
+	})
+}
+
+// UpdateParentID sets the "parent_id" field to the value that was provided on create.
+func (u *MenuUpsertOne) UpdateParentID() *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateParentID()
+	})
+}
+
+// ClearParentID clears the value of the "parent_id" field.
+func (u *MenuUpsertOne) ClearParentID() *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.ClearParentID()
+	})
+}
+
+// SetType sets the "type" field.
+func (u *MenuUpsertOne) SetType(v int32) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetType(v)
+	})
+}
+
+// AddType adds v to the "type" field.
+func (u *MenuUpsertOne) AddType(v int32) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.AddType(v)
+	})
+}
+
+// UpdateType sets the "type" field to the value that was provided on create.
+func (u *MenuUpsertOne) UpdateType() *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateType()
+	})
+}
+
+// SetPath sets the "path" field.
+func (u *MenuUpsertOne) SetPath(v string) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetPath(v)
+	})
+}
+
+// UpdatePath sets the "path" field to the value that was provided on create.
+func (u *MenuUpsertOne) UpdatePath() *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdatePath()
+	})
+}
+
+// SetComponent sets the "component" field.
+func (u *MenuUpsertOne) SetComponent(v string) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetComponent(v)
+	})
+}
+
+// UpdateComponent sets the "component" field to the value that was provided on create.
+func (u *MenuUpsertOne) UpdateComponent() *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateComponent()
+	})
+}
+
+// SetIcon sets the "icon" field.
+func (u *MenuUpsertOne) SetIcon(v string) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetIcon(v)
+	})
+}
+
+// UpdateIcon sets the "icon" field to the value that was provided on create.
+func (u *MenuUpsertOne) UpdateIcon() *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateIcon()
+	})
+}
+
+// SetIsExt sets the "is_ext" field.
+func (u *MenuUpsertOne) SetIsExt(v bool) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetIsExt(v)
+	})
+}
+
+// UpdateIsExt sets the "is_ext" field to the value that was provided on create.
+func (u *MenuUpsertOne) UpdateIsExt() *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateIsExt()
+	})
+}
+
+// SetExtURL sets the "ext_url" field.
+func (u *MenuUpsertOne) SetExtURL(v string) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetExtURL(v)
+	})
+}
+
+// UpdateExtURL sets the "ext_url" field to the value that was provided on create.
+func (u *MenuUpsertOne) UpdateExtURL() *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateExtURL()
+	})
+}
+
+// SetPermissions sets the "permissions" field.
+func (u *MenuUpsertOne) SetPermissions(v []string) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetPermissions(v)
+	})
+}
+
+// UpdatePermissions sets the "permissions" field to the value that was provided on create.
+func (u *MenuUpsertOne) UpdatePermissions() *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdatePermissions()
+	})
+}
+
+// ClearPermissions clears the value of the "permissions" field.
+func (u *MenuUpsertOne) ClearPermissions() *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.ClearPermissions()
+	})
+}
+
+// SetRedirect sets the "redirect" field.
+func (u *MenuUpsertOne) SetRedirect(v string) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetRedirect(v)
+	})
+}
+
+// UpdateRedirect sets the "redirect" field to the value that was provided on create.
+func (u *MenuUpsertOne) UpdateRedirect() *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateRedirect()
+	})
+}
+
+// SetCurrentActiveMenu sets the "current_active_menu" field.
+func (u *MenuUpsertOne) SetCurrentActiveMenu(v string) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetCurrentActiveMenu(v)
+	})
+}
+
+// UpdateCurrentActiveMenu sets the "current_active_menu" field to the value that was provided on create.
+func (u *MenuUpsertOne) UpdateCurrentActiveMenu() *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateCurrentActiveMenu()
+	})
+}
+
+// SetKeepAlive sets the "keep_alive" field.
+func (u *MenuUpsertOne) SetKeepAlive(v bool) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetKeepAlive(v)
+	})
+}
+
+// UpdateKeepAlive sets the "keep_alive" field to the value that was provided on create.
+func (u *MenuUpsertOne) UpdateKeepAlive() *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateKeepAlive()
+	})
+}
+
+// SetVisible sets the "visible" field.
+func (u *MenuUpsertOne) SetVisible(v bool) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetVisible(v)
+	})
+}
+
+// UpdateVisible sets the "visible" field to the value that was provided on create.
+func (u *MenuUpsertOne) UpdateVisible() *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateVisible()
+	})
+}
+
+// SetHideTab sets the "hide_tab" field.
+func (u *MenuUpsertOne) SetHideTab(v bool) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetHideTab(v)
+	})
+}
+
+// UpdateHideTab sets the "hide_tab" field to the value that was provided on create.
+func (u *MenuUpsertOne) UpdateHideTab() *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateHideTab()
+	})
+}
+
+// SetHideMenu sets the "hide_menu" field.
+func (u *MenuUpsertOne) SetHideMenu(v bool) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetHideMenu(v)
+	})
+}
+
+// UpdateHideMenu sets the "hide_menu" field to the value that was provided on create.
+func (u *MenuUpsertOne) UpdateHideMenu() *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateHideMenu()
+	})
+}
+
+// SetHideBreadcrumb sets the "hide_breadcrumb" field.
+func (u *MenuUpsertOne) SetHideBreadcrumb(v bool) *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetHideBreadcrumb(v)
+	})
+}
+
+// UpdateHideBreadcrumb sets the "hide_breadcrumb" field to the value that was provided on create.
+func (u *MenuUpsertOne) UpdateHideBreadcrumb() *MenuUpsertOne {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateHideBreadcrumb()
 	})
 }
 
@@ -730,24 +1759,66 @@ func (u *MenuUpsertBulk) ClearDeletedAt() *MenuUpsertBulk {
 	})
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (u *MenuUpsertBulk) SetPlatformID(v uint64) *MenuUpsertBulk {
+// SetRemark sets the "remark" field.
+func (u *MenuUpsertBulk) SetRemark(v string) *MenuUpsertBulk {
 	return u.Update(func(s *MenuUpsert) {
-		s.SetPlatformID(v)
+		s.SetRemark(v)
 	})
 }
 
-// AddPlatformID adds v to the "platform_id" field.
-func (u *MenuUpsertBulk) AddPlatformID(v uint64) *MenuUpsertBulk {
+// UpdateRemark sets the "remark" field to the value that was provided on create.
+func (u *MenuUpsertBulk) UpdateRemark() *MenuUpsertBulk {
 	return u.Update(func(s *MenuUpsert) {
-		s.AddPlatformID(v)
+		s.UpdateRemark()
 	})
 }
 
-// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
-func (u *MenuUpsertBulk) UpdatePlatformID() *MenuUpsertBulk {
+// ClearRemark clears the value of the "remark" field.
+func (u *MenuUpsertBulk) ClearRemark() *MenuUpsertBulk {
 	return u.Update(func(s *MenuUpsert) {
-		s.UpdatePlatformID()
+		s.ClearRemark()
+	})
+}
+
+// SetSort sets the "sort" field.
+func (u *MenuUpsertBulk) SetSort(v int32) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetSort(v)
+	})
+}
+
+// AddSort adds v to the "sort" field.
+func (u *MenuUpsertBulk) AddSort(v int32) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.AddSort(v)
+	})
+}
+
+// UpdateSort sets the "sort" field to the value that was provided on create.
+func (u *MenuUpsertBulk) UpdateSort() *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateSort()
+	})
+}
+
+// SetState sets the "state" field.
+func (u *MenuUpsertBulk) SetState(v int32) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetState(v)
+	})
+}
+
+// AddState adds v to the "state" field.
+func (u *MenuUpsertBulk) AddState(v int32) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.AddState(v)
+	})
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *MenuUpsertBulk) UpdateState() *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateState()
 	})
 }
 
@@ -765,10 +1836,248 @@ func (u *MenuUpsertBulk) UpdateName() *MenuUpsertBulk {
 	})
 }
 
-// ClearName clears the value of the "name" field.
-func (u *MenuUpsertBulk) ClearName() *MenuUpsertBulk {
+// SetTitle sets the "title" field.
+func (u *MenuUpsertBulk) SetTitle(v string) *MenuUpsertBulk {
 	return u.Update(func(s *MenuUpsert) {
-		s.ClearName()
+		s.SetTitle(v)
+	})
+}
+
+// UpdateTitle sets the "title" field to the value that was provided on create.
+func (u *MenuUpsertBulk) UpdateTitle() *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateTitle()
+	})
+}
+
+// SetParentID sets the "parent_id" field.
+func (u *MenuUpsertBulk) SetParentID(v uint32) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetParentID(v)
+	})
+}
+
+// UpdateParentID sets the "parent_id" field to the value that was provided on create.
+func (u *MenuUpsertBulk) UpdateParentID() *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateParentID()
+	})
+}
+
+// ClearParentID clears the value of the "parent_id" field.
+func (u *MenuUpsertBulk) ClearParentID() *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.ClearParentID()
+	})
+}
+
+// SetType sets the "type" field.
+func (u *MenuUpsertBulk) SetType(v int32) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetType(v)
+	})
+}
+
+// AddType adds v to the "type" field.
+func (u *MenuUpsertBulk) AddType(v int32) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.AddType(v)
+	})
+}
+
+// UpdateType sets the "type" field to the value that was provided on create.
+func (u *MenuUpsertBulk) UpdateType() *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateType()
+	})
+}
+
+// SetPath sets the "path" field.
+func (u *MenuUpsertBulk) SetPath(v string) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetPath(v)
+	})
+}
+
+// UpdatePath sets the "path" field to the value that was provided on create.
+func (u *MenuUpsertBulk) UpdatePath() *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdatePath()
+	})
+}
+
+// SetComponent sets the "component" field.
+func (u *MenuUpsertBulk) SetComponent(v string) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetComponent(v)
+	})
+}
+
+// UpdateComponent sets the "component" field to the value that was provided on create.
+func (u *MenuUpsertBulk) UpdateComponent() *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateComponent()
+	})
+}
+
+// SetIcon sets the "icon" field.
+func (u *MenuUpsertBulk) SetIcon(v string) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetIcon(v)
+	})
+}
+
+// UpdateIcon sets the "icon" field to the value that was provided on create.
+func (u *MenuUpsertBulk) UpdateIcon() *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateIcon()
+	})
+}
+
+// SetIsExt sets the "is_ext" field.
+func (u *MenuUpsertBulk) SetIsExt(v bool) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetIsExt(v)
+	})
+}
+
+// UpdateIsExt sets the "is_ext" field to the value that was provided on create.
+func (u *MenuUpsertBulk) UpdateIsExt() *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateIsExt()
+	})
+}
+
+// SetExtURL sets the "ext_url" field.
+func (u *MenuUpsertBulk) SetExtURL(v string) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetExtURL(v)
+	})
+}
+
+// UpdateExtURL sets the "ext_url" field to the value that was provided on create.
+func (u *MenuUpsertBulk) UpdateExtURL() *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateExtURL()
+	})
+}
+
+// SetPermissions sets the "permissions" field.
+func (u *MenuUpsertBulk) SetPermissions(v []string) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetPermissions(v)
+	})
+}
+
+// UpdatePermissions sets the "permissions" field to the value that was provided on create.
+func (u *MenuUpsertBulk) UpdatePermissions() *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdatePermissions()
+	})
+}
+
+// ClearPermissions clears the value of the "permissions" field.
+func (u *MenuUpsertBulk) ClearPermissions() *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.ClearPermissions()
+	})
+}
+
+// SetRedirect sets the "redirect" field.
+func (u *MenuUpsertBulk) SetRedirect(v string) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetRedirect(v)
+	})
+}
+
+// UpdateRedirect sets the "redirect" field to the value that was provided on create.
+func (u *MenuUpsertBulk) UpdateRedirect() *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateRedirect()
+	})
+}
+
+// SetCurrentActiveMenu sets the "current_active_menu" field.
+func (u *MenuUpsertBulk) SetCurrentActiveMenu(v string) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetCurrentActiveMenu(v)
+	})
+}
+
+// UpdateCurrentActiveMenu sets the "current_active_menu" field to the value that was provided on create.
+func (u *MenuUpsertBulk) UpdateCurrentActiveMenu() *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateCurrentActiveMenu()
+	})
+}
+
+// SetKeepAlive sets the "keep_alive" field.
+func (u *MenuUpsertBulk) SetKeepAlive(v bool) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetKeepAlive(v)
+	})
+}
+
+// UpdateKeepAlive sets the "keep_alive" field to the value that was provided on create.
+func (u *MenuUpsertBulk) UpdateKeepAlive() *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateKeepAlive()
+	})
+}
+
+// SetVisible sets the "visible" field.
+func (u *MenuUpsertBulk) SetVisible(v bool) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetVisible(v)
+	})
+}
+
+// UpdateVisible sets the "visible" field to the value that was provided on create.
+func (u *MenuUpsertBulk) UpdateVisible() *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateVisible()
+	})
+}
+
+// SetHideTab sets the "hide_tab" field.
+func (u *MenuUpsertBulk) SetHideTab(v bool) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetHideTab(v)
+	})
+}
+
+// UpdateHideTab sets the "hide_tab" field to the value that was provided on create.
+func (u *MenuUpsertBulk) UpdateHideTab() *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateHideTab()
+	})
+}
+
+// SetHideMenu sets the "hide_menu" field.
+func (u *MenuUpsertBulk) SetHideMenu(v bool) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetHideMenu(v)
+	})
+}
+
+// UpdateHideMenu sets the "hide_menu" field to the value that was provided on create.
+func (u *MenuUpsertBulk) UpdateHideMenu() *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateHideMenu()
+	})
+}
+
+// SetHideBreadcrumb sets the "hide_breadcrumb" field.
+func (u *MenuUpsertBulk) SetHideBreadcrumb(v bool) *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.SetHideBreadcrumb(v)
+	})
+}
+
+// UpdateHideBreadcrumb sets the "hide_breadcrumb" field to the value that was provided on create.
+func (u *MenuUpsertBulk) UpdateHideBreadcrumb() *MenuUpsertBulk {
+	return u.Update(func(s *MenuUpsert) {
+		s.UpdateHideBreadcrumb()
 	})
 }
 

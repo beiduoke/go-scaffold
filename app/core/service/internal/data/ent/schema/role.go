@@ -4,8 +4,8 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
+	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
-	mx "github.com/beiduoke/go-scaffold/pkg/entgo/mixin"
 )
 
 // Role holds the schema definition for the Role entity.
@@ -27,7 +27,7 @@ func (Role) Annotations() []schema.Annotation {
 // Mixin of the Role.
 func (Role) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		mx.Common{},
+		MixinTop{},
 	}
 }
 
@@ -37,14 +37,16 @@ func (Role) Fields() []ent.Field {
 		field.String("name").
 			Comment("名称").
 			MaxLen(128).
-			Optional().
 			Nillable(),
 	}
 }
 
 // Edges of the Role.
 func (Role) Edges() []ent.Edge {
-	return nil
+	return []ent.Edge{
+		edge.From("users", User.Type).
+			Ref("roles"),
+	}
 }
 
 // Indexes of the Role.

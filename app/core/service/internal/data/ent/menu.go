@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -24,11 +25,83 @@ type Menu struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 	// 删除时间
 	DeletedAt *time.Time `json:"deleted_at,omitempty"`
-	// 平台ID
-	PlatformID uint64 `json:"platform_id,omitempty"`
-	// 名称
-	Name         *string `json:"name,omitempty"`
+	// 备注
+	Remark *string `json:"remark,omitempty"`
+	// 排序
+	Sort *int32 `json:"sort,omitempty"`
+	// 状态
+	State *int32 `json:"state,omitempty"`
+	// 菜单名称
+	Name *string `json:"name,omitempty"`
+	// 菜单标题
+	Title *string `json:"title,omitempty"`
+	// 父级ID
+	ParentID *uint32 `json:"parent_id,omitempty"`
+	// 菜单类型 0 UNSPECIFIED, 目录 1 -> FOLDER, 菜单 2 -> MENU, 按钮 3 -> BUTTON
+	Type *int32 `json:"type,omitempty"`
+	// 路径,当其类型为'按钮'的时候对应的数据操作名,例如:/user.service.v1.UserService/Login
+	Path *string `json:"path,omitempty"`
+	// 前端页面组件
+	Component *string `json:"component,omitempty"`
+	// 图标
+	Icon *string `json:"icon,omitempty"`
+	// 是否外链
+	IsExt *bool `json:"is_ext,omitempty"`
+	// 外链地址
+	ExtURL *string `json:"ext_url,omitempty"`
+	// 权限代码 例如:sys:menu
+	Permissions []string `json:"permissions,omitempty"`
+	// 跳转路径
+	Redirect *string `json:"redirect,omitempty"`
+	// 当前激活菜单
+	CurrentActiveMenu *string `json:"current_active_menu,omitempty"`
+	// 是否缓存
+	KeepAlive *bool `json:"keep_alive,omitempty"`
+	// 是否显示
+	Visible *bool `json:"visible,omitempty"`
+	// 是否显示在标签页导航
+	HideTab *bool `json:"hide_tab,omitempty"`
+	// 是否显示在菜单导航
+	HideMenu *bool `json:"hide_menu,omitempty"`
+	// 是否显示在面包屑导航
+	HideBreadcrumb *bool `json:"hide_breadcrumb,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the MenuQuery when eager-loading is set.
+	Edges        MenuEdges `json:"edges"`
 	selectValues sql.SelectValues
+}
+
+// MenuEdges holds the relations/edges for other nodes in the graph.
+type MenuEdges struct {
+	// Parent holds the value of the parent edge.
+	Parent *Menu `json:"parent,omitempty"`
+	// Children holds the value of the children edge.
+	Children []*Menu `json:"children,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [2]bool
+}
+
+// ParentOrErr returns the Parent value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e MenuEdges) ParentOrErr() (*Menu, error) {
+	if e.loadedTypes[0] {
+		if e.Parent == nil {
+			// Edge was loaded but was not found.
+			return nil, &NotFoundError{label: menu.Label}
+		}
+		return e.Parent, nil
+	}
+	return nil, &NotLoadedError{edge: "parent"}
+}
+
+// ChildrenOrErr returns the Children value or an error if the edge
+// was not loaded in eager-loading.
+func (e MenuEdges) ChildrenOrErr() ([]*Menu, error) {
+	if e.loadedTypes[1] {
+		return e.Children, nil
+	}
+	return nil, &NotLoadedError{edge: "children"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -36,9 +109,13 @@ func (*Menu) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case menu.FieldID, menu.FieldPlatformID:
+		case menu.FieldPermissions:
+			values[i] = new([]byte)
+		case menu.FieldIsExt, menu.FieldKeepAlive, menu.FieldVisible, menu.FieldHideTab, menu.FieldHideMenu, menu.FieldHideBreadcrumb:
+			values[i] = new(sql.NullBool)
+		case menu.FieldID, menu.FieldSort, menu.FieldState, menu.FieldParentID, menu.FieldType:
 			values[i] = new(sql.NullInt64)
-		case menu.FieldName:
+		case menu.FieldRemark, menu.FieldName, menu.FieldTitle, menu.FieldPath, menu.FieldComponent, menu.FieldIcon, menu.FieldExtURL, menu.FieldRedirect, menu.FieldCurrentActiveMenu:
 			values[i] = new(sql.NullString)
 		case menu.FieldCreatedAt, menu.FieldUpdatedAt, menu.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
@@ -84,11 +161,26 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 				m.DeletedAt = new(time.Time)
 				*m.DeletedAt = value.Time
 			}
-		case menu.FieldPlatformID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field platform_id", values[i])
+		case menu.FieldRemark:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field remark", values[i])
 			} else if value.Valid {
-				m.PlatformID = uint64(value.Int64)
+				m.Remark = new(string)
+				*m.Remark = value.String
+			}
+		case menu.FieldSort:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field sort", values[i])
+			} else if value.Valid {
+				m.Sort = new(int32)
+				*m.Sort = int32(value.Int64)
+			}
+		case menu.FieldState:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field state", values[i])
+			} else if value.Valid {
+				m.State = new(int32)
+				*m.State = int32(value.Int64)
 			}
 		case menu.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -96,6 +188,119 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				m.Name = new(string)
 				*m.Name = value.String
+			}
+		case menu.FieldTitle:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field title", values[i])
+			} else if value.Valid {
+				m.Title = new(string)
+				*m.Title = value.String
+			}
+		case menu.FieldParentID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field parent_id", values[i])
+			} else if value.Valid {
+				m.ParentID = new(uint32)
+				*m.ParentID = uint32(value.Int64)
+			}
+		case menu.FieldType:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field type", values[i])
+			} else if value.Valid {
+				m.Type = new(int32)
+				*m.Type = int32(value.Int64)
+			}
+		case menu.FieldPath:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field path", values[i])
+			} else if value.Valid {
+				m.Path = new(string)
+				*m.Path = value.String
+			}
+		case menu.FieldComponent:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field component", values[i])
+			} else if value.Valid {
+				m.Component = new(string)
+				*m.Component = value.String
+			}
+		case menu.FieldIcon:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field icon", values[i])
+			} else if value.Valid {
+				m.Icon = new(string)
+				*m.Icon = value.String
+			}
+		case menu.FieldIsExt:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field is_ext", values[i])
+			} else if value.Valid {
+				m.IsExt = new(bool)
+				*m.IsExt = value.Bool
+			}
+		case menu.FieldExtURL:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field ext_url", values[i])
+			} else if value.Valid {
+				m.ExtURL = new(string)
+				*m.ExtURL = value.String
+			}
+		case menu.FieldPermissions:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field permissions", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &m.Permissions); err != nil {
+					return fmt.Errorf("unmarshal field permissions: %w", err)
+				}
+			}
+		case menu.FieldRedirect:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field redirect", values[i])
+			} else if value.Valid {
+				m.Redirect = new(string)
+				*m.Redirect = value.String
+			}
+		case menu.FieldCurrentActiveMenu:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field current_active_menu", values[i])
+			} else if value.Valid {
+				m.CurrentActiveMenu = new(string)
+				*m.CurrentActiveMenu = value.String
+			}
+		case menu.FieldKeepAlive:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field keep_alive", values[i])
+			} else if value.Valid {
+				m.KeepAlive = new(bool)
+				*m.KeepAlive = value.Bool
+			}
+		case menu.FieldVisible:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field visible", values[i])
+			} else if value.Valid {
+				m.Visible = new(bool)
+				*m.Visible = value.Bool
+			}
+		case menu.FieldHideTab:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field hide_tab", values[i])
+			} else if value.Valid {
+				m.HideTab = new(bool)
+				*m.HideTab = value.Bool
+			}
+		case menu.FieldHideMenu:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field hide_menu", values[i])
+			} else if value.Valid {
+				m.HideMenu = new(bool)
+				*m.HideMenu = value.Bool
+			}
+		case menu.FieldHideBreadcrumb:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field hide_breadcrumb", values[i])
+			} else if value.Valid {
+				m.HideBreadcrumb = new(bool)
+				*m.HideBreadcrumb = value.Bool
 			}
 		default:
 			m.selectValues.Set(columns[i], values[i])
@@ -108,6 +313,16 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (m *Menu) Value(name string) (ent.Value, error) {
 	return m.selectValues.Get(name)
+}
+
+// QueryParent queries the "parent" edge of the Menu entity.
+func (m *Menu) QueryParent() *MenuQuery {
+	return NewMenuClient(m.config).QueryParent(m)
+}
+
+// QueryChildren queries the "children" edge of the Menu entity.
+func (m *Menu) QueryChildren() *MenuQuery {
+	return NewMenuClient(m.config).QueryChildren(m)
 }
 
 // Update returns a builder for updating this Menu.
@@ -148,12 +363,102 @@ func (m *Menu) String() string {
 		builder.WriteString(v.Format(time.ANSIC))
 	}
 	builder.WriteString(", ")
-	builder.WriteString("platform_id=")
-	builder.WriteString(fmt.Sprintf("%v", m.PlatformID))
+	if v := m.Remark; v != nil {
+		builder.WriteString("remark=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := m.Sort; v != nil {
+		builder.WriteString("sort=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := m.State; v != nil {
+		builder.WriteString("state=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
 	builder.WriteString(", ")
 	if v := m.Name; v != nil {
 		builder.WriteString("name=")
 		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := m.Title; v != nil {
+		builder.WriteString("title=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := m.ParentID; v != nil {
+		builder.WriteString("parent_id=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := m.Type; v != nil {
+		builder.WriteString("type=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := m.Path; v != nil {
+		builder.WriteString("path=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := m.Component; v != nil {
+		builder.WriteString("component=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := m.Icon; v != nil {
+		builder.WriteString("icon=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := m.IsExt; v != nil {
+		builder.WriteString("is_ext=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := m.ExtURL; v != nil {
+		builder.WriteString("ext_url=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	builder.WriteString("permissions=")
+	builder.WriteString(fmt.Sprintf("%v", m.Permissions))
+	builder.WriteString(", ")
+	if v := m.Redirect; v != nil {
+		builder.WriteString("redirect=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := m.CurrentActiveMenu; v != nil {
+		builder.WriteString("current_active_menu=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := m.KeepAlive; v != nil {
+		builder.WriteString("keep_alive=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := m.Visible; v != nil {
+		builder.WriteString("visible=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := m.HideTab; v != nil {
+		builder.WriteString("hide_tab=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := m.HideMenu; v != nil {
+		builder.WriteString("hide_menu=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := m.HideBreadcrumb; v != nil {
+		builder.WriteString("hide_breadcrumb=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteByte(')')
 	return builder.String()

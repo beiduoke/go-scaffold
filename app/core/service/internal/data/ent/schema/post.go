@@ -5,7 +5,6 @@ import (
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
-	mx "github.com/beiduoke/go-scaffold/pkg/entgo/mixin"
 )
 
 // Post holds the schema definition for the Post entity.
@@ -27,7 +26,7 @@ func (Post) Annotations() []schema.Annotation {
 // Mixin of the Post.
 func (Post) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		mx.Common{},
+		MixinTop{},
 	}
 }
 

@@ -24,10 +24,15 @@ type Post struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 	// 删除时间
 	DeletedAt *time.Time `json:"deleted_at,omitempty"`
-	// 平台ID
-	PlatformID uint64 `json:"platform_id,omitempty"`
+	// 备注
+	Remark *string `json:"remark,omitempty"`
+	// 排序
+	Sort *int32 `json:"sort,omitempty"`
+	// 状态
+	State *int32 `json:"state,omitempty"`
 	// 名称
 	Name         *string `json:"name,omitempty"`
+	user_posts   *uint32
 	selectValues sql.SelectValues
 }
 
@@ -36,12 +41,14 @@ func (*Post) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case post.FieldID, post.FieldPlatformID:
+		case post.FieldID, post.FieldSort, post.FieldState:
 			values[i] = new(sql.NullInt64)
-		case post.FieldName:
+		case post.FieldRemark, post.FieldName:
 			values[i] = new(sql.NullString)
 		case post.FieldCreatedAt, post.FieldUpdatedAt, post.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
+		case post.ForeignKeys[0]: // user_posts
+			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -84,11 +91,26 @@ func (po *Post) assignValues(columns []string, values []any) error {
 				po.DeletedAt = new(time.Time)
 				*po.DeletedAt = value.Time
 			}
-		case post.FieldPlatformID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field platform_id", values[i])
+		case post.FieldRemark:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field remark", values[i])
 			} else if value.Valid {
-				po.PlatformID = uint64(value.Int64)
+				po.Remark = new(string)
+				*po.Remark = value.String
+			}
+		case post.FieldSort:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field sort", values[i])
+			} else if value.Valid {
+				po.Sort = new(int32)
+				*po.Sort = int32(value.Int64)
+			}
+		case post.FieldState:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field state", values[i])
+			} else if value.Valid {
+				po.State = new(int32)
+				*po.State = int32(value.Int64)
 			}
 		case post.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -96,6 +118,13 @@ func (po *Post) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				po.Name = new(string)
 				*po.Name = value.String
+			}
+		case post.ForeignKeys[0]:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for edge-field user_posts", value)
+			} else if value.Valid {
+				po.user_posts = new(uint32)
+				*po.user_posts = uint32(value.Int64)
 			}
 		default:
 			po.selectValues.Set(columns[i], values[i])
@@ -148,8 +177,20 @@ func (po *Post) String() string {
 		builder.WriteString(v.Format(time.ANSIC))
 	}
 	builder.WriteString(", ")
-	builder.WriteString("platform_id=")
-	builder.WriteString(fmt.Sprintf("%v", po.PlatformID))
+	if v := po.Remark; v != nil {
+		builder.WriteString("remark=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := po.Sort; v != nil {
+		builder.WriteString("sort=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := po.State; v != nil {
+		builder.WriteString("state=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
 	builder.WriteString(", ")
 	if v := po.Name; v != nil {
 		builder.WriteString("name=")

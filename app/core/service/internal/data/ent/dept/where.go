@@ -69,9 +69,9 @@ func DeletedAt(v time.Time) predicate.Dept {
 	return predicate.Dept(sql.FieldEQ(FieldDeletedAt, v))
 }
 
-// PlatformID applies equality check predicate on the "platform_id" field. It's identical to PlatformIDEQ.
-func PlatformID(v uint64) predicate.Dept {
-	return predicate.Dept(sql.FieldEQ(FieldPlatformID, v))
+// Remark applies equality check predicate on the "remark" field. It's identical to RemarkEQ.
+func Remark(v string) predicate.Dept {
+	return predicate.Dept(sql.FieldEQ(FieldRemark, v))
 }
 
 // Sort applies equality check predicate on the "sort" field. It's identical to SortEQ.
@@ -79,9 +79,9 @@ func Sort(v int32) predicate.Dept {
 	return predicate.Dept(sql.FieldEQ(FieldSort, v))
 }
 
-// Remark applies equality check predicate on the "remark" field. It's identical to RemarkEQ.
-func Remark(v string) predicate.Dept {
-	return predicate.Dept(sql.FieldEQ(FieldRemark, v))
+// State applies equality check predicate on the "state" field. It's identical to StateEQ.
+func State(v int32) predicate.Dept {
+	return predicate.Dept(sql.FieldEQ(FieldState, v))
 }
 
 // Name applies equality check predicate on the "name" field. It's identical to NameEQ.
@@ -244,96 +244,6 @@ func DeletedAtNotNil() predicate.Dept {
 	return predicate.Dept(sql.FieldNotNull(FieldDeletedAt))
 }
 
-// PlatformIDEQ applies the EQ predicate on the "platform_id" field.
-func PlatformIDEQ(v uint64) predicate.Dept {
-	return predicate.Dept(sql.FieldEQ(FieldPlatformID, v))
-}
-
-// PlatformIDNEQ applies the NEQ predicate on the "platform_id" field.
-func PlatformIDNEQ(v uint64) predicate.Dept {
-	return predicate.Dept(sql.FieldNEQ(FieldPlatformID, v))
-}
-
-// PlatformIDIn applies the In predicate on the "platform_id" field.
-func PlatformIDIn(vs ...uint64) predicate.Dept {
-	return predicate.Dept(sql.FieldIn(FieldPlatformID, vs...))
-}
-
-// PlatformIDNotIn applies the NotIn predicate on the "platform_id" field.
-func PlatformIDNotIn(vs ...uint64) predicate.Dept {
-	return predicate.Dept(sql.FieldNotIn(FieldPlatformID, vs...))
-}
-
-// PlatformIDGT applies the GT predicate on the "platform_id" field.
-func PlatformIDGT(v uint64) predicate.Dept {
-	return predicate.Dept(sql.FieldGT(FieldPlatformID, v))
-}
-
-// PlatformIDGTE applies the GTE predicate on the "platform_id" field.
-func PlatformIDGTE(v uint64) predicate.Dept {
-	return predicate.Dept(sql.FieldGTE(FieldPlatformID, v))
-}
-
-// PlatformIDLT applies the LT predicate on the "platform_id" field.
-func PlatformIDLT(v uint64) predicate.Dept {
-	return predicate.Dept(sql.FieldLT(FieldPlatformID, v))
-}
-
-// PlatformIDLTE applies the LTE predicate on the "platform_id" field.
-func PlatformIDLTE(v uint64) predicate.Dept {
-	return predicate.Dept(sql.FieldLTE(FieldPlatformID, v))
-}
-
-// SortEQ applies the EQ predicate on the "sort" field.
-func SortEQ(v int32) predicate.Dept {
-	return predicate.Dept(sql.FieldEQ(FieldSort, v))
-}
-
-// SortNEQ applies the NEQ predicate on the "sort" field.
-func SortNEQ(v int32) predicate.Dept {
-	return predicate.Dept(sql.FieldNEQ(FieldSort, v))
-}
-
-// SortIn applies the In predicate on the "sort" field.
-func SortIn(vs ...int32) predicate.Dept {
-	return predicate.Dept(sql.FieldIn(FieldSort, vs...))
-}
-
-// SortNotIn applies the NotIn predicate on the "sort" field.
-func SortNotIn(vs ...int32) predicate.Dept {
-	return predicate.Dept(sql.FieldNotIn(FieldSort, vs...))
-}
-
-// SortGT applies the GT predicate on the "sort" field.
-func SortGT(v int32) predicate.Dept {
-	return predicate.Dept(sql.FieldGT(FieldSort, v))
-}
-
-// SortGTE applies the GTE predicate on the "sort" field.
-func SortGTE(v int32) predicate.Dept {
-	return predicate.Dept(sql.FieldGTE(FieldSort, v))
-}
-
-// SortLT applies the LT predicate on the "sort" field.
-func SortLT(v int32) predicate.Dept {
-	return predicate.Dept(sql.FieldLT(FieldSort, v))
-}
-
-// SortLTE applies the LTE predicate on the "sort" field.
-func SortLTE(v int32) predicate.Dept {
-	return predicate.Dept(sql.FieldLTE(FieldSort, v))
-}
-
-// SortIsNil applies the IsNil predicate on the "sort" field.
-func SortIsNil() predicate.Dept {
-	return predicate.Dept(sql.FieldIsNull(FieldSort))
-}
-
-// SortNotNil applies the NotNil predicate on the "sort" field.
-func SortNotNil() predicate.Dept {
-	return predicate.Dept(sql.FieldNotNull(FieldSort))
-}
-
 // RemarkEQ applies the EQ predicate on the "remark" field.
 func RemarkEQ(v string) predicate.Dept {
 	return predicate.Dept(sql.FieldEQ(FieldRemark, v))
@@ -409,34 +319,84 @@ func RemarkContainsFold(v string) predicate.Dept {
 	return predicate.Dept(sql.FieldContainsFold(FieldRemark, v))
 }
 
-// StatusEQ applies the EQ predicate on the "status" field.
-func StatusEQ(v Status) predicate.Dept {
-	return predicate.Dept(sql.FieldEQ(FieldStatus, v))
+// SortEQ applies the EQ predicate on the "sort" field.
+func SortEQ(v int32) predicate.Dept {
+	return predicate.Dept(sql.FieldEQ(FieldSort, v))
 }
 
-// StatusNEQ applies the NEQ predicate on the "status" field.
-func StatusNEQ(v Status) predicate.Dept {
-	return predicate.Dept(sql.FieldNEQ(FieldStatus, v))
+// SortNEQ applies the NEQ predicate on the "sort" field.
+func SortNEQ(v int32) predicate.Dept {
+	return predicate.Dept(sql.FieldNEQ(FieldSort, v))
 }
 
-// StatusIn applies the In predicate on the "status" field.
-func StatusIn(vs ...Status) predicate.Dept {
-	return predicate.Dept(sql.FieldIn(FieldStatus, vs...))
+// SortIn applies the In predicate on the "sort" field.
+func SortIn(vs ...int32) predicate.Dept {
+	return predicate.Dept(sql.FieldIn(FieldSort, vs...))
 }
 
-// StatusNotIn applies the NotIn predicate on the "status" field.
-func StatusNotIn(vs ...Status) predicate.Dept {
-	return predicate.Dept(sql.FieldNotIn(FieldStatus, vs...))
+// SortNotIn applies the NotIn predicate on the "sort" field.
+func SortNotIn(vs ...int32) predicate.Dept {
+	return predicate.Dept(sql.FieldNotIn(FieldSort, vs...))
 }
 
-// StatusIsNil applies the IsNil predicate on the "status" field.
-func StatusIsNil() predicate.Dept {
-	return predicate.Dept(sql.FieldIsNull(FieldStatus))
+// SortGT applies the GT predicate on the "sort" field.
+func SortGT(v int32) predicate.Dept {
+	return predicate.Dept(sql.FieldGT(FieldSort, v))
 }
 
-// StatusNotNil applies the NotNil predicate on the "status" field.
-func StatusNotNil() predicate.Dept {
-	return predicate.Dept(sql.FieldNotNull(FieldStatus))
+// SortGTE applies the GTE predicate on the "sort" field.
+func SortGTE(v int32) predicate.Dept {
+	return predicate.Dept(sql.FieldGTE(FieldSort, v))
+}
+
+// SortLT applies the LT predicate on the "sort" field.
+func SortLT(v int32) predicate.Dept {
+	return predicate.Dept(sql.FieldLT(FieldSort, v))
+}
+
+// SortLTE applies the LTE predicate on the "sort" field.
+func SortLTE(v int32) predicate.Dept {
+	return predicate.Dept(sql.FieldLTE(FieldSort, v))
+}
+
+// StateEQ applies the EQ predicate on the "state" field.
+func StateEQ(v int32) predicate.Dept {
+	return predicate.Dept(sql.FieldEQ(FieldState, v))
+}
+
+// StateNEQ applies the NEQ predicate on the "state" field.
+func StateNEQ(v int32) predicate.Dept {
+	return predicate.Dept(sql.FieldNEQ(FieldState, v))
+}
+
+// StateIn applies the In predicate on the "state" field.
+func StateIn(vs ...int32) predicate.Dept {
+	return predicate.Dept(sql.FieldIn(FieldState, vs...))
+}
+
+// StateNotIn applies the NotIn predicate on the "state" field.
+func StateNotIn(vs ...int32) predicate.Dept {
+	return predicate.Dept(sql.FieldNotIn(FieldState, vs...))
+}
+
+// StateGT applies the GT predicate on the "state" field.
+func StateGT(v int32) predicate.Dept {
+	return predicate.Dept(sql.FieldGT(FieldState, v))
+}
+
+// StateGTE applies the GTE predicate on the "state" field.
+func StateGTE(v int32) predicate.Dept {
+	return predicate.Dept(sql.FieldGTE(FieldState, v))
+}
+
+// StateLT applies the LT predicate on the "state" field.
+func StateLT(v int32) predicate.Dept {
+	return predicate.Dept(sql.FieldLT(FieldState, v))
+}
+
+// StateLTE applies the LTE predicate on the "state" field.
+func StateLTE(v int32) predicate.Dept {
+	return predicate.Dept(sql.FieldLTE(FieldState, v))
 }
 
 // NameEQ applies the EQ predicate on the "name" field.

@@ -69,24 +69,65 @@ func (pu *PostUpdate) ClearDeletedAt() *PostUpdate {
 	return pu
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (pu *PostUpdate) SetPlatformID(u uint64) *PostUpdate {
-	pu.mutation.ResetPlatformID()
-	pu.mutation.SetPlatformID(u)
+// SetRemark sets the "remark" field.
+func (pu *PostUpdate) SetRemark(s string) *PostUpdate {
+	pu.mutation.SetRemark(s)
 	return pu
 }
 
-// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
-func (pu *PostUpdate) SetNillablePlatformID(u *uint64) *PostUpdate {
-	if u != nil {
-		pu.SetPlatformID(*u)
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (pu *PostUpdate) SetNillableRemark(s *string) *PostUpdate {
+	if s != nil {
+		pu.SetRemark(*s)
 	}
 	return pu
 }
 
-// AddPlatformID adds u to the "platform_id" field.
-func (pu *PostUpdate) AddPlatformID(u int64) *PostUpdate {
-	pu.mutation.AddPlatformID(u)
+// ClearRemark clears the value of the "remark" field.
+func (pu *PostUpdate) ClearRemark() *PostUpdate {
+	pu.mutation.ClearRemark()
+	return pu
+}
+
+// SetSort sets the "sort" field.
+func (pu *PostUpdate) SetSort(i int32) *PostUpdate {
+	pu.mutation.ResetSort()
+	pu.mutation.SetSort(i)
+	return pu
+}
+
+// SetNillableSort sets the "sort" field if the given value is not nil.
+func (pu *PostUpdate) SetNillableSort(i *int32) *PostUpdate {
+	if i != nil {
+		pu.SetSort(*i)
+	}
+	return pu
+}
+
+// AddSort adds i to the "sort" field.
+func (pu *PostUpdate) AddSort(i int32) *PostUpdate {
+	pu.mutation.AddSort(i)
+	return pu
+}
+
+// SetState sets the "state" field.
+func (pu *PostUpdate) SetState(i int32) *PostUpdate {
+	pu.mutation.ResetState()
+	pu.mutation.SetState(i)
+	return pu
+}
+
+// SetNillableState sets the "state" field if the given value is not nil.
+func (pu *PostUpdate) SetNillableState(i *int32) *PostUpdate {
+	if i != nil {
+		pu.SetState(*i)
+	}
+	return pu
+}
+
+// AddState adds i to the "state" field.
+func (pu *PostUpdate) AddState(i int32) *PostUpdate {
+	pu.mutation.AddState(i)
 	return pu
 }
 
@@ -144,9 +185,14 @@ func (pu *PostUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (pu *PostUpdate) check() error {
-	if v, ok := pu.mutation.PlatformID(); ok {
-		if err := post.PlatformIDValidator(v); err != nil {
-			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "Post.platform_id": %w`, err)}
+	if v, ok := pu.mutation.Sort(); ok {
+		if err := post.SortValidator(v); err != nil {
+			return &ValidationError{Name: "sort", err: fmt.Errorf(`ent: validator failed for field "Post.sort": %w`, err)}
+		}
+	}
+	if v, ok := pu.mutation.State(); ok {
+		if err := post.StateValidator(v); err != nil {
+			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "Post.state": %w`, err)}
 		}
 	}
 	if v, ok := pu.mutation.Name(); ok {
@@ -190,11 +236,23 @@ func (pu *PostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if pu.mutation.DeletedAtCleared() {
 		_spec.ClearField(post.FieldDeletedAt, field.TypeTime)
 	}
-	if value, ok := pu.mutation.PlatformID(); ok {
-		_spec.SetField(post.FieldPlatformID, field.TypeUint64, value)
+	if value, ok := pu.mutation.Remark(); ok {
+		_spec.SetField(post.FieldRemark, field.TypeString, value)
 	}
-	if value, ok := pu.mutation.AddedPlatformID(); ok {
-		_spec.AddField(post.FieldPlatformID, field.TypeUint64, value)
+	if pu.mutation.RemarkCleared() {
+		_spec.ClearField(post.FieldRemark, field.TypeString)
+	}
+	if value, ok := pu.mutation.Sort(); ok {
+		_spec.SetField(post.FieldSort, field.TypeInt32, value)
+	}
+	if value, ok := pu.mutation.AddedSort(); ok {
+		_spec.AddField(post.FieldSort, field.TypeInt32, value)
+	}
+	if value, ok := pu.mutation.State(); ok {
+		_spec.SetField(post.FieldState, field.TypeInt32, value)
+	}
+	if value, ok := pu.mutation.AddedState(); ok {
+		_spec.AddField(post.FieldState, field.TypeInt32, value)
 	}
 	if value, ok := pu.mutation.Name(); ok {
 		_spec.SetField(post.FieldName, field.TypeString, value)
@@ -264,24 +322,65 @@ func (puo *PostUpdateOne) ClearDeletedAt() *PostUpdateOne {
 	return puo
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (puo *PostUpdateOne) SetPlatformID(u uint64) *PostUpdateOne {
-	puo.mutation.ResetPlatformID()
-	puo.mutation.SetPlatformID(u)
+// SetRemark sets the "remark" field.
+func (puo *PostUpdateOne) SetRemark(s string) *PostUpdateOne {
+	puo.mutation.SetRemark(s)
 	return puo
 }
 
-// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
-func (puo *PostUpdateOne) SetNillablePlatformID(u *uint64) *PostUpdateOne {
-	if u != nil {
-		puo.SetPlatformID(*u)
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (puo *PostUpdateOne) SetNillableRemark(s *string) *PostUpdateOne {
+	if s != nil {
+		puo.SetRemark(*s)
 	}
 	return puo
 }
 
-// AddPlatformID adds u to the "platform_id" field.
-func (puo *PostUpdateOne) AddPlatformID(u int64) *PostUpdateOne {
-	puo.mutation.AddPlatformID(u)
+// ClearRemark clears the value of the "remark" field.
+func (puo *PostUpdateOne) ClearRemark() *PostUpdateOne {
+	puo.mutation.ClearRemark()
+	return puo
+}
+
+// SetSort sets the "sort" field.
+func (puo *PostUpdateOne) SetSort(i int32) *PostUpdateOne {
+	puo.mutation.ResetSort()
+	puo.mutation.SetSort(i)
+	return puo
+}
+
+// SetNillableSort sets the "sort" field if the given value is not nil.
+func (puo *PostUpdateOne) SetNillableSort(i *int32) *PostUpdateOne {
+	if i != nil {
+		puo.SetSort(*i)
+	}
+	return puo
+}
+
+// AddSort adds i to the "sort" field.
+func (puo *PostUpdateOne) AddSort(i int32) *PostUpdateOne {
+	puo.mutation.AddSort(i)
+	return puo
+}
+
+// SetState sets the "state" field.
+func (puo *PostUpdateOne) SetState(i int32) *PostUpdateOne {
+	puo.mutation.ResetState()
+	puo.mutation.SetState(i)
+	return puo
+}
+
+// SetNillableState sets the "state" field if the given value is not nil.
+func (puo *PostUpdateOne) SetNillableState(i *int32) *PostUpdateOne {
+	if i != nil {
+		puo.SetState(*i)
+	}
+	return puo
+}
+
+// AddState adds i to the "state" field.
+func (puo *PostUpdateOne) AddState(i int32) *PostUpdateOne {
+	puo.mutation.AddState(i)
 	return puo
 }
 
@@ -352,9 +451,14 @@ func (puo *PostUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (puo *PostUpdateOne) check() error {
-	if v, ok := puo.mutation.PlatformID(); ok {
-		if err := post.PlatformIDValidator(v); err != nil {
-			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "Post.platform_id": %w`, err)}
+	if v, ok := puo.mutation.Sort(); ok {
+		if err := post.SortValidator(v); err != nil {
+			return &ValidationError{Name: "sort", err: fmt.Errorf(`ent: validator failed for field "Post.sort": %w`, err)}
+		}
+	}
+	if v, ok := puo.mutation.State(); ok {
+		if err := post.StateValidator(v); err != nil {
+			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "Post.state": %w`, err)}
 		}
 	}
 	if v, ok := puo.mutation.Name(); ok {
@@ -415,11 +519,23 @@ func (puo *PostUpdateOne) sqlSave(ctx context.Context) (_node *Post, err error) 
 	if puo.mutation.DeletedAtCleared() {
 		_spec.ClearField(post.FieldDeletedAt, field.TypeTime)
 	}
-	if value, ok := puo.mutation.PlatformID(); ok {
-		_spec.SetField(post.FieldPlatformID, field.TypeUint64, value)
+	if value, ok := puo.mutation.Remark(); ok {
+		_spec.SetField(post.FieldRemark, field.TypeString, value)
 	}
-	if value, ok := puo.mutation.AddedPlatformID(); ok {
-		_spec.AddField(post.FieldPlatformID, field.TypeUint64, value)
+	if puo.mutation.RemarkCleared() {
+		_spec.ClearField(post.FieldRemark, field.TypeString)
+	}
+	if value, ok := puo.mutation.Sort(); ok {
+		_spec.SetField(post.FieldSort, field.TypeInt32, value)
+	}
+	if value, ok := puo.mutation.AddedSort(); ok {
+		_spec.AddField(post.FieldSort, field.TypeInt32, value)
+	}
+	if value, ok := puo.mutation.State(); ok {
+		_spec.SetField(post.FieldState, field.TypeInt32, value)
+	}
+	if value, ok := puo.mutation.AddedState(); ok {
+		_spec.AddField(post.FieldState, field.TypeInt32, value)
 	}
 	if value, ok := puo.mutation.Name(); ok {
 		_spec.SetField(post.FieldName, field.TypeString, value)

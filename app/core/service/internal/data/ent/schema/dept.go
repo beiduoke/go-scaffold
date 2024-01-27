@@ -4,8 +4,8 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
+	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
-	mx "github.com/beiduoke/go-scaffold/pkg/entgo/mixin"
 )
 
 // Dept holds the schema definition for the Dept entity.
@@ -27,7 +27,7 @@ func (Dept) Annotations() []schema.Annotation {
 // Mixin of the Dept.
 func (Dept) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		mx.Common{},
+		MixinTop{},
 	}
 }
 
@@ -37,9 +37,9 @@ func (Dept) Fields() []ent.Field {
 		field.String("name").
 			Comment("名称").
 			MaxLen(128).
-			Optional().
+			// Optional().
 			Nillable(),
-		field.Int32("parent_id").
+		field.Uint32("parent_id").
 			Comment("父级ID").
 			Default(0).
 			Optional().
@@ -53,7 +53,12 @@ func (Dept) Fields() []ent.Field {
 
 // Edges of the Dept.
 func (Dept) Edges() []ent.Edge {
-	return nil
+	return []ent.Edge{
+		edge.To("children", Menu.Type).
+			From("parent").
+			Unique().
+			Field("parent_id"),
+	}
 }
 
 // Indexes of the Dept.

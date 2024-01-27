@@ -2,6 +2,7 @@ package mixin
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
 )
@@ -12,10 +13,13 @@ type State struct {
 
 func (State) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("state").
-			Comment("状态").
+		field.Int32("state").
+			Comment("状态 0 UNSPECIFIED 开启 1 -> ACTIVE 关闭 2 -> INACTIVE, 禁用 3 -> BANNED").
 			Default(1).
-			Optional().
+			NonNegative().
+			SchemaType(map[string]string{
+				dialect.MySQL: "tinyint(2)",
+			}).
 			Nillable(),
 	}
 }

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/predicate"
 )
 
@@ -69,9 +70,19 @@ func DeletedAt(v time.Time) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldDeletedAt, v))
 }
 
-// PlatformID applies equality check predicate on the "platform_id" field. It's identical to PlatformIDEQ.
-func PlatformID(v uint64) predicate.Role {
-	return predicate.Role(sql.FieldEQ(FieldPlatformID, v))
+// Remark applies equality check predicate on the "remark" field. It's identical to RemarkEQ.
+func Remark(v string) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldRemark, v))
+}
+
+// Sort applies equality check predicate on the "sort" field. It's identical to SortEQ.
+func Sort(v int32) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldSort, v))
+}
+
+// State applies equality check predicate on the "state" field. It's identical to StateEQ.
+func State(v int32) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldState, v))
 }
 
 // Name applies equality check predicate on the "name" field. It's identical to NameEQ.
@@ -229,44 +240,159 @@ func DeletedAtNotNil() predicate.Role {
 	return predicate.Role(sql.FieldNotNull(FieldDeletedAt))
 }
 
-// PlatformIDEQ applies the EQ predicate on the "platform_id" field.
-func PlatformIDEQ(v uint64) predicate.Role {
-	return predicate.Role(sql.FieldEQ(FieldPlatformID, v))
+// RemarkEQ applies the EQ predicate on the "remark" field.
+func RemarkEQ(v string) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldRemark, v))
 }
 
-// PlatformIDNEQ applies the NEQ predicate on the "platform_id" field.
-func PlatformIDNEQ(v uint64) predicate.Role {
-	return predicate.Role(sql.FieldNEQ(FieldPlatformID, v))
+// RemarkNEQ applies the NEQ predicate on the "remark" field.
+func RemarkNEQ(v string) predicate.Role {
+	return predicate.Role(sql.FieldNEQ(FieldRemark, v))
 }
 
-// PlatformIDIn applies the In predicate on the "platform_id" field.
-func PlatformIDIn(vs ...uint64) predicate.Role {
-	return predicate.Role(sql.FieldIn(FieldPlatformID, vs...))
+// RemarkIn applies the In predicate on the "remark" field.
+func RemarkIn(vs ...string) predicate.Role {
+	return predicate.Role(sql.FieldIn(FieldRemark, vs...))
 }
 
-// PlatformIDNotIn applies the NotIn predicate on the "platform_id" field.
-func PlatformIDNotIn(vs ...uint64) predicate.Role {
-	return predicate.Role(sql.FieldNotIn(FieldPlatformID, vs...))
+// RemarkNotIn applies the NotIn predicate on the "remark" field.
+func RemarkNotIn(vs ...string) predicate.Role {
+	return predicate.Role(sql.FieldNotIn(FieldRemark, vs...))
 }
 
-// PlatformIDGT applies the GT predicate on the "platform_id" field.
-func PlatformIDGT(v uint64) predicate.Role {
-	return predicate.Role(sql.FieldGT(FieldPlatformID, v))
+// RemarkGT applies the GT predicate on the "remark" field.
+func RemarkGT(v string) predicate.Role {
+	return predicate.Role(sql.FieldGT(FieldRemark, v))
 }
 
-// PlatformIDGTE applies the GTE predicate on the "platform_id" field.
-func PlatformIDGTE(v uint64) predicate.Role {
-	return predicate.Role(sql.FieldGTE(FieldPlatformID, v))
+// RemarkGTE applies the GTE predicate on the "remark" field.
+func RemarkGTE(v string) predicate.Role {
+	return predicate.Role(sql.FieldGTE(FieldRemark, v))
 }
 
-// PlatformIDLT applies the LT predicate on the "platform_id" field.
-func PlatformIDLT(v uint64) predicate.Role {
-	return predicate.Role(sql.FieldLT(FieldPlatformID, v))
+// RemarkLT applies the LT predicate on the "remark" field.
+func RemarkLT(v string) predicate.Role {
+	return predicate.Role(sql.FieldLT(FieldRemark, v))
 }
 
-// PlatformIDLTE applies the LTE predicate on the "platform_id" field.
-func PlatformIDLTE(v uint64) predicate.Role {
-	return predicate.Role(sql.FieldLTE(FieldPlatformID, v))
+// RemarkLTE applies the LTE predicate on the "remark" field.
+func RemarkLTE(v string) predicate.Role {
+	return predicate.Role(sql.FieldLTE(FieldRemark, v))
+}
+
+// RemarkContains applies the Contains predicate on the "remark" field.
+func RemarkContains(v string) predicate.Role {
+	return predicate.Role(sql.FieldContains(FieldRemark, v))
+}
+
+// RemarkHasPrefix applies the HasPrefix predicate on the "remark" field.
+func RemarkHasPrefix(v string) predicate.Role {
+	return predicate.Role(sql.FieldHasPrefix(FieldRemark, v))
+}
+
+// RemarkHasSuffix applies the HasSuffix predicate on the "remark" field.
+func RemarkHasSuffix(v string) predicate.Role {
+	return predicate.Role(sql.FieldHasSuffix(FieldRemark, v))
+}
+
+// RemarkIsNil applies the IsNil predicate on the "remark" field.
+func RemarkIsNil() predicate.Role {
+	return predicate.Role(sql.FieldIsNull(FieldRemark))
+}
+
+// RemarkNotNil applies the NotNil predicate on the "remark" field.
+func RemarkNotNil() predicate.Role {
+	return predicate.Role(sql.FieldNotNull(FieldRemark))
+}
+
+// RemarkEqualFold applies the EqualFold predicate on the "remark" field.
+func RemarkEqualFold(v string) predicate.Role {
+	return predicate.Role(sql.FieldEqualFold(FieldRemark, v))
+}
+
+// RemarkContainsFold applies the ContainsFold predicate on the "remark" field.
+func RemarkContainsFold(v string) predicate.Role {
+	return predicate.Role(sql.FieldContainsFold(FieldRemark, v))
+}
+
+// SortEQ applies the EQ predicate on the "sort" field.
+func SortEQ(v int32) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldSort, v))
+}
+
+// SortNEQ applies the NEQ predicate on the "sort" field.
+func SortNEQ(v int32) predicate.Role {
+	return predicate.Role(sql.FieldNEQ(FieldSort, v))
+}
+
+// SortIn applies the In predicate on the "sort" field.
+func SortIn(vs ...int32) predicate.Role {
+	return predicate.Role(sql.FieldIn(FieldSort, vs...))
+}
+
+// SortNotIn applies the NotIn predicate on the "sort" field.
+func SortNotIn(vs ...int32) predicate.Role {
+	return predicate.Role(sql.FieldNotIn(FieldSort, vs...))
+}
+
+// SortGT applies the GT predicate on the "sort" field.
+func SortGT(v int32) predicate.Role {
+	return predicate.Role(sql.FieldGT(FieldSort, v))
+}
+
+// SortGTE applies the GTE predicate on the "sort" field.
+func SortGTE(v int32) predicate.Role {
+	return predicate.Role(sql.FieldGTE(FieldSort, v))
+}
+
+// SortLT applies the LT predicate on the "sort" field.
+func SortLT(v int32) predicate.Role {
+	return predicate.Role(sql.FieldLT(FieldSort, v))
+}
+
+// SortLTE applies the LTE predicate on the "sort" field.
+func SortLTE(v int32) predicate.Role {
+	return predicate.Role(sql.FieldLTE(FieldSort, v))
+}
+
+// StateEQ applies the EQ predicate on the "state" field.
+func StateEQ(v int32) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldState, v))
+}
+
+// StateNEQ applies the NEQ predicate on the "state" field.
+func StateNEQ(v int32) predicate.Role {
+	return predicate.Role(sql.FieldNEQ(FieldState, v))
+}
+
+// StateIn applies the In predicate on the "state" field.
+func StateIn(vs ...int32) predicate.Role {
+	return predicate.Role(sql.FieldIn(FieldState, vs...))
+}
+
+// StateNotIn applies the NotIn predicate on the "state" field.
+func StateNotIn(vs ...int32) predicate.Role {
+	return predicate.Role(sql.FieldNotIn(FieldState, vs...))
+}
+
+// StateGT applies the GT predicate on the "state" field.
+func StateGT(v int32) predicate.Role {
+	return predicate.Role(sql.FieldGT(FieldState, v))
+}
+
+// StateGTE applies the GTE predicate on the "state" field.
+func StateGTE(v int32) predicate.Role {
+	return predicate.Role(sql.FieldGTE(FieldState, v))
+}
+
+// StateLT applies the LT predicate on the "state" field.
+func StateLT(v int32) predicate.Role {
+	return predicate.Role(sql.FieldLT(FieldState, v))
+}
+
+// StateLTE applies the LTE predicate on the "state" field.
+func StateLTE(v int32) predicate.Role {
+	return predicate.Role(sql.FieldLTE(FieldState, v))
 }
 
 // NameEQ applies the EQ predicate on the "name" field.
@@ -324,16 +450,6 @@ func NameHasSuffix(v string) predicate.Role {
 	return predicate.Role(sql.FieldHasSuffix(FieldName, v))
 }
 
-// NameIsNil applies the IsNil predicate on the "name" field.
-func NameIsNil() predicate.Role {
-	return predicate.Role(sql.FieldIsNull(FieldName))
-}
-
-// NameNotNil applies the NotNil predicate on the "name" field.
-func NameNotNil() predicate.Role {
-	return predicate.Role(sql.FieldNotNull(FieldName))
-}
-
 // NameEqualFold applies the EqualFold predicate on the "name" field.
 func NameEqualFold(v string) predicate.Role {
 	return predicate.Role(sql.FieldEqualFold(FieldName, v))
@@ -342,6 +458,29 @@ func NameEqualFold(v string) predicate.Role {
 // NameContainsFold applies the ContainsFold predicate on the "name" field.
 func NameContainsFold(v string) predicate.Role {
 	return predicate.Role(sql.FieldContainsFold(FieldName, v))
+}
+
+// HasUsers applies the HasEdge predicate on the "users" edge.
+func HasUsers() predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, UsersTable, UsersPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasUsersWith applies the HasEdge predicate on the "users" edge with a given conditions (other predicates).
+func HasUsersWith(preds ...predicate.User) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := newUsersStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
 }
 
 // And groups predicates with the AND operator between them.

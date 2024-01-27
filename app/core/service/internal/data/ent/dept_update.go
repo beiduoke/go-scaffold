@@ -70,24 +70,23 @@ func (du *DeptUpdate) ClearDeletedAt() *DeptUpdate {
 	return du
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (du *DeptUpdate) SetPlatformID(u uint64) *DeptUpdate {
-	du.mutation.ResetPlatformID()
-	du.mutation.SetPlatformID(u)
+// SetRemark sets the "remark" field.
+func (du *DeptUpdate) SetRemark(s string) *DeptUpdate {
+	du.mutation.SetRemark(s)
 	return du
 }
 
-// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
-func (du *DeptUpdate) SetNillablePlatformID(u *uint64) *DeptUpdate {
-	if u != nil {
-		du.SetPlatformID(*u)
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (du *DeptUpdate) SetNillableRemark(s *string) *DeptUpdate {
+	if s != nil {
+		du.SetRemark(*s)
 	}
 	return du
 }
 
-// AddPlatformID adds u to the "platform_id" field.
-func (du *DeptUpdate) AddPlatformID(u int64) *DeptUpdate {
-	du.mutation.AddPlatformID(u)
+// ClearRemark clears the value of the "remark" field.
+func (du *DeptUpdate) ClearRemark() *DeptUpdate {
+	du.mutation.ClearRemark()
 	return du
 }
 
@@ -112,49 +111,24 @@ func (du *DeptUpdate) AddSort(i int32) *DeptUpdate {
 	return du
 }
 
-// ClearSort clears the value of the "sort" field.
-func (du *DeptUpdate) ClearSort() *DeptUpdate {
-	du.mutation.ClearSort()
+// SetState sets the "state" field.
+func (du *DeptUpdate) SetState(i int32) *DeptUpdate {
+	du.mutation.ResetState()
+	du.mutation.SetState(i)
 	return du
 }
 
-// SetRemark sets the "remark" field.
-func (du *DeptUpdate) SetRemark(s string) *DeptUpdate {
-	du.mutation.SetRemark(s)
-	return du
-}
-
-// SetNillableRemark sets the "remark" field if the given value is not nil.
-func (du *DeptUpdate) SetNillableRemark(s *string) *DeptUpdate {
-	if s != nil {
-		du.SetRemark(*s)
+// SetNillableState sets the "state" field if the given value is not nil.
+func (du *DeptUpdate) SetNillableState(i *int32) *DeptUpdate {
+	if i != nil {
+		du.SetState(*i)
 	}
 	return du
 }
 
-// ClearRemark clears the value of the "remark" field.
-func (du *DeptUpdate) ClearRemark() *DeptUpdate {
-	du.mutation.ClearRemark()
-	return du
-}
-
-// SetStatus sets the "status" field.
-func (du *DeptUpdate) SetStatus(d dept.Status) *DeptUpdate {
-	du.mutation.SetStatus(d)
-	return du
-}
-
-// SetNillableStatus sets the "status" field if the given value is not nil.
-func (du *DeptUpdate) SetNillableStatus(d *dept.Status) *DeptUpdate {
-	if d != nil {
-		du.SetStatus(*d)
-	}
-	return du
-}
-
-// ClearStatus clears the value of the "status" field.
-func (du *DeptUpdate) ClearStatus() *DeptUpdate {
-	du.mutation.ClearStatus()
+// AddState adds i to the "state" field.
+func (du *DeptUpdate) AddState(i int32) *DeptUpdate {
+	du.mutation.AddState(i)
 	return du
 }
 
@@ -257,14 +231,14 @@ func (du *DeptUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (du *DeptUpdate) check() error {
-	if v, ok := du.mutation.PlatformID(); ok {
-		if err := dept.PlatformIDValidator(v); err != nil {
-			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "Dept.platform_id": %w`, err)}
+	if v, ok := du.mutation.Sort(); ok {
+		if err := dept.SortValidator(v); err != nil {
+			return &ValidationError{Name: "sort", err: fmt.Errorf(`ent: validator failed for field "Dept.sort": %w`, err)}
 		}
 	}
-	if v, ok := du.mutation.Status(); ok {
-		if err := dept.StatusValidator(v); err != nil {
-			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Dept.status": %w`, err)}
+	if v, ok := du.mutation.State(); ok {
+		if err := dept.StateValidator(v); err != nil {
+			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "Dept.state": %w`, err)}
 		}
 	}
 	if v, ok := du.mutation.Name(); ok {
@@ -308,11 +282,11 @@ func (du *DeptUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if du.mutation.DeletedAtCleared() {
 		_spec.ClearField(dept.FieldDeletedAt, field.TypeTime)
 	}
-	if value, ok := du.mutation.PlatformID(); ok {
-		_spec.SetField(dept.FieldPlatformID, field.TypeUint64, value)
+	if value, ok := du.mutation.Remark(); ok {
+		_spec.SetField(dept.FieldRemark, field.TypeString, value)
 	}
-	if value, ok := du.mutation.AddedPlatformID(); ok {
-		_spec.AddField(dept.FieldPlatformID, field.TypeUint64, value)
+	if du.mutation.RemarkCleared() {
+		_spec.ClearField(dept.FieldRemark, field.TypeString)
 	}
 	if value, ok := du.mutation.Sort(); ok {
 		_spec.SetField(dept.FieldSort, field.TypeInt32, value)
@@ -320,20 +294,11 @@ func (du *DeptUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := du.mutation.AddedSort(); ok {
 		_spec.AddField(dept.FieldSort, field.TypeInt32, value)
 	}
-	if du.mutation.SortCleared() {
-		_spec.ClearField(dept.FieldSort, field.TypeInt32)
+	if value, ok := du.mutation.State(); ok {
+		_spec.SetField(dept.FieldState, field.TypeInt32, value)
 	}
-	if value, ok := du.mutation.Remark(); ok {
-		_spec.SetField(dept.FieldRemark, field.TypeString, value)
-	}
-	if du.mutation.RemarkCleared() {
-		_spec.ClearField(dept.FieldRemark, field.TypeString)
-	}
-	if value, ok := du.mutation.Status(); ok {
-		_spec.SetField(dept.FieldStatus, field.TypeEnum, value)
-	}
-	if du.mutation.StatusCleared() {
-		_spec.ClearField(dept.FieldStatus, field.TypeEnum)
+	if value, ok := du.mutation.AddedState(); ok {
+		_spec.AddField(dept.FieldState, field.TypeInt32, value)
 	}
 	if value, ok := du.mutation.Name(); ok {
 		_spec.SetField(dept.FieldName, field.TypeString, value)
@@ -423,24 +388,23 @@ func (duo *DeptUpdateOne) ClearDeletedAt() *DeptUpdateOne {
 	return duo
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (duo *DeptUpdateOne) SetPlatformID(u uint64) *DeptUpdateOne {
-	duo.mutation.ResetPlatformID()
-	duo.mutation.SetPlatformID(u)
+// SetRemark sets the "remark" field.
+func (duo *DeptUpdateOne) SetRemark(s string) *DeptUpdateOne {
+	duo.mutation.SetRemark(s)
 	return duo
 }
 
-// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
-func (duo *DeptUpdateOne) SetNillablePlatformID(u *uint64) *DeptUpdateOne {
-	if u != nil {
-		duo.SetPlatformID(*u)
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (duo *DeptUpdateOne) SetNillableRemark(s *string) *DeptUpdateOne {
+	if s != nil {
+		duo.SetRemark(*s)
 	}
 	return duo
 }
 
-// AddPlatformID adds u to the "platform_id" field.
-func (duo *DeptUpdateOne) AddPlatformID(u int64) *DeptUpdateOne {
-	duo.mutation.AddPlatformID(u)
+// ClearRemark clears the value of the "remark" field.
+func (duo *DeptUpdateOne) ClearRemark() *DeptUpdateOne {
+	duo.mutation.ClearRemark()
 	return duo
 }
 
@@ -465,49 +429,24 @@ func (duo *DeptUpdateOne) AddSort(i int32) *DeptUpdateOne {
 	return duo
 }
 
-// ClearSort clears the value of the "sort" field.
-func (duo *DeptUpdateOne) ClearSort() *DeptUpdateOne {
-	duo.mutation.ClearSort()
+// SetState sets the "state" field.
+func (duo *DeptUpdateOne) SetState(i int32) *DeptUpdateOne {
+	duo.mutation.ResetState()
+	duo.mutation.SetState(i)
 	return duo
 }
 
-// SetRemark sets the "remark" field.
-func (duo *DeptUpdateOne) SetRemark(s string) *DeptUpdateOne {
-	duo.mutation.SetRemark(s)
-	return duo
-}
-
-// SetNillableRemark sets the "remark" field if the given value is not nil.
-func (duo *DeptUpdateOne) SetNillableRemark(s *string) *DeptUpdateOne {
-	if s != nil {
-		duo.SetRemark(*s)
+// SetNillableState sets the "state" field if the given value is not nil.
+func (duo *DeptUpdateOne) SetNillableState(i *int32) *DeptUpdateOne {
+	if i != nil {
+		duo.SetState(*i)
 	}
 	return duo
 }
 
-// ClearRemark clears the value of the "remark" field.
-func (duo *DeptUpdateOne) ClearRemark() *DeptUpdateOne {
-	duo.mutation.ClearRemark()
-	return duo
-}
-
-// SetStatus sets the "status" field.
-func (duo *DeptUpdateOne) SetStatus(d dept.Status) *DeptUpdateOne {
-	duo.mutation.SetStatus(d)
-	return duo
-}
-
-// SetNillableStatus sets the "status" field if the given value is not nil.
-func (duo *DeptUpdateOne) SetNillableStatus(d *dept.Status) *DeptUpdateOne {
-	if d != nil {
-		duo.SetStatus(*d)
-	}
-	return duo
-}
-
-// ClearStatus clears the value of the "status" field.
-func (duo *DeptUpdateOne) ClearStatus() *DeptUpdateOne {
-	duo.mutation.ClearStatus()
+// AddState adds i to the "state" field.
+func (duo *DeptUpdateOne) AddState(i int32) *DeptUpdateOne {
+	duo.mutation.AddState(i)
 	return duo
 }
 
@@ -623,14 +562,14 @@ func (duo *DeptUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (duo *DeptUpdateOne) check() error {
-	if v, ok := duo.mutation.PlatformID(); ok {
-		if err := dept.PlatformIDValidator(v); err != nil {
-			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "Dept.platform_id": %w`, err)}
+	if v, ok := duo.mutation.Sort(); ok {
+		if err := dept.SortValidator(v); err != nil {
+			return &ValidationError{Name: "sort", err: fmt.Errorf(`ent: validator failed for field "Dept.sort": %w`, err)}
 		}
 	}
-	if v, ok := duo.mutation.Status(); ok {
-		if err := dept.StatusValidator(v); err != nil {
-			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Dept.status": %w`, err)}
+	if v, ok := duo.mutation.State(); ok {
+		if err := dept.StateValidator(v); err != nil {
+			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "Dept.state": %w`, err)}
 		}
 	}
 	if v, ok := duo.mutation.Name(); ok {
@@ -691,11 +630,11 @@ func (duo *DeptUpdateOne) sqlSave(ctx context.Context) (_node *Dept, err error) 
 	if duo.mutation.DeletedAtCleared() {
 		_spec.ClearField(dept.FieldDeletedAt, field.TypeTime)
 	}
-	if value, ok := duo.mutation.PlatformID(); ok {
-		_spec.SetField(dept.FieldPlatformID, field.TypeUint64, value)
+	if value, ok := duo.mutation.Remark(); ok {
+		_spec.SetField(dept.FieldRemark, field.TypeString, value)
 	}
-	if value, ok := duo.mutation.AddedPlatformID(); ok {
-		_spec.AddField(dept.FieldPlatformID, field.TypeUint64, value)
+	if duo.mutation.RemarkCleared() {
+		_spec.ClearField(dept.FieldRemark, field.TypeString)
 	}
 	if value, ok := duo.mutation.Sort(); ok {
 		_spec.SetField(dept.FieldSort, field.TypeInt32, value)
@@ -703,20 +642,11 @@ func (duo *DeptUpdateOne) sqlSave(ctx context.Context) (_node *Dept, err error) 
 	if value, ok := duo.mutation.AddedSort(); ok {
 		_spec.AddField(dept.FieldSort, field.TypeInt32, value)
 	}
-	if duo.mutation.SortCleared() {
-		_spec.ClearField(dept.FieldSort, field.TypeInt32)
+	if value, ok := duo.mutation.State(); ok {
+		_spec.SetField(dept.FieldState, field.TypeInt32, value)
 	}
-	if value, ok := duo.mutation.Remark(); ok {
-		_spec.SetField(dept.FieldRemark, field.TypeString, value)
-	}
-	if duo.mutation.RemarkCleared() {
-		_spec.ClearField(dept.FieldRemark, field.TypeString)
-	}
-	if value, ok := duo.mutation.Status(); ok {
-		_spec.SetField(dept.FieldStatus, field.TypeEnum, value)
-	}
-	if duo.mutation.StatusCleared() {
-		_spec.ClearField(dept.FieldStatus, field.TypeEnum)
+	if value, ok := duo.mutation.AddedState(); ok {
+		_spec.AddField(dept.FieldState, field.TypeInt32, value)
 	}
 	if value, ok := duo.mutation.Name(); ok {
 		_spec.SetField(dept.FieldName, field.TypeString, value)

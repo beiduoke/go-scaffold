@@ -64,16 +64,44 @@ func (pc *PostCreate) SetNillableDeletedAt(t *time.Time) *PostCreate {
 	return pc
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (pc *PostCreate) SetPlatformID(u uint64) *PostCreate {
-	pc.mutation.SetPlatformID(u)
+// SetRemark sets the "remark" field.
+func (pc *PostCreate) SetRemark(s string) *PostCreate {
+	pc.mutation.SetRemark(s)
 	return pc
 }
 
-// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
-func (pc *PostCreate) SetNillablePlatformID(u *uint64) *PostCreate {
-	if u != nil {
-		pc.SetPlatformID(*u)
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (pc *PostCreate) SetNillableRemark(s *string) *PostCreate {
+	if s != nil {
+		pc.SetRemark(*s)
+	}
+	return pc
+}
+
+// SetSort sets the "sort" field.
+func (pc *PostCreate) SetSort(i int32) *PostCreate {
+	pc.mutation.SetSort(i)
+	return pc
+}
+
+// SetNillableSort sets the "sort" field if the given value is not nil.
+func (pc *PostCreate) SetNillableSort(i *int32) *PostCreate {
+	if i != nil {
+		pc.SetSort(*i)
+	}
+	return pc
+}
+
+// SetState sets the "state" field.
+func (pc *PostCreate) SetState(i int32) *PostCreate {
+	pc.mutation.SetState(i)
+	return pc
+}
+
+// SetNillableState sets the "state" field if the given value is not nil.
+func (pc *PostCreate) SetNillableState(i *int32) *PostCreate {
+	if i != nil {
+		pc.SetState(*i)
 	}
 	return pc
 }
@@ -133,20 +161,36 @@ func (pc *PostCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (pc *PostCreate) defaults() {
-	if _, ok := pc.mutation.PlatformID(); !ok {
-		v := post.DefaultPlatformID()
-		pc.mutation.SetPlatformID(v)
+	if _, ok := pc.mutation.Remark(); !ok {
+		v := post.DefaultRemark
+		pc.mutation.SetRemark(v)
+	}
+	if _, ok := pc.mutation.Sort(); !ok {
+		v := post.DefaultSort
+		pc.mutation.SetSort(v)
+	}
+	if _, ok := pc.mutation.State(); !ok {
+		v := post.DefaultState
+		pc.mutation.SetState(v)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
 func (pc *PostCreate) check() error {
-	if _, ok := pc.mutation.PlatformID(); !ok {
-		return &ValidationError{Name: "platform_id", err: errors.New(`ent: missing required field "Post.platform_id"`)}
+	if _, ok := pc.mutation.Sort(); !ok {
+		return &ValidationError{Name: "sort", err: errors.New(`ent: missing required field "Post.sort"`)}
 	}
-	if v, ok := pc.mutation.PlatformID(); ok {
-		if err := post.PlatformIDValidator(v); err != nil {
-			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "Post.platform_id": %w`, err)}
+	if v, ok := pc.mutation.Sort(); ok {
+		if err := post.SortValidator(v); err != nil {
+			return &ValidationError{Name: "sort", err: fmt.Errorf(`ent: validator failed for field "Post.sort": %w`, err)}
+		}
+	}
+	if _, ok := pc.mutation.State(); !ok {
+		return &ValidationError{Name: "state", err: errors.New(`ent: missing required field "Post.state"`)}
+	}
+	if v, ok := pc.mutation.State(); ok {
+		if err := post.StateValidator(v); err != nil {
+			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "Post.state": %w`, err)}
 		}
 	}
 	if v, ok := pc.mutation.Name(); ok {
@@ -204,9 +248,17 @@ func (pc *PostCreate) createSpec() (*Post, *sqlgraph.CreateSpec) {
 		_spec.SetField(post.FieldDeletedAt, field.TypeTime, value)
 		_node.DeletedAt = &value
 	}
-	if value, ok := pc.mutation.PlatformID(); ok {
-		_spec.SetField(post.FieldPlatformID, field.TypeUint64, value)
-		_node.PlatformID = value
+	if value, ok := pc.mutation.Remark(); ok {
+		_spec.SetField(post.FieldRemark, field.TypeString, value)
+		_node.Remark = &value
+	}
+	if value, ok := pc.mutation.Sort(); ok {
+		_spec.SetField(post.FieldSort, field.TypeInt32, value)
+		_node.Sort = &value
+	}
+	if value, ok := pc.mutation.State(); ok {
+		_spec.SetField(post.FieldState, field.TypeInt32, value)
+		_node.State = &value
 	}
 	if value, ok := pc.mutation.Name(); ok {
 		_spec.SetField(post.FieldName, field.TypeString, value)
@@ -300,21 +352,57 @@ func (u *PostUpsert) ClearDeletedAt() *PostUpsert {
 	return u
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (u *PostUpsert) SetPlatformID(v uint64) *PostUpsert {
-	u.Set(post.FieldPlatformID, v)
+// SetRemark sets the "remark" field.
+func (u *PostUpsert) SetRemark(v string) *PostUpsert {
+	u.Set(post.FieldRemark, v)
 	return u
 }
 
-// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
-func (u *PostUpsert) UpdatePlatformID() *PostUpsert {
-	u.SetExcluded(post.FieldPlatformID)
+// UpdateRemark sets the "remark" field to the value that was provided on create.
+func (u *PostUpsert) UpdateRemark() *PostUpsert {
+	u.SetExcluded(post.FieldRemark)
 	return u
 }
 
-// AddPlatformID adds v to the "platform_id" field.
-func (u *PostUpsert) AddPlatformID(v uint64) *PostUpsert {
-	u.Add(post.FieldPlatformID, v)
+// ClearRemark clears the value of the "remark" field.
+func (u *PostUpsert) ClearRemark() *PostUpsert {
+	u.SetNull(post.FieldRemark)
+	return u
+}
+
+// SetSort sets the "sort" field.
+func (u *PostUpsert) SetSort(v int32) *PostUpsert {
+	u.Set(post.FieldSort, v)
+	return u
+}
+
+// UpdateSort sets the "sort" field to the value that was provided on create.
+func (u *PostUpsert) UpdateSort() *PostUpsert {
+	u.SetExcluded(post.FieldSort)
+	return u
+}
+
+// AddSort adds v to the "sort" field.
+func (u *PostUpsert) AddSort(v int32) *PostUpsert {
+	u.Add(post.FieldSort, v)
+	return u
+}
+
+// SetState sets the "state" field.
+func (u *PostUpsert) SetState(v int32) *PostUpsert {
+	u.Set(post.FieldState, v)
+	return u
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *PostUpsert) UpdateState() *PostUpsert {
+	u.SetExcluded(post.FieldState)
+	return u
+}
+
+// AddState adds v to the "state" field.
+func (u *PostUpsert) AddState(v int32) *PostUpsert {
+	u.Add(post.FieldState, v)
 	return u
 }
 
@@ -429,24 +517,66 @@ func (u *PostUpsertOne) ClearDeletedAt() *PostUpsertOne {
 	})
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (u *PostUpsertOne) SetPlatformID(v uint64) *PostUpsertOne {
+// SetRemark sets the "remark" field.
+func (u *PostUpsertOne) SetRemark(v string) *PostUpsertOne {
 	return u.Update(func(s *PostUpsert) {
-		s.SetPlatformID(v)
+		s.SetRemark(v)
 	})
 }
 
-// AddPlatformID adds v to the "platform_id" field.
-func (u *PostUpsertOne) AddPlatformID(v uint64) *PostUpsertOne {
+// UpdateRemark sets the "remark" field to the value that was provided on create.
+func (u *PostUpsertOne) UpdateRemark() *PostUpsertOne {
 	return u.Update(func(s *PostUpsert) {
-		s.AddPlatformID(v)
+		s.UpdateRemark()
 	})
 }
 
-// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
-func (u *PostUpsertOne) UpdatePlatformID() *PostUpsertOne {
+// ClearRemark clears the value of the "remark" field.
+func (u *PostUpsertOne) ClearRemark() *PostUpsertOne {
 	return u.Update(func(s *PostUpsert) {
-		s.UpdatePlatformID()
+		s.ClearRemark()
+	})
+}
+
+// SetSort sets the "sort" field.
+func (u *PostUpsertOne) SetSort(v int32) *PostUpsertOne {
+	return u.Update(func(s *PostUpsert) {
+		s.SetSort(v)
+	})
+}
+
+// AddSort adds v to the "sort" field.
+func (u *PostUpsertOne) AddSort(v int32) *PostUpsertOne {
+	return u.Update(func(s *PostUpsert) {
+		s.AddSort(v)
+	})
+}
+
+// UpdateSort sets the "sort" field to the value that was provided on create.
+func (u *PostUpsertOne) UpdateSort() *PostUpsertOne {
+	return u.Update(func(s *PostUpsert) {
+		s.UpdateSort()
+	})
+}
+
+// SetState sets the "state" field.
+func (u *PostUpsertOne) SetState(v int32) *PostUpsertOne {
+	return u.Update(func(s *PostUpsert) {
+		s.SetState(v)
+	})
+}
+
+// AddState adds v to the "state" field.
+func (u *PostUpsertOne) AddState(v int32) *PostUpsertOne {
+	return u.Update(func(s *PostUpsert) {
+		s.AddState(v)
+	})
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *PostUpsertOne) UpdateState() *PostUpsertOne {
+	return u.Update(func(s *PostUpsert) {
+		s.UpdateState()
 	})
 }
 
@@ -730,24 +860,66 @@ func (u *PostUpsertBulk) ClearDeletedAt() *PostUpsertBulk {
 	})
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (u *PostUpsertBulk) SetPlatformID(v uint64) *PostUpsertBulk {
+// SetRemark sets the "remark" field.
+func (u *PostUpsertBulk) SetRemark(v string) *PostUpsertBulk {
 	return u.Update(func(s *PostUpsert) {
-		s.SetPlatformID(v)
+		s.SetRemark(v)
 	})
 }
 
-// AddPlatformID adds v to the "platform_id" field.
-func (u *PostUpsertBulk) AddPlatformID(v uint64) *PostUpsertBulk {
+// UpdateRemark sets the "remark" field to the value that was provided on create.
+func (u *PostUpsertBulk) UpdateRemark() *PostUpsertBulk {
 	return u.Update(func(s *PostUpsert) {
-		s.AddPlatformID(v)
+		s.UpdateRemark()
 	})
 }
 
-// UpdatePlatformID sets the "platform_id" field to the value that was provided on create.
-func (u *PostUpsertBulk) UpdatePlatformID() *PostUpsertBulk {
+// ClearRemark clears the value of the "remark" field.
+func (u *PostUpsertBulk) ClearRemark() *PostUpsertBulk {
 	return u.Update(func(s *PostUpsert) {
-		s.UpdatePlatformID()
+		s.ClearRemark()
+	})
+}
+
+// SetSort sets the "sort" field.
+func (u *PostUpsertBulk) SetSort(v int32) *PostUpsertBulk {
+	return u.Update(func(s *PostUpsert) {
+		s.SetSort(v)
+	})
+}
+
+// AddSort adds v to the "sort" field.
+func (u *PostUpsertBulk) AddSort(v int32) *PostUpsertBulk {
+	return u.Update(func(s *PostUpsert) {
+		s.AddSort(v)
+	})
+}
+
+// UpdateSort sets the "sort" field to the value that was provided on create.
+func (u *PostUpsertBulk) UpdateSort() *PostUpsertBulk {
+	return u.Update(func(s *PostUpsert) {
+		s.UpdateSort()
+	})
+}
+
+// SetState sets the "state" field.
+func (u *PostUpsertBulk) SetState(v int32) *PostUpsertBulk {
+	return u.Update(func(s *PostUpsert) {
+		s.SetState(v)
+	})
+}
+
+// AddState adds v to the "state" field.
+func (u *PostUpsertBulk) AddState(v int32) *PostUpsertBulk {
+	return u.Update(func(s *PostUpsert) {
+		s.AddState(v)
+	})
+}
+
+// UpdateState sets the "state" field to the value that was provided on create.
+func (u *PostUpsertBulk) UpdateState() *PostUpsertBulk {
+	return u.Update(func(s *PostUpsert) {
+		s.UpdateState()
 	})
 }
 

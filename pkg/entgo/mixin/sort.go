@@ -2,6 +2,7 @@ package mixin
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
 )
@@ -15,7 +16,10 @@ func (Sort) Fields() []ent.Field {
 		field.Int32("sort").
 			Comment("排序").
 			Default(100).
-			Optional().
+			NonNegative().
+			SchemaType(map[string]string{
+				dialect.MySQL: "int",
+			}).
 			Nillable(),
 	}
 }

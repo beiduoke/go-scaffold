@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/predicate"
 	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/role"
+	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/user"
 )
 
 // RoleUpdate is the builder for updating Role entities.
@@ -69,24 +70,65 @@ func (ru *RoleUpdate) ClearDeletedAt() *RoleUpdate {
 	return ru
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (ru *RoleUpdate) SetPlatformID(u uint64) *RoleUpdate {
-	ru.mutation.ResetPlatformID()
-	ru.mutation.SetPlatformID(u)
+// SetRemark sets the "remark" field.
+func (ru *RoleUpdate) SetRemark(s string) *RoleUpdate {
+	ru.mutation.SetRemark(s)
 	return ru
 }
 
-// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
-func (ru *RoleUpdate) SetNillablePlatformID(u *uint64) *RoleUpdate {
-	if u != nil {
-		ru.SetPlatformID(*u)
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (ru *RoleUpdate) SetNillableRemark(s *string) *RoleUpdate {
+	if s != nil {
+		ru.SetRemark(*s)
 	}
 	return ru
 }
 
-// AddPlatformID adds u to the "platform_id" field.
-func (ru *RoleUpdate) AddPlatformID(u int64) *RoleUpdate {
-	ru.mutation.AddPlatformID(u)
+// ClearRemark clears the value of the "remark" field.
+func (ru *RoleUpdate) ClearRemark() *RoleUpdate {
+	ru.mutation.ClearRemark()
+	return ru
+}
+
+// SetSort sets the "sort" field.
+func (ru *RoleUpdate) SetSort(i int32) *RoleUpdate {
+	ru.mutation.ResetSort()
+	ru.mutation.SetSort(i)
+	return ru
+}
+
+// SetNillableSort sets the "sort" field if the given value is not nil.
+func (ru *RoleUpdate) SetNillableSort(i *int32) *RoleUpdate {
+	if i != nil {
+		ru.SetSort(*i)
+	}
+	return ru
+}
+
+// AddSort adds i to the "sort" field.
+func (ru *RoleUpdate) AddSort(i int32) *RoleUpdate {
+	ru.mutation.AddSort(i)
+	return ru
+}
+
+// SetState sets the "state" field.
+func (ru *RoleUpdate) SetState(i int32) *RoleUpdate {
+	ru.mutation.ResetState()
+	ru.mutation.SetState(i)
+	return ru
+}
+
+// SetNillableState sets the "state" field if the given value is not nil.
+func (ru *RoleUpdate) SetNillableState(i *int32) *RoleUpdate {
+	if i != nil {
+		ru.SetState(*i)
+	}
+	return ru
+}
+
+// AddState adds i to the "state" field.
+func (ru *RoleUpdate) AddState(i int32) *RoleUpdate {
+	ru.mutation.AddState(i)
 	return ru
 }
 
@@ -104,15 +146,45 @@ func (ru *RoleUpdate) SetNillableName(s *string) *RoleUpdate {
 	return ru
 }
 
-// ClearName clears the value of the "name" field.
-func (ru *RoleUpdate) ClearName() *RoleUpdate {
-	ru.mutation.ClearName()
+// AddUserIDs adds the "users" edge to the User entity by IDs.
+func (ru *RoleUpdate) AddUserIDs(ids ...uint32) *RoleUpdate {
+	ru.mutation.AddUserIDs(ids...)
 	return ru
+}
+
+// AddUsers adds the "users" edges to the User entity.
+func (ru *RoleUpdate) AddUsers(u ...*User) *RoleUpdate {
+	ids := make([]uint32, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return ru.AddUserIDs(ids...)
 }
 
 // Mutation returns the RoleMutation object of the builder.
 func (ru *RoleUpdate) Mutation() *RoleMutation {
 	return ru.mutation
+}
+
+// ClearUsers clears all "users" edges to the User entity.
+func (ru *RoleUpdate) ClearUsers() *RoleUpdate {
+	ru.mutation.ClearUsers()
+	return ru
+}
+
+// RemoveUserIDs removes the "users" edge to User entities by IDs.
+func (ru *RoleUpdate) RemoveUserIDs(ids ...uint32) *RoleUpdate {
+	ru.mutation.RemoveUserIDs(ids...)
+	return ru
+}
+
+// RemoveUsers removes "users" edges to User entities.
+func (ru *RoleUpdate) RemoveUsers(u ...*User) *RoleUpdate {
+	ids := make([]uint32, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return ru.RemoveUserIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -144,9 +216,14 @@ func (ru *RoleUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (ru *RoleUpdate) check() error {
-	if v, ok := ru.mutation.PlatformID(); ok {
-		if err := role.PlatformIDValidator(v); err != nil {
-			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "Role.platform_id": %w`, err)}
+	if v, ok := ru.mutation.Sort(); ok {
+		if err := role.SortValidator(v); err != nil {
+			return &ValidationError{Name: "sort", err: fmt.Errorf(`ent: validator failed for field "Role.sort": %w`, err)}
+		}
+	}
+	if v, ok := ru.mutation.State(); ok {
+		if err := role.StateValidator(v); err != nil {
+			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "Role.state": %w`, err)}
 		}
 	}
 	if v, ok := ru.mutation.Name(); ok {
@@ -190,17 +267,71 @@ func (ru *RoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if ru.mutation.DeletedAtCleared() {
 		_spec.ClearField(role.FieldDeletedAt, field.TypeTime)
 	}
-	if value, ok := ru.mutation.PlatformID(); ok {
-		_spec.SetField(role.FieldPlatformID, field.TypeUint64, value)
+	if value, ok := ru.mutation.Remark(); ok {
+		_spec.SetField(role.FieldRemark, field.TypeString, value)
 	}
-	if value, ok := ru.mutation.AddedPlatformID(); ok {
-		_spec.AddField(role.FieldPlatformID, field.TypeUint64, value)
+	if ru.mutation.RemarkCleared() {
+		_spec.ClearField(role.FieldRemark, field.TypeString)
+	}
+	if value, ok := ru.mutation.Sort(); ok {
+		_spec.SetField(role.FieldSort, field.TypeInt32, value)
+	}
+	if value, ok := ru.mutation.AddedSort(); ok {
+		_spec.AddField(role.FieldSort, field.TypeInt32, value)
+	}
+	if value, ok := ru.mutation.State(); ok {
+		_spec.SetField(role.FieldState, field.TypeInt32, value)
+	}
+	if value, ok := ru.mutation.AddedState(); ok {
+		_spec.AddField(role.FieldState, field.TypeInt32, value)
 	}
 	if value, ok := ru.mutation.Name(); ok {
 		_spec.SetField(role.FieldName, field.TypeString, value)
 	}
-	if ru.mutation.NameCleared() {
-		_spec.ClearField(role.FieldName, field.TypeString)
+	if ru.mutation.UsersCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.UsersTable,
+			Columns: role.UsersPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUint32),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.RemovedUsersIDs(); len(nodes) > 0 && !ru.mutation.UsersCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.UsersTable,
+			Columns: role.UsersPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.UsersIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.UsersTable,
+			Columns: role.UsersPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_spec.AddModifiers(ru.modifiers...)
 	if n, err = sqlgraph.UpdateNodes(ctx, ru.driver, _spec); err != nil {
@@ -264,24 +395,65 @@ func (ruo *RoleUpdateOne) ClearDeletedAt() *RoleUpdateOne {
 	return ruo
 }
 
-// SetPlatformID sets the "platform_id" field.
-func (ruo *RoleUpdateOne) SetPlatformID(u uint64) *RoleUpdateOne {
-	ruo.mutation.ResetPlatformID()
-	ruo.mutation.SetPlatformID(u)
+// SetRemark sets the "remark" field.
+func (ruo *RoleUpdateOne) SetRemark(s string) *RoleUpdateOne {
+	ruo.mutation.SetRemark(s)
 	return ruo
 }
 
-// SetNillablePlatformID sets the "platform_id" field if the given value is not nil.
-func (ruo *RoleUpdateOne) SetNillablePlatformID(u *uint64) *RoleUpdateOne {
-	if u != nil {
-		ruo.SetPlatformID(*u)
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (ruo *RoleUpdateOne) SetNillableRemark(s *string) *RoleUpdateOne {
+	if s != nil {
+		ruo.SetRemark(*s)
 	}
 	return ruo
 }
 
-// AddPlatformID adds u to the "platform_id" field.
-func (ruo *RoleUpdateOne) AddPlatformID(u int64) *RoleUpdateOne {
-	ruo.mutation.AddPlatformID(u)
+// ClearRemark clears the value of the "remark" field.
+func (ruo *RoleUpdateOne) ClearRemark() *RoleUpdateOne {
+	ruo.mutation.ClearRemark()
+	return ruo
+}
+
+// SetSort sets the "sort" field.
+func (ruo *RoleUpdateOne) SetSort(i int32) *RoleUpdateOne {
+	ruo.mutation.ResetSort()
+	ruo.mutation.SetSort(i)
+	return ruo
+}
+
+// SetNillableSort sets the "sort" field if the given value is not nil.
+func (ruo *RoleUpdateOne) SetNillableSort(i *int32) *RoleUpdateOne {
+	if i != nil {
+		ruo.SetSort(*i)
+	}
+	return ruo
+}
+
+// AddSort adds i to the "sort" field.
+func (ruo *RoleUpdateOne) AddSort(i int32) *RoleUpdateOne {
+	ruo.mutation.AddSort(i)
+	return ruo
+}
+
+// SetState sets the "state" field.
+func (ruo *RoleUpdateOne) SetState(i int32) *RoleUpdateOne {
+	ruo.mutation.ResetState()
+	ruo.mutation.SetState(i)
+	return ruo
+}
+
+// SetNillableState sets the "state" field if the given value is not nil.
+func (ruo *RoleUpdateOne) SetNillableState(i *int32) *RoleUpdateOne {
+	if i != nil {
+		ruo.SetState(*i)
+	}
+	return ruo
+}
+
+// AddState adds i to the "state" field.
+func (ruo *RoleUpdateOne) AddState(i int32) *RoleUpdateOne {
+	ruo.mutation.AddState(i)
 	return ruo
 }
 
@@ -299,15 +471,45 @@ func (ruo *RoleUpdateOne) SetNillableName(s *string) *RoleUpdateOne {
 	return ruo
 }
 
-// ClearName clears the value of the "name" field.
-func (ruo *RoleUpdateOne) ClearName() *RoleUpdateOne {
-	ruo.mutation.ClearName()
+// AddUserIDs adds the "users" edge to the User entity by IDs.
+func (ruo *RoleUpdateOne) AddUserIDs(ids ...uint32) *RoleUpdateOne {
+	ruo.mutation.AddUserIDs(ids...)
 	return ruo
+}
+
+// AddUsers adds the "users" edges to the User entity.
+func (ruo *RoleUpdateOne) AddUsers(u ...*User) *RoleUpdateOne {
+	ids := make([]uint32, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return ruo.AddUserIDs(ids...)
 }
 
 // Mutation returns the RoleMutation object of the builder.
 func (ruo *RoleUpdateOne) Mutation() *RoleMutation {
 	return ruo.mutation
+}
+
+// ClearUsers clears all "users" edges to the User entity.
+func (ruo *RoleUpdateOne) ClearUsers() *RoleUpdateOne {
+	ruo.mutation.ClearUsers()
+	return ruo
+}
+
+// RemoveUserIDs removes the "users" edge to User entities by IDs.
+func (ruo *RoleUpdateOne) RemoveUserIDs(ids ...uint32) *RoleUpdateOne {
+	ruo.mutation.RemoveUserIDs(ids...)
+	return ruo
+}
+
+// RemoveUsers removes "users" edges to User entities.
+func (ruo *RoleUpdateOne) RemoveUsers(u ...*User) *RoleUpdateOne {
+	ids := make([]uint32, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return ruo.RemoveUserIDs(ids...)
 }
 
 // Where appends a list predicates to the RoleUpdate builder.
@@ -352,9 +554,14 @@ func (ruo *RoleUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (ruo *RoleUpdateOne) check() error {
-	if v, ok := ruo.mutation.PlatformID(); ok {
-		if err := role.PlatformIDValidator(v); err != nil {
-			return &ValidationError{Name: "platform_id", err: fmt.Errorf(`ent: validator failed for field "Role.platform_id": %w`, err)}
+	if v, ok := ruo.mutation.Sort(); ok {
+		if err := role.SortValidator(v); err != nil {
+			return &ValidationError{Name: "sort", err: fmt.Errorf(`ent: validator failed for field "Role.sort": %w`, err)}
+		}
+	}
+	if v, ok := ruo.mutation.State(); ok {
+		if err := role.StateValidator(v); err != nil {
+			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "Role.state": %w`, err)}
 		}
 	}
 	if v, ok := ruo.mutation.Name(); ok {
@@ -415,17 +622,71 @@ func (ruo *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) 
 	if ruo.mutation.DeletedAtCleared() {
 		_spec.ClearField(role.FieldDeletedAt, field.TypeTime)
 	}
-	if value, ok := ruo.mutation.PlatformID(); ok {
-		_spec.SetField(role.FieldPlatformID, field.TypeUint64, value)
+	if value, ok := ruo.mutation.Remark(); ok {
+		_spec.SetField(role.FieldRemark, field.TypeString, value)
 	}
-	if value, ok := ruo.mutation.AddedPlatformID(); ok {
-		_spec.AddField(role.FieldPlatformID, field.TypeUint64, value)
+	if ruo.mutation.RemarkCleared() {
+		_spec.ClearField(role.FieldRemark, field.TypeString)
+	}
+	if value, ok := ruo.mutation.Sort(); ok {
+		_spec.SetField(role.FieldSort, field.TypeInt32, value)
+	}
+	if value, ok := ruo.mutation.AddedSort(); ok {
+		_spec.AddField(role.FieldSort, field.TypeInt32, value)
+	}
+	if value, ok := ruo.mutation.State(); ok {
+		_spec.SetField(role.FieldState, field.TypeInt32, value)
+	}
+	if value, ok := ruo.mutation.AddedState(); ok {
+		_spec.AddField(role.FieldState, field.TypeInt32, value)
 	}
 	if value, ok := ruo.mutation.Name(); ok {
 		_spec.SetField(role.FieldName, field.TypeString, value)
 	}
-	if ruo.mutation.NameCleared() {
-		_spec.ClearField(role.FieldName, field.TypeString)
+	if ruo.mutation.UsersCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.UsersTable,
+			Columns: role.UsersPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUint32),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.RemovedUsersIDs(); len(nodes) > 0 && !ruo.mutation.UsersCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.UsersTable,
+			Columns: role.UsersPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.UsersIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.UsersTable,
+			Columns: role.UsersPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_spec.AddModifiers(ruo.modifiers...)
 	_node = &Role{config: ruo.config}

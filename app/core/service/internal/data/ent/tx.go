@@ -14,12 +14,16 @@ type Tx struct {
 	config
 	// Dept is the client for interacting with the Dept builders.
 	Dept *DeptClient
+	// Member is the client for interacting with the Member builders.
+	Member *MemberClient
 	// Menu is the client for interacting with the Menu builders.
 	Menu *MenuClient
 	// Post is the client for interacting with the Post builders.
 	Post *PostClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
+	// Tenant is the client for interacting with the Tenant builders.
+	Tenant *TenantClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 
@@ -154,9 +158,11 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Dept = NewDeptClient(tx.config)
+	tx.Member = NewMemberClient(tx.config)
 	tx.Menu = NewMenuClient(tx.config)
 	tx.Post = NewPostClient(tx.config)
 	tx.Role = NewRoleClient(tx.config)
+	tx.Tenant = NewTenantClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 }
 

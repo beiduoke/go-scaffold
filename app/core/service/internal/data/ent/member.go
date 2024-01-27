@@ -9,11 +9,11 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/user"
+	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/member"
 )
 
-// 用户表
-type User struct {
+// 会员表
+type Member struct {
 	config `json:"-"`
 	// ID of the ent.
 	// id
@@ -30,7 +30,7 @@ type User struct {
 	Sort *int32 `json:"sort,omitempty"`
 	// 状态
 	State *int32 `json:"state,omitempty"`
-	// 用户名
+	// 会员名
 	Username string `json:"username,omitempty"`
 	// 密码
 	Password string `json:"password,omitempty"`
@@ -43,54 +43,20 @@ type User struct {
 	// 头像
 	Avatar string `json:"avatar,omitempty"`
 	// 个人说明
-	Description string `json:"description,omitempty"`
-	// 授权 0 UNSPECIFIED, 1 -> SYS_ADMIN, 2 -> CUSTOMER_USER, 3 -> GUEST_USER, 4 -> REFRESH_TOKEN
-	Authority int8 `json:"authority,omitempty"`
-	// Edges holds the relations/edges for other nodes in the graph.
-	// The values are being populated by the UserQuery when eager-loading is set.
-	Edges        UserEdges `json:"edges"`
+	Description  string `json:"description,omitempty"`
 	selectValues sql.SelectValues
 }
 
-// UserEdges holds the relations/edges for other nodes in the graph.
-type UserEdges struct {
-	// Roles holds the value of the roles edge.
-	Roles []*Role `json:"roles,omitempty"`
-	// Posts holds the value of the posts edge.
-	Posts []*Post `json:"posts,omitempty"`
-	// loadedTypes holds the information for reporting if a
-	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
-}
-
-// RolesOrErr returns the Roles value or an error if the edge
-// was not loaded in eager-loading.
-func (e UserEdges) RolesOrErr() ([]*Role, error) {
-	if e.loadedTypes[0] {
-		return e.Roles, nil
-	}
-	return nil, &NotLoadedError{edge: "roles"}
-}
-
-// PostsOrErr returns the Posts value or an error if the edge
-// was not loaded in eager-loading.
-func (e UserEdges) PostsOrErr() ([]*Post, error) {
-	if e.loadedTypes[1] {
-		return e.Posts, nil
-	}
-	return nil, &NotLoadedError{edge: "posts"}
-}
-
 // scanValues returns the types for scanning values from sql.Rows.
-func (*User) scanValues(columns []string) ([]any, error) {
+func (*Member) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldID, user.FieldSort, user.FieldState, user.FieldAuthority:
+		case member.FieldID, member.FieldSort, member.FieldState:
 			values[i] = new(sql.NullInt64)
-		case user.FieldRemark, user.FieldUsername, user.FieldPassword, user.FieldNickname, user.FieldPhone, user.FieldEmail, user.FieldAvatar, user.FieldDescription:
+		case member.FieldRemark, member.FieldUsername, member.FieldPassword, member.FieldNickname, member.FieldPhone, member.FieldEmail, member.FieldAvatar, member.FieldDescription:
 			values[i] = new(sql.NullString)
-		case user.FieldCreatedAt, user.FieldUpdatedAt, user.FieldDeletedAt:
+		case member.FieldCreatedAt, member.FieldUpdatedAt, member.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -100,211 +66,192 @@ func (*User) scanValues(columns []string) ([]any, error) {
 }
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
-// to the User fields.
-func (u *User) assignValues(columns []string, values []any) error {
+// to the Member fields.
+func (m *Member) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldID:
+		case member.FieldID:
 			value, ok := values[i].(*sql.NullInt64)
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			u.ID = uint32(value.Int64)
-		case user.FieldCreatedAt:
+			m.ID = uint32(value.Int64)
+		case member.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
-				u.CreatedAt = new(time.Time)
-				*u.CreatedAt = value.Time
+				m.CreatedAt = new(time.Time)
+				*m.CreatedAt = value.Time
 			}
-		case user.FieldUpdatedAt:
+		case member.FieldUpdatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
-				u.UpdatedAt = new(time.Time)
-				*u.UpdatedAt = value.Time
+				m.UpdatedAt = new(time.Time)
+				*m.UpdatedAt = value.Time
 			}
-		case user.FieldDeletedAt:
+		case member.FieldDeletedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
 			} else if value.Valid {
-				u.DeletedAt = new(time.Time)
-				*u.DeletedAt = value.Time
+				m.DeletedAt = new(time.Time)
+				*m.DeletedAt = value.Time
 			}
-		case user.FieldRemark:
+		case member.FieldRemark:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field remark", values[i])
 			} else if value.Valid {
-				u.Remark = new(string)
-				*u.Remark = value.String
+				m.Remark = new(string)
+				*m.Remark = value.String
 			}
-		case user.FieldSort:
+		case member.FieldSort:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field sort", values[i])
 			} else if value.Valid {
-				u.Sort = new(int32)
-				*u.Sort = int32(value.Int64)
+				m.Sort = new(int32)
+				*m.Sort = int32(value.Int64)
 			}
-		case user.FieldState:
+		case member.FieldState:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field state", values[i])
 			} else if value.Valid {
-				u.State = new(int32)
-				*u.State = int32(value.Int64)
+				m.State = new(int32)
+				*m.State = int32(value.Int64)
 			}
-		case user.FieldUsername:
+		case member.FieldUsername:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field username", values[i])
 			} else if value.Valid {
-				u.Username = value.String
+				m.Username = value.String
 			}
-		case user.FieldPassword:
+		case member.FieldPassword:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field password", values[i])
 			} else if value.Valid {
-				u.Password = value.String
+				m.Password = value.String
 			}
-		case user.FieldNickname:
+		case member.FieldNickname:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field nickname", values[i])
 			} else if value.Valid {
-				u.Nickname = value.String
+				m.Nickname = value.String
 			}
-		case user.FieldPhone:
+		case member.FieldPhone:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field phone", values[i])
 			} else if value.Valid {
-				u.Phone = value.String
+				m.Phone = value.String
 			}
-		case user.FieldEmail:
+		case member.FieldEmail:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field email", values[i])
 			} else if value.Valid {
-				u.Email = value.String
+				m.Email = value.String
 			}
-		case user.FieldAvatar:
+		case member.FieldAvatar:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field avatar", values[i])
 			} else if value.Valid {
-				u.Avatar = value.String
+				m.Avatar = value.String
 			}
-		case user.FieldDescription:
+		case member.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
-				u.Description = value.String
-			}
-		case user.FieldAuthority:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field authority", values[i])
-			} else if value.Valid {
-				u.Authority = int8(value.Int64)
+				m.Description = value.String
 			}
 		default:
-			u.selectValues.Set(columns[i], values[i])
+			m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
 }
 
-// Value returns the ent.Value that was dynamically selected and assigned to the User.
+// Value returns the ent.Value that was dynamically selected and assigned to the Member.
 // This includes values selected through modifiers, order, etc.
-func (u *User) Value(name string) (ent.Value, error) {
-	return u.selectValues.Get(name)
+func (m *Member) Value(name string) (ent.Value, error) {
+	return m.selectValues.Get(name)
 }
 
-// QueryRoles queries the "roles" edge of the User entity.
-func (u *User) QueryRoles() *RoleQuery {
-	return NewUserClient(u.config).QueryRoles(u)
-}
-
-// QueryPosts queries the "posts" edge of the User entity.
-func (u *User) QueryPosts() *PostQuery {
-	return NewUserClient(u.config).QueryPosts(u)
-}
-
-// Update returns a builder for updating this User.
-// Note that you need to call User.Unwrap() before calling this method if this User
+// Update returns a builder for updating this Member.
+// Note that you need to call Member.Unwrap() before calling this method if this Member
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (u *User) Update() *UserUpdateOne {
-	return NewUserClient(u.config).UpdateOne(u)
+func (m *Member) Update() *MemberUpdateOne {
+	return NewMemberClient(m.config).UpdateOne(m)
 }
 
-// Unwrap unwraps the User entity that was returned from a transaction after it was closed,
+// Unwrap unwraps the Member entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (u *User) Unwrap() *User {
-	_tx, ok := u.config.driver.(*txDriver)
+func (m *Member) Unwrap() *Member {
+	_tx, ok := m.config.driver.(*txDriver)
 	if !ok {
-		panic("ent: User is not a transactional entity")
+		panic("ent: Member is not a transactional entity")
 	}
-	u.config.driver = _tx.drv
-	return u
+	m.config.driver = _tx.drv
+	return m
 }
 
 // String implements the fmt.Stringer.
-func (u *User) String() string {
+func (m *Member) String() string {
 	var builder strings.Builder
-	builder.WriteString("User(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", u.ID))
-	if v := u.CreatedAt; v != nil {
+	builder.WriteString("Member(")
+	builder.WriteString(fmt.Sprintf("id=%v, ", m.ID))
+	if v := m.CreatedAt; v != nil {
 		builder.WriteString("created_at=")
 		builder.WriteString(v.Format(time.ANSIC))
 	}
 	builder.WriteString(", ")
-	if v := u.UpdatedAt; v != nil {
+	if v := m.UpdatedAt; v != nil {
 		builder.WriteString("updated_at=")
 		builder.WriteString(v.Format(time.ANSIC))
 	}
 	builder.WriteString(", ")
-	if v := u.DeletedAt; v != nil {
+	if v := m.DeletedAt; v != nil {
 		builder.WriteString("deleted_at=")
 		builder.WriteString(v.Format(time.ANSIC))
 	}
 	builder.WriteString(", ")
-	if v := u.Remark; v != nil {
+	if v := m.Remark; v != nil {
 		builder.WriteString("remark=")
 		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")
-	if v := u.Sort; v != nil {
+	if v := m.Sort; v != nil {
 		builder.WriteString("sort=")
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteString(", ")
-	if v := u.State; v != nil {
+	if v := m.State; v != nil {
 		builder.WriteString("state=")
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteString(", ")
 	builder.WriteString("username=")
-	builder.WriteString(u.Username)
+	builder.WriteString(m.Username)
 	builder.WriteString(", ")
 	builder.WriteString("password=")
-	builder.WriteString(u.Password)
+	builder.WriteString(m.Password)
 	builder.WriteString(", ")
 	builder.WriteString("nickname=")
-	builder.WriteString(u.Nickname)
+	builder.WriteString(m.Nickname)
 	builder.WriteString(", ")
 	builder.WriteString("phone=")
-	builder.WriteString(u.Phone)
+	builder.WriteString(m.Phone)
 	builder.WriteString(", ")
 	builder.WriteString("email=")
-	builder.WriteString(u.Email)
+	builder.WriteString(m.Email)
 	builder.WriteString(", ")
 	builder.WriteString("avatar=")
-	builder.WriteString(u.Avatar)
+	builder.WriteString(m.Avatar)
 	builder.WriteString(", ")
 	builder.WriteString("description=")
-	builder.WriteString(u.Description)
-	builder.WriteString(", ")
-	builder.WriteString("authority=")
-	builder.WriteString(fmt.Sprintf("%v", u.Authority))
+	builder.WriteString(m.Description)
 	builder.WriteByte(')')
 	return builder.String()
 }
 
-// Users is a parsable slice of User.
-type Users []*User
+// Members is a parsable slice of Member.
+type Members []*Member

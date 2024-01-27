@@ -25,14 +25,12 @@ type Dept struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 	// 删除时间
 	DeletedAt *time.Time `json:"deleted_at,omitempty"`
-	// 平台ID
-	PlatformID uint64 `json:"platform_id,omitempty"`
-	// 排序
-	Sort *int32 `json:"sort,omitempty"`
 	// 备注
 	Remark *string `json:"remark,omitempty"`
+	// 排序
+	Sort *int32 `json:"sort,omitempty"`
 	// 状态
-	Status *dept.Status `json:"status,omitempty"`
+	State *int32 `json:"state,omitempty"`
 	// 名称
 	Name *string `json:"name,omitempty"`
 	// 父级ID
@@ -49,9 +47,9 @@ func (*Dept) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case dept.FieldAncestors:
 			values[i] = new([]byte)
-		case dept.FieldID, dept.FieldPlatformID, dept.FieldSort, dept.FieldParentID:
+		case dept.FieldID, dept.FieldSort, dept.FieldState, dept.FieldParentID:
 			values[i] = new(sql.NullInt64)
-		case dept.FieldRemark, dept.FieldStatus, dept.FieldName:
+		case dept.FieldRemark, dept.FieldName:
 			values[i] = new(sql.NullString)
 		case dept.FieldCreatedAt, dept.FieldUpdatedAt, dept.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
@@ -97,11 +95,12 @@ func (d *Dept) assignValues(columns []string, values []any) error {
 				d.DeletedAt = new(time.Time)
 				*d.DeletedAt = value.Time
 			}
-		case dept.FieldPlatformID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field platform_id", values[i])
+		case dept.FieldRemark:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field remark", values[i])
 			} else if value.Valid {
-				d.PlatformID = uint64(value.Int64)
+				d.Remark = new(string)
+				*d.Remark = value.String
 			}
 		case dept.FieldSort:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -110,19 +109,12 @@ func (d *Dept) assignValues(columns []string, values []any) error {
 				d.Sort = new(int32)
 				*d.Sort = int32(value.Int64)
 			}
-		case dept.FieldRemark:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field remark", values[i])
+		case dept.FieldState:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field state", values[i])
 			} else if value.Valid {
-				d.Remark = new(string)
-				*d.Remark = value.String
-			}
-		case dept.FieldStatus:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field status", values[i])
-			} else if value.Valid {
-				d.Status = new(dept.Status)
-				*d.Status = dept.Status(value.String)
+				d.State = new(int32)
+				*d.State = int32(value.Int64)
 			}
 		case dept.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -197,21 +189,18 @@ func (d *Dept) String() string {
 		builder.WriteString(v.Format(time.ANSIC))
 	}
 	builder.WriteString(", ")
-	builder.WriteString("platform_id=")
-	builder.WriteString(fmt.Sprintf("%v", d.PlatformID))
+	if v := d.Remark; v != nil {
+		builder.WriteString("remark=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
 	if v := d.Sort; v != nil {
 		builder.WriteString("sort=")
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteString(", ")
-	if v := d.Remark; v != nil {
-		builder.WriteString("remark=")
-		builder.WriteString(*v)
-	}
-	builder.WriteString(", ")
-	if v := d.Status; v != nil {
-		builder.WriteString("status=")
+	if v := d.State; v != nil {
+		builder.WriteString("state=")
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteString(", ")

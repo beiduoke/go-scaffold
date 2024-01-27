@@ -75,6 +75,7 @@ require (
 
 require (
 	ariga.io/atlas v0.15.0 // indirect
+	ariga.io/entviz v0.0.0-20230419175438-29569ec22220 // indirect
 	entgo.io/contrib v0.4.5 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
@@ -92,7 +93,7 @@ require (
 	github.com/google/gofuzz v1.1.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.19.1 // indirect
 	github.com/jhump/protoreflect v1.15.3 // indirect
-	github.com/lib/pq v1.10.2 // indirect
+	github.com/lib/pq v1.10.7 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/sony/sonyflake v1.2.0 // indirect
