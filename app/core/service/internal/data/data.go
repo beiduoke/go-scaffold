@@ -117,8 +117,8 @@ func NewGormClient(cfg *conf.Bootstrap, logger log.Logger, models []interface{})
 
 // NewRedisClient 创建Redis客户端
 func NewRedisClient(cfg *conf.Bootstrap, logger log.Logger) *redis.Client {
-	l := log.NewHelper(log.With(logger, "module", "redis/data/service"))
-	return bootstrap.NewRedisClient(cfg, l)
+	// l := log.NewHelper(log.With(logger, "module", "redis/data/service"))
+	return bootstrap.NewRedisClient(cfg.GetData())
 }
 
 // NewMeilisearchClient 创建Meilisearch客户端

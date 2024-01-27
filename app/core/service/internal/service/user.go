@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 
+	"github.com/beiduoke/go-scaffold/api/common/pagination"
 	pb "github.com/beiduoke/go-scaffold/api/core/service/v1"
 	"github.com/beiduoke/go-scaffold/app/core/service/internal/data"
 	"github.com/go-kratos/kratos/v2/log"
@@ -31,9 +32,18 @@ func (s *UserService) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest)
 func (s *UserService) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
 	return &pb.DeleteUserResponse{}, nil
 }
-func (s *UserService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
-	return &pb.GetUserResponse{}, nil
+func (s *UserService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.User, error) {
+	return &pb.User{}, nil
 }
-func (s *UserService) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb.ListUserResponse, error) {
+func (s *UserService) GetUserByUserName(ctx context.Context, req *pb.GetUserByUserNameRequest) (*pb.User, error) {
+	return &pb.User{}, nil
+}
+func (s *UserService) ListUser(ctx context.Context, req *pagination.PagingRequest) (*pb.ListUserResponse, error) {
 	return &pb.ListUserResponse{}, nil
+}
+func (s *UserService) VerifyPassword(ctx context.Context, req *pb.VerifyPasswordRequest) (*pb.VerifyPasswordResponse, error) {
+	return &pb.VerifyPasswordResponse{}, nil
+}
+func (s *UserService) UserExists(ctx context.Context, req *pb.UserExistsRequest) (*pb.UserExistsResponse, error) {
+	return &pb.UserExistsResponse{}, nil
 }

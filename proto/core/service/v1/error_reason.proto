@@ -5,7 +5,6 @@ import "errors/errors.proto";
 
 option go_package = "github.com/beiduoke/go-scaffold/api/core/service/v1;v1";
 option java_multiple_files = true;
-option java_package = "dev.kratos.core.service.v1";
 option objc_class_prefix = "RESOURCEapiV1";
 
 enum ErrorReason {

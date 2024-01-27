@@ -11,7 +11,7 @@ plugins:
 #      - logtostderr=true
   # generate openapi v2 yaml doc
   - name: openapi
-    out: api/docs/service/admin
+    out: api/docs/business/v1
     opt:
       - naming=json
       - paths=source_relative

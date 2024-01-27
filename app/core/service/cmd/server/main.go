@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/beiduoke/go-scaffold/pkg/bootstrap"
+	"github.com/beiduoke/go-scaffold/pkg/service"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/registry"
@@ -13,7 +14,7 @@ import (
 var (
 	id, _   = os.Hostname()
 	Service = bootstrap.NewServiceInfo(
-		"kratos-core",
+		service.CoreService,
 		"1.0.0",
 		id,
 	)

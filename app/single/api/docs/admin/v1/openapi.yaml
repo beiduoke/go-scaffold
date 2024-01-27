@@ -435,9 +435,9 @@ paths:
     /v1/depts:
         get:
             tags:
-                - DomainService
-            description: 列表租户套餐
-            operationId: DomainService_ListDomainPackage
+                - DeptService
+            description: 列表部门
+            operationId: DeptService_ListDept
             parameters:
                 - name: nopaging
                   in: query
@@ -456,17 +456,13 @@ paths:
                   schema:
                     type: integer
                     format: int32
-                - name: name
-                  in: query
-                  schema:
-                    type: string
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/ListDomainPackageResponse'
+                                $ref: '#/components/schemas/ListDeptResponse'
                 default:
                     description: Default error response
                     content:
@@ -978,7 +974,52 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /v1/domainPackage:
+    /v1/domainPackages:
+        get:
+            tags:
+                - DomainService
+            description: 列表租户套餐
+            operationId: DomainService_ListDomainPackage
+            parameters:
+                - name: nopaging
+                  in: query
+                  description: 是否不分页
+                  schema:
+                    type: boolean
+                - name: page
+                  in: query
+                  description: 当前页
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  description: 每一页的行数
+                  schema:
+                    type: integer
+                    format: int32
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: state
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListDomainPackageResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
         post:
             tags:
                 - DomainService
@@ -1003,7 +1044,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /v1/domainPackage/{id}:
+    /v1/domainPackages/{id}:
         get:
             tags:
                 - DomainService
@@ -1082,7 +1123,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /v1/domainPackage/{id}/state:
+    /v1/domainPackages/{id}/state:
         put:
             tags:
                 - DomainService
@@ -1306,7 +1347,7 @@ paths:
         get:
             tags:
                 - DomainService
-            description: 获取角色菜单
+            description: 获取租户菜单
             operationId: DomainService_ListDomainMenu
             parameters:
                 - name: id
@@ -1330,7 +1371,7 @@ paths:
         post:
             tags:
                 - DomainService
-            description: 处理角色菜单
+            description: 处理租户菜单
             operationId: DomainService_HandleDomainMenu
             parameters:
                 - name: id
@@ -1442,7 +1483,7 @@ paths:
         get:
             tags:
                 - MenuService
-            description: "菜单模块\r\n 列表菜单"
+            description: 列表菜单
             operationId: MenuService_ListMenu
             parameters:
                 - name: nopaging
@@ -1582,7 +1623,7 @@ paths:
         get:
             tags:
                 - MenuService
-            description: 获取树形菜单
+            description: "菜单模块\r\n 获取树形菜单"
             operationId: MenuService_ListMenuTree
             parameters:
                 - name: id
@@ -2413,6 +2454,8 @@ components:
                     format: int32
                 remarks:
                     type: string
+                packageId:
+                    type: string
             description: 请求 - 创建租户
         CreateDomainResponse:
             type: object
@@ -2842,6 +2885,10 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/Domain'
+                packageId:
+                    type: string
+                package:
+                    $ref: '#/components/schemas/DomainPackage'
             description: 租户模块
         DomainPackage:
             type: object
@@ -3694,6 +3741,8 @@ components:
                     type: integer
                     format: int32
                 remarks:
+                    type: string
+                packageId:
                     type: string
         UpdateDomainResponse:
             type: object

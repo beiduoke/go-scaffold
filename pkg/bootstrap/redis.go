@@ -3,26 +3,41 @@ package bootstrap
 import (
 	"github.com/go-kratos/kratos/v2/log"
 
+	"github.com/redis/go-redis/extra/redisotel/v9"
 	"github.com/redis/go-redis/v9"
 
 	"github.com/beiduoke/go-scaffold/api/common/conf"
 )
 
-// NewRedisClient 创建Redis客户端
-func NewRedisClient(cfg *conf.Bootstrap, logger *log.Helper) *redis.Client {
-	rdb := redis.NewClient(&redis.Options{
-		Addr:         cfg.Data.Redis.Addr,
-		Password:     cfg.Data.Redis.Password,
-		DB:           int(cfg.Data.Redis.Db),
-		DialTimeout:  cfg.Data.Redis.DialTimeout.AsDuration(),
-		WriteTimeout: cfg.Data.Redis.WriteTimeout.AsDuration(),
-		ReadTimeout:  cfg.Data.Redis.ReadTimeout.AsDuration(),
-	})
-	if rdb == nil {
-		logger.Fatalf("failed opening connection to redis")
+// NewRedisClient create go-redis client
+func NewRedisClient(conf *conf.Data) (rdb *redis.Client) {
+	if rdb = redis.NewClient(&redis.Options{
+		Addr:         conf.GetRedis().GetAddr(),
+		Password:     conf.GetRedis().GetPassword(),
+		DB:           int(conf.GetRedis().GetDb()),
+		DialTimeout:  conf.GetRedis().GetDialTimeout().AsDuration(),
+		WriteTimeout: conf.GetRedis().GetWriteTimeout().AsDuration(),
+		ReadTimeout:  conf.GetRedis().GetReadTimeout().AsDuration(),
+	}); rdb == nil {
+		log.Fatalf("failed opening connection to redis")
 		return nil
 	}
-	// rdb.AddHook(redis.ProcessHook())
+
+	// open tracing instrumentation.
+	if conf.GetRedis().GetEnableTracing() {
+		if err := redisotel.InstrumentTracing(rdb); err != nil {
+			log.Fatalf("failed open tracing: %s", err.Error())
+			panic(err)
+		}
+	}
+
+	// open metrics instrumentation.
+	if conf.GetRedis().GetEnableMetrics() {
+		if err := redisotel.InstrumentMetrics(rdb); err != nil {
+			log.Fatalf("failed open metrics: %s", err.Error())
+			panic(err)
+		}
+	}
 
 	return rdb
 }

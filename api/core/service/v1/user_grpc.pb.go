@@ -8,6 +8,7 @@ package v1
 
 import (
 	context "context"
+	pagination "github.com/beiduoke/go-scaffold/api/common/pagination"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -19,11 +20,14 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	UserService_CreateUser_FullMethodName = "/core.service.v1.UserService/CreateUser"
-	UserService_UpdateUser_FullMethodName = "/core.service.v1.UserService/UpdateUser"
-	UserService_DeleteUser_FullMethodName = "/core.service.v1.UserService/DeleteUser"
-	UserService_GetUser_FullMethodName    = "/core.service.v1.UserService/GetUser"
-	UserService_ListUser_FullMethodName   = "/core.service.v1.UserService/ListUser"
+	UserService_CreateUser_FullMethodName        = "/core.service.v1.UserService/CreateUser"
+	UserService_UpdateUser_FullMethodName        = "/core.service.v1.UserService/UpdateUser"
+	UserService_DeleteUser_FullMethodName        = "/core.service.v1.UserService/DeleteUser"
+	UserService_GetUser_FullMethodName           = "/core.service.v1.UserService/GetUser"
+	UserService_ListUser_FullMethodName          = "/core.service.v1.UserService/ListUser"
+	UserService_GetUserByUserName_FullMethodName = "/core.service.v1.UserService/GetUserByUserName"
+	UserService_VerifyPassword_FullMethodName    = "/core.service.v1.UserService/VerifyPassword"
+	UserService_UserExists_FullMethodName        = "/core.service.v1.UserService/UserExists"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -33,8 +37,14 @@ type UserServiceClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
-	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
-	ListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserResponse, error)
+	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*User, error)
+	ListUser(ctx context.Context, in *pagination.PagingRequest, opts ...grpc.CallOption) (*ListUserResponse, error)
+	// 查询用户详情
+	GetUserByUserName(ctx context.Context, in *GetUserByUserNameRequest, opts ...grpc.CallOption) (*User, error)
+	// 验证密码
+	VerifyPassword(ctx context.Context, in *VerifyPasswordRequest, opts ...grpc.CallOption) (*VerifyPasswordResponse, error)
+	// 用户是否存在
+	UserExists(ctx context.Context, in *UserExistsRequest, opts ...grpc.CallOption) (*UserExistsResponse, error)
 }
 
 type userServiceClient struct {
@@ -72,8 +82,8 @@ func (c *userServiceClient) DeleteUser(ctx context.Context, in *DeleteUserReques
 	return out, nil
 }
 
-func (c *userServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error) {
-	out := new(GetUserResponse)
+func (c *userServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
 	err := c.cc.Invoke(ctx, UserService_GetUser_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -81,9 +91,36 @@ func (c *userServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opt
 	return out, nil
 }
 
-func (c *userServiceClient) ListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserResponse, error) {
+func (c *userServiceClient) ListUser(ctx context.Context, in *pagination.PagingRequest, opts ...grpc.CallOption) (*ListUserResponse, error) {
 	out := new(ListUserResponse)
 	err := c.cc.Invoke(ctx, UserService_ListUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) GetUserByUserName(ctx context.Context, in *GetUserByUserNameRequest, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
+	err := c.cc.Invoke(ctx, UserService_GetUserByUserName_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) VerifyPassword(ctx context.Context, in *VerifyPasswordRequest, opts ...grpc.CallOption) (*VerifyPasswordResponse, error) {
+	out := new(VerifyPasswordResponse)
+	err := c.cc.Invoke(ctx, UserService_VerifyPassword_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) UserExists(ctx context.Context, in *UserExistsRequest, opts ...grpc.CallOption) (*UserExistsResponse, error) {
+	out := new(UserExistsResponse)
+	err := c.cc.Invoke(ctx, UserService_UserExists_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -97,8 +134,14 @@ type UserServiceServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
-	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
-	ListUser(context.Context, *ListUserRequest) (*ListUserResponse, error)
+	GetUser(context.Context, *GetUserRequest) (*User, error)
+	ListUser(context.Context, *pagination.PagingRequest) (*ListUserResponse, error)
+	// 查询用户详情
+	GetUserByUserName(context.Context, *GetUserByUserNameRequest) (*User, error)
+	// 验证密码
+	VerifyPassword(context.Context, *VerifyPasswordRequest) (*VerifyPasswordResponse, error)
+	// 用户是否存在
+	UserExists(context.Context, *UserExistsRequest) (*UserExistsResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -115,11 +158,20 @@ func (UnimplementedUserServiceServer) UpdateUser(context.Context, *UpdateUserReq
 func (UnimplementedUserServiceServer) DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
 }
-func (UnimplementedUserServiceServer) GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error) {
+func (UnimplementedUserServiceServer) GetUser(context.Context, *GetUserRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
-func (UnimplementedUserServiceServer) ListUser(context.Context, *ListUserRequest) (*ListUserResponse, error) {
+func (UnimplementedUserServiceServer) ListUser(context.Context, *pagination.PagingRequest) (*ListUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUser not implemented")
+}
+func (UnimplementedUserServiceServer) GetUserByUserName(context.Context, *GetUserByUserNameRequest) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserByUserName not implemented")
+}
+func (UnimplementedUserServiceServer) VerifyPassword(context.Context, *VerifyPasswordRequest) (*VerifyPasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyPassword not implemented")
+}
+func (UnimplementedUserServiceServer) UserExists(context.Context, *UserExistsRequest) (*UserExistsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserExists not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -207,7 +259,7 @@ func _UserService_GetUser_Handler(srv interface{}, ctx context.Context, dec func
 }
 
 func _UserService_ListUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListUserRequest)
+	in := new(pagination.PagingRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -219,7 +271,61 @@ func _UserService_ListUser_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: UserService_ListUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).ListUser(ctx, req.(*ListUserRequest))
+		return srv.(UserServiceServer).ListUser(ctx, req.(*pagination.PagingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_GetUserByUserName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserByUserNameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetUserByUserName(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_GetUserByUserName_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetUserByUserName(ctx, req.(*GetUserByUserNameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_VerifyPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).VerifyPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_VerifyPassword_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).VerifyPassword(ctx, req.(*VerifyPasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_UserExists_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserExistsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UserExists(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_UserExists_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UserExists(ctx, req.(*UserExistsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -250,6 +356,18 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListUser",
 			Handler:    _UserService_ListUser_Handler,
+		},
+		{
+			MethodName: "GetUserByUserName",
+			Handler:    _UserService_GetUserByUserName_Handler,
+		},
+		{
+			MethodName: "VerifyPassword",
+			Handler:    _UserService_VerifyPassword_Handler,
+		},
+		{
+			MethodName: "UserExists",
+			Handler:    _UserService_UserExists_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

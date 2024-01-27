@@ -70,7 +70,8 @@ api:
 # generate OpenAPI v3 doc
 .PHONY: openapi
 openapi:
-	buf generate --path proto/server/v1 --template proto/server/v1/buf.openapi.gen.yaml
+	buf generate --path proto/admin/v1 --template proto/admin/v1/buf.openapi.gen.yaml
+	buf generate --path proto/business/v1 --template proto/business/v1/buf.openapi.gen.yaml
 
 .PHONY: build
 # build
