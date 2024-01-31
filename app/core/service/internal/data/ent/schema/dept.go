@@ -54,7 +54,7 @@ func (Dept) Fields() []ent.Field {
 // Edges of the Dept.
 func (Dept) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("children", Menu.Type).
+		edge.To("children", Dept.Type).
 			From("parent").
 			Unique().
 			Field("parent_id"),

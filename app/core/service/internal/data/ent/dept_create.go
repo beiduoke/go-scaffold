@@ -112,24 +112,16 @@ func (dc *DeptCreate) SetName(s string) *DeptCreate {
 	return dc
 }
 
-// SetNillableName sets the "name" field if the given value is not nil.
-func (dc *DeptCreate) SetNillableName(s *string) *DeptCreate {
-	if s != nil {
-		dc.SetName(*s)
-	}
-	return dc
-}
-
 // SetParentID sets the "parent_id" field.
-func (dc *DeptCreate) SetParentID(i int32) *DeptCreate {
-	dc.mutation.SetParentID(i)
+func (dc *DeptCreate) SetParentID(u uint32) *DeptCreate {
+	dc.mutation.SetParentID(u)
 	return dc
 }
 
 // SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (dc *DeptCreate) SetNillableParentID(i *int32) *DeptCreate {
-	if i != nil {
-		dc.SetParentID(*i)
+func (dc *DeptCreate) SetNillableParentID(u *uint32) *DeptCreate {
+	if u != nil {
+		dc.SetParentID(*u)
 	}
 	return dc
 }
@@ -144,6 +136,26 @@ func (dc *DeptCreate) SetAncestors(i []int) *DeptCreate {
 func (dc *DeptCreate) SetID(u uint32) *DeptCreate {
 	dc.mutation.SetID(u)
 	return dc
+}
+
+// SetParent sets the "parent" edge to the Dept entity.
+func (dc *DeptCreate) SetParent(d *Dept) *DeptCreate {
+	return dc.SetParentID(d.ID)
+}
+
+// AddChildIDs adds the "children" edge to the Dept entity by IDs.
+func (dc *DeptCreate) AddChildIDs(ids ...uint32) *DeptCreate {
+	dc.mutation.AddChildIDs(ids...)
+	return dc
+}
+
+// AddChildren adds the "children" edges to the Dept entity.
+func (dc *DeptCreate) AddChildren(d ...*Dept) *DeptCreate {
+	ids := make([]uint32, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return dc.AddChildIDs(ids...)
 }
 
 // Mutation returns the DeptMutation object of the builder.
@@ -221,6 +233,9 @@ func (dc *DeptCreate) check() error {
 			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "Dept.state": %w`, err)}
 		}
 	}
+	if _, ok := dc.mutation.Name(); !ok {
+		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Dept.name"`)}
+	}
 	if v, ok := dc.mutation.Name(); ok {
 		if err := dept.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Dept.name": %w`, err)}
@@ -292,13 +307,42 @@ func (dc *DeptCreate) createSpec() (*Dept, *sqlgraph.CreateSpec) {
 		_spec.SetField(dept.FieldName, field.TypeString, value)
 		_node.Name = &value
 	}
-	if value, ok := dc.mutation.ParentID(); ok {
-		_spec.SetField(dept.FieldParentID, field.TypeInt32, value)
-		_node.ParentID = &value
-	}
 	if value, ok := dc.mutation.Ancestors(); ok {
 		_spec.SetField(dept.FieldAncestors, field.TypeJSON, value)
 		_node.Ancestors = value
+	}
+	if nodes := dc.mutation.ParentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   dept.ParentTable,
+			Columns: []string{dept.ParentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(dept.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.ParentID = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := dc.mutation.ChildrenIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   dept.ChildrenTable,
+			Columns: []string{dept.ChildrenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(dept.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }
@@ -454,14 +498,8 @@ func (u *DeptUpsert) UpdateName() *DeptUpsert {
 	return u
 }
 
-// ClearName clears the value of the "name" field.
-func (u *DeptUpsert) ClearName() *DeptUpsert {
-	u.SetNull(dept.FieldName)
-	return u
-}
-
 // SetParentID sets the "parent_id" field.
-func (u *DeptUpsert) SetParentID(v int32) *DeptUpsert {
+func (u *DeptUpsert) SetParentID(v uint32) *DeptUpsert {
 	u.Set(dept.FieldParentID, v)
 	return u
 }
@@ -469,12 +507,6 @@ func (u *DeptUpsert) SetParentID(v int32) *DeptUpsert {
 // UpdateParentID sets the "parent_id" field to the value that was provided on create.
 func (u *DeptUpsert) UpdateParentID() *DeptUpsert {
 	u.SetExcluded(dept.FieldParentID)
-	return u
-}
-
-// AddParentID adds v to the "parent_id" field.
-func (u *DeptUpsert) AddParentID(v int32) *DeptUpsert {
-	u.Add(dept.FieldParentID, v)
 	return u
 }
 
@@ -672,24 +704,10 @@ func (u *DeptUpsertOne) UpdateName() *DeptUpsertOne {
 	})
 }
 
-// ClearName clears the value of the "name" field.
-func (u *DeptUpsertOne) ClearName() *DeptUpsertOne {
-	return u.Update(func(s *DeptUpsert) {
-		s.ClearName()
-	})
-}
-
 // SetParentID sets the "parent_id" field.
-func (u *DeptUpsertOne) SetParentID(v int32) *DeptUpsertOne {
+func (u *DeptUpsertOne) SetParentID(v uint32) *DeptUpsertOne {
 	return u.Update(func(s *DeptUpsert) {
 		s.SetParentID(v)
-	})
-}
-
-// AddParentID adds v to the "parent_id" field.
-func (u *DeptUpsertOne) AddParentID(v int32) *DeptUpsertOne {
-	return u.Update(func(s *DeptUpsert) {
-		s.AddParentID(v)
 	})
 }
 
@@ -1064,24 +1082,10 @@ func (u *DeptUpsertBulk) UpdateName() *DeptUpsertBulk {
 	})
 }
 
-// ClearName clears the value of the "name" field.
-func (u *DeptUpsertBulk) ClearName() *DeptUpsertBulk {
-	return u.Update(func(s *DeptUpsert) {
-		s.ClearName()
-	})
-}
-
 // SetParentID sets the "parent_id" field.
-func (u *DeptUpsertBulk) SetParentID(v int32) *DeptUpsertBulk {
+func (u *DeptUpsertBulk) SetParentID(v uint32) *DeptUpsertBulk {
 	return u.Update(func(s *DeptUpsert) {
 		s.SetParentID(v)
-	})
-}
-
-// AddParentID adds v to the "parent_id" field.
-func (u *DeptUpsertBulk) AddParentID(v int32) *DeptUpsertBulk {
-	return u.Update(func(s *DeptUpsert) {
-		s.AddParentID(v)
 	})
 }
 

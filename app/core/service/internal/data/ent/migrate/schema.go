@@ -17,10 +17,10 @@ var (
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
 		{Name: "remark", Type: field.TypeString, Nullable: true, Comment: "备注", Default: ""},
 		{Name: "sort", Type: field.TypeInt32, Comment: "排序", Default: 100, SchemaType: map[string]string{"mysql": "int"}},
-		{Name: "state", Type: field.TypeInt32, Comment: "状态", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)"}},
-		{Name: "name", Type: field.TypeString, Nullable: true, Size: 128, Comment: "名称"},
-		{Name: "parent_id", Type: field.TypeInt32, Nullable: true, Comment: "父级ID", Default: 0},
+		{Name: "state", Type: field.TypeInt32, Comment: "状态 0 UNSPECIFIED 开启 1 -> ACTIVE 关闭 2 -> INACTIVE, 禁用 3 -> BANNED", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)"}},
+		{Name: "name", Type: field.TypeString, Size: 128, Comment: "名称"},
 		{Name: "ancestors", Type: field.TypeJSON, Nullable: true, Comment: "祖级列表"},
+		{Name: "parent_id", Type: field.TypeUint32, Nullable: true, Comment: "父级ID", Default: 0, SchemaType: map[string]string{"mysql": "int", "postgres": "serial"}},
 	}
 	// DeptsTable holds the schema information for the "depts" table.
 	DeptsTable = &schema.Table{
@@ -28,6 +28,14 @@ var (
 		Comment:    "部门表",
 		Columns:    DeptsColumns,
 		PrimaryKey: []*schema.Column{DeptsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "depts_depts_children",
+				Columns:    []*schema.Column{DeptsColumns[9]},
+				RefColumns: []*schema.Column{DeptsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
 	}
 	// MembersColumns holds the columns for the "members" table.
 	MembersColumns = []*schema.Column{
@@ -37,7 +45,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
 		{Name: "remark", Type: field.TypeString, Nullable: true, Comment: "备注", Default: ""},
 		{Name: "sort", Type: field.TypeInt32, Comment: "排序", Default: 100, SchemaType: map[string]string{"mysql": "int"}},
-		{Name: "state", Type: field.TypeInt32, Comment: "状态", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)"}},
+		{Name: "state", Type: field.TypeInt32, Comment: "状态 0 UNSPECIFIED 开启 1 -> ACTIVE 关闭 2 -> INACTIVE, 禁用 3 -> BANNED", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)"}},
 		{Name: "username", Type: field.TypeString, Unique: true, Size: 50, Comment: "会员名"},
 		{Name: "password", Type: field.TypeString, Size: 255, Comment: "密码", Default: ""},
 		{Name: "nickname", Type: field.TypeString, Size: 128, Comment: "昵称", Default: ""},
@@ -68,7 +76,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
 		{Name: "remark", Type: field.TypeString, Nullable: true, Comment: "备注", Default: ""},
 		{Name: "sort", Type: field.TypeInt32, Comment: "排序", Default: 100, SchemaType: map[string]string{"mysql": "int"}},
-		{Name: "state", Type: field.TypeInt32, Comment: "状态", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)"}},
+		{Name: "state", Type: field.TypeInt32, Comment: "状态 0 UNSPECIFIED 开启 1 -> ACTIVE 关闭 2 -> INACTIVE, 禁用 3 -> BANNED", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)"}},
 		{Name: "name", Type: field.TypeString, Size: 32, Comment: "菜单名称", Default: ""},
 		{Name: "title", Type: field.TypeString, Comment: "菜单标题", Default: ""},
 		{Name: "type", Type: field.TypeInt32, Comment: "菜单类型 0 UNSPECIFIED, 目录 1 -> FOLDER, 菜单 2 -> MENU, 按钮 3 -> BUTTON", Default: 1},
@@ -110,7 +118,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
 		{Name: "remark", Type: field.TypeString, Nullable: true, Comment: "备注", Default: ""},
 		{Name: "sort", Type: field.TypeInt32, Comment: "排序", Default: 100, SchemaType: map[string]string{"mysql": "int"}},
-		{Name: "state", Type: field.TypeInt32, Comment: "状态", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)"}},
+		{Name: "state", Type: field.TypeInt32, Comment: "状态 0 UNSPECIFIED 开启 1 -> ACTIVE 关闭 2 -> INACTIVE, 禁用 3 -> BANNED", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)"}},
 		{Name: "name", Type: field.TypeString, Nullable: true, Size: 128, Comment: "名称"},
 		{Name: "user_posts", Type: field.TypeUint32, Nullable: true, SchemaType: map[string]string{"mysql": "int", "postgres": "serial"}},
 	}
@@ -137,7 +145,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
 		{Name: "remark", Type: field.TypeString, Nullable: true, Comment: "备注", Default: ""},
 		{Name: "sort", Type: field.TypeInt32, Comment: "排序", Default: 100, SchemaType: map[string]string{"mysql": "int"}},
-		{Name: "state", Type: field.TypeInt32, Comment: "状态", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)"}},
+		{Name: "state", Type: field.TypeInt32, Comment: "状态 0 UNSPECIFIED 开启 1 -> ACTIVE 关闭 2 -> INACTIVE, 禁用 3 -> BANNED", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)"}},
 		{Name: "name", Type: field.TypeString, Size: 128, Comment: "名称"},
 	}
 	// RolesTable holds the schema information for the "roles" table.
@@ -155,7 +163,7 @@ var (
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
 		{Name: "remark", Type: field.TypeString, Nullable: true, Comment: "备注", Default: ""},
 		{Name: "sort", Type: field.TypeInt32, Comment: "排序", Default: 100, SchemaType: map[string]string{"mysql": "int"}},
-		{Name: "state", Type: field.TypeInt32, Comment: "状态", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)"}},
+		{Name: "state", Type: field.TypeInt32, Comment: "状态 0 UNSPECIFIED 开启 1 -> ACTIVE 关闭 2 -> INACTIVE, 禁用 3 -> BANNED", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)"}},
 		{Name: "name", Type: field.TypeString},
 	}
 	// TenantsTable holds the schema information for the "tenants" table.
@@ -173,15 +181,18 @@ var (
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
 		{Name: "remark", Type: field.TypeString, Nullable: true, Comment: "备注", Default: ""},
 		{Name: "sort", Type: field.TypeInt32, Comment: "排序", Default: 100, SchemaType: map[string]string{"mysql": "int"}},
-		{Name: "state", Type: field.TypeInt32, Comment: "状态", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)"}},
-		{Name: "username", Type: field.TypeString, Unique: true, Size: 50, Comment: "用户名"},
+		{Name: "state", Type: field.TypeInt32, Comment: "状态 0 UNSPECIFIED 开启 1 -> ACTIVE 关闭 2 -> INACTIVE, 禁用 3 -> BANNED", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)"}},
+		{Name: "user_name", Type: field.TypeString, Unique: true, Size: 50, Comment: "用户名"},
 		{Name: "password", Type: field.TypeString, Size: 255, Comment: "密码", Default: ""},
-		{Name: "nickname", Type: field.TypeString, Size: 128, Comment: "昵称", Default: ""},
+		{Name: "nick_name", Type: field.TypeString, Size: 128, Comment: "昵称", Default: ""},
+		{Name: "real_name", Type: field.TypeString, Size: 128, Comment: "昵称", Default: ""},
 		{Name: "phone", Type: field.TypeString, Unique: true, Size: 20, Comment: "手机号"},
 		{Name: "email", Type: field.TypeString, Size: 127, Comment: "电子邮箱", Default: ""},
+		{Name: "birthday", Type: field.TypeTime, Comment: "生日", SchemaType: map[string]string{"mysql": "date", "postgres": "date"}},
+		{Name: "gender", Type: field.TypeInt32, Comment: "性别 0 UNSPECIFIED, 1 -> MAN, 2 -> WOMAN", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)", "postgres": "tinyint(2)"}},
 		{Name: "avatar", Type: field.TypeString, Size: 500, Comment: "头像", Default: ""},
 		{Name: "description", Type: field.TypeString, Size: 1023, Comment: "个人说明", Default: ""},
-		{Name: "authority", Type: field.TypeInt8, Nullable: true, Comment: "授权 0 UNSPECIFIED, 1 -> SYS_ADMIN, 2 -> CUSTOMER_USER, 3 -> GUEST_USER, 4 -> REFRESH_TOKEN", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)", "postgres": "tinyint(2)"}},
+		{Name: "authority", Type: field.TypeInt32, Comment: "授权 0 UNSPECIFIED, 1 -> SYS_ADMIN, 2 -> CUSTOMER_USER, 3 -> GUEST_USER, 4 -> REFRESH_TOKEN", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)", "postgres": "tinyint(2)"}},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{
@@ -193,7 +204,7 @@ var (
 			{
 				Name:    "user_phone_authority",
 				Unique:  true,
-				Columns: []*schema.Column{UsersColumns[10], UsersColumns[14]},
+				Columns: []*schema.Column{UsersColumns[11], UsersColumns[17]},
 			},
 		},
 	}
@@ -236,6 +247,7 @@ var (
 )
 
 func init() {
+	DeptsTable.ForeignKeys[0].RefTable = DeptsTable
 	DeptsTable.Annotation = &entsql.Annotation{
 		Charset:   "utf8mb4",
 		Collation: "utf8mb4_bin",

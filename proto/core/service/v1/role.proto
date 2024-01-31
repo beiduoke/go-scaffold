@@ -10,43 +10,57 @@ import "google/protobuf/any.proto";
 import "validate/validate.proto";
 
 option go_package = "github.com/beiduoke/go-scaffold/api/core/service/v1;v1";
-option java_multiple_files = true;
-option java_package = "core.service.v1";
 
 service RoleService {
 	rpc CreateRole (CreateRoleRequest) returns (CreateRoleResponse);
 	rpc UpdateRole (UpdateRoleRequest) returns (UpdateRoleResponse);
 	rpc DeleteRole (DeleteRoleRequest) returns (DeleteRoleResponse);
-	rpc GetRole (GetRoleRequest) returns (GetRoleResponse);
+	rpc GetRole (GetRoleRequest) returns (Role);
 	rpc ListRole (ListRoleRequest) returns (ListRoleResponse);
 }
 
 // 角色模块
 message Role {
-  optional google.protobuf.Timestamp created_at = 1;
-  optional google.protobuf.Timestamp updated_at = 2;
-  uint64 id = 3;
+  optional string created_at = 1;
+  optional string updated_at = 2;
+  uint32 id = 3;
   string name = 4;
   optional string default_router = 6;
   optional int32 sort = 7;
 	optional int32 data_scope = 8;         
-	optional int32 menu_check_strictly = 9; 
-	optional int32 dept_check_strictly = 10; 
-  optional int32 state = 11;
+	optional int32 menu_check_strictly = 9 [(gnostic.openapi.v3.property) = {description: "菜单树选择项是否关联显示"}]; 
+	optional int32 dept_check_strictly = 10 [(gnostic.openapi.v3.property) = {description: "部门树选择项是否关联显示"}]; 
+  optional int32 state = 11 [(gnostic.openapi.v3.property) = {description: "状态"}];
   optional string remarks = 12;
 }
 
-message CreateRoleRequest {}
+message CreateRoleRequest {
+  Role role = 1;
+  uint32 operator_id = 2;
+}
 message CreateRoleResponse {}
 
-message UpdateRoleRequest {}
-message UpdateRoleResponse {}
+message UpdateRoleRequest {
+  uint32 id = 1;
+  Role role = 2;
+  uint32 operator_id = 3;
+}
+message UpdateRoleResponse {
+}
 
-message DeleteRoleRequest {}
+message DeleteRoleRequest {
+  uint32 id = 1;
+  uint32 operator_id = 2;
+}
 message DeleteRoleResponse {}
 
-message GetRoleRequest {}
+message GetRoleRequest {
+  uint32 id = 1;
+}
 message GetRoleResponse {}
 
 message ListRoleRequest {}
-message ListRoleResponse {}
+message ListRoleResponse {
+  repeated Role items = 1;
+  int32 total = 2;
+}

@@ -28,7 +28,9 @@ func wireApp(logger log.Logger, registrar registry.Registrar, bootstrap *conf.Bo
 	if err != nil {
 		return nil, nil, err
 	}
-	authRepo := data.NewAuthRepo(dataData, logger)
+	syncedEnforcer := data.NewAuthzCasbinClient(bootstrap, logger)
+	authorized := data.NewAuthorized(syncedEnforcer, logger)
+	authRepo := data.NewAuthRepo(dataData, authorized, logger)
 	authService := service.NewAuthService(logger, authRepo)
 	userRepo := data.NewUserRepo(dataData, logger)
 	userService := service.NewUserService(logger, userRepo)

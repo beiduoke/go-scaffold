@@ -2,6 +2,7 @@ package schema
 
 import (
 	"regexp"
+	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
@@ -38,7 +39,7 @@ func (User) Mixin() []ent.Mixin {
 // Fields of the User.
 func (User) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("username").
+		field.String("user_name").
 			Comment("用户名").
 			Unique().
 			MaxLen(50).
@@ -50,39 +51,65 @@ func (User) Fields() []ent.Field {
 			Comment("密码").
 			Default("").
 			MaxLen(255).
-			NotEmpty(),
+			Nillable(),
 
-		field.String("nickname").
+		field.String("nick_name").
 			Comment("昵称").
 			Default("").
 			MaxLen(128).
-			NotEmpty(),
+			Nillable(),
+
+		field.String("real_name").
+			Comment("昵称").
+			Default("").
+			MaxLen(128).
+			Nillable(),
 
 		field.String("phone").
 			Comment("手机号").
 			Unique().
 			MaxLen(20).
-			NotEmpty().
-			Match(regexp.MustCompile("^1[3-9]{10}$")),
+			Match(regexp.MustCompile("^1[0-9]{10}$")).
+			Nillable(),
+
 		field.String("email").
 			Comment("电子邮箱").
 			MaxLen(127).
 			Default("").
-			NotEmpty(),
+			Nillable(),
+
+		field.Time("birthday").
+			Comment("生日").
+			Default(time.Now()).
+			SchemaType(map[string]string{
+				dialect.MySQL:    "date", // Override MySQL.
+				dialect.Postgres: "date", // Override Postgres.
+			}).
+			Nillable(),
+
+		field.Int32("gender").
+			Comment("性别 0 UNSPECIFIED, 1 -> MAN, 2 -> WOMAN").
+			// Optional().
+			SchemaType(map[string]string{
+				dialect.MySQL:    "tinyint(2)",
+				dialect.Postgres: "tinyint(2)",
+			}).
+			Default(1).
+			Nillable(),
 
 		field.String("avatar").
 			Comment("头像").
 			MaxLen(500).
 			Default("").
-			NotEmpty(),
+			Nillable(),
 
 		field.String("description").
 			Comment("个人说明").
 			MaxLen(1023).
 			Default("").
-			NotEmpty(),
+			Nillable(),
 
-		field.Int8("authority").
+		field.Int32("authority").
 			Comment("授权 0 UNSPECIFIED, 1 -> SYS_ADMIN, 2 -> CUSTOMER_USER, 3 -> GUEST_USER, 4 -> REFRESH_TOKEN").
 			// Optional().
 			SchemaType(map[string]string{

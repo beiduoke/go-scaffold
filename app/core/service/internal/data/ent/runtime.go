@@ -3,6 +3,8 @@
 package ent
 
 import (
+	"time"
+
 	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/dept"
 	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/member"
 	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/menu"
@@ -45,7 +47,7 @@ func init() {
 	// deptDescParentID is the schema descriptor for parent_id field.
 	deptDescParentID := deptFields[1].Descriptor()
 	// dept.DefaultParentID holds the default value on creation for the parent_id field.
-	dept.DefaultParentID = deptDescParentID.Default.(int32)
+	dept.DefaultParentID = deptDescParentID.Default.(uint32)
 	// deptDescAncestors is the schema descriptor for ancestors field.
 	deptDescAncestors := deptFields[2].Descriptor()
 	// dept.DefaultAncestors holds the default value on creation for the ancestors field.
@@ -440,19 +442,19 @@ func init() {
 	user.DefaultState = userDescState.Default.(int32)
 	// user.StateValidator is a validator for the "state" field. It is called by the builders before save.
 	user.StateValidator = userDescState.Validators[0].(func(int32) error)
-	// userDescUsername is the schema descriptor for username field.
-	userDescUsername := userFields[0].Descriptor()
-	// user.UsernameValidator is a validator for the "username" field. It is called by the builders before save.
-	user.UsernameValidator = func() func(string) error {
-		validators := userDescUsername.Validators
+	// userDescUserName is the schema descriptor for user_name field.
+	userDescUserName := userFields[0].Descriptor()
+	// user.UserNameValidator is a validator for the "user_name" field. It is called by the builders before save.
+	user.UserNameValidator = func() func(string) error {
+		validators := userDescUserName.Validators
 		fns := [...]func(string) error{
 			validators[0].(func(string) error),
 			validators[1].(func(string) error),
 			validators[2].(func(string) error),
 		}
-		return func(username string) error {
+		return func(user_name string) error {
 			for _, fn := range fns {
-				if err := fn(username); err != nil {
+				if err := fn(user_name); err != nil {
 					return err
 				}
 			}
@@ -464,50 +466,27 @@ func init() {
 	// user.DefaultPassword holds the default value on creation for the password field.
 	user.DefaultPassword = userDescPassword.Default.(string)
 	// user.PasswordValidator is a validator for the "password" field. It is called by the builders before save.
-	user.PasswordValidator = func() func(string) error {
-		validators := userDescPassword.Validators
-		fns := [...]func(string) error{
-			validators[0].(func(string) error),
-			validators[1].(func(string) error),
-		}
-		return func(password string) error {
-			for _, fn := range fns {
-				if err := fn(password); err != nil {
-					return err
-				}
-			}
-			return nil
-		}
-	}()
-	// userDescNickname is the schema descriptor for nickname field.
-	userDescNickname := userFields[2].Descriptor()
-	// user.DefaultNickname holds the default value on creation for the nickname field.
-	user.DefaultNickname = userDescNickname.Default.(string)
-	// user.NicknameValidator is a validator for the "nickname" field. It is called by the builders before save.
-	user.NicknameValidator = func() func(string) error {
-		validators := userDescNickname.Validators
-		fns := [...]func(string) error{
-			validators[0].(func(string) error),
-			validators[1].(func(string) error),
-		}
-		return func(nickname string) error {
-			for _, fn := range fns {
-				if err := fn(nickname); err != nil {
-					return err
-				}
-			}
-			return nil
-		}
-	}()
+	user.PasswordValidator = userDescPassword.Validators[0].(func(string) error)
+	// userDescNickName is the schema descriptor for nick_name field.
+	userDescNickName := userFields[2].Descriptor()
+	// user.DefaultNickName holds the default value on creation for the nick_name field.
+	user.DefaultNickName = userDescNickName.Default.(string)
+	// user.NickNameValidator is a validator for the "nick_name" field. It is called by the builders before save.
+	user.NickNameValidator = userDescNickName.Validators[0].(func(string) error)
+	// userDescRealName is the schema descriptor for real_name field.
+	userDescRealName := userFields[3].Descriptor()
+	// user.DefaultRealName holds the default value on creation for the real_name field.
+	user.DefaultRealName = userDescRealName.Default.(string)
+	// user.RealNameValidator is a validator for the "real_name" field. It is called by the builders before save.
+	user.RealNameValidator = userDescRealName.Validators[0].(func(string) error)
 	// userDescPhone is the schema descriptor for phone field.
-	userDescPhone := userFields[3].Descriptor()
+	userDescPhone := userFields[4].Descriptor()
 	// user.PhoneValidator is a validator for the "phone" field. It is called by the builders before save.
 	user.PhoneValidator = func() func(string) error {
 		validators := userDescPhone.Validators
 		fns := [...]func(string) error{
 			validators[0].(func(string) error),
 			validators[1].(func(string) error),
-			validators[2].(func(string) error),
 		}
 		return func(phone string) error {
 			for _, fn := range fns {
@@ -519,69 +498,35 @@ func init() {
 		}
 	}()
 	// userDescEmail is the schema descriptor for email field.
-	userDescEmail := userFields[4].Descriptor()
+	userDescEmail := userFields[5].Descriptor()
 	// user.DefaultEmail holds the default value on creation for the email field.
 	user.DefaultEmail = userDescEmail.Default.(string)
 	// user.EmailValidator is a validator for the "email" field. It is called by the builders before save.
-	user.EmailValidator = func() func(string) error {
-		validators := userDescEmail.Validators
-		fns := [...]func(string) error{
-			validators[0].(func(string) error),
-			validators[1].(func(string) error),
-		}
-		return func(email string) error {
-			for _, fn := range fns {
-				if err := fn(email); err != nil {
-					return err
-				}
-			}
-			return nil
-		}
-	}()
+	user.EmailValidator = userDescEmail.Validators[0].(func(string) error)
+	// userDescBirthday is the schema descriptor for birthday field.
+	userDescBirthday := userFields[6].Descriptor()
+	// user.DefaultBirthday holds the default value on creation for the birthday field.
+	user.DefaultBirthday = userDescBirthday.Default.(time.Time)
+	// userDescGender is the schema descriptor for gender field.
+	userDescGender := userFields[7].Descriptor()
+	// user.DefaultGender holds the default value on creation for the gender field.
+	user.DefaultGender = userDescGender.Default.(int32)
 	// userDescAvatar is the schema descriptor for avatar field.
-	userDescAvatar := userFields[5].Descriptor()
+	userDescAvatar := userFields[8].Descriptor()
 	// user.DefaultAvatar holds the default value on creation for the avatar field.
 	user.DefaultAvatar = userDescAvatar.Default.(string)
 	// user.AvatarValidator is a validator for the "avatar" field. It is called by the builders before save.
-	user.AvatarValidator = func() func(string) error {
-		validators := userDescAvatar.Validators
-		fns := [...]func(string) error{
-			validators[0].(func(string) error),
-			validators[1].(func(string) error),
-		}
-		return func(avatar string) error {
-			for _, fn := range fns {
-				if err := fn(avatar); err != nil {
-					return err
-				}
-			}
-			return nil
-		}
-	}()
+	user.AvatarValidator = userDescAvatar.Validators[0].(func(string) error)
 	// userDescDescription is the schema descriptor for description field.
-	userDescDescription := userFields[6].Descriptor()
+	userDescDescription := userFields[9].Descriptor()
 	// user.DefaultDescription holds the default value on creation for the description field.
 	user.DefaultDescription = userDescDescription.Default.(string)
 	// user.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
-	user.DescriptionValidator = func() func(string) error {
-		validators := userDescDescription.Validators
-		fns := [...]func(string) error{
-			validators[0].(func(string) error),
-			validators[1].(func(string) error),
-		}
-		return func(description string) error {
-			for _, fn := range fns {
-				if err := fn(description); err != nil {
-					return err
-				}
-			}
-			return nil
-		}
-	}()
+	user.DescriptionValidator = userDescDescription.Validators[0].(func(string) error)
 	// userDescAuthority is the schema descriptor for authority field.
-	userDescAuthority := userFields[7].Descriptor()
+	userDescAuthority := userFields[10].Descriptor()
 	// user.DefaultAuthority holds the default value on creation for the authority field.
-	user.DefaultAuthority = userDescAuthority.Default.(int8)
+	user.DefaultAuthority = userDescAuthority.Default.(int32)
 	// userDescID is the schema descriptor for id field.
 	userDescID := userMixinFields0[0].Descriptor()
 	// user.IDValidator is a validator for the "id" field. It is called by the builders before save.

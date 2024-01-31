@@ -146,30 +146,17 @@ func (du *DeptUpdate) SetNillableName(s *string) *DeptUpdate {
 	return du
 }
 
-// ClearName clears the value of the "name" field.
-func (du *DeptUpdate) ClearName() *DeptUpdate {
-	du.mutation.ClearName()
-	return du
-}
-
 // SetParentID sets the "parent_id" field.
-func (du *DeptUpdate) SetParentID(i int32) *DeptUpdate {
-	du.mutation.ResetParentID()
-	du.mutation.SetParentID(i)
+func (du *DeptUpdate) SetParentID(u uint32) *DeptUpdate {
+	du.mutation.SetParentID(u)
 	return du
 }
 
 // SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (du *DeptUpdate) SetNillableParentID(i *int32) *DeptUpdate {
-	if i != nil {
-		du.SetParentID(*i)
+func (du *DeptUpdate) SetNillableParentID(u *uint32) *DeptUpdate {
+	if u != nil {
+		du.SetParentID(*u)
 	}
-	return du
-}
-
-// AddParentID adds i to the "parent_id" field.
-func (du *DeptUpdate) AddParentID(i int32) *DeptUpdate {
-	du.mutation.AddParentID(i)
 	return du
 }
 
@@ -197,9 +184,56 @@ func (du *DeptUpdate) ClearAncestors() *DeptUpdate {
 	return du
 }
 
+// SetParent sets the "parent" edge to the Dept entity.
+func (du *DeptUpdate) SetParent(d *Dept) *DeptUpdate {
+	return du.SetParentID(d.ID)
+}
+
+// AddChildIDs adds the "children" edge to the Dept entity by IDs.
+func (du *DeptUpdate) AddChildIDs(ids ...uint32) *DeptUpdate {
+	du.mutation.AddChildIDs(ids...)
+	return du
+}
+
+// AddChildren adds the "children" edges to the Dept entity.
+func (du *DeptUpdate) AddChildren(d ...*Dept) *DeptUpdate {
+	ids := make([]uint32, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return du.AddChildIDs(ids...)
+}
+
 // Mutation returns the DeptMutation object of the builder.
 func (du *DeptUpdate) Mutation() *DeptMutation {
 	return du.mutation
+}
+
+// ClearParent clears the "parent" edge to the Dept entity.
+func (du *DeptUpdate) ClearParent() *DeptUpdate {
+	du.mutation.ClearParent()
+	return du
+}
+
+// ClearChildren clears all "children" edges to the Dept entity.
+func (du *DeptUpdate) ClearChildren() *DeptUpdate {
+	du.mutation.ClearChildren()
+	return du
+}
+
+// RemoveChildIDs removes the "children" edge to Dept entities by IDs.
+func (du *DeptUpdate) RemoveChildIDs(ids ...uint32) *DeptUpdate {
+	du.mutation.RemoveChildIDs(ids...)
+	return du
+}
+
+// RemoveChildren removes "children" edges to Dept entities.
+func (du *DeptUpdate) RemoveChildren(d ...*Dept) *DeptUpdate {
+	ids := make([]uint32, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return du.RemoveChildIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -303,18 +337,6 @@ func (du *DeptUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := du.mutation.Name(); ok {
 		_spec.SetField(dept.FieldName, field.TypeString, value)
 	}
-	if du.mutation.NameCleared() {
-		_spec.ClearField(dept.FieldName, field.TypeString)
-	}
-	if value, ok := du.mutation.ParentID(); ok {
-		_spec.SetField(dept.FieldParentID, field.TypeInt32, value)
-	}
-	if value, ok := du.mutation.AddedParentID(); ok {
-		_spec.AddField(dept.FieldParentID, field.TypeInt32, value)
-	}
-	if du.mutation.ParentIDCleared() {
-		_spec.ClearField(dept.FieldParentID, field.TypeInt32)
-	}
 	if value, ok := du.mutation.Ancestors(); ok {
 		_spec.SetField(dept.FieldAncestors, field.TypeJSON, value)
 	}
@@ -325,6 +347,80 @@ func (du *DeptUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if du.mutation.AncestorsCleared() {
 		_spec.ClearField(dept.FieldAncestors, field.TypeJSON)
+	}
+	if du.mutation.ParentCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   dept.ParentTable,
+			Columns: []string{dept.ParentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(dept.FieldID, field.TypeUint32),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.ParentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   dept.ParentTable,
+			Columns: []string{dept.ParentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(dept.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if du.mutation.ChildrenCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   dept.ChildrenTable,
+			Columns: []string{dept.ChildrenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(dept.FieldID, field.TypeUint32),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.RemovedChildrenIDs(); len(nodes) > 0 && !du.mutation.ChildrenCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   dept.ChildrenTable,
+			Columns: []string{dept.ChildrenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(dept.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.ChildrenIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   dept.ChildrenTable,
+			Columns: []string{dept.ChildrenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(dept.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_spec.AddModifiers(du.modifiers...)
 	if n, err = sqlgraph.UpdateNodes(ctx, du.driver, _spec); err != nil {
@@ -464,30 +560,17 @@ func (duo *DeptUpdateOne) SetNillableName(s *string) *DeptUpdateOne {
 	return duo
 }
 
-// ClearName clears the value of the "name" field.
-func (duo *DeptUpdateOne) ClearName() *DeptUpdateOne {
-	duo.mutation.ClearName()
-	return duo
-}
-
 // SetParentID sets the "parent_id" field.
-func (duo *DeptUpdateOne) SetParentID(i int32) *DeptUpdateOne {
-	duo.mutation.ResetParentID()
-	duo.mutation.SetParentID(i)
+func (duo *DeptUpdateOne) SetParentID(u uint32) *DeptUpdateOne {
+	duo.mutation.SetParentID(u)
 	return duo
 }
 
 // SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (duo *DeptUpdateOne) SetNillableParentID(i *int32) *DeptUpdateOne {
-	if i != nil {
-		duo.SetParentID(*i)
+func (duo *DeptUpdateOne) SetNillableParentID(u *uint32) *DeptUpdateOne {
+	if u != nil {
+		duo.SetParentID(*u)
 	}
-	return duo
-}
-
-// AddParentID adds i to the "parent_id" field.
-func (duo *DeptUpdateOne) AddParentID(i int32) *DeptUpdateOne {
-	duo.mutation.AddParentID(i)
 	return duo
 }
 
@@ -515,9 +598,56 @@ func (duo *DeptUpdateOne) ClearAncestors() *DeptUpdateOne {
 	return duo
 }
 
+// SetParent sets the "parent" edge to the Dept entity.
+func (duo *DeptUpdateOne) SetParent(d *Dept) *DeptUpdateOne {
+	return duo.SetParentID(d.ID)
+}
+
+// AddChildIDs adds the "children" edge to the Dept entity by IDs.
+func (duo *DeptUpdateOne) AddChildIDs(ids ...uint32) *DeptUpdateOne {
+	duo.mutation.AddChildIDs(ids...)
+	return duo
+}
+
+// AddChildren adds the "children" edges to the Dept entity.
+func (duo *DeptUpdateOne) AddChildren(d ...*Dept) *DeptUpdateOne {
+	ids := make([]uint32, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return duo.AddChildIDs(ids...)
+}
+
 // Mutation returns the DeptMutation object of the builder.
 func (duo *DeptUpdateOne) Mutation() *DeptMutation {
 	return duo.mutation
+}
+
+// ClearParent clears the "parent" edge to the Dept entity.
+func (duo *DeptUpdateOne) ClearParent() *DeptUpdateOne {
+	duo.mutation.ClearParent()
+	return duo
+}
+
+// ClearChildren clears all "children" edges to the Dept entity.
+func (duo *DeptUpdateOne) ClearChildren() *DeptUpdateOne {
+	duo.mutation.ClearChildren()
+	return duo
+}
+
+// RemoveChildIDs removes the "children" edge to Dept entities by IDs.
+func (duo *DeptUpdateOne) RemoveChildIDs(ids ...uint32) *DeptUpdateOne {
+	duo.mutation.RemoveChildIDs(ids...)
+	return duo
+}
+
+// RemoveChildren removes "children" edges to Dept entities.
+func (duo *DeptUpdateOne) RemoveChildren(d ...*Dept) *DeptUpdateOne {
+	ids := make([]uint32, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return duo.RemoveChildIDs(ids...)
 }
 
 // Where appends a list predicates to the DeptUpdate builder.
@@ -651,18 +781,6 @@ func (duo *DeptUpdateOne) sqlSave(ctx context.Context) (_node *Dept, err error) 
 	if value, ok := duo.mutation.Name(); ok {
 		_spec.SetField(dept.FieldName, field.TypeString, value)
 	}
-	if duo.mutation.NameCleared() {
-		_spec.ClearField(dept.FieldName, field.TypeString)
-	}
-	if value, ok := duo.mutation.ParentID(); ok {
-		_spec.SetField(dept.FieldParentID, field.TypeInt32, value)
-	}
-	if value, ok := duo.mutation.AddedParentID(); ok {
-		_spec.AddField(dept.FieldParentID, field.TypeInt32, value)
-	}
-	if duo.mutation.ParentIDCleared() {
-		_spec.ClearField(dept.FieldParentID, field.TypeInt32)
-	}
 	if value, ok := duo.mutation.Ancestors(); ok {
 		_spec.SetField(dept.FieldAncestors, field.TypeJSON, value)
 	}
@@ -673,6 +791,80 @@ func (duo *DeptUpdateOne) sqlSave(ctx context.Context) (_node *Dept, err error) 
 	}
 	if duo.mutation.AncestorsCleared() {
 		_spec.ClearField(dept.FieldAncestors, field.TypeJSON)
+	}
+	if duo.mutation.ParentCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   dept.ParentTable,
+			Columns: []string{dept.ParentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(dept.FieldID, field.TypeUint32),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.ParentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   dept.ParentTable,
+			Columns: []string{dept.ParentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(dept.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if duo.mutation.ChildrenCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   dept.ChildrenTable,
+			Columns: []string{dept.ChildrenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(dept.FieldID, field.TypeUint32),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.RemovedChildrenIDs(); len(nodes) > 0 && !duo.mutation.ChildrenCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   dept.ChildrenTable,
+			Columns: []string{dept.ChildrenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(dept.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.ChildrenIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   dept.ChildrenTable,
+			Columns: []string{dept.ChildrenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(dept.FieldID, field.TypeUint32),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_spec.AddModifiers(duo.modifiers...)
 	_node = &Dept{config: duo.config}

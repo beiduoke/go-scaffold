@@ -6,9 +6,9 @@ import (
 	v1 "github.com/beiduoke/go-scaffold/api/admin/interface/v1"
 	"github.com/beiduoke/go-scaffold/api/common/pagination"
 	coreV1 "github.com/beiduoke/go-scaffold/api/core/service/v1"
+	"github.com/beiduoke/go-scaffold/pkg/middleware/authn"
 	"github.com/beiduoke/go-scaffold/pkg/util/trans"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/google/martian/v3/auth"
 )
 
 type UserService struct {
@@ -39,7 +39,8 @@ func (s *UserService) GetUserByUserName(ctx context.Context, req *coreV1.GetUser
 }
 
 func (s *UserService) CreateUser(ctx context.Context, req *coreV1.CreateUserRequest) (*coreV1.CreateUserResponse, error) {
-	authInfo, err := auth.FromContext(ctx)
+	return s.uc.CreateUser(ctx, req)
+	authInfo, err := authn.AuthFromContext(ctx)
 	if err != nil {
 		s.log.Errorf("用户认证失败[%s]", err.Error())
 		return nil, v1.ErrorAccessForbidden("用户认证失败")
@@ -59,7 +60,7 @@ func (s *UserService) CreateUser(ctx context.Context, req *coreV1.CreateUserRequ
 }
 
 func (s *UserService) UpdateUser(ctx context.Context, req *coreV1.UpdateUserRequest) (*coreV1.UpdateUserResponse, error) {
-	authInfo, err := auth.FromContext(ctx)
+	authInfo, err := authn.AuthFromContext(ctx)
 	if err != nil {
 		s.log.Errorf("用户认证失败[%s]", err.Error())
 		return nil, v1.ErrorAccessForbidden("用户认证失败")
@@ -75,7 +76,7 @@ func (s *UserService) UpdateUser(ctx context.Context, req *coreV1.UpdateUserRequ
 }
 
 func (s *UserService) DeleteUser(ctx context.Context, req *coreV1.DeleteUserRequest) (*coreV1.DeleteUserResponse, error) {
-	authInfo, err := auth.FromContext(ctx)
+	authInfo, err := authn.AuthFromContext(ctx)
 	if err != nil {
 		s.log.Errorf("用户认证失败[%s]", err.Error())
 		return nil, v1.ErrorAccessForbidden("用户认证失败")

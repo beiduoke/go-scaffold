@@ -6,8 +6,10 @@ import (
 
 	"github.com/beiduoke/go-scaffold/api/common/conf"
 	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent"
+	"github.com/beiduoke/go-scaffold/pkg/auth/authz"
 	"github.com/beiduoke/go-scaffold/pkg/bootstrap"
 	"github.com/bwmarrin/snowflake"
+	"github.com/casbin/casbin/v2"
 	"github.com/meilisearch/meilisearch-go"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
@@ -19,6 +21,8 @@ import (
 
 // ProviderSet is data providers.
 var ProviderSet = wire.NewSet(
+	// 服务注册发现
+	NewDiscovery,
 	// 数据实例化
 	NewData,
 	// 数据库客户端
@@ -29,6 +33,10 @@ var ProviderSet = wire.NewSet(
 	NewMeilisearchClient,
 	// 雪花ID生成器
 	NewSnowflake,
+	// 鉴权客户端
+	NewAuthzCasbinClient,
+	// 鉴权验证器
+	NewAuthorized,
 	// 系统方法
 	// 认证
 	NewAuthRepo,
@@ -131,4 +139,16 @@ func NewMeilisearchClient(cfg *conf.Bootstrap, logger log.Logger) *meilisearch.C
 func NewDiscovery(cfg *conf.Bootstrap, logger log.Logger) registry.Discovery {
 	log.NewHelper(log.With(logger, "module", "discovery/data/service"))
 	return bootstrap.NewConsulRegistry(cfg.Registry)
+}
+
+// NewAuthzCasbinClient 创建Casbin客户端
+func NewAuthzCasbinClient(cfg *conf.Bootstrap, logger log.Logger) *casbin.SyncedEnforcer {
+	log.NewHelper(log.With(logger, "module", "authz/casbin/service"))
+	model, adapter, watcher := bootstrap.NewAuthzCasbinModel(logger), bootstrap.NewAuthzCasbinEntAdapter(cfg, logger), bootstrap.NewAuthzCasbinWatcher(cfg, logger)
+	return bootstrap.NewAuthzCasbinEnforcer(model, adapter, watcher, logger)
+}
+
+// NewAuthorized 创建鉴权
+func NewAuthorized(enforcer *casbin.SyncedEnforcer, logger log.Logger) authz.Authorized {
+	return bootstrap.NewAuthzCasbin(enforcer, logger)
 }

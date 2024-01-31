@@ -57,7 +57,7 @@ func (m *LoginRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Username
+	// no validation rules for UserName
 
 	// no validation rules for Password
 
@@ -166,7 +166,7 @@ func (m *LoginResponse) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for Username
+	// no validation rules for UserName
 
 	// no validation rules for TokenType
 
@@ -273,8 +273,6 @@ func (m *LogoutRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for Id
 
 	if len(errors) > 0 {
 		return LogoutRequestMultiError(errors)
@@ -766,9 +764,9 @@ func (m *RegisterRequest_Auth) validate(all bool) error {
 
 	var errors []error
 
-	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
+	if l := utf8.RuneCountInString(m.GetUserName()); l < 1 || l > 10 {
 		err := RegisterRequest_AuthValidationError{
-			field:  "Name",
+			field:  "UserName",
 			reason: "value length must be between 1 and 10 runes, inclusive",
 		}
 		if !all {
@@ -797,6 +795,10 @@ func (m *RegisterRequest_Auth) validate(all bool) error {
 			return err
 		}
 		errors = append(errors, err)
+	}
+
+	if m.GrandType != nil {
+		// no validation rules for GrandType
 	}
 
 	if len(errors) > 0 {

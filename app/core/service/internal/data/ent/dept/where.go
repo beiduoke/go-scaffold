@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/predicate"
 )
 
@@ -90,7 +91,7 @@ func Name(v string) predicate.Dept {
 }
 
 // ParentID applies equality check predicate on the "parent_id" field. It's identical to ParentIDEQ.
-func ParentID(v int32) predicate.Dept {
+func ParentID(v uint32) predicate.Dept {
 	return predicate.Dept(sql.FieldEQ(FieldParentID, v))
 }
 
@@ -454,16 +455,6 @@ func NameHasSuffix(v string) predicate.Dept {
 	return predicate.Dept(sql.FieldHasSuffix(FieldName, v))
 }
 
-// NameIsNil applies the IsNil predicate on the "name" field.
-func NameIsNil() predicate.Dept {
-	return predicate.Dept(sql.FieldIsNull(FieldName))
-}
-
-// NameNotNil applies the NotNil predicate on the "name" field.
-func NameNotNil() predicate.Dept {
-	return predicate.Dept(sql.FieldNotNull(FieldName))
-}
-
 // NameEqualFold applies the EqualFold predicate on the "name" field.
 func NameEqualFold(v string) predicate.Dept {
 	return predicate.Dept(sql.FieldEqualFold(FieldName, v))
@@ -475,43 +466,23 @@ func NameContainsFold(v string) predicate.Dept {
 }
 
 // ParentIDEQ applies the EQ predicate on the "parent_id" field.
-func ParentIDEQ(v int32) predicate.Dept {
+func ParentIDEQ(v uint32) predicate.Dept {
 	return predicate.Dept(sql.FieldEQ(FieldParentID, v))
 }
 
 // ParentIDNEQ applies the NEQ predicate on the "parent_id" field.
-func ParentIDNEQ(v int32) predicate.Dept {
+func ParentIDNEQ(v uint32) predicate.Dept {
 	return predicate.Dept(sql.FieldNEQ(FieldParentID, v))
 }
 
 // ParentIDIn applies the In predicate on the "parent_id" field.
-func ParentIDIn(vs ...int32) predicate.Dept {
+func ParentIDIn(vs ...uint32) predicate.Dept {
 	return predicate.Dept(sql.FieldIn(FieldParentID, vs...))
 }
 
 // ParentIDNotIn applies the NotIn predicate on the "parent_id" field.
-func ParentIDNotIn(vs ...int32) predicate.Dept {
+func ParentIDNotIn(vs ...uint32) predicate.Dept {
 	return predicate.Dept(sql.FieldNotIn(FieldParentID, vs...))
-}
-
-// ParentIDGT applies the GT predicate on the "parent_id" field.
-func ParentIDGT(v int32) predicate.Dept {
-	return predicate.Dept(sql.FieldGT(FieldParentID, v))
-}
-
-// ParentIDGTE applies the GTE predicate on the "parent_id" field.
-func ParentIDGTE(v int32) predicate.Dept {
-	return predicate.Dept(sql.FieldGTE(FieldParentID, v))
-}
-
-// ParentIDLT applies the LT predicate on the "parent_id" field.
-func ParentIDLT(v int32) predicate.Dept {
-	return predicate.Dept(sql.FieldLT(FieldParentID, v))
-}
-
-// ParentIDLTE applies the LTE predicate on the "parent_id" field.
-func ParentIDLTE(v int32) predicate.Dept {
-	return predicate.Dept(sql.FieldLTE(FieldParentID, v))
 }
 
 // ParentIDIsNil applies the IsNil predicate on the "parent_id" field.
@@ -532,6 +503,52 @@ func AncestorsIsNil() predicate.Dept {
 // AncestorsNotNil applies the NotNil predicate on the "ancestors" field.
 func AncestorsNotNil() predicate.Dept {
 	return predicate.Dept(sql.FieldNotNull(FieldAncestors))
+}
+
+// HasParent applies the HasEdge predicate on the "parent" edge.
+func HasParent() predicate.Dept {
+	return predicate.Dept(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, ParentTable, ParentColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasParentWith applies the HasEdge predicate on the "parent" edge with a given conditions (other predicates).
+func HasParentWith(preds ...predicate.Dept) predicate.Dept {
+	return predicate.Dept(func(s *sql.Selector) {
+		step := newParentStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasChildren applies the HasEdge predicate on the "children" edge.
+func HasChildren() predicate.Dept {
+	return predicate.Dept(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, ChildrenTable, ChildrenColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasChildrenWith applies the HasEdge predicate on the "children" edge with a given conditions (other predicates).
+func HasChildrenWith(preds ...predicate.Dept) predicate.Dept {
+	return predicate.Dept(func(s *sql.Selector) {
+		step := newChildrenStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
 }
 
 // And groups predicates with the AND operator between them.

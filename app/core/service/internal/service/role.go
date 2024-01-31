@@ -3,13 +3,13 @@ package service
 import (
 	"context"
 
-	pb "github.com/beiduoke/go-scaffold/api/core/service/v1"
+	v1 "github.com/beiduoke/go-scaffold/api/core/service/v1"
 	"github.com/beiduoke/go-scaffold/app/core/service/internal/data"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
 type RoleService struct {
-	pb.UnimplementedRoleServiceServer
+	v1.UnimplementedRoleServiceServer
 	log *log.Helper
 	ac  *data.RoleRepo
 }
@@ -22,18 +22,18 @@ func NewRoleService(logger log.Logger, ac *data.RoleRepo) *RoleService {
 	}
 }
 
-func (s *RoleService) CreateRole(ctx context.Context, req *pb.CreateRoleRequest) (*pb.CreateRoleResponse, error) {
-	return &pb.CreateRoleResponse{}, nil
+func (s *RoleService) CreateRole(ctx context.Context, req *v1.CreateRoleRequest) (*v1.CreateRoleResponse, error) {
+	return s.ac.CreateRole(ctx, req)
 }
-func (s *RoleService) UpdateRole(ctx context.Context, req *pb.UpdateRoleRequest) (*pb.UpdateRoleResponse, error) {
-	return &pb.UpdateRoleResponse{}, nil
+func (s *RoleService) UpdateRole(ctx context.Context, req *v1.UpdateRoleRequest) (*v1.UpdateRoleResponse, error) {
+	return s.ac.UpdateRole(ctx, req)
 }
-func (s *RoleService) DeleteRole(ctx context.Context, req *pb.DeleteRoleRequest) (*pb.DeleteRoleResponse, error) {
-	return &pb.DeleteRoleResponse{}, nil
+func (s *RoleService) DeleteRole(ctx context.Context, req *v1.DeleteRoleRequest) (*v1.DeleteRoleResponse, error) {
+	return s.ac.DeleteRole(ctx, req)
 }
-func (s *RoleService) GetRole(ctx context.Context, req *pb.GetRoleRequest) (*pb.GetRoleResponse, error) {
-	return &pb.GetRoleResponse{}, nil
+func (s *RoleService) GetRole(ctx context.Context, req *v1.GetRoleRequest) (*v1.Role, error) {
+	return s.ac.GetRole(ctx, req)
 }
-func (s *RoleService) ListRole(ctx context.Context, req *pb.ListRoleRequest) (*pb.ListRoleResponse, error) {
-	return &pb.ListRoleResponse{}, nil
+func (s *RoleService) ListRole(ctx context.Context, req *v1.ListRoleRequest) (*v1.ListRoleResponse, error) {
+	return s.ac.ListRole(ctx, req)
 }

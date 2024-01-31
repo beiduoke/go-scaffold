@@ -28,24 +28,30 @@ type User struct {
 	Remark *string `json:"remark,omitempty"`
 	// 排序
 	Sort *int32 `json:"sort,omitempty"`
-	// 状态
+	// 状态 0 UNSPECIFIED 开启 1 -> ACTIVE 关闭 2 -> INACTIVE, 禁用 3 -> BANNED
 	State *int32 `json:"state,omitempty"`
 	// 用户名
-	Username string `json:"username,omitempty"`
+	UserName string `json:"user_name,omitempty"`
 	// 密码
-	Password string `json:"password,omitempty"`
+	Password *string `json:"password,omitempty"`
 	// 昵称
-	Nickname string `json:"nickname,omitempty"`
+	NickName *string `json:"nick_name,omitempty"`
+	// 昵称
+	RealName *string `json:"real_name,omitempty"`
 	// 手机号
-	Phone string `json:"phone,omitempty"`
+	Phone *string `json:"phone,omitempty"`
 	// 电子邮箱
-	Email string `json:"email,omitempty"`
+	Email *string `json:"email,omitempty"`
+	// 生日
+	Birthday *time.Time `json:"birthday,omitempty"`
+	// 性别 0 UNSPECIFIED, 1 -> MAN, 2 -> WOMAN
+	Gender *int32 `json:"gender,omitempty"`
 	// 头像
-	Avatar string `json:"avatar,omitempty"`
+	Avatar *string `json:"avatar,omitempty"`
 	// 个人说明
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// 授权 0 UNSPECIFIED, 1 -> SYS_ADMIN, 2 -> CUSTOMER_USER, 3 -> GUEST_USER, 4 -> REFRESH_TOKEN
-	Authority int8 `json:"authority,omitempty"`
+	Authority *int32 `json:"authority,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserQuery when eager-loading is set.
 	Edges        UserEdges `json:"edges"`
@@ -86,11 +92,11 @@ func (*User) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldID, user.FieldSort, user.FieldState, user.FieldAuthority:
+		case user.FieldID, user.FieldSort, user.FieldState, user.FieldGender, user.FieldAuthority:
 			values[i] = new(sql.NullInt64)
-		case user.FieldRemark, user.FieldUsername, user.FieldPassword, user.FieldNickname, user.FieldPhone, user.FieldEmail, user.FieldAvatar, user.FieldDescription:
+		case user.FieldRemark, user.FieldUserName, user.FieldPassword, user.FieldNickName, user.FieldRealName, user.FieldPhone, user.FieldEmail, user.FieldAvatar, user.FieldDescription:
 			values[i] = new(sql.NullString)
-		case user.FieldCreatedAt, user.FieldUpdatedAt, user.FieldDeletedAt:
+		case user.FieldCreatedAt, user.FieldUpdatedAt, user.FieldDeletedAt, user.FieldBirthday:
 			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -155,53 +161,81 @@ func (u *User) assignValues(columns []string, values []any) error {
 				u.State = new(int32)
 				*u.State = int32(value.Int64)
 			}
-		case user.FieldUsername:
+		case user.FieldUserName:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field username", values[i])
+				return fmt.Errorf("unexpected type %T for field user_name", values[i])
 			} else if value.Valid {
-				u.Username = value.String
+				u.UserName = value.String
 			}
 		case user.FieldPassword:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field password", values[i])
 			} else if value.Valid {
-				u.Password = value.String
+				u.Password = new(string)
+				*u.Password = value.String
 			}
-		case user.FieldNickname:
+		case user.FieldNickName:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field nickname", values[i])
+				return fmt.Errorf("unexpected type %T for field nick_name", values[i])
 			} else if value.Valid {
-				u.Nickname = value.String
+				u.NickName = new(string)
+				*u.NickName = value.String
+			}
+		case user.FieldRealName:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field real_name", values[i])
+			} else if value.Valid {
+				u.RealName = new(string)
+				*u.RealName = value.String
 			}
 		case user.FieldPhone:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field phone", values[i])
 			} else if value.Valid {
-				u.Phone = value.String
+				u.Phone = new(string)
+				*u.Phone = value.String
 			}
 		case user.FieldEmail:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field email", values[i])
 			} else if value.Valid {
-				u.Email = value.String
+				u.Email = new(string)
+				*u.Email = value.String
+			}
+		case user.FieldBirthday:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field birthday", values[i])
+			} else if value.Valid {
+				u.Birthday = new(time.Time)
+				*u.Birthday = value.Time
+			}
+		case user.FieldGender:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field gender", values[i])
+			} else if value.Valid {
+				u.Gender = new(int32)
+				*u.Gender = int32(value.Int64)
 			}
 		case user.FieldAvatar:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field avatar", values[i])
 			} else if value.Valid {
-				u.Avatar = value.String
+				u.Avatar = new(string)
+				*u.Avatar = value.String
 			}
 		case user.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
-				u.Description = value.String
+				u.Description = new(string)
+				*u.Description = value.String
 			}
 		case user.FieldAuthority:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field authority", values[i])
 			} else if value.Valid {
-				u.Authority = int8(value.Int64)
+				u.Authority = new(int32)
+				*u.Authority = int32(value.Int64)
 			}
 		default:
 			u.selectValues.Set(columns[i], values[i])
@@ -279,29 +313,58 @@ func (u *User) String() string {
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteString(", ")
-	builder.WriteString("username=")
-	builder.WriteString(u.Username)
+	builder.WriteString("user_name=")
+	builder.WriteString(u.UserName)
 	builder.WriteString(", ")
-	builder.WriteString("password=")
-	builder.WriteString(u.Password)
+	if v := u.Password; v != nil {
+		builder.WriteString("password=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
-	builder.WriteString("nickname=")
-	builder.WriteString(u.Nickname)
+	if v := u.NickName; v != nil {
+		builder.WriteString("nick_name=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
-	builder.WriteString("phone=")
-	builder.WriteString(u.Phone)
+	if v := u.RealName; v != nil {
+		builder.WriteString("real_name=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
-	builder.WriteString("email=")
-	builder.WriteString(u.Email)
+	if v := u.Phone; v != nil {
+		builder.WriteString("phone=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
-	builder.WriteString("avatar=")
-	builder.WriteString(u.Avatar)
+	if v := u.Email; v != nil {
+		builder.WriteString("email=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
-	builder.WriteString("description=")
-	builder.WriteString(u.Description)
+	if v := u.Birthday; v != nil {
+		builder.WriteString("birthday=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
 	builder.WriteString(", ")
-	builder.WriteString("authority=")
-	builder.WriteString(fmt.Sprintf("%v", u.Authority))
+	if v := u.Gender; v != nil {
+		builder.WriteString("gender=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := u.Avatar; v != nil {
+		builder.WriteString("avatar=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := u.Description; v != nil {
+		builder.WriteString("description=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := u.Authority; v != nil {
+		builder.WriteString("authority=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -325,6 +325,218 @@ var _ interface {
 	ErrorName() string
 } = RegisterResponseValidationError{}
 
+// Validate checks the field values on IsAuthorizedRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *IsAuthorizedRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on IsAuthorizedRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// IsAuthorizedRequestMultiError, or nil if none found.
+func (m *IsAuthorizedRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *IsAuthorizedRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Subject
+
+	// no validation rules for Action
+
+	// no validation rules for Resource
+
+	// no validation rules for Project
+
+	if len(errors) > 0 {
+		return IsAuthorizedRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// IsAuthorizedRequestMultiError is an error wrapping multiple validation
+// errors returned by IsAuthorizedRequest.ValidateAll() if the designated
+// constraints aren't met.
+type IsAuthorizedRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m IsAuthorizedRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m IsAuthorizedRequestMultiError) AllErrors() []error { return m }
+
+// IsAuthorizedRequestValidationError is the validation error returned by
+// IsAuthorizedRequest.Validate if the designated constraints aren't met.
+type IsAuthorizedRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e IsAuthorizedRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e IsAuthorizedRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e IsAuthorizedRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e IsAuthorizedRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e IsAuthorizedRequestValidationError) ErrorName() string {
+	return "IsAuthorizedRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e IsAuthorizedRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sIsAuthorizedRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = IsAuthorizedRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = IsAuthorizedRequestValidationError{}
+
+// Validate checks the field values on IsAuthorizedResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *IsAuthorizedResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on IsAuthorizedResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// IsAuthorizedResponseMultiError, or nil if none found.
+func (m *IsAuthorizedResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *IsAuthorizedResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return IsAuthorizedResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// IsAuthorizedResponseMultiError is an error wrapping multiple validation
+// errors returned by IsAuthorizedResponse.ValidateAll() if the designated
+// constraints aren't met.
+type IsAuthorizedResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m IsAuthorizedResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m IsAuthorizedResponseMultiError) AllErrors() []error { return m }
+
+// IsAuthorizedResponseValidationError is the validation error returned by
+// IsAuthorizedResponse.Validate if the designated constraints aren't met.
+type IsAuthorizedResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e IsAuthorizedResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e IsAuthorizedResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e IsAuthorizedResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e IsAuthorizedResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e IsAuthorizedResponseValidationError) ErrorName() string {
+	return "IsAuthorizedResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e IsAuthorizedResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sIsAuthorizedResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = IsAuthorizedResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = IsAuthorizedResponseValidationError{}
+
 // Validate checks the field values on RegisterRequest_Auth with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.

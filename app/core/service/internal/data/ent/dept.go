@@ -29,15 +29,51 @@ type Dept struct {
 	Remark *string `json:"remark,omitempty"`
 	// 排序
 	Sort *int32 `json:"sort,omitempty"`
-	// 状态
+	// 状态 0 UNSPECIFIED 开启 1 -> ACTIVE 关闭 2 -> INACTIVE, 禁用 3 -> BANNED
 	State *int32 `json:"state,omitempty"`
 	// 名称
 	Name *string `json:"name,omitempty"`
 	// 父级ID
-	ParentID *int32 `json:"parent_id,omitempty"`
+	ParentID *uint32 `json:"parent_id,omitempty"`
 	// 祖级列表
-	Ancestors    []int `json:"ancestors,omitempty"`
+	Ancestors []int `json:"ancestors,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the DeptQuery when eager-loading is set.
+	Edges        DeptEdges `json:"edges"`
 	selectValues sql.SelectValues
+}
+
+// DeptEdges holds the relations/edges for other nodes in the graph.
+type DeptEdges struct {
+	// Parent holds the value of the parent edge.
+	Parent *Dept `json:"parent,omitempty"`
+	// Children holds the value of the children edge.
+	Children []*Dept `json:"children,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [2]bool
+}
+
+// ParentOrErr returns the Parent value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e DeptEdges) ParentOrErr() (*Dept, error) {
+	if e.loadedTypes[0] {
+		if e.Parent == nil {
+			// Edge was loaded but was not found.
+			return nil, &NotFoundError{label: dept.Label}
+		}
+		return e.Parent, nil
+	}
+	return nil, &NotLoadedError{edge: "parent"}
+}
+
+// ChildrenOrErr returns the Children value or an error if the edge
+// was not loaded in eager-loading.
+func (e DeptEdges) ChildrenOrErr() ([]*Dept, error) {
+	if e.loadedTypes[1] {
+		return e.Children, nil
+	}
+	return nil, &NotLoadedError{edge: "children"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -127,8 +163,8 @@ func (d *Dept) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field parent_id", values[i])
 			} else if value.Valid {
-				d.ParentID = new(int32)
-				*d.ParentID = int32(value.Int64)
+				d.ParentID = new(uint32)
+				*d.ParentID = uint32(value.Int64)
 			}
 		case dept.FieldAncestors:
 			if value, ok := values[i].(*[]byte); !ok {
@@ -149,6 +185,16 @@ func (d *Dept) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (d *Dept) Value(name string) (ent.Value, error) {
 	return d.selectValues.Get(name)
+}
+
+// QueryParent queries the "parent" edge of the Dept entity.
+func (d *Dept) QueryParent() *DeptQuery {
+	return NewDeptClient(d.config).QueryParent(d)
+}
+
+// QueryChildren queries the "children" edge of the Dept entity.
+func (d *Dept) QueryChildren() *DeptQuery {
+	return NewDeptClient(d.config).QueryChildren(d)
 }
 
 // Update returns a builder for updating this Dept.

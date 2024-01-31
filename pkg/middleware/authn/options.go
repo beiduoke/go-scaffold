@@ -2,6 +2,7 @@ package authn
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/beiduoke/go-scaffold/pkg/auth/authn"
 )
@@ -33,4 +34,26 @@ func NewContext(ctx context.Context, claims *authn.AuthClaims) context.Context {
 
 func FromContext(ctx context.Context) (*authn.AuthClaims, bool) {
 	return authn.AuthClaimsFromContext(ctx)
+}
+
+type Result struct {
+	UserId   uint32
+	UserName string
+}
+
+func AuthFromContext(ctx context.Context) (*Result, error) {
+	claims, ok := authn.AuthClaimsFromContext(ctx)
+	if !ok {
+		return nil, ErrMissingJwtToken
+	}
+
+	userId, err := strconv.ParseUint(claims.Subject, 10, 32)
+	if err != nil {
+		return nil, ErrExtractSubjectFailed
+	}
+
+	return &Result{
+		UserId:   uint32(userId),
+		UserName: "",
+	}, nil
 }

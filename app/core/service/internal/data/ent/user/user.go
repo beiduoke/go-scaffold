@@ -3,6 +3,8 @@
 package user
 
 import (
+	"time"
+
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 )
@@ -24,16 +26,22 @@ const (
 	FieldSort = "sort"
 	// FieldState holds the string denoting the state field in the database.
 	FieldState = "state"
-	// FieldUsername holds the string denoting the username field in the database.
-	FieldUsername = "username"
+	// FieldUserName holds the string denoting the user_name field in the database.
+	FieldUserName = "user_name"
 	// FieldPassword holds the string denoting the password field in the database.
 	FieldPassword = "password"
-	// FieldNickname holds the string denoting the nickname field in the database.
-	FieldNickname = "nickname"
+	// FieldNickName holds the string denoting the nick_name field in the database.
+	FieldNickName = "nick_name"
+	// FieldRealName holds the string denoting the real_name field in the database.
+	FieldRealName = "real_name"
 	// FieldPhone holds the string denoting the phone field in the database.
 	FieldPhone = "phone"
 	// FieldEmail holds the string denoting the email field in the database.
 	FieldEmail = "email"
+	// FieldBirthday holds the string denoting the birthday field in the database.
+	FieldBirthday = "birthday"
+	// FieldGender holds the string denoting the gender field in the database.
+	FieldGender = "gender"
 	// FieldAvatar holds the string denoting the avatar field in the database.
 	FieldAvatar = "avatar"
 	// FieldDescription holds the string denoting the description field in the database.
@@ -69,11 +77,14 @@ var Columns = []string{
 	FieldRemark,
 	FieldSort,
 	FieldState,
-	FieldUsername,
+	FieldUserName,
 	FieldPassword,
-	FieldNickname,
+	FieldNickName,
+	FieldRealName,
 	FieldPhone,
 	FieldEmail,
+	FieldBirthday,
+	FieldGender,
 	FieldAvatar,
 	FieldDescription,
 	FieldAuthority,
@@ -106,22 +117,30 @@ var (
 	DefaultState int32
 	// StateValidator is a validator for the "state" field. It is called by the builders before save.
 	StateValidator func(int32) error
-	// UsernameValidator is a validator for the "username" field. It is called by the builders before save.
-	UsernameValidator func(string) error
+	// UserNameValidator is a validator for the "user_name" field. It is called by the builders before save.
+	UserNameValidator func(string) error
 	// DefaultPassword holds the default value on creation for the "password" field.
 	DefaultPassword string
 	// PasswordValidator is a validator for the "password" field. It is called by the builders before save.
 	PasswordValidator func(string) error
-	// DefaultNickname holds the default value on creation for the "nickname" field.
-	DefaultNickname string
-	// NicknameValidator is a validator for the "nickname" field. It is called by the builders before save.
-	NicknameValidator func(string) error
+	// DefaultNickName holds the default value on creation for the "nick_name" field.
+	DefaultNickName string
+	// NickNameValidator is a validator for the "nick_name" field. It is called by the builders before save.
+	NickNameValidator func(string) error
+	// DefaultRealName holds the default value on creation for the "real_name" field.
+	DefaultRealName string
+	// RealNameValidator is a validator for the "real_name" field. It is called by the builders before save.
+	RealNameValidator func(string) error
 	// PhoneValidator is a validator for the "phone" field. It is called by the builders before save.
 	PhoneValidator func(string) error
 	// DefaultEmail holds the default value on creation for the "email" field.
 	DefaultEmail string
 	// EmailValidator is a validator for the "email" field. It is called by the builders before save.
 	EmailValidator func(string) error
+	// DefaultBirthday holds the default value on creation for the "birthday" field.
+	DefaultBirthday time.Time
+	// DefaultGender holds the default value on creation for the "gender" field.
+	DefaultGender int32
 	// DefaultAvatar holds the default value on creation for the "avatar" field.
 	DefaultAvatar string
 	// AvatarValidator is a validator for the "avatar" field. It is called by the builders before save.
@@ -131,7 +150,7 @@ var (
 	// DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	DescriptionValidator func(string) error
 	// DefaultAuthority holds the default value on creation for the "authority" field.
-	DefaultAuthority int8
+	DefaultAuthority int32
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(uint32) error
 )
@@ -174,9 +193,9 @@ func ByState(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldState, opts...).ToFunc()
 }
 
-// ByUsername orders the results by the username field.
-func ByUsername(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldUsername, opts...).ToFunc()
+// ByUserName orders the results by the user_name field.
+func ByUserName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUserName, opts...).ToFunc()
 }
 
 // ByPassword orders the results by the password field.
@@ -184,9 +203,14 @@ func ByPassword(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPassword, opts...).ToFunc()
 }
 
-// ByNickname orders the results by the nickname field.
-func ByNickname(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldNickname, opts...).ToFunc()
+// ByNickName orders the results by the nick_name field.
+func ByNickName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldNickName, opts...).ToFunc()
+}
+
+// ByRealName orders the results by the real_name field.
+func ByRealName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldRealName, opts...).ToFunc()
 }
 
 // ByPhone orders the results by the phone field.
@@ -197,6 +221,16 @@ func ByPhone(opts ...sql.OrderTermOption) OrderOption {
 // ByEmail orders the results by the email field.
 func ByEmail(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldEmail, opts...).ToFunc()
+}
+
+// ByBirthday orders the results by the birthday field.
+func ByBirthday(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldBirthday, opts...).ToFunc()
+}
+
+// ByGender orders the results by the gender field.
+func ByGender(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldGender, opts...).ToFunc()
 }
 
 // ByAvatar orders the results by the avatar field.

@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"fmt"
 	"math"
 
@@ -17,11 +18,13 @@ import (
 // DeptQuery is the builder for querying Dept entities.
 type DeptQuery struct {
 	config
-	ctx        *QueryContext
-	order      []dept.OrderOption
-	inters     []Interceptor
-	predicates []predicate.Dept
-	modifiers  []func(*sql.Selector)
+	ctx          *QueryContext
+	order        []dept.OrderOption
+	inters       []Interceptor
+	predicates   []predicate.Dept
+	withParent   *DeptQuery
+	withChildren *DeptQuery
+	modifiers    []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -56,6 +59,50 @@ func (dq *DeptQuery) Unique(unique bool) *DeptQuery {
 func (dq *DeptQuery) Order(o ...dept.OrderOption) *DeptQuery {
 	dq.order = append(dq.order, o...)
 	return dq
+}
+
+// QueryParent chains the current query on the "parent" edge.
+func (dq *DeptQuery) QueryParent() *DeptQuery {
+	query := (&DeptClient{config: dq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := dq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(dept.Table, dept.FieldID, selector),
+			sqlgraph.To(dept.Table, dept.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, dept.ParentTable, dept.ParentColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryChildren chains the current query on the "children" edge.
+func (dq *DeptQuery) QueryChildren() *DeptQuery {
+	query := (&DeptClient{config: dq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := dq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(dept.Table, dept.FieldID, selector),
+			sqlgraph.To(dept.Table, dept.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, dept.ChildrenTable, dept.ChildrenColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first Dept entity from the query.
@@ -245,15 +292,39 @@ func (dq *DeptQuery) Clone() *DeptQuery {
 		return nil
 	}
 	return &DeptQuery{
-		config:     dq.config,
-		ctx:        dq.ctx.Clone(),
-		order:      append([]dept.OrderOption{}, dq.order...),
-		inters:     append([]Interceptor{}, dq.inters...),
-		predicates: append([]predicate.Dept{}, dq.predicates...),
+		config:       dq.config,
+		ctx:          dq.ctx.Clone(),
+		order:        append([]dept.OrderOption{}, dq.order...),
+		inters:       append([]Interceptor{}, dq.inters...),
+		predicates:   append([]predicate.Dept{}, dq.predicates...),
+		withParent:   dq.withParent.Clone(),
+		withChildren: dq.withChildren.Clone(),
 		// clone intermediate query.
 		sql:  dq.sql.Clone(),
 		path: dq.path,
 	}
+}
+
+// WithParent tells the query-builder to eager-load the nodes that are connected to
+// the "parent" edge. The optional arguments are used to configure the query builder of the edge.
+func (dq *DeptQuery) WithParent(opts ...func(*DeptQuery)) *DeptQuery {
+	query := (&DeptClient{config: dq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withParent = query
+	return dq
+}
+
+// WithChildren tells the query-builder to eager-load the nodes that are connected to
+// the "children" edge. The optional arguments are used to configure the query builder of the edge.
+func (dq *DeptQuery) WithChildren(opts ...func(*DeptQuery)) *DeptQuery {
+	query := (&DeptClient{config: dq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withChildren = query
+	return dq
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -332,8 +403,12 @@ func (dq *DeptQuery) prepareQuery(ctx context.Context) error {
 
 func (dq *DeptQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Dept, error) {
 	var (
-		nodes = []*Dept{}
-		_spec = dq.querySpec()
+		nodes       = []*Dept{}
+		_spec       = dq.querySpec()
+		loadedTypes = [2]bool{
+			dq.withParent != nil,
+			dq.withChildren != nil,
+		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*Dept).scanValues(nil, columns)
@@ -341,6 +416,7 @@ func (dq *DeptQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Dept, e
 	_spec.Assign = func(columns []string, values []any) error {
 		node := &Dept{config: dq.config}
 		nodes = append(nodes, node)
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	if len(dq.modifiers) > 0 {
@@ -355,7 +431,86 @@ func (dq *DeptQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Dept, e
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	if query := dq.withParent; query != nil {
+		if err := dq.loadParent(ctx, query, nodes, nil,
+			func(n *Dept, e *Dept) { n.Edges.Parent = e }); err != nil {
+			return nil, err
+		}
+	}
+	if query := dq.withChildren; query != nil {
+		if err := dq.loadChildren(ctx, query, nodes,
+			func(n *Dept) { n.Edges.Children = []*Dept{} },
+			func(n *Dept, e *Dept) { n.Edges.Children = append(n.Edges.Children, e) }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
+}
+
+func (dq *DeptQuery) loadParent(ctx context.Context, query *DeptQuery, nodes []*Dept, init func(*Dept), assign func(*Dept, *Dept)) error {
+	ids := make([]uint32, 0, len(nodes))
+	nodeids := make(map[uint32][]*Dept)
+	for i := range nodes {
+		if nodes[i].ParentID == nil {
+			continue
+		}
+		fk := *nodes[i].ParentID
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	query.Where(dept.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "parent_id" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
+}
+func (dq *DeptQuery) loadChildren(ctx context.Context, query *DeptQuery, nodes []*Dept, init func(*Dept), assign func(*Dept, *Dept)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[uint32]*Dept)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(dept.FieldParentID)
+	}
+	query.Where(predicate.Dept(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(dept.ChildrenColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.ParentID
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "parent_id" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "parent_id" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
 }
 
 func (dq *DeptQuery) sqlCount(ctx context.Context) (int, error) {
@@ -385,6 +540,9 @@ func (dq *DeptQuery) querySpec() *sqlgraph.QuerySpec {
 			if fields[i] != dept.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
+		}
+		if dq.withParent != nil {
+			_spec.Node.AddColumnOnce(dept.FieldParentID)
 		}
 	}
 	if ps := dq.predicates; len(ps) > 0 {

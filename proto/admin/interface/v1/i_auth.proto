@@ -9,13 +9,10 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
 import "validate/validate.proto";
 
+import "core/service/v1/auth.proto";
 import "core/service/v1/user.proto";
-import "core/service/v1/role.proto";
 
 option go_package = "github.com/beiduoke/go-scaffold/api/admin/interface/v1;v1";
-option java_multiple_files = true;
-option java_package = "admin.interface.v1";
-option java_outer_classname = "adminProtoV1";
 
 option (gnostic.openapi.v3.document) = {
   info: {
@@ -43,6 +40,7 @@ service AuthService {
       body: "*"
     };
   }
+  
   // 后台登出
   rpc Logout (LogoutRequest) returns (LogoutResponse) {
     option (google.api.http) = {
@@ -54,6 +52,7 @@ service AuthService {
       security: [{additional_properties: [{name: "OAuth2PasswordBearer"; value: {}}]}]
     };
   }
+
   // 注册
   rpc Register (RegisterRequest) returns (RegisterResponse) {
     option (google.api.http) = {
@@ -63,26 +62,30 @@ service AuthService {
   }
 }
 
+// 授权类型
+enum GrandType {
+  GRAND_TYPE_UNSPECIFIED = 0; // 未指定
+  GRAND_TYPE_PASSWORD = 1; // 密码
+  GRAND_TYPE_CODE = 2; // 验证码
+}
 
 // 用户后台登陆 - 请求
 message LoginRequest {
-  string username = 1; // 用户名
+  string user_name = 1; // 账号
   string password = 2; // 密码
-  optional string grand_type = 3; // 授权类型，一直为：password
+  optional int32 grand_type = 3; // 授权类型，一直为：password
 }
 // 用户后台登陆 - 回应
 message LoginResponse {
   uint32 id = 1; // 用户ID
-  string username = 2; // 用户名
+  string user_name = 2; // 用户名
   string token_type = 3; // 令牌类型
   string access_token = 4; // 访问令牌
   string refresh_token = 5; // 刷新令牌
 }
 
 // 用户后台登出 - 请求
-message LogoutRequest {
-  uint32 id = 1;
-}
+message LogoutRequest {}
 
 // 用户后台登出 - 回应
 message LogoutResponse {}
@@ -91,11 +94,13 @@ message LogoutResponse {}
 message RegisterRequest {
   message Auth {
     // 用户名
-    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    string user_name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
     // 密码
     string password = 2 [(validate.rules).string = {min_len: 6, max_len: 25}];
     // 电话
     string phone = 3 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
+    // 授权类型，一直为：password
+    optional int32 grand_type = 4; 
   }
   // 请求体
   Auth auth = 1 [(validate.rules).message = {required: true}];

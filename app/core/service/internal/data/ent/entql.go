@@ -39,7 +39,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			dept.FieldSort:      {Type: field.TypeInt32, Column: dept.FieldSort},
 			dept.FieldState:     {Type: field.TypeInt32, Column: dept.FieldState},
 			dept.FieldName:      {Type: field.TypeString, Column: dept.FieldName},
-			dept.FieldParentID:  {Type: field.TypeInt32, Column: dept.FieldParentID},
+			dept.FieldParentID:  {Type: field.TypeUint32, Column: dept.FieldParentID},
 			dept.FieldAncestors: {Type: field.TypeJSON, Column: dept.FieldAncestors},
 		},
 	}
@@ -182,16 +182,43 @@ var schemaGraph = func() *sqlgraph.Schema {
 			user.FieldRemark:      {Type: field.TypeString, Column: user.FieldRemark},
 			user.FieldSort:        {Type: field.TypeInt32, Column: user.FieldSort},
 			user.FieldState:       {Type: field.TypeInt32, Column: user.FieldState},
-			user.FieldUsername:    {Type: field.TypeString, Column: user.FieldUsername},
+			user.FieldUserName:    {Type: field.TypeString, Column: user.FieldUserName},
 			user.FieldPassword:    {Type: field.TypeString, Column: user.FieldPassword},
-			user.FieldNickname:    {Type: field.TypeString, Column: user.FieldNickname},
+			user.FieldNickName:    {Type: field.TypeString, Column: user.FieldNickName},
+			user.FieldRealName:    {Type: field.TypeString, Column: user.FieldRealName},
 			user.FieldPhone:       {Type: field.TypeString, Column: user.FieldPhone},
 			user.FieldEmail:       {Type: field.TypeString, Column: user.FieldEmail},
+			user.FieldBirthday:    {Type: field.TypeTime, Column: user.FieldBirthday},
+			user.FieldGender:      {Type: field.TypeInt32, Column: user.FieldGender},
 			user.FieldAvatar:      {Type: field.TypeString, Column: user.FieldAvatar},
 			user.FieldDescription: {Type: field.TypeString, Column: user.FieldDescription},
-			user.FieldAuthority:   {Type: field.TypeInt8, Column: user.FieldAuthority},
+			user.FieldAuthority:   {Type: field.TypeInt32, Column: user.FieldAuthority},
 		},
 	}
+	graph.MustAddE(
+		"parent",
+		&sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   dept.ParentTable,
+			Columns: []string{dept.ParentColumn},
+			Bidi:    false,
+		},
+		"Dept",
+		"Dept",
+	)
+	graph.MustAddE(
+		"children",
+		&sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   dept.ChildrenTable,
+			Columns: []string{dept.ChildrenColumn},
+			Bidi:    false,
+		},
+		"Dept",
+		"Dept",
+	)
 	graph.MustAddE(
 		"parent",
 		&sqlgraph.EdgeSpec{
@@ -336,14 +363,42 @@ func (f *DeptFilter) WhereName(p entql.StringP) {
 	f.Where(p.Field(dept.FieldName))
 }
 
-// WhereParentID applies the entql int32 predicate on the parent_id field.
-func (f *DeptFilter) WhereParentID(p entql.Int32P) {
+// WhereParentID applies the entql uint32 predicate on the parent_id field.
+func (f *DeptFilter) WhereParentID(p entql.Uint32P) {
 	f.Where(p.Field(dept.FieldParentID))
 }
 
 // WhereAncestors applies the entql json.RawMessage predicate on the ancestors field.
 func (f *DeptFilter) WhereAncestors(p entql.BytesP) {
 	f.Where(p.Field(dept.FieldAncestors))
+}
+
+// WhereHasParent applies a predicate to check if query has an edge parent.
+func (f *DeptFilter) WhereHasParent() {
+	f.Where(entql.HasEdge("parent"))
+}
+
+// WhereHasParentWith applies a predicate to check if query has an edge parent with a given conditions (other predicates).
+func (f *DeptFilter) WhereHasParentWith(preds ...predicate.Dept) {
+	f.Where(entql.HasEdgeWith("parent", sqlgraph.WrapFunc(func(s *sql.Selector) {
+		for _, p := range preds {
+			p(s)
+		}
+	})))
+}
+
+// WhereHasChildren applies a predicate to check if query has an edge children.
+func (f *DeptFilter) WhereHasChildren() {
+	f.Where(entql.HasEdge("children"))
+}
+
+// WhereHasChildrenWith applies a predicate to check if query has an edge children with a given conditions (other predicates).
+func (f *DeptFilter) WhereHasChildrenWith(preds ...predicate.Dept) {
+	f.Where(entql.HasEdgeWith("children", sqlgraph.WrapFunc(func(s *sql.Selector) {
+		for _, p := range preds {
+			p(s)
+		}
+	})))
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -943,9 +998,9 @@ func (f *UserFilter) WhereState(p entql.Int32P) {
 	f.Where(p.Field(user.FieldState))
 }
 
-// WhereUsername applies the entql string predicate on the username field.
-func (f *UserFilter) WhereUsername(p entql.StringP) {
-	f.Where(p.Field(user.FieldUsername))
+// WhereUserName applies the entql string predicate on the user_name field.
+func (f *UserFilter) WhereUserName(p entql.StringP) {
+	f.Where(p.Field(user.FieldUserName))
 }
 
 // WherePassword applies the entql string predicate on the password field.
@@ -953,9 +1008,14 @@ func (f *UserFilter) WherePassword(p entql.StringP) {
 	f.Where(p.Field(user.FieldPassword))
 }
 
-// WhereNickname applies the entql string predicate on the nickname field.
-func (f *UserFilter) WhereNickname(p entql.StringP) {
-	f.Where(p.Field(user.FieldNickname))
+// WhereNickName applies the entql string predicate on the nick_name field.
+func (f *UserFilter) WhereNickName(p entql.StringP) {
+	f.Where(p.Field(user.FieldNickName))
+}
+
+// WhereRealName applies the entql string predicate on the real_name field.
+func (f *UserFilter) WhereRealName(p entql.StringP) {
+	f.Where(p.Field(user.FieldRealName))
 }
 
 // WherePhone applies the entql string predicate on the phone field.
@@ -968,6 +1028,16 @@ func (f *UserFilter) WhereEmail(p entql.StringP) {
 	f.Where(p.Field(user.FieldEmail))
 }
 
+// WhereBirthday applies the entql time.Time predicate on the birthday field.
+func (f *UserFilter) WhereBirthday(p entql.TimeP) {
+	f.Where(p.Field(user.FieldBirthday))
+}
+
+// WhereGender applies the entql int32 predicate on the gender field.
+func (f *UserFilter) WhereGender(p entql.Int32P) {
+	f.Where(p.Field(user.FieldGender))
+}
+
 // WhereAvatar applies the entql string predicate on the avatar field.
 func (f *UserFilter) WhereAvatar(p entql.StringP) {
 	f.Where(p.Field(user.FieldAvatar))
@@ -978,8 +1048,8 @@ func (f *UserFilter) WhereDescription(p entql.StringP) {
 	f.Where(p.Field(user.FieldDescription))
 }
 
-// WhereAuthority applies the entql int8 predicate on the authority field.
-func (f *UserFilter) WhereAuthority(p entql.Int8P) {
+// WhereAuthority applies the entql int32 predicate on the authority field.
+func (f *UserFilter) WhereAuthority(p entql.Int32P) {
 	f.Where(p.Field(user.FieldAuthority))
 }
 

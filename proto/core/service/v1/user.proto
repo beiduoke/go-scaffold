@@ -12,8 +12,6 @@ import "validate/validate.proto";
 import "common/pagination/pagination.proto";
 
 option go_package = "github.com/beiduoke/go-scaffold/api/core/service/v1;v1";
-option java_multiple_files = true;
-option java_package = "core.service.v1";
 
 service UserService {
 	rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
@@ -27,12 +25,11 @@ service UserService {
   rpc VerifyPassword (VerifyPasswordRequest) returns (VerifyPasswordResponse) {}
   // 用户是否存在
   rpc UserExists (UserExistsRequest) returns (UserExistsResponse) {}
-  
 }
 
 // 验证密码结果码
 enum VerifyPassword {
-  VERIFY_PASSWORD_UNSPECIFIED = 0;  // 验证成功
+  VERIFY_PASSWORD_UNSPECIFIED = 0; 
   VERIFY_PASSWORD_SUCCESS = 1;  // 验证成功
   VERIFY_PASSWORD_ACCOUNT_NOT_EXISTS = 2; // 账号不存在
   VERIFY_PASSWORD_WRONG_PASSWORD = 3;// 密码错误
@@ -41,15 +38,15 @@ enum VerifyPassword {
 }
 // 用户权限
 enum Authority {
-  AUTHORITY_UNSPECIFIED = 0;  // 系统超级用户
+  AUTHORITY_UNSPECIFIED = 0; 
   AUTHORITY_SYS_ADMIN = 1;  // 系统超级用户
   AUTHORITY_CUSTOMER_USER = 2;  // 普通用户
   AUTHORITY_GUEST_USER = 3;  // 游客
 }
 
 message User {
-  uint64 id = 1;
-  string name = 2;
+  uint32 id = 1;
+  string user_name = 2;
   optional string nick_name = 4;
   optional string real_name = 5;
   optional string birthday = 6;
@@ -58,17 +55,19 @@ message User {
   optional string email = 9;
   optional string avatar = 10;
   optional int32 state = 11 [(gnostic.openapi.v3.property) = {description: "状态"}];
-  optional google.protobuf.Timestamp created_at = 12;
-  optional google.protobuf.Timestamp updated_at = 13;
+  optional string created_at = 12;
+  optional string updated_at = 13;
   optional uint32 creator_id = 14 [(gnostic.openapi.v3.property) = {description: "创建者ID"}]; // 创建者ID
   optional int32 authority = 15 [(gnostic.openapi.v3.property) = {description: "权限"}]; // 权限
+  optional string password = 16;
 }
 
 message CreateUserRequest {
   User user = 1;
   uint32 operator_id = 2;
 }
-message CreateUserResponse {}
+message CreateUserResponse {
+}
 
 message UpdateUserRequest {
   uint32 id = 1;
@@ -94,7 +93,10 @@ message GetUserByUserNameRequest {
 }
 
 message ListUserRequest {}
-message ListUserResponse {}
+message ListUserResponse {
+  repeated User items = 1;
+  int32 total = 2;
+}
 // 验证密码 - 请求
 message VerifyPasswordRequest {
   string user_name = 1;

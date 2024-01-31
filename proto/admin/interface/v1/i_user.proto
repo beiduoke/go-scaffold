@@ -13,9 +13,6 @@ import "core/service/v1/user.proto";
 import "core/service/v1/role.proto";
 
 option go_package = "github.com/beiduoke/go-scaffold/api/admin/interface/v1;v1";
-option java_multiple_files = true;
-option java_package = "admin.interface.v1";
-option java_outer_classname = "adminProtoV1";
 
 // 用户管理服务
 service UserService {

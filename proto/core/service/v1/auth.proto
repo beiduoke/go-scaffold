@@ -13,9 +13,6 @@ import "core/service/v1/user.proto";
 import "core/service/v1/role.proto";
 
 option go_package = "github.com/beiduoke/go-scaffold/api/core/service/v1;v1";
-option java_multiple_files = true;
-option java_package = "core.service.v1";
-option java_outer_classname = "coreProtoV1";
 
 option (gnostic.openapi.v3.document) = {
   info: {
@@ -36,11 +33,13 @@ option (gnostic.openapi.v3.document) = {
 
 // The greeting service definition.
 service AuthService {
-  // 注册
+  // 注册 - 暂保留
   rpc Register (RegisterRequest) returns (RegisterResponse);
+  // 鉴权
+  rpc IsAuthorized (IsAuthorizedRequest) returns (IsAuthorizedResponse);
 }
 
-// 请求 - 注册
+// 注册 - 请求
 message RegisterRequest {
   message Auth {
     // 用户名
@@ -55,7 +54,7 @@ message RegisterRequest {
   string domain = 2 [(validate.rules).string = {min_len: 1, max_len: 20}];
 }
 
-// 回应 - 注册
+// 注册 - 回应
 message RegisterResponse {
   int32 code = 1;
   string message = 2;
@@ -63,3 +62,14 @@ message RegisterResponse {
   string type = 4;
 }
 
+
+// 鉴权 - 请求
+message IsAuthorizedRequest {
+  string subject = 1;
+  string action = 2;
+  string resource = 3;
+  string project = 4;
+}
+
+// 鉴权 - 回应
+message IsAuthorizedResponse {}

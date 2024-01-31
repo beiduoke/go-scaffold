@@ -17,12 +17,29 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-const modelText = `
+const modelTextRbac = `
 [request_definition]
-r = sub, obj, act, dom
+r = sub, obj, act
 
 [policy_definition]
-p = sub, obj, act, dom
+p = sub, obj, act
+
+[role_definition]
+g = _, _
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act
+`
+
+const modelTextRbacDom = `
+[request_definition]
+r = sub, dom, obj, act
+
+[policy_definition]
+p = sub, dom, obj, act
 
 [role_definition]
 g = _, _, _
@@ -31,17 +48,23 @@ g = _, _, _
 e = some(where (p.eft == allow))
 
 [matchers]
-m = g(r.sub, p.sub, r.dom) && r.dom == p.dom && r.obj == p.obj && r.act == p.act || (r.sub == "1" && r.dom == "1")
+m = g(r.sub, p.sub, r.dom) && r.dom == p.dom && r.obj == p.obj && r.act == p.act 
 `
 
-// NewAuthzCasbinModel 模型
-func NewAuthzCasbinModel(cfg *conf.Bootstrap, logger log.Logger) model.Model {
-	log := log.NewHelper(log.With(logger, "module", "casbin/data/authCasbinModel"))
-	authz := cfg.Server.Http.Middleware.Authorizer.GetCasbin()
-	m, err := model.NewModelFromString(modelText)
-	if authz.GetModelPath() != "" {
-		m, err = model.NewModelFromFile(authz.GetModelPath())
+func NewAuthzCasbinModel(logger log.Logger) model.Model {
+	log := log.NewHelper(log.With(logger, "module", "casbin/data/authCasbinRbacModel"))
+	m, err := model.NewModelFromString(modelTextRbac)
+	if err != nil {
+		log.Fatalf("failed casbin model connection %v", err)
 	}
+	return m
+}
+
+// NewAuthzCasbinModel 模型
+func NewAuthzCasbinFileModel(cfg *conf.Bootstrap, logger log.Logger) model.Model {
+	log := log.NewHelper(log.With(logger, "module", "casbin/data/authCasbinRbacDomModel"))
+	authz := cfg.Server.Http.Middleware.Authorizer.GetCasbin()
+	m, err := model.NewModelFromFile(authz.GetModelPath())
 	if err != nil {
 		log.Fatalf("failed casbin model connection %v", err)
 	}

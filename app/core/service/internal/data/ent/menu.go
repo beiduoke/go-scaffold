@@ -29,7 +29,7 @@ type Menu struct {
 	Remark *string `json:"remark,omitempty"`
 	// 排序
 	Sort *int32 `json:"sort,omitempty"`
-	// 状态
+	// 状态 0 UNSPECIFIED 开启 1 -> ACTIVE 关闭 2 -> INACTIVE, 禁用 3 -> BANNED
 	State *int32 `json:"state,omitempty"`
 	// 菜单名称
 	Name *string `json:"name,omitempty"`
