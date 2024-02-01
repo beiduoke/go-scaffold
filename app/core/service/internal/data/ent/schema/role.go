@@ -37,7 +37,7 @@ func (Role) Fields() []ent.Field {
 		field.String("name").
 			Comment("名称").
 			MaxLen(128).
-			Nillable(),
+			NotEmpty(),
 	}
 }
 

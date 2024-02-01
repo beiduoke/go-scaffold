@@ -9,42 +9,30 @@ import (
 	v1 "github.com/beiduoke/go-scaffold/api/core/service/v1"
 	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent"
 	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/user"
+	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/crypto"
-	paging "github.com/beiduoke/go-scaffold/pkg/util/pagination"
 	"github.com/beiduoke/go-scaffold/pkg/util/trans"
 	"github.com/go-kratos/kratos/v2/log"
+	entgo "github.com/tx7do/go-utils/entgo/query"
 )
 
 func (r *UserRepo) toProto(in *ent.User) *v1.User {
 	if in == nil {
 		return nil
 	}
-	var (
-		createdAt, updatedAt, birthday string
-	)
-	if in.CreatedAt != nil {
-		createdAt = in.CreatedAt.Format(time.DateTime)
-	}
-	if in.UpdatedAt != nil {
-		updatedAt = in.UpdatedAt.Format(time.DateTime)
-	}
-	if in.Birthday != nil {
-		birthday = in.Birthday.Format(time.DateOnly)
-	}
-
 	return &v1.User{
 		Id:        in.ID,
 		UserName:  in.UserName,
 		NickName:  in.NickName,
 		RealName:  in.RealName,
-		Birthday:  &birthday,
 		Gender:    in.Gender,
 		Phone:     in.Phone,
 		Email:     in.Email,
 		Avatar:    in.Avatar,
 		State:     in.State,
-		CreatedAt: &createdAt,
-		UpdatedAt: &updatedAt,
+		CreatedAt: convert.TimeValueToString(in.CreatedAt, time.DateTime),
+		UpdatedAt: convert.TimeValueToString(in.UpdatedAt, time.DateTime),
+		Birthday:  convert.TimeValueToString(in.Birthday, time.DateTime),
 	}
 }
 
@@ -63,7 +51,7 @@ func NewUserRepo(data *Data, logger log.Logger) *UserRepo {
 
 func (r *UserRepo) Count(ctx context.Context, whereCond []func(s *sql.Selector)) (int, error) {
 	builder := r.data.db.User.Query()
-	if len(whereCond) != 0 {
+	if len(whereCond) > 0 {
 		builder.Modify(whereCond...)
 	}
 
@@ -108,10 +96,37 @@ func (r *UserRepo) GetUser(ctx context.Context, req *v1.GetUserRequest) (*v1.Use
 
 func (r *UserRepo) ListUser(ctx context.Context, req *pagination.PagingRequest) (*v1.ListUserResponse, error) {
 	builder := r.data.db.Debug().User.Query()
+	// if !req.GetNoPaging() {
+	// 	builder = builder.Offset(paging.GetPageOffset(req.GetPage(), req.GetPageSize())).Limit(int(req.GetPageSize()))
+	// }
+	// orderOption := make([]user.OrderOption, 0)
+	// for _, v := range req.GetOrderBy() {
+	// 	if v == "-id" {
+	// 		orderOption = append(orderOption, ent.Desc("id"))
+	// 	}
+	// }
+	// builder.Order()
+	// builder = builder.Order(orderOption...)
+	// builder = builder.Where(func(s *sql.Selector) {
+	// 	// if req.GetQuery()
+	// 	// s.Where(sql.InInts(pet.FieldOwnerID, 1, 2, 3))
+	// })
+	// builder.Order(sqljson.OrderValue("user_name", sqljson.Path("key1", "key2")))
 
-	builder = builder.Offset(paging.GetPageOffset(*req.Page, *req.PageSize)).Limit(int(req.GetPageSize()))
-	// user.By
-	// builder = builder.Order(paging.GetSorting(req.Sorting))
+	err, whereSelectors, querySelectors := entgo.BuildQuerySelector(
+		req.GetQuery(), req.GetOrQuery(),
+		req.GetPage(), req.GetPageSize(), req.GetNoPaging(),
+		req.GetOrderBy(), user.FieldCreatedAt,
+		req.GetFieldMask().GetPaths(),
+	)
+	if err != nil {
+		r.log.Errorf("解析条件发生错误[%s]", err.Error())
+		return nil, err
+	}
+
+	if querySelectors != nil {
+		builder.Modify(querySelectors...)
+	}
 
 	results, err := builder.All(ctx)
 	if err != nil {
@@ -123,11 +138,10 @@ func (r *UserRepo) ListUser(ctx context.Context, req *pagination.PagingRequest) 
 	for _, res := range results {
 		items = append(items, r.toProto(res))
 	}
-	count := 0
-	// count, err := r.Count(ctx, whereSelectors)
-	// if err != nil {
-	// 	return nil, err
-	// }
+	count, err := r.Count(ctx, whereSelectors)
+	if err != nil {
+		return nil, err
+	}
 
 	return &v1.ListUserResponse{
 		Total: int32(count),

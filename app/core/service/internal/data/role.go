@@ -2,10 +2,28 @@ package data
 
 import (
 	"context"
+	"time"
 
 	v1 "github.com/beiduoke/go-scaffold/api/core/service/v1"
+	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent"
+	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/go-kratos/kratos/v2/log"
 )
+
+func (r *RoleRepo) toProto(in *ent.Role) *v1.Role {
+	if in == nil {
+		return nil
+	}
+	return &v1.Role{
+		Id:        in.ID,
+		Name:      in.Name,
+		State:     in.State,
+		Remarks:   in.Remark,
+		Sort:      in.Sort,
+		CreatedAt: convert.TimeValueToString(in.CreatedAt, time.DateTime),
+		UpdatedAt: convert.TimeValueToString(in.UpdatedAt, time.DateTime),
+	}
+}
 
 type RoleRepo struct {
 	data *Data

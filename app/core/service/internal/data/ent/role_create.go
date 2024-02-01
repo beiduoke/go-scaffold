@@ -273,7 +273,7 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := rc.mutation.Name(); ok {
 		_spec.SetField(role.FieldName, field.TypeString, value)
-		_node.Name = &value
+		_node.Name = value
 	}
 	if nodes := rc.mutation.UsersIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

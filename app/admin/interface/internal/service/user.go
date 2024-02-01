@@ -39,7 +39,7 @@ func (s *UserService) GetUserByUserName(ctx context.Context, req *coreV1.GetUser
 }
 
 func (s *UserService) CreateUser(ctx context.Context, req *coreV1.CreateUserRequest) (*coreV1.CreateUserResponse, error) {
-	return s.uc.CreateUser(ctx, req)
+	// return s.uc.CreateUser(ctx, req)
 	authInfo, err := authn.AuthFromContext(ctx)
 	if err != nil {
 		s.log.Errorf("用户认证失败[%s]", err.Error())

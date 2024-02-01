@@ -31,7 +31,7 @@ type Role struct {
 	// 状态 0 UNSPECIFIED 开启 1 -> ACTIVE 关闭 2 -> INACTIVE, 禁用 3 -> BANNED
 	State *int32 `json:"state,omitempty"`
 	// 名称
-	Name *string `json:"name,omitempty"`
+	Name string `json:"name,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoleQuery when eager-loading is set.
 	Edges        RoleEdges `json:"edges"`
@@ -134,8 +134,7 @@ func (r *Role) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
-				r.Name = new(string)
-				*r.Name = value.String
+				r.Name = value.String
 			}
 		default:
 			r.selectValues.Set(columns[i], values[i])
@@ -208,10 +207,8 @@ func (r *Role) String() string {
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteString(", ")
-	if v := r.Name; v != nil {
-		builder.WriteString("name=")
-		builder.WriteString(*v)
-	}
+	builder.WriteString("name=")
+	builder.WriteString(r.Name)
 	builder.WriteByte(')')
 	return builder.String()
 }
