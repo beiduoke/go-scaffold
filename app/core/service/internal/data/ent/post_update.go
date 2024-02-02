@@ -145,12 +145,6 @@ func (pu *PostUpdate) SetNillableName(s *string) *PostUpdate {
 	return pu
 }
 
-// ClearName clears the value of the "name" field.
-func (pu *PostUpdate) ClearName() *PostUpdate {
-	pu.mutation.ClearName()
-	return pu
-}
-
 // Mutation returns the PostMutation object of the builder.
 func (pu *PostUpdate) Mutation() *PostMutation {
 	return pu.mutation
@@ -256,9 +250,6 @@ func (pu *PostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := pu.mutation.Name(); ok {
 		_spec.SetField(post.FieldName, field.TypeString, value)
-	}
-	if pu.mutation.NameCleared() {
-		_spec.ClearField(post.FieldName, field.TypeString)
 	}
 	_spec.AddModifiers(pu.modifiers...)
 	if n, err = sqlgraph.UpdateNodes(ctx, pu.driver, _spec); err != nil {
@@ -398,12 +389,6 @@ func (puo *PostUpdateOne) SetNillableName(s *string) *PostUpdateOne {
 	return puo
 }
 
-// ClearName clears the value of the "name" field.
-func (puo *PostUpdateOne) ClearName() *PostUpdateOne {
-	puo.mutation.ClearName()
-	return puo
-}
-
 // Mutation returns the PostMutation object of the builder.
 func (puo *PostUpdateOne) Mutation() *PostMutation {
 	return puo.mutation
@@ -539,9 +524,6 @@ func (puo *PostUpdateOne) sqlSave(ctx context.Context) (_node *Post, err error) 
 	}
 	if value, ok := puo.mutation.Name(); ok {
 		_spec.SetField(post.FieldName, field.TypeString, value)
-	}
-	if puo.mutation.NameCleared() {
-		_spec.ClearField(post.FieldName, field.TypeString)
 	}
 	_spec.AddModifiers(puo.modifiers...)
 	_node = &Post{config: puo.config}

@@ -31,7 +31,7 @@ func (r *UserRepo) toProto(in *ent.User) *v1.User {
 		State:     in.State,
 		CreatedAt: convert.TimeValueToString(in.CreatedAt, time.DateTime),
 		UpdatedAt: convert.TimeValueToString(in.UpdatedAt, time.DateTime),
-		Birthday:  convert.TimeValueToString(in.Birthday, time.DateTime),
+		Birthday:  convert.TimeValueToString(in.Birthday, time.DateOnly),
 	}
 }
 
@@ -90,34 +90,49 @@ func (r *UserRepo) CreateUser(ctx context.Context, req *v1.CreateUserRequest) (*
 	return &v1.CreateUserResponse{}, err
 }
 func (r *UserRepo) UpdateUser(ctx context.Context, req *v1.UpdateUserRequest) (*v1.UpdateUserResponse, error) {
-	return &v1.UpdateUserResponse{}, nil
+
+	builder := r.data.db.User.UpdateOneID(req.Id)
+	if req.User.Password != nil {
+		pass, err := crypto.HashPassword(req.User.GetPassword())
+		if err != nil {
+			return nil, err
+		}
+		builder = builder.SetPassword(pass)
+	}
+	builder = builder.SetPhone(req.User.GetPhone()).
+		SetNillableNickName(req.User.NickName).
+		SetNillableRealName(req.User.RealName).
+		SetNillableEmail(req.User.Email).
+		SetNillableAvatar(req.User.Avatar).
+		SetNillableDescription(req.User.Description).
+		SetNillableAuthority(req.User.Authority).
+		SetNillableBirthday(convert.StringValueToTime(req.User.Birthday, time.DateOnly))
+
+	_, err := builder.Save(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &v1.UpdateUserResponse{}, err
 }
 func (r *UserRepo) DeleteUser(ctx context.Context, req *v1.DeleteUserRequest) (*v1.DeleteUserResponse, error) {
+	err := r.data.db.User.
+		DeleteOneID(req.GetId()).
+		Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
 	return &v1.DeleteUserResponse{}, nil
 }
 func (r *UserRepo) GetUser(ctx context.Context, req *v1.GetUserRequest) (*v1.User, error) {
-	return &v1.User{}, nil
+	ret, err := r.data.db.User.Get(ctx, req.GetId())
+	if err != nil && !ent.IsNotFound(err) {
+		return nil, err
+	}
+	return r.toProto(ret), err
 }
 
 func (r *UserRepo) ListUser(ctx context.Context, req *pagination.PagingRequest) (*v1.ListUserResponse, error) {
 	builder := r.data.db.Debug().User.Query()
-	// if !req.GetNoPaging() {
-	// 	builder = builder.Offset(paging.GetPageOffset(req.GetPage(), req.GetPageSize())).Limit(int(req.GetPageSize()))
-	// }
-	// orderOption := make([]user.OrderOption, 0)
-	// for _, v := range req.GetOrderBy() {
-	// 	if v == "-id" {
-	// 		orderOption = append(orderOption, ent.Desc("id"))
-	// 	}
-	// }
-	// builder.Order()
-	// builder = builder.Order(orderOption...)
-	// builder = builder.Where(func(s *sql.Selector) {
-	// 	// if req.GetQuery()
-	// 	// s.Where(sql.InInts(pet.FieldOwnerID, 1, 2, 3))
-	// })
-	// builder.Order(sqljson.OrderValue("name", sqljson.Path("key1", "key2")))
-
 	err, whereSelectors, querySelectors := entgo.BuildQuerySelector(
 		req.GetQuery(), req.GetOrQuery(),
 		req.GetPage(), req.GetPageSize(), req.GetNoPaging(),
@@ -174,7 +189,6 @@ func (r *UserRepo) VerifyPassword(ctx context.Context, req *v1.VerifyPasswordReq
 		r.log.Errorf("query user data failed: %s", err.Error())
 		return nil, v1.ErrorUserNotFound("用户未找到")
 	}
-
 	bMatched := crypto.CheckPasswordHash(req.GetPassword(), *res.Password)
 	if !bMatched {
 		return nil, v1.ErrorUserNotFound("密码错误")
@@ -183,5 +197,14 @@ func (r *UserRepo) VerifyPassword(ctx context.Context, req *v1.VerifyPasswordReq
 	return &v1.VerifyPasswordResponse{}, nil
 }
 func (r *UserRepo) UserExists(ctx context.Context, req *v1.UserExistsRequest) (*v1.UserExistsResponse, error) {
-	return &v1.UserExistsResponse{}, nil
+	_, err := r.data.db.User.
+		Query().
+		Select(user.FieldID, user.FieldPassword).
+		Where(user.NameEQ(req.GetName())).
+		Only(ctx)
+	if err != nil {
+		r.log.Errorf("query user data failed: %s", err.Error())
+		return nil, v1.ErrorUserNotFound("用户未找到")
+	}
+	return &v1.UserExistsResponse{Exist: true}, nil
 }

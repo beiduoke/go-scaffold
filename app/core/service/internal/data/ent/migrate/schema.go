@@ -77,7 +77,7 @@ var (
 		{Name: "remark", Type: field.TypeString, Nullable: true, Comment: "备注", Default: ""},
 		{Name: "sort", Type: field.TypeInt32, Comment: "排序", Default: 100, SchemaType: map[string]string{"mysql": "int"}},
 		{Name: "state", Type: field.TypeInt32, Comment: "状态 0 UNSPECIFIED 开启 1 -> ACTIVE 关闭 2 -> INACTIVE, 禁用 3 -> BANNED", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)"}},
-		{Name: "name", Type: field.TypeString, Size: 32, Comment: "菜单名称", Default: ""},
+		{Name: "name", Type: field.TypeString, Size: 32, Comment: "名称", Default: ""},
 		{Name: "title", Type: field.TypeString, Comment: "菜单标题", Default: ""},
 		{Name: "type", Type: field.TypeInt32, Comment: "菜单类型 0 UNSPECIFIED, 目录 1 -> FOLDER, 菜单 2 -> MENU, 按钮 3 -> BUTTON", Default: 1},
 		{Name: "path", Type: field.TypeString, Comment: "路径,当其类型为'按钮'的时候对应的数据操作名,例如:/user.service.v1.UserService/Login", Default: ""},
@@ -119,7 +119,7 @@ var (
 		{Name: "remark", Type: field.TypeString, Nullable: true, Comment: "备注", Default: ""},
 		{Name: "sort", Type: field.TypeInt32, Comment: "排序", Default: 100, SchemaType: map[string]string{"mysql": "int"}},
 		{Name: "state", Type: field.TypeInt32, Comment: "状态 0 UNSPECIFIED 开启 1 -> ACTIVE 关闭 2 -> INACTIVE, 禁用 3 -> BANNED", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)"}},
-		{Name: "name", Type: field.TypeString, Nullable: true, Size: 128, Comment: "名称"},
+		{Name: "name", Type: field.TypeString, Size: 50, Comment: "名称", Default: ""},
 		{Name: "user_posts", Type: field.TypeUint32, Nullable: true, SchemaType: map[string]string{"mysql": "int", "postgres": "serial"}},
 	}
 	// PostsTable holds the schema information for the "posts" table.
@@ -146,7 +146,11 @@ var (
 		{Name: "remark", Type: field.TypeString, Nullable: true, Comment: "备注", Default: ""},
 		{Name: "sort", Type: field.TypeInt32, Comment: "排序", Default: 100, SchemaType: map[string]string{"mysql": "int"}},
 		{Name: "state", Type: field.TypeInt32, Comment: "状态 0 UNSPECIFIED 开启 1 -> ACTIVE 关闭 2 -> INACTIVE, 禁用 3 -> BANNED", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)"}},
-		{Name: "name", Type: field.TypeString, Size: 128, Comment: "名称"},
+		{Name: "name", Type: field.TypeString, Size: 50, Comment: "名称", Default: ""},
+		{Name: "default_router", Type: field.TypeString, Size: 255, Comment: "默认路由", Default: ""},
+		{Name: "data_scope", Type: field.TypeInt32, Comment: "数据范围（0：未指定 1：全部数据权限 2：本人数据权限 3：本部门数据权限 4：本部门及以下数据权限 5：自定部门数据权限 ）", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)", "postgres": "tinyint(2)"}},
+		{Name: "menu_check_strictly", Type: field.TypeInt32, Comment: "菜单树选择项是否关联显示", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)", "postgres": "tinyint(2)"}},
+		{Name: "dept_check_strictly", Type: field.TypeInt32, Comment: "部门树选择项是否关联显示", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)", "postgres": "tinyint(2)"}},
 	}
 	// RolesTable holds the schema information for the "roles" table.
 	RolesTable = &schema.Table{
@@ -154,6 +158,13 @@ var (
 		Comment:    "角色表",
 		Columns:    RolesColumns,
 		PrimaryKey: []*schema.Column{RolesColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "role_name",
+				Unique:  false,
+				Columns: []*schema.Column{RolesColumns[7]},
+			},
+		},
 	}
 	// TenantsColumns holds the columns for the "tenants" table.
 	TenantsColumns = []*schema.Column{

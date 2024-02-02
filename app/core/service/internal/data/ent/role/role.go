@@ -26,6 +26,14 @@ const (
 	FieldState = "state"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
+	// FieldDefaultRouter holds the string denoting the default_router field in the database.
+	FieldDefaultRouter = "default_router"
+	// FieldDataScope holds the string denoting the data_scope field in the database.
+	FieldDataScope = "data_scope"
+	// FieldMenuCheckStrictly holds the string denoting the menu_check_strictly field in the database.
+	FieldMenuCheckStrictly = "menu_check_strictly"
+	// FieldDeptCheckStrictly holds the string denoting the dept_check_strictly field in the database.
+	FieldDeptCheckStrictly = "dept_check_strictly"
 	// EdgeUsers holds the string denoting the users edge name in mutations.
 	EdgeUsers = "users"
 	// Table holds the table name of the role in the database.
@@ -47,6 +55,10 @@ var Columns = []string{
 	FieldSort,
 	FieldState,
 	FieldName,
+	FieldDefaultRouter,
+	FieldDataScope,
+	FieldMenuCheckStrictly,
+	FieldDeptCheckStrictly,
 }
 
 var (
@@ -76,8 +88,20 @@ var (
 	DefaultState int32
 	// StateValidator is a validator for the "state" field. It is called by the builders before save.
 	StateValidator func(int32) error
+	// DefaultName holds the default value on creation for the "name" field.
+	DefaultName string
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
 	NameValidator func(string) error
+	// DefaultDefaultRouter holds the default value on creation for the "default_router" field.
+	DefaultDefaultRouter string
+	// DefaultRouterValidator is a validator for the "default_router" field. It is called by the builders before save.
+	DefaultRouterValidator func(string) error
+	// DefaultDataScope holds the default value on creation for the "data_scope" field.
+	DefaultDataScope int32
+	// DefaultMenuCheckStrictly holds the default value on creation for the "menu_check_strictly" field.
+	DefaultMenuCheckStrictly int32
+	// DefaultDeptCheckStrictly holds the default value on creation for the "dept_check_strictly" field.
+	DefaultDeptCheckStrictly int32
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(uint32) error
 )
@@ -123,6 +147,26 @@ func ByState(opts ...sql.OrderTermOption) OrderOption {
 // ByName orders the results by the name field.
 func ByName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldName, opts...).ToFunc()
+}
+
+// ByDefaultRouter orders the results by the default_router field.
+func ByDefaultRouter(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDefaultRouter, opts...).ToFunc()
+}
+
+// ByDataScope orders the results by the data_scope field.
+func ByDataScope(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDataScope, opts...).ToFunc()
+}
+
+// ByMenuCheckStrictly orders the results by the menu_check_strictly field.
+func ByMenuCheckStrictly(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldMenuCheckStrictly, opts...).ToFunc()
+}
+
+// ByDeptCheckStrictly orders the results by the dept_check_strictly field.
+func ByDeptCheckStrictly(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDeptCheckStrictly, opts...).ToFunc()
 }
 
 // ByUsersCount orders the results by users count.

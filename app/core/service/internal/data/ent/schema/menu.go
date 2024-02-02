@@ -36,11 +36,10 @@ func (Menu) Mixin() []ent.Mixin {
 func (Menu) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name").
-			Comment("菜单名称").
+			Comment("名称").
 			Default("").
 			MaxLen(32).
 			NotEmpty().
-			// Optional().
 			Nillable(),
 
 		field.String("title").
@@ -59,39 +58,33 @@ func (Menu) Fields() []ent.Field {
 		field.Int32("type").
 			Comment("菜单类型 0 UNSPECIFIED, 目录 1 -> FOLDER, 菜单 2 -> MENU, 按钮 3 -> BUTTON").
 			Default(1).
-			// Optional().
 			Nillable(),
 
 		field.String("path").
 			Comment("路径,当其类型为'按钮'的时候对应的数据操作名,例如:/user.service.v1.UserService/Login").
 			Default("").
-			// Optional().
 			Nillable(),
 
 		field.String("component").
 			Comment("前端页面组件").
 			Default("").
-			// Optional().
 			Nillable(),
 
 		field.String("icon").
 			Comment("图标").
 			Default("").
 			MaxLen(128).
-			// Optional().
 			Nillable(),
 
 		field.Bool("is_ext").
 			Comment("是否外链").
 			Default(false).
-			// Optional().
 			Nillable(),
 
 		field.String("ext_url").
 			Comment("外链地址").
 			MaxLen(255).
 			Default("").
-			// Optional().
 			Nillable(),
 
 		field.Strings("permissions").
@@ -105,42 +98,35 @@ func (Menu) Fields() []ent.Field {
 		field.String("redirect").
 			Comment("跳转路径").
 			Default("").
-			// Optional().
 			Nillable(),
 		field.String("current_active_menu").
 			Comment("当前激活菜单").
 			Default("").
-			// Optional().
 			Nillable(),
 
 		field.Bool("keep_alive").
 			Comment("是否缓存").
 			Default(false).
-			// Optional().
 			Nillable(),
 
 		field.Bool("visible").
 			Comment("是否显示").
 			Default(true).
-			// Optional().
 			Nillable(),
 
 		field.Bool("hide_tab").
 			Comment("是否显示在标签页导航").
 			Default(true).
-			// Optional().
 			Nillable(),
 
 		field.Bool("hide_menu").
 			Comment("是否显示在菜单导航").
 			Default(true).
-			// Optional().
 			Nillable(),
 
 		field.Bool("hide_breadcrumb").
 			Comment("是否显示在面包屑导航").
 			Default(true).
-			// Optional().
 			Nillable(),
 	}
 }

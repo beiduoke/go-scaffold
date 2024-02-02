@@ -58,14 +58,16 @@ func (m *Menu) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for Name
-
 	if m.CreatedAt != nil {
 		// no validation rules for CreatedAt
 	}
 
 	if m.UpdatedAt != nil {
 		// no validation rules for UpdatedAt
+	}
+
+	if m.Name != nil {
+		// no validation rules for Name
 	}
 
 	if m.Sort != nil {
@@ -76,8 +78,8 @@ func (m *Menu) validate(all bool) error {
 		// no validation rules for State
 	}
 
-	if m.Remarks != nil {
-		// no validation rules for Remarks
+	if m.Remark != nil {
+		// no validation rules for Remark
 	}
 
 	if m.ParentId != nil {

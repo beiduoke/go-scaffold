@@ -4632,22 +4632,9 @@ func (m *PostMutation) OldName(ctx context.Context) (v *string, err error) {
 	return oldValue.Name, nil
 }
 
-// ClearName clears the value of the "name" field.
-func (m *PostMutation) ClearName() {
-	m.name = nil
-	m.clearedFields[post.FieldName] = struct{}{}
-}
-
-// NameCleared returns if the "name" field was cleared in this mutation.
-func (m *PostMutation) NameCleared() bool {
-	_, ok := m.clearedFields[post.FieldName]
-	return ok
-}
-
 // ResetName resets all changes to the "name" field.
 func (m *PostMutation) ResetName() {
 	m.name = nil
-	delete(m.clearedFields, post.FieldName)
 }
 
 // Where appends a list predicates to the PostMutation builder.
@@ -4878,9 +4865,6 @@ func (m *PostMutation) ClearedFields() []string {
 	if m.FieldCleared(post.FieldRemark) {
 		fields = append(fields, post.FieldRemark)
 	}
-	if m.FieldCleared(post.FieldName) {
-		fields = append(fields, post.FieldName)
-	}
 	return fields
 }
 
@@ -4906,9 +4890,6 @@ func (m *PostMutation) ClearField(name string) error {
 		return nil
 	case post.FieldRemark:
 		m.ClearRemark()
-		return nil
-	case post.FieldName:
-		m.ClearName()
 		return nil
 	}
 	return fmt.Errorf("unknown Post nullable field %s", name)
@@ -4994,25 +4975,32 @@ func (m *PostMutation) ResetEdge(name string) error {
 // RoleMutation represents an operation that mutates the Role nodes in the graph.
 type RoleMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *uint32
-	created_at    *time.Time
-	updated_at    *time.Time
-	deleted_at    *time.Time
-	remark        *string
-	sort          *int32
-	addsort       *int32
-	state         *int32
-	addstate      *int32
-	name          *string
-	clearedFields map[string]struct{}
-	users         map[uint32]struct{}
-	removedusers  map[uint32]struct{}
-	clearedusers  bool
-	done          bool
-	oldValue      func(context.Context) (*Role, error)
-	predicates    []predicate.Role
+	op                     Op
+	typ                    string
+	id                     *uint32
+	created_at             *time.Time
+	updated_at             *time.Time
+	deleted_at             *time.Time
+	remark                 *string
+	sort                   *int32
+	addsort                *int32
+	state                  *int32
+	addstate               *int32
+	name                   *string
+	default_router         *string
+	data_scope             *int32
+	adddata_scope          *int32
+	menu_check_strictly    *int32
+	addmenu_check_strictly *int32
+	dept_check_strictly    *int32
+	adddept_check_strictly *int32
+	clearedFields          map[string]struct{}
+	users                  map[uint32]struct{}
+	removedusers           map[uint32]struct{}
+	clearedusers           bool
+	done                   bool
+	oldValue               func(context.Context) (*Role, error)
+	predicates             []predicate.Role
 }
 
 var _ ent.Mutation = (*RoleMutation)(nil)
@@ -5444,7 +5432,7 @@ func (m *RoleMutation) Name() (r string, exists bool) {
 // OldName returns the old "name" field's value of the Role entity.
 // If the Role object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *RoleMutation) OldName(ctx context.Context) (v string, err error) {
+func (m *RoleMutation) OldName(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldName is only allowed on UpdateOne operations")
 	}
@@ -5461,6 +5449,210 @@ func (m *RoleMutation) OldName(ctx context.Context) (v string, err error) {
 // ResetName resets all changes to the "name" field.
 func (m *RoleMutation) ResetName() {
 	m.name = nil
+}
+
+// SetDefaultRouter sets the "default_router" field.
+func (m *RoleMutation) SetDefaultRouter(s string) {
+	m.default_router = &s
+}
+
+// DefaultRouter returns the value of the "default_router" field in the mutation.
+func (m *RoleMutation) DefaultRouter() (r string, exists bool) {
+	v := m.default_router
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDefaultRouter returns the old "default_router" field's value of the Role entity.
+// If the Role object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RoleMutation) OldDefaultRouter(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDefaultRouter is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDefaultRouter requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDefaultRouter: %w", err)
+	}
+	return oldValue.DefaultRouter, nil
+}
+
+// ResetDefaultRouter resets all changes to the "default_router" field.
+func (m *RoleMutation) ResetDefaultRouter() {
+	m.default_router = nil
+}
+
+// SetDataScope sets the "data_scope" field.
+func (m *RoleMutation) SetDataScope(i int32) {
+	m.data_scope = &i
+	m.adddata_scope = nil
+}
+
+// DataScope returns the value of the "data_scope" field in the mutation.
+func (m *RoleMutation) DataScope() (r int32, exists bool) {
+	v := m.data_scope
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDataScope returns the old "data_scope" field's value of the Role entity.
+// If the Role object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RoleMutation) OldDataScope(ctx context.Context) (v *int32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDataScope is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDataScope requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDataScope: %w", err)
+	}
+	return oldValue.DataScope, nil
+}
+
+// AddDataScope adds i to the "data_scope" field.
+func (m *RoleMutation) AddDataScope(i int32) {
+	if m.adddata_scope != nil {
+		*m.adddata_scope += i
+	} else {
+		m.adddata_scope = &i
+	}
+}
+
+// AddedDataScope returns the value that was added to the "data_scope" field in this mutation.
+func (m *RoleMutation) AddedDataScope() (r int32, exists bool) {
+	v := m.adddata_scope
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDataScope resets all changes to the "data_scope" field.
+func (m *RoleMutation) ResetDataScope() {
+	m.data_scope = nil
+	m.adddata_scope = nil
+}
+
+// SetMenuCheckStrictly sets the "menu_check_strictly" field.
+func (m *RoleMutation) SetMenuCheckStrictly(i int32) {
+	m.menu_check_strictly = &i
+	m.addmenu_check_strictly = nil
+}
+
+// MenuCheckStrictly returns the value of the "menu_check_strictly" field in the mutation.
+func (m *RoleMutation) MenuCheckStrictly() (r int32, exists bool) {
+	v := m.menu_check_strictly
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMenuCheckStrictly returns the old "menu_check_strictly" field's value of the Role entity.
+// If the Role object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RoleMutation) OldMenuCheckStrictly(ctx context.Context) (v *int32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMenuCheckStrictly is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMenuCheckStrictly requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMenuCheckStrictly: %w", err)
+	}
+	return oldValue.MenuCheckStrictly, nil
+}
+
+// AddMenuCheckStrictly adds i to the "menu_check_strictly" field.
+func (m *RoleMutation) AddMenuCheckStrictly(i int32) {
+	if m.addmenu_check_strictly != nil {
+		*m.addmenu_check_strictly += i
+	} else {
+		m.addmenu_check_strictly = &i
+	}
+}
+
+// AddedMenuCheckStrictly returns the value that was added to the "menu_check_strictly" field in this mutation.
+func (m *RoleMutation) AddedMenuCheckStrictly() (r int32, exists bool) {
+	v := m.addmenu_check_strictly
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetMenuCheckStrictly resets all changes to the "menu_check_strictly" field.
+func (m *RoleMutation) ResetMenuCheckStrictly() {
+	m.menu_check_strictly = nil
+	m.addmenu_check_strictly = nil
+}
+
+// SetDeptCheckStrictly sets the "dept_check_strictly" field.
+func (m *RoleMutation) SetDeptCheckStrictly(i int32) {
+	m.dept_check_strictly = &i
+	m.adddept_check_strictly = nil
+}
+
+// DeptCheckStrictly returns the value of the "dept_check_strictly" field in the mutation.
+func (m *RoleMutation) DeptCheckStrictly() (r int32, exists bool) {
+	v := m.dept_check_strictly
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeptCheckStrictly returns the old "dept_check_strictly" field's value of the Role entity.
+// If the Role object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RoleMutation) OldDeptCheckStrictly(ctx context.Context) (v *int32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeptCheckStrictly is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeptCheckStrictly requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeptCheckStrictly: %w", err)
+	}
+	return oldValue.DeptCheckStrictly, nil
+}
+
+// AddDeptCheckStrictly adds i to the "dept_check_strictly" field.
+func (m *RoleMutation) AddDeptCheckStrictly(i int32) {
+	if m.adddept_check_strictly != nil {
+		*m.adddept_check_strictly += i
+	} else {
+		m.adddept_check_strictly = &i
+	}
+}
+
+// AddedDeptCheckStrictly returns the value that was added to the "dept_check_strictly" field in this mutation.
+func (m *RoleMutation) AddedDeptCheckStrictly() (r int32, exists bool) {
+	v := m.adddept_check_strictly
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeptCheckStrictly resets all changes to the "dept_check_strictly" field.
+func (m *RoleMutation) ResetDeptCheckStrictly() {
+	m.dept_check_strictly = nil
+	m.adddept_check_strictly = nil
 }
 
 // AddUserIDs adds the "users" edge to the User entity by ids.
@@ -5551,7 +5743,7 @@ func (m *RoleMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *RoleMutation) Fields() []string {
-	fields := make([]string, 0, 7)
+	fields := make([]string, 0, 11)
 	if m.created_at != nil {
 		fields = append(fields, role.FieldCreatedAt)
 	}
@@ -5572,6 +5764,18 @@ func (m *RoleMutation) Fields() []string {
 	}
 	if m.name != nil {
 		fields = append(fields, role.FieldName)
+	}
+	if m.default_router != nil {
+		fields = append(fields, role.FieldDefaultRouter)
+	}
+	if m.data_scope != nil {
+		fields = append(fields, role.FieldDataScope)
+	}
+	if m.menu_check_strictly != nil {
+		fields = append(fields, role.FieldMenuCheckStrictly)
+	}
+	if m.dept_check_strictly != nil {
+		fields = append(fields, role.FieldDeptCheckStrictly)
 	}
 	return fields
 }
@@ -5595,6 +5799,14 @@ func (m *RoleMutation) Field(name string) (ent.Value, bool) {
 		return m.State()
 	case role.FieldName:
 		return m.Name()
+	case role.FieldDefaultRouter:
+		return m.DefaultRouter()
+	case role.FieldDataScope:
+		return m.DataScope()
+	case role.FieldMenuCheckStrictly:
+		return m.MenuCheckStrictly()
+	case role.FieldDeptCheckStrictly:
+		return m.DeptCheckStrictly()
 	}
 	return nil, false
 }
@@ -5618,6 +5830,14 @@ func (m *RoleMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldState(ctx)
 	case role.FieldName:
 		return m.OldName(ctx)
+	case role.FieldDefaultRouter:
+		return m.OldDefaultRouter(ctx)
+	case role.FieldDataScope:
+		return m.OldDataScope(ctx)
+	case role.FieldMenuCheckStrictly:
+		return m.OldMenuCheckStrictly(ctx)
+	case role.FieldDeptCheckStrictly:
+		return m.OldDeptCheckStrictly(ctx)
 	}
 	return nil, fmt.Errorf("unknown Role field %s", name)
 }
@@ -5676,6 +5896,34 @@ func (m *RoleMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetName(v)
 		return nil
+	case role.FieldDefaultRouter:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDefaultRouter(v)
+		return nil
+	case role.FieldDataScope:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDataScope(v)
+		return nil
+	case role.FieldMenuCheckStrictly:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMenuCheckStrictly(v)
+		return nil
+	case role.FieldDeptCheckStrictly:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeptCheckStrictly(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Role field %s", name)
 }
@@ -5690,6 +5938,15 @@ func (m *RoleMutation) AddedFields() []string {
 	if m.addstate != nil {
 		fields = append(fields, role.FieldState)
 	}
+	if m.adddata_scope != nil {
+		fields = append(fields, role.FieldDataScope)
+	}
+	if m.addmenu_check_strictly != nil {
+		fields = append(fields, role.FieldMenuCheckStrictly)
+	}
+	if m.adddept_check_strictly != nil {
+		fields = append(fields, role.FieldDeptCheckStrictly)
+	}
 	return fields
 }
 
@@ -5702,6 +5959,12 @@ func (m *RoleMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedSort()
 	case role.FieldState:
 		return m.AddedState()
+	case role.FieldDataScope:
+		return m.AddedDataScope()
+	case role.FieldMenuCheckStrictly:
+		return m.AddedMenuCheckStrictly()
+	case role.FieldDeptCheckStrictly:
+		return m.AddedDeptCheckStrictly()
 	}
 	return nil, false
 }
@@ -5724,6 +5987,27 @@ func (m *RoleMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddState(v)
+		return nil
+	case role.FieldDataScope:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDataScope(v)
+		return nil
+	case role.FieldMenuCheckStrictly:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddMenuCheckStrictly(v)
+		return nil
+	case role.FieldDeptCheckStrictly:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeptCheckStrictly(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Role numeric field %s", name)
@@ -5799,6 +6083,18 @@ func (m *RoleMutation) ResetField(name string) error {
 		return nil
 	case role.FieldName:
 		m.ResetName()
+		return nil
+	case role.FieldDefaultRouter:
+		m.ResetDefaultRouter()
+		return nil
+	case role.FieldDataScope:
+		m.ResetDataScope()
+		return nil
+	case role.FieldMenuCheckStrictly:
+		m.ResetMenuCheckStrictly()
+		return nil
+	case role.FieldDeptCheckStrictly:
+		m.ResetDeptCheckStrictly()
 		return nil
 	}
 	return fmt.Errorf("unknown Role field %s", name)

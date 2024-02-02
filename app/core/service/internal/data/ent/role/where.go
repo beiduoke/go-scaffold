@@ -90,6 +90,26 @@ func Name(v string) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldName, v))
 }
 
+// DefaultRouter applies equality check predicate on the "default_router" field. It's identical to DefaultRouterEQ.
+func DefaultRouter(v string) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldDefaultRouter, v))
+}
+
+// DataScope applies equality check predicate on the "data_scope" field. It's identical to DataScopeEQ.
+func DataScope(v int32) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldDataScope, v))
+}
+
+// MenuCheckStrictly applies equality check predicate on the "menu_check_strictly" field. It's identical to MenuCheckStrictlyEQ.
+func MenuCheckStrictly(v int32) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldMenuCheckStrictly, v))
+}
+
+// DeptCheckStrictly applies equality check predicate on the "dept_check_strictly" field. It's identical to DeptCheckStrictlyEQ.
+func DeptCheckStrictly(v int32) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldDeptCheckStrictly, v))
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v time.Time) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldCreatedAt, v))
@@ -458,6 +478,191 @@ func NameEqualFold(v string) predicate.Role {
 // NameContainsFold applies the ContainsFold predicate on the "name" field.
 func NameContainsFold(v string) predicate.Role {
 	return predicate.Role(sql.FieldContainsFold(FieldName, v))
+}
+
+// DefaultRouterEQ applies the EQ predicate on the "default_router" field.
+func DefaultRouterEQ(v string) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldDefaultRouter, v))
+}
+
+// DefaultRouterNEQ applies the NEQ predicate on the "default_router" field.
+func DefaultRouterNEQ(v string) predicate.Role {
+	return predicate.Role(sql.FieldNEQ(FieldDefaultRouter, v))
+}
+
+// DefaultRouterIn applies the In predicate on the "default_router" field.
+func DefaultRouterIn(vs ...string) predicate.Role {
+	return predicate.Role(sql.FieldIn(FieldDefaultRouter, vs...))
+}
+
+// DefaultRouterNotIn applies the NotIn predicate on the "default_router" field.
+func DefaultRouterNotIn(vs ...string) predicate.Role {
+	return predicate.Role(sql.FieldNotIn(FieldDefaultRouter, vs...))
+}
+
+// DefaultRouterGT applies the GT predicate on the "default_router" field.
+func DefaultRouterGT(v string) predicate.Role {
+	return predicate.Role(sql.FieldGT(FieldDefaultRouter, v))
+}
+
+// DefaultRouterGTE applies the GTE predicate on the "default_router" field.
+func DefaultRouterGTE(v string) predicate.Role {
+	return predicate.Role(sql.FieldGTE(FieldDefaultRouter, v))
+}
+
+// DefaultRouterLT applies the LT predicate on the "default_router" field.
+func DefaultRouterLT(v string) predicate.Role {
+	return predicate.Role(sql.FieldLT(FieldDefaultRouter, v))
+}
+
+// DefaultRouterLTE applies the LTE predicate on the "default_router" field.
+func DefaultRouterLTE(v string) predicate.Role {
+	return predicate.Role(sql.FieldLTE(FieldDefaultRouter, v))
+}
+
+// DefaultRouterContains applies the Contains predicate on the "default_router" field.
+func DefaultRouterContains(v string) predicate.Role {
+	return predicate.Role(sql.FieldContains(FieldDefaultRouter, v))
+}
+
+// DefaultRouterHasPrefix applies the HasPrefix predicate on the "default_router" field.
+func DefaultRouterHasPrefix(v string) predicate.Role {
+	return predicate.Role(sql.FieldHasPrefix(FieldDefaultRouter, v))
+}
+
+// DefaultRouterHasSuffix applies the HasSuffix predicate on the "default_router" field.
+func DefaultRouterHasSuffix(v string) predicate.Role {
+	return predicate.Role(sql.FieldHasSuffix(FieldDefaultRouter, v))
+}
+
+// DefaultRouterEqualFold applies the EqualFold predicate on the "default_router" field.
+func DefaultRouterEqualFold(v string) predicate.Role {
+	return predicate.Role(sql.FieldEqualFold(FieldDefaultRouter, v))
+}
+
+// DefaultRouterContainsFold applies the ContainsFold predicate on the "default_router" field.
+func DefaultRouterContainsFold(v string) predicate.Role {
+	return predicate.Role(sql.FieldContainsFold(FieldDefaultRouter, v))
+}
+
+// DataScopeEQ applies the EQ predicate on the "data_scope" field.
+func DataScopeEQ(v int32) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldDataScope, v))
+}
+
+// DataScopeNEQ applies the NEQ predicate on the "data_scope" field.
+func DataScopeNEQ(v int32) predicate.Role {
+	return predicate.Role(sql.FieldNEQ(FieldDataScope, v))
+}
+
+// DataScopeIn applies the In predicate on the "data_scope" field.
+func DataScopeIn(vs ...int32) predicate.Role {
+	return predicate.Role(sql.FieldIn(FieldDataScope, vs...))
+}
+
+// DataScopeNotIn applies the NotIn predicate on the "data_scope" field.
+func DataScopeNotIn(vs ...int32) predicate.Role {
+	return predicate.Role(sql.FieldNotIn(FieldDataScope, vs...))
+}
+
+// DataScopeGT applies the GT predicate on the "data_scope" field.
+func DataScopeGT(v int32) predicate.Role {
+	return predicate.Role(sql.FieldGT(FieldDataScope, v))
+}
+
+// DataScopeGTE applies the GTE predicate on the "data_scope" field.
+func DataScopeGTE(v int32) predicate.Role {
+	return predicate.Role(sql.FieldGTE(FieldDataScope, v))
+}
+
+// DataScopeLT applies the LT predicate on the "data_scope" field.
+func DataScopeLT(v int32) predicate.Role {
+	return predicate.Role(sql.FieldLT(FieldDataScope, v))
+}
+
+// DataScopeLTE applies the LTE predicate on the "data_scope" field.
+func DataScopeLTE(v int32) predicate.Role {
+	return predicate.Role(sql.FieldLTE(FieldDataScope, v))
+}
+
+// MenuCheckStrictlyEQ applies the EQ predicate on the "menu_check_strictly" field.
+func MenuCheckStrictlyEQ(v int32) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldMenuCheckStrictly, v))
+}
+
+// MenuCheckStrictlyNEQ applies the NEQ predicate on the "menu_check_strictly" field.
+func MenuCheckStrictlyNEQ(v int32) predicate.Role {
+	return predicate.Role(sql.FieldNEQ(FieldMenuCheckStrictly, v))
+}
+
+// MenuCheckStrictlyIn applies the In predicate on the "menu_check_strictly" field.
+func MenuCheckStrictlyIn(vs ...int32) predicate.Role {
+	return predicate.Role(sql.FieldIn(FieldMenuCheckStrictly, vs...))
+}
+
+// MenuCheckStrictlyNotIn applies the NotIn predicate on the "menu_check_strictly" field.
+func MenuCheckStrictlyNotIn(vs ...int32) predicate.Role {
+	return predicate.Role(sql.FieldNotIn(FieldMenuCheckStrictly, vs...))
+}
+
+// MenuCheckStrictlyGT applies the GT predicate on the "menu_check_strictly" field.
+func MenuCheckStrictlyGT(v int32) predicate.Role {
+	return predicate.Role(sql.FieldGT(FieldMenuCheckStrictly, v))
+}
+
+// MenuCheckStrictlyGTE applies the GTE predicate on the "menu_check_strictly" field.
+func MenuCheckStrictlyGTE(v int32) predicate.Role {
+	return predicate.Role(sql.FieldGTE(FieldMenuCheckStrictly, v))
+}
+
+// MenuCheckStrictlyLT applies the LT predicate on the "menu_check_strictly" field.
+func MenuCheckStrictlyLT(v int32) predicate.Role {
+	return predicate.Role(sql.FieldLT(FieldMenuCheckStrictly, v))
+}
+
+// MenuCheckStrictlyLTE applies the LTE predicate on the "menu_check_strictly" field.
+func MenuCheckStrictlyLTE(v int32) predicate.Role {
+	return predicate.Role(sql.FieldLTE(FieldMenuCheckStrictly, v))
+}
+
+// DeptCheckStrictlyEQ applies the EQ predicate on the "dept_check_strictly" field.
+func DeptCheckStrictlyEQ(v int32) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldDeptCheckStrictly, v))
+}
+
+// DeptCheckStrictlyNEQ applies the NEQ predicate on the "dept_check_strictly" field.
+func DeptCheckStrictlyNEQ(v int32) predicate.Role {
+	return predicate.Role(sql.FieldNEQ(FieldDeptCheckStrictly, v))
+}
+
+// DeptCheckStrictlyIn applies the In predicate on the "dept_check_strictly" field.
+func DeptCheckStrictlyIn(vs ...int32) predicate.Role {
+	return predicate.Role(sql.FieldIn(FieldDeptCheckStrictly, vs...))
+}
+
+// DeptCheckStrictlyNotIn applies the NotIn predicate on the "dept_check_strictly" field.
+func DeptCheckStrictlyNotIn(vs ...int32) predicate.Role {
+	return predicate.Role(sql.FieldNotIn(FieldDeptCheckStrictly, vs...))
+}
+
+// DeptCheckStrictlyGT applies the GT predicate on the "dept_check_strictly" field.
+func DeptCheckStrictlyGT(v int32) predicate.Role {
+	return predicate.Role(sql.FieldGT(FieldDeptCheckStrictly, v))
+}
+
+// DeptCheckStrictlyGTE applies the GTE predicate on the "dept_check_strictly" field.
+func DeptCheckStrictlyGTE(v int32) predicate.Role {
+	return predicate.Role(sql.FieldGTE(FieldDeptCheckStrictly, v))
+}
+
+// DeptCheckStrictlyLT applies the LT predicate on the "dept_check_strictly" field.
+func DeptCheckStrictlyLT(v int32) predicate.Role {
+	return predicate.Role(sql.FieldLT(FieldDeptCheckStrictly, v))
+}
+
+// DeptCheckStrictlyLTE applies the LTE predicate on the "dept_check_strictly" field.
+func DeptCheckStrictlyLTE(v int32) predicate.Role {
+	return predicate.Role(sql.FieldLTE(FieldDeptCheckStrictly, v))
 }
 
 // HasUsers applies the HasEdge predicate on the "users" edge.

@@ -173,6 +173,10 @@ func (pc *PostCreate) defaults() {
 		v := post.DefaultState
 		pc.mutation.SetState(v)
 	}
+	if _, ok := pc.mutation.Name(); !ok {
+		v := post.DefaultName
+		pc.mutation.SetName(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -192,6 +196,9 @@ func (pc *PostCreate) check() error {
 		if err := post.StateValidator(v); err != nil {
 			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "Post.state": %w`, err)}
 		}
+	}
+	if _, ok := pc.mutation.Name(); !ok {
+		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Post.name"`)}
 	}
 	if v, ok := pc.mutation.Name(); ok {
 		if err := post.NameValidator(v); err != nil {
@@ -418,12 +425,6 @@ func (u *PostUpsert) UpdateName() *PostUpsert {
 	return u
 }
 
-// ClearName clears the value of the "name" field.
-func (u *PostUpsert) ClearName() *PostUpsert {
-	u.SetNull(post.FieldName)
-	return u
-}
-
 // UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
@@ -591,13 +592,6 @@ func (u *PostUpsertOne) SetName(v string) *PostUpsertOne {
 func (u *PostUpsertOne) UpdateName() *PostUpsertOne {
 	return u.Update(func(s *PostUpsert) {
 		s.UpdateName()
-	})
-}
-
-// ClearName clears the value of the "name" field.
-func (u *PostUpsertOne) ClearName() *PostUpsertOne {
-	return u.Update(func(s *PostUpsert) {
-		s.ClearName()
 	})
 }
 
@@ -934,13 +928,6 @@ func (u *PostUpsertBulk) SetName(v string) *PostUpsertBulk {
 func (u *PostUpsertBulk) UpdateName() *PostUpsertBulk {
 	return u.Update(func(s *PostUpsert) {
 		s.UpdateName()
-	})
-}
-
-// ClearName clears the value of the "name" field.
-func (u *PostUpsertBulk) ClearName() *PostUpsertBulk {
-	return u.Update(func(s *PostUpsert) {
-		s.ClearName()
 	})
 }
 

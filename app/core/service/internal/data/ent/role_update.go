@@ -146,6 +146,83 @@ func (ru *RoleUpdate) SetNillableName(s *string) *RoleUpdate {
 	return ru
 }
 
+// SetDefaultRouter sets the "default_router" field.
+func (ru *RoleUpdate) SetDefaultRouter(s string) *RoleUpdate {
+	ru.mutation.SetDefaultRouter(s)
+	return ru
+}
+
+// SetNillableDefaultRouter sets the "default_router" field if the given value is not nil.
+func (ru *RoleUpdate) SetNillableDefaultRouter(s *string) *RoleUpdate {
+	if s != nil {
+		ru.SetDefaultRouter(*s)
+	}
+	return ru
+}
+
+// SetDataScope sets the "data_scope" field.
+func (ru *RoleUpdate) SetDataScope(i int32) *RoleUpdate {
+	ru.mutation.ResetDataScope()
+	ru.mutation.SetDataScope(i)
+	return ru
+}
+
+// SetNillableDataScope sets the "data_scope" field if the given value is not nil.
+func (ru *RoleUpdate) SetNillableDataScope(i *int32) *RoleUpdate {
+	if i != nil {
+		ru.SetDataScope(*i)
+	}
+	return ru
+}
+
+// AddDataScope adds i to the "data_scope" field.
+func (ru *RoleUpdate) AddDataScope(i int32) *RoleUpdate {
+	ru.mutation.AddDataScope(i)
+	return ru
+}
+
+// SetMenuCheckStrictly sets the "menu_check_strictly" field.
+func (ru *RoleUpdate) SetMenuCheckStrictly(i int32) *RoleUpdate {
+	ru.mutation.ResetMenuCheckStrictly()
+	ru.mutation.SetMenuCheckStrictly(i)
+	return ru
+}
+
+// SetNillableMenuCheckStrictly sets the "menu_check_strictly" field if the given value is not nil.
+func (ru *RoleUpdate) SetNillableMenuCheckStrictly(i *int32) *RoleUpdate {
+	if i != nil {
+		ru.SetMenuCheckStrictly(*i)
+	}
+	return ru
+}
+
+// AddMenuCheckStrictly adds i to the "menu_check_strictly" field.
+func (ru *RoleUpdate) AddMenuCheckStrictly(i int32) *RoleUpdate {
+	ru.mutation.AddMenuCheckStrictly(i)
+	return ru
+}
+
+// SetDeptCheckStrictly sets the "dept_check_strictly" field.
+func (ru *RoleUpdate) SetDeptCheckStrictly(i int32) *RoleUpdate {
+	ru.mutation.ResetDeptCheckStrictly()
+	ru.mutation.SetDeptCheckStrictly(i)
+	return ru
+}
+
+// SetNillableDeptCheckStrictly sets the "dept_check_strictly" field if the given value is not nil.
+func (ru *RoleUpdate) SetNillableDeptCheckStrictly(i *int32) *RoleUpdate {
+	if i != nil {
+		ru.SetDeptCheckStrictly(*i)
+	}
+	return ru
+}
+
+// AddDeptCheckStrictly adds i to the "dept_check_strictly" field.
+func (ru *RoleUpdate) AddDeptCheckStrictly(i int32) *RoleUpdate {
+	ru.mutation.AddDeptCheckStrictly(i)
+	return ru
+}
+
 // AddUserIDs adds the "users" edge to the User entity by IDs.
 func (ru *RoleUpdate) AddUserIDs(ids ...uint32) *RoleUpdate {
 	ru.mutation.AddUserIDs(ids...)
@@ -231,6 +308,11 @@ func (ru *RoleUpdate) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Role.name": %w`, err)}
 		}
 	}
+	if v, ok := ru.mutation.DefaultRouter(); ok {
+		if err := role.DefaultRouterValidator(v); err != nil {
+			return &ValidationError{Name: "default_router", err: fmt.Errorf(`ent: validator failed for field "Role.default_router": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -287,6 +369,27 @@ func (ru *RoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := ru.mutation.Name(); ok {
 		_spec.SetField(role.FieldName, field.TypeString, value)
+	}
+	if value, ok := ru.mutation.DefaultRouter(); ok {
+		_spec.SetField(role.FieldDefaultRouter, field.TypeString, value)
+	}
+	if value, ok := ru.mutation.DataScope(); ok {
+		_spec.SetField(role.FieldDataScope, field.TypeInt32, value)
+	}
+	if value, ok := ru.mutation.AddedDataScope(); ok {
+		_spec.AddField(role.FieldDataScope, field.TypeInt32, value)
+	}
+	if value, ok := ru.mutation.MenuCheckStrictly(); ok {
+		_spec.SetField(role.FieldMenuCheckStrictly, field.TypeInt32, value)
+	}
+	if value, ok := ru.mutation.AddedMenuCheckStrictly(); ok {
+		_spec.AddField(role.FieldMenuCheckStrictly, field.TypeInt32, value)
+	}
+	if value, ok := ru.mutation.DeptCheckStrictly(); ok {
+		_spec.SetField(role.FieldDeptCheckStrictly, field.TypeInt32, value)
+	}
+	if value, ok := ru.mutation.AddedDeptCheckStrictly(); ok {
+		_spec.AddField(role.FieldDeptCheckStrictly, field.TypeInt32, value)
 	}
 	if ru.mutation.UsersCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -471,6 +574,83 @@ func (ruo *RoleUpdateOne) SetNillableName(s *string) *RoleUpdateOne {
 	return ruo
 }
 
+// SetDefaultRouter sets the "default_router" field.
+func (ruo *RoleUpdateOne) SetDefaultRouter(s string) *RoleUpdateOne {
+	ruo.mutation.SetDefaultRouter(s)
+	return ruo
+}
+
+// SetNillableDefaultRouter sets the "default_router" field if the given value is not nil.
+func (ruo *RoleUpdateOne) SetNillableDefaultRouter(s *string) *RoleUpdateOne {
+	if s != nil {
+		ruo.SetDefaultRouter(*s)
+	}
+	return ruo
+}
+
+// SetDataScope sets the "data_scope" field.
+func (ruo *RoleUpdateOne) SetDataScope(i int32) *RoleUpdateOne {
+	ruo.mutation.ResetDataScope()
+	ruo.mutation.SetDataScope(i)
+	return ruo
+}
+
+// SetNillableDataScope sets the "data_scope" field if the given value is not nil.
+func (ruo *RoleUpdateOne) SetNillableDataScope(i *int32) *RoleUpdateOne {
+	if i != nil {
+		ruo.SetDataScope(*i)
+	}
+	return ruo
+}
+
+// AddDataScope adds i to the "data_scope" field.
+func (ruo *RoleUpdateOne) AddDataScope(i int32) *RoleUpdateOne {
+	ruo.mutation.AddDataScope(i)
+	return ruo
+}
+
+// SetMenuCheckStrictly sets the "menu_check_strictly" field.
+func (ruo *RoleUpdateOne) SetMenuCheckStrictly(i int32) *RoleUpdateOne {
+	ruo.mutation.ResetMenuCheckStrictly()
+	ruo.mutation.SetMenuCheckStrictly(i)
+	return ruo
+}
+
+// SetNillableMenuCheckStrictly sets the "menu_check_strictly" field if the given value is not nil.
+func (ruo *RoleUpdateOne) SetNillableMenuCheckStrictly(i *int32) *RoleUpdateOne {
+	if i != nil {
+		ruo.SetMenuCheckStrictly(*i)
+	}
+	return ruo
+}
+
+// AddMenuCheckStrictly adds i to the "menu_check_strictly" field.
+func (ruo *RoleUpdateOne) AddMenuCheckStrictly(i int32) *RoleUpdateOne {
+	ruo.mutation.AddMenuCheckStrictly(i)
+	return ruo
+}
+
+// SetDeptCheckStrictly sets the "dept_check_strictly" field.
+func (ruo *RoleUpdateOne) SetDeptCheckStrictly(i int32) *RoleUpdateOne {
+	ruo.mutation.ResetDeptCheckStrictly()
+	ruo.mutation.SetDeptCheckStrictly(i)
+	return ruo
+}
+
+// SetNillableDeptCheckStrictly sets the "dept_check_strictly" field if the given value is not nil.
+func (ruo *RoleUpdateOne) SetNillableDeptCheckStrictly(i *int32) *RoleUpdateOne {
+	if i != nil {
+		ruo.SetDeptCheckStrictly(*i)
+	}
+	return ruo
+}
+
+// AddDeptCheckStrictly adds i to the "dept_check_strictly" field.
+func (ruo *RoleUpdateOne) AddDeptCheckStrictly(i int32) *RoleUpdateOne {
+	ruo.mutation.AddDeptCheckStrictly(i)
+	return ruo
+}
+
 // AddUserIDs adds the "users" edge to the User entity by IDs.
 func (ruo *RoleUpdateOne) AddUserIDs(ids ...uint32) *RoleUpdateOne {
 	ruo.mutation.AddUserIDs(ids...)
@@ -569,6 +749,11 @@ func (ruo *RoleUpdateOne) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Role.name": %w`, err)}
 		}
 	}
+	if v, ok := ruo.mutation.DefaultRouter(); ok {
+		if err := role.DefaultRouterValidator(v); err != nil {
+			return &ValidationError{Name: "default_router", err: fmt.Errorf(`ent: validator failed for field "Role.default_router": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -642,6 +827,27 @@ func (ruo *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) 
 	}
 	if value, ok := ruo.mutation.Name(); ok {
 		_spec.SetField(role.FieldName, field.TypeString, value)
+	}
+	if value, ok := ruo.mutation.DefaultRouter(); ok {
+		_spec.SetField(role.FieldDefaultRouter, field.TypeString, value)
+	}
+	if value, ok := ruo.mutation.DataScope(); ok {
+		_spec.SetField(role.FieldDataScope, field.TypeInt32, value)
+	}
+	if value, ok := ruo.mutation.AddedDataScope(); ok {
+		_spec.AddField(role.FieldDataScope, field.TypeInt32, value)
+	}
+	if value, ok := ruo.mutation.MenuCheckStrictly(); ok {
+		_spec.SetField(role.FieldMenuCheckStrictly, field.TypeInt32, value)
+	}
+	if value, ok := ruo.mutation.AddedMenuCheckStrictly(); ok {
+		_spec.AddField(role.FieldMenuCheckStrictly, field.TypeInt32, value)
+	}
+	if value, ok := ruo.mutation.DeptCheckStrictly(); ok {
+		_spec.SetField(role.FieldDeptCheckStrictly, field.TypeInt32, value)
+	}
+	if value, ok := ruo.mutation.AddedDeptCheckStrictly(); ok {
+		_spec.AddField(role.FieldDeptCheckStrictly, field.TypeInt32, value)
 	}
 	if ruo.mutation.UsersCleared() {
 		edge := &sqlgraph.EdgeSpec{

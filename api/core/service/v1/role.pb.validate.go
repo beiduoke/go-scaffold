@@ -58,8 +58,6 @@ func (m *Role) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for Name
-
 	if m.CreatedAt != nil {
 		// no validation rules for CreatedAt
 	}
@@ -68,16 +66,24 @@ func (m *Role) validate(all bool) error {
 		// no validation rules for UpdatedAt
 	}
 
-	if m.DefaultRouter != nil {
-		// no validation rules for DefaultRouter
+	if m.State != nil {
+		// no validation rules for State
 	}
 
 	if m.Sort != nil {
 		// no validation rules for Sort
 	}
 
-	if m.DataScope != nil {
-		// no validation rules for DataScope
+	if m.Remark != nil {
+		// no validation rules for Remark
+	}
+
+	if m.Name != nil {
+		// no validation rules for Name
+	}
+
+	if m.DefaultRouter != nil {
+		// no validation rules for DefaultRouter
 	}
 
 	if m.MenuCheckStrictly != nil {
@@ -88,12 +94,8 @@ func (m *Role) validate(all bool) error {
 		// no validation rules for DeptCheckStrictly
 	}
 
-	if m.State != nil {
-		// no validation rules for State
-	}
-
-	if m.Remarks != nil {
-		// no validation rules for Remarks
+	if m.DataScope != nil {
+		// no validation rules for DataScope
 	}
 
 	if len(errors) > 0 {

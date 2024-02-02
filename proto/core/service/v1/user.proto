@@ -55,7 +55,7 @@ message User {
   optional string phone = 8 [(validate.rules).string.pattern = "^1[0-9]{10}$"];
   optional string email = 9 [(validate.rules).string.email = true];
   optional string avatar = 10;
-  optional int32 state = 11 [(validate.rules).int32.gte = 0,(gnostic.openapi.v3.property) = {description: "状态"}];
+  optional int32 state = 11 [(validate.rules).int32.gte = 0,(gnostic.openapi.v3.property) = {description: "状态 1 激活 2 未激活 3 禁用"}];
   optional string created_at = 12;
   optional string updated_at = 13;
   optional uint32 creator_id = 14 [(gnostic.openapi.v3.property) = {description: "创建者ID"}]; // 创建者ID

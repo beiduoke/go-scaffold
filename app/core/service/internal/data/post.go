@@ -14,40 +14,36 @@ import (
 	entgo "github.com/tx7do/go-utils/entgo/query"
 )
 
-func (r *RoleRepo) toProto(in *ent.Role) *v1.Role {
+func (r *PostRepo) toProto(in *ent.Post) *v1.Post {
 	if in == nil {
 		return nil
 	}
-	return &v1.Role{
-		CreatedAt:         convert.TimeValueToString(in.CreatedAt, time.DateTime),
-		UpdatedAt:         convert.TimeValueToString(in.UpdatedAt, time.DateTime),
-		Id:                in.ID,
-		Name:              in.Name,
-		DefaultRouter:     in.DefaultRouter,
-		Sort:              in.Sort,
-		DataScope:         in.DataScope,
-		MenuCheckStrictly: in.MenuCheckStrictly,
-		DeptCheckStrictly: in.DeptCheckStrictly,
-		State:             in.State,
-		Remark:            in.Remark,
+	return &v1.Post{
+		CreatedAt: convert.TimeValueToString(in.CreatedAt, time.DateTime),
+		UpdatedAt: convert.TimeValueToString(in.UpdatedAt, time.DateTime),
+		Id:        in.ID,
+		Name:      in.Name,
+		State:     in.State,
+		Remark:    in.Remark,
+		Sort:      in.Sort,
 	}
 }
 
-type RoleRepo struct {
+type PostRepo struct {
 	data *Data
 	log  *log.Helper
 }
 
-// NewRoleRepo .
-func NewRoleRepo(data *Data, logger log.Logger) *RoleRepo {
-	return &RoleRepo{
+// NewPostRepo .
+func NewPostRepo(data *Data, logger log.Logger) *PostRepo {
+	return &PostRepo{
 		data: data,
 		log:  log.NewHelper(logger),
 	}
 }
 
-func (r *RoleRepo) Count(ctx context.Context, whereCond []func(s *sql.Selector)) (int, error) {
-	builder := r.data.db.Role.Query()
+func (r *PostRepo) Count(ctx context.Context, whereCond []func(s *sql.Selector)) (int, error) {
+	builder := r.data.db.Post.Query()
 	if len(whereCond) > 0 {
 		builder.Modify(whereCond...)
 	}
@@ -60,9 +56,12 @@ func (r *RoleRepo) Count(ctx context.Context, whereCond []func(s *sql.Selector))
 	return count, err
 }
 
-func (r *RoleRepo) CreateRole(ctx context.Context, req *v1.CreateRoleRequest) (*v1.CreateRoleResponse, error) {
-	builder := r.data.db.Role.Create().SetCreatedAt(time.Now())
-	builder = builder.SetName(req.Role.GetName())
+func (r *PostRepo) CreatePost(ctx context.Context, req *v1.CreatePostRequest) (*v1.CreatePostResponse, error) {
+	builder := r.data.db.Post.Create().SetCreatedAt(time.Now())
+	builder = builder.SetName(req.Post.GetName()).
+		SetNillableState(req.Post.State).
+		SetNillableRemark(req.Post.Remark).
+		SetNillableSort(req.Post.Sort)
 
 	_, err := builder.Save(ctx)
 	if err != nil {
@@ -70,39 +69,41 @@ func (r *RoleRepo) CreateRole(ctx context.Context, req *v1.CreateRoleRequest) (*
 		return nil, err
 	}
 
-	return &v1.CreateRoleResponse{}, err
+	return &v1.CreatePostResponse{}, err
 }
-func (r *RoleRepo) UpdateRole(ctx context.Context, req *v1.UpdateRoleRequest) (*v1.UpdateRoleResponse, error) {
+func (r *PostRepo) UpdatePost(ctx context.Context, req *v1.UpdatePostRequest) (*v1.UpdatePostResponse, error) {
 
-	builder := r.data.db.Role.UpdateOneID(req.Id)
-	builder = builder.SetNillableSort(req.Role.Sort).
-		SetNillableRemark(req.Role.Remark)
+	builder := r.data.db.Post.UpdateOneID(req.Id)
+	builder = builder.SetName(req.Post.GetName()).
+		SetNillableState(req.Post.State).
+		SetNillableRemark(req.Post.Remark).
+		SetNillableSort(req.Post.Sort)
 
 	_, err := builder.Save(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return &v1.UpdateRoleResponse{}, err
+	return &v1.UpdatePostResponse{}, err
 }
-func (r *RoleRepo) DeleteRole(ctx context.Context, req *v1.DeleteRoleRequest) (*v1.DeleteRoleResponse, error) {
-	err := r.data.db.Role.
+func (r *PostRepo) DeletePost(ctx context.Context, req *v1.DeletePostRequest) (*v1.DeletePostResponse, error) {
+	err := r.data.db.Post.
 		DeleteOneID(req.GetId()).
 		Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return &v1.DeleteRoleResponse{}, nil
+	return &v1.DeletePostResponse{}, nil
 }
-func (r *RoleRepo) GetRole(ctx context.Context, req *v1.GetRoleRequest) (*v1.Role, error) {
-	ret, err := r.data.db.Role.Get(ctx, req.GetId())
+func (r *PostRepo) GetPost(ctx context.Context, req *v1.GetPostRequest) (*v1.Post, error) {
+	ret, err := r.data.db.Post.Get(ctx, req.GetId())
 	if err != nil && !ent.IsNotFound(err) {
 		return nil, err
 	}
 	return r.toProto(ret), err
 }
 
-func (r *RoleRepo) ListRole(ctx context.Context, req *pagination.PagingRequest) (*v1.ListRoleResponse, error) {
-	builder := r.data.db.Debug().Role.Query()
+func (r *PostRepo) ListPost(ctx context.Context, req *pagination.PagingRequest) (*v1.ListPostResponse, error) {
+	builder := r.data.db.Debug().Post.Query()
 	err, whereSelectors, querySelectors := entgo.BuildQuerySelector(
 		req.GetQuery(), req.GetOrQuery(),
 		req.GetPage(), req.GetPageSize(), req.GetNoPaging(),
@@ -124,7 +125,7 @@ func (r *RoleRepo) ListRole(ctx context.Context, req *pagination.PagingRequest) 
 		return nil, err
 	}
 
-	items := make([]*v1.Role, 0, len(results))
+	items := make([]*v1.Post, 0, len(results))
 	for _, res := range results {
 		items = append(items, r.toProto(res))
 	}
@@ -133,7 +134,7 @@ func (r *RoleRepo) ListRole(ctx context.Context, req *pagination.PagingRequest) 
 		return nil, err
 	}
 
-	return &v1.ListRoleResponse{
+	return &v1.ListPostResponse{
 		Total: int32(count),
 		Items: items,
 	}, nil

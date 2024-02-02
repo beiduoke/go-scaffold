@@ -26,9 +26,10 @@ message Post {
   optional string created_at = 1;
   optional string updated_at = 2;
   uint32 id = 3;
-  string name = 4;
-  optional int32 state = 11 [(gnostic.openapi.v3.property) = {description: "状态"}];
-  optional string remarks = 12;
+  optional int32 state = 4 [(gnostic.openapi.v3.property) = {description: "状态 1 激活 2 未激活 3 禁用"}];
+  optional string remark = 5;
+  optional int32 sort = 6;
+  optional string name = 7;
 }
 
 message CreatePostRequest {

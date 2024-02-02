@@ -113,6 +113,70 @@ func (rc *RoleCreate) SetName(s string) *RoleCreate {
 	return rc
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (rc *RoleCreate) SetNillableName(s *string) *RoleCreate {
+	if s != nil {
+		rc.SetName(*s)
+	}
+	return rc
+}
+
+// SetDefaultRouter sets the "default_router" field.
+func (rc *RoleCreate) SetDefaultRouter(s string) *RoleCreate {
+	rc.mutation.SetDefaultRouter(s)
+	return rc
+}
+
+// SetNillableDefaultRouter sets the "default_router" field if the given value is not nil.
+func (rc *RoleCreate) SetNillableDefaultRouter(s *string) *RoleCreate {
+	if s != nil {
+		rc.SetDefaultRouter(*s)
+	}
+	return rc
+}
+
+// SetDataScope sets the "data_scope" field.
+func (rc *RoleCreate) SetDataScope(i int32) *RoleCreate {
+	rc.mutation.SetDataScope(i)
+	return rc
+}
+
+// SetNillableDataScope sets the "data_scope" field if the given value is not nil.
+func (rc *RoleCreate) SetNillableDataScope(i *int32) *RoleCreate {
+	if i != nil {
+		rc.SetDataScope(*i)
+	}
+	return rc
+}
+
+// SetMenuCheckStrictly sets the "menu_check_strictly" field.
+func (rc *RoleCreate) SetMenuCheckStrictly(i int32) *RoleCreate {
+	rc.mutation.SetMenuCheckStrictly(i)
+	return rc
+}
+
+// SetNillableMenuCheckStrictly sets the "menu_check_strictly" field if the given value is not nil.
+func (rc *RoleCreate) SetNillableMenuCheckStrictly(i *int32) *RoleCreate {
+	if i != nil {
+		rc.SetMenuCheckStrictly(*i)
+	}
+	return rc
+}
+
+// SetDeptCheckStrictly sets the "dept_check_strictly" field.
+func (rc *RoleCreate) SetDeptCheckStrictly(i int32) *RoleCreate {
+	rc.mutation.SetDeptCheckStrictly(i)
+	return rc
+}
+
+// SetNillableDeptCheckStrictly sets the "dept_check_strictly" field if the given value is not nil.
+func (rc *RoleCreate) SetNillableDeptCheckStrictly(i *int32) *RoleCreate {
+	if i != nil {
+		rc.SetDeptCheckStrictly(*i)
+	}
+	return rc
+}
+
 // SetID sets the "id" field.
 func (rc *RoleCreate) SetID(u uint32) *RoleCreate {
 	rc.mutation.SetID(u)
@@ -181,6 +245,26 @@ func (rc *RoleCreate) defaults() {
 		v := role.DefaultState
 		rc.mutation.SetState(v)
 	}
+	if _, ok := rc.mutation.Name(); !ok {
+		v := role.DefaultName
+		rc.mutation.SetName(v)
+	}
+	if _, ok := rc.mutation.DefaultRouter(); !ok {
+		v := role.DefaultDefaultRouter
+		rc.mutation.SetDefaultRouter(v)
+	}
+	if _, ok := rc.mutation.DataScope(); !ok {
+		v := role.DefaultDataScope
+		rc.mutation.SetDataScope(v)
+	}
+	if _, ok := rc.mutation.MenuCheckStrictly(); !ok {
+		v := role.DefaultMenuCheckStrictly
+		rc.mutation.SetMenuCheckStrictly(v)
+	}
+	if _, ok := rc.mutation.DeptCheckStrictly(); !ok {
+		v := role.DefaultDeptCheckStrictly
+		rc.mutation.SetDeptCheckStrictly(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -208,6 +292,23 @@ func (rc *RoleCreate) check() error {
 		if err := role.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Role.name": %w`, err)}
 		}
+	}
+	if _, ok := rc.mutation.DefaultRouter(); !ok {
+		return &ValidationError{Name: "default_router", err: errors.New(`ent: missing required field "Role.default_router"`)}
+	}
+	if v, ok := rc.mutation.DefaultRouter(); ok {
+		if err := role.DefaultRouterValidator(v); err != nil {
+			return &ValidationError{Name: "default_router", err: fmt.Errorf(`ent: validator failed for field "Role.default_router": %w`, err)}
+		}
+	}
+	if _, ok := rc.mutation.DataScope(); !ok {
+		return &ValidationError{Name: "data_scope", err: errors.New(`ent: missing required field "Role.data_scope"`)}
+	}
+	if _, ok := rc.mutation.MenuCheckStrictly(); !ok {
+		return &ValidationError{Name: "menu_check_strictly", err: errors.New(`ent: missing required field "Role.menu_check_strictly"`)}
+	}
+	if _, ok := rc.mutation.DeptCheckStrictly(); !ok {
+		return &ValidationError{Name: "dept_check_strictly", err: errors.New(`ent: missing required field "Role.dept_check_strictly"`)}
 	}
 	if v, ok := rc.mutation.ID(); ok {
 		if err := role.IDValidator(v); err != nil {
@@ -273,7 +374,23 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := rc.mutation.Name(); ok {
 		_spec.SetField(role.FieldName, field.TypeString, value)
-		_node.Name = value
+		_node.Name = &value
+	}
+	if value, ok := rc.mutation.DefaultRouter(); ok {
+		_spec.SetField(role.FieldDefaultRouter, field.TypeString, value)
+		_node.DefaultRouter = &value
+	}
+	if value, ok := rc.mutation.DataScope(); ok {
+		_spec.SetField(role.FieldDataScope, field.TypeInt32, value)
+		_node.DataScope = &value
+	}
+	if value, ok := rc.mutation.MenuCheckStrictly(); ok {
+		_spec.SetField(role.FieldMenuCheckStrictly, field.TypeInt32, value)
+		_node.MenuCheckStrictly = &value
+	}
+	if value, ok := rc.mutation.DeptCheckStrictly(); ok {
+		_spec.SetField(role.FieldDeptCheckStrictly, field.TypeInt32, value)
+		_node.DeptCheckStrictly = &value
 	}
 	if nodes := rc.mutation.UsersIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -445,6 +562,72 @@ func (u *RoleUpsert) UpdateName() *RoleUpsert {
 	return u
 }
 
+// SetDefaultRouter sets the "default_router" field.
+func (u *RoleUpsert) SetDefaultRouter(v string) *RoleUpsert {
+	u.Set(role.FieldDefaultRouter, v)
+	return u
+}
+
+// UpdateDefaultRouter sets the "default_router" field to the value that was provided on create.
+func (u *RoleUpsert) UpdateDefaultRouter() *RoleUpsert {
+	u.SetExcluded(role.FieldDefaultRouter)
+	return u
+}
+
+// SetDataScope sets the "data_scope" field.
+func (u *RoleUpsert) SetDataScope(v int32) *RoleUpsert {
+	u.Set(role.FieldDataScope, v)
+	return u
+}
+
+// UpdateDataScope sets the "data_scope" field to the value that was provided on create.
+func (u *RoleUpsert) UpdateDataScope() *RoleUpsert {
+	u.SetExcluded(role.FieldDataScope)
+	return u
+}
+
+// AddDataScope adds v to the "data_scope" field.
+func (u *RoleUpsert) AddDataScope(v int32) *RoleUpsert {
+	u.Add(role.FieldDataScope, v)
+	return u
+}
+
+// SetMenuCheckStrictly sets the "menu_check_strictly" field.
+func (u *RoleUpsert) SetMenuCheckStrictly(v int32) *RoleUpsert {
+	u.Set(role.FieldMenuCheckStrictly, v)
+	return u
+}
+
+// UpdateMenuCheckStrictly sets the "menu_check_strictly" field to the value that was provided on create.
+func (u *RoleUpsert) UpdateMenuCheckStrictly() *RoleUpsert {
+	u.SetExcluded(role.FieldMenuCheckStrictly)
+	return u
+}
+
+// AddMenuCheckStrictly adds v to the "menu_check_strictly" field.
+func (u *RoleUpsert) AddMenuCheckStrictly(v int32) *RoleUpsert {
+	u.Add(role.FieldMenuCheckStrictly, v)
+	return u
+}
+
+// SetDeptCheckStrictly sets the "dept_check_strictly" field.
+func (u *RoleUpsert) SetDeptCheckStrictly(v int32) *RoleUpsert {
+	u.Set(role.FieldDeptCheckStrictly, v)
+	return u
+}
+
+// UpdateDeptCheckStrictly sets the "dept_check_strictly" field to the value that was provided on create.
+func (u *RoleUpsert) UpdateDeptCheckStrictly() *RoleUpsert {
+	u.SetExcluded(role.FieldDeptCheckStrictly)
+	return u
+}
+
+// AddDeptCheckStrictly adds v to the "dept_check_strictly" field.
+func (u *RoleUpsert) AddDeptCheckStrictly(v int32) *RoleUpsert {
+	u.Add(role.FieldDeptCheckStrictly, v)
+	return u
+}
+
 // UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
@@ -612,6 +795,83 @@ func (u *RoleUpsertOne) SetName(v string) *RoleUpsertOne {
 func (u *RoleUpsertOne) UpdateName() *RoleUpsertOne {
 	return u.Update(func(s *RoleUpsert) {
 		s.UpdateName()
+	})
+}
+
+// SetDefaultRouter sets the "default_router" field.
+func (u *RoleUpsertOne) SetDefaultRouter(v string) *RoleUpsertOne {
+	return u.Update(func(s *RoleUpsert) {
+		s.SetDefaultRouter(v)
+	})
+}
+
+// UpdateDefaultRouter sets the "default_router" field to the value that was provided on create.
+func (u *RoleUpsertOne) UpdateDefaultRouter() *RoleUpsertOne {
+	return u.Update(func(s *RoleUpsert) {
+		s.UpdateDefaultRouter()
+	})
+}
+
+// SetDataScope sets the "data_scope" field.
+func (u *RoleUpsertOne) SetDataScope(v int32) *RoleUpsertOne {
+	return u.Update(func(s *RoleUpsert) {
+		s.SetDataScope(v)
+	})
+}
+
+// AddDataScope adds v to the "data_scope" field.
+func (u *RoleUpsertOne) AddDataScope(v int32) *RoleUpsertOne {
+	return u.Update(func(s *RoleUpsert) {
+		s.AddDataScope(v)
+	})
+}
+
+// UpdateDataScope sets the "data_scope" field to the value that was provided on create.
+func (u *RoleUpsertOne) UpdateDataScope() *RoleUpsertOne {
+	return u.Update(func(s *RoleUpsert) {
+		s.UpdateDataScope()
+	})
+}
+
+// SetMenuCheckStrictly sets the "menu_check_strictly" field.
+func (u *RoleUpsertOne) SetMenuCheckStrictly(v int32) *RoleUpsertOne {
+	return u.Update(func(s *RoleUpsert) {
+		s.SetMenuCheckStrictly(v)
+	})
+}
+
+// AddMenuCheckStrictly adds v to the "menu_check_strictly" field.
+func (u *RoleUpsertOne) AddMenuCheckStrictly(v int32) *RoleUpsertOne {
+	return u.Update(func(s *RoleUpsert) {
+		s.AddMenuCheckStrictly(v)
+	})
+}
+
+// UpdateMenuCheckStrictly sets the "menu_check_strictly" field to the value that was provided on create.
+func (u *RoleUpsertOne) UpdateMenuCheckStrictly() *RoleUpsertOne {
+	return u.Update(func(s *RoleUpsert) {
+		s.UpdateMenuCheckStrictly()
+	})
+}
+
+// SetDeptCheckStrictly sets the "dept_check_strictly" field.
+func (u *RoleUpsertOne) SetDeptCheckStrictly(v int32) *RoleUpsertOne {
+	return u.Update(func(s *RoleUpsert) {
+		s.SetDeptCheckStrictly(v)
+	})
+}
+
+// AddDeptCheckStrictly adds v to the "dept_check_strictly" field.
+func (u *RoleUpsertOne) AddDeptCheckStrictly(v int32) *RoleUpsertOne {
+	return u.Update(func(s *RoleUpsert) {
+		s.AddDeptCheckStrictly(v)
+	})
+}
+
+// UpdateDeptCheckStrictly sets the "dept_check_strictly" field to the value that was provided on create.
+func (u *RoleUpsertOne) UpdateDeptCheckStrictly() *RoleUpsertOne {
+	return u.Update(func(s *RoleUpsert) {
+		s.UpdateDeptCheckStrictly()
 	})
 }
 
@@ -948,6 +1208,83 @@ func (u *RoleUpsertBulk) SetName(v string) *RoleUpsertBulk {
 func (u *RoleUpsertBulk) UpdateName() *RoleUpsertBulk {
 	return u.Update(func(s *RoleUpsert) {
 		s.UpdateName()
+	})
+}
+
+// SetDefaultRouter sets the "default_router" field.
+func (u *RoleUpsertBulk) SetDefaultRouter(v string) *RoleUpsertBulk {
+	return u.Update(func(s *RoleUpsert) {
+		s.SetDefaultRouter(v)
+	})
+}
+
+// UpdateDefaultRouter sets the "default_router" field to the value that was provided on create.
+func (u *RoleUpsertBulk) UpdateDefaultRouter() *RoleUpsertBulk {
+	return u.Update(func(s *RoleUpsert) {
+		s.UpdateDefaultRouter()
+	})
+}
+
+// SetDataScope sets the "data_scope" field.
+func (u *RoleUpsertBulk) SetDataScope(v int32) *RoleUpsertBulk {
+	return u.Update(func(s *RoleUpsert) {
+		s.SetDataScope(v)
+	})
+}
+
+// AddDataScope adds v to the "data_scope" field.
+func (u *RoleUpsertBulk) AddDataScope(v int32) *RoleUpsertBulk {
+	return u.Update(func(s *RoleUpsert) {
+		s.AddDataScope(v)
+	})
+}
+
+// UpdateDataScope sets the "data_scope" field to the value that was provided on create.
+func (u *RoleUpsertBulk) UpdateDataScope() *RoleUpsertBulk {
+	return u.Update(func(s *RoleUpsert) {
+		s.UpdateDataScope()
+	})
+}
+
+// SetMenuCheckStrictly sets the "menu_check_strictly" field.
+func (u *RoleUpsertBulk) SetMenuCheckStrictly(v int32) *RoleUpsertBulk {
+	return u.Update(func(s *RoleUpsert) {
+		s.SetMenuCheckStrictly(v)
+	})
+}
+
+// AddMenuCheckStrictly adds v to the "menu_check_strictly" field.
+func (u *RoleUpsertBulk) AddMenuCheckStrictly(v int32) *RoleUpsertBulk {
+	return u.Update(func(s *RoleUpsert) {
+		s.AddMenuCheckStrictly(v)
+	})
+}
+
+// UpdateMenuCheckStrictly sets the "menu_check_strictly" field to the value that was provided on create.
+func (u *RoleUpsertBulk) UpdateMenuCheckStrictly() *RoleUpsertBulk {
+	return u.Update(func(s *RoleUpsert) {
+		s.UpdateMenuCheckStrictly()
+	})
+}
+
+// SetDeptCheckStrictly sets the "dept_check_strictly" field.
+func (u *RoleUpsertBulk) SetDeptCheckStrictly(v int32) *RoleUpsertBulk {
+	return u.Update(func(s *RoleUpsert) {
+		s.SetDeptCheckStrictly(v)
+	})
+}
+
+// AddDeptCheckStrictly adds v to the "dept_check_strictly" field.
+func (u *RoleUpsertBulk) AddDeptCheckStrictly(v int32) *RoleUpsertBulk {
+	return u.Update(func(s *RoleUpsert) {
+		s.AddDeptCheckStrictly(v)
+	})
+}
+
+// UpdateDeptCheckStrictly sets the "dept_check_strictly" field to the value that was provided on create.
+func (u *RoleUpsertBulk) UpdateDeptCheckStrictly() *RoleUpsertBulk {
+	return u.Update(func(s *RoleUpsert) {
+		s.UpdateDeptCheckStrictly()
 	})
 }
 

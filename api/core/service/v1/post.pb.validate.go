@@ -58,8 +58,6 @@ func (m *Post) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for Name
-
 	if m.CreatedAt != nil {
 		// no validation rules for CreatedAt
 	}
@@ -72,8 +70,16 @@ func (m *Post) validate(all bool) error {
 		// no validation rules for State
 	}
 
-	if m.Remarks != nil {
-		// no validation rules for Remarks
+	if m.Remark != nil {
+		// no validation rules for Remark
+	}
+
+	if m.Sort != nil {
+		// no validation rules for Sort
+	}
+
+	if m.Name != nil {
+		// no validation rules for Name
 	}
 
 	if len(errors) > 0 {

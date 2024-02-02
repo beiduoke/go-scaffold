@@ -136,13 +136,17 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "Role",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			role.FieldCreatedAt: {Type: field.TypeTime, Column: role.FieldCreatedAt},
-			role.FieldUpdatedAt: {Type: field.TypeTime, Column: role.FieldUpdatedAt},
-			role.FieldDeletedAt: {Type: field.TypeTime, Column: role.FieldDeletedAt},
-			role.FieldRemark:    {Type: field.TypeString, Column: role.FieldRemark},
-			role.FieldSort:      {Type: field.TypeInt32, Column: role.FieldSort},
-			role.FieldState:     {Type: field.TypeInt32, Column: role.FieldState},
-			role.FieldName:      {Type: field.TypeString, Column: role.FieldName},
+			role.FieldCreatedAt:         {Type: field.TypeTime, Column: role.FieldCreatedAt},
+			role.FieldUpdatedAt:         {Type: field.TypeTime, Column: role.FieldUpdatedAt},
+			role.FieldDeletedAt:         {Type: field.TypeTime, Column: role.FieldDeletedAt},
+			role.FieldRemark:            {Type: field.TypeString, Column: role.FieldRemark},
+			role.FieldSort:              {Type: field.TypeInt32, Column: role.FieldSort},
+			role.FieldState:             {Type: field.TypeInt32, Column: role.FieldState},
+			role.FieldName:              {Type: field.TypeString, Column: role.FieldName},
+			role.FieldDefaultRouter:     {Type: field.TypeString, Column: role.FieldDefaultRouter},
+			role.FieldDataScope:         {Type: field.TypeInt32, Column: role.FieldDataScope},
+			role.FieldMenuCheckStrictly: {Type: field.TypeInt32, Column: role.FieldMenuCheckStrictly},
+			role.FieldDeptCheckStrictly: {Type: field.TypeInt32, Column: role.FieldDeptCheckStrictly},
 		},
 	}
 	graph.Nodes[5] = &sqlgraph.Node{
@@ -837,6 +841,26 @@ func (f *RoleFilter) WhereState(p entql.Int32P) {
 // WhereName applies the entql string predicate on the name field.
 func (f *RoleFilter) WhereName(p entql.StringP) {
 	f.Where(p.Field(role.FieldName))
+}
+
+// WhereDefaultRouter applies the entql string predicate on the default_router field.
+func (f *RoleFilter) WhereDefaultRouter(p entql.StringP) {
+	f.Where(p.Field(role.FieldDefaultRouter))
+}
+
+// WhereDataScope applies the entql int32 predicate on the data_scope field.
+func (f *RoleFilter) WhereDataScope(p entql.Int32P) {
+	f.Where(p.Field(role.FieldDataScope))
+}
+
+// WhereMenuCheckStrictly applies the entql int32 predicate on the menu_check_strictly field.
+func (f *RoleFilter) WhereMenuCheckStrictly(p entql.Int32P) {
+	f.Where(p.Field(role.FieldMenuCheckStrictly))
+}
+
+// WhereDeptCheckStrictly applies the entql int32 predicate on the dept_check_strictly field.
+func (f *RoleFilter) WhereDeptCheckStrictly(p entql.Int32P) {
+	f.Where(p.Field(role.FieldDeptCheckStrictly))
 }
 
 // WhereHasUsers applies a predicate to check if query has an edge users.

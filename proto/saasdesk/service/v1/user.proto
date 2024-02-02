@@ -35,7 +35,7 @@ message User {
   optional string phone = 8;
   optional string email = 9;
   optional string avatar = 10;
-  optional int32 state = 11 [(gnostic.openapi.v3.property) = {description: "状态"}];
+  optional int32 state = 11 [(gnostic.openapi.v3.property) = {description: "状态 1 激活 2 未激活 3 禁用"}];
   optional google.protobuf.Timestamp created_at = 12;
   optional google.protobuf.Timestamp updated_at = 13;
 }

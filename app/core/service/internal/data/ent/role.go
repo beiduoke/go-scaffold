@@ -31,7 +31,15 @@ type Role struct {
 	// 状态 0 UNSPECIFIED 开启 1 -> ACTIVE 关闭 2 -> INACTIVE, 禁用 3 -> BANNED
 	State *int32 `json:"state,omitempty"`
 	// 名称
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
+	// 默认路由
+	DefaultRouter *string `json:"default_router,omitempty"`
+	// 数据范围（0：未指定 1：全部数据权限 2：本人数据权限 3：本部门数据权限 4：本部门及以下数据权限 5：自定部门数据权限 ）
+	DataScope *int32 `json:"data_scope,omitempty"`
+	// 菜单树选择项是否关联显示
+	MenuCheckStrictly *int32 `json:"menu_check_strictly,omitempty"`
+	// 部门树选择项是否关联显示
+	DeptCheckStrictly *int32 `json:"dept_check_strictly,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoleQuery when eager-loading is set.
 	Edges        RoleEdges `json:"edges"`
@@ -61,9 +69,9 @@ func (*Role) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case role.FieldID, role.FieldSort, role.FieldState:
+		case role.FieldID, role.FieldSort, role.FieldState, role.FieldDataScope, role.FieldMenuCheckStrictly, role.FieldDeptCheckStrictly:
 			values[i] = new(sql.NullInt64)
-		case role.FieldRemark, role.FieldName:
+		case role.FieldRemark, role.FieldName, role.FieldDefaultRouter:
 			values[i] = new(sql.NullString)
 		case role.FieldCreatedAt, role.FieldUpdatedAt, role.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
@@ -134,7 +142,36 @@ func (r *Role) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
-				r.Name = value.String
+				r.Name = new(string)
+				*r.Name = value.String
+			}
+		case role.FieldDefaultRouter:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field default_router", values[i])
+			} else if value.Valid {
+				r.DefaultRouter = new(string)
+				*r.DefaultRouter = value.String
+			}
+		case role.FieldDataScope:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field data_scope", values[i])
+			} else if value.Valid {
+				r.DataScope = new(int32)
+				*r.DataScope = int32(value.Int64)
+			}
+		case role.FieldMenuCheckStrictly:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field menu_check_strictly", values[i])
+			} else if value.Valid {
+				r.MenuCheckStrictly = new(int32)
+				*r.MenuCheckStrictly = int32(value.Int64)
+			}
+		case role.FieldDeptCheckStrictly:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field dept_check_strictly", values[i])
+			} else if value.Valid {
+				r.DeptCheckStrictly = new(int32)
+				*r.DeptCheckStrictly = int32(value.Int64)
 			}
 		default:
 			r.selectValues.Set(columns[i], values[i])
@@ -207,8 +244,30 @@ func (r *Role) String() string {
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteString(", ")
-	builder.WriteString("name=")
-	builder.WriteString(r.Name)
+	if v := r.Name; v != nil {
+		builder.WriteString("name=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := r.DefaultRouter; v != nil {
+		builder.WriteString("default_router=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
+	if v := r.DataScope; v != nil {
+		builder.WriteString("data_scope=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := r.MenuCheckStrictly; v != nil {
+		builder.WriteString("menu_check_strictly=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	if v := r.DeptCheckStrictly; v != nil {
+		builder.WriteString("dept_check_strictly=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
 	builder.WriteByte(')')
 	return builder.String()
 }

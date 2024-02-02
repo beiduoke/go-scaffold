@@ -24,14 +24,14 @@ message Role {
   optional string created_at = 1;
   optional string updated_at = 2;
   uint32 id = 3;
-  string name = 4;
-  optional string default_router = 6;
-  optional int32 sort = 7;
-	optional int32 data_scope = 8;         
-	optional int32 menu_check_strictly = 9 [(gnostic.openapi.v3.property) = {description: "菜单树选择项是否关联显示"}]; 
-	optional int32 dept_check_strictly = 10 [(gnostic.openapi.v3.property) = {description: "部门树选择项是否关联显示"}]; 
-  optional int32 state = 11 [(gnostic.openapi.v3.property) = {description: "状态"}];
-  optional string remarks = 12;
+  optional int32 state = 4 [(gnostic.openapi.v3.property) = {description: "状态 1 激活 2 未激活 3 禁用", default: {number: 1}}];
+  optional int32 sort = 5;
+  optional string remark = 6;
+  optional string name = 7;
+  optional string default_router = 8;
+	optional int32 menu_check_strictly = 9 [(gnostic.openapi.v3.property) = {description: "菜单树选择项是否关联显示", default: {number: 1}}]; 
+	optional int32 dept_check_strictly = 10 [(gnostic.openapi.v3.property) = {description: "部门树选择项是否关联显示", default: {number: 1}}]; 
+	optional int32 data_scope = 11;         
 }
 
 message CreateRoleRequest {

@@ -73,6 +73,8 @@ var (
 	DefaultState int32
 	// StateValidator is a validator for the "state" field. It is called by the builders before save.
 	StateValidator func(int32) error
+	// DefaultName holds the default value on creation for the "name" field.
+	DefaultName string
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
 	NameValidator func(string) error
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.

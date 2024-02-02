@@ -35,8 +35,8 @@ func (Post) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name").
 			Comment("名称").
-			MaxLen(128).
-			Optional().
+			MaxLen(50).
+			Default("").
 			Nillable(),
 	}
 }

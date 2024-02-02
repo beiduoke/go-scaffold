@@ -19,15 +19,15 @@ service MenuService {
 	rpc ListMenu (ListMenuRequest) returns (ListMenuResponse);
 }
 
-// 角色模块
+// 菜单模块
 message Menu {
   optional string created_at = 1;
   optional string updated_at = 2;
   uint32 id = 3;
-  string name = 4;
+  optional string name = 4;
   optional int32 sort = 5;
-  optional int32 state = 6 [(gnostic.openapi.v3.property) = {description: "状态"}];
-  optional string remarks = 7;
+  optional int32 state = 6 [(gnostic.openapi.v3.property) = {description: "状态 1 激活 2 未激活 3 禁用"}];
+  optional string remark = 7;
   optional uint32 parent_id = 8;
   optional string title = 9;
   optional int32 type = 10;

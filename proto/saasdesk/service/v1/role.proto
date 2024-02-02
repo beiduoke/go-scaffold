@@ -38,7 +38,7 @@ message Role {
 	optional int32 menu_check_strictly = 9; 
 	optional int32 dept_check_strictly = 10; 
   optional int32 state = 11;
-  optional string remarks = 12;
+  optional string remark = 12;
 }
 
 message CreateRoleRequest {}

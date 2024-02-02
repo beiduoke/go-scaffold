@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ContentFilters</key>
+	<dict/>
+	<key>auto_connect</key>
+	<true/>
+	<key>data</key>
+	<dict>
+		<key>connection</key>
+		<dict>
+			<key>allowDataLocalInfile</key>
+			<integer>0</integer>
+			<key>database</key>
+			<string>shengjingyuan_test</string>
+			<key>enableClearTextPlugin</key>
+			<integer>0</integer>
+			<key>host</key>
+			<string>127.0.0.1</string>
+			<key>kcid</key>
+			<string>-3430215786965953938</string>
+			<key>name</key>
+			<string>倍多客生产数据库</string>
+			<key>port</key>
+			<integer>3306</integer>
+			<key>rdbms_type</key>
+			<string>mysql</string>
+			<key>ssh_host</key>
+			<string>47.110.15.246</string>
+			<key>ssh_keyLocation</key>
+			<string>/Users/jayden/Development/bedoke/倍多客root 用户登录密钥.pem</string>
+			<key>ssh_keyLocationEnabled</key>
+			<integer>1</integer>
+			<key>ssh_port</key>
+			<integer>22</integer>
+			<key>ssh_user</key>
+			<string>root</string>
+			<key>sslCACertFileLocation</key>
+			<string></string>
+			<key>sslCACertFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>sslCertificateFileLocation</key>
+			<string></string>
+			<key>sslCertificateFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>sslKeyFileLocation</key>
+			<string></string>
+			<key>sslKeyFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>type</key>
+			<string>SPSSHTunnelConnection</string>
+			<key>useSSL</key>
+			<integer>0</integer>
+			<key>user</key>
+			<string>root</string>
+		</dict>
+		<key>session</key>
+		<dict>
+			<key>connectionEncoding</key>
+			<string>utf8mb4</string>
+			<key>contentFilterV2</key>
+			<dict>
+				<key>column</key>
+				<string>id</string>
+				<key>enabled</key>
+				<true/>
+				<key>filterClass</key>
+				<string>expressionNode</string>
+				<key>filterComparison</key>
+				<string>=</string>
+				<key>filterType</key>
+				<string>number</string>
+				<key>filterValues</key>
+				<array>
+					<string></string>
+				</array>
+			</dict>
+			<key>contentPageNumber</key>
+			<integer>1</integer>
+			<key>contentSelection</key>
+			<data>
+			YnBsaXN0MDDUAQIDBAUGBwpYJHZlcnNpb25ZJGFyY2hpdmVyVCR0
+			b3BYJG9iamVjdHMSAAGGoF8QD05TS2V5ZWRBcmNoaXZlctEICVRk
+			YXRhgAGtCwwZGhscHSEoLDA0OFUkbnVsbNMNDg8QFBhXTlMua2V5
+			c1pOUy5vYmplY3RzViRjbGFzc6MREhOAAoADgASjFRYXgAWABoAI
+			gAxUdHlwZVRyb3dzVGtleXNfECZTZWxlY3Rpb25EZXRhaWxUeXBl
+			UHJpbWFyeUtleWVkRGV0YWlsc9MNDg8eHyCgoIAH0iIjJCVaJGNs
+			YXNzbmFtZVgkY2xhc3Nlc18QE05TTXV0YWJsZURpY3Rpb25hcnmj
+			JCYnXE5TRGljdGlvbmFyeVhOU09iamVjdNIODykroSqACYAL0g8t
+			Li9ZTlMuc3RyaW5ngApSaWTSIiMxMl8QD05TTXV0YWJsZVN0cmlu
+			Z6MxMydYTlNTdHJpbmfSIiM1Nl5OU011dGFibGVBcnJheaM1NydX
+			TlNBcnJhedIiIyY5oiYnAAgAEQAaACQAKQAyADcASQBMAFEAUwBh
+			AGcAbgB2AIEAiACMAI4AkACSAJYAmACaAJwAngCjAKgArQDWAN0A
+			3gDfAOEA5gDxAPoBEAEUASEBKgEvATEBMwE1AToBRAFGAUkBTgFg
+			AWQBbQFyAYEBhQGNAZIAAAAAAAACAQAAAAAAAAA6AAAAAAAAAAAA
+			AAAAAAABlQ==
+			</data>
+			<key>contentSortColIsAsc</key>
+			<true/>
+			<key>contentViewport</key>
+			<string>{{0, 0}, {2303, 841}}</string>
+			<key>isToolbarVisible</key>
+			<true/>
+			<key>queries</key>
+			<string>
+
+-- 后台业务接口-用户账户管理 分页获取用户账户明细
+INSERT INTO `sys_apis` (`created_at`, `updated_at`, `deleted_at`, `path`, `description`, `api_group`, `method`) VALUES ('2023-12-21 23:10:04.510', '2023-12-21 23:10:04.510', NULL, '/busUserAccounts/getBusUserAccountDetialsList', '分页获取用户账户明细', '后台业务接口-用户账户管理', 'GET');
+
+INSERT INTO `casbin_rule` (`p_type`, `v0`, `v1`, `v2`, `v3`, `v4`, `v5`) VALUES ('p', '888', '/busUserAccounts/getBusUserAccountDetialsList', 'GET', '', '', '');</string>
+			<key>table</key>
+			<string>bus_user_accounts</string>
+			<key>view</key>
+			<string>SP_VIEW_CONTENT</string>
+			<key>windowVerticalDividerPosition</key>
+			<real>255</real>
+		</dict>
+	</dict>
+	<key>encrypted</key>
+	<false/>
+	<key>format</key>
+	<string>connection</string>
+	<key>queryFavorites</key>
+	<array/>
+	<key>rdbms_type</key>
+	<string>mysql</string>
+	<key>rdbms_version</key>
+	<string>5.7.44-log</string>
+	<key>version</key>
+	<integer>1</integer>
+</dict>
+</plist>

@@ -150,8 +150,8 @@ func (m *Role) validate(all bool) error {
 		// no validation rules for State
 	}
 
-	if m.Remarks != nil {
-		// no validation rules for Remarks
+	if m.Remark != nil {
+		// no validation rules for Remark
 	}
 
 	if len(errors) > 0 {

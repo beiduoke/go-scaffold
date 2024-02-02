@@ -357,6 +357,8 @@ func init() {
 	post.StateValidator = postDescState.Validators[0].(func(int32) error)
 	// postDescName is the schema descriptor for name field.
 	postDescName := postFields[0].Descriptor()
+	// post.DefaultName holds the default value on creation for the name field.
+	post.DefaultName = postDescName.Default.(string)
 	// post.NameValidator is a validator for the "name" field. It is called by the builders before save.
 	post.NameValidator = postDescName.Validators[0].(func(string) error)
 	// postDescID is the schema descriptor for id field.
@@ -386,22 +388,28 @@ func init() {
 	role.StateValidator = roleDescState.Validators[0].(func(int32) error)
 	// roleDescName is the schema descriptor for name field.
 	roleDescName := roleFields[0].Descriptor()
+	// role.DefaultName holds the default value on creation for the name field.
+	role.DefaultName = roleDescName.Default.(string)
 	// role.NameValidator is a validator for the "name" field. It is called by the builders before save.
-	role.NameValidator = func() func(string) error {
-		validators := roleDescName.Validators
-		fns := [...]func(string) error{
-			validators[0].(func(string) error),
-			validators[1].(func(string) error),
-		}
-		return func(name string) error {
-			for _, fn := range fns {
-				if err := fn(name); err != nil {
-					return err
-				}
-			}
-			return nil
-		}
-	}()
+	role.NameValidator = roleDescName.Validators[0].(func(string) error)
+	// roleDescDefaultRouter is the schema descriptor for default_router field.
+	roleDescDefaultRouter := roleFields[1].Descriptor()
+	// role.DefaultDefaultRouter holds the default value on creation for the default_router field.
+	role.DefaultDefaultRouter = roleDescDefaultRouter.Default.(string)
+	// role.DefaultRouterValidator is a validator for the "default_router" field. It is called by the builders before save.
+	role.DefaultRouterValidator = roleDescDefaultRouter.Validators[0].(func(string) error)
+	// roleDescDataScope is the schema descriptor for data_scope field.
+	roleDescDataScope := roleFields[2].Descriptor()
+	// role.DefaultDataScope holds the default value on creation for the data_scope field.
+	role.DefaultDataScope = roleDescDataScope.Default.(int32)
+	// roleDescMenuCheckStrictly is the schema descriptor for menu_check_strictly field.
+	roleDescMenuCheckStrictly := roleFields[3].Descriptor()
+	// role.DefaultMenuCheckStrictly holds the default value on creation for the menu_check_strictly field.
+	role.DefaultMenuCheckStrictly = roleDescMenuCheckStrictly.Default.(int32)
+	// roleDescDeptCheckStrictly is the schema descriptor for dept_check_strictly field.
+	roleDescDeptCheckStrictly := roleFields[4].Descriptor()
+	// role.DefaultDeptCheckStrictly holds the default value on creation for the dept_check_strictly field.
+	role.DefaultDeptCheckStrictly = roleDescDeptCheckStrictly.Default.(int32)
 	// roleDescID is the schema descriptor for id field.
 	roleDescID := roleMixinFields0[0].Descriptor()
 	// role.IDValidator is a validator for the "id" field. It is called by the builders before save.
