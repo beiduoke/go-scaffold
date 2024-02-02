@@ -31,7 +31,7 @@ type User struct {
 	// 状态 0 UNSPECIFIED 开启 1 -> ACTIVE 关闭 2 -> INACTIVE, 禁用 3 -> BANNED
 	State *int32 `json:"state,omitempty"`
 	// 用户名
-	UserName string `json:"user_name,omitempty"`
+	Name *string `json:"name,omitempty"`
 	// 密码
 	Password *string `json:"password,omitempty"`
 	// 昵称
@@ -94,7 +94,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case user.FieldID, user.FieldSort, user.FieldState, user.FieldGender, user.FieldAuthority:
 			values[i] = new(sql.NullInt64)
-		case user.FieldRemark, user.FieldUserName, user.FieldPassword, user.FieldNickName, user.FieldRealName, user.FieldPhone, user.FieldEmail, user.FieldAvatar, user.FieldDescription:
+		case user.FieldRemark, user.FieldName, user.FieldPassword, user.FieldNickName, user.FieldRealName, user.FieldPhone, user.FieldEmail, user.FieldAvatar, user.FieldDescription:
 			values[i] = new(sql.NullString)
 		case user.FieldCreatedAt, user.FieldUpdatedAt, user.FieldDeletedAt, user.FieldBirthday:
 			values[i] = new(sql.NullTime)
@@ -161,11 +161,12 @@ func (u *User) assignValues(columns []string, values []any) error {
 				u.State = new(int32)
 				*u.State = int32(value.Int64)
 			}
-		case user.FieldUserName:
+		case user.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field user_name", values[i])
+				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
-				u.UserName = value.String
+				u.Name = new(string)
+				*u.Name = value.String
 			}
 		case user.FieldPassword:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -313,8 +314,10 @@ func (u *User) String() string {
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteString(", ")
-	builder.WriteString("user_name=")
-	builder.WriteString(u.UserName)
+	if v := u.Name; v != nil {
+		builder.WriteString("name=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
 	if v := u.Password; v != nil {
 		builder.WriteString("password=")

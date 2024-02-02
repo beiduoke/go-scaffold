@@ -36,7 +36,7 @@ func (s *AuthService) Login(ctx context.Context, req *v1.LoginRequest) (*v1.Logi
 	switch (v1.GrandType)(req.GetGrandType()) {
 	case v1.GrandType_GRAND_TYPE_PASSWORD:
 		_, verifyErr = s.uc.VerifyPassword(ctx, &coreV1.VerifyPasswordRequest{
-			UserName: req.GetUserName(),
+			Name:     req.GetName(),
 			Password: req.GetPassword(),
 		})
 	case v1.GrandType_GRAND_TYPE_CODE:
@@ -47,7 +47,7 @@ func (s *AuthService) Login(ctx context.Context, req *v1.LoginRequest) (*v1.Logi
 		return &v1.LoginResponse{}, verifyErr
 	}
 
-	user, err := s.uc.GetUserByUserName(ctx, &coreV1.GetUserByUserNameRequest{UserName: req.GetUserName()})
+	user, err := s.uc.GetUserByName(ctx, &coreV1.GetUserByNameRequest{Name: req.GetName()})
 	if err != nil {
 		return &v1.LoginResponse{}, err
 	}
@@ -62,6 +62,6 @@ func (s *AuthService) Login(ctx context.Context, req *v1.LoginRequest) (*v1.Logi
 		AccessToken:  token,
 		RefreshToken: "",
 		Id:           user.GetId(),
-		UserName:     user.GetUserName(),
+		Name:         user.GetName(),
 	}, nil
 }

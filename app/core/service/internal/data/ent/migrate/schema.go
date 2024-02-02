@@ -182,7 +182,7 @@ var (
 		{Name: "remark", Type: field.TypeString, Nullable: true, Comment: "备注", Default: ""},
 		{Name: "sort", Type: field.TypeInt32, Comment: "排序", Default: 100, SchemaType: map[string]string{"mysql": "int"}},
 		{Name: "state", Type: field.TypeInt32, Comment: "状态 0 UNSPECIFIED 开启 1 -> ACTIVE 关闭 2 -> INACTIVE, 禁用 3 -> BANNED", Default: 1, SchemaType: map[string]string{"mysql": "tinyint(2)"}},
-		{Name: "user_name", Type: field.TypeString, Unique: true, Size: 50, Comment: "用户名"},
+		{Name: "name", Type: field.TypeString, Unique: true, Size: 50, Comment: "用户名"},
 		{Name: "password", Type: field.TypeString, Size: 255, Comment: "密码", Default: ""},
 		{Name: "nick_name", Type: field.TypeString, Size: 128, Comment: "昵称", Default: ""},
 		{Name: "real_name", Type: field.TypeString, Size: 128, Comment: "昵称", Default: ""},
@@ -202,9 +202,9 @@ var (
 		PrimaryKey: []*schema.Column{UsersColumns[0]},
 		Indexes: []*schema.Index{
 			{
-				Name:    "user_phone_authority",
+				Name:    "user_phone_name",
 				Unique:  true,
-				Columns: []*schema.Column{UsersColumns[11], UsersColumns[17]},
+				Columns: []*schema.Column{UsersColumns[11], UsersColumns[7]},
 			},
 		},
 	}

@@ -34,8 +34,8 @@ func (s *UserService) GetUser(ctx context.Context, req *coreV1.GetUserRequest) (
 	return s.uc.GetUser(ctx, req)
 }
 
-func (s *UserService) GetUserByUserName(ctx context.Context, req *coreV1.GetUserByUserNameRequest) (*coreV1.User, error) {
-	return s.uc.GetUserByUserName(ctx, req)
+func (s *UserService) GetUserByName(ctx context.Context, req *coreV1.GetUserByNameRequest) (*coreV1.User, error) {
+	return s.uc.GetUserByName(ctx, req)
 }
 
 func (s *UserService) CreateUser(ctx context.Context, req *coreV1.CreateUserRequest) (*coreV1.CreateUserResponse, error) {

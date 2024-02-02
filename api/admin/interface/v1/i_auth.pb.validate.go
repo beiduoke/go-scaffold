@@ -57,9 +57,27 @@ func (m *LoginRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for UserName
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
+		err := LoginRequestValidationError{
+			field:  "Name",
+			reason: "value length must be between 1 and 10 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
-	// no validation rules for Password
+	if l := utf8.RuneCountInString(m.GetPassword()); l < 6 || l > 25 {
+		err := LoginRequestValidationError{
+			field:  "Password",
+			reason: "value length must be between 6 and 25 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if m.GrandType != nil {
 		// no validation rules for GrandType
@@ -166,7 +184,7 @@ func (m *LoginResponse) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for UserName
+	// no validation rules for Name
 
 	// no validation rules for TokenType
 
@@ -764,9 +782,9 @@ func (m *RegisterRequest_Auth) validate(all bool) error {
 
 	var errors []error
 
-	if l := utf8.RuneCountInString(m.GetUserName()); l < 1 || l > 10 {
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
 		err := RegisterRequest_AuthValidationError{
-			field:  "UserName",
+			field:  "Name",
 			reason: "value length must be between 1 and 10 runes, inclusive",
 		}
 		if !all {

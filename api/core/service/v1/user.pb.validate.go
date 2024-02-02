@@ -58,30 +58,110 @@ func (m *User) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for UserName
+	if m.Name != nil {
+
+		if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 10 {
+			err := UserValidationError{
+				field:  "Name",
+				reason: "value length must be between 1 and 10 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
 
 	if m.NickName != nil {
-		// no validation rules for NickName
+
+		if l := utf8.RuneCountInString(m.GetNickName()); l < 1 || l > 10 {
+			err := UserValidationError{
+				field:  "NickName",
+				reason: "value length must be between 1 and 10 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.RealName != nil {
-		// no validation rules for RealName
+
+		if l := utf8.RuneCountInString(m.GetRealName()); l < 2 || l > 10 {
+			err := UserValidationError{
+				field:  "RealName",
+				reason: "value length must be between 2 and 10 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.Birthday != nil {
-		// no validation rules for Birthday
+
+		if !_User_Birthday_Pattern.MatchString(m.GetBirthday()) {
+			err := UserValidationError{
+				field:  "Birthday",
+				reason: "value does not match regex pattern \"^(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)$\"",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.Gender != nil {
-		// no validation rules for Gender
+
+		if m.GetGender() < 0 {
+			err := UserValidationError{
+				field:  "Gender",
+				reason: "value must be greater than or equal to 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.Phone != nil {
-		// no validation rules for Phone
+
+		if !_User_Phone_Pattern.MatchString(m.GetPhone()) {
+			err := UserValidationError{
+				field:  "Phone",
+				reason: "value does not match regex pattern \"^1[0-9]{10}$\"",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.Email != nil {
-		// no validation rules for Email
+
+		if err := m._validateEmail(m.GetEmail()); err != nil {
+			err = UserValidationError{
+				field:  "Email",
+				reason: "value must be a valid email address",
+				cause:  err,
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.Avatar != nil {
@@ -89,7 +169,18 @@ func (m *User) validate(all bool) error {
 	}
 
 	if m.State != nil {
-		// no validation rules for State
+
+		if m.GetState() < 0 {
+			err := UserValidationError{
+				field:  "State",
+				reason: "value must be greater than or equal to 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.CreatedAt != nil {
@@ -109,7 +200,22 @@ func (m *User) validate(all bool) error {
 	}
 
 	if m.Password != nil {
-		// no validation rules for Password
+
+		if l := utf8.RuneCountInString(m.GetPassword()); l < 6 || l > 28 {
+			err := UserValidationError{
+				field:  "Password",
+				reason: "value length must be between 6 and 28 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Description != nil {
+		// no validation rules for Description
 	}
 
 	if len(errors) > 0 {
@@ -117,6 +223,56 @@ func (m *User) validate(all bool) error {
 	}
 
 	return nil
+}
+
+func (m *User) _validateHostname(host string) error {
+	s := strings.ToLower(strings.TrimSuffix(host, "."))
+
+	if len(host) > 253 {
+		return errors.New("hostname cannot exceed 253 characters")
+	}
+
+	for _, part := range strings.Split(s, ".") {
+		if l := len(part); l == 0 || l > 63 {
+			return errors.New("hostname part must be non-empty and cannot exceed 63 characters")
+		}
+
+		if part[0] == '-' {
+			return errors.New("hostname parts cannot begin with hyphens")
+		}
+
+		if part[len(part)-1] == '-' {
+			return errors.New("hostname parts cannot end with hyphens")
+		}
+
+		for _, r := range part {
+			if (r < 'a' || r > 'z') && (r < '0' || r > '9') && r != '-' {
+				return fmt.Errorf("hostname parts can only contain alphanumeric characters or hyphens, got %q", string(r))
+			}
+		}
+	}
+
+	return nil
+}
+
+func (m *User) _validateEmail(addr string) error {
+	a, err := mail.ParseAddress(addr)
+	if err != nil {
+		return err
+	}
+	addr = a.Address
+
+	if len(addr) > 254 {
+		return errors.New("email addresses cannot exceed 254 characters")
+	}
+
+	parts := strings.SplitN(addr, "@", 2)
+
+	if len(parts[0]) > 64 {
+		return errors.New("email address local phrase cannot exceed 64 characters")
+	}
+
+	return m._validateHostname(parts[1])
 }
 
 // UserMultiError is an error wrapping multiple validation errors returned by
@@ -188,6 +344,10 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = UserValidationError{}
+
+var _User_Birthday_Pattern = regexp.MustCompile("^(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)$")
+
+var _User_Phone_Pattern = regexp.MustCompile("^1[0-9]{10}$")
 
 // Validate checks the field values on CreateUserRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
@@ -1071,44 +1231,44 @@ var _ interface {
 	ErrorName() string
 } = GetUserResponseValidationError{}
 
-// Validate checks the field values on GetUserByUserNameRequest with the rules
+// Validate checks the field values on GetUserByNameRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *GetUserByUserNameRequest) Validate() error {
+func (m *GetUserByNameRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on GetUserByUserNameRequest with the
-// rules defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on GetUserByNameRequest with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// GetUserByUserNameRequestMultiError, or nil if none found.
-func (m *GetUserByUserNameRequest) ValidateAll() error {
+// GetUserByNameRequestMultiError, or nil if none found.
+func (m *GetUserByNameRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *GetUserByUserNameRequest) validate(all bool) error {
+func (m *GetUserByNameRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	// no validation rules for UserName
+	// no validation rules for Name
 
 	if len(errors) > 0 {
-		return GetUserByUserNameRequestMultiError(errors)
+		return GetUserByNameRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// GetUserByUserNameRequestMultiError is an error wrapping multiple validation
-// errors returned by GetUserByUserNameRequest.ValidateAll() if the designated
+// GetUserByNameRequestMultiError is an error wrapping multiple validation
+// errors returned by GetUserByNameRequest.ValidateAll() if the designated
 // constraints aren't met.
-type GetUserByUserNameRequestMultiError []error
+type GetUserByNameRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m GetUserByUserNameRequestMultiError) Error() string {
+func (m GetUserByNameRequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1117,11 +1277,11 @@ func (m GetUserByUserNameRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m GetUserByUserNameRequestMultiError) AllErrors() []error { return m }
+func (m GetUserByNameRequestMultiError) AllErrors() []error { return m }
 
-// GetUserByUserNameRequestValidationError is the validation error returned by
-// GetUserByUserNameRequest.Validate if the designated constraints aren't met.
-type GetUserByUserNameRequestValidationError struct {
+// GetUserByNameRequestValidationError is the validation error returned by
+// GetUserByNameRequest.Validate if the designated constraints aren't met.
+type GetUserByNameRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1129,24 +1289,24 @@ type GetUserByUserNameRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e GetUserByUserNameRequestValidationError) Field() string { return e.field }
+func (e GetUserByNameRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e GetUserByUserNameRequestValidationError) Reason() string { return e.reason }
+func (e GetUserByNameRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e GetUserByUserNameRequestValidationError) Cause() error { return e.cause }
+func (e GetUserByNameRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e GetUserByUserNameRequestValidationError) Key() bool { return e.key }
+func (e GetUserByNameRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e GetUserByUserNameRequestValidationError) ErrorName() string {
-	return "GetUserByUserNameRequestValidationError"
+func (e GetUserByNameRequestValidationError) ErrorName() string {
+	return "GetUserByNameRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e GetUserByUserNameRequestValidationError) Error() string {
+func (e GetUserByNameRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1158,14 +1318,14 @@ func (e GetUserByUserNameRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sGetUserByUserNameRequest.%s: %s%s",
+		"invalid %sGetUserByNameRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = GetUserByUserNameRequestValidationError{}
+var _ error = GetUserByNameRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -1173,7 +1333,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = GetUserByUserNameRequestValidationError{}
+} = GetUserByNameRequestValidationError{}
 
 // Validate checks the field values on ListUserRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
@@ -1196,6 +1356,113 @@ func (m *ListUserRequest) validate(all bool) error {
 	}
 
 	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetFieldMask()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ListUserRequestValidationError{
+					field:  "FieldMask",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ListUserRequestValidationError{
+					field:  "FieldMask",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetFieldMask()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ListUserRequestValidationError{
+				field:  "FieldMask",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if m.Page != nil {
+		// no validation rules for Page
+	}
+
+	if m.PageSize != nil {
+		// no validation rules for PageSize
+	}
+
+	if m.Query != nil {
+
+		if all {
+			switch v := interface{}(m.GetQuery()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListUserRequestValidationError{
+						field:  "Query",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListUserRequestValidationError{
+						field:  "Query",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetQuery()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListUserRequestValidationError{
+					field:  "Query",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.OrQuery != nil {
+
+		if all {
+			switch v := interface{}(m.GetOrQuery()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListUserRequestValidationError{
+						field:  "OrQuery",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListUserRequestValidationError{
+						field:  "OrQuery",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetOrQuery()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListUserRequestValidationError{
+					field:  "OrQuery",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.NoPaging != nil {
+		// no validation rules for NoPaging
+	}
 
 	if len(errors) > 0 {
 		return ListUserRequestMultiError(errors)
@@ -1433,7 +1700,7 @@ func (m *VerifyPasswordRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for UserName
+	// no validation rules for Name
 
 	// no validation rules for Password
 
@@ -1643,7 +1910,7 @@ func (m *UserExistsRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for UserName
+	// no validation rules for Name
 
 	if len(errors) > 0 {
 		return UserExistsRequestMultiError(errors)

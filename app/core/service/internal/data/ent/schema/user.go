@@ -39,13 +39,14 @@ func (User) Mixin() []ent.Mixin {
 // Fields of the User.
 func (User) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("user_name").
+		field.String("name").
 			Comment("用户名").
 			Unique().
 			MaxLen(50).
 			NotEmpty().
 			Immutable().
-			Match(regexp.MustCompile("^[a-zA-Z0-9_]{4,16}$")),
+			Match(regexp.MustCompile("^[a-zA-Z0-9_]{4,16}$")).
+			Nillable(),
 
 		field.String("password").
 			Comment("密码").
@@ -132,7 +133,7 @@ func (User) Edges() []ent.Edge {
 // Indexes of the User.
 func (User) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("phone", "authority").Unique(),
+		index.Fields("phone", "name").Unique(),
 	}
 }
 

@@ -26,8 +26,8 @@ const (
 	FieldSort = "sort"
 	// FieldState holds the string denoting the state field in the database.
 	FieldState = "state"
-	// FieldUserName holds the string denoting the user_name field in the database.
-	FieldUserName = "user_name"
+	// FieldName holds the string denoting the name field in the database.
+	FieldName = "name"
 	// FieldPassword holds the string denoting the password field in the database.
 	FieldPassword = "password"
 	// FieldNickName holds the string denoting the nick_name field in the database.
@@ -77,7 +77,7 @@ var Columns = []string{
 	FieldRemark,
 	FieldSort,
 	FieldState,
-	FieldUserName,
+	FieldName,
 	FieldPassword,
 	FieldNickName,
 	FieldRealName,
@@ -117,8 +117,8 @@ var (
 	DefaultState int32
 	// StateValidator is a validator for the "state" field. It is called by the builders before save.
 	StateValidator func(int32) error
-	// UserNameValidator is a validator for the "user_name" field. It is called by the builders before save.
-	UserNameValidator func(string) error
+	// NameValidator is a validator for the "name" field. It is called by the builders before save.
+	NameValidator func(string) error
 	// DefaultPassword holds the default value on creation for the "password" field.
 	DefaultPassword string
 	// PasswordValidator is a validator for the "password" field. It is called by the builders before save.
@@ -193,9 +193,9 @@ func ByState(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldState, opts...).ToFunc()
 }
 
-// ByUserName orders the results by the user_name field.
-func ByUserName(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldUserName, opts...).ToFunc()
+// ByName orders the results by the name field.
+func ByName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldName, opts...).ToFunc()
 }
 
 // ByPassword orders the results by the password field.

@@ -182,7 +182,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			user.FieldRemark:      {Type: field.TypeString, Column: user.FieldRemark},
 			user.FieldSort:        {Type: field.TypeInt32, Column: user.FieldSort},
 			user.FieldState:       {Type: field.TypeInt32, Column: user.FieldState},
-			user.FieldUserName:    {Type: field.TypeString, Column: user.FieldUserName},
+			user.FieldName:        {Type: field.TypeString, Column: user.FieldName},
 			user.FieldPassword:    {Type: field.TypeString, Column: user.FieldPassword},
 			user.FieldNickName:    {Type: field.TypeString, Column: user.FieldNickName},
 			user.FieldRealName:    {Type: field.TypeString, Column: user.FieldRealName},
@@ -998,9 +998,9 @@ func (f *UserFilter) WhereState(p entql.Int32P) {
 	f.Where(p.Field(user.FieldState))
 }
 
-// WhereUserName applies the entql string predicate on the user_name field.
-func (f *UserFilter) WhereUserName(p entql.StringP) {
-	f.Where(p.Field(user.FieldUserName))
+// WhereName applies the entql string predicate on the name field.
+func (f *UserFilter) WhereName(p entql.StringP) {
+	f.Where(p.Field(user.FieldName))
 }
 
 // WherePassword applies the entql string predicate on the password field.

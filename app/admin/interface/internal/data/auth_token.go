@@ -47,7 +47,7 @@ func (r *AuthTokenRepo) createAccessJwtToken(_ string, userId uint32) string {
 }
 
 func (r *AuthTokenRepo) GenerateToken(ctx context.Context, user *coreV1.User) (string, error) {
-	token := r.createAccessJwtToken(user.GetUserName(), user.GetId())
+	token := r.createAccessJwtToken(user.GetName(), user.GetId())
 	if token == "" {
 		return "", errors.New("create token failed")
 	}

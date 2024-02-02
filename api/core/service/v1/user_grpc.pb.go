@@ -20,14 +20,14 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	UserService_CreateUser_FullMethodName        = "/core.service.v1.UserService/CreateUser"
-	UserService_UpdateUser_FullMethodName        = "/core.service.v1.UserService/UpdateUser"
-	UserService_DeleteUser_FullMethodName        = "/core.service.v1.UserService/DeleteUser"
-	UserService_GetUser_FullMethodName           = "/core.service.v1.UserService/GetUser"
-	UserService_ListUser_FullMethodName          = "/core.service.v1.UserService/ListUser"
-	UserService_GetUserByUserName_FullMethodName = "/core.service.v1.UserService/GetUserByUserName"
-	UserService_VerifyPassword_FullMethodName    = "/core.service.v1.UserService/VerifyPassword"
-	UserService_UserExists_FullMethodName        = "/core.service.v1.UserService/UserExists"
+	UserService_CreateUser_FullMethodName     = "/core.service.v1.UserService/CreateUser"
+	UserService_UpdateUser_FullMethodName     = "/core.service.v1.UserService/UpdateUser"
+	UserService_DeleteUser_FullMethodName     = "/core.service.v1.UserService/DeleteUser"
+	UserService_GetUser_FullMethodName        = "/core.service.v1.UserService/GetUser"
+	UserService_ListUser_FullMethodName       = "/core.service.v1.UserService/ListUser"
+	UserService_GetUserByName_FullMethodName  = "/core.service.v1.UserService/GetUserByName"
+	UserService_VerifyPassword_FullMethodName = "/core.service.v1.UserService/VerifyPassword"
+	UserService_UserExists_FullMethodName     = "/core.service.v1.UserService/UserExists"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -40,7 +40,7 @@ type UserServiceClient interface {
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*User, error)
 	ListUser(ctx context.Context, in *pagination.PagingRequest, opts ...grpc.CallOption) (*ListUserResponse, error)
 	// 查询用户详情
-	GetUserByUserName(ctx context.Context, in *GetUserByUserNameRequest, opts ...grpc.CallOption) (*User, error)
+	GetUserByName(ctx context.Context, in *GetUserByNameRequest, opts ...grpc.CallOption) (*User, error)
 	// 验证密码
 	VerifyPassword(ctx context.Context, in *VerifyPasswordRequest, opts ...grpc.CallOption) (*VerifyPasswordResponse, error)
 	// 用户是否存在
@@ -100,9 +100,9 @@ func (c *userServiceClient) ListUser(ctx context.Context, in *pagination.PagingR
 	return out, nil
 }
 
-func (c *userServiceClient) GetUserByUserName(ctx context.Context, in *GetUserByUserNameRequest, opts ...grpc.CallOption) (*User, error) {
+func (c *userServiceClient) GetUserByName(ctx context.Context, in *GetUserByNameRequest, opts ...grpc.CallOption) (*User, error) {
 	out := new(User)
-	err := c.cc.Invoke(ctx, UserService_GetUserByUserName_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, UserService_GetUserByName_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -137,7 +137,7 @@ type UserServiceServer interface {
 	GetUser(context.Context, *GetUserRequest) (*User, error)
 	ListUser(context.Context, *pagination.PagingRequest) (*ListUserResponse, error)
 	// 查询用户详情
-	GetUserByUserName(context.Context, *GetUserByUserNameRequest) (*User, error)
+	GetUserByName(context.Context, *GetUserByNameRequest) (*User, error)
 	// 验证密码
 	VerifyPassword(context.Context, *VerifyPasswordRequest) (*VerifyPasswordResponse, error)
 	// 用户是否存在
@@ -164,8 +164,8 @@ func (UnimplementedUserServiceServer) GetUser(context.Context, *GetUserRequest) 
 func (UnimplementedUserServiceServer) ListUser(context.Context, *pagination.PagingRequest) (*ListUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUser not implemented")
 }
-func (UnimplementedUserServiceServer) GetUserByUserName(context.Context, *GetUserByUserNameRequest) (*User, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserByUserName not implemented")
+func (UnimplementedUserServiceServer) GetUserByName(context.Context, *GetUserByNameRequest) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserByName not implemented")
 }
 func (UnimplementedUserServiceServer) VerifyPassword(context.Context, *VerifyPasswordRequest) (*VerifyPasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyPassword not implemented")
@@ -276,20 +276,20 @@ func _UserService_ListUser_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_GetUserByUserName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserByUserNameRequest)
+func _UserService_GetUserByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserByNameRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).GetUserByUserName(ctx, in)
+		return srv.(UserServiceServer).GetUserByName(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserService_GetUserByUserName_FullMethodName,
+		FullMethod: UserService_GetUserByName_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetUserByUserName(ctx, req.(*GetUserByUserNameRequest))
+		return srv.(UserServiceServer).GetUserByName(ctx, req.(*GetUserByNameRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -358,8 +358,8 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_ListUser_Handler,
 		},
 		{
-			MethodName: "GetUserByUserName",
-			Handler:    _UserService_GetUserByUserName_Handler,
+			MethodName: "GetUserByName",
+			Handler:    _UserService_GetUserByName_Handler,
 		},
 		{
 			MethodName: "VerifyPassword",

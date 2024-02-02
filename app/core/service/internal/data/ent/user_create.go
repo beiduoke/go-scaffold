@@ -108,9 +108,9 @@ func (uc *UserCreate) SetNillableState(i *int32) *UserCreate {
 	return uc
 }
 
-// SetUserName sets the "user_name" field.
-func (uc *UserCreate) SetUserName(s string) *UserCreate {
-	uc.mutation.SetUserName(s)
+// SetName sets the "name" field.
+func (uc *UserCreate) SetName(s string) *UserCreate {
+	uc.mutation.SetName(s)
 	return uc
 }
 
@@ -385,12 +385,12 @@ func (uc *UserCreate) check() error {
 			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "User.state": %w`, err)}
 		}
 	}
-	if _, ok := uc.mutation.UserName(); !ok {
-		return &ValidationError{Name: "user_name", err: errors.New(`ent: missing required field "User.user_name"`)}
+	if _, ok := uc.mutation.Name(); !ok {
+		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "User.name"`)}
 	}
-	if v, ok := uc.mutation.UserName(); ok {
-		if err := user.UserNameValidator(v); err != nil {
-			return &ValidationError{Name: "user_name", err: fmt.Errorf(`ent: validator failed for field "User.user_name": %w`, err)}
+	if v, ok := uc.mutation.Name(); ok {
+		if err := user.NameValidator(v); err != nil {
+			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "User.name": %w`, err)}
 		}
 	}
 	if _, ok := uc.mutation.Password(); !ok {
@@ -520,9 +520,9 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.SetField(user.FieldState, field.TypeInt32, value)
 		_node.State = &value
 	}
-	if value, ok := uc.mutation.UserName(); ok {
-		_spec.SetField(user.FieldUserName, field.TypeString, value)
-		_node.UserName = value
+	if value, ok := uc.mutation.Name(); ok {
+		_spec.SetField(user.FieldName, field.TypeString, value)
+		_node.Name = &value
 	}
 	if value, ok := uc.mutation.Password(); ok {
 		_spec.SetField(user.FieldPassword, field.TypeString, value)
@@ -890,8 +890,8 @@ func (u *UserUpsertOne) UpdateNewValues() *UserUpsertOne {
 		if _, exists := u.create.mutation.CreatedAt(); exists {
 			s.SetIgnore(user.FieldCreatedAt)
 		}
-		if _, exists := u.create.mutation.UserName(); exists {
-			s.SetIgnore(user.FieldUserName)
+		if _, exists := u.create.mutation.Name(); exists {
+			s.SetIgnore(user.FieldName)
 		}
 	}))
 	return u
@@ -1368,8 +1368,8 @@ func (u *UserUpsertBulk) UpdateNewValues() *UserUpsertBulk {
 			if _, exists := b.mutation.CreatedAt(); exists {
 				s.SetIgnore(user.FieldCreatedAt)
 			}
-			if _, exists := b.mutation.UserName(); exists {
-				s.SetIgnore(user.FieldUserName)
+			if _, exists := b.mutation.Name(); exists {
+				s.SetIgnore(user.FieldName)
 			}
 		}
 	}))

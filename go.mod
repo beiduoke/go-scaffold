@@ -25,11 +25,11 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/google/gnostic v0.6.9
 	github.com/google/subcommands v1.0.1
-	github.com/google/uuid v1.4.0
+	github.com/google/uuid v1.4.0 // indirect
 	github.com/gorilla/handlers v1.5.1
 	github.com/hashicorp/consul/api v1.22.0
 	github.com/iancoleman/strcase v0.2.0
-	github.com/imdario/mergo v0.3.16
+	github.com/imdario/mergo v0.3.16 // indirect
 	github.com/meilisearch/meilisearch-go v0.26.0
 	github.com/minio/minio-go/v7 v7.0.64
 	github.com/nacos-group/nacos-sdk-go v1.1.4
@@ -40,7 +40,6 @@ require (
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.4
-	github.com/zzsds/go-tools v0.0.6
 	go.etcd.io/etcd/client/v3 v3.5.9
 	go.opentelemetry.io/otel v1.17.0
 	go.opentelemetry.io/otel/exporters/jaeger v1.16.0
@@ -57,6 +56,7 @@ require (
 )
 
 require (
+	github.com/casbin/ent-adapter v0.3.0
 	github.com/go-kratos/kratos/contrib/config/apollo/v2 v2.0.0-20230830131453-6c026bce56a9
 	github.com/go-kratos/kratos/contrib/config/consul/v2 v2.0.0-20230830131453-6c026bce56a9
 	github.com/go-kratos/kratos/contrib/config/etcd/v2 v2.0.0-20230830131453-6c026bce56a9
@@ -71,19 +71,17 @@ require (
 	github.com/go-kratos/kratos/contrib/registry/eureka/v2 v2.0.0-20230830131453-6c026bce56a9
 	github.com/go-kratos/kratos/contrib/registry/nacos/v2 v2.0.0-20230830131453-6c026bce56a9
 	github.com/go-kratos/kratos/contrib/registry/zookeeper/v2 v2.0.0-20230830131453-6c026bce56a9
+	k8s.io/client-go v0.24.3
 )
 
 require (
 	ariga.io/atlas v0.15.0 // indirect
-	ariga.io/entviz v0.0.0-20230419175438-29569ec22220 // indirect
 	entgo.io/contrib v0.4.5 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
-	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/bufbuild/protocompile v0.6.0 // indirect
-	github.com/casbin/ent-adapter v0.3.0 // indirect
 	github.com/emicklei/go-restful v2.9.5+incompatible // indirect
 	github.com/go-openapi/inflect v0.19.0 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
@@ -94,6 +92,7 @@ require (
 	github.com/hashicorp/hcl/v2 v2.19.1 // indirect
 	github.com/jhump/protoreflect v1.15.3 // indirect
 	github.com/lib/pq v1.10.7 // indirect
+	github.com/miekg/dns v1.1.50 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5 // indirect
@@ -109,7 +108,6 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	k8s.io/api v0.24.3 // indirect
 	k8s.io/apimachinery v0.24.3 // indirect
-	k8s.io/client-go v0.24.3 // indirect
 	k8s.io/klog/v2 v2.60.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20220328201542-3ee0da9b0b42 // indirect
 	k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9 // indirect

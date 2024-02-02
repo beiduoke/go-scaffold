@@ -166,7 +166,7 @@ func (uc *UserUsecase) GetPhone(ctx context.Context, g *User) (*User, error) {
 
 // GetName 获取用户名
 func (uc *UserUsecase) GetName(ctx context.Context, g *User) (*User, error) {
-	uc.log.WithContext(ctx).Debugf("GetUserName: %v", g)
+	uc.log.WithContext(ctx).Debugf("GetName: %v", g)
 	return uc.biz.userRepo.FindByName(ctx, g.Name)
 }
 

@@ -2223,7 +2223,7 @@ components:
                 id:
                     type: integer
                     format: uint32
-                userName:
+                name:
                     type: string
                 nickName:
                     type: string

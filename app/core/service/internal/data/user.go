@@ -11,7 +11,6 @@ import (
 	"github.com/beiduoke/go-scaffold/app/core/service/internal/data/ent/user"
 	"github.com/beiduoke/go-scaffold/pkg/util/convert"
 	"github.com/beiduoke/go-scaffold/pkg/util/crypto"
-	"github.com/beiduoke/go-scaffold/pkg/util/trans"
 	"github.com/go-kratos/kratos/v2/log"
 	entgo "github.com/tx7do/go-utils/entgo/query"
 )
@@ -22,7 +21,7 @@ func (r *UserRepo) toProto(in *ent.User) *v1.User {
 	}
 	return &v1.User{
 		Id:        in.ID,
-		UserName:  in.UserName,
+		Name:      in.Name,
 		NickName:  in.NickName,
 		RealName:  in.RealName,
 		Gender:    in.Gender,
@@ -64,19 +63,25 @@ func (r *UserRepo) Count(ctx context.Context, whereCond []func(s *sql.Selector))
 }
 
 func (r *UserRepo) CreateUser(ctx context.Context, req *v1.CreateUserRequest) (*v1.CreateUserResponse, error) {
-	pass, err := crypto.HashPassword(req.User.GetPassword())
-	if err != nil {
-		return nil, err
+	builder := r.data.db.User.Create().SetCreatedAt(time.Now())
+	if req.User.Password != nil {
+		pass, err := crypto.HashPassword(req.User.GetPassword())
+		if err != nil {
+			return nil, err
+		}
+		builder = builder.SetPassword(pass)
 	}
-	builder := r.data.db.User.Create().
-		SetUserName(req.User.UserName).
+	builder = builder.SetName(req.User.GetName()).
+		SetPhone(req.User.GetPhone()).
 		SetNillableNickName(req.User.NickName).
-		SetPhone(trans.StringValue(req.User.Phone)).
+		SetNillableRealName(req.User.RealName).
 		SetNillableEmail(req.User.Email).
-		SetPassword(pass).
-		SetCreatedAt(time.Now())
+		SetNillableAvatar(req.User.Avatar).
+		SetNillableDescription(req.User.Description).
+		SetNillableAuthority(req.User.Authority).
+		SetNillableBirthday(convert.StringValueToTime(req.User.Birthday, time.DateOnly))
 
-	_, err = builder.Save(ctx)
+	_, err := builder.Save(ctx)
 	if err != nil {
 		r.log.Errorf("insert one data failed: %s", err.Error())
 		return nil, err
@@ -111,7 +116,7 @@ func (r *UserRepo) ListUser(ctx context.Context, req *pagination.PagingRequest) 
 	// 	// if req.GetQuery()
 	// 	// s.Where(sql.InInts(pet.FieldOwnerID, 1, 2, 3))
 	// })
-	// builder.Order(sqljson.OrderValue("user_name", sqljson.Path("key1", "key2")))
+	// builder.Order(sqljson.OrderValue("name", sqljson.Path("key1", "key2")))
 
 	err, whereSelectors, querySelectors := entgo.BuildQuerySelector(
 		req.GetQuery(), req.GetOrQuery(),
@@ -148,9 +153,9 @@ func (r *UserRepo) ListUser(ctx context.Context, req *pagination.PagingRequest) 
 		Items: items,
 	}, nil
 }
-func (r *UserRepo) GetUserByUserName(ctx context.Context, req *v1.GetUserByUserNameRequest) (*v1.User, error) {
+func (r *UserRepo) GetUserByName(ctx context.Context, req *v1.GetUserByNameRequest) (*v1.User, error) {
 	ret, err := r.data.db.User.Query().
-		Where(user.UserNameEQ(req.GetUserName())).
+		Where(user.NameEQ(req.GetName())).
 		Only(ctx)
 	if err != nil {
 		r.log.Errorf("query user data failed: %s", err.Error())
@@ -160,6 +165,21 @@ func (r *UserRepo) GetUserByUserName(ctx context.Context, req *v1.GetUserByUserN
 	return r.toProto(ret), err
 }
 func (r *UserRepo) VerifyPassword(ctx context.Context, req *v1.VerifyPasswordRequest) (*v1.VerifyPasswordResponse, error) {
+	res, err := r.data.db.User.
+		Query().
+		Select(user.FieldID, user.FieldPassword).
+		Where(user.NameEQ(req.GetName())).
+		Only(ctx)
+	if err != nil {
+		r.log.Errorf("query user data failed: %s", err.Error())
+		return nil, v1.ErrorUserNotFound("用户未找到")
+	}
+
+	bMatched := crypto.CheckPasswordHash(req.GetPassword(), *res.Password)
+	if !bMatched {
+		return nil, v1.ErrorUserNotFound("密码错误")
+	}
+
 	return &v1.VerifyPasswordResponse{}, nil
 }
 func (r *UserRepo) UserExists(ctx context.Context, req *v1.UserExistsRequest) (*v1.UserExistsResponse, error) {

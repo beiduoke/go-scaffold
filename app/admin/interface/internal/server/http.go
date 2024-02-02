@@ -16,7 +16,10 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/middleware/logging"
+	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/middleware/selector"
+	"github.com/go-kratos/kratos/v2/middleware/tracing"
+	"github.com/go-kratos/kratos/v2/middleware/validate"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	swaggerUI "github.com/tx7do/kratos-swagger-ui"
 )
@@ -35,8 +38,12 @@ func newHttpWhiteListMatcher() selector.MatchFunc {
 
 // NewMiddleware 创建中间件
 func newHttpMiddleware(authenticator authn.Authenticator, authorized authz.Authorized, creator authn.SecurityUserCreator, logger log.Logger) []middleware.Middleware {
-	var ms []middleware.Middleware
-	ms = append(ms, logging.Server(logger))
+	var ms = []middleware.Middleware{
+		recovery.Recovery(),
+		logging.Server(logger),
+		tracing.Server(),
+		validate.Validator(),
+	}
 	ms = append(ms, selector.Server(
 		// 认证
 		authnM.Server(authenticator, creator),

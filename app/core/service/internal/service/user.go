@@ -35,8 +35,8 @@ func (s *UserService) DeleteUser(ctx context.Context, req *v1.DeleteUserRequest)
 func (s *UserService) GetUser(ctx context.Context, req *v1.GetUserRequest) (*v1.User, error) {
 	return s.uc.GetUser(ctx, req)
 }
-func (s *UserService) GetUserByUserName(ctx context.Context, req *v1.GetUserByUserNameRequest) (*v1.User, error) {
-	return s.uc.GetUserByUserName(ctx, req)
+func (s *UserService) GetUserByName(ctx context.Context, req *v1.GetUserByNameRequest) (*v1.User, error) {
+	return s.uc.GetUserByName(ctx, req)
 }
 func (s *UserService) ListUser(ctx context.Context, req *pagination.PagingRequest) (*v1.ListUserResponse, error) {
 	return s.uc.ListUser(ctx, req)

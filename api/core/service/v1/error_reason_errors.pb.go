@@ -22,3 +22,15 @@ func IsUnspecified(err error) bool {
 func ErrorUnspecified(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, ErrorReason_UNSPECIFIED.String(), fmt.Sprintf(format, args...))
 }
+
+func IsUserNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_USER_NOT_FOUND.String() && e.Code == 600
+}
+
+func ErrorUserNotFound(format string, args ...interface{}) *errors.Error {
+	return errors.New(600, ErrorReason_USER_NOT_FOUND.String(), fmt.Sprintf(format, args...))
+}

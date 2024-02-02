@@ -62,10 +62,13 @@ config:
  	       --go_out=paths=source_relative:./internal \
 	       $(INTERNAL_PROTO_FILES)
 
-.PHONY: api
+.PHONY: api lintapi
 # generate api proto
 api:
 	buf generate
+	
+lintapi:
+	buf lint proto
 	
 # generate OpenAPI v3 doc
 .PHONY: openapi

@@ -37,8 +37,8 @@ func FromContext(ctx context.Context) (*authn.AuthClaims, bool) {
 }
 
 type Result struct {
-	UserId   uint32
-	UserName string
+	UserId uint32
+	Name   string
 }
 
 func AuthFromContext(ctx context.Context) (*Result, error) {
@@ -53,7 +53,7 @@ func AuthFromContext(ctx context.Context) (*Result, error) {
 	}
 
 	return &Result{
-		UserId:   uint32(userId),
-		UserName: "",
+		UserId: uint32(userId),
+		Name:   "",
 	}, nil
 }

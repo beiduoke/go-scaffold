@@ -2,11 +2,11 @@ version: v1
 build:
   excludes: [third_party]
 deps:
-  - buf.build/googleapis/googleapis:28151c0d0a1641bf938a7672c500e01d
-  - buf.build/envoyproxy/protoc-gen-validate:eac44469a7af47e7839a7f1f3d7ac004
+  - buf.build/googleapis/googleapis:a86849a25cc04f4dbe9b15ddddfbc488
+  - buf.build/envoyproxy/protoc-gen-validate:71881f09a0c5420a9545a07987a86728
   - buf.build/kratos/apis:c2de25f14fa445a79a054214f31d17a8
   - buf.build/gnostic/gnostic:087bc8072ce44e339f213209e4d57bf0
-  - buf.build/protocolbuffers/wellknowntypes:44e83bc050a4497fa7b36b34d95ca156
+  - buf.build/protocolbuffers/wellknowntypes:v21.12
 breaking:
   use:
     - FILE

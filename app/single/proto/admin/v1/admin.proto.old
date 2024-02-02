@@ -168,7 +168,7 @@ service AdminService {
   }
 
   // 验证用户名是否存在
-  rpc ExistUserName (ExistUserNameRequest) returns (ExistUserNameResponse) {
+  rpc ExistName (ExistNameRequest) returns (ExistNameResponse) {
     option (google.api.http) = {
       post: "/v1/users/existName"
       body: "*"
@@ -1072,12 +1072,12 @@ message UserMenuTreeResponse {
 }
 
 // 请求 - 验证用户是否存在
-message ExistUserNameRequest {
+message ExistNameRequest {
   string name = 1;
 }
 
 // 回应 - 验证用户是否存在
-message ExistUserNameResponse {
+message ExistNameResponse {
   int32 code = 1;
   string message = 2;
   optional google.protobuf.Any result = 3;

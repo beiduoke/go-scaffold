@@ -1766,12 +1766,12 @@ paths:
             tags:
                 - AdminService
             description: 验证用户名是否存在
-            operationId: AdminService_ExistUserName
+            operationId: AdminService_ExistName
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/ExistUserNameReq'
+                            $ref: '#/components/schemas/ExistNameReq'
                 required: true
             responses:
                 "200":
@@ -1779,7 +1779,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/ExistUserNameReply'
+                                $ref: '#/components/schemas/ExistNameReply'
                 default:
                     description: Default error response
                     content:
@@ -2568,7 +2568,7 @@ components:
                     type: string
                 code:
                     type: string
-        ExistUserNameReply:
+        ExistNameReply:
             type: object
             properties:
                 code:
@@ -2581,7 +2581,7 @@ components:
                 type:
                     type: string
             description: 回应 - 验证用户是否存在
-        ExistUserNameReq:
+        ExistNameReq:
             type: object
             properties:
                 name:

@@ -71,14 +71,14 @@ enum GrandType {
 
 // 用户后台登陆 - 请求
 message LoginRequest {
-  string user_name = 1; // 账号
-  string password = 2; // 密码
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}]; // 账号
+  string password = 2 [(validate.rules).string = {min_len: 6, max_len: 25}]; // 密码
   optional int32 grand_type = 3; // 授权类型，一直为：password
 }
 // 用户后台登陆 - 回应
 message LoginResponse {
   uint32 id = 1; // 用户ID
-  string user_name = 2; // 用户名
+  string name = 2; // 用户名
   string token_type = 3; // 令牌类型
   string access_token = 4; // 访问令牌
   string refresh_token = 5; // 刷新令牌
@@ -94,7 +94,7 @@ message LogoutResponse {}
 message RegisterRequest {
   message Auth {
     // 用户名
-    string user_name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
     // 密码
     string password = 2 [(validate.rules).string = {min_len: 6, max_len: 25}];
     // 电话
