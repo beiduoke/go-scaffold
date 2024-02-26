@@ -9,16 +9,16 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
 import "validate/validate.proto";
 
+import "common/pagination/pagination.proto";
+
 option go_package = "github.com/beiduoke/go-scaffold/api/core/service/v1;v1";
-option java_multiple_files = true;
-option java_package = "core.service.v1";
 
 service PostService {
 	rpc CreatePost (CreatePostRequest) returns (CreatePostResponse);
 	rpc UpdatePost (UpdatePostRequest) returns (UpdatePostResponse);
 	rpc DeletePost (DeletePostRequest) returns (DeletePostResponse);
-	rpc GetPost (GetPostRequest) returns (GetPostResponse);
-	rpc ListPost (ListPostRequest) returns (ListPostResponse);
+	rpc GetPost (GetPostRequest) returns (Post);
+	rpc ListPost (pagination.PagingRequest) returns (ListPostResponse);
 }
 
 // 岗位模块

@@ -8,6 +8,7 @@ package v1
 
 import (
 	context "context"
+	pagination "github.com/beiduoke/go-scaffold/api/common/pagination"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -34,7 +35,7 @@ type RoleServiceClient interface {
 	UpdateRole(ctx context.Context, in *UpdateRoleRequest, opts ...grpc.CallOption) (*UpdateRoleResponse, error)
 	DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*DeleteRoleResponse, error)
 	GetRole(ctx context.Context, in *GetRoleRequest, opts ...grpc.CallOption) (*Role, error)
-	ListRole(ctx context.Context, in *ListRoleRequest, opts ...grpc.CallOption) (*ListRoleResponse, error)
+	ListRole(ctx context.Context, in *pagination.PagingRequest, opts ...grpc.CallOption) (*ListRoleResponse, error)
 }
 
 type roleServiceClient struct {
@@ -81,7 +82,7 @@ func (c *roleServiceClient) GetRole(ctx context.Context, in *GetRoleRequest, opt
 	return out, nil
 }
 
-func (c *roleServiceClient) ListRole(ctx context.Context, in *ListRoleRequest, opts ...grpc.CallOption) (*ListRoleResponse, error) {
+func (c *roleServiceClient) ListRole(ctx context.Context, in *pagination.PagingRequest, opts ...grpc.CallOption) (*ListRoleResponse, error) {
 	out := new(ListRoleResponse)
 	err := c.cc.Invoke(ctx, RoleService_ListRole_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -98,7 +99,7 @@ type RoleServiceServer interface {
 	UpdateRole(context.Context, *UpdateRoleRequest) (*UpdateRoleResponse, error)
 	DeleteRole(context.Context, *DeleteRoleRequest) (*DeleteRoleResponse, error)
 	GetRole(context.Context, *GetRoleRequest) (*Role, error)
-	ListRole(context.Context, *ListRoleRequest) (*ListRoleResponse, error)
+	ListRole(context.Context, *pagination.PagingRequest) (*ListRoleResponse, error)
 	mustEmbedUnimplementedRoleServiceServer()
 }
 
@@ -118,7 +119,7 @@ func (UnimplementedRoleServiceServer) DeleteRole(context.Context, *DeleteRoleReq
 func (UnimplementedRoleServiceServer) GetRole(context.Context, *GetRoleRequest) (*Role, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRole not implemented")
 }
-func (UnimplementedRoleServiceServer) ListRole(context.Context, *ListRoleRequest) (*ListRoleResponse, error) {
+func (UnimplementedRoleServiceServer) ListRole(context.Context, *pagination.PagingRequest) (*ListRoleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRole not implemented")
 }
 func (UnimplementedRoleServiceServer) mustEmbedUnimplementedRoleServiceServer() {}
@@ -207,7 +208,7 @@ func _RoleService_GetRole_Handler(srv interface{}, ctx context.Context, dec func
 }
 
 func _RoleService_ListRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListRoleRequest)
+	in := new(pagination.PagingRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -219,7 +220,7 @@ func _RoleService_ListRole_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: RoleService_ListRole_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RoleServiceServer).ListRole(ctx, req.(*ListRoleRequest))
+		return srv.(RoleServiceServer).ListRole(ctx, req.(*pagination.PagingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

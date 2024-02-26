@@ -8,6 +8,7 @@ package v1
 
 import (
 	context "context"
+	pagination "github.com/beiduoke/go-scaffold/api/common/pagination"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -33,8 +34,8 @@ type DeptServiceClient interface {
 	CreateDept(ctx context.Context, in *CreateDeptRequest, opts ...grpc.CallOption) (*CreateDeptResponse, error)
 	UpdateDept(ctx context.Context, in *UpdateDeptRequest, opts ...grpc.CallOption) (*UpdateDeptResponse, error)
 	DeleteDept(ctx context.Context, in *DeleteDeptRequest, opts ...grpc.CallOption) (*DeleteDeptResponse, error)
-	GetDept(ctx context.Context, in *GetDeptRequest, opts ...grpc.CallOption) (*GetDeptResponse, error)
-	ListDept(ctx context.Context, in *ListDeptRequest, opts ...grpc.CallOption) (*ListDeptResponse, error)
+	GetDept(ctx context.Context, in *GetDeptRequest, opts ...grpc.CallOption) (*Dept, error)
+	ListDept(ctx context.Context, in *pagination.PagingRequest, opts ...grpc.CallOption) (*ListDeptResponse, error)
 }
 
 type deptServiceClient struct {
@@ -72,8 +73,8 @@ func (c *deptServiceClient) DeleteDept(ctx context.Context, in *DeleteDeptReques
 	return out, nil
 }
 
-func (c *deptServiceClient) GetDept(ctx context.Context, in *GetDeptRequest, opts ...grpc.CallOption) (*GetDeptResponse, error) {
-	out := new(GetDeptResponse)
+func (c *deptServiceClient) GetDept(ctx context.Context, in *GetDeptRequest, opts ...grpc.CallOption) (*Dept, error) {
+	out := new(Dept)
 	err := c.cc.Invoke(ctx, DeptService_GetDept_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -81,7 +82,7 @@ func (c *deptServiceClient) GetDept(ctx context.Context, in *GetDeptRequest, opt
 	return out, nil
 }
 
-func (c *deptServiceClient) ListDept(ctx context.Context, in *ListDeptRequest, opts ...grpc.CallOption) (*ListDeptResponse, error) {
+func (c *deptServiceClient) ListDept(ctx context.Context, in *pagination.PagingRequest, opts ...grpc.CallOption) (*ListDeptResponse, error) {
 	out := new(ListDeptResponse)
 	err := c.cc.Invoke(ctx, DeptService_ListDept_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -97,8 +98,8 @@ type DeptServiceServer interface {
 	CreateDept(context.Context, *CreateDeptRequest) (*CreateDeptResponse, error)
 	UpdateDept(context.Context, *UpdateDeptRequest) (*UpdateDeptResponse, error)
 	DeleteDept(context.Context, *DeleteDeptRequest) (*DeleteDeptResponse, error)
-	GetDept(context.Context, *GetDeptRequest) (*GetDeptResponse, error)
-	ListDept(context.Context, *ListDeptRequest) (*ListDeptResponse, error)
+	GetDept(context.Context, *GetDeptRequest) (*Dept, error)
+	ListDept(context.Context, *pagination.PagingRequest) (*ListDeptResponse, error)
 	mustEmbedUnimplementedDeptServiceServer()
 }
 
@@ -115,10 +116,10 @@ func (UnimplementedDeptServiceServer) UpdateDept(context.Context, *UpdateDeptReq
 func (UnimplementedDeptServiceServer) DeleteDept(context.Context, *DeleteDeptRequest) (*DeleteDeptResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDept not implemented")
 }
-func (UnimplementedDeptServiceServer) GetDept(context.Context, *GetDeptRequest) (*GetDeptResponse, error) {
+func (UnimplementedDeptServiceServer) GetDept(context.Context, *GetDeptRequest) (*Dept, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDept not implemented")
 }
-func (UnimplementedDeptServiceServer) ListDept(context.Context, *ListDeptRequest) (*ListDeptResponse, error) {
+func (UnimplementedDeptServiceServer) ListDept(context.Context, *pagination.PagingRequest) (*ListDeptResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDept not implemented")
 }
 func (UnimplementedDeptServiceServer) mustEmbedUnimplementedDeptServiceServer() {}
@@ -207,7 +208,7 @@ func _DeptService_GetDept_Handler(srv interface{}, ctx context.Context, dec func
 }
 
 func _DeptService_ListDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListDeptRequest)
+	in := new(pagination.PagingRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -219,7 +220,7 @@ func _DeptService_ListDept_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: DeptService_ListDept_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DeptServiceServer).ListDept(ctx, req.(*ListDeptRequest))
+		return srv.(DeptServiceServer).ListDept(ctx, req.(*pagination.PagingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

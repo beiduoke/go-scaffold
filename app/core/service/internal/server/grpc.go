@@ -22,8 +22,11 @@ func NewGRPCServer(
 	authSrv *service.AuthService,
 	userSrv *service.UserService,
 	roleSrv *service.RoleService,
+	postSrv *service.PostService,
+	deptSrv *service.DeptService,
+	menuSrv *service.MenuService,
 ) *grpc.Server {
-	var ms = []middleware.Middleware{
+	ms := []middleware.Middleware{
 		recovery.Recovery(),
 		tracing.Server(),
 		logging.Server(logger),
@@ -33,5 +36,8 @@ func NewGRPCServer(
 	v1.RegisterAuthServiceServer(srv, authSrv)
 	v1.RegisterUserServiceServer(srv, userSrv)
 	v1.RegisterRoleServiceServer(srv, roleSrv)
+	v1.RegisterPostServiceServer(srv, postSrv)
+	v1.RegisterDeptServiceServer(srv, deptSrv)
+	v1.RegisterMenuServiceServer(srv, menuSrv)
 	return srv
 }

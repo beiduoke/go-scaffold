@@ -28,9 +28,14 @@ var ProviderSet = wire.NewSet(
 	NewAuthenticator,
 	NewAuthTokenRepo,
 	NewSecurityUser,
+	// 鉴权
 	NewAuthorized,
 
 	NewUserServiceClient,
+	NewRoleServiceClient,
+	NewPostServiceClient,
+	NewDeptServiceClient,
+	NewMenuServiceClient,
 )
 
 // Data .
@@ -58,21 +63,13 @@ func NewData(rdb *redis.Client, logger log.Logger) (*Data, func(), error) {
 
 // NewRedisClient 创建Redis客户端
 func NewRedisClient(cfg *conf.Bootstrap, _ log.Logger) *redis.Client {
-	//l := log.NewHelper(log.With(logger, "module", "redis/data/admin-service"))
+	// l := log.NewHelper(log.With(logger, "module", "redis/data/admin-service"))
 	return bootstrap.NewRedisClient(cfg.Data)
 }
 
 // NewDiscovery 创建服务发现客户端
 func NewDiscovery(cfg *conf.Bootstrap) registry.Discovery {
 	return bootstrap.NewConsulRegistry(cfg.Registry)
-}
-
-func NewUserServiceClient(r registry.Discovery, c *conf.Bootstrap) coreV1.UserServiceClient {
-	return coreV1.NewUserServiceClient(bootstrap.CreateGrpcClient(context.Background(), r, service.CoreService, c))
-}
-
-func NewAuthorizerServiceClient(r registry.Discovery, c *conf.Bootstrap) coreV1.UserServiceClient {
-	return coreV1.NewUserServiceClient(bootstrap.CreateGrpcClient(context.Background(), r, service.CoreService, c))
 }
 
 // NewAuthenticator 创建认证
@@ -83,4 +80,34 @@ func NewAuthenticator(cfg *conf.Bootstrap, logger log.Logger) authn.Authenticato
 // NewAuthorized 创建鉴权
 func NewAuthorized(logger log.Logger) authz.Authorized {
 	return noop.State{}
+}
+
+// NewUserServiceClient 用户服务
+func NewUserServiceClient(r registry.Discovery, c *conf.Bootstrap) coreV1.UserServiceClient {
+	return coreV1.NewUserServiceClient(bootstrap.CreateGrpcClient(context.Background(), r, service.CoreService, c))
+}
+
+// NewAuthorizerServiceClient 认证服务
+func NewAuthorizerServiceClient(r registry.Discovery, c *conf.Bootstrap) coreV1.AuthServiceClient {
+	return coreV1.NewAuthServiceClient(bootstrap.CreateGrpcClient(context.Background(), r, service.CoreService, c))
+}
+
+// NewRoleServiceClient 角色服务
+func NewRoleServiceClient(r registry.Discovery, c *conf.Bootstrap) coreV1.RoleServiceClient {
+	return coreV1.NewRoleServiceClient(bootstrap.CreateGrpcClient(context.Background(), r, service.CoreService, c))
+}
+
+// NewPostServiceClient 岗位服务
+func NewPostServiceClient(r registry.Discovery, c *conf.Bootstrap) coreV1.PostServiceClient {
+	return coreV1.NewPostServiceClient(bootstrap.CreateGrpcClient(context.Background(), r, service.CoreService, c))
+}
+
+// NewDeptServiceClient 部门服务
+func NewDeptServiceClient(r registry.Discovery, c *conf.Bootstrap) coreV1.DeptServiceClient {
+	return coreV1.NewDeptServiceClient(bootstrap.CreateGrpcClient(context.Background(), r, service.CoreService, c))
+}
+
+// NewMenuServiceClient 菜单服务
+func NewMenuServiceClient(r registry.Discovery, c *conf.Bootstrap) coreV1.MenuServiceClient {
+	return coreV1.NewMenuServiceClient(bootstrap.CreateGrpcClient(context.Background(), r, service.CoreService, c))
 }

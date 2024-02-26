@@ -38,7 +38,7 @@ func newHttpWhiteListMatcher() selector.MatchFunc {
 
 // NewMiddleware 创建中间件
 func newHttpMiddleware(authenticator authn.Authenticator, authorized authz.Authorized, creator authn.SecurityUserCreator, logger log.Logger) []middleware.Middleware {
-	var ms = []middleware.Middleware{
+	ms := []middleware.Middleware{
 		recovery.Recovery(),
 		logging.Server(logger),
 		tracing.Server(),
@@ -59,11 +59,19 @@ func NewHTTPServer(
 	authenticator authn.Authenticator, authorized authz.Authorized, creator authn.SecurityUserCreator,
 	authnSvc *service.AuthService,
 	userSvc *service.UserService,
+	roleSvc *service.RoleService,
+	postSvc *service.PostService,
+	deptSvc *service.DeptService,
+	menuSvc *service.MenuService,
 ) *http.Server {
 	srv := bootstrap.CreateHttpServer(cfg, newHttpMiddleware(authenticator, authorized, creator, logger)...)
 
 	v1.RegisterAuthServiceHTTPServer(srv, authnSvc)
 	v1.RegisterUserServiceHTTPServer(srv, userSvc)
+	v1.RegisterRoleServiceHTTPServer(srv, roleSvc)
+	v1.RegisterPostServiceHTTPServer(srv, postSvc)
+	v1.RegisterDeptServiceHTTPServer(srv, deptSvc)
+	v1.RegisterMenuServiceHTTPServer(srv, menuSvc)
 
 	if cfg.GetServer().GetHttp().GetEnableSwagger() {
 		swaggerUI.RegisterSwaggerUIServerWithOption(

@@ -8,6 +8,7 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
 import "validate/validate.proto";
+import "common/pagination/pagination.proto";
 
 option go_package = "github.com/beiduoke/go-scaffold/api/core/service/v1;v1";
 
@@ -15,8 +16,8 @@ service MenuService {
 	rpc CreateMenu (CreateMenuRequest) returns (CreateMenuResponse);
 	rpc UpdateMenu (UpdateMenuRequest) returns (UpdateMenuResponse);
 	rpc DeleteMenu (DeleteMenuRequest) returns (DeleteMenuResponse);
-	rpc GetMenu (GetMenuRequest) returns (GetMenuResponse);
-	rpc ListMenu (ListMenuRequest) returns (ListMenuResponse);
+	rpc GetMenu (GetMenuRequest) returns (Menu);
+	rpc ListMenu (pagination.PagingRequest) returns (ListMenuResponse);
 }
 
 // 菜单模块

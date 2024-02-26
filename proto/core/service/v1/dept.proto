@@ -8,6 +8,7 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
 import "validate/validate.proto";
+import "common/pagination/pagination.proto";
 
 option go_package = "github.com/beiduoke/go-scaffold/api/core/service/v1;v1";
 
@@ -15,8 +16,8 @@ service DeptService {
 	rpc CreateDept (CreateDeptRequest) returns (CreateDeptResponse);
 	rpc UpdateDept (UpdateDeptRequest) returns (UpdateDeptResponse);
 	rpc DeleteDept (DeleteDeptRequest) returns (DeleteDeptResponse);
-	rpc GetDept (GetDeptRequest) returns (GetDeptResponse);
-	rpc ListDept (ListDeptRequest) returns (ListDeptResponse);
+	rpc GetDept (GetDeptRequest) returns (Dept);
+	rpc ListDept (pagination.PagingRequest) returns (ListDeptResponse);
 }
 
 // 部门模块

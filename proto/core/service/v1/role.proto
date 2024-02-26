@@ -8,6 +8,7 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
 import "validate/validate.proto";
+import "common/pagination/pagination.proto";
 
 option go_package = "github.com/beiduoke/go-scaffold/api/core/service/v1;v1";
 
@@ -16,7 +17,7 @@ service RoleService {
 	rpc UpdateRole (UpdateRoleRequest) returns (UpdateRoleResponse);
 	rpc DeleteRole (DeleteRoleRequest) returns (DeleteRoleResponse);
 	rpc GetRole (GetRoleRequest) returns (Role);
-	rpc ListRole (ListRoleRequest) returns (ListRoleResponse);
+	rpc ListRole (pagination.PagingRequest) returns (ListRoleResponse);
 }
 
 // 角色模块

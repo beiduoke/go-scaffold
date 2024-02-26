@@ -101,8 +101,8 @@ func (r *MenuRepo) CreateMenu(ctx context.Context, req *v1.CreateMenuRequest) (*
 
 	return &v1.CreateMenuResponse{}, err
 }
-func (r *MenuRepo) UpdateMenu(ctx context.Context, req *v1.UpdateMenuRequest) (*v1.UpdateMenuResponse, error) {
 
+func (r *MenuRepo) UpdateMenu(ctx context.Context, req *v1.UpdateMenuRequest) (*v1.UpdateMenuResponse, error) {
 	builder := r.data.db.Menu.UpdateOneID(req.Id)
 	builder = builder.SetName(req.Menu.GetName()).
 		SetNillableState(req.Menu.State).
@@ -127,6 +127,7 @@ func (r *MenuRepo) UpdateMenu(ctx context.Context, req *v1.UpdateMenuRequest) (*
 	}
 	return &v1.UpdateMenuResponse{}, err
 }
+
 func (r *MenuRepo) DeleteMenu(ctx context.Context, req *v1.DeleteMenuRequest) (*v1.DeleteMenuResponse, error) {
 	err := r.data.db.Menu.
 		DeleteOneID(req.GetId()).
@@ -136,6 +137,7 @@ func (r *MenuRepo) DeleteMenu(ctx context.Context, req *v1.DeleteMenuRequest) (*
 	}
 	return &v1.DeleteMenuResponse{}, nil
 }
+
 func (r *MenuRepo) GetMenu(ctx context.Context, req *v1.GetMenuRequest) (*v1.Menu, error) {
 	ret, err := r.data.db.Menu.Get(ctx, req.GetId())
 	if err != nil && !ent.IsNotFound(err) {

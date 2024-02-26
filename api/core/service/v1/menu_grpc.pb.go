@@ -8,6 +8,7 @@ package v1
 
 import (
 	context "context"
+	pagination "github.com/beiduoke/go-scaffold/api/common/pagination"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -33,8 +34,8 @@ type MenuServiceClient interface {
 	CreateMenu(ctx context.Context, in *CreateMenuRequest, opts ...grpc.CallOption) (*CreateMenuResponse, error)
 	UpdateMenu(ctx context.Context, in *UpdateMenuRequest, opts ...grpc.CallOption) (*UpdateMenuResponse, error)
 	DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...grpc.CallOption) (*DeleteMenuResponse, error)
-	GetMenu(ctx context.Context, in *GetMenuRequest, opts ...grpc.CallOption) (*GetMenuResponse, error)
-	ListMenu(ctx context.Context, in *ListMenuRequest, opts ...grpc.CallOption) (*ListMenuResponse, error)
+	GetMenu(ctx context.Context, in *GetMenuRequest, opts ...grpc.CallOption) (*Menu, error)
+	ListMenu(ctx context.Context, in *pagination.PagingRequest, opts ...grpc.CallOption) (*ListMenuResponse, error)
 }
 
 type menuServiceClient struct {
@@ -72,8 +73,8 @@ func (c *menuServiceClient) DeleteMenu(ctx context.Context, in *DeleteMenuReques
 	return out, nil
 }
 
-func (c *menuServiceClient) GetMenu(ctx context.Context, in *GetMenuRequest, opts ...grpc.CallOption) (*GetMenuResponse, error) {
-	out := new(GetMenuResponse)
+func (c *menuServiceClient) GetMenu(ctx context.Context, in *GetMenuRequest, opts ...grpc.CallOption) (*Menu, error) {
+	out := new(Menu)
 	err := c.cc.Invoke(ctx, MenuService_GetMenu_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -81,7 +82,7 @@ func (c *menuServiceClient) GetMenu(ctx context.Context, in *GetMenuRequest, opt
 	return out, nil
 }
 
-func (c *menuServiceClient) ListMenu(ctx context.Context, in *ListMenuRequest, opts ...grpc.CallOption) (*ListMenuResponse, error) {
+func (c *menuServiceClient) ListMenu(ctx context.Context, in *pagination.PagingRequest, opts ...grpc.CallOption) (*ListMenuResponse, error) {
 	out := new(ListMenuResponse)
 	err := c.cc.Invoke(ctx, MenuService_ListMenu_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -97,8 +98,8 @@ type MenuServiceServer interface {
 	CreateMenu(context.Context, *CreateMenuRequest) (*CreateMenuResponse, error)
 	UpdateMenu(context.Context, *UpdateMenuRequest) (*UpdateMenuResponse, error)
 	DeleteMenu(context.Context, *DeleteMenuRequest) (*DeleteMenuResponse, error)
-	GetMenu(context.Context, *GetMenuRequest) (*GetMenuResponse, error)
-	ListMenu(context.Context, *ListMenuRequest) (*ListMenuResponse, error)
+	GetMenu(context.Context, *GetMenuRequest) (*Menu, error)
+	ListMenu(context.Context, *pagination.PagingRequest) (*ListMenuResponse, error)
 	mustEmbedUnimplementedMenuServiceServer()
 }
 
@@ -115,10 +116,10 @@ func (UnimplementedMenuServiceServer) UpdateMenu(context.Context, *UpdateMenuReq
 func (UnimplementedMenuServiceServer) DeleteMenu(context.Context, *DeleteMenuRequest) (*DeleteMenuResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteMenu not implemented")
 }
-func (UnimplementedMenuServiceServer) GetMenu(context.Context, *GetMenuRequest) (*GetMenuResponse, error) {
+func (UnimplementedMenuServiceServer) GetMenu(context.Context, *GetMenuRequest) (*Menu, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMenu not implemented")
 }
-func (UnimplementedMenuServiceServer) ListMenu(context.Context, *ListMenuRequest) (*ListMenuResponse, error) {
+func (UnimplementedMenuServiceServer) ListMenu(context.Context, *pagination.PagingRequest) (*ListMenuResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMenu not implemented")
 }
 func (UnimplementedMenuServiceServer) mustEmbedUnimplementedMenuServiceServer() {}
@@ -207,7 +208,7 @@ func _MenuService_GetMenu_Handler(srv interface{}, ctx context.Context, dec func
 }
 
 func _MenuService_ListMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListMenuRequest)
+	in := new(pagination.PagingRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -219,7 +220,7 @@ func _MenuService_ListMenu_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: MenuService_ListMenu_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MenuServiceServer).ListMenu(ctx, req.(*ListMenuRequest))
+		return srv.(MenuServiceServer).ListMenu(ctx, req.(*pagination.PagingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

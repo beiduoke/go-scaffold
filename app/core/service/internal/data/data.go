@@ -44,6 +44,12 @@ var ProviderSet = wire.NewSet(
 	NewUserRepo,
 	// 角色
 	NewRoleRepo,
+	// 岗位
+	NewPostRepo,
+	// 部门
+	NewDeptRepo,
+	// 菜单
+	NewMenuRepo,
 )
 
 // Data .
