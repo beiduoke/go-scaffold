@@ -41,7 +41,7 @@ service PostService {
   rpc CreatePost (core.service.v1.CreatePostRequest) returns (core.service.v1.CreatePostResponse) {
     option (google.api.http) = {
       post: "/admin/v1/posts"
-      body: "user"
+      body: "post"
     };
 
     option(gnostic.openapi.v3.operation) = {
@@ -53,7 +53,7 @@ service PostService {
   rpc UpdatePost (core.service.v1.UpdatePostRequest) returns (core.service.v1.UpdatePostResponse) {
     option (google.api.http) = {
       put: "/admin/v1/posts/{id}"
-      body: "user"
+      body: "post"
     };
 
     option(gnostic.openapi.v3.operation) = {

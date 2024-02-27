@@ -93,7 +93,7 @@ func _PostService_GetPost0_HTTP_Handler(srv PostServiceHTTPServer) func(ctx http
 func _PostService_CreatePost0_HTTP_Handler(srv PostServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in v1.CreatePostRequest
-		if err := ctx.Bind(&in.User); err != nil {
+		if err := ctx.Bind(&in.Post); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -115,7 +115,7 @@ func _PostService_CreatePost0_HTTP_Handler(srv PostServiceHTTPServer) func(ctx h
 func _PostService_UpdatePost0_HTTP_Handler(srv PostServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in v1.UpdatePostRequest
-		if err := ctx.Bind(&in.User); err != nil {
+		if err := ctx.Bind(&in.Post); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -181,7 +181,7 @@ func (c *PostServiceHTTPClientImpl) CreatePost(ctx context.Context, in *v1.Creat
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationPostServiceCreatePost))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.User, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in.Post, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -233,7 +233,7 @@ func (c *PostServiceHTTPClientImpl) UpdatePost(ctx context.Context, in *v1.Updat
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationPostServiceUpdatePost))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in.User, &out, opts...)
+	err := c.cc.Invoke(ctx, "PUT", path, in.Post, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

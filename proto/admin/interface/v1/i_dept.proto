@@ -41,7 +41,7 @@ service DeptService {
   rpc CreateDept (core.service.v1.CreateDeptRequest) returns (core.service.v1.CreateDeptResponse) {
     option (google.api.http) = {
       post: "/admin/v1/depts"
-      body: "user"
+      body: "dept"
     };
 
     option(gnostic.openapi.v3.operation) = {
@@ -53,7 +53,7 @@ service DeptService {
   rpc UpdateDept (core.service.v1.UpdateDeptRequest) returns (core.service.v1.UpdateDeptResponse) {
     option (google.api.http) = {
       put: "/admin/v1/depts/{id}"
-      body: "user"
+      body: "dept"
     };
 
     option(gnostic.openapi.v3.operation) = {

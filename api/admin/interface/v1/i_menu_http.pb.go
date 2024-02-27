@@ -93,7 +93,7 @@ func _MenuService_GetMenu0_HTTP_Handler(srv MenuServiceHTTPServer) func(ctx http
 func _MenuService_CreateMenu0_HTTP_Handler(srv MenuServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in v1.CreateMenuRequest
-		if err := ctx.Bind(&in.User); err != nil {
+		if err := ctx.Bind(&in.Menu); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -115,7 +115,7 @@ func _MenuService_CreateMenu0_HTTP_Handler(srv MenuServiceHTTPServer) func(ctx h
 func _MenuService_UpdateMenu0_HTTP_Handler(srv MenuServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in v1.UpdateMenuRequest
-		if err := ctx.Bind(&in.User); err != nil {
+		if err := ctx.Bind(&in.Menu); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -181,7 +181,7 @@ func (c *MenuServiceHTTPClientImpl) CreateMenu(ctx context.Context, in *v1.Creat
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationMenuServiceCreateMenu))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.User, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in.Menu, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -233,7 +233,7 @@ func (c *MenuServiceHTTPClientImpl) UpdateMenu(ctx context.Context, in *v1.Updat
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationMenuServiceUpdateMenu))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in.User, &out, opts...)
+	err := c.cc.Invoke(ctx, "PUT", path, in.Menu, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

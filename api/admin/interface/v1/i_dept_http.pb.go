@@ -93,7 +93,7 @@ func _DeptService_GetDept0_HTTP_Handler(srv DeptServiceHTTPServer) func(ctx http
 func _DeptService_CreateDept0_HTTP_Handler(srv DeptServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in v1.CreateDeptRequest
-		if err := ctx.Bind(&in.User); err != nil {
+		if err := ctx.Bind(&in.Dept); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -115,7 +115,7 @@ func _DeptService_CreateDept0_HTTP_Handler(srv DeptServiceHTTPServer) func(ctx h
 func _DeptService_UpdateDept0_HTTP_Handler(srv DeptServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in v1.UpdateDeptRequest
-		if err := ctx.Bind(&in.User); err != nil {
+		if err := ctx.Bind(&in.Dept); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -181,7 +181,7 @@ func (c *DeptServiceHTTPClientImpl) CreateDept(ctx context.Context, in *v1.Creat
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationDeptServiceCreateDept))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.User, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in.Dept, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -233,7 +233,7 @@ func (c *DeptServiceHTTPClientImpl) UpdateDept(ctx context.Context, in *v1.Updat
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationDeptServiceUpdateDept))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in.User, &out, opts...)
+	err := c.cc.Invoke(ctx, "PUT", path, in.Dept, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

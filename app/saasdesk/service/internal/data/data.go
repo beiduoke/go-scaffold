@@ -168,6 +168,6 @@ func NewAuthorized(enforcer *casbin.SyncedEnforcer, logger log.Logger) authz.Aut
 // NewAuthzCasbinClient 创建Casbin客户端
 func NewAuthzCasbinClient(cfg *conf.Bootstrap, logger log.Logger) *casbin.SyncedEnforcer {
 	log.NewHelper(log.With(logger, "module", "casbin/authz/service"))
-	model, adapter, watcher := bootstrap.NewAuthzCasbinModel(cfg, logger), bootstrap.NewAuthzCasbinGormAdapter(cfg, logger), bootstrap.NewAuthzCasbinWatcher(cfg, logger)
+	model, adapter, watcher := bootstrap.NewAuthzCasbinModel(logger), bootstrap.NewAuthzCasbinGormAdapter(cfg, logger), bootstrap.NewAuthzCasbinWatcher(cfg, logger)
 	return bootstrap.NewAuthzCasbinEnforcer(model, adapter, watcher, logger)
 }

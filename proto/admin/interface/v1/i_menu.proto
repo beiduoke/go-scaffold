@@ -41,7 +41,7 @@ service MenuService {
   rpc CreateMenu (core.service.v1.CreateMenuRequest) returns (core.service.v1.CreateMenuResponse) {
     option (google.api.http) = {
       post: "/admin/v1/menus"
-      body: "user"
+      body: "menu"
     };
 
     option(gnostic.openapi.v3.operation) = {
@@ -53,7 +53,7 @@ service MenuService {
   rpc UpdateMenu (core.service.v1.UpdateMenuRequest) returns (core.service.v1.UpdateMenuResponse) {
     option (google.api.http) = {
       put: "/admin/v1/menus/{id}"
-      body: "user"
+      body: "menu"
     };
 
     option(gnostic.openapi.v3.operation) = {

@@ -42,7 +42,7 @@ service RoleService {
   rpc CreateRole (core.service.v1.CreateRoleRequest) returns (core.service.v1.CreateRoleResponse) {
     option (google.api.http) = {
       post: "/admin/v1/roles"
-      body: "user"
+      body: "role"
     };
 
     option(gnostic.openapi.v3.operation) = {
@@ -54,7 +54,7 @@ service RoleService {
   rpc UpdateRole (core.service.v1.UpdateRoleRequest) returns (core.service.v1.UpdateRoleResponse) {
     option (google.api.http) = {
       put: "/admin/v1/roles/{id}"
-      body: "user"
+      body: "role"
     };
 
     option(gnostic.openapi.v3.operation) = {
