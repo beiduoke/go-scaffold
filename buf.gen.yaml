@@ -1,37 +1,53 @@
-# 配置protoc生成规则
-version: v1
+version: v2
 managed:
-  enabled: false
+  enabled: true
+  # override:
+  #   - file_option: go_package_prefix
+  #     value: github.com/beiduoke/go-scaffold/api
 plugins:
-  # generate go struct code
-  #- plugin: buf.build/protocolbuffers/go
-  - name: go
+  - remote: buf.build/protocolbuffers/go:v1.36.5
+    out: api
+    opt:
+      - paths=source_relative
+
+  - remote: buf.build/grpc/go:v1.5.1
+    out: api
+    opt:
+      - paths=source_relative
+
+  - local: protoc-gen-go-http
+    out: api
+    opt:
+      - paths=source_relative
+
+  - local: protoc-gen-go-errors
     out: api
     opt: paths=source_relative
 
-  # generate grpc service code
-  #- plugin: buf.build/grpc/go
-  - name: go-grpc
+  # - local: protoc-gen-validate
+  #   out: api
+  #   opt:
+  #     - paths=source_relative
+  #     - lang=go
+
+  - remote: buf.build/bufbuild/validate-go:v1.2.1
     out: api
     opt:
       - paths=source_relative
 
-  # generate rest service code
-  - name: go-http
+  - remote: buf.build/community/google-gnostic-openapi:v0.7.0
     out: api
-    opt:
-      - paths=source_relative
 
-  # generate kratos errors code
-  - name: go-errors
-    out: api
-    opt:
-      - paths=source_relative
+  ## - remote: buf.build/grpc-ecosystem/openapiv2:v2.26.0
+  ##   out: api
 
-  # generate message validator code
-  #- plugin: buf.build/bufbuild/validate-go
-  - name: validate
-    out: api
-    opt:
-      - paths=source_relative
-      - lang=go
+  # - remote: buf.build/bufbuild/protoschema-pubsub:v0.2.0
+  #   out: api
+
+  # - remote: buf.build/bufbuild/protoschema-jsonschema:v0.2.0
+  #   out: api
+  
+  # - remote: buf.build/community/stephenh-ts-proto:v2.3.0
+  #   out: api
+inputs:
+  - directory: proto

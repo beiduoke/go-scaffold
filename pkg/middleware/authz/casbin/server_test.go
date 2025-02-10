@@ -17,7 +17,7 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
 	"github.com/go-kratos/kratos/v2/transport"
-	jwtV4 "github.com/golang-jwt/jwt/v4"
+	jwtV5 "github.com/golang-jwt/jwt/v5"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -114,11 +114,11 @@ func NewSecurityUser() authn.SecurityUser {
 
 func (su *SecurityUser) ParseFromContext(ctx context.Context) error {
 	if claims, ok := jwt.FromContext(ctx); ok {
-		str, ok := claims.(jwtV4.MapClaims)[ClaimRoleId]
+		str, ok := claims.(jwtV5.MapClaims)[ClaimRoleId]
 		if ok {
 			su.RoleId = str.(string)
 		}
-		str, ok = claims.(jwtV4.MapClaims)[Domain]
+		str, ok = claims.(jwtV5.MapClaims)[Domain]
 		if ok {
 			su.Domain = str.(string)
 		}
@@ -156,8 +156,8 @@ func (su *SecurityUser) GetDomain() string {
 	return su.Domain
 }
 
-func createToken(roleId string) jwtV4.Claims {
-	return jwtV4.MapClaims{
+func createToken(roleId string) jwtV5.Claims {
+	return jwtV5.MapClaims{
 		ClaimRoleId: roleId,
 	}
 }

@@ -8,12 +8,11 @@ import (
 )
 
 // NewMeilisearchClient 创建Meilisearch客户端
-func NewMeilisearchClient(cfg *conf.Bootstrap, logger *log.Helper) *meilisearch.Client {
-	sdb := meilisearch.NewClient(meilisearch.ClientConfig{
-		Host:    cfg.Data.Meilisearch.GetHost(),
-		APIKey:  cfg.Data.Meilisearch.GetApiKey(),
-		Timeout: cfg.Data.Meilisearch.Timeout.AsDuration(),
-	})
+func NewMeilisearchClient(cfg *conf.Bootstrap, logger *log.Helper) meilisearch.ServiceManager {
+	sdb := meilisearch.New(
+		cfg.Data.Meilisearch.GetHost(),
+		meilisearch.WithAPIKey(cfg.Data.Meilisearch.GetApiKey()),
+	)
 	_, err := sdb.Health()
 	if err != nil {
 		logger.Fatalf("failed opening connection to redis %v", err)

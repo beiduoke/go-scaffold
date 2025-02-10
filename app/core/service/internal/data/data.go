@@ -58,12 +58,12 @@ type Data struct {
 	cfg *conf.Bootstrap
 	db  *ent.Client
 	rdb *redis.Client
-	sdb *meilisearch.Client
+	sdb meilisearch.ServiceManager
 	sf  *snowflake.Node
 }
 
 // NewData .
-func NewData(logger log.Logger, cfg *conf.Bootstrap, db *ent.Client, rdb *redis.Client, sdb *meilisearch.Client, sf *snowflake.Node) (*Data, func(), error) {
+func NewData(logger log.Logger, cfg *conf.Bootstrap, db *ent.Client, rdb *redis.Client, sdb meilisearch.ServiceManager, sf *snowflake.Node) (*Data, func(), error) {
 	l := log.NewHelper(log.With(logger, "module", "data/initialize"))
 	d := &Data{db: db, rdb: rdb, sdb: sdb, log: l, sf: sf, cfg: cfg}
 	return d, func() {
@@ -136,7 +136,7 @@ func NewRedisClient(cfg *conf.Bootstrap, logger log.Logger) *redis.Client {
 }
 
 // NewMeilisearchClient 创建Meilisearch客户端
-func NewMeilisearchClient(cfg *conf.Bootstrap, logger log.Logger) *meilisearch.Client {
+func NewMeilisearchClient(cfg *conf.Bootstrap, logger log.Logger) meilisearch.ServiceManager {
 	l := log.NewHelper(log.With(logger, "module", "meilisearch/data/service"))
 	return bootstrap.NewMeilisearchClient(cfg, l)
 }

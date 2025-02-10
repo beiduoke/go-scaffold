@@ -1,9 +1,0 @@
-[Login]
-description = "login"
-one = "Login {{.Name}} {{.Password}}"
-other = "Login {{.Name}} {{.Password}}"
-
-[Register]
-description = "register"
-one = "Register {{.Name}} {{.Password}}"
-other = "Register {{.Name}} {{.Password}}"

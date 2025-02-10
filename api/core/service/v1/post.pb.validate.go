@@ -95,7 +95,7 @@ type PostMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m PostMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -226,7 +226,7 @@ type CreatePostRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m CreatePostRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -328,7 +328,7 @@ type CreatePostResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m CreatePostResponseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -463,7 +463,7 @@ type UpdatePostRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m UpdatePostRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -565,7 +565,7 @@ type UpdatePostResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m UpdatePostResponseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -671,7 +671,7 @@ type DeletePostRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m DeletePostRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -773,7 +773,7 @@ type DeletePostResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m DeletePostResponseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -877,7 +877,7 @@ type GetPostRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m GetPostRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -977,7 +977,7 @@ type GetPostResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m GetPostResponseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1077,7 +1077,7 @@ type ListPostRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m ListPostRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1213,7 +1213,7 @@ type ListPostResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m ListPostResponseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}

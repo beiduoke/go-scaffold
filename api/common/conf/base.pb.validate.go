@@ -127,7 +127,7 @@ type BaseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m BaseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -230,7 +230,7 @@ type Base_AdminMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m Base_AdminMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -329,7 +329,7 @@ type Base_DomainMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m Base_DomainMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}

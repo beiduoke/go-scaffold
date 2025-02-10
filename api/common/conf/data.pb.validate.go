@@ -330,7 +330,7 @@ type DataMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m DataMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -471,7 +471,7 @@ type Data_DatabaseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m Data_DatabaseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -669,7 +669,7 @@ type Data_RedisMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m Data_RedisMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -770,7 +770,7 @@ type Data_MongoDBMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m Data_MongoDBMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -872,7 +872,7 @@ type Data_ClickHouseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m Data_ClickHouseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -980,7 +980,7 @@ type Data_InfluxDBMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m Data_InfluxDBMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1081,7 +1081,7 @@ type Data_KafkaMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m Data_KafkaMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1182,7 +1182,7 @@ type Data_DorisMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m Data_DorisMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1284,7 +1284,7 @@ type Data_ElasticSearchMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m Data_ElasticSearchMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1419,7 +1419,7 @@ type Data_MeilisearchMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m Data_MeilisearchMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}

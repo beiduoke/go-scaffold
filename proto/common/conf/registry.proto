@@ -43,7 +43,7 @@ message Registry {
 
   // Kubernetes
   message Kubernetes {
-
+    string namespace = 1;
   }
 
   // Eureka

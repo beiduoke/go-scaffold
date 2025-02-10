@@ -1,9 +1,0 @@
-[Login]
-description = "login"
-hash = "sha1-c3bc241979ef10e575e69645d5b90dce680e9470"
-other = "登录 {{.Name}} {{.Password}}"
-
-[Register]
-description = "register"
-hash = "sha1-094cd0f54580cd211b2ff22cfd9b564dc1e707e0"
-other = "注册 {{.Name}} {{.Password}}"

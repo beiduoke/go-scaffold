@@ -122,7 +122,7 @@ type RegisterRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m RegisterRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -261,7 +261,7 @@ type RegisterResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m RegisterResponseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -369,7 +369,7 @@ type IsAuthorizedRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m IsAuthorizedRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -471,7 +471,7 @@ type IsAuthorizedResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m IsAuthorizedResponseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -606,7 +606,7 @@ type RegisterRequest_AuthMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m RegisterRequest_AuthMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}

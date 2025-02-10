@@ -196,7 +196,7 @@ func NewNacosRegistry(c *conf.Registry) *nacosKratos.Registry {
 }
 
 // NewKubernetesRegistry 创建一个注册发现客户端 - Kubernetes
-func NewKubernetesRegistry(_ *conf.Registry) *k8sRegistry.Registry {
+func NewKubernetesRegistry(c *conf.Registry) *k8sRegistry.Registry {
 	restConfig, err := k8sRest.InClusterConfig()
 	if err != nil {
 		home := k8sUtil.HomeDir()
@@ -214,7 +214,7 @@ func NewKubernetesRegistry(_ *conf.Registry) *k8sRegistry.Registry {
 		return nil
 	}
 
-	reg := k8sRegistry.NewRegistry(clientSet)
+	reg := k8sRegistry.NewRegistry(clientSet, c.Kubernetes.GetNamespace())
 
 	return reg
 }
