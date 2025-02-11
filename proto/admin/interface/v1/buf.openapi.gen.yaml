@@ -1,17 +1,7 @@
 # 配置protoc生成规则
-version: v1
+version: v2
 managed:
   enabled: false
 plugins:
-  # generate openapi v2 json doc
-#  - name: openapiv2
-#    out: ../docs
-#    opt:
-#      - json_names_for_fields=true
-#      - logtostderr=true
-  # generate openapi v2 yaml doc
-  - name: openapi
-    out: api/docs/admin/interface/v1
-    opt:
-      - naming=json
-      - paths=source_relative
+  - remote: buf.build/community/google-gnostic-openapi:v0.7.0
+    out: api/admin/docs/v1

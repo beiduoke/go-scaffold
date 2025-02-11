@@ -1,0 +1,12 @@
+{
+  "folders": [
+    {
+      "name": "@scaffold/gateway",
+      "path": "app/gateway"
+    },
+    {
+      "name": "@scaffold/admin-api",
+      "path": "app/admin/interface"
+    }
+  ]
+}

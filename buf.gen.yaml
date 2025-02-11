@@ -4,6 +4,9 @@ managed:
   # override:
   #   - file_option: go_package_prefix
   #     value: github.com/beiduoke/go-scaffold/api
+  disable:
+    - file_option: go_package_prefix
+      module: buf.build/bufbuild/protovalidate
 plugins:
   - remote: buf.build/protocolbuffers/go:v1.36.5
     out: api
@@ -35,8 +38,8 @@ plugins:
     opt:
       - paths=source_relative
 
-  - remote: buf.build/community/google-gnostic-openapi:v0.7.0
-    out: api
+  # - remote: buf.build/community/google-gnostic-openapi:v0.7.0
+  #   out: api
 
   ## - remote: buf.build/grpc-ecosystem/openapiv2:v2.26.0
   ##   out: api

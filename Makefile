@@ -36,11 +36,6 @@ mysqlimport:
 	@echo '--执行恢复命令--'
 	docker exec -i mysql57 bash -c 'exec mysql -uroot -p"$$MYSQL_ROOT_PASSWORD"' < ./resouces/backup/${DATE}/go_scaffold.sql
 
-.PHONY: run
-# generate internal proto
-run:
-	cd cmd/server && bee run .
-
 .PHONY: init
 # init env
 init:
@@ -62,26 +57,24 @@ config:
  	       --go_out=paths=source_relative:./internal \
 	       $(INTERNAL_PROTO_FILES)
 
-.PHONY: api lintapi
+.PHONY: api lint openapi
 # generate api proto
 api:
 	buf generate
 	
-lintapi:
+lint:
 	buf lint proto
 	
 # generate OpenAPI v3 doc
-.PHONY: openapi
 openapi:
 	buf generate --path proto/admin/interface/v1 --template proto/admin/interface/v1/buf.openapi.gen.yaml
 	buf generate --path proto/core/service/v1 --template proto/core/service/v1/buf.openapi.gen.yaml
 
-.PHONY: build
+.PHONY: generate build
 # build
 build:
 	mkdir -p bin/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin/ ./...
 
-.PHONY: generate
 # generate
 generate:
 	go mod tidy

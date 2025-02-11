@@ -8,6 +8,7 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
 import "validate/validate.proto";
+import "buf/validate/validate.proto";
 
 import "core/service/v1/auth.proto";
 import "core/service/v1/user.proto";
@@ -71,7 +72,7 @@ enum GrandType {
 
 // 用户后台登陆 - 请求
 message LoginRequest {
-  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}]; // 账号
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 10}, (buf.validate.field).string.min_len = 1]; // 账号
   string password = 2 [(validate.rules).string = {min_len: 6, max_len: 25}]; // 密码
   optional int32 grand_type = 3; // 授权类型，一直为：password
 }
