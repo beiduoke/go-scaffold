@@ -1,0 +1,3 @@
+[submodule "app/gateway"]
+	path = app/gateway
+	url = https://github.com/go-kratos/gateway.git
