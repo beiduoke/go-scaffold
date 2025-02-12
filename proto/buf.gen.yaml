@@ -7,25 +7,31 @@ managed:
   disable:
     - file_option: go_package_prefix
       module: buf.build/bufbuild/protovalidate
+
+inputs:
+  - directory: .
+    # paths:
+    #   - ./admin/interface/v1
 plugins:
   - remote: buf.build/protocolbuffers/go:v1.36.5
-    out: api
+    out: ../api
     opt:
       - paths=source_relative
 
   - remote: buf.build/grpc/go:v1.5.1
-    out: api
+    out: ../api
     opt:
       - paths=source_relative
 
   - local: protoc-gen-go-http
-    out: api
+    out: ../api
     opt:
       - paths=source_relative
 
   - local: protoc-gen-go-errors
-    out: api
-    opt: paths=source_relative
+    out: ../api
+    opt:
+      - paths=source_relative
 
   # - local: protoc-gen-validate
   #   out: api
@@ -34,23 +40,21 @@ plugins:
   #     - lang=go
 
   - remote: buf.build/bufbuild/validate-go:v1.2.1
-    out: api
+    out: ../api
     opt:
       - paths=source_relative
 
   # - remote: buf.build/community/google-gnostic-openapi:v0.7.0
-  #   out: api
+  #   out: ../api
 
   ## - remote: buf.build/grpc-ecosystem/openapiv2:v2.26.0
-  ##   out: api
+  ##   out: ../api
 
   # - remote: buf.build/bufbuild/protoschema-pubsub:v0.2.0
-  #   out: api
+  #   out: ../api
 
   # - remote: buf.build/bufbuild/protoschema-jsonschema:v0.2.0
-  #   out: api
+  #   out: ../api
   
   # - remote: buf.build/community/stephenh-ts-proto:v2.3.0
-  #   out: api
-inputs:
-  - directory: proto
+  #   out: ../api

@@ -1,9 +1,15 @@
 version: v2
 modules:
-  - path: proto
+  - path: .
     excludes:
-      - proto/third_party
-  # - path: proto/third_party
+      - third_party
+    lint:
+      use:
+        - STANDARD
+    breaking:
+      use:
+        - FILE
+  # - path: apis/third_party
 deps:
   - buf.build/googleapis/googleapis:83c0f6c19b2f4ea0b0fd84a80e753659
   - buf.build/gnostic/gnostic:087bc8072ce44e339f213209e4d57bf0
